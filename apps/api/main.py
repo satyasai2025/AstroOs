@@ -17,6 +17,7 @@ from fastapi.responses import JSONResponse
 from apps.api.config import get_settings
 from apps.api.routers import auth
 from apps.api.routers import horoscope as horoscope_router
+from apps.api.routers import divisional as divisional_router
 from apps.api.schemas.auth import HealthResponse
 from apps.api.schemas.ephemeris import EphemerisStatusSchema
 from apps.api.services.ephemeris_service import EphemerisService
@@ -96,6 +97,7 @@ def create_app() -> FastAPI:
 
     app.include_router(auth.router, prefix="/api/v1")
     app.include_router(horoscope_router.router, prefix="/api/v1")
+    app.include_router(divisional_router.router, prefix="/api/v1")
 
     # ── Health ────────────────────────────────────────────────────────────────
 
