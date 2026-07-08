@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-noto-serif: "Noto Serif Devanagari", Georgia, serif;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-cosmos-950 text-slate-100 font-sans;
+    background-image: radial-gradient(ellipse at top, #1e1e8a 0%, #060620 70%);
+    min-height: 100dvh;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-cosmos-950;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-cosmos-700 rounded-full;
+  }
+}
+
+@layer components {
+  /* Glass card — used throughout the UI */
+  .glass-card {
+    @apply rounded-xl border border-white/10 bg-white/5 backdrop-blur-md;
+    background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+  }
+
+  /* Input field */
+  .field-input {
+    @apply w-full rounded-lg border border-white/10 bg-cosmos-900/60
+      px-4 py-2.5 text-sm text-slate-100 placeholder:text-slate-500
+      outline-none transition
+      focus:border-amber-400/60 focus:ring-1 focus:ring-amber-400/30;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg
+      bg-amber-500 px-5 py-2.5 text-sm font-semibold text-cosmos-950
+      transition hover:bg-amber-400 active:scale-95
+      disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Ghost / secondary button */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg
+      border border-white/10 px-5 py-2.5 text-sm font-medium text-slate-300
+      transition hover:border-white/25 hover:text-white active:scale-95;
+  }
+
+  /* Error text */
+  .text-error {
+    @apply text-sm text-red-400;
+  }
+
+  /* Label */
+  .field-label {
+    @apply block text-xs font-medium uppercase tracking-wider text-slate-400 mb-1.5;
+  }
+}
