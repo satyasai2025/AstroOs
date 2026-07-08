@@ -1,0 +1,205 @@
+Task 4 
+
+Build the Horoscope Engine.
+
+Generate
+
+D1
+
+Calculate
+
+Signs
+
+Houses
+
+Planets
+
+Nakshatras
+
+Aspects
+
+Planet Strength
+
+Return JSON API.
+
+No UI.
+
+Task 5
+
+Build all divisional chart calculations.
+
+Support
+
+D2
+
+D3
+
+D4
+
+D7
+
+D9
+
+D10
+
+D12
+
+D16
+
+D20
+
+D24
+
+D27
+
+D30
+
+D40
+
+D45
+
+D60
+
+Every chart must be independently testable.
+
+Task 6
+
+Implement Dasha Engine.
+
+Support
+
+Vimshottari
+
+Yogini
+
+Kalachakra
+
+Ashtottari
+
+Chara
+
+Narayana
+
+Return
+
+Mahadasha
+
+Antardasha
+
+Pratyantar
+
+Sookshma
+
+Prana
+
+Expose REST APIs.
+
+Task 7
+Build a generic Rule Engine.
+
+Rules must come from database.
+
+Do not hardcode rules.
+
+Support
+
+AND
+
+OR
+
+NOT
+
+Priority
+
+Weights
+
+Exceptions
+
+Return
+
+Matched Rules
+
+Failed Rules
+
+Confidence
+
+Explanation
+
+Task 8
+
+Build Event Engine.
+
+Unlimited events.
+
+Categories
+
+Marriage
+
+Promotion
+
+Job
+
+Business
+
+Travel
+
+Visa
+
+Hospital
+
+Accident
+
+Child Birth
+
+Death
+
+Property
+
+Store snapshots.
+
+Every event must keep the astrological state at that date.
+
+Task 9
+Build Research Engine.
+
+Users should query
+
+Find charts where
+
+Marriage
+
+Age 28
+
+Venus AD
+
+Jupiter Transit
+
+Return statistics.
+
+Return matching charts.
+
+Build optimized SQL queries.
+
+Task 10
+
+Build interactive visualization.
+
+Modules
+
+Interactive Kundli
+
+Timeline
+
+Knowledge Graph
+
+Planet Graph
+
+House Graph
+
+Heatmap
+
+Research Dashboard
+
+Use D3.js and Cytoscape.
+
+No calculation logic.
