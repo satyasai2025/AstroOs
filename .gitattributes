@@ -1,0 +1,2 @@
+Vedic-Astro-Research.zip filter=lfs diff=lfs merge=lfs -text
+zipFile.zip filter=lfs diff=lfs merge=lfs -text
