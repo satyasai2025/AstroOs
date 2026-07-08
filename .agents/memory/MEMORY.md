@@ -1,0 +1,3 @@
+- [bcrypt-passlib](astros-bcrypt-passlib.md) — passlib <1.8 crashes with bcrypt>=4; project uses bcrypt directly
+- [pyswisseph-cusps](pyswisseph-cusps.md) — swe.houses() returns 12-element 0-indexed tuple, NOT 13-element 1-indexed
+- [pyswisseph-constants](pyswisseph-constants.md) — SIDM_TRUE_CITRA not SIDM_TRUE_CHITRA; all ayanamsa IDs verified
