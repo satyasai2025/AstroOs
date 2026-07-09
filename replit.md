@@ -86,12 +86,12 @@ docs/
 | Module | Status | Domain |
 |--------|--------|--------|
 | 1 — Foundation | ✅ Complete | Auth, Users, JWT, DB bootstrap |
-| 2 — Chart Engine | ⬜ Next | Swiss Ephemeris wrapper, birth chart computation |
-| 3 — Graha Module | ⬜ | Planetary positions, dignities, aspects |
-| 4 — Nakshatra Module | ⬜ | Lunar mansions, pada, ruling planet |
-| 5 — Dasha Module | ⬜ | Vimshottari, Yogini, Chara systems |
-| 6 — Divisional Charts | ⬜ | D1–D60 varga computation |
-| 7 — Ashtakavarga | ⬜ | Bindu calculation, Sarvashtakavarga |
+| 2 — Chart Engine | ✅ Complete | Swiss Ephemeris wrapper, birth chart computation |
+| 3 — Graha Module | ✅ Complete | Planetary positions, dignities, aspects |
+| 4 — Nakshatra Module | ✅ Complete | Lunar mansions, pada, ruling planet |
+| 5 — Divisional Charts | ✅ Complete | D1–D60 varga computation |
+| 6 — Dasha Module | ✅ Complete | Vimshottari, Yogini, Ashtottari, Kalachakra, Chara, Narayana |
+| 7 — Ashtakavarga | ⬜ Next | Bindu calculation, Sarvashtakavarga |
 | 8 — Yoga Module | ⬜ | Raj Yoga, Dhana Yoga, pattern detection |
 | 9 — Research Tools | ⬜ | Search, comparison, statistical analysis |
 | 10 — Visualization | ⬜ | D3.js charts, Cytoscape.js |

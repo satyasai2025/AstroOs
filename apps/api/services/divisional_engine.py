@@ -463,68 +463,7 @@ class DivisionalEngine:
             ayanamsa=ayanamsa,
             house_system=house_system,
         )
-
-        # ── Varga lagna ────────────────────────────────────────────────────────
-        asc_sid = result.ascendant.sidereal_longitude
-        asc_d1_rashi, asc_d1_deg = longitude_to_rashi(asc_sid)
-        asc_v_rashi, asc_v_deg = compute_varga_sign(varga, asc_sid)
-
-        varga_ascendant = VargaAscendant(
-            d1_sidereal_longitude=asc_sid,
-            d1_rashi=asc_d1_rashi,
-            d1_rashi_degree=asc_d1_deg,
-            varga_rashi=asc_v_rashi,
-            varga_rashi_degree=asc_v_deg,
-        )
-
-        lagna_rashi_idx = _RASHI_LIST.index(asc_v_rashi)
-
-        # ── Per-planet positions ───────────────────────────────────────────────
-        varga_positions: list[VargaPosition] = []
-        for sid_pos in result.planet_positions:
-            planet = sid_pos.planet
-            d1_sid = sid_pos.sidereal_longitude
-            d1_rashi, d1_deg = longitude_to_rashi(d1_sid)
-
-            # D30 — Sun and Moon receive their D1 sign unchanged (no Trimshamsha)
-            if varga == "D30" and planet in ("sun", "moon"):
-                v_rashi = d1_rashi
-                v_deg = d1_deg
-            else:
-                v_rashi, v_deg = compute_varga_sign(varga, d1_sid)
-
-            v_rashi_idx = _RASHI_LIST.index(v_rashi)
-            house_number = ((v_rashi_idx - lagna_rashi_idx) % 12) + 1
-
-            nak_info = longitude_to_nakshatra(d1_sid)
-
-            varga_positions.append(
-                VargaPosition(
-                    planet=planet,
-                    d1_sidereal_longitude=d1_sid,
-                    d1_rashi=d1_rashi,
-                    d1_rashi_degree=round(d1_deg, 6),
-                    varga_rashi=v_rashi,
-                    varga_rashi_degree=round(v_deg, 6),
-                    varga_house_number=house_number,
-                    is_retrograde=sid_pos.is_retrograde,
-                    is_combust=sid_pos.is_combust,
-                    nakshatra=nak_info.nakshatra,
-                    pada=nak_info.pada,
-                )
-            )
-
-        # Sort by house then planet name for deterministic ordering
-        varga_positions.sort(key=lambda p: (p.varga_house_number, p.planet))
-
-        return VargaChart(
-            varga=varga,
-            divisor=SUPPORTED_VARGAS[varga],
-            ascendant=varga_ascendant,
-            planet_positions=tuple(varga_positions),
-            ayanamsa_system=ayanamsa,
-            julian_day=result.julian_day,
-        )
+        return self._build_from_result(result, varga, ayanamsa)
 
     def compute_all(
         self,
