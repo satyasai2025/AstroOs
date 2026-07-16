@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# Node / frontend
+node_modules/
+.next/
+
+# Environment / secrets
+.env
+apps/api/security/keys/*.pem
+
+# Editor/OS
+.DS_Store
+
+# Replit / agent session artifacts — not application code
+attached_assets/
+.agents/
+.local/
+.replit
+replit.nix
