@@ -1,0 +1,518 @@
+# Karakatva Catalogue: Graha Significators
+# Source: BPHS Chapter 33 (Karaka Graha Phala Adhyaya)
+# Standardized karaka assignments for all 9 grahas
+
+id: karaka.graha.karakatvas
+name: Graha Karakatva Samuha
+aliases: [Graha Significator Collection, Planetary Karakatvas]
+category: karaka
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+source_primary: source.BPHS
+
+karaka_type: graha
+
+significations:
+  - graha: graha.surya
+    name: Surya (Sun)
+    karakatvas:
+      - concept: Atma (soul, self)
+        confidence: high
+        bhava_link: bhava.1
+        notes: Primary significator of soul and self-identity
+      - concept: Pitru (father, ancestors)
+        confidence: high
+        bhava_link: bhava.9
+        notes: Karaka for father and paternal lineage
+      - concept: Raja (authority, governance)
+        confidence: high
+        bhava_link: bhava.10
+        notes: Represents authority, government, political power
+      - concept: bones (asthi dhatu)
+        confidence: high
+        notes: Physical significator for skeletal system
+      - concept: eyes (especially right eye)
+        confidence: high
+        notes: Primary karaka for vision and eyes
+      - concept: heart (hridaya)
+        confidence: high
+        notes: Represents cardiac function and vitality
+      - concept: reputation (kirti)
+        confidence: high
+        bhava_link: bhava.10
+        notes: Fame, social standing, public image
+      - concept: vitality (ojas)
+        confidence: high
+        notes: Life force, immunity, general vigor
+      - concept: copper (metallurgical)
+        confidence: medium
+        notes: Associated metal in elemental correspondence
+    cross_references:
+      - ref: bhava.1
+        relationship: "Natural karaka for 1st bhava (self)"
+      - ref: bhava.9
+        relationship: "Natural karaka for 9th bhava (father, dharma)"
+      - ref: bhava.10
+        relationship: "Natural karaka for 10th bhava (career, authority)"
+      - ref: bhava.5
+        relationship: "Signifies father's bhava in Vimshamsha context"
+    sources:
+      - ref: source.BPHS
+        claim: "Surya is karaka for Atma, Pitru, Raja, bones, eyes, heart"
+        confidence: high
+
+  - graha: graha.chandra
+    name: Chandra (Moon)
+    karakatvas:
+      - concept: Manas (mind, emotions)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Primary significator of emotional and mental state
+      - concept: Maatru (mother)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Karaka for mother and maternal lineage
+      - concept: blood (rakta dhatu)
+        confidence: high
+        notes: Physical significator for blood and fluid systems
+      - concept: left eye
+        confidence: high
+        notes: Primary significator for left eye vision
+      - concept: mind (manas)
+        confidence: high
+        notes: Mental faculties, psychological well-being
+      - concept: fertility (shukra kshaya)
+        confidence: high
+        bhava_link: bhava.7
+        notes: Fertility, conception, reproductive capacity
+      - concept: pearl (manikya gem)
+        confidence: medium
+        notes: Gemstone correspondence
+      - concept: silver (metallurgical)
+        confidence: medium
+        notes: Associated metal in elemental correspondence
+      - concept: liquids, water
+        confidence: high
+        bhava_link: bhava.4
+        notes: Represents all liquid elements, nurturing qualities
+    cross_references:
+      - ref: bhava.4
+        relationship: "Natural karaka for 4th bhava (mother, happiness)"
+      - ref: bhava.7
+        relationship: "Signifies fertility and progeny potential"
+      - ref: bhava.1
+        relationship: "Mind/mental nature of the self"
+    sources:
+      - ref: source.BPHS
+        claim: "Chandra is karaka for Manas, Maatru, blood, left eye, mind"
+        confidence: high
+
+  - graha: graha.mangala
+    name: Mangala (Mars)
+    karakatvas:
+      - concept: Bhratru (siblings, brothers)
+        confidence: high
+        bhava_link: bhava.3
+        notes: Karaka for brothers and siblings, especially younger
+      - concept: land (bhumi)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Signifies landed property and real estate
+      - concept: courage (saahas)
+        confidence: high
+        bhava_link: bhava.3
+        notes: Bravery, initiative, fighting spirit
+      - concept: blood (rakta dhatu)
+        confidence: high
+        notes: Physical significator for blood, red corpuscles
+      - concept: fire (agni tattva)
+        confidence: high
+        notes: Digestive fire, metabolic heat, transformation
+      - concept: muscles (peshi dhatu)
+        confidence: high
+        notes: Muscular system, physical strength
+      - concept: wounds, injuries (vranas)
+        confidence: high
+        notes: Surgery, accidents, cuts, burns
+      - concept: property disputes
+        confidence: medium
+        bhava_link: bhava.4
+        notes: Legal disputes related to immovable property
+      - concept: coral (moonga gem)
+        confidence: medium
+        notes: Gemstone correspondence
+    cross_references:
+      - ref: bhava.3
+        relationship: "Natural karaka for 3rd bhava (siblings, courage)"
+      - ref: bhava.7
+        relationship: "Kuja Dosha significator for marriage"
+      - ref: bhava.1
+        relationship: "Physical vitality and aggressive tendencies"
+      - ref: bhava.8
+        relationship: "Signifies accidents, surgery, sudden death"
+    sources:
+      - ref: source.BPHS
+        claim: "Mangala is karaka for Bhratru, land, courage, blood, fire"
+        confidence: high
+
+  - graha: graha.budha
+    name: Budha (Mercury)
+    karakatvas:
+      - concept: Buddhi (intellect, reasoning)
+        confidence: high
+        bhava_link: bhava.5
+        notes: Primary significator of analytical intelligence
+      - concept: Vak (speech, communication)
+        confidence: high
+        bhava_link: bhava.2
+        notes: Eloquence, speech, writing ability
+      - concept: education (vidya)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Learning, academic pursuits, study
+      - concept: commerce (vanijya)
+        confidence: high
+        bhava_link: bhava.2
+        notes: Trade, business acumen, financial transactions
+      - concept: maternal uncle (maama)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Mother's brother, maternal family connections
+      - concept: skin (tvak dhatu)
+        confidence: high
+        notes: Physical significator for skin and dermatological health
+      - concept: wit, humor (hasya)
+        confidence: high
+        notes: Cleverness, adaptability, light-heartedness
+      - concept: artistry, crafting
+        confidence: medium
+        notes: Skills in art, design, and creative expression
+      - concept: emerald (panna gem)
+        confidence: medium
+        notes: Gemstone correspondence
+    cross_references:
+      - ref: bhava.2
+        relationship: "Natural karaka for 2nd bhava (wealth, speech)"
+      - ref: bhava.4
+        relationship: "Signifies education and maternal uncle"
+      - ref: bhava.5
+        relationship: "Signifies intelligence, children (by association)"
+      - ref: bhava.10
+        relationship: "Commerce and professional skill"
+    sources:
+      - ref: source.BPHS
+        claim: "Budha is karaka for Buddhi, Vak, education, commerce, maternal uncle"
+        confidence: high
+
+  - graha: graha.guru
+    name: Guru (Jupiter)
+    karakatvas:
+      - concept: Jnana (knowledge, wisdom)
+        confidence: high
+        bhava_link: bhava.5
+        notes: Primary significator of higher knowledge, philosophy
+      - concept: Putra (children, sons)
+        confidence: high
+        bhava_link: bhava.5
+        notes: Karaka for progeny, specifically sons
+      - concept: Bhagya (fortune, luck)
+        confidence: high
+        bhava_link: bhava.9
+        notes: General fortune, prosperity, divine grace
+      - concept: Dharma (righteousness, duty)
+        confidence: high
+        bhava_link: bhava.9
+        notes: Moral conduct, spiritual inclination, religion
+      - concept: wealth (dhana)
+        confidence: high
+        bhava_link: bhava.2
+        notes: Accumulated wealth, financial prosperity
+      - concept: gold (swarna)
+        confidence: high
+        notes: Precious metal, material abundance
+      - concept: fat (meda dhatu)
+        confidence: high
+        notes: Physical significator for adipose tissue
+      - concept: counseling, guidance
+        confidence: high
+        bhava_link: bhava.2
+        notes: Advisory role, teaching, mentoring
+      - concept: temple, sacred spaces
+        confidence: medium
+        notes: Religious institutions, pilgrimage
+      - concept: yellow sapphire (pukhraj gem)
+        confidence: medium
+        notes: Gemstone correspondence
+    cross_references:
+      - ref: bhava.2
+        relationship: "Natural karaka for 2nd bhava (wealth, family)"
+      - ref: bhava.5
+        relationship: "Natural karaka for 5th bhava (children, intelligence)"
+      - ref: bhava.9
+        relationship: "Natural karaka for 9th bhava (dharma, fortune)"
+      - ref: bhava.11
+        relationship: "Signifies gains and fulfillment of desires"
+    sources:
+      - ref: source.BPHS
+        claim: "Guru is karaka for Jnana, Putra, Bhagya, Dharma, wealth"
+        confidence: high
+
+  - graha: graha.shukra
+    name: Shukra (Venus)
+    karakatvas:
+      - concept: Dara (spouse, marriage)
+        confidence: high
+        bhava_link: bhava.7
+        notes: Primary significator of marriage and marital harmony
+      - concept: beauty (sundari)
+        confidence: high
+        bhava_link: bhava.1
+        notes: Physical beauty, attractiveness, charm
+      - concept: luxury (bhoga)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Comfort, pleasures, opulent living
+      - concept: vehicles (vaahana)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Cars, conveyances, material possessions
+      - concept: art (kala)
+        confidence: high
+        bhava_link: bhava.5
+        notes: Fine arts, music, dance, creative expression
+      - concept: semen (shukra dhatu)
+        confidence: high
+        notes: Reproductive essence, vitality of procreation
+      - concept: perfume, flowers
+        confidence: medium
+        notes: Aesthetic pleasures, sensory enjoyment
+      - concept: diamond (heera gem)
+        confidence: medium
+        notes: Gemstone correspondence
+      - concept: opposite sex relationships
+        confidence: high
+        bhava_link: bhava.7
+        notes: Romantic partnerships, sexual relationships
+    cross_references:
+      - ref: bhava.7
+        relationship: "Natural karaka for 7th bhava (marriage, partnership)"
+      - ref: bhava.4
+        relationship: "Signifies vehicles, comforts, domestic happiness"
+      - ref: bhava.5
+        relationship: "Signifies arts, creative progeny"
+      - ref: bhava.1
+        relationship: "Physical beauty and appearance"
+    sources:
+      - ref: source.BPHS
+        claim: "Shukra is karaka for Dara, beauty, luxury, vehicles, art"
+        confidence: high
+
+  - graha: graha.shani
+    name: Shani (Saturn)
+    karakatvas:
+      - concept: Ayush (longevity, lifespan)
+        confidence: high
+        bhava_link: bhava.8
+        notes: Primary significator of life span and death timing
+      - concept: Seva (service, servitude)
+        confidence: high
+        bhava_link: bhava.6
+        notes: Employment, service to others, labor
+      - concept: obstacles (vighna)
+        confidence: high
+        bhava_link: bhava.8
+        notes: Delays, hindrances, karmic blockages
+      - concept: discipline (niyama)
+        confidence: high
+        bhava_link: bhava.10
+        notes: Self-restraint, routine, structured effort
+      - concept: longevity (deergha ayus)
+        confidence: high
+        bhava_link: bhava.8
+        notes: Duration of life, endurance, resilience
+      - concept: renunciation (vairagya)
+        confidence: high
+        bhava_link: bhava.12
+        notes: Detachment, spiritual asceticism
+      - concept: bones (asthi dhatu)
+        confidence: high
+        notes: Skeletal structure, joints, teeth
+      - concept: wind, air (vayu)
+        confidence: high
+        notes: Vata dosha, nervous system, movement
+      - concept: iron (metallurgical)
+        confidence: medium
+        notes: Associated metal in elemental correspondence
+      - concept: blue sapphire (neelam gem)
+        confidence: medium
+        notes: Gemstone correspondence
+    cross_references:
+      - ref: bhava.6
+        relationship: "Natural karaka for 6th bhava (service, obstacles)"
+      - ref: bhava.8
+        relationship: "Natural karaka for 8th bhava (longevity, transformation)"
+      - ref: bhava.10
+        relationship: "Natural karaka for 10th bhava (career, discipline)"
+      - ref: bhava.12
+        relationship: "Signifies losses, expenses, renunciation"
+      - ref: bhava.11
+        relationship: "Signifies gains through sustained effort"
+    sources:
+      - ref: source.BPHS
+        claim: "Shani is karaka for Ayush, Seva, obstacles, discipline, longevity"
+        confidence: high
+
+  - graha: graha.rahu
+    name: Rahu (North Lunar Node)
+    karakatvas:
+      - concept: foreign lands (videsh)
+        confidence: high
+        bhava_link: bhava.7
+        notes: Foreign travel, settlement, alien environments
+      - concept: sudden events (akasmika ghatana)
+        confidence: high
+        bhava_link: bhava.8
+        notes: Unexpected occurrences, sudden changes
+      - concept: illusion (maya)
+        confidence: high
+        bhava_link: bhava.12
+        notes: Confusion, deception, false perceptions
+      - concept: grandfather (pitamaha)
+        confidence: high
+        bhava_link: bhava.9
+        notes: Paternal grandfather, ancestral lineage
+      - concept: poison (visha)
+        confidence: high
+        notes: Toxic substances, chemical exposure, snake bite
+      - concept: obsession (moha)
+        confidence: high
+        notes: Strong desires, attachments, compulsions
+      - concept: technology, innovation
+        confidence: medium
+        bhava_link: bhava.11
+        notes: Modern technology, unconventional methods
+      - concept: gambling, speculation
+        confidence: medium
+        bhava_link: bhava.5
+        notes: Risk-taking, chance-based activities
+      - concept: clouds, smoke
+        confidence: medium
+        notes: Atmospheric phenomena, mental clouding
+      - concept: unconventional paths
+        confidence: high
+        notes: Breaking norms, unconventional lifestyle choices
+    cross_references:
+      - ref: bhava.7
+        relationship: "Signifies foreign partnerships, unconventional relationships"
+      - ref: bhava.8
+        relationship: "Signifies sudden events, hidden transformations"
+      - ref: bhava.12
+        relationship: "Signifies illusion, foreign lands, expenses"
+      - ref: bhava.9
+        relationship: "Signifies grandfather, foreign dharma"
+      - ref: graha.ketu
+        relationship: "Rahu-Ketu axis: Rahu = material desires, Ketu = spiritual liberation"
+    sources:
+      - ref: source.BPHS
+        claim: "Rahu is karaka for foreign lands, sudden events, illusion, grandfather"
+        confidence: high
+
+  - graha: graha.ketu
+    name: Ketu (South Lunar Node)
+    karakatvas:
+      - concept: Moksha (liberation, spiritual freedom)
+        confidence: high
+        bhava_link: bhava.12
+        notes: Primary significator of spiritual liberation
+      - concept: grandmother (pitamahi)
+        confidence: high
+        bhava_link: bhava.4
+        notes: Paternal grandmother, maternal lineage
+      - concept: detachment (vairagya)
+        confidence: high
+        bhava_link: bhava.12
+        notes: Renunciation, letting go, non-attachment
+      - concept: surgery (shalya tantra)
+        confidence: high
+        bhava_link: bhava.6
+        notes: Surgical procedures, cutting, separation
+      - concept: hidden knowledge (guhya vidya)
+        confidence: high
+        bhava_link: bhava.8
+        notes: Occult knowledge, mysteries, esoteric wisdom
+      - concept: past life karma (purva janma)
+        confidence: high
+        bhava_link: bhava.8
+        notes: Previous incarnation karma, inherited patterns
+      - concept: ghosts, spirits (bhuta pretas)
+        confidence: medium
+        bhava_link: bhava.8
+        notes: Supernatural entities, paranormal phenomena
+      - concept: insects, reptiles
+        confidence: medium
+        notes: Small creatures, insect-related matters
+      - concept: dog, cats (domestic animals)
+        confidence: medium
+        notes: Pets, animal companions
+      - concept: clouds (megha)
+        confidence: medium
+        notes: Atmospheric phenomena, obscuring influences
+    cross_references:
+      - ref: bhava.12
+        relationship: "Natural karaka for 12th bhava (moksha, liberation)"
+      - ref: bhava.8
+        relationship: "Signifies hidden knowledge, past karma, transformation"
+      - ref: bhava.6
+        relationship: "Signifies surgery, healing through separation"
+      - ref: graha.rahu
+        relationship: "Ketu-Rahu axis: Ketu = past life mastery, Rahu = future growth"
+    sources:
+      - ref: source.BPHS
+        claim: "Ketu is karaka for Moksha, grandmother, detachment, surgery, hidden knowledge"
+        confidence: high
+
+cross_references_summary:
+  primary_karaka_bhavas:
+    - graha: graha.surya
+      bhavas: [bhava.1, bhava.9, bhava.10]
+    - graha: graha.chandra
+      bhavas: [bhava.4, bhava.7]
+    - graha: graha.mangala
+      bhavas: [bhava.3, bhava.4]
+    - graha: graha.budha
+      bhavas: [bhava.2, bhava.4, bhava.5]
+    - graha: graha.guru
+      bhavas: [bhava.2, bhava.5, bhava.9]
+    - graha: graha.shukra
+      bhavas: [bhava.4, bhava.5, bhava.7]
+    - graha: graha.shani
+      bhavas: [bhava.6, bhava.8, bhava.10, bhava.11, bhava.12]
+    - graha: graha.rahu
+      bhavas: [bhava.7, bhava.8, bhava.9, bhava.11, bhava.12]
+    - graha: graha.ketu
+      bhavas: [bhava.6, bhava.8, bhava.12]
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 33: Karaka Graha Phala Adhyaya - definitive source for all graha karakatvas"
+    confidence: high
+
+notes: |
+  This catalogue centralizes the karakatva assignments from BPHS Ch.33 for all 9 grahas.
+  These are the NATURAL significators (naisargika karaka) -- they apply regardless of
+  placement, conjunction, or aspect. Positional, dispositor-based, and conditional
+  karakatvas are derived separately.
+
+  Key principles:
+  1. Each graha is the natural karaka for specific bhavas and life areas
+  2. Karakatvas operate at multiple levels: physical (dhatu), functional (bhava), and spiritual
+  3. Rahu-Ketu axis represents the material-spiritual polarity
+  4. Natural karakatvas are universal; their expression varies by placement
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with all 9 graha karakatvas from BPHS Ch.33"
+    author: "Chief Jyotish Knowledge Architect"

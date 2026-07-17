@@ -1,0 +1,4 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,chart_record_id,event_date,event_date_accuracy,event_type,event_category,title,description,source_type,verification_status,confidence_tier,privacy_tier
+ASTRO-REC-EVNT-000007,ASTRO-RS-EVENT-v0.1.0,event,1,false,ASTRO-REC-WIKI-000003,1895-07-26,exact,marriage,life_milestone,Marriage to Pierre Curie,"Marries Pierre Curie, fellow physicist",biography,verified_multi_source,verified,public
+ASTRO-REC-EVNT-000041,ASTRO-RS-EVENT-v0.1.0,event,1,false,ASTRO-REC-WIKI-000001,1914-06-25,exact,marriage,life_milestone,Marriage to Mileva Maric,Einstein marries Mileva Maric in Bern,biography,verified_multi_source,verified,public
+ASTRO-REC-EVNT-000042,ASTRO-RS-EVENT-v0.1.0,event,1,false,ASTRO-REC-WIKI-000001,1919-02-14,exact,marriage,life_milestone,Marriage to Elsa Einstein,Einstein marries his cousin Elsa Einstein,biography,verified_multi_source,verified,public

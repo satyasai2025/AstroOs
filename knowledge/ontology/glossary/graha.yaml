@@ -1,0 +1,69 @@
+# ontology/glossary/graha.yaml
+
+id: term.graha
+name: Graha
+aliases:
+  - Graha
+  - Planet
+  - Celestial Body
+  - ग्रह
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    graha — from grah (to seize, to grasp, to hold). Literally
+    "the seizer, that which grasps." In jyotisha, the nine
+    celestial bodies that "seize" or influence mortal beings
+    through their positional energies.
+  english: >
+    One of the nine celestial bodies (navagraha) used in
+    jyotisha: Surya (Sun), Chandra (Moon), Mangala (Mars),
+    Budha (Mercury), Brihaspati (Jupiter), Shukra (Venus),
+    Shani (Saturn), Rahu (North Lunar Node), and Ketu (South
+    Lunar Node). Each graha rules specific signs, houses, and
+    life domains.
+  technical: >
+    Grahas are classified by nature: natural benefic
+    (Jupiter, Venus, Mercury if unafflicted), natural malefic
+    (Sun, Mars, Saturn, Rahu, Ketu), and neutral (Moon,
+    Mercury). Functionally, a graha's effect depends on its
+    lordship (which houses it rules), its dignity, its
+    position, aspects received, and the running dasha. Each
+    graha has a defined moolatrikona sign, uchcha
+    (exaltation), and neecha (debilitation) sign.
+
+usage:
+  primary: "Foundation of all jyotisha analysis — each graha's position, dignity, and relationships"
+  secondary: "Identification of significations (karakatva) for each graha across life domains"
+
+related_concepts:
+  - ref: term.rashi
+    relationship: "Each graha rules certain rashis and has defined exaltation/debilitation signs"
+  - ref: term.bhava
+    relationship: "Grahas occupy bhavas and their lordship determines influence over house matters"
+  - ref: term.drishti
+    relationship: "Grahas cast aspects (drishti) on other houses and planets"
+
+sources:
+  - ref: source.BPHS
+    chapter: 2
+    verse: 1-12
+    claim: "Grahaṇāṃ svarūpaṃ vakṣye — I shall describe the nature of the grahas"
+    confidence: high
+
+notes: >
+  The term graha originally referred to the visible planets
+  plus the nodes (Rahu, Ketu). The Navagraha system is
+  foundational to all jyotisha analysis. Each graha has a
+  gemstone, deity, color, and day of the week association
+  that is used in remedial measures.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -16,16 +16,21 @@ No business logic lives here.
 
 from __future__ import annotations
 
+import asyncio
+import functools
 import logging
 from typing import Callable
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_ephemeris_service
+from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
 from apps.api.domain.dasha import DashaTree
+from apps.api.repositories.birth_chart_repository import BirthChartRepository
+from apps.api.repositories.dasha_repository import DashaRepository
 from apps.api.schemas.dasha import DashaRequest, DashaPeriodResponse, DashaTreeResponse
 from apps.api.services.dasha_engine import DashaEngine
-from apps.api.services.ephemeris_service import EphemerisService
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 logger = logging.getLogger(__name__)
@@ -37,12 +42,21 @@ router = APIRouter(prefix="/dasha", tags=["Dasha"])
 
 
 def _get_dasha_engine(
-    ephe_svc: EphemerisService = Depends(get_ephemeris_service),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+    session: AsyncSession = Depends(get_db_session),
 ) -> DashaEngine:
-    from apps.api.config import get_settings
-    settings = get_settings()
-    wrapper = EphemerisWrapper(ephemeris_path=settings.EPHEMERIS_PATH)
-    return DashaEngine(wrapper)
+    """
+    Build a DashaEngine using the process-wide EphemerisWrapper singleton,
+    plus request-scoped repositories for persistence.
+
+    Does NOT construct a new EphemerisWrapper — see get_ephemeris_wrapper's
+    docstring for why that would reintroduce a global-state race condition.
+    """
+    return DashaEngine(
+        wrapper,
+        birth_chart_repo=BirthChartRepository(session),
+        dasha_repo=DashaRepository(session),
+    )
 
 
 # ── Serialisation ──────────────────────────────────────────────────────────────
@@ -83,15 +97,20 @@ def _make_endpoint(compute_fn_name: str, summary: str, description: str):
     ) -> DashaTreeResponse:
         try:
             compute_fn: Callable = getattr(engine, compute_fn_name)
-            tree = compute_fn(
-                birth_datetime_utc=body.birth_datetime_utc,
-                latitude=body.latitude,
-                longitude=body.longitude,
-                ayanamsa=body.ayanamsa,
-                house_system=body.house_system,
-                max_depth=body.max_depth,
+            # Blocking pyswisseph call — offload to a worker thread so it
+            # does not freeze the event loop. See horoscope.py's
+            # generate_d1_chart for the full rationale.
+            tree = await asyncio.to_thread(
+                functools.partial(
+                    compute_fn,
+                    birth_datetime_utc=body.birth_datetime_utc,
+                    latitude=body.latitude,
+                    longitude=body.longitude,
+                    ayanamsa=body.ayanamsa,
+                    house_system=body.house_system,
+                    max_depth=body.max_depth,
+                )
             )
-            return _serialise_tree(tree)
         except ValueError as exc:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
@@ -102,6 +121,27 @@ def _make_endpoint(compute_fn_name: str, summary: str, description: str):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to compute dasha: {exc}",
             )
+
+        try:
+            await engine.persist_tree(
+                tree,
+                birth_datetime_utc=body.birth_datetime_utc,
+                latitude=body.latitude,
+                longitude=body.longitude,
+                ayanamsa=body.ayanamsa,
+                house_system=body.house_system,
+            )
+        except SQLAlchemyError as exc:
+            logger.exception("Failed to persist %s dasha tree: %s", compute_fn_name, exc)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=(
+                    "Dasha tree was computed successfully but could not be "
+                    "saved. Please retry."
+                ),
+            ) from exc
+
+        return _serialise_tree(tree)
 
     endpoint.__name__ = compute_fn_name
     endpoint.__doc__ = description

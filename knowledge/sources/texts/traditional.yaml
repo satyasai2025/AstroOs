@@ -1,0 +1,30 @@
+id: source.traditional
+name: Traditional / Oral Attribution
+aliases:
+  - Traditional Sources
+  - Sampradaya (Oral Tradition)
+category: source
+status: active
+confidence: low
+version: 1.0
+last_verified: 2026-07-16
+
+author: Unattributed
+date:
+  approximate: "Unknown"
+  confidence: low
+
+language:
+  original: "Not applicable (oral/customary transmission)"
+
+tradition: Traditional
+
+significance: "A deliberate pseudo-source marker used when a catalogue entry documents a widely-practiced technique or combination (e.g. Sarpadosha, Kaal Sarpadosha) that is well-established in living practice and oral teaching lineages but is not traceable to a single specific classical verse or named text. This is distinct from an unresearched or missing citation — it signals that the claim's authority rests on broad contemporary practitioner consensus rather than textual attribution."
+
+notes: "Used sparingly. Any entry citing source.traditional should still specify, in its own notes, why the claim is considered reliable despite lacking a specific textual citation. Confidence is deliberately kept low at the source level to flag this distinction to future contributors."
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial catalogue entry — formally registers the source.traditional marker already in use (as source.Traditional, inconsistent casing) since Phase 3 in the dosha yoga records, so it resolves against the source registry like any other citation"
+    author: "Chief Jyotish Knowledge Architect"

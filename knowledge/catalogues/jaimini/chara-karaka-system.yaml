@@ -1,0 +1,114 @@
+id: jaimini.chara-karaka-system
+name: Chara Karaka System
+aliases:
+  - Chara Karakas
+  - चर कारक प्रणाली
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  The Chara Karaka system is Jaimini's unique method of assigning
+  significators to life areas based on planetary degrees rather than
+  fixed natural significations. The graha with the highest longitude
+  becomes the primary significator (Atmakaraka), and others follow
+  in descending order.
+
+calculation: >
+  Among all 9 grahas (Surya through Ketu), rank them by longitude.
+  The graha with highest longitude = Atmakaraka (AK).
+  Second highest = Amatyakaraka (AmK).
+  Continue for 8 karakas. Rahu and Ketu are typically excluded.
+
+# === THE 8 CHARA KARAKAS ===
+karakas:
+  - rank: 1
+    abbreviation: AK
+    name: Atmakaraka
+    meaning: "Soul Significator"
+    signification: "Soul, self, life purpose, basic nature"
+    primary_house: 1st
+    source: source.jaimini-sutras
+
+  - rank: 2
+    abbreviation: AmK
+    name: Amatyakaraka
+    meaning: "Minister Significator"
+    signification: "Career, profession, intellect, advisors"
+    primary_house: 10th
+    source: source.jaimini-sutras
+
+  - rank: 3
+    abbreviation: BK
+    name: Bhratrukaraka
+    meaning: "Sibling Significator"
+    signification: "Siblings, courage, strength, friends"
+    primary_house: 3rd
+    source: source.jaimini-sutras
+
+  - rank: 4
+    abbreviation: MK
+    name: Matrukaraka
+    meaning: "Mother Significator"
+    signification: "Mother, home, property, vehicles, happiness"
+    primary_house: 4th
+    source: source.jaimini-sutras
+
+  - rank: 5
+    abbreviation: PiK
+    name: Pitrukaraka
+    meaning: "Father Significator"
+    signification: "Father, teachers, luck, dharma, long travels"
+    primary_house: 9th
+    source: source.jaimini-sutras
+
+  - rank: 6
+    abbreviation: PK
+    name: Putrakaraka
+    meaning: "Child Significator"
+    signification: "Children, creativity, intelligence, past merit"
+    primary_house: 5th
+    source: source.jaimini-sutras
+
+  - rank: 7
+    abbreviation: GK
+    name: Gnatikaraka
+    meaning: "Relative Significator"
+    signification: "Obstacles, enemies, diseases, cousins, litigation"
+    primary_house: 6th
+    source: source.jaimini-sutras
+
+  - rank: 8
+    abbreviation: DK
+    name: Darakaraka
+    meaning: "Spouse Significator"
+    signification: "Marriage, spouse, partnerships, business"
+    primary_house: 7th
+    source: source.jaimini-sutras
+
+# === RULES ===
+rules:
+  - rule: "Atmakaraka is the most important chara karaka"
+    source: source.jaimini-sutras
+  - rule: "Rahu and Ketu are excluded from chara karakas in most traditions"
+    source: source.jaimini-sutras-sharma
+  - rule: "In case of equal longitudes, the graha in retrograde gets priority"
+    source: source.jaimini-sutras
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  The Chara Karaka system is unique to Jaimini and has no equivalent
+  in Parashari. It provides a dynamic, chart-specific set of
+  significators that changes based on the exact degrees of planets.
+  This is in contrast to Parashari's fixed natural karakatvas.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial chara karaka system entry"
+    author: "Chief Jyotish Knowledge Architect"

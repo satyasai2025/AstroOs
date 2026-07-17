@@ -1,0 +1,56 @@
+id: nakshatra.revati
+name: Revati
+aliases: [Revati, रेवती]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Revati
+devanagari: रेवती
+meaning: "The Wealthy; the Nourishing One"
+ruler: { ref: graha.budha, system: vimshottari }
+deity:
+  name: Pushan
+  description: "The Nourisher; the solar deity who guides travelers and nourishes all living beings"
+  attributes: [nourishment, protection, guidance, solar care, compassion]
+shakti:
+  name: Dharana
+  meaning: "The power to nourish and protect"
+  power: "To nourish and protect; to guide souls through transitions"
+star: { name: "Zeta Piscium" }
+starting_degree: 16.67
+ending_degree: 30.0
+rashi_span: [{ ref: rashi.meenam }]
+padas:
+  - { pada: 1, degrees: "16°40'-20° Meena", rashi: rashi.meenam, navamsha_rashi: rashi.mesham }
+  - { pada: 2, degrees: "20°-23°20' Meena", rashi: rashi.meenam, navamsha_rashi: rashi.vrishabham }
+  - { pada: 3, degrees: "23°20'-26°40' Meena", rashi: rashi.meenam, navamsha_rashi: rashi.mithunam }
+  - { pada: 4, degrees: "26°40'-30° Meena", rashi: rashi.meenam, navamsha_rashi: rashi.karkam }
+nature:
+  temperament: "Nourishing and compassionate; possesses gentle wisdom and nurturing qualities"
+  guna: sattvic
+  gana: deva
+  yoni: elephant
+  nadis: madhya
+karakatvas:
+  - { concept: "Nourishment and sustenance" }
+  - { concept: "Protection and guidance" }
+  - { concept: "Compassion and kindness" }
+  - { concept: "Travel and safe passage" }
+  - { concept: "Completion and conclusion" }
+compatible_nakshatras:
+  - { ref: nakshatra.uttarabhadrapada }
+  - { ref: nakshatra.ashvini }
+  - { ref: nakshatra.bharani }
+incompatible_nakshatras:
+  - { ref: nakshatra.krittika }
+  - { ref: nakshatra.rohini }
+  - { ref: nakshatra.mrigashira }
+sources:
+  - { ref: source.BPHS, claim: "Revati is ruled by Budha; deity is Pushan; Gana is Deva; Yoni is Elephant; Nadi is Madhya", confidence: high }
+  - { ref: source.BPHS, claim: "Revati spans from 16°40' to 30° Meena", confidence: high }
+notes: "Revati is the last nakshatra of the zodiac, representing completion and nourishment. Pushan as deity is the cosmic shepherd who guides souls through transitions. This nakshatra is associated with compassion, gentle wisdom, and the safe passage of souls."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

@@ -1,0 +1,170 @@
+# Jaimini Chara Dasha Detailed Rules
+# Variable-length rashi periods determined by sign nature.
+# Source: Jaimini Sutras Chapter 2
+
+id: jaimini.chara-dasha.rules
+name: Chara Dasha Viddhi
+aliases: ["Chara Dasha Rules", "Jaimini Dasha Rules", "Chara Kala Vidhana"]
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: jaimini
+type: rashi-dasha
+
+statement: >
+  Chara Dasha is a rashi-based (sign-based) dasha system from the
+  Jaimini tradition. Variable-length periods are assigned to each rashi
+  based on its nature: movable (chara) rashis get 2 years, fixed
+  (sthira) rashis get 5 years, and dual (dvisvabhava) rashis get
+  7 years. The dasha sequence begins from the rashi occupied by the
+  Atmakaraka.
+
+conditions:
+  - entity: jaimini.chara-karakas.atmakaraka
+    role: subject
+    notes: >
+      The Atmakaraka (AK) — the graha with the highest degrees in
+      the birth chart — determines the starting rashi for the Chara
+      Dasha sequence. The rashi occupied by the AK in the Rashi
+      chart is the first dasha period.
+  - entity: rashi.nature
+    role: determinant
+    notes: >
+      The nature of each rashi (movable, fixed, or dual) determines
+      its dasha duration. This is the fundamental principle that
+      makes Chara Dasha a variable-length system.
+
+durations:
+  chara: 2       # years — Movable rashis: Mesha (1), Karka (4), Tula (7), Makara (10)
+  sthira: 5      # years — Fixed rashis: Vrishabha (2), Simha (5), Vrischika (8), Kumbha (11)
+  dvisvabhava: 7 # years — Dual rashis: Mithuna (3), Kanya (6), Dhanu (9), Meena (12)
+
+dasha_sequence_rules: |
+  1. Starting Point:
+     The dasha sequence begins from the rashi occupied by the
+     Atmakaraka (AK) in the Rashi (D-1) chart.
+
+  2. Direction:
+     - If the AK's rashi is counted from the Lagna and falls in an
+       odd-numbered position (1st, 3rd, 5th, 7th, 9th, 11th from
+       Lagna), the sequence proceeds FORWARD (clockwise through
+       the zodiac).
+     - If the AK's rashi falls in an even-numbered position (2nd,
+       4th, 6th, 8th, 10th, 12th from Lagna), the sequence
+       proceeds BACKWARD (counter-clockwise through the zodiac).
+
+  3. Duration per Rashi:
+     Each rashi gets a fixed duration based on its nature:
+       - Chara (movable) rashis: 2 years each
+       - Sthira (fixed) rashis: 5 years each
+       - Dvisvabhava (dual) rashis: 7 years each
+
+  4. Full Cycle:
+     The sequence runs through all 12 rashis in order (forward or
+     backward), with each rashi receiving its nature-based duration.
+     Total cycle duration = (4 x 2) + (4 x 5) + (4 x 7)
+                         = 8 + 20 + 28
+                         = 56 years per full cycle.
+
+  5. Sequence Example (Forward from Mesh, AK in Mesha):
+     Mesha (2yr) -> Vrishabha (5yr) -> Mithuna (7yr) ->
+     Karka (2yr) -> Simha (5yr) -> Kanya (7yr) ->
+     Tula (2yr) -> Vrischika (5yr) -> Dhanu (7yr) ->
+     Makara (2yr) -> Kumbha (5yr) -> Meena (7yr)
+
+antardasha_rules: |
+  Sub-periods (antardasha) within each rashi period are determined
+  by the grahas occupying that rashi and the lords of the rashis
+  that aspect it.
+
+  Antardasha Lord Determination:
+  1. Identify the grahas placed in the dasha rashi.
+  2. If grahas are present, the antardasha sequence follows the
+     order of these grahas (typically by degrees within the sign).
+  3. If no grahas occupy the dasha rashi, the lord of that rashi
+     serves as the sole antardasha lord (full period is one
+     antardasha).
+  4. The antardasha periods divide the total dasha duration among
+     the occupying grahas proportionally.
+
+pratyantardasha: false
+
+event_timing_principles: |
+  Events during a Chara Dasha period are influenced by:
+  1. The dasha rashi lord and its placement in the birth chart.
+  2. Grahas occupying the dasha rashi.
+  3. The antardasha lord and its functional nature.
+  4. Rashi drishti (Jaimini aspects) from the dasha rashi to
+     other rashis in the chart.
+  5. Argala (intervention) influences on the dasha rashi.
+  6. The relationship between the dasha rashi lord and the
+     Atmakaraka.
+
+effects:
+  - description: >
+      Each rashi period activates the life themes of the dasha
+      rashi lord and the bhavas it occupies and owns in the chart.
+    intensity: strong
+  - description: >
+      The variable durations (2/5/7 years) create unequal emphasis
+      on different life areas, with dual rashis receiving the
+      longest periods and movable rashis the shortest.
+    intensity: strong
+  - description: >
+      The starting point from the Atmakaraka ties the entire dasha
+      system to the soul's journey, making it fundamentally
+      different from graha-based dasha systems.
+    intensity: moderate
+
+cross_references:
+  - ref: jaimini.chara-karakas.system
+    relationship: "Atmakaraka determines the starting rashi of the Chara Dasha sequence"
+  - ref: jaimini.karakamsha.chart
+    relationship: "Karakamsha analysis complements Chara Dasha timing for soul-purpose interpretation"
+  - ref: jaimini.rashi-drishti.complete
+    relationship: "Rashi drishti from the dasha rashi to other rashis modifies event outcomes during the period"
+  - ref: dasha.chara
+    relationship: "General reference entry for Chara Dasha; this file provides detailed Jaimini-specific rules"
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras Chapter 2 define Chara Dasha as a rashi-based
+      system with variable durations determined by sign nature
+      (movable, fixed, dual), beginning from the Atmakaraka's
+      rashi position.
+    confidence: high
+
+notes: |
+  This entry provides detailed Jaimini-specific rules for the Chara
+  Dasha system. For the general overview entry, see dasha.chara.
+
+  Duration Variation Note:
+  The durations used in this entry (movable 2, fixed 5, dual 7)
+  represent one tradition of Jaimini interpretation. Alternative
+  values found in some texts and the existing dasha.chara entry
+  use movable 2, fixed 3, dual 1 (totaling 24 years per cycle).
+  The variation arises from different commentarial traditions on
+  the Jaimini Sutras. The user of this knowledge base should be
+  aware that different Jaimini schools may employ different
+  duration values.
+
+  Comparison with Parashari Dasha Systems:
+  - Vimshottari: Nakshatra-based, fixed 120-year cycle, graha-ruled
+  - Chara Dasha: Rashi-based, variable cycle length, sign-ruled
+  - The fundamental difference is that Chara Dasha operates on
+    rashis (signs) rather than nakshatras (lunar mansions).
+
+  The Atmakaraka starting point makes Chara Dasha inherently
+  personal — the same birth date will produce different dasha
+  sequences depending on the AK, creating a unique timing
+  framework for each individual.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,40 @@
+id: yoga.chandra.sunapha
+name: Sunapha Yoga
+aliases: ["Self-Earned Wealth Yoga"]
+category: yoga
+type: chandra
+subcategory: nakshatra-based
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Any planet (other than the Sun) is placed in the 2nd house from the Moon"
+      entity: yoga.chandra.sunapha
+      role: subject
+      notes: "The planet must be in the sign immediately following the Moon's sign. The Sun is excluded. Mars, Mercury, Jupiter, Venus, Saturn, Rahu, or Ketu can form this yoga. The nature of the wealth is influenced by the specific planet present."
+
+effects:
+  positive:
+    - "Wealth earned through one's own effort"
+    - "Self-made financial success"
+    - "Determination and persistence"
+    - "Financial stability in middle life"
+  negative:
+    - "The specific planet modifies the nature of results (e.g., Saturn in 2nd from Moon brings delayed but steady wealth)"
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 25
+
+notes: "Part of the Moon-based (Chandra) yoga system described in BPHS chapter 5. The 2nd from Moon is the house of wealth and family from the emotional/mental standpoint. A planet here indicates the native will earn wealth through their own efforts related to the planet's significations. This is one of four related yogas (Sunapha, Anapha, Durudhura, Kemadruma) based on planets flanking the Moon."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

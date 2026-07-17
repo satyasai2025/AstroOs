@@ -6,13 +6,19 @@ All business logic lives in HoroscopeEngine; this file handles only
 HTTP concerns: input validation, response serialisation, error mapping.
 """
 
+import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_ephemeris_service
+from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
 from apps.api.domain.ephemeris import DignityType
 from apps.api.domain.horoscope import D1Chart
+from apps.api.repositories.birth_chart_repository import BirthChartRepository
+from apps.api.repositories.house_repository import HouseRepository
+from apps.api.repositories.planet_position_repository import PlanetPositionRepository
 from apps.api.schemas.horoscope import (
     AscendantSchema,
     AspectSchema,
@@ -28,7 +34,6 @@ from apps.api.schemas.horoscope import (
     VaraSchema,
     YogaSchema,
 )
-from apps.api.services.ephemeris_service import EphemerisService
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
 
@@ -38,20 +43,24 @@ router = APIRouter(prefix="/horoscope", tags=["Horoscope"])
 
 
 def _get_horoscope_engine(
-    ephe_svc: EphemerisService = Depends(get_ephemeris_service),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+    session: AsyncSession = Depends(get_db_session),
 ) -> HoroscopeEngine:
     """
-    Build a HoroscopeEngine using the EphemerisWrapper singleton.
+    Build a HoroscopeEngine using the process-wide EphemerisWrapper singleton,
+    plus request-scoped repositories for persistence.
 
-    EphemerisWrapper shares the same underlying swe path as EphemerisService.
+    Does NOT construct a new EphemerisWrapper — see get_ephemeris_wrapper's
+    docstring for why that would reintroduce a global-state race condition.
+    The repositories, unlike the wrapper, are cheap and request-scoped —
+    each request gets its own, bound to that request's DB session.
     """
-    from apps.api.config import get_settings
-    settings = get_settings()
-    wrapper = EphemerisWrapper(
-        ephemeris_path=settings.EPHEMERIS_PATH,
-        ayanamsa="lahiri",
+    return HoroscopeEngine(
+        wrapper,
+        birth_chart_repo=BirthChartRepository(session),
+        planet_position_repo=PlanetPositionRepository(session),
+        house_repo=HouseRepository(session),
     )
-    return HoroscopeEngine(wrapper)
 
 
 def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
@@ -196,14 +205,21 @@ async def generate_d1_chart(
     - **house_system**: `W` = Whole Sign (default) | `P` = Placidus | `K` = Koch | `E` = Equal
     """
     try:
-        chart = engine.generate_d1(
+        # generate_d1 is a blocking, CPU-bound call into pyswisseph's C
+        # library. Running it directly inside this async handler would
+        # freeze the event loop for every other in-flight request (auth,
+        # health checks, everything) for the duration of the calculation.
+        # asyncio.to_thread offloads it to a worker thread; the wrapper's
+        # internal lock (see EphemerisWrapper.calculate) still serializes
+        # access to pyswisseph's process-global state across those threads.
+        chart = await asyncio.to_thread(
+            engine.generate_d1,
             birth_datetime_utc=request.birth_datetime_utc,
             latitude=request.latitude,
             longitude=request.longitude,
             ayanamsa=request.ayanamsa,
             house_system=request.house_system,
         )
-        return _chart_to_response(chart)
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -215,3 +231,30 @@ async def generate_d1_chart(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Ephemeris calculation failed. Check server logs.",
         ) from exc
+
+    # Persistence step. The calculation above already succeeded and its
+    # result is what we return either way — but if saving it fails, that
+    # is reported as an error rather than silently returned as if nothing
+    # was persisted. get_db_session's session (see apps/api/dependencies.py)
+    # rolls back automatically once this exception propagates out of the
+    # request, so a failed persist never leaves a partial chart committed.
+    try:
+        await engine.persist_d1(
+            chart,
+            birth_datetime_utc=request.birth_datetime_utc,
+            latitude=request.latitude,
+            longitude=request.longitude,
+            ayanamsa=request.ayanamsa,
+            house_system=request.house_system,
+        )
+    except SQLAlchemyError as exc:
+        logger.exception("Failed to persist D1 chart: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=(
+                "Chart was computed successfully but could not be saved. "
+                "Please retry."
+            ),
+        ) from exc
+
+    return _chart_to_response(chart)

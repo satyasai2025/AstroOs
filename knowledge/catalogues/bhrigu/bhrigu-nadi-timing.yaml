@@ -1,0 +1,65 @@
+id: bhrigu.core.timing
+name: Bhrigu Nandi Nadi Timing System
+aliases: ["BNN Timing", "Nadi Dasha System", "Bhrigu Nadi Timing Principles"]
+category: bhrigu
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: bhrigu
+statement: >
+  Bhrigu Nandi Nadi uses its own timing framework that differs from standard
+  Vimshottari Dasha. BNN timing is based on the nakshatra positions of
+  planets: the timing of events is derived from when planets transit or
+  activate specific nakshatras linked to the Nadi combinations in the chart.
+  The system uses nakshatra-based period calculations where the nakshatra lord
+  of the triggering planet determines the timing window. Additionally, BNN
+  incorporates annual and sub-annual timing through the progression of
+  planetary nakshatra activations.
+
+conditions:
+  - entity: graha.nakshatra-transit
+    role: subject
+    detail: "Transit of key planets through linked nakshatras triggers Nadi combination events"
+
+  - entity: dasha.nakshatra-based
+    role: framework
+    detail: "BNN timing periods are calculated based on nakshatra lordships rather than standard Vimshottari"
+
+effects:
+  - description: "Nakshatra-based timing narrows event prediction to specific transit windows"
+    intensity: strong
+  - description: "When a triggering planet transits the nakshatra of a Nadi yoga participant, the event manifests"
+    intensity: strong
+  - description: "BNN timing can be used independently of Vimshottari Dasha for event timing"
+    intensity: moderate
+  - description: "Annual timing in BNN is based on the progression of the Lagna nakshatra through the year"
+    intensity: moderate
+
+sources:
+  - ref: source.bhrigu-nandi-nadi
+    claim: "BNN timing system: Nadi-specific dasha and timing principles."
+    confidence: high
+
+notes: >
+  BNN timing principles: (1) The primary timing mechanism is nakshatra-based
+  transit — when a planet transits the nakshatra that activates a Nadi
+  combination, the predicted event manifests. (2) The timing sequence follows
+  the natural order of nakshatras from the Lagna nakshatra. (3) Each Nadi
+  combination has an associated timing window based on which planet is the
+  "trigger" planet. (4) The trigger planet's transit through its own linked
+  nakshatra or the nakshatra of its combination partner indicates the event
+  period. (5) BNN timing can be layered: the annual theme (from the annual
+  nakshatra progression) sets the year's focus, and transit-based timing
+  pinpoints the event within the year. (6) Some practitioners combine BNN
+  timing with Vimshottari Dasha for cross-validation. (7) BNN's strength is
+  that it can predict event timing from the birth chart alone, without requiring
+  divisional chart progression. (8) The system's accuracy depends on correct
+  identification of the Nadi combinations in the chart.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

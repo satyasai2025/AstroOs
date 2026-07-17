@@ -1,0 +1,90 @@
+id: nakshatra.17
+name: Anuradha
+aliases:
+  - Anuradha
+  - अनुराधा
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Anuradha
+devanagari: अनुराधा
+meaning: "Following Radha, Subsequent Success"
+
+ruler:
+  ref: graha.7
+  system: vimshottari
+
+deity:
+  name: Mitra
+  description: God of friendship, partnership, and harmony — the radiant aspect of the Sun who connects and unites
+  attributes:
+    - friendship
+    - partnership
+    - harmony
+    - devotion
+
+shakti:
+  name: Radana Shakti
+  meaning: "The power to radiate and connect"
+  power: "To radiate warmth, foster devotion, and create harmonious connections"
+
+star:
+  name: Graffias / Acrab (Beta Scorpii)
+  magnitude: 2.56
+
+starting_degree: 213.333333333
+ending_degree: 226.666666667
+rashi_span:
+  - ref: rashi.vrishchikam
+
+padas:
+  - pada: 1
+    degrees: "3°20' to 6°40' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.dhanus
+  - pada: 2
+    degrees: "6°40' to 10°00' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.makaram
+  - pada: 3
+    degrees: "10°00' to 13°20' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.kumbham
+  - pada: 4
+    degrees: "13°20' to 16°40' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.meenam
+
+nature:
+  temperament: Friendly, devoted, focused, harmonious
+  guna: sattvic
+  gana: deva
+  yoni: Deer
+  nadis: antya
+
+karakatvas:
+  - concept: friendship
+  - concept: devotion
+  - concept: focus
+  - concept: connection
+  - concept: partnership
+
+compatible_nakshatras: []
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes the characteristics and traits associated with Anuradha nakshatra, ruled by Saturn and deity Mitra"
+    confidence: high
+
+notes: "Anuradha is the 17th nakshatra, spanning 3°20' to 16°40' of Vrishchika (Scorpio). It is ruled by Saturn (Shani) and its deity is Mitra, god of friendship and harmony. The shakti is Radana — the power to radiate and connect. Anuradha natives are friendly, devoted, and skilled at building harmonious relationships. The star is Beta Scorpii."
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references that used numeric sign-index IDs (rashi.8) instead of the catalogue's canonical named IDs (rashi.vrishchikam)", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

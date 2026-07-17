@@ -1,0 +1,41 @@
+id: source.BPHS-sanjay-rath
+name: Brihat Parashara Hora Shastra (Sanjay Rath Commentary)
+aliases:
+  - BPHS Sanjay Rath Edition
+  - Parashara Hora Shastra with Commentary by Sanjay Rath
+  - Rath's BPHS
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Parashara (original); Sanjay Rath (commentator)
+date:
+  approximate: "~500-800 CE (original); 2001 (commentary)"
+  confidence: high
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: Sanjay Rath
+  publisher: Sagar Publications
+  year: 2001
+  language: en
+  notes: "Commentary and translation in 2 volumes. Includes original Sanskrit verses with word-by-word meaning and detailed commentary."
+
+relationship_to_primary:
+  primary_text: source.BPHS
+  type: commentary
+  notes: "Comprehensive verse-by-verse commentary on BPHS by Sanjay Rath, incorporating traditional interpretation and practical application."
+
+notes: "Sanjay Rath's commentary is a significant modern exposition of BPHS. It draws on the traditional oral lineage teachings of his guru and provides detailed insights into Parashara's principles."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

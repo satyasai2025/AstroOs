@@ -1,0 +1,50 @@
+{
+  "dataset_id": "ASTRO-RS-health-v0.1.0",
+  "name": "Health Datasets",
+  "description": "Subset of RS-EVENT containing health events from public biographies.",
+  "category": "Research",
+  "category_code": "RS",
+  "type": "HEALTH",
+  "type_code": "HEALTH",
+  "version": "0.1.0",
+  "dataset_version": "ASTRO-RS-health-v0.1.0",
+  "provenance_tier": "Derived",
+  "source_description": "Derived from RS-EVENT v1.0.0, filtered by category 'health'",
+  "source_uris": [
+    "ASTRO-RS-EVENT-v1.0.0"
+  ],
+  "collection_method": "filtered_extract",
+  "curator": "AstroOS Research Data Office",
+  "quality_score": 0.95,
+  "quality_tier": "A",
+  "dimension_scores": {
+    "completeness": 1.0,
+    "accuracy": 0.95,
+    "consistency": 1.0,
+    "coverage": 0.9,
+    "timeliness": 0.95,
+    "provenance": 0.95
+  },
+  "validation_status": "Validated",
+  "known_limitations": [
+    "Subset of RS-EVENT with same biases",
+    "Category-specific analysis may have selection effects"
+  ],
+  "completeness_pct": 100.0,
+  "missing_fields": [],
+  "duplicate_count": 0,
+  "duplicate_pct": 0.0,
+  "license_id": "CC-BY-4.0",
+  "license_name": "Creative Commons Attribution 4.0",
+  "privacy_tier": "Public",
+  "confidence_tier": "Verified",
+  "contains_pii": false,
+  "format": "CSV",
+  "record_count": 183,
+  "field_count": 16,
+  "lifecycle_stage": "Candidacy",
+  "created_at": "2026-07-16T12:21:00.994729",
+  "updated_at": "2026-07-16T12:21:00.994747",
+  "maintainer": "AstroOS Research Data Office",
+  "changelog_ref": "ASTRO-RS-health-v0.1.0_changelog.md"
+}

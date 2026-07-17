@@ -1,0 +1,91 @@
+id: nakshatra.16
+name: Vishakha
+aliases:
+  - Vishakha
+  - विशाखा
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Vishakha
+devanagari: विशाखा
+meaning: "Forked, Two-Branched"
+
+ruler:
+  ref: graha.5
+  system: vimshottari
+
+deity:
+  name: Indra-Agni
+  description: Indra, king of gods, and Agni, god of fire — together representing combined power of rulership and transformation
+  attributes:
+    - kingship
+    - fire
+    - power
+    - sacrifice
+
+shakti:
+  name: Vyuhana Shakti
+  meaning: "The power to aim and achieve"
+  power: "To aim, achieve goals, and bring forth results through focused determination"
+
+star:
+  name: Zubenelgenubi (Alpha Librae)
+  magnitude: 2.75
+
+starting_degree: 200.0
+ending_degree: 213.333333333
+rashi_span:
+  - ref: rashi.tulanam
+  - ref: rashi.vrishchikam
+
+padas:
+  - pada: 1
+    degrees: "20°00' to 23°20' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.simham
+  - pada: 2
+    degrees: "23°20' to 26°40' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.kanyam
+  - pada: 3
+    degrees: "26°40' to 30°00' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.tulanam
+  - pada: 4
+    degrees: "0°00' to 3°20' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.vrishchikam
+
+nature:
+  temperament: Determined, goal-oriented, competitive
+  guna: rajasic
+  gana: rakshasa
+  yoni: Tiger
+  nadis: madhya
+
+karakatvas:
+  - concept: achievement
+  - concept: ambition
+  - concept: competition
+  - concept: purpose
+  - concept: radiance
+
+compatible_nakshatras: []
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes the characteristics and traits associated with Vishakha nakshatra, ruled by Jupiter and deity Indra-Agni"
+    confidence: high
+
+notes: "Vishakha is the 16th nakshatra, spanning 20°00' Tula to 3°20' Vrishchika. It is ruled by Jupiter (Guru) and its deity is the dual aspect Indra-Agni. The shakti is Vyuhana — the power to aim and achieve. Vishakha natives are ambitious, competitive, and driven toward their goals. The star marking this nakshatra is Zubenelgenubi (Alpha Librae)."
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references that used numeric sign-index IDs (rashi.8) instead of the catalogue's canonical named IDs (rashi.vrishchikam)", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

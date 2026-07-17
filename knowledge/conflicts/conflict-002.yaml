@@ -1,0 +1,138 @@
+# conflicts/conflict-002.yaml
+
+id: conflict.002
+name: Surya's Nature — Benefic vs Malefic Classification
+topic: Whether Surya (Sun) is a natural benefic, natural malefic, or depends on placement
+domain: graha
+status: unresolved
+confidence: medium
+version: 1.0
+last_verified: 2026-07-15
+
+# === POSITIONS ===
+
+positions:
+  - tradition: "Parashari (Classical)"
+    source:
+      ref: source.BPHS
+      chapter: 2
+      verses: 1–5
+    position: >
+      Surya is a natural malefic (prakrita pāpa graha). He is hot,
+      produces bile (pitta), and is of the nature of fire. As a
+      natural malefic, Surya tends to produce harsh, challenging,
+      or difficult results unless very well placed.
+    arguments:
+      - "BPHS Ch. 2 explicitly classifies Surya as malefic"
+      - "Surya is of the fiery, rajasa-tamasic nature"
+      - "Most classical texts (Saravali, Phaladeepika) follow BPHS here"
+    adherents:
+      - Classical Parashari tradition
+      - Majority of traditional practitioners
+
+  - tradition: "Tamil / Southern Tradition"
+    source:
+      ref: source.bhrigu-nandi-nadi
+    position: >
+      Surya can be benefic or malefic depending on placement,
+      dignity, and association. When strong (exalted, own sign,
+      or in friendly sign), Surya produces excellent results.
+      When weak, Surya produces malefic results.
+    arguments:
+      - "Surya is the soul (atma), which cannot be inherently malefic"
+      - "The strength of Surya determines the quality of its effects"
+      - "Tamil astrological tradition emphasizes placement over nature"
+    adherents:
+      - Southern Indian astrological tradition
+      - Some Nadi practitioners
+
+  - tradition: "Modern Contextual"
+    source:
+      ref: source.kp-system
+    position: >
+      Surya's effects depend entirely on house ownership, sub-lord
+      significations, and the specific chart context. The concept
+      of 'natural benefic' or 'natural malefic' is secondary to
+      cuspal and sub-lord analysis. Surya is judged by its
+      significations in the specific chart, not by a fixed nature.
+    arguments:
+      - "KP system focuses on significators, not inherent nature"
+      - "Surya rules different houses in each chart"
+      - "Modern statistical approach questions fixed malefic/benefic labels"
+    adherents:
+      - KP practitioners
+      - Some modern Jyotish researchers
+
+# === ANALYSIS ===
+
+analysis: >
+  This conflict is foundational to Jyotish interpretation. The
+  classical Parashari position is clear: Surya is a natural malefic.
+  However, this classification is nuanced. Surya is often described
+  as 'mildly malefic' compared to Shani (Saturn) and Mangala (Mars).
+
+  The Southern tradition's argument that Surya as the atma-karaka
+  (soul significator) cannot be inherently malefic has theological
+  weight. If the soul is inherently good, how can its significator
+  be malefic?
+
+  A possible resolution: Surya as 'malefic' refers to his drying,
+  heating, and consuming qualities — not moral evil. A strong Surya
+  burns away impurities, which is painful but ultimately beneficial.
+  This aligns with the Tamil position when properly understood.
+
+# === EVIDENCE ===
+
+evidence:
+  for_parashari:
+    - "BPHS Ch. 2 v. 1–5 explicitly lists Surya with other malefics"
+    - "Saravali Ch. 1 v. 15–18 lists Surya as papagraha"
+    - "Phaladeepika Ch. 2 v. 3–5 confirms malefic status"
+  for_tamil:
+    - "The Atmakaraka concept contradicts inherent evil in the soul"
+    - "Strong Surya consistently produces good results in practice"
+    - "Nadi texts regularly list Surya's benefic effects in good dignity"
+  for_modern:
+    - "Statistical studies (1980–2010) show chart-specific results dominate fixed nature"
+    - "KP system's predictive success casts doubt on fixed classifications"
+
+# === RESOLUTION ===
+
+resolution_status: unresolved
+resolution: >
+  The conflict remains unresolved. The classical position (Surya is
+  a natural malefic) is textually supported and traditional. The
+  southern/modern position (Surya's effects are placement-dependent)
+  has practical and theological support.
+
+recommended_position: >
+  In the knowledge base, classify Surya as a natural malefic per
+  BPHS, but document exceptions: when exalted (10° Mesha), in own
+  sign (Simha), or in moolatrikona (0°–20° Simha), Surya produces
+  benefic results. Tag all claims with system: parashari (classical)
+  or system: contextual (modern/southern) as appropriate.
+
+weight_of_evidence: >
+  The textual evidence favors the classical malefic classification
+  by a clear margin (3+ primary sources agree). The practical and
+  theological evidence for the contextual position is strong but
+  less represented in classical texts.
+
+# === RELATED ===
+
+related_conflicts:
+  - ref: conflict.003
+    topic: "Surya's neutral sign classification"
+
+notes: >
+  This conflict affects interpretation of Surya's dasha (6 years),
+  Surya's aspects, and Surya conjunctions. Practitioners should
+  be aware of both traditions when reading charts.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial conflict entry documenting three traditions"
+    author: "Chief Jyotish Knowledge Architect"

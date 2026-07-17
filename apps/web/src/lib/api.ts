@@ -20,6 +20,34 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * FastAPI's error response `detail` field has two possible shapes:
+ *  - A plain string, for hand-raised HTTPException(detail="...") errors
+ *    (e.g. "Email already registered").
+ *  - An array of Pydantic validation error objects, for automatic 422
+ *    responses: [{ type, loc, msg, input, ctx }, ...].
+ *
+ * Components must only ever receive a string — rendering the array form
+ * directly as a React child throws "Objects are not valid as a React
+ * child". This normalises both shapes into one human-readable string.
+ */
+function _normaliseErrorDetail(detail: unknown): string | undefined {
+  if (typeof detail === "string") {
+    return detail;
+  }
+  if (Array.isArray(detail)) {
+    const messages = detail
+      .map((item) =>
+        item && typeof item === "object" && "msg" in item
+          ? String((item as { msg: unknown }).msg)
+          : null,
+      )
+      .filter((msg): msg is string => Boolean(msg));
+    return messages.length > 0 ? messages.join(" ") : undefined;
+  }
+  return undefined;
+}
+
 // ── Token storage (client-side only) ─────────────────────────────────────────
 
 const TOKEN_KEY = "astro_access_token";
@@ -78,7 +106,7 @@ async function _fetch<T>(
     let detail = `HTTP ${res.status}`;
     try {
       const body = await res.json();
-      detail = body.detail ?? detail;
+      detail = _normaliseErrorDetail(body.detail) ?? detail;
     } catch {
       // ignore JSON parse errors
     }

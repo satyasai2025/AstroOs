@@ -1,0 +1,56 @@
+id: nakshatra.uttarabhadrapada
+name: Uttarabhadrapada
+aliases: [Uttara Bhadrapada, उत्तरभाद्रपदा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Uttara Bhadrapada
+devanagari: उत्तरभाद्रपदा
+meaning: "The Later One of the Blessed Feet; the Bright Star"
+ruler: { ref: graha.shani, system: vimshottari }
+deity:
+  name: Ahirbudhnya
+  description: "The Serpent of the Deep; the cosmic serpent of wisdom dwelling in the depths"
+  attributes: [stability, depth, serpentine wisdom, cosmic patience, earth energy]
+shakti:
+  name: Pralambana
+  meaning: "The power to stabilize and deepen"
+  power: "To stabilize and deepen; to bring profound spiritual depth"
+star: { name: "Gamma Pegasi" }
+starting_degree: 3.33
+ending_degree: 16.67
+rashi_span: [{ ref: rashi.meenam }]
+padas:
+  - { pada: 1, degrees: "3°20'-6°40' Meena", rashi: rashi.meenam, navamsha_rashi: rashi.dhanus }
+  - { pada: 2, degrees: "6°40'-10° Meena", rashi: rashi.meenam, navamsha_rashi: rashi.makaram }
+  - { pada: 3, degrees: "10°-13°20' Meena", rashi: rashi.meenam, navamsha_rashi: rashi.kumbham }
+  - { pada: 4, degrees: "13°20'-16°40' Meena", rashi: rashi.meenam, navamsha_rashi: rashi.meenam }
+nature:
+  temperament: "Deep and stable; possesses profound spiritual depth and unwavering patience"
+  guna: tamasic
+  gana: manushya
+  yoni: cow
+  nadis: adi
+karakatvas:
+  - { concept: "Depth and stability" }
+  - { concept: "Spiritual wisdom" }
+  - { concept: "Patience and endurance" }
+  - { concept: "Meditation and contemplation" }
+  - { concept: "Serpentine knowledge" }
+compatible_nakshatras:
+  - { ref: nakshatra.purvabhadrapada }
+  - { ref: nakshatra.revati }
+  - { ref: nakshatra.rohini }
+incompatible_nakshatras:
+  - { ref: nakshatra.ashvini }
+  - { ref: nakshatra.bharani }
+  - { ref: nakshatra.krittika }
+sources:
+  - { ref: source.BPHS, claim: "Uttara Bhadrapada is ruled by Shani; deity is Ahirbudhnya; Gana is Manushya; Yoni is Cow; Nadi is Adi", confidence: high }
+  - { ref: source.BPHS, claim: "Uttara Bhadrapada spans from 3°20' to 16°40' Meena", confidence: high }
+notes: "Uttara Bhadrapada is the nakshatra of deep stability and spiritual wisdom. Ahirbudhnya as deity represents the serpent of cosmic wisdom. This nakshatra is associated with profound meditation, patience, and the slow accumulation of spiritual knowledge."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

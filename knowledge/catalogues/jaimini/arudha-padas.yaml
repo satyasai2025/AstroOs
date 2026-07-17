@@ -1,0 +1,110 @@
+id: jaimini.arudha-padas
+name: Arudha Pada System
+aliases:
+  - Arudha
+  - Pada System
+  - अरूढ पद
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Arudha Padas are reflected positions of houses in the chart.
+  They show how the world perceives us, rather than our inner reality.
+  The Arudha of a house is calculated by counting from the house
+  lord's position to the house itself, then applying the same count
+  from the Lagna.
+
+# === CALCULATION ===
+calculation: >
+  1. Identify the lord of a house (e.g., 4th house lord).
+  2. Count from the house lord's sign to the house sign.
+  3. Apply the same count from the Lagna.
+  4. The resulting sign is the Arudha of that house.
+
+# === KEY ARUDHA PADAS ===
+arudha_padad:
+  - id: PADA_1
+    name: Arudha Lagna (AL)
+    description: "How the world perceives the native's self"
+    calculation: "Arudha of the 1st house"
+
+  - id: PADA_2
+    name: Arudha of 2nd House (A2)
+    description: "How the world perceives the native's wealth"
+    calculation: "Arudha of the 2nd house"
+
+  - id: PADA_3
+    name: Arudha of 3rd House (A3)
+    description: "How the world perceives the native's courage"
+    calculation: "Arudha of the 3rd house"
+
+  - id: PADA_4
+    name: Arudha of 4th House (A4)
+    description: "How the world perceives the native's home"
+    calculation: "Arudha of the 4th house"
+
+  - id: PADA_5
+    name: Arudha of 5th House (A5)
+    description: "How the world perceives the native's children"
+    calculation: "Arudha of the 5th house"
+
+  - id: PADA_6
+    name: Arudha of 6th House (A6)
+    description: "How the world perceives the native's enemies"
+    calculation: "Arudha of the 6th house"
+
+  - id: PADA_7
+    name: Arudha of 7th House (A7)
+    description: "How the world perceives the native's partnerships"
+    calculation: "Arudha of the 7th house"
+
+  - id: PADA_8
+    name: Arudha of 8th House (A8)
+    description: "How the world perceives the native's transformation"
+    calculation: "Arudha of the 8th house"
+
+  - id: PADA_9
+    name: Arudha of 9th House (A9)
+    description: "How the world perceives the native's fortune"
+    calculation: "Arudha of the 9th house"
+
+  - id: PADA_10
+    name: Arudha of 10th House (A10)
+    description: "How the world perceives the native's career"
+    calculation: "Arudha of the 10th house"
+
+  - id: PADA_11
+    name: Arudha of 11th House (A11)
+    description: "How the world perceives the native's gains"
+    calculation: "Arudha of the 11th house"
+
+  - id: PADA_12
+    name: Arudha of 12th House (A12)
+    description: "How the world perceives the native's losses"
+    calculation: "Arudha of the 12th house"
+
+# === SPECIAL RULES ===
+special_rules:
+  - rule: "If the Arudha falls in the same house as the original, count one more sign"
+    source: source.jaimini-sutras
+  - rule: "The Arudha Lagna (AL) is the most important for overall appearance"
+    source: source.jaimini-sutras
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  Arudha Padas show the external, public face of the native. They
+  are used extensively in Jaimini for predicting social status,
+  public image, and worldly achievements. The Arudha system is
+  distinct from the direct house interpretation in Parashari.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial Arudha Pada entry"
+    author: "Chief Jyotish Knowledge Architect"

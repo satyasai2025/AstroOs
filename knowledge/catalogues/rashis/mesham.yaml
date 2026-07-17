@@ -1,0 +1,87 @@
+# catalogues/rashis/mesham.yaml
+
+id: rashi.mesham
+name: Mesham
+aliases:
+  - Aries
+  - Mesha
+  - मेष
+category: rashi
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Mesha
+devanagari: मेष
+meaning: "The ram"
+element: fire
+quality: cardinal
+gender: male
+
+ruler:
+  ref: graha.mangala
+  notes: Traditional Parashari rulership of Mesham
+
+tattva_lord:
+  element: fire
+  lord: graha.mangala
+  notes: Mangala is the lord of the fire element (Tejas Tattva)
+
+degree_span:
+  start: 0
+  end: 30
+
+body_part: Head
+direction: East
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.ashvini
+    padas: [1, 2, 3, 4]
+    degrees: "0°00' - 13°20'"
+  - nakshatra: nakshatra.bharani
+    padas: [1, 2, 3, 4]
+    degrees: "13°20' - 26°40'"
+  - nakshatra: nakshatra.krittika
+    padas: [1]
+    degrees: "26°40' - 30°00'"
+
+properties:
+  temperament: Fiery, initiative, leadership
+  motivation: dharma
+  symbol: Ram
+
+karakatvas:
+  - concept: Initiation and pioneering spirit
+  - concept: Courage and assertiveness
+  - concept: Physical vitality and leadership
+
+compatible_with:
+  - ref: rashi.simham
+  - ref: rashi.dhanus
+incompatible_with:
+  - ref: rashi.tulanam
+
+sources:
+  - ref: source.BPHS
+    chapter: 3
+    verse: 1-10
+    claim: "Describes Mesha as a Chara (cardinal), Urdhvamukha (looking upward), and Mriga (animal) sign ruled by Mangala"
+    confidence: high
+
+notes: >
+  Mesham is the first sign of the zodiac, initiating the
+  cycle of the seasons with the vernal equinox. As a cardinal
+  fire sign, it embodies raw initiative, courage, and the
+  drive to begin. Natives born under Mesham are said to be
+  pioneers with strong physical vitality and a natural
+  leadership instinct. The sign corresponds to the head
+  (Shiras) in the Kalapurusha correspondence of the zodiac
+  to the human body. Mesham is the only sign ruled by
+  Mangala (Mars).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

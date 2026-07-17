@@ -1,0 +1,70 @@
+{
+  "dataset_id": "ASTRO-RF-AYAN-v1.0.0",
+  "name": "Reference Ayanamsa Data",
+  "description": "Supported ayanamsa systems with definitions, Swiss Ephemeris sidereal mode IDs, formulae, and base epochs. Exact values marked PLACEHOLDER pending Knowledge Office approval.",
+  "category": "Reference",
+  "category_code": "RF",
+  "version": "1.0.0",
+  "dataset_version": "ASTRO-RF-AYAN-v1.0.0",
+  "lifecycle_stage": "Candidacy",
+  "quality_score": 0.7,
+  "provenance_tier": "Curated",
+  "source_description": "Seeded from AstroOS database migrations and Knowledge Office-approved constants",
+  "source_uris": [
+    "https://github.com/astrosos/platform"
+  ],
+  "collection_method": "database_extraction",
+  "curator": "Chief Dataset & Research Curator",
+  "quality_score_breakdown": {
+    "completeness": 0.7,
+    "accuracy": 0.75,
+    "consistency": 1.0,
+    "coverage": 1.0,
+    "timeliness": 1.0,
+    "provenance": 0.95
+  },
+  "validation_status": "In-Review",
+  "known_limitations": [
+    "RDO-DEP-005: Exact ayanamsa values for each system at reference epoch \u2014 requires Knowledge Office approval"
+  ],
+  "known_biases": [],
+  "completeness_pct": 83.3,
+  "missing_fields": [
+    "current_value_deg"
+  ],
+  "duplicate_count": 0,
+  "duplicate_pct": 0.0,
+  "license_id": "CC0-1.0",
+  "license_name": "Creative Commons Zero v1.0 Universal",
+  "privacy_tier": "public",
+  "confidence_tier": "estimated",
+  "confidence_notes": "System definitions verified; exact values need Knowledge Office approval",
+  "contains_pii": false,
+  "format": "CSV",
+  "formats_available": [
+    "CSV"
+  ],
+  "record_count": 6,
+  "field_count": 0,
+  "file_size_bytes": 0,
+  "checksum_sha256": "pending",
+  "compression": "none",
+  "schema_ref": "astrosos-dataset-schema.json",
+  "created_at": "2026-07-15T16:00:00Z",
+  "updated_at": "2026-07-15T16:00:00Z",
+  "published_at": null,
+  "maintainer": "Chief Dataset & Research Curator",
+  "review_date": "2026-07-15",
+  "next_review_date": "2027-07-15",
+  "tags": [
+    "reference",
+    "classical"
+  ],
+  "intended_use": "Foundational reference for astrological calculations",
+  "prohibited_uses": [],
+  "language": "en",
+  "geographic_coverage": "global",
+  "curator_notes": "All 6 systems from AyanamsaSystem enum. Values computed at runtime by swe.get_ayanamsa_ut(jd).",
+  "type_code": "AYAN",
+  "type": "AYAN"
+}

@@ -1,0 +1,100 @@
+id: aspect.special.shani
+name: Shani Special Aspects
+aliases:
+  - Saturn Special Aspects
+  - Shani Tryodasha-Dashama Drishti
+  - Shani 3rd and 10th Aspects
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: special
+
+statement: >
+  Shani (Saturn) aspects the 3rd and 10th houses from its position in
+  addition to the standard 7th house aspect. Shani thus aspects houses
+  3, 7, and 10 from its placement.
+
+conditions:
+  - entity: graha.shani
+    role: subject
+    notes: >
+      Only Shani possesses this combination of special aspects. The rule
+      applies regardless of Shani's sign, house ownership, or dignity.
+  - entity: house.3rd-from-shani
+    role: object
+    notes: >
+      The 3rd aspect is a special drishti unique to Shani. The 3rd house
+      governs courage, effort, siblings, and short journeys.
+  - entity: house.10th-from-shani
+    role: object
+    notes: >
+      The 10th aspect is the second special drishti of Shani. The 10th
+      house governs karma, profession, reputation, and authority.
+
+effects:
+  - description: >
+      The 3rd aspect connects Shani to matters of effort, courage,
+      initiative, and sibling relationships.
+    intensity: strong
+    notes: >
+      Being a special aspect from a natural malefic, this intensifies
+      the testing and restructuring nature of Shani on 3rd house matters.
+  - description: >
+      The 10th aspect connects Shani to matters of professional
+      duty, public standing, and karma (actions).
+    intensity: strong
+    notes: >
+      Shani aspecting the 10th from itself activates the karmic
+      dimensions of professional life.
+  - description: >
+      Shani's triple aspect (3rd, 7th, 10th) creates a pattern of
+      testing, discipline, and restructuring across all three houses.
+    intensity: strong
+    notes: >
+      The aspects are considered powerful malefic influences that
+      demand effort and endurance from the native.
+
+exceptions:
+  - condition: >
+      When Shani is retrograde (vakri), the special aspects intensify
+      and the karmic effects may turn inward, affecting self-discipline
+      and personal growth more than external events.
+    reason: >
+      Retrograde Shani intensifies its Saturnian qualities, making
+      internal restructuring more prominent.
+  - condition: >
+      When Shani is combust (astangata), the special aspects are
+      weakened, though not entirely negated.
+    reason: >
+      Combustion diminishes but does not eliminate Shani's capacity
+      to cast aspects, given its inherently strong malefic nature.
+  - condition: >
+      Shani's aspects produce constructive results when placed in
+      own sign, exalted, or in friendly signs.
+    reason: >
+      Dignity modifies the quality — well-placed Shani uses its special
+      aspects to build rather than destroy.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Shani aspects the 3rd,
+      7th, and 10th houses from its position. The 3rd and 10th aspects
+      are special to Shani.
+    confidence: high
+
+notes: >
+  Shani's special aspects connect to the 3rd (effort/courage) and 10th
+  (karma/duty) houses. Unlike Guru's trinal aspects which are inherently
+  auspicious, Shani's aspects connect to Kendra and Upachaya houses,
+  reflecting Shani's role as a karmic disciplinarian. The 10th aspect
+  is considered particularly powerful for professional and karmic matters.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,90 @@
+id: nakshatra.15
+name: Swati
+aliases:
+  - Swati
+  - स्वाति
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Swati
+devanagari: स्वाति
+meaning: "The Star, The Sword, The Independent One"
+
+ruler:
+  ref: graha.8
+  system: vimshottari
+
+deity:
+  name: Vayu
+  description: God of Wind, air, and breath — the purifying cosmic force
+  attributes:
+    - wind
+    - movement
+    - purification
+    - independence
+
+shakti:
+  name: Vyapani Shakti
+  meaning: "The power to scatter like wind"
+  power: "To scatter, spread, and expand freely like the wind"
+
+star:
+  name: Arcturus (Alpha Boötis)
+  magnitude: -0.05
+
+starting_degree: 186.666666667
+ending_degree: 200.0
+rashi_span:
+  - ref: rashi.tulanam
+
+padas:
+  - pada: 1
+    degrees: "6°40' to 10°00' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.mesham
+  - pada: 2
+    degrees: "10°00' to 13°20' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.vrishabham
+  - pada: 3
+    degrees: "13°20' to 16°40' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.mithunam
+  - pada: 4
+    degrees: "16°40' to 20°00' Tula"
+    rashi: rashi.tulanam
+    navamsha_rashi: rashi.karkam
+
+nature:
+  temperament: Independent, free-moving, adaptable
+  guna: rajasic
+  gana: deva
+  yoni: Buffalo
+  nadis: adi
+
+karakatvas:
+  - concept: independence
+  - concept: wind and air
+  - concept: travel
+  - concept: business
+  - concept: scattering
+
+compatible_nakshatras: []
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes the characteristics and traits associated with Swati nakshatra, ruled by Rahu and deity Vayu"
+    confidence: high
+
+notes: "Swati is the 15th nakshatra, spanning 6°40' to 20°00' of Tula (Libra). It is ruled by Rahu and its deity is Vayu, the god of wind. The shakti is Vyapani — the power to scatter like wind. Swati natives are independent, adaptable, and free-moving. Arcturus, the brightest star in the northern hemisphere, marks this nakshatra."
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references that used numeric sign-index IDs (rashi.8) instead of the catalogue's canonical named IDs (rashi.vrishchikam)", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,80 @@
+# catalogues/grahas/_index.yaml
+# Complete index of all 9 graha (planet) catalogue records.
+
+catalogue: grahas
+version: 1.0
+last_updated: 2026-07-15
+total_entries: 9
+
+entries:
+  - id: graha.surya
+    file: surya.yaml
+    name: Surya
+    classical: Sūrya
+    devanagari: "सूर्य"
+    type: physical
+    status: active
+
+  - id: graha.chandra
+    file: chandra.yaml
+    name: Chandra
+    classical: Candr
+    devanagari: "चन्द्र"
+    type: physical
+    status: active
+
+  - id: graha.mangala
+    file: mangala.yaml
+    name: Mangala
+    classical: Aṅgāraka
+    devanagari: "मङ्गल"
+    type: physical
+    status: active
+
+  - id: graha.budha
+    file: budha.yaml
+    name: Budha
+    classical: Budha
+    devanagari: "बुध"
+    type: physical
+    status: active
+
+  - id: graha.guru
+    file: guru.yaml
+    name: Guru
+    classical: Bṛhaspati
+    devanagari: "गुरु"
+    type: physical
+    status: active
+
+  - id: graha.shukra
+    file: shukra.yaml
+    name: Shukra
+    classical: Śukra
+    devanagari: "शुक्र"
+    type: physical
+    status: active
+
+  - id: graha.shani
+    file: shani.yaml
+    name: Shani
+    classical: Śanaiścara
+    devanagari: "शनि"
+    type: physical
+    status: active
+
+  - id: graha.rahu
+    file: rahu.yaml
+    name: Rahu
+    classical: Rāhu
+    devanagari: "राहु"
+    type: shadow
+    status: active
+
+  - id: graha.ketu
+    file: ketu.yaml
+    name: Ketu
+    classical: Ketu
+    devanagari: "केतु"
+    type: shadow
+    status: active

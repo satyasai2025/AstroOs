@@ -1,0 +1,53 @@
+# sources/texts/tajika-nihanti.yaml
+
+id: source.tajika-nihanti
+name: Tajika Nihanti
+aliases:
+  - Tajika
+  - ताजिक निहन्ति
+category: source
+status: active
+confidence: medium
+version: 1.0
+last_verified: 2026-07-15
+
+author: "Various (attributed)"
+date:
+  approximate: "1400 CE"
+  confidence: low
+
+language:
+  original: Persian / Sanskrit
+
+tradition: Tajika
+system: Tajika Jyotish (Annual Horoscopy)
+
+edition:
+  primary:
+    editor: "Sri P S S S Sastry"
+    year: 1968
+    language: Sanskrit
+
+related_texts:
+  - ref: source.tajika-raman
+    relationship: "Raman's compilation of Tajika texts."
+
+significance: >
+  The Tajika Nihanti is the foundational text for Tajika (annual
+  horoscopy) Jyotish. It presents the system of annual charts
+  (Varshaphal) used for predicting events in a given year, based
+  on the solar return. The Tajika system introduces unique concepts
+  such as Muntha, Ittalaqa, and the Tajika yogas.
+
+notes: >
+  Tajika is a specialized branch of Jyotish focused on annual
+  predictions. It uses a separate set of rules from the birth
+  chart analysis. The system is of Persian-Arabic origin but was
+  integrated into Indian Jyotish. Tajika is classified as a
+  separate system within the broader Jyotish tradition.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

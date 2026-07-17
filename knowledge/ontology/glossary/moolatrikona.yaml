@@ -1,0 +1,68 @@
+# ontology/glossary/moolatrikona.yaml
+
+id: term.moolatrikona
+name: Mūlatrikoṇa
+aliases:
+  - Moolatrikona
+  - Mulatrikona
+  - Root Triangle
+  - मूलत्रिकोण
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    mūlatrikoṇa — from mūla (root, original) + trikoṇa
+    (triangle, three-cornered). A specific arc of a rāśi
+    where a graha is considered naturally powerful and
+    comfortable — its "root" or "home" territory within
+    its own sign.
+  english: >
+    The preferred zone within a graha's own sign where it
+    feels most at home and acts most naturally. Each graha
+    has a specified moolatrikona position: e.g., Surya in
+    0-20 degrees of Simha, Chandra in 3-30 degrees of
+    Vrishabha, etc. Planets in moolatrikona are stronger
+    than in their own sign but weaker than in exaltation.
+  technical: >
+    Moolatrikona is part of the graded dignity hierarchy
+    (graha bala): uchcha (exaltation) > moolatrikona > sva
+    (own sign) > mitra (friend's sign) > sama (neutral sign)
+    > shatru (enemy's sign) > neecha (debilitation). The
+    moolatrikona positions are specified in BPHS for each
+    graha and represent its natural seat of power.
+
+usage:
+  primary: "Assessment of a graha's intrinsic strength based on its moolatrikona placement"
+  secondary: "Graded evaluation of planetary dignity across the bala spectrum"
+
+related_concepts:
+  - ref: term.uchcha
+    relationship: "Uchcha (exaltation) is the highest dignity, above moolatrikona in strength"
+  - ref: term.necha
+    relationship: "Neecha (debilitation) is the lowest dignity, opposite in effect to moolatrikona"
+  - ref: term.graha
+    relationship: "Each graha has a unique moolatrikona position within its own sign"
+
+sources:
+  - ref: source.BPHS
+    chapter: 3
+    verse: 1-12
+    claim: "Mūlatrikoṇaṃ balaṃ śreṣṭhaṃ — moolatrikona is the best strength"
+    confidence: high
+
+notes: >
+  Moolatrikona is considered the "seat of power" for a graha
+  — a position where it can express its energy spontaneously
+  and naturally without the intensity of exaltation or the
+  comfort of own sign. A planet in moolatrikona acts naturally
+  and effectively for its own significations.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

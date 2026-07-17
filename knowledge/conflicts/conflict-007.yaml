@@ -1,0 +1,151 @@
+# conflicts/conflict-007.yaml
+
+id: conflict.007
+name: Kaal Sarpa Dosha — Classical Doctrine or Later Folk Addition?
+topic: Whether Kaal Sarpa Dosha is a legitimate classical yoga/dosha or a modern/regional accretion without primary-text grounding
+domain: yoga
+status: unresolved
+confidence: low
+version: 1.0
+last_verified: 2026-07-16
+
+# === POSITIONS ===
+
+positions:
+  - tradition: "Traditional-Practice School"
+    source:
+      ref: source.traditional
+    position: >
+      Kaal Sarpa Dosha — all seven classical planets hemmed on one side
+      of the Rahu-Ketu axis — is a recognized, widely-applied dosha
+      across regional traditions, classified into 12 sub-types by
+      Rahu's house position, and treated as one of the most frequently
+      checked conditions in practice.
+    arguments:
+      - "Recognized across all regional traditions per this knowledge base's own catalogue entry"
+      - "12-fold classification by Rahu's house shows a mature, elaborated interpretive tradition"
+    adherents:
+      - Majority of contemporary practicing astrologers
+      - Popular/commercial Jyotish literature and software
+
+  - tradition: "Textual-Purist School"
+    source:
+      ref: source.BPHS
+    position: >
+      Kaal Sarpa Dosha is not explicitly detailed in BPHS or other core
+      classical texts catalogued in this knowledge base's source
+      registry (BPHS, Saravali, Phaladeepika, Jaimini Sutras, Uttara
+      Kalamrita). Its absence from the primary canon suggests it is a
+      later addition, likely 20th-century in origin, popularized
+      through oral tradition and modern publications rather than
+      textual transmission.
+    arguments:
+      - "No citation to a specific chapter/verse of any registered primary source exists anywhere in this knowledge base for this dosha, unlike every other cataloged yoga/dosha"
+      - "The dosha's own catalogue record cites only source.traditional — the knowledge base's explicitly low-confidence, informally-scoped pseudo-source (see sources/texts/traditional.yaml) — never a primary text"
+    adherents:
+      - Textual-purist scholars and commentators
+      - Practitioners skeptical of popularized 20th-century doshas
+
+# === ANALYSIS ===
+
+analysis: >
+  This conflict differs in kind from conflicts 001-006: it is not a
+  disagreement between named classical schools over the content of a
+  doctrine, but a disagreement over whether the doctrine has classical
+  standing at all. The knowledge base's own catalogue record for this
+  dosha (catalogues/yogas/dosha/kaal-sarpadosha.yaml) already
+  acknowledges the tension in its notes field ("not always explicitly
+  detailed in classical texts... scholarly debate about whether this is
+  a classical yoga or a later addition") but had not been promoted to a
+  formal conflict record or cross-checked against the source registry
+  until this Phase 6 review confirmed no primary-text citation exists
+  for it anywhere in the knowledge base.
+
+# === EVIDENCE ===
+
+evidence:
+  for_traditional_practice:
+    - "Near-universal regional recognition and heavy practical use, per the catalogue record's own notes"
+    - "Elaborated 12-fold sub-classification suggests a mature interpretive tradition, whatever its origin"
+  for_textual_purist:
+    - "Zero primary-source (BPHS/Saravali/Phaladeepika/Jaimini/Uttara Kalamrita) citations anywhere in this knowledge base for this specific dosha — confirmed by re-checking the catalogue record's sources field, which cites only source.traditional"
+    - "Only 2 of the 20 cataloged yogas/doshas in this knowledge base rely solely on source.traditional with no primary-text citation: this one and catalogues/yogas/dosha/sarpadosha.yaml (Sarpadosha) — every other cataloged yoga cites at least one primary text (overwhelmingly BPHS). Both share the same 'widely recognized in regional tradition, absent from core classical canon' profile, per their own notes fields."
+
+# === RESOLUTION ===
+
+resolution_status: unresolved
+resolution: >
+  The absence of primary-text grounding is a documented fact, not
+  itself proof the dosha lacks value in practice — many effective
+  practical heuristics postdate the classical canon. This knowledge
+  base does not adjudicate "should practitioners use this dosha,"
+  only "what is its textual standing," and on that narrower question
+  the evidence favors the textual-purist position without fully
+  resolving the practical-utility question.
+
+recommended_position: >
+  Retain the Kaal Sarpa Dosha catalogue record, but its confidence
+  field should reflect its non-primary-source status distinctly from
+  yogas/doshas with direct classical citation (e.g. mangal-dosha, which
+  cites BPHS). Any future report-generation or Rule Engine feature that
+  surfaces this dosha to end users should disclose its textual status
+  rather than presenting it with the same evidentiary weight as a
+  BPHS-cited yoga.
+
+weight_of_evidence: >
+  Weak on textual grounds (no primary citation), strong on practical/
+  popularity grounds. This asymmetry is exactly what makes the
+  conflict unresolved rather than resolved in either direction.
+
+# === RELATED ===
+
+related_conflicts: []
+notes: >
+  A useful negative-control case for Phase 6: not every doctrinal
+  tension in this knowledge base is a clean two/three-tradition split
+  like conflicts 001-006 — some are "is this classical at all"
+  questions, which need different resolution criteria (source-registry
+  presence/absence) than content disputes between named schools.
+
+  catalogues/yogas/dosha/sarpadosha.yaml shares the identical profile
+  (sole source.traditional citation, no primary-text grounding, regional
+  rather than pan-classical recognition) but is not given its own
+  conflict record — the underlying question and resolution are the same
+  one this record already covers, so a separate record would duplicate
+  rather than add analysis.
+
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "none"
+      note: >
+        No YOGA-* entity exists for Kaal Sarpa Dosha in the Ontology.
+        _populate_yoga() sources its entity list from
+        apps/api/services/yoga_registry.py's all_yogas(), which is
+        populated only by @register_yoga decorators in
+        apps/api/services/yogas/*.py (arishta_yoga.py, chandra_yoga.py,
+        dhana_yoga.py, neecha_bhanga.py, raja_yoga.py — no dosha-yoga
+        module exists there). This dosha exists only as knowledge-base
+        documentation, with zero representation in the Ontology.
+  rule_engine:
+    - reference: "none found"
+      note: >
+        No RuleDefinition, YogaEngine registration, or fact key
+        referencing Kaal Sarpa / node-hemming exists anywhere in
+        apps/api. Confirmed by grep across apps/api and packages for
+        "kaal_sarp"/"kaalsarpa" — zero matches.
+  validation_status: >
+    Confirmed 2026-07-16 — this dosha is pure knowledge-base content
+    with no Rule Engine or Ontology implementation, consistent with its
+    weaker textual standing relative to the implemented, BPHS-cited
+    yogas (Panch Mahapurusha, Raja Yoga, Dhana Yoga, Neecha Bhanga) that
+    do have Ontology/Rule Engine representation.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Phase 6 — new conflict entry formalizing the classical-legitimacy question already flagged in the catalogue record's own notes field; confirmed via source-registry and codebase cross-check that no primary-text citation or Rule Engine/Ontology implementation exists for this dosha"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,61 @@
+id: kp.core.significators
+name: KP Significator Table
+aliases: ["KP House Significators", "KP Sub-lord Significator Mapping"]
+category: kp
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: kp
+statement: >
+  Each house (bhava) is governed by a specific set of sub-lords that signify
+  events related to that house. The significator table maps houses to their
+  sub-lord rulers. A planet becomes a significator of a house when it is the
+  sub-lord of that house cusp or occupies a sub-division ruled by the cuspal
+  sub-lord. The complete significator table covers all 12 houses and their
+  linkages to planetary sub-lords for event prediction.
+
+conditions:
+  - entity: bhava.cusp
+    role: subject
+    detail: "Each house cusp has a sub-lord that defines the house's event domain"
+
+  - entity: graha.significator
+    role: framework
+    detail: "Planets become significators through sub-lord linkage to the cuspal sub-lord"
+
+effects:
+  - description: "Sub-lord of the 1st cusp signifies self, body, personality and lifespan"
+    intensity: strong
+  - description: "Sub-lord of the 7th cusp signifies marriage, partnership, and open enemies"
+    intensity: strong
+  - description: "Sub-lord of the 10th cusp signifies career, profession, and status in society"
+    intensity: strong
+  - description: "Sub-lord of the 2nd cusp signifies wealth, family, and speech"
+    intensity: strong
+  - description: "Sub-lord of the 5th cusp signifies children, intelligence, and speculation"
+    intensity: strong
+  - description: "Sub-lord of the 6th cusp signifies disease, competition, and service"
+    intensity: moderate
+
+sources:
+  - ref: source.kp-system
+    claim: "KP Significators: Complete house-to-sub-lord significator table. Each house is governed by specific sub-lords that signify events."
+    confidence: high
+
+notes: >
+  KP significator logic works as follows: (1) The sub-lord of a house cusp
+  determines the nature of events. (2) Planets that are sub-lords of the
+  cuspal sub-lord become the prime significators. (3) Planets in the
+  constellation (nakshatra) of the cuspal sub-lord become secondary
+  significators. (4) For event prediction, all significators must be traced
+  to the appropriate Dasha-Bhukti period. The significator table differs
+  from classical Parashari in that it does not use natural karakatvas but
+  derives significators purely from the cuspal sub-lord chain.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

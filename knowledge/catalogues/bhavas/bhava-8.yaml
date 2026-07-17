@@ -1,0 +1,102 @@
+# catalogues/bhavas/bhava-8.yaml
+
+id: bhava.8
+name: Randhra Bhava
+aliases:
+  - 8th House
+  - Longevity House
+  - Transformation House
+  - रंध्र भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Randhra
+number: 8
+meaning: "Hole; cavity; obstacle; transformation"
+
+natural_karaka:
+  ref: graha.shani
+  notes: "Shani is the natural karaka for longevity, obstacles, and transformation"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana. A Dusthana — considered a difficult house"
+
+karakatvas:
+  classical:
+    - concept: Longevity and lifespan (Ayus)
+      source: source.BPHS
+    - concept: Transformation and sudden changes
+      source: source.BPHS
+    - concept: Obstacles and hardships
+      source: source.BPHS
+    - concept: Inheritance and occult knowledge
+      source: source.BPHS
+  traditional:
+    - concept: Longevity
+    - concept: Transformation
+    - concept: Obstacles
+    - concept: Inheritance
+    - concept: Occult
+
+conditions:
+  strong_when:
+    - Malefics placed here (Dusthana benefits from malefic energy)
+    - Lord strong and well-placed
+    - Shani strong
+  weak_when:
+    - Malefics afflicting the house
+    - Weak or debilitated lord
+    - Lord in enemy sign
+  afflicted_when:
+    - Benefics occupying (can reduce transformative power)
+    - Afflicted lord in Dusthana
+    - Papa kartari yoga
+
+effects:
+  positive:
+    - Long life and vitality
+    - Deep spiritual and occult understanding
+    - Ability to overcome profound obstacles
+    - Unexpected inheritance or windfalls
+  negative:
+    - Sudden crises and life disruptions
+    - Health scares and surgical interventions
+    - Obstacles and delays
+    - Premature death (if heavily afflicted)
+
+related_bhavas:
+  - bhava: 2
+    relationship: life span
+    notes: "The 8th from the 2nd (bhava.9) indicates the longevity of wealth"
+  - bhava: 12
+    relationship: liberation
+    notes: "Both are Dusthana; the 12th from the 8th (bhava.7) shows liberation through transformation"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Longevity, transformation, obstacles, inheritance, and occult knowledge are significations of the 8th house"
+    confidence: high
+
+notes: >
+  The 8th house (Randhra Bhava) is a Dusthana (difficult house)
+  representing longevity, transformation, and hidden matters.
+  It is the most intense of the three Dusthana and governs
+  sudden life changes, inheritance, and occult knowledge.
+  A strong 8th house can bestow a long life and profound
+  spiritual insight. The 8th lord (Ayushpati) is a key
+  indicator of lifespan in longevity calculations.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

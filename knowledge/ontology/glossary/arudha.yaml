@@ -1,0 +1,60 @@
+# ontology/glossary/arudha.yaml
+
+id: term.arudha
+name: Ārūḍha
+aliases:
+  - Arudha Pada
+  - आरूढ
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    ārūḍha — from ā (toward) + ruh (to mount, ascend).
+    The pada or "footprint" of a house, calculated by counting
+    from the lord of that house to the house lord's position,
+    then counting the same number from the lord.
+  english: >
+    A pada (footprint) of a house, most commonly used for the
+    lagna (Arudha Lagna = AL). The arudha of a house is the
+    reflection or image of that house as perceived by the world.
+  technical: >
+    For any house, if its lord is in house X, count from the
+    lord's house to the house in question, then count the same
+    number of houses from the lord again; the result is the
+    arudha. The arudha of lagna (AL) is the most important,
+    representing the native's worldly image.
+
+usage:
+  primary: "Determination of worldly image and perception (AL)"
+  secondary: "Analysis of specific life areas through arudhas of other houses"
+
+related_concepts:
+  - ref: term.lagna
+    relationship: "Arudha Lagna (AL) is the reflection of the lagna — the native's perceived self"
+  - ref: term.upapada
+    relationship: "Upapada is the arudha of the 12th house, representing the spouse"
+  - ref: term.bhava
+    relationship: "Each bhava can have its own arudha for specialized analysis"
+
+sources:
+  - ref: source.BPHS
+    chapter: 31
+    verse: 1-3
+    claim: "Ārūḍhaṃ padaṃ proktaṃ — the arudha is declared as the pada"
+    confidence: high
+
+notes: >
+  The arudha calculation has exceptions: if the arudha falls in
+  the same house or the 7th from the sign or the lord, the
+  arudha is nullified. This is the concept of ubhayachara and
+  bhagyada.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

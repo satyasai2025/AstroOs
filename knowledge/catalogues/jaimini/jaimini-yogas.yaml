@@ -1,0 +1,323 @@
+# Jaimini-Specific Yogas
+# Rajayoga from chara karaka conjunctions, karakamsha yogas, argala yogas.
+# Source: Jaimini Sutras
+
+id: jaimini.yogas.collection
+name: Jaimini Yoga Samuha
+aliases: ["Jaimini Yogas", "Jaimini Yoga Collection", "Chara Karaka Yogas"]
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: jaimini
+type: yoga-collection
+
+statement: >
+  Jaimini yogas are a distinct class of planetary combinations
+  (yogas) that operate within the Jaimini framework. Unlike Parashari
+  yogas which depend on bhava lords and graha relationships, Jaimini
+  yogas arise from chara karaka conjunctions, karakamsha lagna
+  configurations, rashi drishti patterns, and argala (intervention)
+  mechanics. These yogas are unique to the Jaimini system and have
+  no direct equivalent in Parashari Jyotish.
+
+conditions:
+  - entity: jaimini.chara-karakas.system
+    role: framework
+    notes: >
+      All Jaimini yogas depend on the chara karaka assignments,
+      which are determined by planetary degree positions. The
+      karaka roles (AK, AmK, DK, etc.) are the building blocks
+      of Jaimini yoga formation.
+  - entity: jaimini.karakamsha.chart
+    role: framework
+    notes: >
+      The Karakamsha chart provides an additional layer for yoga
+      analysis. Yogas formed in the Karakamsha chart carry
+      soul-level significance.
+
+yogas:
+  - id: jaimini.yoga.rajayoga.karaka-conjunction
+    name: Chara Karaka Rajayoga
+    aliases: ["Karaka Conjunction Rajayoga", "Jaimini Raja Yoga"]
+    description: >
+      A Rajayoga (yoga of power and success) forms when two or more
+      chara karakas conjoin in the same rashi. The specific nature
+      of the Rajayoga depends on which karakas are involved.
+    formation_rules: |
+      1. Basic Rajayoga: Any two chara karakas conjoining in the
+         same rashi (Rashi chart or Karakamsha chart).
+
+      2. Enhanced Rajayoga: When AK (Atmakaraka) conjoins with
+         AmK (Amatyakaraka), the yoga is particularly powerful,
+         indicating a life of authority, leadership, and
+         recognition aligned with soul purpose.
+
+      3. Dhana Rajayoga: When AK conjoins Pk (Pitrukarak) or
+         PutK (Putrakaraka), indicating wealth and fortune
+         connected to the native's dharma and progeny.
+
+      4. Multiple Karaka Rajayoga: When three or more karakas
+         conjoin, the yoga intensifies, with each additional
+         karaka adding its significations to the outcome.
+    conditions:
+      - entity: graha.conjunction
+        role: requirement
+        notes: "Two or more chara karakas must occupy the same rashi"
+    effects:
+      - description: "Success, recognition, and material achievements aligned with soul purpose"
+        intensity: strong
+      - description: "Authority and leadership in the areas signified by the conjoined karakas"
+        intensity: strong
+    confidence: high
+
+  - id: jaimini.yoga.rajayoga.karaka-exchange
+    name: Chara Karaka Parivartana Yoga
+    aliases: ["Karaka Exchange Yoga", "Jaimini Parivartana"]
+    description: >
+      A powerful yoga forms when two chara karakas exchange rashis
+      (mutual sign exchange / parivartana). This creates a deep
+      karmic bond between the life areas represented by the two
+      karakas.
+    formation_rules: |
+      1. Two chara karakas must occupy each other's moolatrikona
+         or own signs.
+      2. The exchange must involve at least one high-rank karaka
+         (AK, AmK, or DK) for the yoga to be fully activated.
+      3. If the exchange happens in the Karakamsha chart, the
+         yoga carries soul-level karmic significance.
+    conditions:
+      - entity: graha.exchange
+        role: requirement
+        notes: "Mutual sign exchange between two chara karakas"
+    effects:
+      - description: "Deep karmic integration between the life areas of the exchanged karakas"
+        intensity: strong
+      - description: "Sustained success through the interplay of the two karaka domains"
+        intensity: moderate
+    confidence: high
+
+  - id: jaimini.yoga.karakamsha-lagna-planets
+    name: Karakamsha Lagna Yoga
+    aliases: ["KL Planet Yoga", "Karakamsha Lagna Graha Yoga"]
+    description: >
+      When grahas occupy the Karakamsha Lagna (the rashi that is
+      the Atmakaraka's D-9 position), they directly influence the
+      soul's expression. Specific grahas in the KL create distinct
+      yoga patterns.
+    formation_rules: |
+      1. Guru (Jupiter) in Karakamsha Lagna: Indicates a wise,
+         dharmic soul with strong spiritual inclinations.
+
+      2. Shukra (Venus) in Karakamsha Lagna: Indicates an
+         artistic, relationship-oriented soul with aesthetic
+         sensibilities.
+
+      3. Budha (Mercury) in Karakamsha Lagna: Indicates an
+         intellectual, communicative soul with analytical abilities.
+
+      4. Mangala (Mars) in Karakamsha Lagna: Indicates a
+         courageous, action-oriented soul with leadership qualities.
+
+      5. Surya (Sun) in Karakamsha Lagna: Indicates a powerful,
+         authoritative soul with government or leadership connections.
+
+      6. Chandra (Moon) in Karakamsha Lagna: Indicates a
+         nurturing, emotionally sensitive soul with public appeal.
+
+      7. Shani (Saturn) in Karakamsha Lagna: Indicates a disciplined,
+         spiritual soul with potential for renunciation or deep
+         practice.
+    conditions:
+      - entity: jaimini.karakamsha.chart
+        role: requirement
+        notes: "Graha must occupy the Lagna of the Karakamsha chart"
+    effects:
+      - description: "Direct soul-level modification of the native's life direction by the occupying graha"
+        intensity: strong
+      - description: "The graha's nature becomes a primary mode of soul expression"
+        intensity: strong
+    confidence: high
+
+  - id: jaimini.yoga.argala-beneficial
+    name: Argala Yoga
+    aliases: ["Intervention Yoga", "Jaimini Argala"]
+    description: >
+      Argala (intervention/obstruction) is a Jaimini-specific
+      mechanic where grahas in specific positions relative to a
+      target rashi create supportive (subha argala) or obstructive
+      (adhana argala) influences. Beneficial argala formations
+      create yogas of support and enablement.
+    formation_rules: |
+      1. Beneficial Argala (Subha Argala):
+         - Graha in the 2nd from a target rashi provides financial
+           and verbal support.
+         - Graha in the 4th from a target rashi provides domestic
+           and emotional support.
+         - Graha in the 11th from a target rashi provides gains
+           and fulfillment of desires.
+
+      2. Obstructive Argala (Adhana/Virodha Argala):
+         - Graha in the 12th from a target rashi creates expenses
+           or losses.
+         - Graha in the 9th from a target rashi can obstruct (the
+           9th argala blocks the 3rd).
+         - Graha in the 3rd from a target rashi can obstruct.
+
+      3. Countering Argala: Obstructive argala is neutralized
+         when an equal or greater number of grahas provide
+         beneficial argala from the countering positions.
+    conditions:
+      - entity: graha.position
+        role: requirement
+        notes: "Specific positional relationships (2nd, 4th, 11th for beneficial) must exist"
+    effects:
+      - description: "Supportive enabling influences on the target rashi's themes"
+        intensity: moderate
+      - description: "Obstructive or challenging influences that require countering"
+        intensity: moderate
+    confidence: high
+
+  - id: jaimini.yoga.ak-in-kendras
+    name: Atmakaraka Kendra Yoga
+    aliases: ["AK Kendra", "AK in Quadrant Yoga"]
+    description: >
+      When the Atmakaraka occupies a kendra (quadrant) house from
+      the Lagna — specifically the 1st, 4th, 7th, or 10th house —
+      it forms a powerful yoga indicating the soul's purpose is
+      prominently expressed in worldly life.
+    formation_rules: |
+      1. AK in 1st (Lagna): The soul's purpose is self-expression
+         and personal identity. Direct, powerful soul manifestation.
+
+      2. AK in 4th: The soul's purpose relates to home, mother,
+         property, and inner peace. Nurturing and domestic focus.
+
+      3. AK in 7th: The soul's purpose is through partnerships
+         and relationships. Marriage and business partnerships
+         are karmically significant.
+
+      4. AK in 10th: The soul's purpose is career and public
+         service. Professional achievements are karmically driven.
+    conditions:
+      - entity: graha.atmakaraka
+        role: subject
+        notes: "AK must occupy a kendra (1st, 4th, 7th, or 10th) from the Lagna"
+    effects:
+      - description: "Prominent worldly expression of the soul's karmic agenda"
+        intensity: strong
+      - description: "Karmic themes are activated early and prominently in life"
+        intensity: moderate
+    confidence: high
+
+  - id: jaimini.yoga.ak-trikona
+    name: Atmakaraka Trikona Yoga
+    aliases: ["AK Trikona", "AK in Triangle Yoga"]
+    description: >
+      When the Atmakaraka occupies a trikona (trine) house from the
+      Lagna — specifically the 1st, 5th, or 9th house — it indicates
+      a soul with strong dharma, wisdom, and creative or spiritual
+      potential.
+    formation_rules: |
+      1. AK in 1st: Soul purpose aligned with self and dharma.
+      2. AK in 5th: Soul purpose through creativity, children,
+         and intellectual pursuits. Strong past-life merit.
+      3. AK in 9th: Soul purpose through dharma, higher knowledge,
+         and spiritual practice. Strong connection to guru and
+         tradition.
+    conditions:
+      - entity: graha.atmakaraka
+        role: subject
+        notes: "AK must occupy a trikona (1st, 5th, or 9th) from the Lagna"
+    effects:
+      - description: "Dharmic alignment of the soul's purpose with wisdom and spiritual growth"
+        intensity: strong
+      - description: "Natural grace and past-life merit supporting the soul's journey"
+        intensity: moderate
+    confidence: high
+
+  - id: jaimini.yoga.darapada-relationship
+    name: Darapada Relationship Yoga
+    aliases: ["DK-Pada Yoga", "Spouse Pada Yoga"]
+    description: >
+      The Darapada is the 7th pada from the Darakaraka's position.
+      The relationship between the Darapada and the Karakamsha
+      Lagna reveals the quality of the marital relationship at
+      the soul level.
+    formation_rules: |
+      1. Darapada in Kendra from KL: Strong, prominent marriage
+         aligned with soul purpose.
+
+      2. Darapada in Trikona from KL: Dharmic marriage with
+         spiritual compatibility.
+
+      3. Darapada conjunct AK in KL: Marriage is deeply karmic
+         and central to the soul's evolution.
+
+      4. Darapada aspected by benefics in KL: Harmonious,
+         supportive marital relationship.
+    conditions:
+      - entity: graha.darakaraka
+        role: subject
+        notes: "The 7th pada from DK's position is analyzed relative to the Karakamsha Lagna"
+    effects:
+      - description: "Soul-level compatibility and karmic nature of the marriage"
+        intensity: moderate
+      - description: "Alignment (or misalignment) of the partnership with the native's dharma"
+        intensity: moderate
+    confidence: high
+
+cross_references:
+  - ref: jaimini.chara-karakas.system
+    relationship: "All Jaimini yogas depend on chara karaka assignments"
+  - ref: jaimini.karakamsha.chart
+    relationship: "Karakamsha chart provides the framework for soul-level yoga analysis"
+  - ref: jaimini.rashi-drishti.complete
+    relationship: "Rashi drishti interactions between karaka-occupied rashis modify yoga outcomes"
+  - ref: jaimini.chara-dasha.rules
+    relationship: "Chara Dasha timing activates Jaimini yogas when the relevant dasha period arrives"
+  - ref: yogas.raja.gaja-keshari
+    relationship: "Parashari Rajayoga reference; Jaimini yogas operate on different principles"
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras describe yoga formations based on chara karaka
+      relationships, Karakamsha configurations, and argala mechanics.
+      These yogas are unique to the Jaimini system and distinct
+      from Parashari yoga principles.
+    confidence: high
+
+notes: |
+  Jaimini yogas are fundamentally different from Parashari yogas:
+
+  Parashari Yogas:
+  - Based on bhava lord relationships (conjunction, exchange, aspect)
+  - Fixed graha-based rules (e.g., Gaja Kesari = Guru in kendra from Chandra)
+  - Apply universally regardless of degree positions
+  - See: yogas.raja.*
+
+  Jaimini Yogas:
+  - Based on chara karaka positions and relationships
+  - Dynamic — depend on degree-based karaka assignments
+  - Include Karakamsha-based and argala-based formations
+  - This file (jaimini.yogas.collection)
+
+  Both systems can be applied to the same chart. A chart may show
+  Parashari Rajayoga through bhava lord connections AND Jaimini
+  Rajayoga through karaka conjunctions simultaneously, creating
+  layered indicators of success.
+
+  The argala mechanic is unique to Jaimini and provides an
+  additional layer of analysis not available in Parashari. It
+  acts as a "weighting" system — grahas in beneficial argala
+  positions strengthen the target, while those in obstructive
+  positions weaken it.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with 7 Jaimini-specific yogas"
+    author: "Chief Jyotish Knowledge Architect"

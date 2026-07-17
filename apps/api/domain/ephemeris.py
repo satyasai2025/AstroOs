@@ -45,6 +45,17 @@ class SiderealPosition:
     is_combust: bool
     combustion_orb: Optional[float]  # degrees from Sun; None for Sun itself
     dignity: Optional[DignityType]
+    # Added in Module 9 Phase 0 (Foundation Extension): this data was
+    # already computed by EphemerisWrapper into the tropical PlanetPosition
+    # object in the same conversion loop that builds SiderealPosition, but
+    # was previously discarded rather than threaded through — see
+    # docs/architecture.md, "Ephemeris Calculation Contract". Defaults keep
+    # every existing test/call site that constructs SiderealPosition
+    # directly (without these fields) working unchanged.
+    latitude_deg: float = 0.0            # ecliptic latitude (tropical == sidereal, unaffected by ayanamsa)
+    distance_au: float = 0.0             # geocentric distance, Astronomical Units
+    speed_deg_per_day: float = 0.0       # longitude speed; negative = retrograde (magnitude needed for Chesta Bala)
+    declination_deg: float = 0.0         # equatorial declination (needed for Ayana Bala)
 
 
 @dataclass(frozen=True)
@@ -133,3 +144,9 @@ class EphemerisResult:
     house_cusps: list[HouseCusp]
     planet_positions: list[SiderealPosition]
     panchanga: PanchangaResult
+    # Added in Module 9 Phase 0 (Foundation Extension) — needed by Kala
+    # Bala's Nathonnata/Ayana/Tribhaga sub-components. Defaults keep
+    # existing test/call sites unaffected.
+    sunrise_jd: Optional[float] = None   # Julian Day of sunrise on the birth date, at the birth location
+    sunset_jd: Optional[float] = None    # Julian Day of sunset on the birth date, at the birth location
+    is_daytime_birth: Optional[bool] = None  # True if birth falls between sunrise and sunset

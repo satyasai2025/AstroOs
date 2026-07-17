@@ -1,0 +1,111 @@
+id: aspect.special.mangala
+name: Mangala Special Aspects
+aliases:
+  - Mars Special Aspects
+  - Mangala Chaturtha-Ashtama Drishti
+  - Mangala 4th and 8th Aspects
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: special
+
+statement: >
+  Mangala (Mars) aspects the 4th and 8th houses from its position in
+  addition to the standard 7th house aspect. Mangala thus aspects
+  houses 4, 7, and 8 from its placement.
+
+conditions:
+  - entity: graha.mangala
+    role: subject
+    notes: >
+      Only Mangala possesses this combination of special aspects. The
+      rule applies regardless of Mangala's sign, house ownership, or
+      dignity.
+  - entity: house.4th-from-mangala
+    role: object
+    notes: >
+      The 4th aspect is a special drishti unique to Mangala. The 4th
+      house governs home, mother, happiness, property, and education.
+  - entity: house.8th-from-mangala
+    role: object
+    notes: >
+      The 8th aspect is the second special drishti of Mangala. The 8th
+      house governs longevity, obstacles, inheritance, transformation,
+      and hidden matters.
+
+effects:
+  - description: >
+      The 4th aspect connects Mangala to matters of home environment,
+    intensity: strong
+    notes: >
+      Mangala's fiery nature directed at the 4th house can create
+      turbulence in domestic harmony but also drive protective action.
+  - description: >
+      The 8th aspect connects Mangala to matters of sudden events,
+      transformation, hidden obstacles, and longevity.
+    intensity: strong
+    notes: >
+      The 8th aspect from Mangala is considered particularly intense,
+      as both Mangala and the 8th house carry turbulent, transformative
+      energies.
+  - description: >
+      Mangala's triple aspect (4th, 7th, 8th) creates an aggressive
+    intensity: strong
+    notes: >
+      The combination of Kendra (4th) and dusthana (8th) houses in
+      Mangala's aspect pattern makes it the most intense of the
+      special aspect configurations.
+
+exceptions:
+  - condition: >
+      When Mangala is retrograde (vakri), the special aspects intensify
+      significantly, and the 8th aspect in particular may manifest as
+      acute internalized pressure.
+    reason: >
+      Retrograde Mangala amplifies its aggressive and transformative
+      qualities, especially through the 8th aspect.
+  - condition: >
+      When Mangala is combust (astangata), the special aspects weaken
+      considerably.
+    reason: >
+      Proximity to Surya diminishes Mangala's independent capacity for
+      aggressive aspecting.
+  - condition: >
+      Mangala's aspects produce constructive results in Chaturthamsha
+      (D-4) and Ashtamamsha (D-8) related matters when Mangala is
+      exalted (Makara) or in own sign (Mesha/Vrishchika).
+    reason: >
+      Exalted or well-placed Mangala channels its intense energy
+      constructively rather than destructively.
+  - condition: >
+      Mangala Dosha (Kuja Dosha) configurations intensify the effects
+      of Mangala's special aspects.
+    reason: >
+      When Mangala occupies the 1st, 2nd, 4th, 7th, 8th, or 12th
+      house in the birth chart, its special aspects acquire heightened
+      significance for relationship and longevity matters.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Mangala aspects the 4th,
+      7th, and 8th houses from its position. The 4th and 8th aspects
+      are special to Mangala.
+    confidence: high
+
+notes: >
+  Mangala's special aspects connect to the 4th (domestic/happiness) and
+  8th (transformation/obstacles) houses. The 8th aspect is considered
+  the most intense of all special aspects across all grahas, as it
+  combines Mangala's inherently aggressive nature with the turbulent
+  significations of the 8th house. Both Mangala and the 8th house
+  carry Vata/dushtana (challenging) qualities that amplify each other.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

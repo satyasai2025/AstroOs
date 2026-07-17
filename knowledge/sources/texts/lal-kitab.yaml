@@ -1,0 +1,59 @@
+# sources/texts/lal-kitab.yaml
+
+id: source.lal-kitab
+name: Lal Kitab
+aliases:
+  - Red Book
+  - लाल किताब
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Pandit Roop Chand Joshi
+date:
+  approximate: "1939-1952"
+  confidence: high
+
+language:
+  original: Urdu / Hindi
+  translations:
+    - language: English
+      edition: "Urmila Bhatia (2010)"
+
+tradition: Lal Kitab
+system: Lal Kitab Jyotish
+
+edition:
+  primary:
+    author: "Pandit Roop Chand Joshi"
+    year_series: "1939-1952"
+    language: Urdu / Hindi
+    notes: "Published in multiple volumes."
+
+related_texts:
+  - ref: source.kp-system
+    relationship: "Both are modern systems that depart from classical Parashari."
+  - ref: source.BPHS
+    relationship: "Lal Kitab references BPHS but uses a fundamentally different interpretive framework."
+
+significance: >
+  The Lal Kitab is a modern astrological text that presents a unique
+  system combining Persian, Arabic, and Indian astrological traditions.
+  It is known for its distinctive approach to house interpretation,
+  remedies, and predictive techniques. The system differs significantly
+  from classical Parashari Jyotish in its foundational principles.
+
+notes: >
+  The Lal Kitab system uses a fixed set of house significations that
+  differ from classical BPHS. It also prescribes specific remedies
+  (upayas) for astrological afflictions. The system is widely followed
+  in North India and Pakistan. Because it is a modern system, it is
+  classified as a separate school rather than a variant of Parashari.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

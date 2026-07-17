@@ -1,0 +1,61 @@
+id: lal-kitab.core.remedies
+name: Lal Kitab Remedies
+aliases: ["Lal Kitab Upayas", "Lal Kitab Practical Remedies", "Lal Kitab Solutions"]
+category: lal-kitab
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: lal-kitab
+statement: >
+  Lal Kitab prescribes specific, practical remedies (upayas) for planetary
+  afflictions that are distinct from classical Jyotish remedial measures. These
+  remedies involve donating specific items, wearing particular substances,
+  performing specific actions, and feeding animals. Remedies are tied to
+  specific house afflictions and planetary positions, and are designed to be
+  accessible and actionable without elaborate rituals.
+
+conditions:
+  - entity: graha.affliction
+    role: subject
+    detail: "A planet afflicted by placement or aspect requires specific remedy based on its house position"
+
+  - entity: bhava.affliction
+    role: subject
+    detail: "House affliction dictates the type and nature of remedy prescribed"
+
+effects:
+  - description: "Remedies neutralize negative planetary effects through practical, everyday actions"
+    intensity: strong
+  - description: "Donating items related to the afflicting planet reduces its malefic impact"
+    intensity: strong
+  - description: "Specific gem-stone or metal recommendations differ from classical Jyotish"
+    intensity: moderate
+  - description: "Feeding specific animals strengthens benefic planetary influences"
+    intensity: moderate
+
+sources:
+  - ref: source.lal-kitab
+    claim: "Lal Kitab remedies (upayas): Specific practical remedies for planetary afflictions. Donating items, wearing gems, specific actions."
+    confidence: high
+
+notes: >
+  Lal Kitab remedy principles: (1) Remedies are based on house position, not
+  just planetary ownership. (2) A common remedy for a planet in a bad house is
+  to feed or donate items associated with that planet. (3) Example: if the
+  Sun is afflicted, one should feed wheat to the poor or serve father figures.
+  (4) If Saturn is problematic, donate iron items or feed crows. (5) The
+  remedy system is designed for everyday practice — no elaborate puja or
+  mantra is typically required. (6) Some remedies are preventative (to
+  strengthen a weak planet) while others are curative (to reduce an afflicting
+  planet's impact). (7) Lal Kitab remedies also include specific behaviors to
+  avoid — for instance, certain houses forbid specific actions when planets
+  are placed there. The remedy framework is one of Lal Kitab's most
+  distinctive contributions, making astrology actionable for ordinary people.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

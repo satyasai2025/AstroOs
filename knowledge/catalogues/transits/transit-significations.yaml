@@ -1,0 +1,613 @@
+# ============================================================================
+# ASTRO OS — Transit Significations — Master Reference
+# ============================================================================
+# Source: BPHS Chapter 42 — Gochara Phaladhyaya
+# Scope: Complete transit signification table for each graha transiting
+#         houses 1-12 from Lagna. A master reference for gochara analysis.
+# Note:  Foundational reference only. No predictive interpretations beyond BPHS.
+# ============================================================================
+
+id: transit.significations.master
+name: "Transit Significations Master Reference"
+aliases: ["Graha Transit Significations", "Gochara Signification Table", "Transit House Effects"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  Each graha, while transiting through the 12 houses from Lagna, produces specific
+  effects based on its nature (malefic/benefic), house ownership, and the domain
+  of the house it occupies. This master reference provides the core signification
+  of each graha's transit through each house. BPHS Ch.42.
+
+# ── SURYA (Sun) Transit Significations ──────────────────────────────────────
+
+graha_significations:
+  surya:
+    name: "Surya (Sun)"
+    nature: malefic
+    transit_speed: "~30 days per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Self-confidence, authority, health improvements, ego issues"
+        intensity: strong
+      h2:
+        house: 2
+        effect: "Wealth gain, family matters, improved speech, authority in family"
+        intensity: moderate
+      h3:
+        house: 3
+        effect: "Courage, short journeys, sibling matters, communication"
+        intensity: moderate
+      h4:
+        house: 4
+        effect: "Domestic harmony, property matters, mother's well-being"
+        intensity: moderate
+      h5:
+        house: 5
+        effect: "Children's welfare, education, creative success, speculation"
+        intensity: moderate
+      h6:
+        house: 6
+        effect: "Victory over enemies, health concerns, service matters"
+        intensity: strong
+      h7:
+        house: 7
+        effect: "Partnership matters, spouse's health, public dealings"
+        intensity: moderate
+      h8:
+        house: 8
+        effect: "Hidden obstacles, health concerns, inheritance matters"
+        intensity: strong
+      h9:
+        house: 9
+        effect: "Fortune, father's well-being, spiritual growth, higher education"
+        intensity: moderate
+      h10:
+        house: 10
+        effect: "Career authority, professional recognition, government relations"
+        intensity: strong
+      h11:
+        house: 11
+        effect: "Financial gains, fulfillment of desires, elder siblings"
+        intensity: moderate
+      h12:
+        house: 12
+        effect: "Expenditure, losses, foreign connections, hospitalization"
+        intensity: strong
+
+  # ── CHANDRA (Moon) Transit Significations ────────────────────────────────
+
+  chandra:
+    name: "Chandra (Moon)"
+    nature: benefic
+    transit_speed: "~2.5 days per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Emotional well-being, mental peace, positive outlook"
+        intensity: moderate
+      h2:
+        house: 2
+        effect: "Family happiness, financial flow, nourishment, good speech"
+        intensity: moderate
+      h3:
+        house: 3
+        effect: "Emotional courage, sibling bonding, short journeys"
+        intensity: mild
+      h4:
+        house: 4
+        effect: "Domestic peace, property comfort, mother's well-being, mental calm"
+        intensity: strong
+      h5:
+        house: 5
+        effect: "Emotional fulfillment, children's happiness, creative inspiration"
+        intensity: moderate
+      h6:
+        house: 6
+        effect: "Emotional challenges, health awareness, service matters"
+        intensity: moderate
+      h7:
+        house: 7
+        effect: "Partnership harmony, spouse's emotional state, public image"
+        intensity: moderate
+      h8:
+        house: 8
+        effect: "Emotional upheaval, hidden fears, psychological transformation"
+        intensity: strong
+      h9:
+        house: 9
+        effect: "Emotional fortune, spiritual peace, father's well-being"
+        intensity: moderate
+      h10:
+        house: 10
+        effect: "Professional satisfaction, career stability, public recognition"
+        intensity: moderate
+      h11:
+        house: 11
+        effect: "Emotional gains, social connections, desire fulfillment"
+        intensity: moderate
+      h12:
+        house: 12
+        effect: "Emotional expenditure, isolation, dreams, spiritual retreat"
+        intensity: moderate
+
+  # ── MANGALA (Mars) Transit Significations ────────────────────────────────
+
+  mangala:
+    name: "Mangala (Mars)"
+    nature: malefic
+    transit_speed: "~45 days per rashi"
+    mangalik_houses: [1, 4, 7, 8, 12]
+    house_significations:
+      h1:
+        house: 1
+        effect: "Energy, aggression, physical vitality, conflicts, accidents"
+        intensity: strong
+        mangalik: true
+      h2:
+        house: 2
+        effect: "Harsh speech, financial disputes, family conflicts"
+        intensity: moderate
+      h3:
+        house: 3
+        effect: "Courage, determination, success in short journeys"
+        intensity: moderate
+        favorable: true
+      h4:
+        house: 4
+        effect: "Domestic unrest, property disputes, mental agitation"
+        intensity: strong
+        mangalik: true
+      h5:
+        house: 5
+        effect: "Obstacles in progeny, speculative losses, creative challenges"
+        intensity: moderate
+      h6:
+        house: 6
+        effect: "Victory over enemies, legal success, competitive advantage"
+        intensity: strong
+        favorable: true
+      h7:
+        house: 7
+        effect: "Relationship conflicts, partnership disputes, spouse's aggression"
+        intensity: strong
+        mangalik: true
+      h8:
+        house: 8
+        effect: "Accidents, surgery, sudden health events, hidden dangers"
+        intensity: strong
+        mangalik: true
+      h9:
+        house: 9
+        effect: "Conflicts with father/teachers, ideological disputes"
+        intensity: moderate
+      h10:
+        house: 10
+        effect: "Professional drive, career conflicts, authority disputes"
+        intensity: moderate
+      h11:
+        house: 11
+        effect: "Financial gains, desire fulfillment, network benefits"
+        intensity: moderate
+        favorable: true
+      h12:
+        house: 12
+        effect: "Expenditure, losses, hospitalization, foreign connections"
+        intensity: strong
+        mangalik: true
+
+  # ── BUDHA (Mercury) Transit Significations ───────────────────────────────
+
+  budha:
+    name: "Budha (Mercury)"
+    nature: benefic
+    transit_speed: "~25 days per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Intellectual growth, communication skills, analytical ability"
+        intensity: moderate
+      h2:
+        house: 2
+        effect: "Financial intelligence, eloquent speech, family communication"
+        intensity: moderate
+      h3:
+        house: 3
+        effect: "Writing success, communication mastery, short journeys"
+        intensity: moderate
+        favorable: true
+      h4:
+        house: 4
+        effect: "Domestic communication, property intelligence, educational pursuits"
+        intensity: moderate
+      h5:
+        house: 5
+        effect: "Intellectual creativity, educational success, children's progress"
+        intensity: moderate
+        favorable: true
+      h6:
+        house: 6
+        effect: "Competitive intelligence, legal matters, health awareness"
+        intensity: moderate
+      h7:
+        house: 7
+        effect: "Partnership communication, intellectual compatibility"
+        intensity: moderate
+      h8:
+        house: 8
+        effect: "Hidden knowledge, research success, psychological insight"
+        intensity: moderate
+      h9:
+        house: 9
+        effect: "Higher education, philosophical communication, teaching"
+        intensity: moderate
+        favorable: true
+      h10:
+        house: 10
+        effect: "Professional communication, business intelligence, analytical work"
+        intensity: moderate
+      h11:
+        house: 11
+        effect: "Financial intelligence, network communication, social gains"
+        intensity: moderate
+        favorable: true
+      h12:
+        house: 12
+        effect: "Expenditure through communication, foreign language, isolation"
+        intensity: mild
+
+  # ── GURU (Jupiter) Transit Significations ────────────────────────────────
+
+  guru:
+    name: "Guru (Jupiter)"
+    nature: benefic
+    transit_speed: "~12 months per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Self-confidence, wisdom, health, personal growth, optimism"
+        intensity: strong
+        favorable: true
+      h2:
+        house: 2
+        effect: "Wealth, family happiness, eloquent speech, nourishment"
+        intensity: strong
+        favorable: true
+      h3:
+        house: 3
+        effect: "Sibling benefits, communication, short journeys, modest initiative"
+        intensity: moderate
+      h4:
+        house: 4
+        effect: "Domestic happiness, property acquisition, mental peace, mother's support"
+        intensity: strong
+        favorable: true
+      h5:
+        house: 5
+        effect: "Fortune, progeny, education, creative success, spiritual merit"
+        intensity: strong
+        favorable: true
+      h6:
+        house: 6
+        effect: "Service matters, health concerns, legal disputes, enemy mitigation"
+        intensity: moderate
+      h7:
+        house: 7
+        effect: "Partnership harmony, marital blessings, public success"
+        intensity: strong
+        favorable: true
+      h8:
+        house: 8
+        effect: "Hidden obstacles, inheritance, spiritual transformation"
+        intensity: moderate
+      h9:
+        house: 9
+        effect: "Supreme fortune, spiritual growth, father's blessings, pilgrimages"
+        intensity: strong
+        favorable: true
+      h10:
+        house: 10
+        effect: "Career growth, professional recognition, authority, leadership"
+        intensity: strong
+        favorable: true
+      h11:
+        house: 11
+        effect: "Desire fulfillment, financial gains, network benefits"
+        intensity: strong
+        favorable: true
+      h12:
+        house: 12
+        effect: "Expenditure, foreign travel, spiritual withdrawal, moksha tendencies"
+        intensity: moderate
+
+  # ── SHUKRA (Venus) Transit Significations ────────────────────────────────
+
+  shukra:
+    name: "Shukra (Venus)"
+    nature: benefic
+    transit_speed: "~25 days per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Beauty, charm, luxury, romantic outlook, artistic expression"
+        intensity: moderate
+        favorable: true
+      h2:
+        house: 2
+        effect: "Wealth, luxury, family harmony, refined speech, artistic talents"
+        intensity: moderate
+        favorable: true
+      h3:
+        house: 3
+        effect: "Creative communication, artistic short journeys, sibling bonds"
+        intensity: mild
+      h4:
+        house: 4
+        effect: "Domestic comfort, property beauty, luxury vehicles, mother's happiness"
+        intensity: moderate
+        favorable: true
+      h5:
+        house: 5
+        effect: "Romantic fulfillment, creative success, artistic expression, progeny"
+        intensity: moderate
+        favorable: true
+      h6:
+        house: 6
+        effect: "Health concerns, luxury expenses, artistic competition"
+        intensity: moderate
+      h7:
+        house: 7
+        effect: "Marital harmony, romantic partnerships, spouse's beauty, public charm"
+        intensity: strong
+        favorable: true
+      h8:
+        house: 8
+        effect: "Hidden desires, secret relationships, artistic transformation"
+        intensity: moderate
+      h9:
+        house: 9
+        effect: "Artistic fortune, luxury travel, spiritual beauty, father's comfort"
+        intensity: moderate
+        favorable: true
+      h10:
+        house: 10
+        effect: "Professional charm, artistic career, luxury business, public image"
+        intensity: moderate
+      h11:
+        house: 11
+        effect: "Financial gains through art/luxury, social connections, desire fulfillment"
+        intensity: moderate
+        favorable: true
+      h12:
+        house: 12
+        effect: "Luxury expenditure, romantic isolation, spiritual beauty, foreign lands"
+        intensity: moderate
+
+  # ── SHANI (Saturn) Transit Significations ────────────────────────────────
+
+  shani:
+    name: "Shani (Saturn)"
+    nature: malefic
+    transit_speed: "~30 months (2.5 years) per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Physical ailments, reduced vitality, introspection, discipline"
+        intensity: strong
+      h2:
+        house: 2
+        effect: "Financial strain, family disputes, dietary changes"
+        intensity: strong
+      h3:
+        house: 3
+        effect: "Increased courage, willpower, success in endeavors"
+        intensity: moderate
+        favorable: true
+      h4:
+        house: 4
+        effect: "Domestic unrest, mental peace disruption, property issues"
+        intensity: strong
+      h5:
+        house: 5
+        effect: "Obstacles in progeny, education challenges, creative blocks"
+        intensity: strong
+      h6:
+        house: 6
+        effect: "Victory over enemies, legal success, competitive advantage"
+        intensity: strong
+        favorable: true
+      h7:
+        house: 7
+        effect: "Partnership difficulties, marriage delays, business strain"
+        intensity: strong
+      h8:
+        house: 8
+        effect: "Health crises, accidents, hidden troubles (Ashtama Shani)"
+        intensity: strong
+      h9:
+        house: 9
+        effect: "Fortune obstacles, father's difficulties, spiritual hardship"
+        intensity: strong
+      h10:
+        house: 10
+        effect: "Professional restructuring, career challenges, authority issues"
+        intensity: strong
+      h11:
+        house: 11
+        effect: "Fulfillment of desires, financial gains, network benefits"
+        intensity: strong
+        favorable: true
+      h12:
+        house: 12
+        effect: "Expenditure, losses, foreign connections, spiritual retreat"
+        intensity: strong
+
+  # ── RAHU Transit Significations ──────────────────────────────────────────
+
+  rahu:
+    name: "Rahu (North Node)"
+    nature: malefic
+    transit_speed: "~18 months per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Identity confusion, unconventional behavior, foreign connections"
+        intensity: strong
+      h2:
+        house: 2
+        effect: "Unusual wealth sources, foreign food, confused speech"
+        intensity: moderate
+      h3:
+        house: 3
+        effect: "Courage through unusual means, foreign communication"
+        intensity: moderate
+      h4:
+        house: 4
+        effect: "Domestic unrest, foreign residence, property complications"
+        intensity: strong
+      h5:
+        house: 5
+        effect: "Unconventional creativity, speculative gains, unusual progeny matters"
+        intensity: moderate
+      h6:
+        house: 6
+        effect: "Victory over unusual enemies, foreign service, competitive success"
+        intensity: moderate
+      h7:
+        house: 7
+        effect: "Unconventional partnerships, foreign spouse, unusual relationships"
+        intensity: strong
+      h8:
+        house: 8
+        effect: "Sudden events, hidden dangers, foreign inheritance, transformation"
+        intensity: strong
+      h9:
+        house: 9
+        effect: "Unusual spiritual experiences, foreign travel, unconventional philosophy"
+        intensity: moderate
+      h10:
+        house: 10
+        effect: "Sudden career changes, foreign professional opportunities"
+        intensity: strong
+      h11:
+        house: 11
+        effect: "Unusual gains, foreign networks, unconventional desire fulfillment"
+        intensity: moderate
+      h12:
+        house: 12
+        effect: "Foreign connections, unusual expenditure, spiritual confusion"
+        intensity: strong
+
+  # ── KETU Transit Significations ──────────────────────────────────────────
+
+  ketu:
+    name: "Ketu (South Node)"
+    nature: malefic
+    transit_speed: "~18 months per rashi"
+    house_significations:
+      h1:
+        house: 1
+        effect: "Detachment from self, spiritual seeking, physical disorientation"
+        intensity: strong
+      h2:
+        house: 2
+        effect: "Detachment from wealth, unconventional speech, spiritual simplicity"
+        intensity: moderate
+      h3:
+        house: 3
+        effect: "Detachment from siblings, unusual courage, spiritual communication"
+        intensity: mild
+      h4:
+        house: 4
+        effect: "Detachment from home, loss of domestic peace, spiritual withdrawal"
+        intensity: strong
+      h5:
+        house: 5
+        effect: "Detachment from children/creativity, spiritual merit, past-life wisdom"
+        intensity: moderate
+      h6:
+        house: 6
+        effect: "Victory through detachment, unusual enemies, spiritual service"
+        intensity: moderate
+      h7:
+        house: 7
+        effect: "Detachment from partnerships, karmic resolution in relationships"
+        intensity: strong
+      h8:
+        house: 8
+        effect: "Deep transformation, spiritual liberation, hidden losses"
+        intensity: strong
+      h9:
+        house: 9
+        effect: "Spiritual fortune, detachment from dogma, past-life wisdom"
+        intensity: moderate
+      h10:
+        house: 10
+        effect: "Detachment from career, unusual professional path, spiritual work"
+        intensity: moderate
+      h11:
+        house: 11
+        effect: "Detachment from desires, unusual gains, spiritual network"
+        intensity: moderate
+      h12:
+        house: 12
+        effect: "Spiritual liberation (moksha), foreign connections, deep detachment"
+        intensity: strong
+        favorable: true
+
+conditions:
+  - entity: entity.graha.surya
+    role: subject
+  - entity: entity.graha.chandra
+    role: subject
+  - entity: entity.graha.mangala
+    role: subject
+  - entity: entity.graha.budha
+    role: subject
+  - entity: entity.graha.guru
+    role: subject
+  - entity: entity.graha.shukra
+    role: subject
+  - entity: entity.graha.shani
+    role: subject
+  - entity: entity.graha.rahu
+    role: subject
+  - entity: entity.graha.ketu
+    role: subject
+
+effects:
+  - description: "Each graha transit through each house produces specific significations as tabulated above"
+    intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "The transit effects of each planet through the twelve houses from the
+      Lagna are described according to the nature of the planet and the
+      significations of the house occupied."
+    confidence: high
+  - ref: source.BPHS.chapter42
+    claim: >
+      "Chapter 42 (Gochara Phaladhyaya) provides the comprehensive framework
+      for interpreting planetary transits, including the signification of each
+      graha in each house."
+    confidence: high
+
+notes: >
+  This master reference is the foundation for all transit analysis. Use it in
+  conjunction with dignity (exaltation/debilitation), conjunctions, Ashtakavarga
+  strength, and running Dasha to produce accurate transit interpretations. The
+  "favorable" flag indicates houses where a graha's transit is generally positive.
+  The "mangalik" flag (Mars only) indicates houses where Mars transit is
+  particularly challenging.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry — master transit signification reference for all 9 grahas"
+    author: "Chief Jyotish Knowledge Architect"

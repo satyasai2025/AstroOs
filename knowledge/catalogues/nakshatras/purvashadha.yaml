@@ -1,0 +1,56 @@
+id: nakshatra.purvashadha
+name: Purvashadha
+aliases: [Purva Ashadha, पूर्वाषाढ़ा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Purva Ashadha
+devanagari: पूर्वाषाढ़ा
+meaning: "The Former Invincible; the Earlier Conqueror"
+ruler: { ref: graha.shukra, system: vimshottari }
+deity:
+  name: Apah
+  description: "The Waters (also associated with Varuna); the cosmic purifying and life-giving principle"
+  attributes: [water, purification, invincibility, cosmic order]
+shakti:
+  name: Varchograhana
+  meaning: "The power to purify and invigorate"
+  power: "To purify and invigorate; to bestow an invincible quality"
+star: { name: "Delta Sagittarii" }
+starting_degree: 13.33
+ending_degree: 26.67
+rashi_span: [{ ref: rashi.dhanus }]
+padas:
+  - { pada: 1, degrees: "13°20'-16°40' Dhanus", rashi: rashi.dhanus, navamsha_rashi: rashi.dhanus }
+  - { pada: 2, degrees: "16°40'-20° Dhanus", rashi: rashi.dhanus, navamsha_rashi: rashi.makaram }
+  - { pada: 3, degrees: "20°-23°20' Dhanus", rashi: rashi.dhanus, navamsha_rashi: rashi.kumbham }
+  - { pada: 4, degrees: "23°20'-26°40' Dhanus", rashi: rashi.dhanus, navamsha_rashi: rashi.meenam }
+nature:
+  temperament: "Invincible and purifying; possesses a conquering and resilient spirit"
+  guna: rajasic
+  gana: manushya
+  yoni: monkey
+  nadis: adi
+karakatvas:
+  - { concept: "Invincibility and conquest" }
+  - { concept: "Purification and renewal" }
+  - { concept: "Water and cleansing" }
+  - { concept: "Self-assertion and confidence" }
+  - { concept: "Victory through persistence" }
+compatible_nakshatras:
+  - { ref: nakshatra.moola }
+  - { ref: nakshatra.uttarashadha }
+  - { ref: nakshatra.punarvasu }
+incompatible_nakshatras:
+  - { ref: nakshatra.rohini }
+  - { ref: nakshatra.uttaraphalguni }
+  - { ref: nakshatra.hasta }
+sources:
+  - { ref: source.BPHS, claim: "Purva Ashadha is ruled by Shukra; deity is Apah; Gana is Manushya; Yoni is Monkey; Nadi is Adi", confidence: high }
+  - { ref: source.BPHS, claim: "Purva Ashadha spans from 13°20' to 26°40' Dhanus", confidence: high }
+notes: "Purva Ashadha is the nakshatra of invincibility and purification. Apah (the Waters) as deity represents the purifying and life-giving power of water. This nakshatra grants an unconquerable spirit and the ability to regenerate."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

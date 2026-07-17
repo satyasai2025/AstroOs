@@ -1,0 +1,100 @@
+id: aspect.special.guru
+name: Guru Special Aspects
+aliases:
+  - Jupiter Special Aspects
+  - Guru Panchama-Navama Drishti
+  - Guru 5th and 9th Aspects
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: special
+
+statement: >
+  Guru (Jupiter) aspects the 5th and 9th houses from its position in
+  addition to the standard 7th house aspect. Guru thus aspects houses
+  5, 7, and 9 — all trikona (trinal) positions relative to itself.
+
+conditions:
+  - entity: graha.guru
+    role: subject
+    notes: >
+      Only Guru possesses this combination of special aspects. The rule
+      applies regardless of Guru's sign, house ownership, or dignity.
+  - entity: house.5th-from-guru
+    role: object
+    notes: >
+      The 5th house aspect is a special drishti unique to Guru. It
+      carries a strong benefic influence.
+  - entity: house.9th-from-guru
+    role: object
+    notes: >
+      The 9th house aspect is the second special drishti of Guru. It
+      is considered the most fortunate of Guru's aspects.
+
+effects:
+  - description: >
+      The 5th aspect connects Guru to matters of intelligence, progeny,
+      creativity, and past-life merit (purva punya).
+    intensity: strong
+    notes: >
+      Being a special aspect from a natural benefic, this carries strong
+      positive potential when Guru is well-dignified.
+  - description: >
+      The 9th aspect connects Guru to matters of dharma, fortune,
+      higher learning, and spiritual inclination.
+    intensity: strong
+    notes: >
+      Guru aspecting its own trinal house (9th) is considered among
+      the most auspicious configurations.
+  - description: >
+      Guru's triple aspect (5th, 7th, 9th) covers three trinal houses
+      simultaneously, creating a broad field of benefic influence.
+    intensity: strong
+    notes: >
+      The trinal nature of all three aspects amplifies their collective
+      beneficence beyond what three random aspects would produce.
+
+exceptions:
+  - condition: >
+      When Guru is retrograde (vakri), the special aspects intensify
+      rather than weaken, though the direction of influence may shift
+      inward.
+    reason: >
+      Retrograde planets in Vedic astrology are considered strengthened
+      in their drishti capacity, though effects may manifest
+      unconventionally.
+  - condition: >
+      When Guru is combust (astangata), the special aspects are
+      significantly weakened.
+    reason: >
+      Combustion near Surya diminishes the independent capacity of a
+      graha to cast aspects.
+  - condition: >
+      Guru's aspects produce adverse results when Guru is in enemy or
+      debilitated sign, or when aspected by malefics.
+    reason: >
+      The intrinsic strength of Guru determines the quality of effects
+      from its special aspects.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Guru aspects the 5th,
+      7th, and 9th houses from its position. The 5th and 9th aspects
+      are special to Guru.
+    confidence: high
+
+notes: >
+  Guru's special aspects align with trikona (trinal) houses — the 5th
+  and 9th are both trinal positions. This reinforces Guru's role as
+  the primary significator of dharma and fortune. The trikona alignment
+  is considered structurally auspicious in chart interpretation.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

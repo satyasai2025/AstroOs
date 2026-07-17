@@ -1,0 +1,75 @@
+id: lal-kitab.core.house-rules
+name: Lal Kitab House Significations
+aliases: ["Lal Kitab Bhava Rules", "Lal Kitab House Meanings", "Tej Bahadur House System"]
+category: lal-kitab
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: lal-kitab
+statement: >
+  Each of the 12 houses in Lal Kitab has specific fixed significations that
+  differ from classical BPHS (Brihat Parashara Hora Shastra). The Lal Kitab
+  house system assigns unique body-part associations, family-member mappings,
+  and event domains. Houses also have specific interactions: the 7th house
+  aspects the 1st, the 4th aspects the 10th, and the 8th aspects the 2nd
+  ( Lal Kitab directional aspects). Each house has dedicated remedies (upayas)
+  when afflicted.
+
+conditions:
+  - entity: bhava.cusp
+    role: subject
+    detail: "Each house has fixed significations assigned in Lal Kitab that may differ from Parashari"
+
+  - entity: bhava.aspects
+    role: framework
+    detail: "Lal Kitab unique directional aspects: 7th from 1st, 4th from 10th, 8th from 2nd"
+
+effects:
+  - description: "1st house signifies head, brain, self, and overall life direction"
+    intensity: strong
+  - description: "2nd house signifies family, wealth, right eye, and food habits"
+    intensity: strong
+  - description: "3rd house signifies courage, siblings, right ear, and short journeys"
+    intensity: moderate
+  - description: "4th house signifies mother, happiness, property, and vehicles"
+    intensity: strong
+  - description: "5th house signifies children, education, speculation, and past merit"
+    intensity: strong
+  - description: "6th house signifies disease, enemies, debt, and service"
+    intensity: moderate
+  - description: "7th house signifies spouse, partnership, business, and public dealings"
+    intensity: strong
+  - description: "8th house signifies longevity, obstacles, inheritance, and hidden matters"
+    intensity: strong
+  - description: "9th house signifies father, fortune, dharma, and long journeys"
+    intensity: strong
+  - description: "10th house signifies career, reputation, karma, and authority"
+    intensity: strong
+  - description: "11th house signifies gains, income, elder siblings, and fulfillment of desires"
+    intensity: strong
+  - description: "12th house signifies losses, expenditure, foreign lands, and liberation"
+    intensity: moderate
+
+sources:
+  - ref: source.lal-kitab
+    claim: "Lal Kitab house significations: Different from classical BPHS. Each house has specific fixed significations."
+    confidence: high
+
+notes: >
+  Lal Kitab house significations have key differences from Parashari: (1) Each
+  house has a fixed body-part ruling that does not change. (2) Planets in houses
+  produce effects through a "sitting and aspecting" framework unique to Lal Kitab.
+  (3) A planet only aspects the house directly opposite (7th from itself), with
+  additional Lal Kitab-specific aspect rules. (4) The 7th house from Lagna aspects
+  the Lagna itself — a planet in the 7th aspects the 1st. (5) If a house is
+  occupied, its owner's effects are felt; if empty, the house owner's effects are
+  weak. (6) No planet is considered truly malefic or benefic — effects depend on
+  house placement and ownership.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

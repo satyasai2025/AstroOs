@@ -1,0 +1,41 @@
+id: yoga.chandra.anapha
+name: Anapha Yoga
+aliases: ["Comfort Wealth Yoga"]
+category: yoga
+type: chandra
+subcategory: nakshatra-based
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Any planet (other than the Sun) is placed in the 12th house from the Moon"
+      entity: yoga.chandra.anapha
+      role: subject
+      notes: "The planet must be in the sign immediately preceding the Moon's sign. The Sun is excluded. The specific planet determines the nature of comfort and wealth. Venus here particularly indicates luxurious comforts."
+
+effects:
+  positive:
+    - "Wealth and comfortable living"
+    - "Good quality of life and material comforts"
+    - "Success through expenditures (the 12th is the house of expenditure, but from Moon it indicates spending for comfort brings returns)"
+    - "Foreign connections or settlements"
+    - "Spiritual and contemplative wealth"
+  negative:
+    - "May indicate expenses in acquiring comforts"
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 26
+
+notes: "Part of the Moon-based (Chandra) yoga system. The 12th from Moon represents expenditure, loss, and foreign lands from the mental/emotional standpoint. A planet here (other than Sun) indicates that the native's mental energy flows toward acquiring comforts and pleasures. The wealth comes in the form of quality of life rather than raw accumulation. The nature of comforts depends on the planet placed here."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

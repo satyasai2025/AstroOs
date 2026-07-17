@@ -1,0 +1,13 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,house_number,sanskrit_name,category_tags,life_domains,verification_event_category
+ASTRO-REC-HOUSE-000001,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,1,Tanu Bhava,kendra|trikona,self|personality|vitality|appearance,
+ASTRO-REC-HOUSE-000002,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,2,Dhana Bhava,,wealth|family|speech|education,education
+ASTRO-REC-HOUSE-000003,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,3,Sahaja Bhava,upachaya,courage|siblings|communication,
+ASTRO-REC-HOUSE-000004,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,4,Bandhu Bhava,kendra,mother|home|property|happiness,
+ASTRO-REC-HOUSE-000005,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,5,Putra Bhava,trikona,children|intellect|creativity|progeny,progeny
+ASTRO-REC-HOUSE-000006,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,6,Ari Bhava,dusthana|upachaya,health|disease|enemies|debts,health
+ASTRO-REC-HOUSE-000007,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,7,Yuvati Bhava,kendra,marriage|spouse|partnership|relationships,marriage
+ASTRO-REC-HOUSE-000008,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,8,Ayur Bhava,dusthana,longevity|occult|inheritance|crisis,longevity
+ASTRO-REC-HOUSE-000009,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,9,Dharma Bhava,trikona,luck|religion|guru|higher_education,
+ASTRO-REC-HOUSE-000010,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,10,Karma Bhava,kendra|upachaya,career|profession|status|authority,career
+ASTRO-REC-HOUSE-000011,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,11,Labha Bhava,upachaya,gains|income|fulfillment|friends,wealth
+ASTRO-REC-HOUSE-000012,ASTRO-RF-HOUSE-v1.0.0,reference,1,false,12,Vyaya Bhava,dusthana,loss|expenditure|isolation|moksha,

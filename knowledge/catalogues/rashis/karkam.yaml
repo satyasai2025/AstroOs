@@ -1,0 +1,83 @@
+# catalogues/rashis/karkam.yaml
+
+id: rashi.karkam
+name: Karkam
+aliases:
+  - Cancer
+  - Karka
+  - कर्क
+category: rashi
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Karka
+devanagari: कर्क
+meaning: "The crab"
+element: water
+quality: cardinal
+gender: female
+
+ruler:
+  ref: graha.chandra
+  notes: Traditional Parashari rulership of Karka
+
+tattva_lord:
+  element: water
+  lord: graha.shukra
+  notes: Shukra is the lord of the water element (Jala Tattva)
+
+degree_span:
+  start: 90
+  end: 120
+
+body_part: Chest and breasts
+direction: North
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.punarvasu
+    padas: [4]
+    degrees: "90°00' - 93°20'"
+  - nakshatra: nakshatra.pushya
+    padas: [1, 2, 3, 4]
+    degrees: "93°20' - 106°40'"
+  - nakshatra: nakshatra.ashlesha
+    padas: [1, 2, 3, 4]
+    degrees: "106°40' - 120°00'"
+
+properties:
+  temperament: Emotional, nurturing, protective
+  motivation: moksha
+  symbol: Crab
+
+karakatvas:
+  - concept: Emotions and sensitivity
+  - concept: Nurturing and motherhood
+  - concept: Home and domestic life
+
+compatible_with:
+  - ref: rashi.vrishchikam
+  - ref: rashi.meenam
+incompatible_with:
+  - ref: rashi.makaram
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Karka as a Chara (movable), Pristhodara (creeping), and Kitta (insect) sign ruled by Chandra"
+    confidence: high
+
+notes: >
+  Karka is the fourth sign of the zodiac, ruling the domain of emotions
+  and domestic life. As a cardinal water sign, it embodies nurturing
+  energy, deep sensitivity, and protective instincts. Natives born under
+  Karka are said to be deeply emotional, intuitive, and family-oriented.
+  The sign corresponds to the chest and breasts (Hridaya) in the
+  Kalapurusha correspondence of the zodiac to the human body. Karka is
+  the only sign ruled by Chandra (the Moon).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

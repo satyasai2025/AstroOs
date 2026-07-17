@@ -1,0 +1,30 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+
+# pnpm "catalog" — single source of truth for shared dependency versions
+# across the workspace. apps/web/package.json references these via the
+# "catalog:" version protocol (e.g. "react": "catalog:") instead of pinning
+# versions in each package individually, so every workspace package stays
+# on the same version of a shared dependency.
+#
+# Versions below are chosen to match what apps/web/package.json already
+# pins directly for related packages:
+#   - react/react-dom 19.x  -> required by next@^15.1.0 (Next.js 15 targets React 19)
+#   - @tanstack/react-query -> matches @tanstack/react-query-devtools@^5.62.0 already pinned
+#   - tailwind-merge 2.x    -> compatible with tailwindcss@^3.4.17 already pinned
+#                              (tailwind-merge 3.x targets Tailwind v4, not used here)
+catalog:
+  react: ^19.0.0
+  react-dom: ^19.0.0
+  "@tanstack/react-query": ^5.62.0
+  clsx: ^2.1.1
+  tailwind-merge: ^2.6.0
+  zod: ^3.24.1
+  "@types/node": ^22.10.0
+  "@types/react": ^19.0.0
+  "@types/react-dom": ^19.0.0

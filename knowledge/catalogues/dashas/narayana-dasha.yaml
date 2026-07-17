@@ -1,0 +1,68 @@
+id: dasha.narayana
+name: Narayana Dasha
+aliases: ["Narayana Charya Dasha"]
+category: dasha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+type: rashi-dasha
+total_years: 12
+
+sequence:
+  - note: "Variable — starts from the 12th lord from Lagna's rashi"
+  - note: "Each rashi gets exactly 1 year"
+  - note: "Complete cycle through all 12 rashis = 12 years"
+
+calculation_method: |
+  Narayana Dasha is a rashi-based dasha system where each rashi
+  receives exactly 1 year of dasha period.
+
+  Starting Point:
+    The starting rashi is determined by the 12th lord from the Lagna
+    (Ascendant). Specifically, identify which planet rules the 12th
+    house from Lagna, and the dasha begins from the rashi occupied
+    by that 12th lord.
+
+  Sequence:
+    The sequence proceeds forward through the rashis from the starting
+    point, giving each rashi exactly 1 year.
+
+  Duration:
+    Every rashi gets exactly 1 year, making the total cycle 12 years.
+
+antardasha: false
+pratyantardasha: false
+sub_period_calculation: |
+  Narayana Dasha typically does not use antardasha or lower-level
+  sub-periods. The system operates at the rashi level only, with each
+  rashi period lasting exactly 1 year.
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 9 — Narayana Dasha is a rashi-based dasha system where the starting rashi is determined by the 12th lord from Lagna, with each rashi receiving 1 year."
+    confidence: high
+
+notes: |
+  Narayana Dasha is a straightforward rashi-based system. The key
+  features are:
+    - Simple 1-year duration per rashi
+    - 12-year total cycle
+    - Starting point from 12th lord (not Atmakaraka as in Chara)
+    - No antardasha system
+
+  This system is used for timing major life events and is particularly
+  noted for its accuracy in predicting significant transitions. The
+  12th house connection at the starting point is considered significant
+  for understanding the karmic basis of the dasha sequence.
+
+  Unlike Chara Dasha which has variable durations, Narayana Dasha
+  provides uniform 1-year periods, making it simpler to calculate
+  and interpret.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

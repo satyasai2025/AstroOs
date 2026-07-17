@@ -18,10 +18,12 @@ from apps.api.config import get_settings
 from apps.api.routers import auth
 from apps.api.routers import dasha as dasha_router
 from apps.api.routers import divisional as divisional_router
+from apps.api.routers import events as events_router
 from apps.api.routers import horoscope as horoscope_router
 from apps.api.schemas.auth import HealthResponse
 from apps.api.schemas.ephemeris import EphemerisStatusSchema
 from apps.api.services.ephemeris_service import EphemerisService
+from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 logger = logging.getLogger(__name__)
 _settings = get_settings()
@@ -29,6 +31,21 @@ _settings = get_settings()
 
 def _make_ephemeris_service() -> EphemerisService:
     return EphemerisService(_settings.EPHEMERIS_PATH)
+
+
+def _make_ephemeris_wrapper() -> EphemerisWrapper:
+    """
+    Build the single, process-wide EphemerisWrapper instance.
+
+    This MUST be created exactly once and shared via app.state — see the
+    thread-safety note on EphemerisWrapper itself. Routers must never
+    construct their own EphemerisWrapper; they depend on
+    `apps.api.dependencies.get_ephemeris_wrapper` instead.
+    """
+    return EphemerisWrapper(
+        ephemeris_path=_settings.EPHEMERIS_PATH,
+        ayanamsa="lahiri",
+    )
 
 
 @asynccontextmanager
@@ -44,6 +61,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     ephe_svc: EphemerisService = _make_ephemeris_service()
     ephe_svc.initialize()
     app.state.ephemeris_service = ephe_svc
+
+    # Single shared EphemerisWrapper for the whole process — see the
+    # thread-safety note on EphemerisWrapper for why this must not be
+    # re-created per request.
+    app.state.ephemeris_wrapper = _make_ephemeris_wrapper()
 
     startup_status = ephe_svc.get_status()
     logger.info(
@@ -100,6 +122,7 @@ def create_app() -> FastAPI:
     app.include_router(horoscope_router.router, prefix="/api/v1")
     app.include_router(divisional_router.router, prefix="/api/v1")
     app.include_router(dasha_router.router, prefix="/api/v1")
+    app.include_router(events_router.router, prefix="/api/v1")
 
     # ── Health ────────────────────────────────────────────────────────────────
 

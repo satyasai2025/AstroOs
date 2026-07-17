@@ -1,0 +1,59 @@
+# sources/texts/bhrigu-nandi-nadi.yaml
+
+id: source.bhrigu-nandi-nadi
+name: Bhrigu Nandi Nadi
+aliases:
+  - Bhrigu Nadi
+  - भृगु नन्दी नाडी
+category: source
+status: active
+confidence: medium
+version: 1.1
+last_verified: 2026-07-16
+
+author: "Attributed to Maharishi Bhrigu"
+date:
+  approximate: "300 BCE – 500 CE"
+  confidence: low
+  notes: "Traditional attribution to Bhrigu. Likely a composite text compiled over centuries."
+
+language:
+  original: Sanskrit / Tamil
+  script: Grantha / Devanagari
+
+tradition: Nadi
+system: Nadi Jyotish
+
+edition:
+  notes: "Multiple versions exist. No standard critical edition."
+
+related_texts:
+  - ref: source.BPHS
+    relationship: "BNN shares some foundational concepts with the Parashari tradition BPHS represents but uses a different, nakshatra-centric predictive framework; the two are sometimes considered complementary in practice."
+
+significance: >
+  The Bhrigu Nandi Nadi is a foundational text of the Nadi tradition of
+  Jyotish. It presents a unique approach to chart interpretation based
+  on planetary positions and nakshatra-based predictions. The Nadi system
+  is known for its detailed and specific predictions. The text is
+  considered by its adherents to be of equal authority to BPHS.
+
+notes: >
+  The Nadi tradition uses its own unique dasha system and interpretive
+  rules. The Bhrigu Nandi Nadi is one of several Nadi texts, others
+  including those from Vaitheeswaran Koil (Tamil Nadu). The text is
+  traditionally preserved on palm-leaf manuscripts. The authenticity
+  and dating of the text are subjects of scholarly debate.
+  Classification note: Nadi texts are treated as a primary source for
+  the Nadi system but their authority for classical Parashari Jyotish
+  is secondary.
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Removed a redundant/erroneous related_texts entry that referenced an unregistered source.parashara ID; merged its content into the existing source.BPHS entry, which already covered the same Nadi-vs-Parashari relationship."
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

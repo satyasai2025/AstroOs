@@ -20,9 +20,11 @@ from fastapi import Request as _Request
 
 from apps.api.config import Settings, get_settings
 from apps.api.domain.user import User
+from apps.api.repositories.event_repository import EventRepository
 from apps.api.repositories.user_repository import UserRepository
 from apps.api.services.auth_service import AuthError, AuthService
 from apps.api.services.ephemeris_service import EphemerisService
+from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 _settings: Settings = get_settings()
 
@@ -142,6 +144,12 @@ async def get_user_repo(
     return UserRepository(session)
 
 
+async def get_event_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> EventRepository:
+    return EventRepository(session)
+
+
 async def get_auth_service(
     user_repo: UserRepository = Depends(get_user_repo),
     redis: aioredis.Redis | None = Depends(get_redis),
@@ -158,6 +166,21 @@ async def get_ephemeris_service(request: Request) -> EphemerisService:
     Injecting via app.state avoids re-initialising the C library per request.
     """
     return request.app.state.ephemeris_service
+
+
+async def get_ephemeris_wrapper(request: Request) -> EphemerisWrapper:
+    """
+    Return the single process-wide EphemerisWrapper instance created during
+    lifespan startup (see apps.api.main._make_ephemeris_wrapper).
+
+    Routers (horoscope, divisional, dasha) MUST depend on this instead of
+    constructing their own EphemerisWrapper. pyswisseph holds process-global
+    state, and EphemerisWrapper.calculate() is internally lock-protected on
+    the assumption that exactly one instance exists per process — creating
+    a second instance does not provide request isolation, it just adds a
+    second, uncoordinated lock guarding the same global C-library state.
+    """
+    return request.app.state.ephemeris_wrapper
 
 
 # ── Auth Guard ────────────────────────────────────────────────────────────────

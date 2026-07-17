@@ -1,0 +1,75 @@
+# ontology/glossary/varga.yaml
+
+id: term.varga
+name: Varga
+aliases:
+  - Varga
+  - Divisional Chart
+  - Amsha
+  - वर्ग
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    varga — from vṛj (to divide, to separate). Literally "a
+    division, a group, a class." In jyotisha, the system of
+    divisional charts that divide each rāśi into finer
+    segments for specialized analysis.
+  english: >
+    A system of 16 divisional charts (shodashavarga), each
+    dividing the zodiac into finer segments to analyze
+    specific life domains. The primary vargas include D-1
+    (rasi — general), D-2 (hora — wealth), D-3 (drekkana —
+    siblings), D-4 (chaturthamsha — fortune), D-7
+    (saptamsha — children), D-9 (navamsha — spouse/marriage),
+    D-10 (dashamsha — career), D-12 (dvadashamsha —
+    parents), D-16 (shodashamsha — vehicles), D-20
+    (vimshamsha — spirituality), D-24 (chaturvimshamsha —
+    education), D-27 (saptavimshamsha — strength), D-30
+    (trimshamsha — evil), D-40 (khavedamsha — auspicious),
+    D-45 (akshavedamsha — character), D-60 (shashtiamsha —
+    karma).
+  technical: >
+    In each varga, the 30-degree sign is divided into the
+    specified number of segments (e.g., 9 segments of 3:20
+    each for navamsha). The varga charts are used for
+    specialized analysis: varga bala (divisional strength)
+    contributes to overall graha strength evaluation. The
+    saptavarga (seven), dashavarga (ten), and shodashavarga
+    (sixteen) are graded systems of varga analysis.
+
+usage:
+  primary: "Specialized analysis of specific life domains through targeted divisional charts"
+  secondary: "Assessment of graha strength through varga bala (divisional chart evaluation)"
+
+related_concepts:
+  - ref: term.bhava
+    relationship: "Each varga chart maps divisions back to bhava positions for focused interpretation"
+  - ref: term.rashi
+    relationship: "Vargas are subdivisions of each rashi into finer segments"
+  - ref: term.drekkana
+    relationship: "Drekkana (D-3) is one of the most important vargas in the saptavarga system"
+
+sources:
+  - ref: source.BPHS
+    chapter: 7
+    verse: 1-20
+    claim: "Vargāṇāṃ lakṣaṇaṃ vakṣye — I shall describe the characteristics of the vargas"
+    confidence: high
+
+notes: >
+  The varga system is unique to jyotisha and is one of its
+  most sophisticated analytical tools. Each varga chart
+  provides a lens through which a specific domain of life
+  is examined. The D-9 (navamsha) is considered the most
+  important divisional chart after the D-1 (rasi).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

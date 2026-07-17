@@ -1,0 +1,87 @@
+# catalogues/rashis/simham.yaml
+
+id: rashi.simham
+name: Simham
+aliases:
+  - Leo
+  - Simha
+  - सिंह
+category: rashi
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Siṃha
+devanagari: सिंह
+meaning: "The lion"
+element: fire
+quality: fixed
+gender: male
+
+ruler:
+  ref: graha.surya
+  notes: Traditional Parashari rulership of Simha
+
+tattva_lord:
+  element: fire
+  lord: graha.mangala
+  notes: Mangala is the lord of the fire element (Tejas Tattva)
+
+degree_span:
+  start: 120
+  end: 150
+
+body_part: Heart
+direction: East
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.magha
+    padas: [1, 2, 3, 4]
+    degrees: "120°00' - 133°20'"
+  - nakshatra: nakshatra.purvaphalguni
+    padas: [1, 2, 3, 4]
+    degrees: "133°20' - 146°40'"
+  - nakshatra: nakshatra.uttaraphalguni
+    padas: [1]
+    degrees: "146°40' - 150°00'"
+
+properties:
+  temperament: Proud, authoritative, generous
+  motivation: dharma
+  symbol: Lion
+
+karakatvas:
+  - concept: Authority and leadership
+  - concept: Royalty and nobility
+  - concept: Creativity and self-expression
+
+compatible_with:
+  - ref: rashi.mesham
+  - ref: rashi.dhanus
+incompatible_with:
+  - ref: rashi.kumbham
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Simha as a Sthira (fixed), Urdhvamukha (looking upward), and Mriga (animal) sign ruled by Surya"
+    confidence: high
+
+notes: >
+  Simha is the fifth sign of the zodiac, radiating authority and
+  creative self-expression. As a fixed fire sign, it embodies regal
+  dignity, courage, and a generous spirit. Natives born under Simha are
+  said to be natural leaders with a strong sense of pride and honour.
+  The sign corresponds to the heart (Hridaya) in the Kalapurusha
+  correspondence of the zodiac to the human body. Simha is the only
+  sign ruled by Surya (the Sun).
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

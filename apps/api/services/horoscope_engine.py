@@ -9,71 +9,43 @@ Generates a D1 (Rashi / Janma Kundali) birth chart from:
 
 Responsibilities:
   - Orchestrates EphemerisWrapper calls
-  - Computes graha aspects (drishti)
-  - Calculates planet strength summary
+  - Delegates aspect computation to AspectEngine
+  - Delegates planet strength scoring to GrahaEngine
   - Returns a D1Chart domain object
 
 No database I/O here — persistence is the repository's concern.
+
+As of Module 6.5 (Foundation Completion), aspect computation and planet
+strength/dignity scoring were extracted into their own independent
+services (aspect_engine.py, graha_engine.py) — this engine now
+orchestrates them rather than computing either inline. The algorithms
+themselves are unchanged; this is a relocation, verified by the full
+existing test suite still passing unmodified against the new code path.
 """
 
 import logging
+import uuid
 from datetime import datetime
 from typing import Optional
 
-from apps.api.domain.ephemeris import DignityType, SiderealPosition
-from apps.api.domain.horoscope import AspectInfo, D1Chart, PlanetStrength
+from apps.api.domain.horoscope import D1Chart
+from apps.api.services.aspect_engine import AspectEngine
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
-from packages.shared.constants import (
-    DEBILITATION_RASHIS,
-    EXALTATION_DEGREES,
-    OWN_SIGNS,
+from apps.api.services.graha_engine import (
+    DUSTHANA_HOUSES as _DUSTHANA_HOUSES,
+    GrahaEngine,
+    KENDRA_HOUSES as _KENDRA_HOUSES,
+    TRIKONA_HOUSES as _TRIKONA_HOUSES,
 )
 from packages.shared.enums import AyanamsaSystem
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Constants
-# ---------------------------------------------------------------------------
-
-_KENDRA_HOUSES = {1, 4, 7, 10}
-_TRIKONA_HOUSES = {1, 5, 9}
-_DUSTHANA_HOUSES = {6, 8, 12}
-
-# Special graha aspects in Vedic astrology (in addition to 7th house opposition)
-# Graha → set of house numbers it aspects (counted from its own house)
-_SPECIAL_ASPECTS: dict[str, set[int]] = {
-    "mars":    {4, 7, 8},
-    "jupiter": {5, 7, 9},
-    "saturn":  {3, 7, 10},
-    "rahu":    {5, 7, 9},   # Same as Jupiter by many traditions
-    "ketu":    {5, 7, 9},
-}
-
-# All planets aspect the 7th from their position
-_UNIVERSAL_ASPECT = 7
-
-# Orb for graha aspect (degrees within the aspected sign's cusp)
-_ASPECT_ORB = 5.0
-
-# ---------------------------------------------------------------------------
-# Strength scoring weights
-# ---------------------------------------------------------------------------
-
-_STRENGTH_WEIGHTS = {
-    "exalted":     10.0,
-    "moolatrikona": 8.0,
-    "own":          7.0,
-    "friendly":     5.0,
-    "neutral":      4.0,
-    "enemy":        2.5,
-    "debilitated":  1.0,
-}
-_RETROGRADE_BONUS = 0.5    # Retrograde often strengthens (controversial; classical view)
-_COMBUST_PENALTY = -2.0
-_KENDRA_BONUS = 1.0
-_TRIKONA_BONUS = 1.5
-_DUSTHANA_PENALTY = -1.0
+# _KENDRA_HOUSES / _TRIKONA_HOUSES / _DUSTHANA_HOUSES are re-exported from
+# graha_engine.py (their new home) under their original names here purely
+# for backward compatibility — tests/unit/test_horoscope_engine.py imports
+# them from this module. New code should import them from graha_engine
+# directly (as KENDRA_HOUSES etc, without the leading underscore).
 
 
 # ---------------------------------------------------------------------------
@@ -88,8 +60,28 @@ class HoroscopeEngine:
     and share the underlying EphemerisWrapper singleton across requests.
     """
 
-    def __init__(self, wrapper: EphemerisWrapper) -> None:
+    def __init__(
+        self,
+        wrapper: EphemerisWrapper,
+        birth_chart_repo=None,
+        planet_position_repo=None,
+        house_repo=None,
+        graha_engine: Optional[GrahaEngine] = None,
+        aspect_engine: Optional[AspectEngine] = None,
+    ) -> None:
         self._wrapper = wrapper
+        # Optional — only required for persist_d1(). Kept optional (default
+        # None) so existing callers/tests that construct HoroscopeEngine
+        # with just a wrapper (no persistence) are unaffected.
+        self._birth_chart_repo = birth_chart_repo
+        self._planet_position_repo = planet_position_repo
+        self._house_repo = house_repo
+        # GrahaEngine/AspectEngine are stateless and cheap to construct, so
+        # a default instance is created here if the caller doesn't supply
+        # one — existing single-argument construction (HoroscopeEngine
+        # (wrapper)) keeps working exactly as before.
+        self._graha_engine = graha_engine or GrahaEngine()
+        self._aspect_engine = aspect_engine or AspectEngine()
 
     def generate_d1(
         self,
@@ -131,8 +123,8 @@ class HoroscopeEngine:
             house_system=house_system,
         )
 
-        aspects = self._compute_aspects(ephe_result.planet_positions)
-        strengths = self._compute_planet_strengths(ephe_result.planet_positions)
+        aspects = self._aspect_engine.compute(ephe_result.planet_positions)
+        strengths = self._graha_engine.compute_strength(ephe_result.planet_positions)
 
         return D1Chart(
             ephemeris=ephe_result,
@@ -146,141 +138,71 @@ class HoroscopeEngine:
             house_system=house_system,
         )
 
-    # ── Aspects ───────────────────────────────────────────────────────────────
+    # ── Persistence ──────────────────────────────────────────────────────────
+    #
+    # Deliberately separate from generate_d1() rather than a combined
+    # "generate_and_persist" method: generate_d1() is a blocking, CPU-bound
+    # pyswisseph call that routers offload via asyncio.to_thread (see
+    # routers/horoscope.py). Persistence is async DB I/O with no CPU-bound
+    # work, so it does not need — and should not be wrapped in — to_thread.
+    # Keeping them as two methods lets the router keep doing exactly what
+    # it already does for the calculation step, unchanged.
 
-    def _compute_aspects(
-        self, planets: list[SiderealPosition]
-    ) -> list[AspectInfo]:
+    async def persist_d1(
+        self,
+        chart: D1Chart,
+        *,
+        birth_datetime_utc: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str = AyanamsaSystem.LAHIRI.value,
+        house_system: str = "W",
+        user_id: Optional[uuid.UUID] = None,
+        subject_name: str = "Unnamed",
+    ) -> uuid.UUID:
         """
-        Compute all graha drishti (aspects) between planets.
+        Persist an already-computed D1Chart (from generate_d1()) to
+        PostgreSQL: the birth_charts anchor row, its D1 summary fields, all
+        12 houses, and all 9 planet positions.
 
-        In Vedic astrology:
-        - All grahas aspect the 7th house from their position (opposition).
-        - Mars additionally aspects 4th and 8th.
-        - Jupiter additionally aspects 5th and 9th.
-        - Saturn additionally aspects 3rd and 10th.
-        - Rahu/Ketu aspect 5th, 7th, 9th (by some traditions).
+        Requires this engine to have been constructed with
+        birth_chart_repo, planet_position_repo, and house_repo — raises
+        RuntimeError otherwise, so a missing wiring mistake fails loudly
+        instead of silently skipping persistence.
+
+        Returns the birth_charts row id.
         """
-        aspects: list[AspectInfo] = []
-        planet_map = {p.planet: p for p in planets}
+        if not (self._birth_chart_repo and self._planet_position_repo and self._house_repo):
+            raise RuntimeError(
+                "HoroscopeEngine.persist_d1() requires birth_chart_repo, "
+                "planet_position_repo, and house_repo to be provided at "
+                "construction time."
+            )
 
-        for from_planet in planets:
-            aspect_houses = {_UNIVERSAL_ASPECT}
-            aspect_houses.update(_SPECIAL_ASPECTS.get(from_planet.planet, set()))
+        chart_id = await self._birth_chart_repo.get_or_create(
+            birth_datetime_utc=birth_datetime_utc,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+            house_system=house_system,
+            user_id=user_id,
+            subject_name=subject_name,
+        )
 
-            for house_offset in aspect_houses:
-                aspected_house = (
-                    (from_planet.house_number - 1 + house_offset - 1) % 12
-                ) + 1
+        await self._birth_chart_repo.update_d1_summary(
+            chart_id,
+            ayanamsa_value_deg=chart.ephemeris.ayanamsa_value,
+            lagna_rashi=chart.ascendant.rashi,
+            lagna_degree=chart.ascendant.rashi_degree,
+            moon_nakshatra=chart.panchanga.nakshatra.nakshatra,
+        )
 
-                for to_planet in planets:
-                    if to_planet.planet == from_planet.planet:
-                        continue
-                    if to_planet.house_number != aspected_house:
-                        continue
+        await self._house_repo.replace_for_chart(chart_id, chart.houses)
 
-                    # Calculate orb within the aspected sign
-                    from_deg = from_planet.rashi_degree
-                    to_deg = to_planet.rashi_degree
-                    orb = abs(from_deg - to_deg)
-                    if orb > 15:
-                        orb = 30 - orb
+        await self._planet_position_repo.replace_for_chart(
+            chart_id,
+            chart.planets,
+            ayanamsa_value_deg=chart.ephemeris.ayanamsa_value,
+        )
 
-                    aspect_type = self._classify_aspect(house_offset, from_planet.planet)
-                    is_applying = from_planet.speed_deg_per_day > to_planet.speed_deg_per_day \
-                        if hasattr(from_planet, 'speed_deg_per_day') else False
-
-                    aspects.append(AspectInfo(
-                        from_planet=from_planet.planet,
-                        to_planet=to_planet.planet,
-                        aspect_type=aspect_type,
-                        orb_degrees=round(orb, 4),
-                        is_applying=False,   # Speed not stored in SiderealPosition
-                    ))
-
-        return aspects
-
-    def _classify_aspect(self, house_offset: int, planet: str) -> str:
-        """Classify a Vedic aspect by house offset and planet."""
-        if house_offset == 1:
-            return "conjunction"
-        if house_offset == 7:
-            return "opposition"
-        if house_offset in (5, 9):
-            return "trine"
-        if house_offset in (4, 10):
-            return "square"
-        return "special_graha"
-
-    # ── Planet Strength ───────────────────────────────────────────────────────
-
-    def _compute_planet_strengths(
-        self, planets: list[SiderealPosition]
-    ) -> list[PlanetStrength]:
-        """
-        Compute a simplified strength score for each Graha.
-
-        This is a dignitary + positional assessment, not full Shadbala.
-        Score range: 0.0 – 10.0 (higher = stronger).
-        """
-        strengths: list[PlanetStrength] = []
-
-        for planet in planets:
-            dignity = planet.dignity
-
-            # Base score from dignity
-            if dignity is not None:
-                base = _STRENGTH_WEIGHTS.get(dignity.value, 4.0)
-            else:
-                base = 4.0   # neutral default for Rahu/Ketu
-
-            score = base
-
-            # Positional modifiers
-            if planet.house_number in _KENDRA_HOUSES:
-                score += _KENDRA_BONUS
-            if planet.house_number in _TRIKONA_HOUSES:
-                score += _TRIKONA_BONUS
-            if planet.house_number in _DUSTHANA_HOUSES:
-                score += _DUSTHANA_PENALTY
-
-            # Status modifiers
-            if planet.is_combust:
-                score += _COMBUST_PENALTY
-            if planet.is_retrograde:
-                score += _RETROGRADE_BONUS
-
-            score = round(max(0.0, min(10.0, score)), 2)
-
-            is_own_sign = self._is_own_sign(planet.planet, planet.rashi)
-            is_exalted = self._is_exalted(planet.planet, planet.rashi)
-            is_debilitated = self._is_debilitated(planet.planet, planet.rashi)
-
-            strengths.append(PlanetStrength(
-                planet=planet.planet,
-                dignity=dignity,
-                is_retrograde=planet.is_retrograde,
-                is_combust=planet.is_combust,
-                house_number=planet.house_number,
-                is_in_own_sign=is_own_sign,
-                is_exalted=is_exalted,
-                is_debilitated=is_debilitated,
-                is_in_kendra=planet.house_number in _KENDRA_HOUSES,
-                is_in_trikona=planet.house_number in _TRIKONA_HOUSES,
-                is_in_dusthana=planet.house_number in _DUSTHANA_HOUSES,
-                strength_score=score,
-            ))
-
-        return sorted(strengths, key=lambda s: s.strength_score, reverse=True)
-
-    def _is_own_sign(self, planet: str, rashi: str) -> bool:
-        return planet in OWN_SIGNS and rashi in OWN_SIGNS.get(planet, [])
-
-    def _is_exalted(self, planet: str, rashi: str) -> bool:
-        if planet not in EXALTATION_DEGREES:
-            return False
-        ex_rashi, _ = EXALTATION_DEGREES[planet]
-        return rashi == ex_rashi
-
-    def _is_debilitated(self, planet: str, rashi: str) -> bool:
-        return planet in DEBILITATION_RASHIS and rashi == DEBILITATION_RASHIS[planet]
+        return chart_id

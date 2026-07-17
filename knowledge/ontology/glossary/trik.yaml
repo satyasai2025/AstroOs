@@ -1,0 +1,66 @@
+# ontology/glossary/trik.yaml
+
+id: term.trik
+name: Trika
+aliases:
+  - Trik
+  - Trik Houses
+  - Dusthana Sthana
+  - त्रिक
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    trika — from tri (three). Literally "the three." The
+    group of three challenging houses: the 6th (ṣaṣṭha), 8th
+    (aṣṭama), and 12th (dvādaśa). Synonymous with dusthana.
+  english: >
+    The three "trik" or "dusthana" houses — the 6th, 8th, and
+    12th houses from the lagna. These houses are considered
+    inherently difficult, representing obstacles, disease,
+    transformation, and loss. Their lords are called trika
+    lords and generally considered unfavorable.
+  technical: >
+    The trik houses are counted from the lagna: 6th (shatru,
+    roga, rina — enemies, disease, debts), 8th (randhra, ayu
+    — obstacles, longevity), 12th (vyaya, moksha — expenses,
+    liberation). Trika lordship is one of the main criteria
+    for functional benefic/malefic classification: a graha
+    that owns only trik houses (and no kendra/trikona) is
+    classified as functional malefic.
+
+usage:
+  primary: "Identification of difficult houses and classification of functional malefic planets"
+  secondary: "Assessment of trika lord placement for predicting challenges and spiritual growth"
+
+related_concepts:
+  - ref: term.dusthana
+    relationship: "Trik is synonymous with dusthana — both refer to houses 6, 8, and 12"
+  - ref: term.bhava
+    relationship: "Trik houses are a specific subset of bhavas, opposite in nature to kendra and trikona"
+  - ref: term.kendra
+    relationship: "A graha owning both a kendra and a trik house produces a kendra-trik yoga with mixed results"
+
+sources:
+  - ref: source.BPHS
+    chapter: 11
+    verse: 45-52
+    claim: "Trikāṇi duḥkhāni kurvanti — the trik houses produce suffering"
+    confidence: high
+
+notes: >
+  While the trik houses are considered difficult, they also
+  confer resilience and spiritual depth. The 6th house
+  represents service, the 8th deep transformation, and the
+  12th spiritual liberation (moksha). Trika lords are
+  challenging but not wholly negative.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

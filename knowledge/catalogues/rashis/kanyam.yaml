@@ -1,0 +1,87 @@
+# catalogues/rashis/kanyam.yaml
+
+id: rashi.kanyam
+name: Kanyam
+aliases:
+  - Virgo
+  - Kanya
+  - कन्या
+category: rashi
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Kanyā
+devanagari: कन्या
+meaning: "The maiden; the virgin"
+element: earth
+quality: dual
+gender: female
+
+ruler:
+  ref: graha.budha
+  notes: Traditional Parashari rulership of Kanya
+
+tattva_lord:
+  element: earth
+  lord: graha.budha
+  notes: Budha is the lord of the earth element (Prithvi Tattva)
+
+degree_span:
+  start: 150
+  end: 180
+
+body_part: Abdomen
+direction: South
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.uttaraphalguni
+    padas: [2, 3, 4]
+    degrees: "150°00' - 160°00'"
+  - nakshatra: nakshatra.hasta
+    padas: [1, 2, 3, 4]
+    degrees: "160°00' - 173°20'"
+  - nakshatra: nakshatra.chitra
+    padas: [1]
+    degrees: "173°20' - 180°00'"
+
+properties:
+  temperament: Analytical, practical, meticulous
+  motivation: artha
+  symbol: Maiden
+
+karakatvas:
+  - concept: Analysis and discrimination
+  - concept: Service and healing
+  - concept: Purity and detail-oriented work
+
+compatible_with:
+  - ref: rashi.vrishabham
+  - ref: rashi.makaram
+incompatible_with:
+  - ref: rashi.meenam
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Kanya as a Dvisvabhava (dual), Sama (level), and Manushya (human) sign ruled by Budha"
+    confidence: high
+
+notes: >
+  Kanya is the sixth sign of the zodiac, governing analysis, service,
+  and practical intelligence. As a dual earth sign, it embodies
+  meticulous attention to detail, discrimination, and a methodical
+  approach to life. Natives born under Kanya are said to be analytical,
+  hardworking, and devoted to service. The sign corresponds to the
+  abdomen (Udara) in the Kalapurusha correspondence of the zodiac to
+  the human body.
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

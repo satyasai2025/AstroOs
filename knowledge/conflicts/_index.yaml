@@ -1,0 +1,106 @@
+# conflicts/_index.yaml
+
+id: index.conflicts
+name: Conflict Analysis Catalogue Index
+category: index
+status: active
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Index of all documented doctrinal conflicts across the knowledge
+  repository — points where two or more classical traditions, texts,
+  or schools disagree on a specific claim. Phase 6 (Conflict Analysis)
+  reviewed the 3 conflicts carried over from earlier phases, linked
+  every conflict to its classical sources, the Rule Engine
+  (apps/api/services/rules/, aspect_engine.py, and the constants/enum
+  tables the Rule Engine's facts are built from), and the Ontology
+  (apps/api/domain/ontology.py + ontology_registry.py), and added 4
+  newly-surfaced conflicts found during a full-repository survey for
+  undocumented disagreements.
+
+entries:
+  - id: conflict.001
+    file: conflict-001.yaml
+    name: "Lagna vs Bhava 1 — House System Distinction"
+    domain: bhava
+    resolution_status: partially-resolved
+    linked: true
+
+  - id: conflict.002
+    file: conflict-002.yaml
+    name: "Surya's Nature — Benefic vs Malefic Classification"
+    domain: graha
+    resolution_status: unresolved
+    linked: true
+
+  - id: conflict.003
+    file: conflict-003.yaml
+    name: "Surya's Neutral Sign Classification — Internal Discrepancy"
+    domain: graha
+    resolution_status: resolved
+    linked: true
+
+  - id: conflict.004
+    file: conflict-004.yaml
+    name: "Ayanamsa Selection — Which Sidereal Reference Point"
+    domain: ontology
+    resolution_status: partially-resolved
+    linked: true
+
+  - id: conflict.005
+    file: conflict-005.yaml
+    name: "Rahu/Ketu Special Aspects — 5th/9th Aspect Dispute"
+    domain: aspect
+    resolution_status: partially-resolved
+    linked: true
+
+  - id: conflict.006
+    file: conflict-006.yaml
+    name: "Rahu/Ketu Exaltation Signs — Gemini/Sagittarius vs Taurus/Scorpio"
+    domain: graha
+    resolution_status: partially-resolved
+    linked: true
+
+  - id: conflict.007
+    file: conflict-007.yaml
+    name: "Kaal Sarpa Dosha — Classical Doctrine or Later Folk Addition?"
+    domain: yoga
+    resolution_status: unresolved
+    linked: true
+
+count: 7
+
+summary:
+  resolved: 1
+  partially_resolved: 4
+  unresolved: 2
+
+sources:
+  - ref: source.BPHS
+    claim: "Primary source for the majority of positions across all 7 conflicts"
+    confidence: high
+
+notes: >
+  Every conflict record now carries a `cross_references` block (added
+  or verified in Phase 6) documenting its real, grep-verified links to
+  apps/api/services/rules/*.py (Rule Engine), apps/api/services/*_engine.py
+  and packages/shared/constants.py (the Fact Layer feeding the Rule
+  Engine), and apps/api/services/ontology_registry.py (Ontology). Where
+  no such link exists in code, the record says so explicitly
+  (validation_status) rather than asserting one — see conflict.003's
+  and conflict.007's cross_references blocks, both of which document
+  confirmed implementation gaps rather than fabricated links.
+
+  conflict.005 additionally surfaced a real Ontology/Rule Engine drift
+  (ASPECT-SPECIAL-GRAHA's description omits Rahu/Ketu despite
+  aspect_engine.py implementing node special aspects) — an engineering
+  documentation fix, out of Knowledge Office scope. Filed as a formal
+  cross-office request (ER-001) in knowledge/STATUS.md rather than
+  corrected here or actioned informally.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial index — Phase 6 Conflict Analysis. Indexed 3 carried-over conflicts (now cross-referenced) plus 4 newly-documented conflicts (ayanamsa selection, Rahu/Ketu special aspects, Rahu/Ketu exaltation signs, Kaal Sarpa Dosha legitimacy) found via full-repository survey."
+    author: "Chief Jyotish Knowledge Architect"

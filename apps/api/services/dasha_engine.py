@@ -23,6 +23,7 @@ Sub-period formula (universal for nakshatra-based systems)
 
 from __future__ import annotations
 
+import uuid
 from datetime import date, datetime, timedelta, timezone
 from typing import Sequence
 
@@ -303,8 +304,18 @@ class DashaEngine:
     All methods accept the same positional parameters and return a DashaTree.
     """
 
-    def __init__(self, ephemeris_wrapper: EphemerisWrapper) -> None:
+    def __init__(
+        self,
+        ephemeris_wrapper: EphemerisWrapper,
+        birth_chart_repo=None,
+        dasha_repo=None,
+    ) -> None:
         self._wrapper = ephemeris_wrapper
+        # Optional — only required for persist_tree(). Default None keeps
+        # the existing single-arg construction working for callers/tests
+        # that don't need persistence.
+        self._birth_chart_repo = birth_chart_repo
+        self._dasha_repo = dasha_repo
 
     # ── Public compute methods ─────────────────────────────────────────────────
 
@@ -705,3 +716,70 @@ class DashaEngine:
             current_start = current_end
 
         return tuple(mahadashas)
+
+    # ── Persistence ──────────────────────────────────────────────────────────
+    #
+    # Separate from the six compute_*() methods rather than combined
+    # "compute_and_persist" methods, for the same reason as HoroscopeEngine
+    # and DivisionalEngine: the compute_*() methods are blocking pyswisseph
+    # calls that routers offload via asyncio.to_thread; persistence is
+    # async DB I/O with no CPU-bound work.
+
+    _SYSTEM_TO_METHOD = {
+        "vimshottari": "compute_vimshottari",
+        "yogini": "compute_yogini",
+        "ashtottari": "compute_ashtottari",
+        "kalachakra": "compute_kalachakra",
+        "chara": "compute_chara",
+        "narayana": "compute_narayana",
+    }
+
+    async def persist_tree(
+        self,
+        tree: DashaTree,
+        *,
+        birth_datetime_utc: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str = "lahiri",
+        house_system: str = "W",
+        user_id=None,
+        subject_name: str = "Unnamed",
+    ) -> uuid.UUID:
+        """
+        Persist an already-computed DashaTree (from any of the six
+        compute_*() methods): the birth_charts anchor row (created if this
+        subject has no existing one) and the full dasha tree for
+        tree.system, replacing any prior tree already stored for the same
+        (chart, system) pair.
+
+        Requires this engine to have been constructed with
+        birth_chart_repo and dasha_repo — raises RuntimeError otherwise.
+
+        Requires migration 0003 (dasha_type enum extended with
+        'chara'/'narayana'; `lord` widened to a plain string) — see that
+        migration's docstring for why.
+
+        Returns the birth_chart_id.
+        """
+        if not (self._birth_chart_repo and self._dasha_repo):
+            raise RuntimeError(
+                "DashaEngine.persist_tree() requires birth_chart_repo and "
+                "dasha_repo to be provided at construction time."
+            )
+        if tree.system not in self._SYSTEM_TO_METHOD:
+            raise ValueError(f"Unknown dasha system: {tree.system!r}")
+
+        chart_id = await self._birth_chart_repo.get_or_create(
+            birth_datetime_utc=birth_datetime_utc,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+            house_system=house_system,
+            user_id=user_id,
+            subject_name=subject_name,
+        )
+
+        await self._dasha_repo.save_tree(chart_id, tree)
+
+        return chart_id

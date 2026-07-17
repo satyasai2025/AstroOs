@@ -1,0 +1,70 @@
+id: source.saravali
+name: Saravali
+aliases:
+  - Saravali of Kalyanavarma
+  - Kalyanavarma's Saravali
+  - Essential Compendium
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Kalyanavarma
+date:
+  approximate: "800–1150 CE"
+  confidence: low
+language:
+  original: Sanskrit
+tradition: Classical
+system: Parashari Jyotish
+
+edition:
+  primary:
+    editor: R. Santhanam
+    publisher: Motilal Banarsidass
+    year: 1984
+    language: Sanskrit, English
+    notes: "Original Sanskrit text with English translation and commentary based on the Telugu commentary of Ethiraja. Reprint editions available."
+
+chapter_structure:
+  total_chapters: 101
+  key_chapters:
+    - chapter: 1
+      topic: "Lagna and its nature"
+      verses: 14
+      relevance: "Fundamentals of ascendant interpretation; signs, elements, and basic classification"
+    - chapter: 8
+      topic: "Graha friendship and enmity"
+      verses: 10
+      relevance: "Defines natural (naisargika) and temporal (tatkalika) relationships between grahas"
+    - chapter: 35
+      topic: "Yogas and their classification"
+      verses: 18
+      relevance: "Comprehensive treatment of planetary combinations including Raja and Dhana Yogas"
+    - chapter: 55
+      topic: "Vargas and their interpretation"
+      verses: 16
+      relevance: "Detailed interpretation of the divisional charts for predictive purposes"
+    - chapter: 80
+      topic: "Dasha systems and timing"
+      verses: 20
+      relevance: "Multiple Dasha systems and their application in event timing"
+
+related_texts:
+  - ref: source.BPHS
+    relationship: "Saravali follows the Parashari framework and elaborates on principles from the Parashara tradition"
+  - ref: source.brihat-jataka
+    relationship: "Expands upon many principles introduced in Brihat Jataka; both share the Classical Parashari framework"
+  - ref: source.phaladeepika
+    relationship: "Phaladeepika continues and refines the same interpretative tradition established by Saravali"
+
+significance: "Saravali is one of the most comprehensive classical Jyotish texts, covering 101 chapters on virtually every aspect of horoscopy. It is particularly valued for its systematic treatment of yogas, its detailed varga interpretations, and its extensive Dasha timing techniques. The text's encyclopedic scope and practical orientation made it an essential reference for practitioners across India."
+
+notes: "The date of Kalyanavarma is highly debated, with estimates ranging from 300 CE to 1150 CE. The earlier dating (300 CE) was proposed by B.V. Raman based on astronomical references, while later scholarship places the text in the 9th-12th century period. The text survives in multiple manuscript recensions with significant variations in chapter ordering and content between South Indian and North Indian traditions. The Telugu commentary by Ethiraja is particularly important for textual reconstruction."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

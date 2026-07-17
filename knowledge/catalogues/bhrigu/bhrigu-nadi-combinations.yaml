@@ -1,0 +1,65 @@
+id: bhrigu.core.combinations
+name: Bhrigu Nandi Nadi Combinations
+aliases: ["BNN Yogas", "Nadi Planetary Combinations", "Bhrigu Nadi Specific Yogas"]
+category: bhrigu
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: bhrigu
+statement: >
+  Bhrigu Nandi Nadi contains specific planetary combinations (yogas) that are
+  unique to the Nadi system and not found in Parashari or other mainstream
+  Jyotish traditions. These combinations are nakshatra-based: they arise when
+  specific planets occupy specific nakshatras or when nakshatra lords form
+  particular relationships. The combinations produce deterministic life-pattern
+  predictions — for example, a specific combination may indicate that the native
+  will have a career in a particular field, experience a specific life event at
+  a particular age, or have a particular relationship dynamic. Each combination
+  is verified against the nakshatra ownership and position of the involved planets.
+
+conditions:
+  - entity: graha.nakshatra-combination
+    role: subject
+    detail: "Specific planets in specific nakshatras create Nadi yogas with predetermined life-pattern outcomes"
+
+  - entity: nakshatra.lordship-link
+    role: framework
+    detail: "When two planets share nakshatra lordship, they create a linked combination"
+
+effects:
+  - description: "Nadi combinations can predict specific life events without Dasha analysis"
+    intensity: strong
+  - description: "Certain combinations indicate specific career paths or life vocations"
+    intensity: strong
+  - description: "Combinations can indicate specific relationship patterns (marriage, partnership dynamics)"
+    intensity: strong
+  - description: "Multiple Nadi combinations in one chart create layered life patterns"
+    intensity: moderate
+
+sources:
+  - ref: source.bhrigu-nandi-nadi
+    claim: "BNN specific combinations: Unique planetary combinations not found in Parashari."
+    confidence: high
+
+notes: >
+  BNN combination principles: (1) Each Nadi combination is a specific rule: if
+  planet X is in nakshatra Y, and planet Z is in nakshatra W, then outcome Q
+  follows. (2) These combinations are deterministic — they describe fixed life
+  patterns. (3) The combinations use nakshatra lordship as the primary connector
+  between planets. (4) When Sun is in a nakshatra owned by Saturn, and Saturn is
+  in a nakshatra owned by Sun, a specific reversal pattern emerges. (5) The
+  combinations often describe events that Parashari would predict through Dasha
+  analysis — BNN provides the same information through nakshatra logic alone.
+  (6) Some BNN combinations contradict or modify Parashari predictions, making
+  BNN an independent verification system. (7) The strength of a Nadi combination
+  depends on whether the planets involved are natural friends or enemies. (8) BNN
+  combinations should be cross-referenced with natal chart promises for maximum
+  accuracy.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,93 @@
+[
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000001",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "sun",
+      "significations": ["soul","father","authority","government","vitality"],
+      "life_domains": ["self","career","health"]
+    }
+  },
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000002",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "moon",
+      "significations": ["mind","mother","emotions","public"],
+      "life_domains": ["emotions","family","public_life"]
+    }
+  },
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000003",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "mars",
+      "significations": ["siblings","courage","land","conflict"],
+      "life_domains": ["family","career","health"]
+    }
+  },
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000004",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "mercury",
+      "significations": ["intellect","communication","commerce"],
+      "life_domains": ["education","career"]
+    }
+  },
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000005",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "jupiter",
+      "significations": ["wisdom","children","wealth","guru","dharma"],
+      "life_domains": ["education","wealth","progeny","spiritual"]
+    }
+  },
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000006",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "venus",
+      "significations": ["spouse","relationships","luxury","arts"],
+      "life_domains": ["marriage","wealth"]
+    }
+  },
+  {
+    "_record_id": "ASTRO-REC-KARAKA-000007",
+    "_dataset_id": "ASTRO-RF-KARAKA-v1.0.0",
+    "_record_type": "reference",
+    "_version": 1,
+    "_is_deleted": false,
+    "data": {
+      "karaka_type": "naisargika",
+      "graha": "saturn",
+      "significations": ["longevity","career","discipline","servants","sorrow"],
+      "life_domains": ["career","health","longevity"]
+    }
+  }
+]

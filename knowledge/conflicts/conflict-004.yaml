@@ -1,0 +1,166 @@
+# conflicts/conflict-004.yaml
+
+id: conflict.004
+name: Ayanamsa Selection — Which Sidereal Reference Point
+topic: Which ayanamsa (precessional offset) should be used to convert tropical to sidereal positions
+domain: ontology
+status: partially-resolved
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+# === POSITIONS ===
+
+positions:
+  - tradition: "Lahiri (Chitrapaksha)"
+    source:
+      ref: source.BPHS
+    position: >
+      The ayanamsa should be anchored so that 0° Aries corresponds to
+      a fixed point near Spica (Chitra nakshatra's star), as computed
+      by the Indian government's Calendar Reform Committee (1956).
+      This is the de facto national standard.
+    arguments:
+      - "Official standard of the Indian Panchangam and Calendar Reform Committee"
+      - "Overwhelming majority adoption among Parashari practitioners in India"
+      - "Widest software and publication support"
+    adherents:
+      - Indian government astronomical authorities
+      - Majority of contemporary Parashari practitioners
+
+  - tradition: "Raman"
+    source:
+      ref: source.brihat-jataka-raman
+    position: >
+      B.V. Raman's ayanamsa, roughly 0.4-0.9 degrees lower than Lahiri
+      depending on epoch, based on a different zero-point derivation.
+    arguments:
+      - "B.V. Raman's textual and computational authority carries independent weight"
+      - "Used consistently across Raman's own translated/annotated classical editions in this knowledge base (brihat-jataka-raman, saravali-raman, phaladeepika-raman, uttara-kalamrita-raman, tajika-raman, BPHS-raman)"
+    adherents:
+      - B.V. Raman's lineage of practitioners and publications
+
+  - tradition: "KP (Krishnamurti)"
+    source:
+      ref: source.kp-system
+    position: >
+      K.S. Krishnamurti's own ayanamsa value, close to but distinct
+      from Lahiri, tuned for the sub-lord/cuspal timing system's
+      predictive accuracy rather than a fixed astronomical star point.
+    arguments:
+      - "Krishnamurti derived and validated the value against KP's own predictive method"
+      - "Internal consistency with the cuspal house system documented in conflict.001"
+    adherents:
+      - KP System practitioners
+
+  - tradition: "Other sidereal systems (Yukteshwar, Fagan-Bradley, True Chitra)"
+    source:
+      ref: source.traditional
+    position: >
+      Additional ayanamsas exist: Sri Yukteshwar's (derived from his
+      own precession-rate reasoning in *The Holy Science*), Fagan-Bradley
+      (the Western sidereal-astrology standard), and True Chitra (Spica
+      placed at exactly 0° Libra rather than Lahiri's slightly offset value).
+    arguments:
+      - "Each has an internally consistent derivation and a dedicated practitioner base"
+      - "True Chitra corrects a small drift some argue Lahiri accumulated from Spica's actual position"
+    adherents:
+      - Yukteshwar's lineage; Western sidereal astrologers; True Chitra proponents
+
+# === ANALYSIS ===
+
+analysis: >
+  BPHS and other classical texts assume a sidereal zodiac (Ashvini
+  nakshatra begins the zodiac) but do not specify a numerical ayanamsa
+  value — precession itself was not modeled with modern precision when
+  these texts were composed. The choice of ayanamsa is therefore a
+  post-classical computational decision layered onto classical doctrine,
+  not a disagreement about classical text content. Because the ayanamsa
+  shifts every graha's rashi and nakshatra placement, it is the single
+  highest-leverage unresolved choice in the entire system: it changes
+  which yogas form, which dasha is running, and every dignity
+  calculation documented elsewhere in this knowledge base.
+
+# === EVIDENCE ===
+
+evidence:
+  for_lahiri:
+    - "Sole official standard adopted by the Indian government (1956 Calendar Reform Committee)"
+    - "This codebase's default AyanamsaSystem is LAHIRI (see cross-references below)"
+  for_raman:
+    - "Independent derivation with a long, still-active publication lineage"
+  for_kp:
+    - "Internally validated against KP's own sub-lord predictive framework"
+  for_other:
+    - "True Chitra's Spica-alignment argument is a defensible astronomical correction to Lahiri's drift"
+
+# === RESOLUTION ===
+
+resolution_status: partially-resolved
+resolution: >
+  No single ayanamsa can be declared classically correct, since no
+  classical text specifies one numerically. Lahiri is adopted as the
+  practical default given its official and majority status, but this
+  is an operational choice, not a doctrinal resolution of the underlying
+  disagreement.
+
+recommended_position: >
+  Default to Lahiri ayanamsa for all knowledge-base claims and computed
+  examples unless a record explicitly documents a KP or Raman-sourced
+  claim (in which case tag it accordingly, mirroring conflict.001's
+  system-tagging convention). Chart-computation consumers of this
+  knowledge base should treat ayanamsa as a required, explicit input,
+  never an implicit default silently assumed by a downstream reader.
+
+weight_of_evidence: >
+  Lahiri's official/majority status is strong practical evidence for a
+  default, but carries no more classical textual authority than Raman,
+  KP, or True Chitra — none is textually mandated. This is fundamentally
+  an operational-consensus resolution, not an evidentiary one.
+
+# === RELATED ===
+
+related_conflicts: []
+notes: >
+  Every other conflict record and every dignity/yoga/dasha claim in
+  this knowledge base implicitly assumes some ayanamsa was already
+  applied to obtain sidereal positions. This conflict is foundational
+  to all of them but was not previously documented as its own record.
+
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "none"
+      note: >
+        No "Ayanamsa" entity_type exists among the Ontology's 12 types
+        (Graha, Rashi, Bhava, Nakshatra, Pada, Yoga, Bala, Dasha, Aspect,
+        Karaka, Varga, Event — see apps/api/domain/ontology.py docstring).
+        Ayanamsa is a computational parameter, not a first-class ontology
+        entity — a genuine, reasonable scope gap rather than an oversight
+        to fix, since Module 12 is explicitly scoped to entities/relationships.
+  rule_engine:
+    - reference: "AyanamsaSystem enum"
+      file: packages/shared/enums.py:92-98
+      values: ["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
+      note: "All four+ traditions documented above are already representable in code."
+    - reference: "default ayanamsa"
+      file: apps/api/main.py:47
+      snippet: 'ayanamsa="lahiri"'
+      note: "Confirms Lahiri is the operational default this record recommends."
+    - reference: "database default"
+      file: apps/api/models/astrology.py:94-96,195-196
+      snippet: 'server_default="lahiri"'
+      note: "Default is enforced at the persistence layer, not just request-time."
+  validation_status: >
+    Confirmed 2026-07-16 — code already supports all documented
+    traditions as an explicit enum and defaults to the recommended
+    Lahiri choice; no change needed in code for this resolution.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Phase 6 — new conflict entry for ayanamsa selection, previously undocumented as a formal conflict despite being flagged in ontology/glossary/ayanamsa.yaml notes"
+    author: "Chief Jyotish Knowledge Architect"

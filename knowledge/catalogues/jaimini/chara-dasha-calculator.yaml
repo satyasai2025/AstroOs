@@ -1,0 +1,78 @@
+id: jaimini.chara-dasha-calculator
+name: Chara Dasha Calculation Method
+aliases:
+  - Chara Dasha Calculator
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Step-by-step method for calculating Chara Dasha periods.
+
+# === CALCULATION STEPS ===
+steps:
+  - step: 1
+    action: "Identify the Atmakaraka (AK)"
+    detail: "Find the graha with the highest longitude among all 9 grahas"
+
+  - step: 2
+    action: "Find the AK's sign position"
+    detail: "Note which rashi (sign) the AK occupies"
+
+  - step: 3
+    action: "Determine the counting direction"
+    detail: >
+      If AK's sign is odd (Mesha, Mithuna, Simha, Tula, Dhanus,
+      Kumbha): count zodiacally (clockwise).
+      If AK's sign is even (Vrishabha, Karka, Kanya, Vrishchika,
+      Makara, Meena): count counter-zodiacally (counter-clockwise).
+
+  - step: 4
+    action: "Count from AK's sign to each subsequent sign"
+    detail: >
+      The count determines the dasha duration. For example,
+      if AK is in Mesha (odd), count zodiacally:
+      Mesha (count=1), Vrishabha (count=2), Mithuna (count=3), etc.
+
+  - step: 5
+    action: "Assign dasha periods"
+    detail: >
+      Each sign gets a dasha period equal to its count from AK.
+      The sequence proceeds through all 12 signs.
+
+# === EXAMPLE ===
+example:
+  scenario: "AK (Surya) is in Mesha (odd sign)"
+  calculation: >
+    Mesha (AK's sign) = 1 year dasha
+    Vrishabha = 2 years
+    Mithuna = 3 years
+    Karka = 4 years
+    Simha = 5 years
+    Kanya = 6 years
+    Tula = 7 years
+    Vrishchika = 8 years
+    Dhanus = 9 years
+    Makara = 10 years
+    Kumbha = 11 years
+    Meena = 12 years
+  total_cycle: "78 years"
+  notes: "The cycle repeats after Meena"
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  This is the basic calculation method. Advanced practitioners
+  may use modifications based on retrograde planets, combustion,
+  or other factors. The system described here is the standard
+  method from the Jaimini Sutras.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial Chara Dasha calculator entry"
+    author: "Chief Jyotish Knowledge Architect"
