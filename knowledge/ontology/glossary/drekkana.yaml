@@ -1,0 +1,65 @@
+# ontology/glossary/drekkana.yaml
+
+id: term.drekkana
+name: Drekkaṇa
+aliases:
+  - Drekkana
+  - Decanate
+  - D-3 Chart
+  - द्रेक्काण
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    drekkaṇa — from trika (three) + aṇa (part). One-third of a
+    rāśi (10 degrees). Also refers to the D-3 varga chart in
+    the shadvarga system.
+  english: >
+    The third divisional chart (D-3), where each rashi is
+    divided into three equal parts of 10 degrees each. Each
+    drekkana is ruled by a specific graha. The D-3 chart is
+    used primarily to analyze courage, co-borns (siblings),
+    and inherent nature.
+  technical: >
+    The first drekkana of a rashi is ruled by the rashi lord,
+    the second by the lord of the 5th from that rashi, and
+    the third by the lord of the 9th from that rashi. In the
+    D-3 chart, each drekkana maps to a full sign for
+    analysis. BPHS describes three types of drekkanas based
+    on different lord assignment systems.
+
+usage:
+  primary: "Analysis of siblings, courage, and inherent nature via D-3 chart"
+  secondary: "Assessment of specific life events through the drekkana of specific houses"
+
+related_concepts:
+  - ref: term.varga
+    relationship: "Drekkana is one of the seven vargas in the saptavarga system"
+  - ref: term.rashi
+    relationship: "Each rashi (30 degrees) contains three drekkanas of 10 degrees each"
+  - ref: term.bhava
+    relationship: "The D-3 chart maps each drekkana to a bhava for focused interpretation"
+
+sources:
+  - ref: source.BPHS
+    chapter: 7
+    verse: 1-6
+    claim: "Drekkāṇaṃ triṃśad-aṃśaḥ — the drekkana is a 10-degree division"
+    confidence: high
+
+notes: >
+  The word drekkana is derived from the Greek "dekanos"
+  through Sanskrit trika (three), reflecting Hellenistic
+  influence on jyotisha. The D-3 is one of the most
+  important divisional charts in BPHS, ranking after the
+  D-9 (navamsha) in importance.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

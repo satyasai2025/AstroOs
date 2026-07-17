@@ -1,0 +1,64 @@
+# ontology/glossary/karakamsha.yaml
+
+id: term.karakamsha
+name: Kārakāṃśa
+aliases:
+  - Karakamsha
+  - Karakamsa
+  - Atmakaraka Navamsha
+  - कारकांश
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    kārakāṃśa — from kāraka (significator) + aṃśa (division,
+    portion). The navamsha (D-9) sign occupied by the
+    Atmakāraka in the natal chart.
+  english: >
+    The navamsha (D-9) position of the Atmakāraka. The
+    karakamsha sign is treated as a highly sensitive point in
+    the chart and is used extensively in Jaimini astrology to
+    determine the soul's evolutionary direction.
+  technical: >
+    To find the karakamsha: identify the Atmakāraka, find its
+    position in the navamsha (D-9) chart; that navamsha sign
+    is the karakamsha. The lagna placed in the karakamsha
+    becomes a special lagna (svarashtamsa or karakamsha lagna).
+    Planets in the karakamsha become very significant for
+    spiritual evolution.
+
+usage:
+  primary: "Determination of the soul's evolutionary path and spiritual direction"
+  secondary: "Identification of spiritually significant planets through karakamsha placement"
+
+related_concepts:
+  - ref: term.atmakaraka
+    relationship: "Karakamsha is derived from the Atmakaraka's navamsha position"
+  - ref: term.varga
+    relationship: "Karakamsha uses the navamsha (D-9), one of the most important varga charts"
+  - ref: term.lagna
+    relationship: "The karakamsha lagna is a special lagna used in Jaimini analysis"
+
+sources:
+  - ref: source.BPHS
+    chapter: 11
+    verse: 22-25
+    claim: "Ātmakārakāṃśaṃ jñātvā — having known the Atmakaraka's division"
+    confidence: high
+
+notes: >
+  The karakamsha is one of the most important concepts in
+  Jaimini astrology. Planets placed in the karakamsha sign
+  in the natal chart (rasi) become powerful indicators of
+  the native's spiritual evolution and karmic lessons in
+  this lifetime.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,10 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,graha_name,sanskrit_name,is_luminary,is_shadow_planet,natural_classification,exaltation_rashi,exaltation_degree,debilitation_rashi,moolatrikona_rashi,own_signs,sign_lordships,vimshottari_dasha_years,karaka_significations
+ASTRO-REC-PLANET-000001,ASTRO-RF-PLANET-v1.0.0,reference,1,false,sun,Surya,true,false,malefic,aries,10.0,libra,leo,leo,leo,6,soul|father|authority|government|vitality
+ASTRO-REC-PLANET-000002,ASTRO-RF-PLANET-v1.0.0,reference,1,false,moon,Chandra,true,false,benefic,taurus,3.0,scorpio,taurus,cancer,cancer,10,mind|mother|emotions|public
+ASTRO-REC-PLANET-000003,ASTRO-RF-PLANET-v1.0.0,reference,1,false,mars,Mangala,false,false,malefic,capricorn,28.0,cancer,aries,aries|scorpio,aries|scorpio,7,siblings|courage|land|conflict
+ASTRO-REC-PLANET-000004,ASTRO-RF-PLANET-v1.0.0,reference,1,false,mercury,Budha,false,false,benefic,virgo,15.0,pisces,virgo,gemini|virgo,gemini|virgo,17,intellect|communication|commerce
+ASTRO-REC-PLANET-000005,ASTRO-RF-PLANET-v1.0.0,reference,1,false,jupiter,Guru,false,false,benefic,cancer,5.0,capricorn,sagittarius,sagittarius|pisces,sagittarius|pisces,16,wisdom|children|wealth|guru|dharma
+ASTRO-REC-PLANET-000006,ASTRO-RF-PLANET-v1.0.0,reference,1,false,venus,Shukra,false,false,benefic,pisces,27.0,virgo,libra,taurus|libra,taurus|libra,20,spouse|relationships|luxury|arts
+ASTRO-REC-PLANET-000007,ASTRO-RF-PLANET-v1.0.0,reference,1,false,saturn,Shani,false,false,malefic,libra,20.0,aries,aquarius,capricorn|aquarius,capricorn|aquarius,19,longevity|career|discipline|servants|sorrow
+ASTRO-REC-PLANET-000008,ASTRO-RF-PLANET-v1.0.0,reference,1,false,rahu,Rahu,false,true,malefic,gemini,20.0,sagittarius,,,,18,
+ASTRO-REC-PLANET-000009,ASTRO-RF-PLANET-v1.0.0,reference,1,false,ketu,Ketu,false,true,malefic,sagittarius,20.0,gemini,,,,7,

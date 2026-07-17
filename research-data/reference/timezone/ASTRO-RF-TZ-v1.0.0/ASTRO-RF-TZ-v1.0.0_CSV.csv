@@ -1,0 +1,3 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,tz_source,data_type,coverage,version_dependency,notes
+ASTRO-REC-TZ-000001,ASTRO-RF-TZ-v1.0.0,reference,1,false,IANA tzdata,timezone_definitions,global,IANA tzdata 2025b,"PLACEHOLDER — depends on IANA tzdata release. IANA tzdata is the canonical source for timezone definitions and transition history. Extract and package on next release cycle."
+ASTRO-REC-TZ-000002,ASTRO-RF-TZ-v1.0.0,reference,1,false,GeoNames,city_coordinates,major_cities,GeoNames dump,"PLACEHOLDER — depends on GeoNames data. Used for birth place geocoding. CC-BY license requires attribution."

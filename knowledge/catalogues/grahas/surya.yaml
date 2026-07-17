@@ -1,0 +1,156 @@
+# catalogues/grahas/surya.yaml
+
+id: graha.surya
+name: Surya
+aliases:
+  - Sun
+  - Ravi
+  - Aditya
+  - Bhanu
+  - Arka
+  - Dinakara
+category: graha
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Sūrya
+devanagari: "सूर्य"
+meaning: "The supreme light; the ruler of the day"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  sidereal_period_days: 365.25
+  retrograde: false
+  notes: "Surya never retrogrades; its apparent motion reflects Earth's own annual orbit as seen geocentrically."
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: male
+  nature: natural malefic
+  caste: kshatriya
+  element: fire
+  direction: east
+  color: copper red
+  gem: ruby
+  metal: copper
+  grain: wheat
+  body_parts:
+    - bones
+    - heart
+    - right eye (males)
+  animal: horse
+  deity: agni
+  quality: sattvic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: mesha
+    degrees: 10
+  debilitation:
+    sign: tula
+    degrees: 10
+  moolatrikona:
+    sign: simha
+    range: "0°–20°"
+  own_signs:
+    - simha
+  friendly_signs:
+    - mesha
+    - vrishchika
+    - karka
+    - dhanus
+    - meena
+  neutral_signs:
+    - mithuna
+    - kanya
+  inimical_signs:
+    - vrishabha
+    - tula
+    - makara
+    - kumbha
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - krittika
+    - uttaraphalguni
+    - uttarashadha
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.chandra
+    - graha.mangala
+    - graha.guru
+  enemies:
+    - graha.shukra
+    - graha.shani
+    - graha.rahu
+    - graha.ketu
+  neutrals:
+    - graha.budha
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 6
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Soul (Atman)"
+    - "Father (Pitru)"
+    - "Authority and government"
+  traditional:
+    - "Vitality and health"
+    - "Self-confidence"
+    - "Status and reputation"
+  modern:
+    - "Ego and self-expression"
+    - "Leadership"
+    - "Career visibility"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Surya"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Surya"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Surya is regarded as the king among the grahas, signifying the soul
+  (atman), the father, and worldly authority. Despite its sattvic
+  quality and role as the source of light and life, it is classified
+  as a natural malefic due to its intense heat and dominating nature.
+  Surya is exalted in Mesha (10°) and debilitated in Tula (10°); its
+  moolatrikona and own sign are both Simha. In Jaimini astrology,
+  Surya is frequently the Atmakaraka when it holds the highest degree
+  among the seven classical grahas, reinforcing its role as significator
+  of the soul's purpose.
+
+# === HISTORY ===
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Corrected nakshatra_lordship: third nakshatra was erroneously listed as Uttara Bhadrapada (which is Shani's nakshatra); corrected to Uttara Ashadha per the standard Vimshottari sequence. Also standardized Uttara Phalguni's ID to the canonical no-underscore form."
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial catalogue entry — fills gap left in Phase 2B (index referenced graha.surya but file was never created)"
+    author: "Chief Jyotish Knowledge Architect"

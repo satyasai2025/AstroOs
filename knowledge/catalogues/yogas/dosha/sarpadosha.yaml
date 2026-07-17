@@ -1,0 +1,44 @@
+id: yoga.dosha.sarpadosha
+name: Sarpadosha
+aliases: ["Serpent Dosha", "Naga Dosha"]
+category: yoga
+type: dosha
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Rahu-Ketu axis falls on the Lagna (1st-7th axis) with malefic influence from Mars, Saturn, or other malefics aspecting or conjoining the axis"
+      entity: yoga.dosha.sarpadosha
+      role: subject
+      notes: "The Rahu-Ketu axis must occupy the 1st and 7th houses. Additional malefic influence (Mars, Saturn, Sun, or natural malefics) on the axis or on Lagna/Lagna lord intensifies the dosha. Rahu or Ketu in the Lagna alone does not constitute full Sarpadosha without malefic reinforcement."
+
+effects:
+  positive:
+    - "Strong intuitive and psychic abilities"
+    - "Unconventional thinking and breakthroughs"
+    - "Past life spiritual progress carrying forward"
+  negative:
+    - "Obstacles in marriage and relationships"
+    - "Health problems, especially mysterious or chronic ailments"
+    - "Delays in all areas of life"
+    - "Ancestral curses and family troubles"
+    - "Fear, anxiety, and psychological disturbances"
+    - "Serpent-related phobias or encounters"
+  intensity: strong
+
+sources:
+  - ref: source.traditional
+    chapter: null
+    verse: null
+
+notes: "A traditional dosha not always explicitly mentioned in classical texts like BPHS but widely recognized in regional astrological traditions (especially South Indian astrology). The name 'Sarpa' means serpent, linking this dosha to the concept of Naga (serpent) curses from past lives. Remedy traditions include Naga Puja, Sarpa Dosha Nivarana Poojas at temples like Rameswaram and Kalahasti. The dosha is considered strongest when Rahu is in Lagna with malefic aspects."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

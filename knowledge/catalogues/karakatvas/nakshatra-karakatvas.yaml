@@ -1,0 +1,947 @@
+# Karakatva Catalogue: Nakshatra Significators
+# Source: BPHS Chapter 33 and Phaladeepika Chapter 13 (Nakshatra Phala)
+# Standardized karakatva assignments for all 27 nakshatras
+
+id: karaka.nakshatra.karakatvas
+name: Nakshatra Karakatva Samuha
+aliases: [Star Significator Collection, Nakshatra Karakatvas]
+category: karaka
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+source_primary: source.BPHS
+
+karaka_type: nakshatra
+
+significations:
+  - nakshatra: nakshatra.ashvini
+    name: Ashvini
+    deity: Ashvini Kumaras
+    symbol: Horse head
+    karakatvas:
+      - concept: healing (chikitsa)
+        confidence: high
+        notes: Physicians, medical practitioners, therapeutic skills
+      - concept: speed (vegavat)
+        confidence: high
+        notes: Swift action, rapid movement, quick response
+      - concept: new beginnings (arambha)
+        confidence: high
+        notes: Initiating projects, fresh starts, pioneering
+      - concept: medicine (aushadha)
+        confidence: high
+        notes: Herbal remedies, pharmaceutical knowledge
+      - concept: horses (ashva)
+        confidence: medium
+        notes: Connection to horses, equestrian matters
+      - concept: transportation
+        confidence: medium
+        notes: Vehicles, logistics, movement of goods/people
+    cross_references:
+      - ref: graha.ketu
+        relationship: "Ketu-ruled: spiritual healing through physical means"
+      - ref: bhava.1
+        relationship: "Ashvini pada 1 links to Lagna energy"
+    sources:
+      - ref: source.BPHS
+        claim: "Ashvini signifies healing, speed, new beginnings, medicine"
+        confidence: high
+
+  - nakshatra: nakshatra.bharani
+    name: Bharani
+    deity: Yama
+    symbol: Yoni (female reproductive organ)
+    karakatvas:
+      - concept: burden (bhara)
+        confidence: high
+        notes: Carrying heavy responsibilities, endurance
+      - concept: death (mrityu)
+        confidence: high
+        notes: Mortality, transitions, end of cycles
+      - concept: transformation (parinama)
+        confidence: high
+        notes: Deep personal change, rebirth, metamorphosis
+      - concept: cleansing (shodhana)
+        confidence: high
+        notes: Purification, cleansing processes
+      - concept: restraint (dama)
+        confidence: medium
+        notes: Self-control, discipline, patience
+      - concept: reproduction
+        confidence: medium
+        notes: Fertility, birth processes, creative generation
+    cross_references:
+      - ref: graha.shukra
+        relationship: "Venus-ruled: transformation through pleasure and desire"
+      - ref: bhava.8
+        relationship: "Bharani pada 3 connects to transformation themes"
+    sources:
+      - ref: source.BPHS
+        claim: "Bharani signifies burden, death, transformation, cleansing"
+        confidence: high
+
+  - nakshatra: nakshatra.krittika
+    name: Krittika
+    deity: Agni
+    symbol: Razor / flame
+    karakatvas:
+      - concept: fire (agni)
+        confidence: high
+        notes: Purifying fire, transformative energy
+      - concept: sharpness (tikshna)
+        confidence: high
+        notes: Cutting intellect, analytical precision
+      - concept: separation (vichchhedana)
+        confidence: high
+        notes: Cutting ties, surgical precision, division
+      - concept: courage (veerya)
+        confidence: high
+        notes: Valor, bravery, fighting spirit
+      - concept: cooking, nourishment
+        confidence: medium
+        notes: Food preparation, culinary arts
+      - concept: motherhood
+        confidence: medium
+        notes: Nurturing, maternal instincts
+    cross_references:
+      - ref: graha.surya
+        relationship: "Sun-ruled: fiery purification and authority"
+      - ref: bhava.3
+        relationship: "Krittika pada 3 connects to sibling/courage themes"
+    sources:
+      - ref: source.BPHS
+        claim: "Krittika signifies fire, sharpness, separation, courage"
+        confidence: high
+
+  - nakshatra: nakshatra.rohini
+    name: Rohini
+    deity: Brahma
+    symbol: Chariot / ox cart
+    karakatvas:
+      - concept: growth (vriddhi)
+        confidence: high
+        notes: Abundance, prosperity, material expansion
+      - concept: fertility (urvaratva)
+        confidence: high
+        notes: Fecundity, agricultural abundance
+      - concept: beauty (sundari)
+        confidence: high
+        notes: Physical beauty, artistic expression
+      - concept: desire (kama)
+        confidence: high
+        notes: Sensual pleasures, material desires
+      - concept: stability (sthira)
+        confidence: medium
+        notes: Groundedness, consistency, reliability
+      - concept: agriculture
+        confidence: medium
+        notes: Farming, cultivation, earth-based activities
+    cross_references:
+      - ref: graha.chandra
+        relationship: "Moon-ruled: emotional beauty and nurturing growth"
+      - ref: bhava.4
+        relationship: "Rohini pada 1 connects to domestic comfort"
+    sources:
+      - ref: source.BPHS
+        claim: "Rohini signifies growth, fertility, beauty, desire"
+        confidence: high
+
+  - nakshatra: nakshatra.mrigashira
+    name: Mrigashira
+    deity: Soma (Chandra)
+    symbol: Deer head
+    karakatvas:
+      - concept: searching (parisheshana)
+        confidence: high
+        notes: Seeking knowledge, exploration, research
+      - concept: gentleness (mridu)
+        confidence: high
+        notes: Mild temperament, graceful approach
+      - concept: wandering (bhramana)
+        confidence: high
+        notes: Travel, roaming, exploration of new territories
+      - concept: curiosity (jijnasa)
+        confidence: high
+        notes: Inquisitive nature, desire to learn
+      - concept: deer, animals
+        confidence: medium
+        notes: Connection to gentle creatures, wildlife
+      - concept: poetry, literature
+        confidence: medium
+        notes: Creative writing, poetic expression
+    cross_references:
+      - ref: graha.mangala
+        relationship: "Mars-ruled: gentle pursuit through disciplined action"
+      - ref: bhava.12
+        relationship: "Mrigashira pada 4 connects to spiritual seeking"
+    sources:
+      - ref: source.BPHS
+        claim: "Mrigashira signifies searching, gentleness, wandering, curiosity"
+        confidence: high
+
+  - nakshatra: nakshatra.ardra
+    name: Ardra
+    deity: Rudra
+    symbol: Teardrop / diamond
+    karakatvas:
+      - concept: tears (ashru)
+        confidence: high
+        notes: Emotional pain, sorrow, catharsis
+      - concept: upheaval (bhanchana)
+        confidence: high
+        notes: Destruction of old structures, radical change
+      - concept: determination (drdha)
+        confidence: high
+        notes: Firm resolve, unwavering commitment
+      - concept: transformation through suffering
+        confidence: high
+        notes: Growth through pain, lessons from hardship
+      - concept: science, research
+        confidence: medium
+        notes: Analytical inquiry, scientific method
+      - concept: diamonds, precious stones
+        confidence: medium
+        notes: Value through pressure and transformation
+    cross_references:
+      - ref: graha.rahu
+        relationship: "Rahu-ruled: obsessive pursuit, unconventional transformation"
+      - ref: bhava.8
+        relationship: "Ardra pada 2 connects to deep transformation"
+    sources:
+      - ref: source.BPHS
+        claim: "Ardra signifies tears, upheaval, determination, transformation"
+        confidence: high
+
+  - nakshatra: nakshatra.punarvasu
+    name: Punarvasu
+    deity: Aditi
+    symbol: Bow and quiver
+    karakatvas:
+      - concept: renewal (punar + vasu)
+        confidence: high
+        notes: Return, restoration, revival of fortune
+      - concept: abundance (vasu)
+        confidence: high
+        notes: Wealth, prosperity, material comfort
+      - concept: optimism (asha)
+        confidence: high
+        notes: Hope, positive outlook, faith
+      - concept: longevity (deergha ayus)
+        confidence: high
+        notes: Long life, endurance, resilience
+      - concept: travel (yatra)
+        confidence: medium
+        notes: Journeys, especially spiritual pilgrimages
+      - concept: devotion (bhakti)
+        confidence: medium
+        notes: Religious devotion, spiritual practice
+    cross_references:
+      - ref: graha.guru
+        relationship: "Jupiter-ruled: fortune through wisdom and renewal"
+      - ref: bhava.9
+        relationship: "Punarvasu pada 3 connects to dharma and fortune"
+    sources:
+      - ref: source.BPHS
+        claim: "Punarvasu signifies renewal, abundance, optimism, longevity"
+        confidence: high
+
+  - nakshatra: nakshatra.pushya
+    name: Pushya
+    deity: Brihaspati
+    symbol: Lotus / udder of cow
+    karakatvas:
+      - concept: nourishment (pushti)
+        confidence: high
+        notes: Nurturing, feeding, providing sustenance
+      - concept: spirituality (adhyatmika)
+        confidence: high
+        notes: Spiritual discipline, religious observance
+      - concept: devotion (bhakti)
+        confidence: high
+        notes: Religious devotion, surrender to divine
+      - concept: dharmic conduct
+        confidence: high
+        notes: Righteous behavior, moral integrity
+      - concept: milk, dairy
+        confidence: medium
+        notes: Connection to milk, nourishing substances
+      - concept: charity (dana)
+        confidence: medium
+        notes: Giving, philanthropy, selfless service
+    cross_references:
+      - ref: graha.shani
+        relationship: "Saturn-ruled: nurturing through discipline and structure"
+      - ref: bhava.10
+        relationship: "Pushya pada 1 connects to career and public service"
+    sources:
+      - ref: source.BPHS
+        claim: "Pushya signifies nourishment, spirituality, devotion, dharmic conduct"
+        confidence: high
+
+  - nakshatra: nakshatra.ashlesha
+    name: Ashlesha
+    deity: Naga
+    symbol: Serpent / coiled snake
+    karakatvas:
+      - concept: mystery (rahasya)
+        confidence: high
+        notes: Hidden knowledge, secrets, occult
+      - concept: healing through poison
+        confidence: high
+        notes: Homeopathy, antidote, healing through antagonism
+      - concept: kundalini energy
+        confidence: high
+        notes: Serpentine power, spiritual awakening
+      - concept: speech (vaak shakti)
+        confidence: high
+        notes: Powerful speech, hypnotic communication
+      - concept: jealousy, envy
+        confidence: medium
+        notes: Competitive emotions, suspicion
+      - concept: research, investigation
+        confidence: medium
+        notes: Deep inquiry, detective work, analysis
+    cross_references:
+      - ref: graha.budha
+        relationship: "Mercury-ruled: intellectual manipulation, sharp communication"
+      - ref: bhava.8
+        relationship: "Ashlesha pada 4 connects to hidden knowledge"
+    sources:
+      - ref: source.BPHS
+        claim: "Ashlesha signifies mystery, healing, kundalini, powerful speech"
+        confidence: high
+
+  - nakshatra: nakshatra.magha
+    name: Magha
+    deity: Pitru (Ancestors)
+    symbol: Throne / palanquin
+    karakatvas:
+      - concept: royalty (rajas)
+        confidence: high
+        notes: Noble bearing, regal demeanor, leadership
+      - concept: ancestors (pitru)
+        confidence: high
+        notes: Ancestral worship, lineage honors
+      - concept: power (shakti)
+        confidence: high
+        notes: Political power, authority, commanding presence
+      - concept: generosity (dana)
+        confidence: high
+        notes: Noble giving, philanthropic leadership
+      - concept: authority
+        confidence: high
+        notes: Administrative power, governance capability
+      - concept: gold, wealth
+        confidence: medium
+        notes: Material prosperity, opulent display
+    cross_references:
+      - ref: graha.ketu
+        relationship: "Ketu-ruled: past-life authority and spiritual power"
+      - ref: bhava.10
+        relationship: "Magha connects to career authority and public status"
+    sources:
+      - ref: source.BPHS
+        claim: "Magha signifies royalty, ancestors, power, generosity"
+        confidence: high
+
+  - nakshatra: nakshatra.purvaphalguni
+    name: Purva Phalguni
+    deity: Bhaga
+    symbol: Front legs of bed / hammock
+    karakatvas:
+      - concept: rest (vilasa)
+        confidence: high
+        notes: Relaxation, leisure, enjoyment
+      - concept: pleasure (bhoga)
+        confidence: high
+        notes: Sensual enjoyment, comforts, luxury
+      - concept: creativity (srishti)
+        confidence: high
+        notes: Artistic creation, procreation, creative expression
+      - concept: marriage (vivaha)
+        confidence: high
+        notes: Wedding ceremonies, marital bliss
+      - concept: generosity (dana)
+        confidence: medium
+        notes: Giving freely, charitable nature
+      - concept: music, arts
+        confidence: medium
+        notes: Musical talent, performing arts
+    cross_references:
+      - ref: graha.shukra
+        relationship: "Venus-ruled: pleasure through artistic and sensual expression"
+      - ref: bhava.7
+        relationship: "Purva Phalguni pada 2 connects to marriage and partnership"
+    sources:
+      - ref: source.BPHS
+        claim: "Purva Phalguni signifies rest, pleasure, creativity, marriage"
+        confidence: high
+
+  - nakshatra: nakshatra.uttaraphalguni
+    name: Uttara Phalguni
+    deity: Aryaman
+    symbol: Back legs of bed / hammock
+    karakatvas:
+      - concept: patronage (samrakshana)
+        confidence: high
+        notes: Supporting others, protection, patronage
+      - concept: friendship (mitra)
+        confidence: high
+        notes: Loyal friendships, alliances, partnerships
+      - concept: duty (karma)
+        confidence: high
+        notes: Fulfilling obligations, social responsibility
+      - concept: marriage (vivaha)
+        confidence: high
+        notes: Stable marriage, marital responsibility
+      - concept: healing (chikitsa)
+        confidence: medium
+        notes: Therapeutic ability, medical assistance
+      - concept: generosity
+        confidence: medium
+        notes: Philanthropy, supporting community
+    cross_references:
+      - ref: graha.surya
+        relationship: "Sun-ruled: noble duty and generous leadership"
+      - ref: bhava.1
+        relationship: "Uttara Phalguni pada 1 connects to self and identity"
+    sources:
+      - ref: source.BPHS
+        claim: "Uttara Phalguni signifies patronage, friendship, duty, marriage"
+        confidence: high
+
+  - nakshatra: nakshatra.hasta
+    name: Hasta
+    deity: Savitar (Sun)
+    symbol: Open hand / fist
+    karakatvas:
+      - concept: skill (kushalata)
+        confidence: high
+        notes: Manual dexterity, craftsmanship, expertise
+      - concept: healing (chikitsa)
+        confidence: high
+        notes: Healing touch, therapeutic manipulation
+      - concept: magic (mayavi)
+        confidence: high
+        notes: Sleight of hand, illusion, magical arts
+      - concept: craftsmanship (shilpa)
+        confidence: high
+        notes: Artisan work, skilled labor, technical ability
+      - concept: palmistry
+        confidence: medium
+        notes: Divination through palm reading
+      - concept: negotiation
+        confidence: medium
+        notes: Diplomatic skill, persuasion, agreement-making
+    cross_references:
+      - ref: graha.chandra
+        relationship: "Moon-ruled: intuitive skill and healing through touch"
+      - ref: bhava.3
+        relationship: "Hasta pada 3 connects to communication skills"
+    sources:
+      - ref: source.BPHS
+        claim: "Hasta signifies skill, healing, magic, craftsmanship"
+        confidence: high
+
+  - nakshatra: nakshatra.chitra
+    name: Chitra
+    deity: Tvashtar (Vishvakarma)
+    symbol: Pearl / bright jewel
+    karakatvas:
+      - concept: artistry (kala)
+        confidence: high
+        notes: Artistic brilliance, visual arts, design
+      - concept: architecture (vastu)
+        confidence: high
+        notes: Building design, structural planning
+      - concept: brilliance (tejas)
+        confidence: high
+        notes: Radiance, sparkle, dazzling presence
+      - concept: fame (kirti)
+        confidence: high
+        notes: Recognition for creative work, public acclaim
+      - concept: variety (vividha)
+        confidence: medium
+        notes: Diverse talents, multi-faceted abilities
+      - concept: jewelry, gems
+        confidence: medium
+        notes: Precious stones, ornamental creation
+    cross_references:
+      - ref: graha.mangala
+        relationship: "Mars-ruled: dynamic creative force and brilliant construction"
+      - ref: bhava.5
+        relationship: "Chitra pada 2 connects to creative progeny and artistic expression"
+    sources:
+      - ref: source.BPHS
+        claim: "Chitra signifies artistry, architecture, brilliance, fame"
+        confidence: high
+
+  - nakshatra: nakshatra.swati
+    name: Swati
+    deity: Vayu
+    symbol: Coral / young plant sprout
+    karakatvas:
+      - concept: independence (svatantrya)
+        confidence: high
+        notes: Self-reliance, autonomous action
+      - concept: flexibility (chaplata)
+        confidence: high
+        notes: Adaptability, going with the flow
+      - concept: commerce (vanijya)
+        confidence: high
+        notes: Trade, business acumen, commercial activity
+      - concept: wind (vayu)
+        confidence: high
+        notes: Movement, changeability, fresh air
+      - concept: balance (samashti)
+        confidence: medium
+        notes: Equilibrium, fairness, justice
+      - concept: travel
+        confidence: medium
+        notes: Movement, relocation, journeys
+    cross_references:
+      - ref: graha.rahu
+        relationship: "Rahu-ruled: unconventional independence and commercial drive"
+      - ref: bhava.7
+        relationship: "Swati pada 4 connects to partnerships and balance"
+    sources:
+      - ref: source.BPHS
+        claim: "Swati signifies independence, flexibility, commerce, wind"
+        confidence: high
+
+  - nakshatra: nakshatra.vishakha
+    name: Vishakha
+    deity: Indra-Agni
+    symbol: Archway / triumphal gate
+    karakatvas:
+      - concept: determination (drdha lakshya)
+        confidence: high
+        notes: Fixed goal-oriented pursuit, single-minded focus
+      - concept: achievement (siddhi)
+        confidence: high
+        notes: Accomplishment, success through perseverance
+      - concept: hospitality (atithya)
+        confidence: high
+        notes: Hosting, welcoming guests, community building
+      - concept: branching (vishakha)
+        confidence: high
+        notes: Multiple directions, forked paths, decision-making
+      - concept: patience (dheerya)
+        confidence: medium
+        notes: Endurance, sustained effort
+      - concept: judgment
+        confidence: medium
+        notes: Evaluating options, making decisions
+    cross_references:
+      - ref: graha.guru
+        relationship: "Jupiter-ruled: goal achievement through wisdom and patience"
+      - ref: bhava.10
+        relationship: "Vishakha pada 1 connects to career achievement"
+    sources:
+      - ref: source.BPHS
+        claim: "Vishakha signifies determination, achievement, hospitality, branching"
+        confidence: high
+
+  - nakshatra: nakshatra.anuradha
+    name: Anuradha
+    deity: Mitra
+    symbol: Lotus / archway
+    karakatvas:
+      - concept: devotion (bhakti)
+        confidence: high
+        notes: Devotional practice, spiritual surrender
+      - concept: friendship (sakhya)
+        confidence: high
+        notes: Deep bonds, loyal companionship
+      - concept: worship (puja)
+        confidence: high
+        notes: Religious ritual, ceremonial worship
+      - concept: travel (yatra)
+        confidence: high
+        notes: Journeys, exploration, pilgrimage
+      - concept: balance (samyama)
+        confidence: medium
+        notes: Self-regulation, moderation, composure
+      - concept: cooperation
+        confidence: medium
+        notes: Collaborative effort, teamwork
+    cross_references:
+      - ref: graha.shani
+        relationship: "Saturn-ruled: disciplined devotion and loyal friendship"
+      - ref: bhava.11
+        relationship: "Anuradha pada 3 connects to community and gains"
+    sources:
+      - ref: source.BPHS
+        claim: "Anuradha signifies devotion, friendship, worship, travel"
+        confidence: high
+
+  - nakshatra: nakshatra.jyeshtha
+    name: Jyeshtha
+    deity: Indra
+    symbol: Umbrella / talisman
+    karakatvas:
+      - concept: seniority (jyeshtha)
+        confidence: high
+        notes: Eldership, senior position, authority
+      - concept: protection (rakshana)
+        confidence: high
+        notes: Guarding, defending, protective instinct
+      - concept: occult (abhichara)
+        confidence: high
+        notes: Magical practices, occult rituals, tantra
+      - concept: courage (veerya)
+        confidence: high
+        notes: Heroism, bravery, warrior spirit
+      - concept: seniority, hierarchy
+        confidence: high
+        notes: Respect for elders, traditional authority
+      - concept: charisma
+        confidence: medium
+        notes: Magnetic personality, commanding presence
+    cross_references:
+      - ref: graha.budha
+        relationship: "Mercury-ruled: analytical protection and sharp authoritative judgment"
+      - ref: bhava.8
+        relationship: "Jyeshtha pada 2 connects to hidden power and occult"
+    sources:
+      - ref: source.BPHS
+        claim: "Jyeshtha signifies seniority, protection, occult, courage"
+        confidence: high
+
+  - nakshatra: nakshatra.moola
+    name: Moola
+    deity: Nirrti
+    symbol: Bunch of roots
+    karakatvas:
+      - concept: root cause (mula)
+        confidence: high
+        notes: Foundational inquiry, getting to the root
+      - concept: destruction (nashana)
+        confidence: high
+        notes: Dismantling, breaking down, annihilation
+      - concept: research (anusandhana)
+        confidence: high
+        notes: Deep investigation, probing, research
+      - concept: fixed purpose
+        confidence: high
+        notes: Unwavering dedication to a cause
+      - concept: medicine (aushadhi)
+        confidence: medium
+        notes: Root medicine, herbal remedies
+      - concept: poverty, material loss
+        confidence: medium
+        notes: Material deprivation, spiritual enrichment
+    cross_references:
+      - ref: graha.ketu
+        relationship: "Ketu-ruled: detachment through destruction and root-cause dissolution"
+      - ref: bhava.12
+        relationship: "Moola pada 4 connects to liberation through dissolution"
+    sources:
+      - ref: source.BPHS
+        claim: "Moola signifies root cause, destruction, research, fixed purpose"
+        confidence: high
+
+  - nakshatra: nakshatra.purvashadha
+    name: Purva Ashadha
+    deity: Apas (Water)
+    symbol: Elephant tusk / fan
+    karakatvas:
+      - concept: invincibility (aparajita)
+        confidence: high
+        notes: Undefeatable spirit, resilience, comeback ability
+      - concept: water (apas)
+        confidence: high
+        notes: Purifying water, cleansing, flow
+      - concept: fame (kirti)
+        confidence: high
+        notes: Public recognition, reputation building
+      - concept: victory (vijaya)
+        confidence: high
+        notes: Triumph, success, conquering obstacles
+      - concept: beauty (saundarya)
+        confidence: medium
+        notes: Physical attractiveness, aesthetic appeal
+      - concept: comfort
+        confidence: medium
+        notes: Luxury, ease, pleasant living
+    cross_references:
+      - ref: graha.shukra
+        relationship: "Venus-ruled: victory through beauty and charm"
+      - ref: bhava.1
+        relationship: "Purva Ashadha pada 1 connects to self and identity"
+    sources:
+      - ref: source.BPHS
+        claim: "Purva Ashadha signifies invincibility, water, fame, victory"
+        confidence: high
+
+  - nakshatra: nakshatra.uttarashadha
+    name: Uttara Ashadha
+    deity: Vishvadevas
+    symbol: Elephant tusk / planks of bed
+    karakatvas:
+      - concept: universal victory (vishva jaya)
+        confidence: high
+        notes: Lasting victory, universal success
+      - concept: command (adhipatya)
+        confidence: high
+        notes: Leadership, commanding authority
+      - concept: dharma (righteousness)
+        confidence: high
+        notes: Moral integrity, ethical conduct
+      - concept: lasting fame
+        confidence: high
+        notes: Enduring reputation, permanent legacy
+      - concept: gentleness (mridu)
+        confidence: medium
+        notes: Mild approach, diplomatic style
+      - concept: universal truths
+        confidence: medium
+        notes: Timeless principles, cosmic order
+    cross_references:
+      - ref: graha.surya
+        relationship: "Sun-ruled: universal authority and lasting dharma"
+      - ref: bhava.10
+        relationship: "Uttara Ashadha pada 1 connects to career authority"
+    sources:
+      - ref: source.BPHS
+        claim: "Uttara Ashadha signifies universal victory, command, dharma"
+        confidence: high
+
+  - nakshatra: nakshatra.shravana
+    name: Shravana
+    deity: Vishnu
+    symbol: Ear / three footprints
+    karakatvas:
+      - concept: listening (shravana)
+        confidence: high
+        notes: Active listening, receptive learning
+      - concept: knowledge (jnana)
+        confidence: high
+        notes: Learning, education, wisdom acquisition
+      - concept: fame (kirti)
+        confidence: high
+        notes: Renown, reputation, public recognition
+      - concept: devotion (bhakti)
+        confidence: high
+        notes: Devotion to God, spiritual practice
+      - concept: connectivity
+        confidence: medium
+        notes: Networking, communication, connection-building
+      - concept: travel (yatra)
+        confidence: medium
+        notes: Journeys, especially to sacred places
+    cross_references:
+      - ref: graha.chandra
+        relationship: "Moon-ruled: receptive learning through emotional connection"
+      - ref: bhava.2
+        relationship: "Shravana pada 2 connects to speech and family"
+    sources:
+      - ref: source.BPHS
+        claim: "Shravana signifies listening, knowledge, fame, devotion"
+        confidence: high
+
+  - nakshatra: nakshatra.dhanishta
+    name: Dhanishta
+    deity: Vasus
+    symbol: Drum / mridanga
+    karakatvas:
+      - concept: wealth (dhana)
+        confidence: high
+        notes: Prosperity, financial abundance
+      - concept: fame (kirti)
+        confidence: high
+        notes: Renown, public recognition
+      - concept: music (sangeeta)
+        confidence: high
+        notes: Musical talent, rhythmic ability
+      - concept: speed (vegavat)
+        confidence: high
+        notes: Quick action, rapid movement
+      - concept: generosity (dana)
+        confidence: medium
+        notes: Giving nature, philanthropic spirit
+      - concept: drums, rhythm
+        confidence: medium
+        notes: Percussion instruments, beat-keeping
+    cross_references:
+      - ref: graha.mangala
+        relationship: "Mars-ruled: energetic wealth creation and musical expression"
+      - ref: bhava.2
+        relationship: "Dhanishta pada 1 connects to wealth accumulation"
+    sources:
+      - ref: source.BPHS
+        claim: "Dhanishta signifies wealth, fame, music, speed"
+        confidence: high
+
+  - nakshatra: nakshatra.shatabhisha
+    name: Shatabhisha
+    deity: Varuna
+    symbol: Circle / flower
+    karakatvas:
+      - concept: healing (chikitsa)
+        confidence: high
+        notes: Medical practice, therapeutic healing
+      - concept: mystery (rahasya)
+        confidence: high
+        notes: Hidden knowledge, esoteric wisdom
+      - concept: solitude (ekaanta)
+        confidence: high
+        notes: Aloneness, introspection, private life
+      - concept: science (vigyan)
+        confidence: high
+        notes: Scientific inquiry, technological advancement
+      - concept: water (jala)
+        confidence: medium
+        notes: Water elements, healing through water
+      - concept: astronomy
+        confidence: medium
+        notes: Celestial observation, cosmic understanding
+    cross_references:
+      - ref: graha.rahu
+        relationship: "Rahu-ruled: unconventional healing and hidden knowledge"
+      - ref: bhava.12
+        relationship: "Shatabhisha pada 4 connects to liberation through knowledge"
+    sources:
+      - ref: source.BPHS
+        claim: "Shatabhisha signifies healing, mystery, solitude, science"
+        confidence: high
+
+  - nakshatra: nakshatra.purvabhadrapada
+    name: Purva Bhadrapada
+    deity: Aja Ekapada
+    symbol: Sword / front legs of funeral cot
+    karakatvas:
+      - concept: fire (agni)
+        confidence: high
+        notes: Purifying fire, destructive-creative energy
+      - concept: transformation (parinama)
+        confidence: high
+        notes: Radical change, metamorphosis
+      - concept: austerities (tapas)
+        confidence: high
+        notes: Self-discipline, ascetic practice, penance
+      - concept: fear (bhaya)
+        confidence: high
+        notes: Confronting fears, courage through fear
+      - concept: dual nature
+        confidence: medium
+        notes: Two-faced quality, opposing tendencies
+      - concept: funeral rites
+        confidence: medium
+        notes: Death rituals, ancestor worship
+    cross_references:
+      - ref: graha.guru
+        relationship: "Jupiter-ruled: transformation through spiritual austerity"
+      - ref: bhava.8
+        relationship: "Purva Bhadrapada pada 3 connects to death and transformation"
+    sources:
+      - ref: source.BPHS
+        claim: "Purva Bhadrapada signifies fire, transformation, austerities, fear"
+        confidence: high
+
+  - nakshatra: nakshatra.uttarabhadrapada
+    name: Uttara Bhadrapada
+    deity: Ahir Budhnya
+    symbol: Back legs of funeral cot / twin swords
+    karakatvas:
+      - concept: depth (gambhira)
+        confidence: high
+        notes: Profound nature, deep thinking, seriousness
+      - concept: serpent power (naga shakti)
+        confidence: high
+        notes: Kundalini awakening, hidden energy
+      - concept: spiritual depth
+        confidence: high
+        notes: Deep meditation, contemplative practice
+      - concept: rain (meghaduta)
+        confidence: medium
+        notes: Nourishing rain, life-giving forces
+      - concept: duality
+        confidence: medium
+        notes: Dual nature, balancing opposites
+      - concept: cosmic knowledge
+        confidence: medium
+        notes: Deep understanding of universal principles
+    cross_references:
+      - ref: graha.shani
+        relationship: "Saturn-ruled: disciplined spiritual depth and cosmic wisdom"
+      - ref: bhava.9
+        relationship: "Uttara Bhadrapada pada 2 connects to dharma and higher knowledge"
+    sources:
+      - ref: source.BPHS
+        claim: "Uttara Bhadrapada signifies depth, serpent power, spiritual depth"
+        confidence: high
+
+  - nakshatra: nakshatra.revati
+    name: Revati
+    deity: Pushan
+    symbol: Fish / drum
+    karakatvas:
+      - concept: journey (yatra)
+        confidence: high
+        notes: Final journey, spiritual pilgrimage, departure
+      - concept: nourishment (pushti)
+        confidence: high
+        notes: Sustenance, nurturing, providing for others
+      - concept: compassion (karuna)
+        confidence: high
+        notes: Empathy, kindness, emotional sensitivity
+      - concept: closure (samapti)
+        confidence: high
+        notes: Endings, completion, finality
+      - concept: protection (rakshana)
+        confidence: medium
+        notes: Guarding, safe-keeping, shelter
+      - concept: travel, especially sea travel
+        confidence: medium
+        notes: Journeys by water, overseas travel
+    cross_references:
+      - ref: graha.budha
+        relationship: "Mercury-ruled: gentle guidance and compassionate closure of journeys"
+      - ref: bhava.12
+        relationship: "Revati pada 4 connects to final liberation and departure"
+    sources:
+      - ref: source.BPHS
+        claim: "Revati signifies journey, nourishment, compassion, closure"
+        confidence: high
+
+deity_summary:
+  - deity_group: Adityas
+    nakshatras: [nakshatra.rohini, nakshatra.uttaraphalguni]
+    theme: "Solar authority and creative abundance"
+  - deity_group: Rudras
+    nakshatras: [nakshatra.ardra, nakshatra.jyeshtha]
+    theme: "Destructive transformation and fierce power"
+  - deity_group: Vasus
+    nakshatras: [nakshatra.dhanishta, nakshatra.shravana]
+    theme: "Material prosperity and receptive learning"
+  - deity_group: Maruts
+    nakshatras: [nakshatra.swati, nakshatra.hasta]
+    theme: "Independent action and skilled expression"
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 33 and Phaladeepika Chapter 13 - Nakshatra significations"
+    confidence: high
+
+notes: |
+  This catalogue centralizes the nakshatra karakatva assignments from BPHS and Phaladeepika.
+  Each nakshatra has its deity, symbol, and multiple significations that operate across
+  physical, functional, and spiritual levels.
+
+  Key principles:
+  1. Each nakshatra is ruled by a graha and has a presiding deity
+  2. Nakshatra significations influence the bhavas they occupy
+  3. The 4 padas of each nakshatra add additional nuance
+  4. Nakshatra themes are particularly relevant for muhurta (electional) and nakshatra-based predictions
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Corrected three misassigned graha rulers: Jyeshtha was listed as Mangala-ruled (corrected to Budha), Moola as Guru-ruled (corrected to Ketu), Revati as Chandra-ruled (corrected to Budha) — all three now match the standard Vimshottari nakshatra-lord sequence and the individual graha catalogue files' own nakshatra_lordship data. Also standardized nakshatra ID spelling/format (aridra->ardra, maga->magha, mula->moola, and removed underscores from purva/uttara compound names) to match catalogues/nakshatras/_index.yaml."
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with all 27 nakshatra karakatvas from BPHS and Phaladeepika"
+    author: "Chief Jyotish Knowledge Architect"

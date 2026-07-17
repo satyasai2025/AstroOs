@@ -1,0 +1,49 @@
+id: tajika.index
+name: Tajika Catalogue Index
+aliases: ["Tajika System Index", "Varshaphal Index", "Tajika Nihanti Index"]
+category: tajika
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: tajika
+statement: >
+  Complete index of all Tajika system catalogue records in the
+  Jyotish Knowledge Base.
+
+records:
+  - id: tajika.core.annual-chart
+    file: tajika-annual-chart.yaml
+    topic: "Annual Chart (Varshaphal)"
+    description: "Solar return chart, Muntha placement, annual house calculation"
+
+  - id: tajika.core.yogas
+    file: tajika-yogas.yaml
+    topic: "Tajika Yogas"
+    description: "Ittalaqa, Sahama, Tajika-specific combinations within the annual chart"
+
+  - id: tajika.core.timing
+    file: tajika-timing.yaml
+    topic: "Timing Principles"
+    description: "Monthly, weekly, daily charts; Istimrari progression technique"
+
+sources:
+  - ref: source.tajika-nihanti
+    claim: "Tajika foundational texts: Tajika Nihanti by Ghulam Mohammed and related texts"
+    confidence: high
+
+notes: >
+  Tajika is an annual prediction system with roots in Persian astrology that
+  was integrated into Indian Jyotish. Its primary text is the Tajika Nihanti.
+  The system's three pillars are: (1) Annual chart (Varshaphal) based on the
+  solar return, (2) Tajika-specific yogas centered on Ittalaqa and Sahama, and
+  (3) Progressive timing refinement (Istimrari) from year to day. Tajika
+  predictions layer over natal chart promises and ongoing Dasha periods rather
+  than replacing them.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -22,6 +22,7 @@ All returned objects are frozen dataclasses (immutable).
 
 import logging
 import math
+import threading
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -44,13 +45,11 @@ from apps.api.domain.ephemeris import (
 from packages.shared.constants import (
     DEGREES_PER_NAKSHATRA,
     DEGREES_PER_RASHI,
-    EXALTATION_DEGREES,
-    MOOLATRIKONA_RASHIS,
-    OWN_SIGNS,
     PADAS_PER_NAKSHATRA,
     SWEPH_PLANET_IDS,
     TOTAL_NAKSHATRAS,
 )
+from packages.shared.dignity import compute_dignity_value
 from packages.shared.enums import AyanamsaSystem, Graha, Nakshatra, Rashi
 
 logger = logging.getLogger(__name__)
@@ -119,17 +118,6 @@ _AYANAMSA_IDS: dict[str, int] = {
     AyanamsaSystem.YUKTESHWAR.value:     swe.SIDM_YUKTESHWAR,
     AyanamsaSystem.FAGAN_BRADLEY.value:  swe.SIDM_FAGAN_BRADLEY,
     AyanamsaSystem.TRUE_CHITRA.value:    swe.SIDM_TRUE_CITRA,
-}
-
-# Moolatrikona degree ranges within the sign (start, end)
-_MOOLATRIKONA_RANGES: dict[str, tuple[float, float]] = {
-    "sun":     (0.0, 20.0),     # Leo 0–20°
-    "moon":    (3.0, 30.0),     # Taurus 3–30°
-    "mars":    (0.0, 12.0),     # Aries 0–12°
-    "mercury": (15.0, 20.0),    # Virgo 15–20°
-    "jupiter": (0.0, 10.0),     # Sagittarius 0–10°
-    "venus":   (0.0, 15.0),     # Libra 0–15°
-    "saturn":  (0.0, 20.0),     # Aquarius 0–20°
 }
 
 
@@ -212,75 +200,15 @@ def _compute_dignity(planet: str, rashi: str, rashi_deg: float) -> Optional[Dign
     """
     Compute classical Vedic dignity for a planet in a sign.
 
-    Order of precedence: exalted → moolatrikona → own → friendly → neutral → enemy → debilitated
+    As of Module 9 Phase 2, this is a thin wrapper over
+    packages.shared.dignity.compute_dignity_value() — the actual logic
+    was extracted there so GrahaEngine (and, going forward, Saptavargaja
+    Bala's divisional-chart dignity) can reuse the same pure function
+    instead of a second, separate implementation. Behavior is byte-for-
+    byte unchanged; see that module's docstring for the full rationale.
     """
-    if planet in ("rahu", "ketu"):
-        return None   # Dignity not classically assigned in this schema
-
-    # Exaltation check
-    if planet in EXALTATION_DEGREES:
-        ex_rashi, ex_deg = EXALTATION_DEGREES[planet]
-        if rashi == ex_rashi:
-            return DignityType.EXALTED
-
-    # Debilitation — opposite sign
-    from packages.shared.constants import DEBILITATION_RASHIS
-    if planet in DEBILITATION_RASHIS:
-        if rashi == DEBILITATION_RASHIS[planet]:
-            return DignityType.DEBILITATED
-
-    # Moolatrikona
-    if planet in MOOLATRIKONA_RASHIS:
-        if rashi == MOOLATRIKONA_RASHIS[planet]:
-            start, end = _MOOLATRIKONA_RANGES.get(planet, (0.0, 30.0))
-            if start <= rashi_deg < end:
-                return DignityType.MOOLATRIKONA
-
-    # Own sign (swakshetra)
-    if planet in OWN_SIGNS:
-        if rashi in OWN_SIGNS[planet]:
-            return DignityType.OWN
-
-    # Friendly / Neutral / Enemy — simplified natural relationships
-    _FRIENDS: dict[str, list[str]] = {
-        "sun":     ["moon", "mars", "jupiter"],
-        "moon":    ["sun", "mercury"],
-        "mars":    ["sun", "moon", "jupiter"],
-        "mercury": ["sun", "venus"],
-        "jupiter": ["sun", "moon", "mars"],
-        "venus":   ["mercury", "saturn"],
-        "saturn":  ["mercury", "venus"],
-    }
-    _ENEMIES: dict[str, list[str]] = {
-        "sun":     ["venus", "saturn"],
-        "moon":    ["rahu", "ketu"],
-        "mars":    ["mercury"],
-        "mercury": ["moon"],
-        "jupiter": ["mercury", "venus"],
-        "venus":   ["sun", "moon"],
-        "saturn":  ["sun", "moon", "mars"],
-    }
-
-    rashi_lord = None
-    for idx, r in enumerate(_RASHI_LIST):
-        if r == rashi:
-            # Get sign lord from constants
-            from packages.shared.constants import OWN_SIGNS as _OS
-            for graha_name, signs in _OS.items():
-                if rashi in signs:
-                    rashi_lord = graha_name
-                    break
-            break
-
-    if rashi_lord:
-        friends = _FRIENDS.get(planet, [])
-        enemies = _ENEMIES.get(planet, [])
-        if rashi_lord in friends:
-            return DignityType.FRIENDLY
-        if rashi_lord in enemies:
-            return DignityType.ENEMY
-
-    return DignityType.NEUTRAL
+    value = compute_dignity_value(planet, rashi, rashi_deg)
+    return DignityType(value) if value is not None else None
 
 
 # ---------------------------------------------------------------------------
@@ -292,15 +220,39 @@ class EphemerisWrapper:
     Full Swiss Ephemeris calculation wrapper for Vedic astrology.
 
     Lifecycle:
-      - Instantiated once and reused (swe_set_ephe_path is process-global).
+      - Instantiated exactly ONCE per process and reused for every request
+        (enforced by DI — see apps.api.dependencies.get_ephemeris_wrapper).
+        pyswisseph's C library holds process-global state (ephemeris file
+        path, sidereal mode via swe.set_sid_mode), so re-instantiating this
+        class per-request does NOT give request isolation — it only adds
+        redundant syscalls while the underlying global state is still shared.
       - set_ayanamsa() must be called before any sidereal calculation.
       - calculate() is the primary entry point.
+
+    Thread-safety:
+      - `calculate()` acquires `self._lock` for its full duration, and
+        `_calculate_locked()` unconditionally re-runs `swe.set_ephe_path()`
+        and `swe.set_sid_mode()` at its start on every call. Both are
+        necessary: pyswisseph's C-level state from these calls is
+        documented as process-global, but is empirically NOT reliably
+        visible across OS threads — a calculation running on a different
+        thread than whichever one last called them (e.g. via
+        `asyncio.to_thread`, which uses a worker thread pool distinct from
+        wherever this wrapper was constructed) can silently lose
+        precision, with no exception raised. Re-running both calls is
+        cheap and removes the dependency on cross-thread visibility
+        entirely, rather than trying to reason about which thread "owns"
+        the correct state.
+      - Callers on the async side should still run `calculate()` via
+        `asyncio.to_thread(...)` so this lock does not block the event
+        loop — see the router DI helpers for the required pattern.
     """
 
     def __init__(self, ephemeris_path: str, ayanamsa: str = AyanamsaSystem.LAHIRI.value) -> None:
         import os
         self._path = os.path.abspath(ephemeris_path)
         self._ayanamsa = ayanamsa
+        self._lock = threading.Lock()
         swe.set_ephe_path(self._path)
         self._set_ayanamsa(ayanamsa)
 
@@ -364,6 +316,74 @@ class EphemerisWrapper:
             planet: self.get_planet_position(planet, jd)
             for planet in SWEPH_PLANET_IDS
         }
+
+    # ── Sunrise / sunset (Module 9 Phase 0 — Foundation Extension) ────────────
+    #
+    # Added specifically for Kala Bala's Nathonnata/Ayana/Tribhaga
+    # sub-components (Shadbala, Module 9), which need precise day/night
+    # timing relative to sunrise/sunset, not just a rough estimate.
+
+    def get_sunrise_sunset(
+        self,
+        jd: float,
+        latitude: float,
+        longitude: float,
+    ) -> tuple[Optional[float], Optional[float]]:
+        """
+        Sunrise and sunset Julian Days (UT) bracketing the given moment,
+        at the given location.
+
+        Searches for sunrise starting one day before `jd` (safe margin —
+        the solar day is ~1 day everywhere except near the poles), then
+        searches for sunset starting FROM that sunrise result — not from
+        the same starting point again — so the returned sunset is the one
+        immediately following that sunrise (the same local day), not the
+        previous day's sunset. Searching both from the same start point
+        is a common mistake here: rise_trans returns the NEXT event at or
+        after the given time, and starting sunset's search too early can
+        return a sunset from before the sunrise it's supposed to pair with.
+
+        Returns (None, None) if the location is circumpolar at this date
+        (no sunrise/sunset — polar day or night) rather than raising, so
+        callers can degrade gracefully (e.g. Kala Bala components that
+        need this can report "not computable at this latitude" instead of
+        crashing).
+        """
+        geopos = (longitude, latitude, 0.0)
+
+        rise_result, rise_data = swe.rise_trans(jd - 1.0, swe.SUN, swe.CALC_RISE, geopos)
+        if rise_result != 0:
+            return None, None
+        sunrise_jd = rise_data[0]
+
+        set_result, set_data = swe.rise_trans(sunrise_jd, swe.SUN, swe.CALC_SET, geopos)
+        if set_result != 0:
+            return sunrise_jd, None
+        sunset_jd = set_data[0]
+
+        return sunrise_jd, sunset_jd
+
+    def get_declination(self, planet: str, jd: float) -> float:
+        """
+        Equatorial declination (degrees) for a Graha — needed for Ayana
+        Bala (Shadbala, Module 9). Ketu is derived from Rahu (True Node)
+        with declination sign flipped, mirroring get_planet_position's
+        existing Ketu-from-Rahu convention.
+        """
+        flags = swe.FLG_SWIEPH | swe.FLG_SPEED | swe.FLG_EQUATORIAL
+
+        if planet == "ketu":
+            rahu_id = SWEPH_PLANET_IDS["rahu"]
+            xx, retflag = swe.calc_ut(jd, rahu_id, flags)
+            if retflag < 0:
+                raise RuntimeError(f"Swiss Ephemeris calculation error for ketu: retflag={retflag}")
+            return -xx[1]
+
+        planet_id = SWEPH_PLANET_IDS[planet]
+        xx, retflag = swe.calc_ut(jd, planet_id, flags)
+        if retflag < 0:
+            raise RuntimeError(f"Swiss Ephemeris calculation error for {planet}: retflag={retflag}")
+        return xx[1]  # xx[1] is declination when FLG_EQUATORIAL is set
 
     # ── Ascendant and houses ───────────────────────────────────────────────────
 
@@ -537,6 +557,16 @@ class EphemerisWrapper:
         """
         Perform a full ephemeris calculation for a given moment and location.
 
+        Public entry point — acquires `self._lock` for the entire duration
+        of the calculation so that concurrent calls (e.g. two requests with
+        different ayanamsas) cannot interleave the check-set-calculate
+        sequence and corrupt each other's results via pyswisseph's
+        process-global sidereal mode.
+
+        Call this via `asyncio.to_thread(wrapper.calculate, ...)` from async
+        route handlers — it is a blocking call and will hold the lock for
+        its full duration.
+
         Args:
             dt: UTC-aware datetime of the birth/event.
             latitude: Geographic latitude in decimal degrees (+N, -S).
@@ -547,8 +577,44 @@ class EphemerisWrapper:
         Returns:
             EphemerisResult with all positions and panchanga elements.
         """
-        if ayanamsa != self._ayanamsa:
-            self._set_ayanamsa(ayanamsa)
+        with self._lock:
+            return self._calculate_locked(dt, latitude, longitude, ayanamsa, house_system)
+
+    def _calculate_locked(
+        self,
+        dt: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str,
+        house_system: str,
+    ) -> EphemerisResult:
+        """
+        Unlocked calculation body. Only call while holding `self._lock` —
+        use `calculate()` instead of calling this directly.
+
+        Root-cause fix (found via live smoke testing, reproduced and
+        isolated in isolation — see tests/integration/
+        test_ephemeris_wrapper_concurrency.py): pyswisseph's
+        `swe.set_ephe_path()` and `swe.set_sid_mode()` are documented as
+        setting process-global C state, but empirically that state is NOT
+        reliably visible to a thread other than the one that called them.
+        `__init__` calls both exactly once, from whichever thread
+        constructs this wrapper (normally the main thread at process
+        startup) — every real calculation, though, runs via
+        `asyncio.to_thread(...)` on a worker thread from Python's default
+        executor pool, which is a DIFFERENT OS thread. Empirically, a
+        calculation from such a worker thread that never re-establishes
+        this state itself silently loses precision (in one isolated
+        reproduction, by ~0.88 degrees — nowhere near acceptable for real
+        use) even though nothing raises an error. Both calls are cheap
+        (a path string assignment and a mode flag), so both are redone
+        unconditionally at the top of every locked calculation rather than
+        only when `ayanamsa` changes — the previous conditional-only-on-
+        change logic is exactly what let a fresh worker thread's first
+        calculation silently skip re-establishing this state.
+        """
+        swe.set_ephe_path(self._path)
+        self._set_ayanamsa(ayanamsa)
 
         jd = datetime_to_jd(dt)
         ayanamsa_val = self.get_ayanamsa(jd)
@@ -626,6 +692,12 @@ class EphemerisWrapper:
 
             dignity = _compute_dignity(planet, rashi, rashi_deg)
 
+            # Module 9 Phase 0: latitude/distance/speed were already
+            # computed into trop_pos above but previously discarded here.
+            # Declination needs one additional equatorial-frame call per
+            # planet (Ayana Bala, Shadbala).
+            declination = self.get_declination(planet, jd)
+
             sidereal_positions.append(SiderealPosition(
                 planet=planet,
                 sidereal_longitude=sid_lon,
@@ -638,6 +710,10 @@ class EphemerisWrapper:
                 is_combust=combust,
                 combustion_orb=comb_orb,
                 dignity=dignity,
+                latitude_deg=trop_pos.latitude,
+                distance_au=trop_pos.distance_au,
+                speed_deg_per_day=trop_pos.speed_deg_per_day,
+                declination_deg=declination,
             ))
 
         # ── Panchanga ─────────────────────────────────────────────────────────
@@ -667,6 +743,15 @@ class EphemerisWrapper:
             ayanamsa_deg=ayanamsa_val,
         )
 
+        # Module 9 Phase 0: sunrise/sunset for this birth date/location —
+        # needed by Kala Bala's Nathonnata/Ayana/Tribhaga sub-components.
+        # None/None at circumpolar latitudes (see get_sunrise_sunset).
+        sunrise_jd, sunset_jd = self.get_sunrise_sunset(jd, latitude, longitude)
+        is_daytime_birth = (
+            sunrise_jd is not None and sunset_jd is not None
+            and sunrise_jd <= jd <= sunset_jd
+        )
+
         return EphemerisResult(
             julian_day=jd,
             ayanamsa_value=ayanamsa_val,
@@ -675,6 +760,9 @@ class EphemerisWrapper:
             house_cusps=house_cusps,
             planet_positions=sidereal_positions,
             panchanga=panchanga,
+            sunrise_jd=sunrise_jd,
+            sunset_jd=sunset_jd,
+            is_daytime_birth=is_daytime_birth if (sunrise_jd is not None and sunset_jd is not None) else None,
         )
 
     def close(self) -> None:

@@ -1,0 +1,77 @@
+# catalogues/bhavas/_index.yaml
+
+id: index.bhavas
+name: Bhava Catalogue
+category: index
+status: active
+version: 1.0
+last_verified: 2026-07-15
+
+description: >
+  Complete index of all 12 bhavas (houses) in the Jyotish
+  knowledge base. Each bhava has a unique ID of the form
+  bhava.<number>.
+
+bhavas:
+  - id: bhava.1
+    name: Tanu Bhava
+    house: 1
+    group: kendra, trikona
+    file: bhava-1.yaml
+  - id: bhava.2
+    name: Dhana Bhava
+    house: 2
+    group: maraka
+    file: bhava-2.yaml
+  - id: bhava.3
+    name: Sahaja Bhava
+    house: 3
+    group: upachaya
+    file: bhava-3.yaml
+  - id: bhava.4
+    name: Sukha Bhava
+    house: 4
+    group: kendra
+    file: bhava-4.yaml
+  - id: bhava.5
+    name: Putra Bhava
+    house: 5
+    group: trikona
+    file: bhava-5.yaml
+  - id: bhava.6
+    name: Shatru Bhava
+    house: 6
+    group: dusthana, upachaya
+    file: bhava-6.yaml
+  - id: bhava.7
+    name: Yuvati Bhava
+    house: 7
+    group: kendra, maraka
+    file: bhava-7.yaml
+  - id: bhava.8
+    name: Randhra Bhava
+    house: 8
+    group: dusthana
+    file: bhava-8.yaml
+  - id: bhava.9
+    name: Dharma Bhava
+    house: 9
+    group: trikona
+    file: bhava-9.yaml
+  - id: bhava.10
+    name: Karma Bhava
+    house: 10
+    group: kendra
+    file: bhava-10.yaml
+  - id: bhava.11
+    name: Labha Bhava
+    house: 11
+    group: upachaya
+    file: bhava-11.yaml
+  - id: bhava.12
+    name: Vyaya Bhava
+    house: 12
+    group: dusthana
+    file: bhava-12.yaml
+
+count: 12

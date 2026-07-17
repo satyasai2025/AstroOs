@@ -1,0 +1,192 @@
+# ============================================================================
+# ASTRO OS — Transit Catalogue Index
+# ============================================================================
+# Scope: Master index of all transit (gochara) catalogue records
+# Last updated: 2026-07-15
+# ============================================================================
+
+id: index.transits
+domain: transit
+count: 8
+status: active
+version: 1.0
+last_verified: 2026-07-15
+
+# ── Catalogue Files ─────────────────────────────────────────────────────────
+
+files:
+  - file: gochara-rules.yaml
+    id: transit.gochara.basics
+    name: "Gochara Transit Rules"
+    description: "Foundational gochara rules for all 9 grahas transiting 12 houses from Lagna"
+    source: "BPHS Ch.42"
+    record_count: 1
+
+  - file: shani-gochara.yaml
+    id: transit.shani.gochara
+    name: "Shani (Saturn) Gochara"
+    description: "Saturn transit through 12 houses, Sade Sati (7.5-year period), Ashtama Shani"
+    source: "BPHS Ch.42"
+    record_count: 14
+    records:
+      - id: transit.shani.gochara.h1
+        name: "Shani Gochara — 1st House"
+      - id: transit.shani.gochara.h2
+        name: "Shani Gochara — 2nd House"
+      - id: transit.shani.gochara.h3
+        name: "Shani Gochara — 3rd House"
+      - id: transit.shani.gochara.h4
+        name: "Shani Gochara — 4th House"
+      - id: transit.shani.gochara.h5
+        name: "Shani Gochara — 5th House"
+      - id: transit.shani.gochara.h6
+        name: "Shani Gochara — 6th House"
+      - id: transit.shani.gochara.h7
+        name: "Shani Gochara — 7th House"
+      - id: transit.shani.gochara.h8
+        name: "Shani Gochara — 8th House (Ashtama Shani)"
+      - id: transit.shani.gochara.h9
+        name: "Shani Gochara — 9th House"
+      - id: transit.shani.gochara.h10
+        name: "Shani Gochara — 10th House"
+      - id: transit.shani.gochara.h11
+        name: "Shani Gochara — 11th House"
+      - id: transit.shani.gochara.h12
+        name: "Shani Gochara — 12th House"
+      - id: transit.shani.sade-sati
+        name: "Sade Sati — Saturn's 7.5-Year Period"
+      - id: transit.shani.ashtama-shani
+        name: "Ashtama Shani — Saturn's 8th House Transit"
+
+  - file: guru-gochara.yaml
+    id: transit.guru.gochara
+    name: "Guru (Jupiter) Gochara"
+    description: "Jupiter transit through 12 houses from Lagna — fortune, expansion, wisdom"
+    source: "BPHS Ch.42"
+    record_count: 12
+    records:
+      - id: transit.guru.gochara.h1
+        name: "Guru Gochara — 1st House"
+      - id: transit.guru.gochara.h2
+        name: "Guru Gochara — 2nd House"
+      - id: transit.guru.gochara.h3
+        name: "Guru Gochara — 3rd House"
+      - id: transit.guru.gochara.h4
+        name: "Guru Gochara — 4th House"
+      - id: transit.guru.gochara.h5
+        name: "Guru Gochara — 5th House"
+      - id: transit.guru.gochara.h6
+        name: "Guru Gochara — 6th House"
+      - id: transit.guru.gochara.h7
+        name: "Guru Gochara — 7th House"
+      - id: transit.guru.gochara.h8
+        name: "Guru Gochara — 8th House"
+      - id: transit.guru.gochara.h9
+        name: "Guru Gochara — 9th House"
+      - id: transit.guru.gochara.h10
+        name: "Guru Gochara — 10th House"
+      - id: transit.guru.gochara.h11
+        name: "Guru Gochara — 11th House"
+      - id: transit.guru.gochara.h12
+        name: "Guru Gochara — 12th House"
+
+  - file: rahu-ketu-gochara.yaml
+    id: transit.rahu-ketu.gochara
+    name: "Rahu-Ketu Gochara"
+    description: "Rahu and Ketu transit through 12 houses, eclipse effects, karmic themes"
+    source: "BPHS Ch.42"
+    record_count: 10
+    records:
+      - id: transit.rahu.gochara.h1
+        name: "Rahu Gochara — 1st House"
+      - id: transit.rahu.gochara.h4
+        name: "Rahu Gochara — 4th House"
+      - id: transit.rahu.gochara.h7
+        name: "Rahu Gochara — 7th House"
+      - id: transit.rahu.gochara.h10
+        name: "Rahu Gochara — 10th House"
+      - id: transit.ketu.gochara.h1
+        name: "Ketu Gochara — 1st House"
+      - id: transit.ketu.gochara.h4
+        name: "Ketu Gochara — 4th House"
+      - id: transit.ketu.gochara.h7
+        name: "Ketu Gochara — 7th House"
+      - id: transit.ketu.gochara.h12
+        name: "Ketu Gochara — 12th House"
+      - id: transit.eclipse.effects
+        name: "Rahu-Ketu Eclipse Transit Effects"
+
+  - file: mangala-gochara.yaml
+    id: transit.mangala.gochara
+    name: "Mangala (Mars) Gochara"
+    description: "Mars transit through 12 houses, Mangalik transit positions, energy and conflict"
+    source: "BPHS Ch.42"
+    record_count: 13
+    records:
+      - id: transit.mangala.gochara.h1
+        name: "Mangala Gochara — 1st House (Mangalik Transit)"
+      - id: transit.mangala.gochara.h2
+        name: "Mangala Gochara — 2nd House"
+      - id: transit.mangala.gochara.h3
+        name: "Mangala Gochara — 3rd House"
+      - id: transit.mangala.gochara.h4
+        name: "Mangala Gochara — 4th House (Mangalik Transit)"
+      - id: transit.mangala.gochara.h5
+        name: "Mangala Gochara — 5th House"
+      - id: transit.mangala.gochara.h6
+        name: "Mangala Gochara — 6th House"
+      - id: transit.mangala.gochara.h7
+        name: "Mangala Gochara — 7th House (Mangalik Transit)"
+      - id: transit.mangala.gochara.h8
+        name: "Mangala Gochara — 8th House (Mangalik Transit)"
+      - id: transit.mangala.gochara.h9
+        name: "Mangala Gochara — 9th House"
+      - id: transit.mangala.gochara.h10
+        name: "Mangala Gochara — 10th House"
+      - id: transit.mangala.gochara.h11
+        name: "Mangala Gochara — 11th House"
+      - id: transit.mangala.gochara.h12
+        name: "Mangala Gochara — 12th House (Mangalik Transit)"
+      - id: transit.mangalik.positions
+        name: "Mangalik Transit Positions Summary"
+
+  - file: transit-significations.yaml
+    id: transit.significations.master
+    name: "Transit Significations Master Reference"
+    description: "Complete transit signification table — each graha's effect in each house (1-12)"
+    source: "BPHS Ch.42"
+    record_count: 1
+    records:
+      - id: transit.significations.master
+        name: "Transit Significations Master Reference"
+
+  - file: ashtakavarga-basics.yaml
+    id: transit.ashtakavarga.basics
+    name: "Ashtakavarga Basics"
+    description: "Ashtakavarga system — bindus, house strength, SAV, BVA, transit modulation"
+    source: "BPHS Ch.39"
+    record_count: 1
+    records:
+      - id: transit.ashtakavarga.basics
+        name: "Ashtakavarga Basics"
+
+# ── Summary Statistics ──────────────────────────────────────────────────────
+
+summary:
+  total_files: 8
+  total_records: 43
+  grahas_covered:
+    - "Surya (Sun) — transit significations only"
+    - "Chandra (Moon) — transit significations only"
+    - "Mangala (Mars) — full per-house breakdown + Mangalik summary"
+    - "Budha (Mercury) — transit significations only"
+    - "Guru (Jupiter) — full per-house breakdown"
+    - "Shukra (Venus) — transit significations only"
+    - "Shani (Saturn) — full per-house breakdown + Sade Sati + Ashtama Shani"
+    - "Rahu — key houses + eclipse effects"
+    - "Ketu — key houses + eclipse effects"
+  coverage_notes: >
+    Full per-house breakdowns exist for Saturn (14 records), Jupiter (12 records),
+    and Mars (13 records). Rahu-Ketu have key house records plus eclipse effects.
+    Sun, Moon, Mercury, and Venus are covered in the master signification table
+    but do not yet have individual per-house breakdown files.

@@ -1,0 +1,13 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,sign_number,name,sanskrit_name,lord,element,modality,gender,direction,start_degree,end_degree
+ASTRO-REC-SIGNS-000001,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,1,aries,Mesha,mars,fire,cardinal,male,,0.0,30.0
+ASTRO-REC-SIGNS-000002,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,2,taurus,Vrishabha,venus,earth,fixed,female,,30.0,60.0
+ASTRO-REC-SIGNS-000003,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,3,gemini,Mithuna,mercury,air,dual,male,,60.0,90.0
+ASTRO-REC-SIGNS-000004,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,4,cancer,Karka,moon,water,cardinal,female,,90.0,120.0
+ASTRO-REC-SIGNS-000005,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,5,leo,Simha,sun,fire,fixed,male,,120.0,150.0
+ASTRO-REC-SIGNS-000006,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,6,virgo,Kanya,mercury,earth,dual,female,,150.0,180.0
+ASTRO-REC-SIGNS-000007,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,7,libra,Tula,venus,air,cardinal,male,,180.0,210.0
+ASTRO-REC-SIGNS-000008,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,8,scorpio,Vrischika,mars,water,fixed,female,,210.0,240.0
+ASTRO-REC-SIGNS-000009,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,9,sagittarius,Dhanu,jupiter,fire,dual,male,,240.0,270.0
+ASTRO-REC-SIGNS-000010,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,10,capricorn,Makara,saturn,earth,cardinal,female,,270.0,300.0
+ASTRO-REC-SIGNS-000011,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,11,aquarius,Kumbha,saturn,air,fixed,male,,300.0,330.0
+ASTRO-REC-SIGNS-000012,ASTRO-RF-SIGNS-v1.0.0,reference,1,false,12,pisces,Meena,jupiter,water,dual,female,,330.0,360.0

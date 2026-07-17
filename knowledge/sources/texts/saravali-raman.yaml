@@ -1,0 +1,40 @@
+id: source.saravali-raman
+name: Saravali (Raman Translation)
+aliases:
+  - Saravali Raman Edition
+  - Raman's Saravali
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Kalyana Varma (original); B.V. Raman (translator)
+date:
+  approximate: "~900-1000 CE (original); 1986 (translation)"
+  confidence: high
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: B.V. Raman
+  publisher: Motilal Banarsidass Publishers
+  year: 1986
+  language: en
+  notes: "English translation with original Sanskrit verses."
+
+relationship_to_primary:
+  primary_text: source.saravali
+  type: translation
+  notes: "Authoritative English translation of Kalyana Varma's Saravali."
+
+notes: "B.V. Raman's translation of Saravali (also known as Saravali or 'The Essence of Astrology') makes this important medieval compendium accessible to English readers."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

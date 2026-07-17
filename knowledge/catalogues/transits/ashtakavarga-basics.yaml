@@ -1,0 +1,225 @@
+# ============================================================================
+# ASTRO OS — Ashtakavarga Basics — Foundational Catalogue
+# ============================================================================
+# Source: BPHS Chapter 39 — Ashtakavarga Adhyaya
+# Scope: Introduction to the Ashtakavarga system: bindus (points) assigned
+#         to each house based on planetary positions, house strength assessment,
+#         and transit evaluation framework.
+# Note:  Foundational concepts only. Full calculation tables in BPHS Ch.39.
+# ============================================================================
+
+# ── ASHTAKAVARGA OVERVIEW ──────────────────────────────────────────────────
+
+id: transit.ashtakavarga.basics
+name: "Ashtakavarga Basics"
+aliases: ["Ashtakvarga", "Eight-fold Division", "Bindu System", "Sarva Ashtakavarga"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: ashtakavarga
+statement: >
+  Ashtakavarga is a quantitative system that assigns points (bindus) to each
+  of the 12 houses in a natal chart based on the positions of the 7 visible
+  grahas (Surya, Chandra, Mangala, Budha, Guru, Shukra, Shani) relative to
+  each other. Each graha contributes up to 8 points to each house, and the
+  total points in a house indicate its strength. Higher bindus = stronger house.
+  The system is used to evaluate transit effects: when a benefic transits a
+  strong house (high bindus), the results are positive; when a malefic transits
+  a weak house (low bindus), challenges arise. BPHS Ch.39.
+
+conditions:
+  - entity: entity.graha.surya
+    role: subject
+    notes: "Surya contributes bindus based on his position relative to other grahas"
+  - entity: entity.graha.chandra
+    role: subject
+    notes: "Chandra contributes bindus based on his position relative to other grahas"
+  - entity: entity.graha.mangala
+    role: subject
+    notes: "Mangala contributes bindus based on his position relative to other grahas"
+  - entity: entity.graha.budha
+    role: subject
+    notes: "Budha contributes bindus based on his position relative to other grahas"
+  - entity: entity.graha.guru
+    role: subject
+    notes: "Guru contributes bindus based on his position relative to other grahas"
+  - entity: entity.graha.shukra
+    role: subject
+    notes: "Shukra contributes bindus based on his position relative to other grahas"
+  - entity: entity.graha.shani
+    role: subject
+    notes: "Shani contributes bindus based on his position relative to other grahas"
+
+effects:
+  - description: "Houses with 4 or more bindus are considered strong and capable of producing good results"
+    intensity: strong
+  - description: "Houses with fewer than 4 bindus are considered weak and prone to challenges"
+    intensity: weak
+  - description: "Sarva Ashtakavarga (SAV) total should be 280 or more for a strong chart overall"
+    intensity: strong
+  - description: "Transit effects are modulated by the bindu count in the transit house"
+    intensity: moderate
+
+timing:
+  onset: "Calculated from natal chart positions (permanent feature)"
+  duration: "Permanent — applies to all transits throughout life"
+
+# ── CALCULATION BASICS ─────────────────────────────────────────────────────
+
+calculation_basics: >
+  Step-by-step Ashtakavarga calculation:
+  1. For each of the 7 visible grahas, determine which houses receive
+     contribution points (bindus) based on the graha's sign position.
+  2. A graha contributes 1 bindu to a house if specific positional
+     conditions are met relative to the graha's own position.
+  3. The contribution rules differ for benefics (Guru, Shukra, Budha,
+     Chandra when waxing) and malefics (Surya, Mangala, Shani, Rahu,
+     Ketu, Chandra when waning).
+  4. Each graha can contribute a maximum of 8 bindus per house (one per
+     reference point).
+  5. Total points per house (from all 7 grahas) = Sarva Ashtakavarga (SAV).
+  6. Maximum possible SAV per house = 56 (8 points x 7 grahas).
+  7. Minimum possible SAV per house = 0.
+  8. A house with 4+ bindus is strong; below 4 is weak.
+
+# ── KEY TERMS ──────────────────────────────────────────────────────────────
+
+key_terms:
+  bindu:
+    name: "Bindu (Point)"
+    definition: >
+      A single unit of contribution from one graha to one house. Each graha
+      contributes either 0 or 1 bindu to each house based on positional rules.
+    maximum_per_graha: 8
+    maximum_total: 56
+
+  sarva_ashtakavarga:
+    name: "Sarva Ashtakavarga (SAV)"
+    definition: >
+      The total number of bindus in a house from all 7 grahas combined.
+      This is the primary measure of house strength.
+    calculation: "SAV = Sum of bindus from all 7 grahas in a given house"
+    maximum: 56
+    average: "28 (50% of maximum)"
+    strong_threshold: 4
+    excellent_threshold: 8
+    description_of_levels:
+      - range: "0-3"
+        level: weak
+        interpretation: "House is weak — poor results from transits and dasha"
+      - range: "4-5"
+        level: average
+        interpretation: "House has moderate strength — mixed results"
+      - range: "6-7"
+        level: strong
+        interpretation: "House is strong — good results from favorable transits"
+      - range: "8+"
+        level: excellent
+        interpretation: "House is very strong — excellent results"
+
+  bhinnashtakavarga:
+    name: "Bhinnashtakavarga (BVA)"
+    definition: >
+      The individual contribution table of each graha. Shows which houses
+      receive bindus from that specific graha. Maximum 8 bindus per graha.
+    usage: "Identifies which graha is contributing to or withholding from a house"
+
+  prastara_ashtakavarga:
+    name: "Prastara Ashtakavarga"
+    definition: >
+      The tabular representation of all bindu contributions from all 7 grahas
+      across all 12 houses. A 7x12 matrix showing each graha's contribution
+      to each house.
+    usage: "Master calculation table — all individual BVAs are combined here"
+
+  sodhana:
+    name: "Sodhana (Rectification)"
+    definition: >
+      A normalization process applied to the Prastara Ashtakavarga table to
+      ensure the total bindus across all 12 houses for each graha equals 35.
+    total_per_graha: 35
+    total_all_houses: 245
+    usage: "Corrects imbalances in the raw calculation"
+
+  rekha:
+    name: "Rekha"
+    definition: >
+      Points contributed by Surya (Sun) alone to each house. Also called
+      the Solar Ashtakavarga.
+    graha: "Surya"
+
+# ── KEY PRINCIPLES ─────────────────────────────────────────────────────────
+
+key_principles:
+  - principle: "House Strength Assessment"
+    description: >
+      The primary use of Ashtakavarga is to assess the inherent strength of
+      each house in the natal chart. A house with high SAV will produce
+      better results regardless of transits.
+  - principle: "Transit Modulation"
+    description: >
+      When a graha transits a house, the transit results are directly
+      proportional to the SAV of that house. A benefic transit through a
+      high-SAV house produces excellent results; a malefic transit through
+      a low-SAV house produces poor results.
+  - principle: "Graha-Specific Assessment"
+    description: >
+      Bhinnashtakavarga shows which specific graha is contributing to a
+      house. A house may have high overall SAV but low contribution from
+      a particular graha, affecting that graha's transit through that house.
+  - principle: "Chart-Level Strength"
+    description: >
+      The total SAV across all 12 houses for each graha should ideally sum
+      to 35 (after Sodhana). If a graha's total is significantly lower,
+      that graha is inherently weak in the chart.
+  - principle: "Transit Timing"
+    description: >
+      Ashtakavarga helps time events more precisely. When a benefic graha
+      enters a high-SAV house during its transit, the positive window
+      is strongest. When a malefic enters a low-SAV house, challenges peak.
+
+# ── TRANSIT APPLICATION ────────────────────────────────────────────────────
+
+transit_application: >
+  The connection between Ashtakavarga and transit analysis:
+  - Guru (Jupiter) transit through a house with 5+ bindus: excellent results
+  - Shukra (Venus) transit through a house with 4+ bindus: good results
+  - Shani (Saturn) transit through a house with 6+ bindus: reduced malefic effects
+  - Rahu/Ketu transit through a house with 3 or fewer bindus: amplified challenges
+  - Surya (Sun) transit through a house with 5+ bindus: strong authority recognition
+  The bindu count acts as a modifier on the baseline transit effects described
+  in BPHS Chapter 42.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "Ashtakavarga is the eight-fold division system that assigns points to
+      each house based on planetary positions. It is the most important tool
+      for assessing house strength and evaluating transit effects."
+    confidence: high
+  - ref: source.BPHS.chapter39
+    claim: >
+      "Chapter 39 (Ashtakavarga Adhyaya) provides the complete framework
+      for calculating and interpreting Ashtakavarga, including Bhinnashtakavarga,
+      Sarva Ashtakavarga, and their application to transit analysis."
+    confidence: high
+
+notes: >
+  Ashtakavarga is one of the most powerful quantitative tools in Jyotish for
+  assessing house strength. It provides a numerical foundation for transit
+  interpretation — without Ashtakavarga, transit analysis relies solely on
+  qualitative assessment of graha nature and house ownership. The system is
+  detailed and requires careful calculation using the contribution rules for
+  each graha. This entry provides only the foundational concepts; full
+  calculation tables, contribution rules, and worked examples are in BPHS Ch.39.
+  The 7 grahas used in calculation are the visible planets — Rahu and Ketu are
+  excluded from Ashtakavarga calculation.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry — foundational Ashtakavarga concepts per BPHS Ch.39"
+    author: "Chief Jyotish Knowledge Architect"

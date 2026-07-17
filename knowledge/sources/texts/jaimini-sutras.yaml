@@ -1,0 +1,90 @@
+# sources/texts/jaimini-sutras.yaml
+
+id: source.jaimini-sutras
+name: Jaimini Sutras
+aliases:
+  - Upadesha Sutras
+  - Jaimini Upadesha Sutra
+  - जैमिनि सूत्र
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Jaimini
+date:
+  approximate: "200 BCE – 200 CE"
+  confidence: low
+  notes: "Dating is highly debated. Traditional attribution to Jaimini (disciple of Vyasa) suggests earlier date. Scholarly estimates range from 200 BCE to 200 CE."
+
+language:
+  original: Sanskrit
+  script: Devanagari
+  translations:
+    - language: English
+      edition: "Sharma (2003)"
+
+tradition: Jaimini
+system: Jaimini Jyotish
+
+edition:
+  primary:
+    editor: "Sagar Publications"
+    year: 2003
+    language: Sanskrit + English
+    notes: "Standard modern edition with English commentary."
+
+chapter_structure:
+  total_chapters: 4
+  chapters:
+    - chapter: 1
+      name: "Pada Adhyaya"
+      topic: "Phalita Jyotish, Graha effects, Karakas"
+      relevance: "Core chapter on the Chara Karaka system, karaka significations."
+    - chapter: 2
+      name: "Phala Adhyaya"
+      topic: "Chara Dasha, Rashi aspects, Argala"
+      relevance: "Primary chapter on Jaimini's unique rashi dasha system and argala."
+    - chapter: 3
+      name: "Nakshatra Adhyaya"
+      topic: "Nakshatra effects, Drekkana"
+      relevance: "Nakshatra-based interpretation unique to Jaimini."
+    - chapter: 4
+      name: "Vishishta Adhyaya"
+      topic: "Karakamsha, Chara Dasha details"
+      relevance: "Karakamsha chart, dasha computation, special yogas."
+
+related_texts:
+  - ref: source.BPHS
+    relationship: "Complementary system. JM often disagrees with BPHS on rashi aspects and karaka system."
+  - ref: source.phaladeepika
+    relationship: "Phaladeepika mentions some Jaimini concepts."
+  - ref: source.saravali
+    relationship: "Saravali references some Jaimini concepts."
+
+significance: >
+  The Jaimini Sutras are the foundational text of the Jaimini system
+  of Jyotish, which differs significantly from the Parashari system
+  in its use of the Chara Karaka system (astrological significators
+  based on planetary degrees), Rashi Drishti (sign aspects), Chara
+  Dasha (a unique rashi-based dasha system), and the Karakamsha
+  (a chart derived from the Atmakaraka in D-9). While BPHS is the
+  root text for mainstream Jyotish, the Jaimini Sutras provide an
+  alternative framework that many practitioners consider equally
+  authoritative.
+
+notes: >
+  The interpretation of the Jaimini Sutras is less standardized than
+  BPHS. Different commentators (Sharma, Sanjay Rath, etc.) differ
+  on some key points. The sutra format (terse aphorisms) allows for
+  multiple valid interpretations. The text contains only 4 chapters
+  with approximately 1000 sutras (depending on recension). The
+  Jaimini system is often used in conjunction with Parashari, not
+  as a replacement.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

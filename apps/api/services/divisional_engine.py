@@ -26,6 +26,7 @@ All degrees within a varga sign are normalised to [0, 30).
 
 from __future__ import annotations
 
+import uuid
 from datetime import datetime
 
 from apps.api.domain.divisional import VargaAscendant, VargaChart, VargaPosition
@@ -420,8 +421,20 @@ class DivisionalEngine:
         chart = engine.compute(birth_dt, lat, lon, varga="D9")
     """
 
-    def __init__(self, ephemeris_wrapper: EphemerisWrapper) -> None:
+    def __init__(
+        self,
+        ephemeris_wrapper: EphemerisWrapper,
+        birth_chart_repo=None,
+        divisional_chart_repo=None,
+        divisional_planet_repo=None,
+    ) -> None:
         self._wrapper = ephemeris_wrapper
+        # Optional — only required for persist_chart()/persist_all().
+        # Default None keeps the existing single-arg construction working
+        # for callers/tests that don't need persistence.
+        self._birth_chart_repo = birth_chart_repo
+        self._divisional_chart_repo = divisional_chart_repo
+        self._divisional_planet_repo = divisional_planet_repo
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -495,6 +508,119 @@ class DivisionalEngine:
                 result, varga_code, ayanamsa
             )
         return charts
+
+    # ── Persistence ──────────────────────────────────────────────────────────
+    #
+    # Separate from compute()/compute_all() rather than combined
+    # "compute_and_persist" methods, for the same reason as HoroscopeEngine:
+    # compute()/compute_all() are blocking pyswisseph calls that routers
+    # offload via asyncio.to_thread; persistence is async DB I/O with no
+    # CPU-bound work and does not belong inside that thread offload.
+
+    async def persist_chart(
+        self,
+        chart: VargaChart,
+        *,
+        birth_datetime_utc: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str = "lahiri",
+        house_system: str = "W",
+        user_id=None,
+        subject_name: str = "Unnamed",
+    ) -> tuple[uuid.UUID, uuid.UUID]:
+        """
+        Persist an already-computed VargaChart (from compute()): the
+        birth_charts anchor row (created if this subject has no existing
+        one), the divisional_charts identity row, and its 9 planet
+        placements.
+
+        Requires this engine to have been constructed with
+        birth_chart_repo, divisional_chart_repo, and divisional_planet_repo
+        — raises RuntimeError otherwise.
+
+        Returns (birth_chart_id, divisional_chart_id).
+        """
+        self._require_persistence_repos()
+
+        birth_chart_id = await self._birth_chart_repo.get_or_create(
+            birth_datetime_utc=birth_datetime_utc,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+            house_system=house_system,
+            user_id=user_id,
+            subject_name=subject_name,
+        )
+
+        divisional_chart_id = await self._divisional_chart_repo.replace_for_birth_chart(
+            birth_chart_id,
+            chart.varga,
+            lagna_rashi=chart.ascendant.varga_rashi,
+            lagna_degree=chart.ascendant.varga_rashi_degree,
+        )
+
+        await self._divisional_planet_repo.bulk_insert(
+            divisional_chart_id, chart.planet_positions
+        )
+
+        return birth_chart_id, divisional_chart_id
+
+    async def persist_all(
+        self,
+        charts: dict[str, VargaChart],
+        *,
+        birth_datetime_utc: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str = "lahiri",
+        house_system: str = "W",
+        user_id=None,
+        subject_name: str = "Unnamed",
+    ) -> uuid.UUID:
+        """
+        Persist the full dict returned by compute_all() — one
+        birth_charts row shared across all 15 vargas, one
+        divisional_charts row per varga.
+
+        Returns the shared birth_chart_id.
+        """
+        self._require_persistence_repos()
+
+        birth_chart_id = await self._birth_chart_repo.get_or_create(
+            birth_datetime_utc=birth_datetime_utc,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+            house_system=house_system,
+            user_id=user_id,
+            subject_name=subject_name,
+        )
+
+        for chart in charts.values():
+            divisional_chart_id = await self._divisional_chart_repo.replace_for_birth_chart(
+                birth_chart_id,
+                chart.varga,
+                lagna_rashi=chart.ascendant.varga_rashi,
+                lagna_degree=chart.ascendant.varga_rashi_degree,
+            )
+            await self._divisional_planet_repo.bulk_insert(
+                divisional_chart_id, chart.planet_positions
+            )
+
+        return birth_chart_id
+
+    def _require_persistence_repos(self) -> None:
+        if not (
+            self._birth_chart_repo
+            and self._divisional_chart_repo
+            and self._divisional_planet_repo
+        ):
+            raise RuntimeError(
+                "DivisionalEngine persistence requires birth_chart_repo, "
+                "divisional_chart_repo, and divisional_planet_repo to be "
+                "provided at construction time."
+            )
 
     # ── Internal helpers ───────────────────────────────────────────────────────
 

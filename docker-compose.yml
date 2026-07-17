@@ -1,0 +1,45 @@
+version: "3.9"
+
+# AstroOS — Local Development Services
+#
+# Brings up Postgres and Redis for local backend development and for the
+# integration test suite (tests/integration/). Not used in production —
+# production infra is managed separately.
+#
+# Usage:
+#   docker compose up -d
+#   alembic -c database/alembic.ini upgrade head
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: astroos-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: astroos
+      POSTGRES_PASSWORD: astroos_dev_password
+      POSTGRES_DB: astroos
+    ports:
+      - "5432:5432"
+    volumes:
+      - astroos_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U astroos -d astroos"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: astroos-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  astroos_postgres_data:

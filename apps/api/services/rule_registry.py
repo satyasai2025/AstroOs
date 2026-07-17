@@ -1,0 +1,34 @@
+"""
+AstroOS — Rule Registry (Module 13)
+
+Rules register themselves as pure data (RuleDefinition instances), not
+wrapped evaluator functions — RuleEngine evaluates every rule with the
+same generic condition-comparison mechanism, so this registry never
+needs an if/elif chain and neither does anything that uses it.
+"""
+
+from __future__ import annotations
+
+from apps.api.domain.rules import RuleDefinition
+
+_REGISTRY: dict[str, RuleDefinition] = {}
+
+
+def register_rule(rule: RuleDefinition) -> None:
+    if rule.rule_id in _REGISTRY:
+        raise ValueError(f"Duplicate rule_id registered: {rule.rule_id!r}")
+    _REGISTRY[rule.rule_id] = rule
+
+
+def all_rules() -> list[RuleDefinition]:
+    """All registered rules, in registration order."""
+    return list(_REGISTRY.values())
+
+
+def get_rule(rule_id: str) -> RuleDefinition | None:
+    return _REGISTRY.get(rule_id)
+
+
+def clear_registry() -> None:
+    """Test-only: clear all registrations. Not used by production code paths."""
+    _REGISTRY.clear()

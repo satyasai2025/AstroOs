@@ -1,0 +1,83 @@
+{
+  "dataset_id": "ASTRO-PB-WIKI-v0.1.0",
+  "name": "Wikipedia Birth Chart Collection — Candidacy",
+  "description": "Birth data extracted from Wikipedia infoboxes for notable individuals. Contains 15 manually curated records as a candidacy proof-of-concept demonstrating the schema, coverage, and quality approach. v1.0.0 target: 10,000+ records via automated extraction pipeline.",
+  "category": "Public",
+  "category_code": "PB",
+  "type": "Wikipedia Birth Chart Collection",
+  "type_code": "WIKI",
+  "version": "0.1.0",
+  "dataset_version": "ASTRO-PB-WIKI-v0.1.0",
+  "provenance_tier": "Curated",
+  "source_description": "Manually curated from Wikipedia infoboxes. Each record verified against Wikidata for cross-reference. Coordinates geocoded from birthplace. Timezone assigned from IANA tzdata via coordinates.",
+  "source_uris": [
+    "https://en.wikipedia.org/",
+    "https://www.wikidata.org/"
+  ],
+  "collection_method": "manual_curation",
+  "curator": "Chief Dataset & Research Curator",
+  "quality_score": 0.90,
+  "quality_score_breakdown": {
+    "completeness": 0.70,
+    "accuracy": 1.0,
+    "consistency": 0.95,
+    "coverage": 1.0,
+    "timeliness": 1.0,
+    "provenance": 0.90
+  },
+  "validation_status": "Validated",
+  "known_limitations": [
+    "Candidacy version — 15 records only; not statistically significant",
+    "Birth times mostly unknown (Wikipedia infoboxes rarely include birth time)",
+    "Geographic and demographic bias toward Western notable figures",
+    "Notability bias — only individuals with Wikipedia articles included"
+  ],
+  "known_biases": [
+    "Western/European over-representation",
+    "Male over-representation (13:2 M:F ratio)",
+    "STEM field over-representation",
+    "20th/21st century temporal bias"
+  ],
+  "completeness_pct": 70.0,
+  "missing_fields": [
+    "birth_time (14 of 15 records unknown)"
+  ],
+  "duplicate_count": 0,
+  "duplicate_pct": 0.0,
+  "license_id": "CC-BY-SA-3.0",
+  "license_name": "Creative Commons Attribution-ShareAlike 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "license_restrictions": ["Attribution required when redistributing or adapting"],
+  "privacy_tier": "public",
+  "confidence_tier": "verified",
+  "contains_pii": false,
+  "format": "CSV",
+  "formats_available": ["CSV"],
+  "record_count": 15,
+  "field_count": 22,
+  "file_size_bytes": 2140,
+  "checksum_sha256": "pending",
+  "lifecycle_stage": "Candidacy",
+  "created_at": "2026-07-15T17:30:00Z",
+  "updated_at": "2026-07-15T17:30:00Z",
+  "maintainer": "Chief Dataset & Research Curator",
+  "review_date": "2026-07-15",
+  "next_review_date": "2026-10-15",
+  "tags": ["public", "wikipedia", "notable_people", "birth_data", "public_figures"],
+  "research_domains": ["career", "health", "wealth", "longevity"],
+  "intended_use": "Research on notable individuals, career trajectory, longevity studies",
+  "extraction_specification": {
+    "method": "Wikipedia API (action=query) via Infobox extraction",
+    "target_fields": ["birth_date", "birth_place", "death_date", "occupation"],
+    "minimum_requirements": ["birth_date present in infobox"],
+    "maximum_records": "unlimited",
+    "rate_limiting": "respect Wikipedia API guidelines: 200 req/s for bots, 1 req/s for unregistered",
+    "attribution": "Wikipedia contributors, article title, Wikipedia, The Free Encyclopedia",
+    "license": "CC-BY-SA-3.0"
+  },
+  "target_release": {
+    "version": "1.0.0",
+    "target_records": 10000,
+    "target_date": "2026-10-15"
+  }
+}

@@ -1,0 +1,11 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,wikidata_id,person_label,birth_date,birth_date_precision,birth_place,birth_latitude,birth_longitude,country,gender,occupation,death_date
+ASTRO-REC-WIKIDATA-000001,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q937,Albert Einstein,1879-03-14,7,Ulm,48.4010,9.9876,Germany,male,physicist,1955-04-18
+ASTRO-REC-WIKIDATA-000002,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q935,Isaac Newton,1643-01-04,7,Woolsthorpe-by-Colsterworth,52.8000,-0.6333,United Kingdom,male,physicist,1727-03-31
+ASTRO-REC-WIKIDATA-000003,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q7186,Marie Curie,1867-11-07,7,Warsaw,52.2297,21.0122,Poland,female,physicist,1934-07-04
+ASTRO-REC-WIKIDATA-000004,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q7259,Ada Lovelace,1815-12-10,7,London,51.5074,-0.1278,United Kingdom,female,mathematician,1852-11-27
+ASTRO-REC-WIKIDATA-000005,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q7259,Alan Turing,1912-06-23,7,London,51.5074,-0.1278,United Kingdom,male,computer_scientist,1954-06-07
+ASTRO-REC-WIKIDATA-000006,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q762,Leonardo da Vinci,1452-04-15,7,Anchiano,43.7886,11.2469,Italy,male,painter,1519-05-02
+ASTRO-REC-WIKIDATA-000007,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q17455,John von Neumann,1903-12-28,7,Budapest,47.4979,19.0402,Hungary,male,mathematician,1957-02-08
+ASTRO-REC-WIKIDATA-000008,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q5284,Bill Gates,1955-10-28,7,Seattle,47.6062,-122.3321,United States,male,businessperson,
+ASTRO-REC-WIKIDATA-000009,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q17714,Stephen Hawking,1942-01-08,7,Oxford,51.7520,-1.2577,United Kingdom,male,cosmologist,2018-03-14
+ASTRO-REC-WIKIDATA-000010,ASTRO-PB-WIKIDATA-v0.1.0,chart,1,false,Q39829,Stephen King,1947-09-21,7,Portland,43.6591,-70.2568,United States,male,author,

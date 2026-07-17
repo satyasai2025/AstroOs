@@ -6,13 +6,12 @@ Validation rules are strict; no silent coercion of bad input.
 """
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
-if TYPE_CHECKING:
-    from apps.api.schemas.ephemeris import EphemerisStatusSchema
+from apps.api.schemas.ephemeris import EphemerisStatusSchema
 
 
 # ── Request Schemas ───────────────────────────────────────────────────────────
@@ -103,7 +102,7 @@ class HealthResponse(BaseModel):
     status: str
     version: str
     environment: str
-    ephemeris: Optional["EphemerisStatusSchema"] = Field(
+    ephemeris: Optional[EphemerisStatusSchema] = Field(
         default=None,
         description=(
             "Swiss Ephemeris engine status. "

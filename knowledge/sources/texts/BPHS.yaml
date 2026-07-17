@@ -1,0 +1,79 @@
+id: source.BPHS
+name: Brihat Parashara Hora Shastra
+aliases:
+  - BPHS
+  - Bṛhat Parāśara Horā Śāstra
+  - The Great Book of Parashara on Hora
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+author: Parashara (attributed)
+date:
+  approximate: "Extant redaction c. 7th-8th century CE; attributed to the ancient sage Parashara, whose teachings are traditionally dated far earlier"
+  confidence: medium
+language:
+  original: Sanskrit
+tradition: Classical
+system: Parashari Jyotish
+
+edition:
+  primary:
+    editor: R. Santhanam
+    publisher: Ranjan Publications
+    year: 1984
+    language: Sanskrit, English
+    notes: "Two-volume English translation with commentary, one of the most widely used modern editions."
+
+chapter_structure:
+  total_chapters: 97
+  key_chapters:
+    - chapter: 3
+      topic: "Graha Description"
+      relevance: "Physical attributes, gender, nature, caste, and general characteristics of the nine grahas"
+    - chapter: 4
+      topic: "Graha Maitri (Planetary Friendship)"
+      relevance: "Defines the natural friendship, enmity, and neutrality table between grahas that underlies dignity and relationship analysis"
+    - chapter: 5
+      topic: "Rajayogas and other Yogas"
+      relevance: "Defines the majority of the raja, dhana, and chandra yogas catalogued in catalogues/yogas/"
+    - chapter: 9
+      topic: "Dasha Systems"
+      relevance: "Primary source for Vimshottari, Ashtottari, Shodashottari, and Narayana Dasha systems"
+    - chapter: 11
+      topic: "Argala (Intervention)"
+      relevance: "Defines the argala/virargala intervention mechanics catalogued in catalogues/aspects/argala-rules.yaml"
+    - chapter: 19
+      topic: "Effects of Lords in Various Houses"
+      relevance: "General house-lordship theory: kendradhipatya dosha, yogakaraka principles"
+    - chapter: 33
+      topic: "Karaka Graha Phala"
+      relevance: "Primary source for all karakatva (significator) assignments catalogued in catalogues/karakatvas/"
+    - chapter: 36
+      topic: "Mangal Dosha and other Doshas"
+      relevance: "Source for Mangal Dosha and related affliction combinations"
+    - chapter: 46
+      topic: "Dasha Phala (Dasha Results)"
+      relevance: "General principles for interpreting graha dasha period results"
+
+related_texts:
+  - ref: source.BPHS-raman
+    relationship: "B.V. Raman's English translation and commentary edition of this text"
+  - ref: source.BPHS-sanjay-rath
+    relationship: "Sanjay Rath's English translation and commentary edition of this text"
+  - ref: source.brihat-jataka
+    relationship: "Varahamihira's Brihat Jataka systematizes and refines principles attributed to Parashara in this text"
+  - ref: source.jaimini-sutras
+    relationship: "A parallel, distinct tradition (Jaimini system) that is used alongside, not instead of, the Parashari system documented here"
+
+significance: "Brihat Parashara Hora Shastra is regarded as the most authoritative and foundational text of the Parashari school of Jyotish, the mainstream tradition underlying the majority of this knowledge base. Traditionally attributed to the sage Parashara, it systematically covers grahas, rashis, bhavas, yogas, dashas, aspects, divisional charts, and remedial measures across its 97 (some editions 100) chapters. Nearly every catalogue record in this knowledge base cites BPHS as its primary or supporting source."
+
+notes: "The extant text is widely believed by scholars to be a later redaction/compilation (commonly dated to roughly the 7th-8th century CE) of teachings attributed to the ancient sage Parashara, whose own dating is traditionally placed much earlier and is not treated as historically fixed in the way the redaction is. Several editions exist with differing chapter counts (typically 97 or 100 depending on the recension); this record follows the commonly cited 97-chapter structure used by the Santhanam and Raman editions. This is the single most-cited source across this entire knowledge base."
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial catalogue entry — fills a gap where the source was referenced (source.BPHS) throughout the knowledge base and declared in sources/texts/_index.yaml since Phase 2B, but the record itself was never created"
+    author: "Chief Jyotish Knowledge Architect"

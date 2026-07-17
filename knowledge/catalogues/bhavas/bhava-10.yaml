@@ -1,0 +1,111 @@
+# catalogues/bhavas/bhava-10.yaml
+
+id: bhava.10
+name: Karma Bhava
+aliases:
+  - 10th House
+  - Profession House
+  - कर्म भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Karma
+number: 10
+meaning: "Career; profession; duty; action"
+
+natural_karaka:
+  ref: graha.surya
+  notes: "Surya and Shani are natural karakas for career and authority; Surya for government, Shani for disciplined work"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana. The 10th house is the peak of the chart"
+
+karakatvas:
+  classical:
+    - concept: Career and profession (Karma)
+      source: source.BPHS
+    - concept: Status and authority
+      source: source.BPHS
+    - concept: Government and politics
+      source: source.BPHS
+    - concept: Reputation and public image
+      source: source.BPHS
+    - concept: Duty and responsibility (Vyavasaya)
+      source: source.BPHS
+  traditional:
+    - concept: Career
+    - concept: Profession
+    - concept: Status
+    - concept: Authority
+    - concept: Government
+    - concept: Reputation
+    - concept: Duty
+
+conditions:
+  strong_when:
+    - Strong lord placed in Kendra or Trikona
+    - Benefic aspects on the house
+    - Well-placed natural karaka (Surya/Shani)
+  weak_when:
+    - Lord placed in Dusthana (6, 8, 12)
+    - Afflicted by malefics
+    - Weak or debilitated lord
+  afflicted_when:
+    - Malefics occupying the 10th house
+    - Lord in enemy sign or debilitated
+    - Afflicted by papa kartari
+
+effects:
+  positive:
+    - Successful career and professional recognition
+    - Authority and respect in public life
+    - Government support and political success
+    - Strong sense of duty and responsibility
+  negative:
+    - Career obstacles and professional setbacks
+    - Lack of recognition or reputation
+    - Difficulties with authority figures
+    - Unfulfilled ambitions
+
+related_bhavas:
+  - bhava: 1
+    relationship: Kendra
+    notes: "The 1st house (Tanu Bhava) is the starting point of the chart forming the 1-10 axis"
+  - bhava: 7
+    relationship: partnership
+    notes: "The 7th house (Yuvati Bhava) governs business partnerships while the 10th governs individual career"
+  - bhava: 4
+    relationship: Kendra
+    notes: "The 4th house (Sukha Bhava) is the foundation (home/education) supporting career (10th)"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    chapter: 33
+    verse: 40-50
+    claim: "Career, profession, status, authority, and reputation are significations of the 10th house"
+    confidence: high
+
+notes: >
+  The 10th house (Karma Bhava) is the highest point in the
+  chart (MC/Midheaven equivalent) and represents one's
+  public standing, career, and contribution to society. As a
+  Kendra house, it is inherently strong. The 10th lord's
+  placement and strength are critical indicators of
+  professional success. Both Surya (authority) and Shani
+  (discipline, karma) serve as natural karakas, reflecting
+  the house's dual association with power and duty.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

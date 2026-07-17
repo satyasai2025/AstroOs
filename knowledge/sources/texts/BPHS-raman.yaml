@@ -1,0 +1,41 @@
+id: source.BPHS-raman
+name: Brihat Parashara Hora Shastra (Raman Translation)
+aliases:
+  - BPHS Raman Edition
+  - Brihat Parashara Hora Shastra with English Translation
+  - Raman's BPHS
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Parashara (original); B.V. Raman (translator)
+date:
+  approximate: "~500-800 CE (original); 1988 (translation)"
+  confidence: high
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: B.V. Raman
+  publisher: Motilal Banarsidass Publishers
+  year: 1988
+  language: en
+  notes: "Second revised edition. Includes original Sanskrit text with English translation and notes."
+
+relationship_to_primary:
+  primary_text: source.BPHS
+  type: translation
+  notes: "Authoritative English translation of the Brihat Parashara Hora Shastra with Sanskrit text."
+
+notes: "B.V. Raman's translation is one of the most widely used English translations of BPHS. The edition includes the Sanskrit verses in Devanagari script with Roman transliteration and English translation."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

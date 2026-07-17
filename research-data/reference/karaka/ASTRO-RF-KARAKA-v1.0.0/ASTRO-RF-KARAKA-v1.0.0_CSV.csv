@@ -1,0 +1,8 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,karaka_type,graha,significations,life_domains
+ASTRO-REC-KARAKA-000001,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,sun,soul|father|authority|government|vitality,self|career|health
+ASTRO-REC-KARAKA-000002,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,moon,mind|mother|emotions|public,emotions|family|public_life
+ASTRO-REC-KARAKA-000003,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,mars,siblings|courage|land|conflict,family|career|health
+ASTRO-REC-KARAKA-000004,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,mercury,intellect|communication|commerce,education|career
+ASTRO-REC-KARAKA-000005,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,jupiter,wisdom|children|wealth|guru|dharma,education|wealth|progeny|spiritual
+ASTRO-REC-KARAKA-000006,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,venus,spouse|relationships|luxury|arts,marriage|wealth
+ASTRO-REC-KARAKA-000007,ASTRO-RF-KARAKA-v1.0.0,reference,1,false,naisargika,saturn,longevity|career|discipline|servants|sorrow,career|health|longevity

@@ -1,0 +1,40 @@
+id: source.brihat-jataka-raman
+name: Brihat Jataka (Raman Translation)
+aliases:
+  - Brihat Jataka Raman Edition
+  - Raman's Brihat Jataka
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Varahamihira (original); B.V. Raman (translator)
+date:
+  approximate: "~550 CE (original); 1985 (translation)"
+  confidence: high
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: B.V. Raman
+  publisher: Motilal Banarsidass Publishers
+  year: 1985
+  language: en
+  notes: "Second revised edition. Contains English translation with original Sanskrit verses and explanatory notes."
+
+relationship_to_primary:
+  primary_text: source.brihat-jataka
+  type: translation
+  notes: "Standard English translation of Varahamihira's Brihat Jataka with accompanying Sanskrit text."
+
+notes: "B.V. Raman's translation of Varahamihira's classic text remains one of the most accessible English versions. Includes the original Sanskrit slokas with English translation and commentary."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,135 @@
+# cross-references/graha-nakshatra-affinity.yaml
+# Phase 5 — Relationship Mapping: Graha-Nakshatra relationships
+
+id: cross-reference.graha-nakshatra-affinity
+name: Graha-Nakshatra Placement Affinity
+aliases: ["Nakshatra Lord Compatibility", "Graha-in-Nakshatra Affinity"]
+category: cross-reference
+status: active
+confidence: medium
+version: 1.1
+last_verified: 2026-07-16
+
+description: >
+  For each of the 9 grahas, classifies all 27 nakshatras by the
+  relationship between the occupying graha and that nakshatra's ruling
+  graha (own / friendly / neutral / enemy), using each graha's own
+  `relationships` field from catalogues/grahas/*.yaml applied to the
+  standard Vimshottari nakshatra-lordship sequence. This differs from
+  catalogues/karakatvas/nakshatra-karakatvas.yaml (which covers what
+  each nakshatra signifies) — this record covers how comfortably a
+  graha functions when transiting or placed in a nakshatra ruled by
+  another graha.
+
+methodology: >
+  Relationship direction is taken from the OCCUPYING graha's own
+  perspective (its `relationships.friends/neutrals/enemies` list),
+  not the nakshatra lord's perspective — since classical graha-maitri
+  is asymmetric, this matters. A graha in its own nakshatra is
+  self-referential and stable. A graha in a friend-ruled nakshatra
+  finds its themes supported by the underlying nakshatra energy. A
+  graha in a neutral-ruled nakshatra is context-dependent, coloured
+  more by house and aspect than by the nakshatra lord. A graha in an
+  enemy-ruled nakshatra experiences internal tension: its surface
+  expression (sign, house) is filtered through a psychologically
+  uncongenial nakshatra substrate, which classical commentators
+  describe as a source of friction even when the sign placement
+  itself is favourable.
+
+confidence_note: >
+  This specific graha-in-nakshatra-of-enemy technique is a derived
+  application of standard graha-maitri (BPHS Ch.4) to nakshatra
+  lordship, used in practical chart reading (including within KP and
+  Nadi-adjacent traditions) but not itself a single cited classical
+  verse. Confidence is set to medium accordingly — the underlying
+  friendship data is high-confidence; the nakshatra-application
+  framework is a reasonable, widely-practiced synthesis rather than
+  a direct textual citation.
+
+affinity_map:
+  - graha: graha.surya
+    own_nakshatras: [krittika, uttaraphalguni, uttarashadha]
+    friendly_nakshatras: [rohini, hasta, shravana, mrigashira, chitra, dhanishta, punarvasu, vishakha, purvabhadrapada]
+    neutral_nakshatras: [ashlesha, jyeshtha, revati]
+    enemy_nakshatras: [bharani, purvaphalguni, purvashadha, pushya, anuradha, uttarabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    interpretation: "Surya is comfortable in its own and friend-ruled nakshatras (12 of 27). It is most compromised in nakshatras ruled by its four enemies (Shukra, Shani, Rahu, Ketu) — 12 of 27 — where its natural authority and vitality face suppression from the nakshatra substrate regardless of sign dignity."
+
+  - graha: graha.chandra
+    own_nakshatras: [rohini, hasta, shravana]
+    friendly_nakshatras: [krittika, uttaraphalguni, uttarashadha, ashlesha, jyeshtha, revati]
+    neutral_nakshatras: [mrigashira, chitra, dhanishta, punarvasu, vishakha, purvabhadrapada, bharani, purvaphalguni, purvashadha, pushya, anuradha, uttarabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    enemy_nakshatras: []
+    interpretation: "Chandra has no enemies among the grahas, so it has no enemy-ruled nakshatras — it is never structurally hostile to a nakshatra substrate, consistent with its role as the most universally adaptable graha. Its function is shaped almost entirely by sign, house, and aspect rather than nakshatra-lord friction."
+
+  - graha: graha.mangala
+    own_nakshatras: [mrigashira, chitra, dhanishta]
+    friendly_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana, punarvasu, vishakha, purvabhadrapada]
+    neutral_nakshatras: [bharani, purvaphalguni, purvashadha, pushya, anuradha, uttarabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    enemy_nakshatras: [ashlesha, jyeshtha, revati]
+    interpretation: "Mangala has a single enemy (Budha), so only the three Budha-ruled nakshatras (Ashlesha, Jyeshtha, Revati) are hostile territory — here Mangala's assertive, direct energy clashes with Budha's analytical, indirect nakshatra substrate, often manifesting as impulsive or poorly-reasoned action."
+
+  - graha: graha.budha
+    own_nakshatras: [ashlesha, jyeshtha, revati]
+    friendly_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana, punarvasu, vishakha, purvabhadrapada]
+    neutral_nakshatras: [mrigashira, chitra, dhanishta, bharani, purvaphalguni, purvashadha, pushya, anuradha, uttarabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    enemy_nakshatras: []
+    interpretation: "Budha, like Chandra, has no enemies and therefore no enemy-ruled nakshatras. This reinforces its classical description as the most adaptable graha — its results are shaped by association (friends/malefics conjoined) more than by any fixed nakshatra hostility."
+
+  - graha: graha.guru
+    own_nakshatras: [punarvasu, vishakha, purvabhadrapada]
+    friendly_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana, mrigashira, chitra, dhanishta]
+    neutral_nakshatras: [pushya, anuradha, uttarabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    enemy_nakshatras: [ashlesha, jyeshtha, revati, bharani, purvaphalguni, purvashadha]
+    interpretation: "Guru's two enemies (Budha, Shukra) rule six nakshatras where its expansive, dharmic wisdom is filtered through substrates oriented toward analytical precision (Budha) or sensory refinement (Shukra) — often producing a scattered or overly indulgent expression of Guru's significations."
+
+  - graha: graha.shukra
+    own_nakshatras: [bharani, purvaphalguni, purvashadha]
+    friendly_nakshatras: [pushya, anuradha, uttarabhadrapada, ashlesha, jyeshtha, revati]
+    neutral_nakshatras: [punarvasu, vishakha, purvabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    enemy_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana, mrigashira, chitra, dhanishta]
+    interpretation: "Shukra's three enemies (Surya, Chandra, Mangala) rule nine nakshatras — the largest enemy block of any graha — where its refined, relational nature is placed in fiery, self-focused, or assertive substrates, a common signature of friction in relationships and aesthetic overindulgence."
+
+  - graha: graha.shani
+    own_nakshatras: [pushya, anuradha, uttarabhadrapada]
+    friendly_nakshatras: [bharani, purvaphalguni, purvashadha, ashlesha, jyeshtha, revati]
+    neutral_nakshatras: [punarvasu, vishakha, purvabhadrapada, ardra, swati, shatabhisha, ashvini, magha, moola]
+    enemy_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana, mrigashira, chitra, dhanishta]
+    interpretation: "Shani shares the same enemy set as Shukra (Surya, Chandra, Mangala), so the same nine nakshatras are hostile — Shani's slow, restrictive discipline clashes with substrates oriented toward vitality, nurturing, and assertive action, often intensifying delay or obstruction themes."
+
+  - graha: graha.rahu
+    own_nakshatras: [ardra, swati, shatabhisha]
+    friendly_nakshatras: [pushya, anuradha, uttarabhadrapada, bharani, purvaphalguni, purvashadha, ashlesha, jyeshtha, revati]
+    neutral_nakshatras: [mrigashira, chitra, dhanishta, punarvasu, vishakha, purvabhadrapada, ashvini, magha, moola]
+    enemy_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana]
+    interpretation: "Rahu's two enemies (Surya, Chandra) rule six nakshatras — here Rahu's amplifying, materially ambitious nature directly opposes the luminaries' substrates, frequently correlating with identity confusion or health-vitality disturbance when Rahu transits or occupies these nakshatras."
+
+  - graha: graha.ketu
+    own_nakshatras: [ashvini, magha, moola]
+    friendly_nakshatras: [mrigashira, chitra, dhanishta, punarvasu, vishakha, purvabhadrapada, ashlesha, jyeshtha, revati]
+    neutral_nakshatras: [bharani, purvaphalguni, purvashadha, pushya, anuradha, uttarabhadrapada, ardra, swati, shatabhisha]
+    enemy_nakshatras: [krittika, uttaraphalguni, uttarashadha, rohini, hasta, shravana]
+    interpretation: "Ketu shares Rahu's enemy set (Surya, Chandra) and thus the same six enemy nakshatras — Ketu's detached, liberating energy is most disruptive to identity and emotional security when placed there, often coinciding with sudden withdrawal or dissolution of ego/security structures."
+
+sources:
+  - ref: source.BPHS
+    claim: "Graha maitri (natural friendship) table, Chapter 4 — the relationship data this affinity map is derived from"
+    confidence: high
+
+notes: >
+  This is a synthesized cross-reference, not a directly-cited classical
+  table (see confidence_note above). It should be used as a
+  supplementary interpretive lens alongside sign-based dignity
+  (graha-rashi-dignity-matrix.yaml) and dasha-period analysis, not as
+  a standalone predictive factor. Chandra and Budha, having zero
+  enemies, have no enemy_nakshatras entries by construction — this is
+  expected and correct, not a data gap.
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Corrected an inherited error: Surya's own_nakshatras listed Uttara Bhadrapada (Shani's nakshatra) instead of Uttara Ashadha, an error that originated in catalogues/grahas/surya.yaml v1.0 and propagated into every other graha's friendly/neutral/enemy lists wherever Surya's nakshatra triplet appears. Rebuilt the full affinity_map from corrected source data. Also standardized nakshatra IDs to the canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni) to match catalogues/nakshatras/_index.yaml."
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial cross-reference entry — Phase 5 Graha-Nakshatra relationship mapping"
+    author: "Chief Jyotish Knowledge Architect"

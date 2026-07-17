@@ -1,0 +1,68 @@
+# ontology/glossary/gochara.yaml
+
+id: term.gochara
+name: Gocara
+aliases:
+  - Gochara
+  - Transit
+  - Planetary Transit
+  - गोचर
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    gocara — from go (star, planet) + cara (moving, moving
+    about). Literally "planetary motion, a planet's current
+    movement through the zodiac." The current positions of
+    grahas relative to the natal chart.
+  english: >
+    The current (transiting) positions of the planets in the
+    zodiac, interpreted in relation to the positions of the
+    natal chart. Gochara analysis assesses how currently
+    moving planets activate or modify the promises indicated
+    by the birth chart.
+  technical: >
+    Gochara is evaluated by examining the transit of each
+    graha through the houses of the natal chart (transit
+    house interpretation) and through specific sensitive
+    points like the natal Moon, lagna, and current dasha
+    lord. Slow-moving planets (Saturn, Jupiter, Rahu, Ketu)
+    produce longer-lasting transit effects; fast-moving
+    planets (Moon, Mercury, Venus, Sun, Mars) produce
+    shorter-term effects.
+
+usage:
+  primary: "Timing of events and activation of natal chart potentials through current planet positions"
+  secondary: "Daily, monthly, and yearly prediction through transit analysis"
+
+related_concepts:
+  - ref: term.dasha
+    relationship: "Gochara is interpreted in conjunction with the active dasha for event timing"
+  - ref: term.graha
+    relationship: "Each graha produces specific transit effects through different houses of the natal chart"
+  - ref: term.rashi
+    relationship: "Transit analysis includes the movement of grahas through the rashis"
+
+sources:
+  - ref: source.BPHS
+    chapter: 45
+    verse: 1-8
+    claim: "Gocareṇa phalaṃ jñeyaṃ — results are known through transit"
+    confidence: high
+
+notes: >
+  Gochara analysis is most predictive when combined with the
+  active dasha period. A transit of a graha over its own
+  dasha position or through a sensitive point in the natal
+  chart can trigger events. The transit of Saturn, Jupiter,
+  and Rahu/Ketu are considered the most significant.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

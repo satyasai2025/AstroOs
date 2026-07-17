@@ -1,0 +1,39 @@
+id: source.kp-reader
+name: KP Reader
+aliases:
+  - Krishnamurti Paddhati Reader
+  - KP Reader by K.S. Krishnamurti
+  - KP System Reader
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: K.S. Krishnamurti
+date:
+  approximate: "~1980-1988 CE"
+  confidence: high
+language:
+  original: en
+tradition: vedic
+
+edition:
+  editor: K.S. Krishnamurti
+  publisher: Krishnamurti Publications
+  year: 1988
+  language: en
+  notes: "Multi-volume instructional set explaining the KP (Krishnamurti Paddhati) system."
+
+relationship_to_primary:
+  primary_text: source.kp-system
+  type: edition
+  notes: "Expanded and systematized exposition of the KP System principles by its founder."
+
+notes: "The KP Reader is a multi-volume series by K.S. Krishnamurti himself, serving as the definitive instructional text for the Krishnamurti Paddhati (KP) system of astrology. It covers nakshatra-based sub-lord theory, ruling planets, and KP-based prediction techniques."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,164 @@
+# conflicts/conflict-006.yaml
+
+id: conflict.006
+name: Rahu/Ketu Exaltation Signs — Gemini/Sagittarius vs Taurus/Scorpio
+topic: Which sign pair the lunar nodes are exalted/debilitated in, since no classical source universally agrees
+domain: graha
+status: partially-resolved
+confidence: medium
+version: 1.0
+last_verified: 2026-07-16
+
+# === POSITIONS ===
+
+positions:
+  - tradition: "Gemini/Sagittarius School"
+    source:
+      ref: source.saravali
+    position: >
+      Rahu is exalted at 20° Mithuna (Gemini) and debilitated at 20°
+      Dhanus (Sagittarius); Ketu is exalted at 20° Dhanus and debilitated
+      at 20° Mithuna — the mirror-image pair, 180 degrees apart as the
+      nodes always are.
+    arguments:
+      - "Widely cited in Saravali-tradition commentary"
+      - "Internally self-consistent: each node's debilitation sign is exactly the other node's exaltation sign"
+    adherents:
+      - Saravali-adjacent commentators
+      - This codebase's implemented default (see cross-references)
+
+  - tradition: "Taurus/Scorpio School"
+    source:
+      ref: source.traditional
+    position: >
+      Rahu is exalted in Vrishabha (Taurus) and debilitated in
+      Vrischika (Scorpio); Ketu is exalted in Vrischika and debilitated
+      in Vrishabha — the alternate mirror-image pair.
+    arguments:
+      - "Also widely cited across regional and Nadi traditions"
+      - "Equally internally self-consistent (mirror pairing, 180 degrees apart)"
+    adherents:
+      - Various Nadi and regional traditions
+      - Practitioners who follow the Taurus/Scorpio convention documented as a footnote in cross-references/graha-rashi-dignity-matrix.yaml
+
+  - tradition: "No-Exaltation School"
+    source:
+      ref: source.BPHS
+    position: >
+      Some classical readings of BPHS assign Rahu/Ketu no exaltation,
+      debilitation, moolatrikona, or own-sign status at all, treating
+      dignity concepts as applicable only to the seven physical grahas.
+    arguments:
+      - "Rahu/Ketu are chaya grahas without a physical body to have a strongest/weakest placement in the classical embodied sense"
+    adherents:
+      - Conservative classical-purist readers of BPHS
+
+# === ANALYSIS ===
+
+analysis: >
+  This is a genuine textual-tradition split, not a scribal error like
+  conflict.003 — both sign pairs (Gemini/Sagittarius and Taurus/Scorpio)
+  have independent, multi-source classical attestation, and both are
+  internally self-consistent as mirror pairs. Unlike conflict.005, no
+  single primary text is cited as authoritative for one pairing over
+  the other in this knowledge base's own source registry; the
+  disagreement was previously only surfaced as inline "some traditions"
+  footnotes in cross-references/graha-rashi-dignity-matrix.yaml rather
+  than adjudicated as its own conflict record. A related, narrower
+  question — whether Rahu/Ketu hold co-lordship of certain signs
+  alongside their traditional owners (e.g., Rahu with Kumbha/Shani,
+  Ketu with Vrischika/Mangala) — is documented in the same
+  cross-reference file's footnotes and is treated here as part of the
+  same broader "shadow-planet dignity is textually unsettled" conflict
+  rather than split into a separate record, since no source in this
+  knowledge base treats it independently of the exaltation question.
+
+# === EVIDENCE ===
+
+evidence:
+  for_gemini_sagittarius:
+    - "Saravali-tradition citation"
+    - "Implemented as the sole default in this codebase's EXALTATION_DEGREES/DEBILITATION_RASHIS tables"
+  for_taurus_scorpio:
+    - "Independent multi-tradition citation, documented as a footnote on both the Rahu and Ketu rows of the dignity matrix"
+  for_no_exaltation:
+    - "Conceptual consistency with chaya-graha status argument"
+    - "Neither pairing is stated as canonical fact in the matrix's primary status field — both are demoted to footnotes, and the primary table instead uses friendly/neutral/enemy classifications derived from sign lordship, not exaltation"
+
+# === RESOLUTION ===
+
+resolution_status: partially-resolved
+resolution: >
+  The knowledge base's own primary dignity table
+  (cross-references/graha-rashi-dignity-matrix.yaml) already avoids
+  asserting either exaltation pairing as fact, using friendly/neutral/
+  enemy status by sign lordship instead and relegating both exaltation
+  claims to footnotes — a reasonable existing practice this conflict
+  record now makes explicit and documents the reasoning for.
+
+recommended_position: >
+  Do not assert a single universal Rahu/Ketu exaltation sign in
+  knowledge-base prose without tagging its source tradition. Continue
+  the existing dignity-matrix practice of using lordship-derived
+  friendly/neutral/enemy status as the citable default, with both
+  exaltation traditions documented as explicitly-labeled alternatives.
+  Any chart-computation feature that needs a single operational default
+  (e.g., a Neecha Bhanga check for Rahu) should use the
+  Gemini/Sagittarius pairing already implemented in code, tagged
+  system:saravali, to keep the knowledge base and codebase consistent.
+
+weight_of_evidence: >
+  Neither sign pairing has decisively stronger classical citation
+  within this knowledge base's own source registry; the resolution
+  favors operational consistency with the existing implemented default
+  over declaring a doctrinal winner.
+
+# === RELATED ===
+
+related_conflicts:
+  - ref: conflict.005
+    topic: "Rahu/Ketu special aspects — the other major unsettled shadow-graha rule"
+
+notes: >
+  Surfaces and formalizes the "internal inconsistency" that
+  cross-references/graha-rashi-dignity-matrix.yaml's own data_quality_note
+  flagged during Phase 5 but did not resolve as a conflict record: both
+  Vrishabha and Mithuna are annotated as candidate Rahu exaltation
+  signs in the same table.
+
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "GRAHA-RAHU, GRAHA-KETU"
+      file: apps/api/services/ontology_registry.py (_populate_dignity_relationships)
+      note: >
+        ExaltedIn/DebilitatedIn relationships ARE populated for Rahu and
+        Ketu (unlike the friendship/enmity gap in conflict.003), sourced
+        from packages/shared/constants.py. OWN_SIGNS and
+        MOOLATRIKONA_RASHIS have no rahu/ketu entries at all — the
+        codebase takes no position on node sign-ownership or
+        co-lordship, sidestepping that narrower sub-question entirely.
+  rule_engine:
+    - reference: "EXALTATION_DEGREES / DEBILITATION_RASHIS"
+      file: packages/shared/constants.py:203-204,216-217
+      snippet: >
+        "rahu": ("gemini", 20.0), "ketu": ("sagittarius", 20.0) [exaltation];
+        "rahu": "sagittarius", "ketu": "gemini" [debilitation]
+      note: >
+        Confirms the codebase has picked the Gemini/Sagittarius School
+        as its sole operational default, with no representation of the
+        Taurus/Scorpio alternative anywhere in code.
+  validation_status: >
+    Confirmed 2026-07-16 — code implements exactly one of the three
+    documented traditions with no alternative path; this record's
+    recommended_position endorses that existing default rather than
+    requesting a change.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Phase 6 — new conflict entry formalizing the Rahu/Ketu exaltation-sign disagreement previously only noted as inline footnotes in cross-references/graha-rashi-dignity-matrix.yaml"
+    author: "Chief Jyotish Knowledge Architect"

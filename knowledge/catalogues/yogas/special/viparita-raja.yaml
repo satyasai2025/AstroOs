@@ -1,0 +1,44 @@
+id: yoga.special.viparita-raja
+name: Viparita Raja Yoga
+aliases: ["Reverse Fortune Yoga", "Inverted King Yoga"]
+category: yoga
+type: special
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Lord of the 6th, 8th, or 12th house is placed in another Dusthana house (6th, 8th, or 12th) from the Lagna"
+      entity: yoga.special.viparita-raja
+      role: subject
+      notes: "The three possible combinations are: (1) 6th lord in 8th or 12th; (2) 8th lord in 6th or 12th; (3) 12th lord in 6th or 8th. The yoga is strongest when the Dusthana lord is debilitated or in a weak state in its new Dusthana house. The yoga does not apply when a Dusthana lord is in its own Dusthana house (that is a different consideration)."
+
+effects:
+  positive:
+    - "Success through overcoming enemies and obstacles"
+    - "Victory in competitive situations"
+    - "Unexpected gains and windfalls"
+    - "Success in adversity and crisis management"
+    - "Hidden talents and unconventional success"
+    - "Wealth through means considered unconventional"
+  negative:
+    - "Success may come through morally ambiguous paths"
+    - "Health challenges in early life"
+    - "Relationships with authority figures may be complicated"
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 40
+
+notes: "The principle of Viparita Raja Yoga is based on the Jyotish concept that dusthana (6th, 8th, 12th) lords placed in other dusthana houses cancel each other's malefic effects, like two enemies fighting each other. When malefics occupy houses that are themselves inauspicious, they are 'busy' fighting among themselves and cannot harm the native. This creates a paradoxical (viparita = reverse/inverted) form of royal success. The native succeeds not despite difficulties, but through them."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,157 @@
+# conflicts/conflict-005.yaml
+
+id: conflict.005
+name: Rahu/Ketu Special Aspects — Do the Lunar Nodes Cast the 5th/9th Aspect?
+topic: Whether Rahu and Ketu cast Jupiter-pattern special aspects (5th, 9th) in addition to the universal 7th
+domain: aspect
+status: partially-resolved
+confidence: medium
+version: 1.0
+last_verified: 2026-07-16
+
+# === POSITIONS ===
+
+positions:
+  - tradition: "BPHS (Standard Reading)"
+    source:
+      ref: source.BPHS
+      chapter: 2
+    position: >
+      Rahu and Ketu aspect the 5th and 9th houses from their positions,
+      in addition to the standard 7th, following the same pattern as
+      Guru (Jupiter).
+    arguments:
+      - "This is the explicit BPHS Chapter 2 reading"
+      - "Structural symmetry: Rahu/Ketu are always 180 degrees apart, so their 5th/9th aspects are complementary"
+    adherents:
+      - Classical Parashari tradition (BPHS reading)
+      - Majority of contemporary software and practitioners
+
+  - tradition: "Restrictive / Physical-Body School"
+    source:
+      ref: source.traditional
+    position: >
+      Rahu and Ketu, being chaya grahas (shadow points with no physical
+      body), possess only the universal 7th-house aspect. Special
+      aspects are reserved for physical grahas (Mars, Jupiter, Saturn).
+    arguments:
+      - "Special aspects in BPHS's own framework are tied to a graha's physical/planetary nature"
+      - "Several classical commentators and regional traditions omit node special aspects entirely"
+    adherents:
+      - Some traditional commentators
+      - Practitioners who treat shadow-graha rules conservatively
+
+  - tradition: "Jaimini"
+    source:
+      ref: source.jaimini-sutras
+    position: >
+      The Jaimini system does not address Rahu/Ketu special aspects
+      within its own aspect framework (rashi drishti operates on a
+      wholly different sign-based logic — see catalogues/jaimini/rashi-drishti.yaml)
+      and is silent on this specific Parashari-framework question.
+    arguments:
+      - "Jaimini's rashi drishti is sign-to-sign, not graha-to-house, making the question a category mismatch"
+    adherents:
+      - Jaimini tradition (by omission, not by explicit denial)
+
+# === ANALYSIS ===
+
+analysis: >
+  Unlike conflict.002 (Surya's nature), this is not primarily a
+  theological or interpretive dispute — it hinges on a narrower textual
+  question: does BPHS's "special aspects belong to Mangala/Guru/Shani"
+  framework implicitly exclude the nodes, or does its explicit
+  Chapter 2 statement extending 5th/9th to Rahu/Ketu override that
+  implicit exclusion? Both readings are defensible from the same source
+  text, which is why this remains one of the most frequently revisited
+  questions in practice (see catalogues/aspects/rahu-ketu-aspects.yaml
+  notes).
+
+# === EVIDENCE ===
+
+evidence:
+  for_bphs_extension:
+    - "BPHS Ch. 2 explicit statement extends 5th/9th aspects to Rahu/Ketu"
+    - "Majority of modern chart-calculation software implements this by default"
+  for_restrictive:
+    - "Conceptual argument that chaya grahas lack the 'planetary' quality special aspects are grounded in"
+    - "A meaningful minority of traditional commentators omit node special aspects"
+
+# === RESOLUTION ===
+
+resolution_status: partially-resolved
+resolution: >
+  The BPHS-extension position is adopted as the default, both because
+  it is the explicit textual reading and because it is what this
+  codebase already implements (see cross-references below). The
+  restrictive position is documented as a live alternative, not
+  discarded, since no textual evidence definitively overrides it.
+
+recommended_position: >
+  Default to Rahu/Ketu casting 5th, 7th, 9th aspects (matching Guru's
+  pattern) per BPHS. Knowledge base entries computing or discussing
+  node aspects should note the restrictive alternative when the
+  distinction is decision-relevant (e.g., yoga formation that depends
+  on a node's 5th/9th aspect).
+
+weight_of_evidence: >
+  BPHS's explicit statement is a direct primary-source citation; the
+  restrictive position rests on conceptual/structural argument rather
+  than a competing direct citation of equal specificity, so the
+  evidence weight favors the extension reading, though not
+  overwhelmingly.
+
+# === RELATED ===
+
+related_conflicts:
+  - ref: conflict.006
+    topic: "Rahu/Ketu exaltation signs — the other major unsettled shadow-graha rule"
+notes: >
+  Formalizes into a conflict record the disagreement already
+  extensively documented (but not indexed as a conflict) in
+  catalogues/aspects/rahu-ketu-aspects.yaml, which independently
+  described this as "one of the most actively debated topics in
+  Vedic astrology."
+
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "ASPECT-SPECIAL-GRAHA"
+      file: apps/api/services/ontology_registry.py (_populate_aspect)
+      field: metadata.description
+      value: "Mars/Jupiter/Saturn's additional classical special aspects"
+      note: >
+        DISCREPANCY: this entity's description omits Rahu/Ketu even
+        though the actual Aspect Engine (below) implements node special
+        aspects. The Ontology's description text has drifted from the
+        Rule Engine's actual behavior — a documentation gap, not a
+        doctrinal one. Filed as ER-001 (Knowledge Office → Engineering
+        Office), out of Knowledge Office scope to fix directly — see
+        knowledge/STATUS.md's "External Requests" section and
+        ENGINEERING_STATUS.md's "Inbound Requests" section.
+  rule_engine:
+    - reference: "SPECIAL_ASPECTS"
+      file: apps/api/services/aspect_engine.py:26-32
+      snippet: '"rahu": {5, 7, 9}, "ketu": {5, 7, 9},  # Same as Jupiter by many traditions'
+      note: >
+        The Aspect Engine implements the BPHS-extension position (this
+        record's recommended default) for both nodes. Its own inline
+        comment ("by many traditions") already flags the position as
+        contested, consistent with this conflict record.
+  validation_status: >
+    Confirmed 2026-07-16 — Rule Engine (aspect_engine.py) matches the
+    recommended_position; Ontology's aspect entity description is stale
+    relative to it (see discrepancy above).
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Phase 6 — new conflict entry formalizing the Rahu/Ketu special-aspect dispute already narratively documented in catalogues/aspects/rahu-ketu-aspects.yaml; identified and recorded an Ontology/Rule Engine description drift"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.1
+    date: 2026-07-16
+    change: "Replaced the informal fix suggestion with a formal cross-office request (ER-001, logged in knowledge/STATUS.md and ENGINEERING_STATUS.md) per governance requirement"
+    author: "Chief Jyotish Knowledge Architect"

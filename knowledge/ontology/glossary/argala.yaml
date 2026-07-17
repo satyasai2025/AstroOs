@@ -1,0 +1,66 @@
+# ontology/glossary/argala.yaml
+
+id: term.argala
+name: Argalā
+aliases:
+  - Argala
+  - Intervention Aspect
+  - अर्गला
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    argalā — literally "a bolt, a latch, an impediment."
+    In jyotisha, the special intervention or intercession that
+    a graha provides for or against the results of a bhava
+    or another graha.
+  english: >
+    A system of planetary intervention where specific grahas
+    automatically intervene (argala) on or against a bhava
+    or graha. The 2nd, 5th, and 11th from a graha or bhava
+    cast a positive argala; the 3rd and 10th cast a negative
+    argala (virodhargala).
+  technical: >
+    If a graha occupies a house that casts argala on another
+    bhava, that graha becomes an argala-karaka. Argala is
+    unique to Parashari astrology and is evaluated separately
+    from drishti (aspect). The 2nd, 5th, and 11th from a
+    target give beneficial intervention; the 3rd and 10th
+    give obstructive intervention.
+
+usage:
+  primary: "Evaluation of planetary intervention on house results"
+  secondary: "Assessment of virodhargala (obstructive intervention)"
+
+related_concepts:
+  - ref: term.graha
+    relationship: "Grahas become argala-karakas when positioned in argala-casting houses"
+  - ref: term.drishti
+    relationship: "Argala is distinct from drishti (aspect) — operates through different positional rules"
+  - ref: term.bhava
+    relationship: "Bhava results are modified by intervening grahas through argala"
+
+sources:
+  - ref: source.BPHS
+    chapter: 27
+    verse: 1-8
+    claim: "Dvitīyādibhāvā ye — the 2nd and other houses cast argala"
+    confidence: high
+
+notes: >
+  Argala is a distinctively Parashari concept not found in
+  Jaimini or Tajik systems. It describes how planets mediate
+  or obstruct the results of other bhavas, independent of
+  the aspect (drishti) system. The 2nd, 5th, and 11th from
+  a house cast positive argala; the 3rd and 10th cast
+  negative argala (virodhargala).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

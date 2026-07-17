@@ -34,8 +34,19 @@ class ReferenceBase(DeclarativeBase):
     Minimal base for reference / lookup tables.
     No UUID, no audit columns — these tables are populated by migrations and
     never soft-deleted.
+
+    Shares AstroBase's MetaData (rather than getting its own, which is
+    DeclarativeBase's default) so that transactional tables' foreign keys
+    into these reference tables (e.g. planet_positions.nakshatra_id ->
+    nakshatras.id) can resolve. Without this, Base.metadata.create_all() —
+    the standard SQLAlchemy way to build a schema for tests — raises
+    NoReferencedTableError, because the two classes would otherwise
+    register their tables in two separate, mutually invisible MetaData
+    registries. Alembic's migrations are unaffected either way, since they
+    create tables explicitly by name rather than via create_all().
     """
     __abstract__ = True
+    metadata = AstroBase.metadata
 
 
 # ---------------------------------------------------------------------------
@@ -94,7 +105,7 @@ def _dignity_col():
 
 def _dasha_type_col():
     return PGENUM(
-        "vimshottari", "ashtottari", "yogini", "kalachakra",
+        "vimshottari", "ashtottari", "yogini", "kalachakra", "chara", "narayana",
         name="dasha_type", create_type=False,
     )
 
@@ -114,8 +125,8 @@ class SignModel(ReferenceBase):
     modality: Mapped[str] = mapped_column(String(10), nullable=False)
     gender: Mapped[str] = mapped_column(String(10), nullable=False)
     direction: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
-    start_degree: Mapped[Decimal] = mapped_column(Numeric(6, 4), nullable=False)
-    end_degree: Mapped[Decimal] = mapped_column(Numeric(6, 4), nullable=False)
+    start_degree: Mapped[Decimal] = mapped_column(Numeric(9, 6), nullable=False)
+    end_degree: Mapped[Decimal] = mapped_column(Numeric(9, 6), nullable=False)
 
 
 class NakshatraModel(ReferenceBase):
@@ -125,8 +136,8 @@ class NakshatraModel(ReferenceBase):
     name: Mapped[str] = mapped_column(_nakshatra_col(), nullable=False, unique=True)
     lord: Mapped[str] = mapped_column(_graha_col(), nullable=False)
     number: Mapped[int] = mapped_column(SmallInteger, nullable=False, unique=True)
-    start_degree: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
-    end_degree: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
+    start_degree: Mapped[Decimal] = mapped_column(Numeric(9, 6), nullable=False)
+    end_degree: Mapped[Decimal] = mapped_column(Numeric(9, 6), nullable=False)
     deity: Mapped[Optional[str]] = mapped_column(String(60), nullable=True)
     symbol: Mapped[Optional[str]] = mapped_column(String(60), nullable=True)
     gana: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
@@ -149,8 +160,8 @@ class PadaModel(ReferenceBase):
     )
     pada_number: Mapped[int] = mapped_column(SmallInteger, nullable=False)
     navamsha_rashi: Mapped[str] = mapped_column(_rashi_col(), nullable=False)
-    start_degree: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
-    end_degree: Mapped[Decimal] = mapped_column(Numeric(8, 6), nullable=False)
+    start_degree: Mapped[Decimal] = mapped_column(Numeric(9, 6), nullable=False)
+    end_degree: Mapped[Decimal] = mapped_column(Numeric(9, 6), nullable=False)
 
     nakshatra: Mapped["NakshatraModel"] = relationship(
         "NakshatraModel", back_populates="padas"
@@ -238,7 +249,16 @@ class PlanetPositionModel(AstroBase):
     pada_number: Mapped[Optional[int]] = mapped_column(SmallInteger, nullable=True)
     is_retrograde: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_combust: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    combustion_orb_deg: Mapped[Optional[Decimal]] = mapped_column(Numeric(6, 4), nullable=True)
+    combustion_orb_deg: Mapped[Optional[Decimal]] = mapped_column(
+        Numeric(9, 6),
+        nullable=True,
+        doc=(
+            "True angular distance from the Sun (0-180 degrees), not just "
+            "the value when combust — widened from Numeric(6,4) in "
+            "migration 0004 after a real chart produced 150.03 degrees "
+            "for a non-combust planet."
+        ),
+    )
     dignity: Mapped[Optional[str]] = mapped_column(_dignity_col(), nullable=True)
     shadbala_score: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4), nullable=True)
 
@@ -322,7 +342,17 @@ class DashaModel(AstroBase):
         ForeignKey("dashas.id", ondelete="CASCADE"),
         nullable=True, index=True,
     )
-    lord: Mapped[str] = mapped_column(_graha_col(), nullable=False)
+    lord: Mapped[str] = mapped_column(
+        String(40),
+        nullable=False,
+        doc=(
+            "Ruling entity for this period — meaning depends on dasha_type: "
+            "Graha name (vimshottari/ashtottari), Yogini name (yogini), or "
+            "Rashi name (kalachakra/chara/narayana). Widened from the graha "
+            "enum in migration 0003 because only 2 of 6 systems use a "
+            "Graha name here."
+        ),
+    )
     start_date: Mapped[date] = mapped_column(Date, nullable=False)
     end_date: Mapped[date] = mapped_column(Date, nullable=False)
     duration_days: Mapped[int] = mapped_column(Integer, nullable=False)

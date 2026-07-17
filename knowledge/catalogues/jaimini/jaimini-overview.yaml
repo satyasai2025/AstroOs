@@ -1,0 +1,480 @@
+# Jaimini System Overview
+# Comprehensive record for the Jaimini school of Jyotish.
+# This is the master reference tying together all Jaimini catalogue entries.
+
+id: jaimini.system-overview
+name: Jaimini System of Jyotish
+aliases:
+  - Jaimini Astrology
+  - Jaimini Jyotish
+  - Jaimini Paddhati
+  - जैमिनि प्रणाली
+  - जैमिनि ज्योतिष
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+# === IDENTITY ===
+classical_name: Jaimini Jyotish
+origin:
+  author: Jaimini
+  tradition_lineage: >
+    Jaimini is traditionally regarded as a disciple of Vyasa
+    (Krishna Dwaipayana), who also compiled the Vedas and authored
+    the Brahma Sutras. This places the Jaimini tradition within the
+    highest echelons of Vedic intellectual heritage.
+  text: source.jaimini-sutras
+  date: "200 BCE - 200 CE"
+  confidence: low
+  notes: >
+    Dating is highly debated. Traditional attribution to Jaimini
+    (disciple of Vyasa) suggests a much earlier date. Scholarly
+    estimates range from 200 BCE to 200 CE. The sutra format
+    (terse aphorisms) implies an oral tradition predating the
+    written form.
+
+# === SYSTEM DESCRIPTION ===
+description: >
+  Jaimini is a distinct school of Jyotish that differs fundamentally
+  from the Parashari system in its use of rashi-based (sign-based)
+  principles rather than graha-based (planet-based) principles. The
+  system was codified by the sage Jaimini in the Jaimini Sutras
+  (also known as the Upadesha Sutras). Where Parashari treats
+  grahas (planets) as the primary agents of astrological causation,
+  Jaimini treats rashis (signs) as the primary structural framework,
+  with grahas serving as indicators within that framework.
+
+  The Jaimini system is built upon five interconnected pillars:
+  Chara Karakas (dynamic significators), Chara Dasha (rashi-based
+  timing), Rashi Drishti (sign aspects), Karakamsha (soul-level
+  chart), and Arudha Padas (reflected house indicators). Together,
+  these five pillars form a coherent analytical system that
+  emphasizes karma, soul purpose, and the dynamic interplay of
+  life themes.
+
+# === KEY DIFFERENCES FROM PARASHARI ===
+differences:
+  - aspect: >
+      Rashi Drishti (sign aspects) rather than Graha Drishti
+      (planetary aspects). In Jaimini, rashis aspect each other
+      based on their nature (movable, fixed, dual) rather than
+      through planetary 7th-house or special aspects. Every rashi
+      aspects exactly three other rashis, creating a uniform
+      structural grid independent of graha placement. See:
+      jaimini.rashi-drishti.complete
+  - dasha: >
+      Chara Dasha (rashi-based) rather than Vimshottari
+      (nakshatra-based). Chara Dasha periods are determined by
+      the position of the Atmakaraka in the rashi chart, making
+      the dasha system personalized to each native's chart. The
+      sequence of dasha rashis follows the zodiacal order starting
+      from the AK's rashi, with odd-numbered rashis running
+      forward and even-numbered rashis running backward (or the
+      reverse, depending on the AK's rashi parity). See:
+      jaimini.chara-dasha
+  - karakas: >
+      Chara Karakas (degree-based significators) rather than fixed
+      natural karakas (Naisargika Karakas). In Parashari, Surya
+      always signifies the Atma (soul) and Chandra always signifies
+      the Manas (mind). In Jaimini, the karaka assignments change
+      from chart to chart based on the degree each graha holds
+      within its occupied rashi. The graha with the highest degrees
+      becomes the Atmakaraka. See: jaimini.chara-karakas.system
+  - houses: >
+      Arudha Padas (reflected houses) rather than direct house
+      counting. Arudha Padas are calculated by counting from a
+      graha to its natal sign-lord and then reflecting that distance
+      from the sign-lord itself. This creates "reflected" or
+      "projected" house positions that indicate how the world
+      perceives the native's house themes, as opposed to the direct
+      house positions indicating internal experience. See:
+      arudha.system
+  - lagna: >
+      Karakamsha (Atmakaraka in D-9) rather than Lagna as the
+      primary reference point. While the Rashi Lagna remains
+      important, Jaimini gives equal or greater weight to the
+      Karakamsha Lagna — the rashi that holds the Atmakaraka in
+      the Navamsha (D-9) chart. The Karakamsha Lagna is considered
+      the "soul's lagna" and serves as the reference point for
+      analyzing soul-level themes. See: jaimini.karakamsha
+  - timing: >
+      Jaimini uses its own event-triggering rules based on rashi
+      drishti interactions during dasha periods, along with
+      Argala (intervention) mechanics. Parashari uses transit-
+      based triggers (gochara) and planetary period activations.
+      Jaimini's approach is more structural and rashi-centric.
+  - reference_frame: >
+      Parashari uses the Rashi chart with Bhava (house) positions
+      as the primary frame. Jaimini uses the Rashi chart with
+      emphasis on the Karakamsha Lagna and Arudha Lagna as
+      additional reference frames, creating a multi-chart
+      analytical approach where the Rashi, Navamsha, Karakamsha,
+      and Arudha charts are all examined together.
+
+# === CORE CONCEPTS ===
+core_concepts:
+  - id: jaimini.chara-karakas.system
+    name: Chara Karaka System
+    importance: primary
+    brief: >
+      Eight dynamic significator roles (AK, AmK, Bk, Mk, Pk, PutK,
+      GnK, DK) assigned to grahas based on their degree positions
+      within their rashis. The system is chart-specific and forms
+      the foundation of all Jaimini analysis. The Atmakaraka (AK)
+      is the single most important graha in the chart, representing
+      the soul itself.
+    chapter: 1
+
+  - id: jaimini.chara-dasha
+    name: Chara Dasha
+    importance: primary
+    brief: >
+      A rashi-based dasha system where timing periods are determined
+      by the Atmakaraka's position in the rashi chart. The dasha
+      sequence follows zodiacal order from the AK's rashi, with
+      the direction (forward or backward) determined by whether
+      the AK occupies an odd or even rashi. Each dasha period
+      activates the themes of the operating rashi.
+    chapter: 2
+
+  - id: jaimini.rashi-drishti.complete
+    name: Rashi Drishti (Sign Aspects)
+    importance: primary
+    brief: >
+      Structural aspect relationships between rashis based on their
+      nature: movable rashis aspect fixed rashis (except the adjacent
+      one), fixed rashis aspect movable rashis, and dual rashis
+      aspect all other dual rashis. Each rashi aspects exactly three
+      others, creating a 36 directed-relationship grid (18 unique
+      pairs) across the zodiac.
+    chapter: 2
+
+  - id: jaimini.karakamsha
+    name: Karakamsha
+    importance: primary
+    brief: >
+      A specialized chart derived from the Navamsha (D-9) using the
+      Atmakaraka's position. The Karakamsha Lagna (KL) is the rashi
+      occupied by the AK in the D-9 chart. This chart reveals the
+      soul's inherent tendencies, karmic predispositions, and the
+      deepest layer of the native's astrological blueprint. It
+      serves as the primary reference frame for Jaimini analysis.
+    chapter: 4
+
+  - id: arudha.system
+    name: Arudha Padas
+    importance: secondary
+    brief: >
+      Reflected or projected house positions that indicate how the
+      world perceives the native's house themes. Calculated by
+      counting from a graha to its natal sign-lord, then applying
+      the same distance from the sign-lord. The Arudha Lagna (AL)
+      is the most important arudha, representing the native's
+      public image and material persona.
+    chapter: 2
+
+  - id: jaimini.argala
+    name: Argala (Intervention)
+    importance: secondary
+    brief: >
+      A Jaimini-specific mechanic where grahas in specific positions
+      (2nd, 4th, 11th = beneficial; 12th, 9th, 3rd = obstructive)
+      relative to a target rashi create supportive or obstructive
+      influences. Argala acts as a weighting system that modifies
+      the outcomes of other Jaimini factors.
+    chapter: 2
+
+  - id: jaimini.yogas.collection
+    name: Jaimini Yogas
+    importance: secondary
+    brief: >
+      A distinct class of planetary combinations arising from chara
+      karaka conjunctions, Karakamsha configurations, rashi drishti
+      patterns, and argala mechanics. Key yogas include Chara Karaka
+      Rajayoga, Karakamsha Lagna Yoga, and Darapada Relationship
+      Yoga. These are unique to Jaimini and have no direct Parashari
+      equivalent.
+    chapter: 1, 4
+
+# === ANALYTICAL WORKFLOW ===
+analytical_workflow: |
+  The standard Jaimini analytical workflow proceeds through these steps:
+
+  Step 1: Determine Chara Karakas
+    - Calculate the degree of each graha within its occupied rashi
+    - Rank all 7 grahas (Surya through Shani) from highest to lowest degree
+    - Assign the 8 karaka roles (AK through DK)
+
+  Step 2: Identify Key Reference Points
+    - Atmakaraka (AK) position in Rashi chart
+    - Karakamsha Lagna (AK's rashi in D-9)
+    - Arudha Lagna (AL) for public persona
+    - Darakaraka (DK) for marriage analysis
+
+  Step 3: Construct Reference Charts
+    - Rashi chart (primary)
+    - Navamsha/D-9 chart (for Karakamsha derivation)
+    - Karakamsha chart (soul-level analysis)
+    - Arudha Padas for each bhava
+
+  Step 4: Apply Rashi Drishti
+    - Map the rashi aspect grid for all 12 rashis
+    - Identify rashi-level connections between key karakas
+    - Note rashi drishti patterns involving AK, AmK, DK
+
+  Step 5: Evaluate Argala
+    - Apply beneficial argala positions (2nd, 4th, 11th)
+    - Apply obstructive argala positions (12th, 9th, 3rd)
+    - Determine net argala support for key rashis
+
+  Step 6: Identify Jaimini Yogas
+    - Check for karaka conjunctions and exchanges
+    - Evaluate Karakamsha Lagna graha placements
+    - Assess AK position relative to Lagna (kendra/trikona)
+    - Examine Darapada relationship to KL
+
+  Step 7: Timing through Chara Dasha
+    - Determine the starting rashi of Chara Dasha from AK position
+    - Map the full dasha sequence
+    - Identify which dasha period activates the relevant yogas
+    - Cross-reference with Parashari Vimshottari for corroboration
+
+# === RELATIONSHIP TO PARASHARI ===
+relationship_to_parashari: >
+  Jaimini and Parashari are considered complementary systems, not
+  contradictory. Many practitioners use both in their chart analysis.
+  Where they agree, the prediction is strengthened. Where they
+  disagree, both positions should be documented and weighed using
+  additional confirmation factors (transits, varshaphal, prashna).
+
+  In modern practice, most serious Jyotish practitioners work
+  within a Parashari framework for bhava analysis, graha effects,
+  and yogas, while incorporating Jaimini techniques for karaka-
+  based analysis, rashi drishti patterns, and soul-level themes
+  through the Karakamsha.
+
+  The key philosophical difference: Parashari emphasizes what
+  happens to the native (event-focused), while Jaimini emphasizes
+  why it happens to the native (karma/soul-focused).
+
+# === TEXTUAL TRADITION ===
+textual_tradition:
+  primary_text:
+    ref: source.jaimini-sutras
+    name: Jaimini Sutras (Upadesha Sutras)
+    chapters: 4
+    structure: >
+      The text consists of approximately 1000 terse sutras (aphorisms)
+      organized into 4 chapters. The sutra format is deliberately
+      cryptic, requiring commentary for full understanding. This has
+      led to multiple interpretive traditions.
+
+  key_commentaries:
+    - ref: source.jaimini-sutras-sharma
+      name: "Sharma Commentary (2003)"
+      notes: "Standard modern commentary by D.K. Sharma, published by Sagar Publications"
+    - name: "Sanjay Rath Commentary"
+      notes: >
+        A widely followed modern commentary emphasizing the Crasis
+        method and specific interpretive traditions within the
+        Jaimini system. Diverges from Sharma on several key points
+        including dasha computation and karaka rankings.
+    - name: "B.V. Raman Commentary"
+      notes: >
+        Includes Jaimini interpretations within the broader Parashari
+        framework, making it accessible to practitioners primarily
+        trained in the Parashari system.
+
+  chapter_summary:
+    - chapter: 1
+      name: "Pada Adhyaya"
+      topics: ["Chara Karakas", "Graha effects", "Phalita Jyotish"]
+      key_concepts: ["jaimini.chara-karakas.system"]
+    - chapter: 2
+      name: "Phala Adhyaya"
+      topics: ["Chara Dasha", "Rashi aspects", "Argala", "Arudha Padas"]
+      key_concepts: ["jaimini.chara-dasha", "jaimini.rashi-drishti.complete", "jaimini.argala", "arudha.system"]
+    - chapter: 3
+      name: "Nakshatra Adhyaya"
+      topics: ["Nakshatra effects", "Drekkana"]
+      key_concepts: []
+    - chapter: 4
+      name: "Vishishta Adhyaya"
+      topics: ["Karakamsha", "Chara Dasha details", "Special yogas"]
+      key_concepts: ["jaimini.karakamsha", "jaimini.yogas.collection"]
+
+# === CHARA KARAKA SUMMARY ===
+chara_karaka_summary:
+  - rank: 1
+    abbreviation: AK
+    sanskrit: Atmakaraka
+    english: "Soul Significator"
+    brief: "Soul, self, life purpose, karma. The most important graha in Jaimini analysis."
+    reference: jaimini.chara-karakas.system
+  - rank: 2
+    abbreviation: AmK
+    sanskrit: Amatyakaraka
+    english: "Career Significator"
+    brief: "Career, advisors, profession, counsel."
+    reference: jaimini.chara-karakas.system
+  - rank: 3
+    abbreviation: Bk
+    sanskrit: Bhratrukarak
+    english: "Sibling Significator"
+    brief: "Brothers, siblings, courage, competition."
+    reference: jaimini.chara-karakas.system
+  - rank: 4
+    abbreviation: Mk
+    sanskrit: Matrukarak
+    english: "Mother Significator"
+    brief: "Mother, property, vehicles, domestic peace."
+    reference: jaimini.chara-karakas.system
+  - rank: 5
+    abbreviation: Pk
+    sanskrit: Pitrukarak
+    english: "Father Significator"
+    brief: "Father, fortune, dharma, tradition."
+    reference: jaimini.chara-karakas.system
+  - rank: 6
+    abbreviation: PutK
+    sanskrit: Putrakaraka
+    english: "Progeny Significator"
+    brief: "Children, creativity, intelligence, students."
+    reference: jaimini.chara-karakas.system
+  - rank: 7
+    abbreviation: GnK
+    sanskrit: Jnatikaraka
+    english: "Relative Significator"
+    brief: "Cousins, relatives, disputes, extended family."
+    reference: jaimini.chara-karakas.system
+  - rank: 8
+    abbreviation: DK
+    sanskrit: Darakaraka
+    english: "Spouse Significator"
+    brief: "Spouse, marriage, partnerships, relationships."
+    reference: jaimini.chara-karakas.system
+
+# === RASHI DRISHTI SUMMARY ===
+rashi_drishti_summary:
+  rule_movable: >
+    Movable (chara) rashis (Mesha, Karka, Tula, Makara) aspect all
+    fixed (sthira) rashis except the immediately zodiacally following
+    fixed sign.
+  rule_fixed: >
+    Fixed (sthira) rashis (Vrishabha, Simha, Vrischika, Kumbha)
+    aspect all movable (chara) rashis.
+  rule_dual: >
+    Dual (dvisvabhava) rashis (Mithuna, Kanya, Dhanus, Meena)
+    aspect all other dual rashis.
+  total_aspects: 36
+  unique_pairs: 18
+  reference: jaimini.rashi-drishti.complete
+
+# === CHARA DASHA SUMMARY ===
+chara_dasha_summary:
+  basis: >
+    The starting rashi of Chara Dasha is determined by the Atmakaraka's
+    position in the Rashi chart. The dasha sequence follows zodiacal
+    order from the AK's occupied rashi.
+  direction_rule: >
+    If the AK occupies an odd-numbered rashi (1, 3, 5, 7, 9, 11),
+    the dasha sequence proceeds forward (ascending order). If the AK
+    occupies an even-numbered rashi (2, 4, 6, 8, 10, 12), the dasha
+    sequence proceeds backward (descending order).
+  period_calculation: >
+    Each dasha rashi's period duration is determined by the number
+    of rashis the Atmakaraka has traversed within that rashi in
+    the Navamsha chart, multiplied by the standard dasha year unit.
+  reference: jaimini.chara-dasha
+
+# === KARAKAMSHA SUMMARY ===
+karakamsha_summary:
+  definition: >
+    The Karakamsha is a specialized analytical chart derived from the
+    Navamsha (D-9) chart. The Karakamsha Lagna (KL) is the rashi
+    that contains the Atmakaraka (AK) in the D-9 chart. This chart
+    is considered the "soul's chart" and provides the deepest layer
+    of Jaimini analysis.
+  significance: >
+    The Karakamsha Lagna serves as an alternative reference point to
+    the Rashi Lagna. Grahas occupying the KL directly influence the
+    soul's expression and life direction. The KL and the Rashi Lagna
+    together provide a complete picture: the Rashi Lagna shows the
+    worldly personality, while the KL shows the soul's inner nature.
+  key_points:
+    - "Guru in KL indicates a wise, dharmic soul"
+    - "Shukra in KL indicates an artistic, relationship-oriented soul"
+    - "Surya in KL indicates an authoritative, powerful soul"
+    - "Shani in KL indicates a disciplined, potentially renunciant soul"
+    - "The relationship between Rashi Lagna and KL reveals the gap between worldly and soul identity"
+  reference: jaimini.karakamsha
+
+# === CATALOGUE INDEX ===
+catalogue_index:
+  existing_entries:
+    - id: jaimini.chara-karakas.system
+      file: jaimini-karakas.yaml
+      topic: "Chara Karaka Paddhati — all 8 karaka assignments"
+    - id: jaimini.rashi-drishti.complete
+      file: jaimini-aspects.yaml
+      topic: "Complete rashi drishti table for all 12 rashis"
+    - id: jaimini.yogas.collection
+      file: jaimini-yogas.yaml
+      topic: "7 Jaimini-specific yogas"
+  planned_entries:
+    - id: jaimini.chara-dasha
+      topic: "Chara Dasha computation rules and examples"
+      status: pending
+    - id: jaimini.karakamsha
+      topic: "Karakamsha chart construction and analysis"
+      status: pending
+    - id: jaimini.argala
+      topic: "Argala mechanics — beneficial and obstructive positions"
+      status: pending
+    - id: arudha.system
+      topic: "Arudha Pada computation and interpretation"
+      status: pending
+
+# === SOURCES ===
+sources:
+  - ref: source.jaimini-sutras
+    chapter: 1
+    claim: "Foundation text of the Jaimini system — 4 chapters, ~1000 sutras"
+    confidence: high
+  - ref: source.jaimini-sutras-sharma
+    claim: "Standard modern commentary by D.K. Sharma (2003)"
+    confidence: high
+  - ref: source.BPHS
+    claim: "Parashari system for comparison and complementary analysis"
+    confidence: high
+
+# === NOTES ===
+notes: >
+  The Jaimini system is less standardized than Parashari. Different
+  commentators (Sharma, Sanjay Rath, B.V. Raman) interpret the sutras
+  differently on several key points, including:
+
+  1. Whether Shani is excluded from certain chara karaka positions
+  2. The exact computation method for Chara Dasha period durations
+  3. The specific rules for arudha pada calculation in edge cases
+  4. Whether Rahu and Ketu participate in the chara karaka scheme
+
+  The system is often used in conjunction with Parashari, not as a
+  replacement. When Parashari and Jaimini agree on a prediction, the
+  confidence level increases significantly. When they disagree, both
+  positions should be documented.
+
+  The Karakamsha Lagna is considered by many Jaimini practitioners
+  to be as important as, or more important than, the Rashi Lagna
+  for understanding the native's soul purpose and karmic trajectory.
+  This is one of the most distinctive contributions of the Jaimini
+  system.
+
+# === HISTORY ===
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial comprehensive Jaimini system overview entry"
+    author: "Chief Jyotish Knowledge Architect"

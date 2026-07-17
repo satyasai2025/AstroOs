@@ -1,0 +1,82 @@
+# catalogues/rashis/mithunam.yaml
+
+id: rashi.mithunam
+name: Mithunam
+aliases:
+  - Gemini
+  - मिथुन
+category: rashi
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Mithuna
+devanagari: मिथुन
+meaning: "The twins"
+element: air
+quality: dual
+gender: male
+
+ruler:
+  ref: graha.budha
+  notes: Traditional Parashari rulership of Mithuna
+
+tattva_lord:
+  element: air
+  lord: graha.shani
+  notes: Shani is the lord of the air element (Vayu Tattva)
+
+degree_span:
+  start: 60
+  end: 90
+
+body_part: Arms and shoulders
+direction: West
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.mrigashira
+    padas: [3, 4]
+    degrees: "60°00' - 66°40'"
+  - nakshatra: nakshatra.ardra
+    padas: [1, 2, 3, 4]
+    degrees: "66°40' - 80°00'"
+  - nakshatra: nakshatra.punarvasu
+    padas: [1, 2, 3]
+    degrees: "80°00' - 90°00'"
+
+properties:
+  temperament: Curious, adaptable, communicative
+  motivation: dharma
+  symbol: Twins
+
+karakatvas:
+  - concept: Communication and intellect
+  - concept: Adaptability and versatility
+  - concept: Commerce and trade
+
+compatible_with:
+  - ref: rashi.tulanam
+  - ref: rashi.kumbham
+incompatible_with:
+  - ref: rashi.kanyam
+  - ref: rashi.meenam
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Mithuna as a Dvisvabhava (dual), Sama (level), and Manushya (human) sign ruled by Budha"
+    confidence: high
+
+notes: >
+  Mithuna is the third sign of the zodiac, governing communication and
+  intellectual exchange. As a dual air sign, it embodies curiosity,
+  adaptability, and a restless pursuit of knowledge. Natives born under
+  Mithuna are said to be versatile, articulate, and mentally agile. The
+  sign corresponds to the arms and shoulders (Bhuja) in the Kalapurusha
+  correspondence of the zodiac to the human body.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,83 @@
+# catalogues/rashis/tulanam.yaml
+
+id: rashi.tulanam
+name: Tulanam
+aliases:
+  - Libra
+  - Tula
+  - तुला
+category: rashi
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Tulā
+devanagari: तुला
+meaning: "The balance; the scales"
+element: air
+quality: cardinal
+gender: male
+
+ruler:
+  ref: graha.shukra
+  notes: Traditional Parashari rulership of Tula
+
+tattva_lord:
+  element: air
+  lord: graha.shani
+  notes: Shani is the lord of the air element (Vayu Tattva)
+
+degree_span:
+  start: 180
+  end: 210
+
+body_part: Lower back
+direction: West
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.chitra
+    padas: [2, 3, 4]
+    degrees: "180°00' - 190°00'"
+  - nakshatra: nakshatra.swati
+    padas: [1, 2, 3, 4]
+    degrees: "190°00' - 203°20'"
+  - nakshatra: nakshatra.vishakha
+    padas: [1, 2, 3]
+    degrees: "203°20' - 210°00'"
+
+properties:
+  temperament: Balanced, social, diplomatic
+  motivation: kama
+  symbol: Scales
+
+karakatvas:
+  - concept: Balance and harmony
+  - concept: Relationships and partnerships
+  - concept: Justice and fairness
+
+compatible_with:
+  - ref: rashi.mithunam
+  - ref: rashi.kumbham
+incompatible_with:
+  - ref: rashi.mesham
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Tula as a Chara (movable), Sama (level), and Manushya (human) sign ruled by Shukra"
+    confidence: high
+
+notes: >
+  Tula is the seventh sign of the zodiac, governing relationships,
+  balance, and social harmony. As a cardinal air sign, it embodies
+  diplomacy, aesthetics, and a strong sense of justice. Natives born
+  under Tula are said to be charming, diplomatic, and relationship-
+  oriented. The sign corresponds to the lower back and waist (Kati) in
+  the Kalapurusha correspondence of the zodiac to the human body. Tula
+  is the sign of the autumnal equinox in sidereal astrology.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

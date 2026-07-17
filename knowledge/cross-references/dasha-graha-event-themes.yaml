@@ -1,0 +1,167 @@
+# cross-references/dasha-graha-event-themes.yaml
+# Phase 5 — Relationship Mapping: Dasha-Event map
+
+id: cross-reference.dasha-graha-event-themes
+name: Dasha-Graha Event Theme Map
+aliases: ["Mahadasha Life-Event Themes", "Graha Dasha Effects Master Reference"]
+category: cross-reference
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Consolidated general life-event themes per graha as Mahadasha
+  (major period) lord, applicable across the three nakshatra-based
+  dasha systems catalogued in catalogues/dashas/ (Vimshottari,
+  Ashtottari, Shodashottari — all of which share the same 9-graha
+  sequence structure, just different durations and starting
+  conditions). Draws on each graha's own karakatvas
+  (catalogues/grahas/*.yaml) and natural benefic/malefic quality to
+  synthesize a single master reference, rather than repeating
+  per-system duration tables already present in the individual dasha
+  catalogue records.
+
+scope_note: >
+  Chara Dasha and Narayana Dasha (catalogues/dashas/chara-dasha.yaml,
+  narayana-dasha.yaml) are RASHI-based, not graha-based — their
+  period lords are signs, not planets. Chara Dasha's rashi-level
+  event themes are already catalogued in
+  catalogues/jaimini/chara-dasha-effects.yaml. This record covers
+  only the three graha-based systems and is not duplicative of that
+  entry.
+
+duration_by_system:
+  - graha: graha.surya
+    vimshottari_years: 6
+    ashtottari_years: 6
+    shodashottari_years: 6
+  - graha: graha.chandra
+    vimshottari_years: 10
+    ashtottari_years: 15
+    shodashottari_years: 12
+  - graha: graha.mangala
+    vimshottari_years: 7
+    ashtottari_years: 8
+    shodashottari_years: 7
+  - graha: graha.rahu
+    vimshottari_years: 18
+    ashtottari_years: 13
+    shodashottari_years: 18
+  - graha: graha.guru
+    vimshottari_years: 16
+    ashtottari_years: 10
+    shodashottari_years: 16
+  - graha: graha.shani
+    vimshottari_years: 19
+    ashtottari_years: 7
+    shodashottari_years: 19
+  - graha: graha.budha
+    vimshottari_years: 17
+    ashtottari_years: 17
+    shodashottari_years: 17
+  - graha: graha.ketu
+    vimshottari_years: 7
+    ashtottari_years: 7
+    shodashottari_years: 1
+  - graha: graha.shukra
+    vimshottari_years: 20
+    ashtottari_years: 25
+    shodashottari_years: 20
+
+duration_note: >
+  Surya (6) and Budha (17) hold identical durations across all three
+  systems. Ketu's Shodashottari duration (1 year) is a striking
+  outlier compared to its Vimshottari/Ashtottari duration (7 years) —
+  this is a known and correctly-transcribed feature of the
+  Shodashottari sequence, not a data error (see total_verification
+  in catalogues/dashas/shodashottari.yaml: 20+17+16+12+19+7+6+18+1=116).
+
+event_themes:
+  - graha: graha.surya
+    general_theme: "Authority, self-assertion, father, government/official matters, and public visibility come to the foreground."
+    positive: ["Career advancement and recognition", "Improved health and vitality", "Favourable dealings with authority figures", "Growth in self-confidence and leadership"]
+    negative: ["Ego conflicts and friction with superiors or father figures", "Health issues tied to heat, blood pressure, or the heart", "Overreach through pride or dominance"]
+    life_areas_activated: ["Career and status (10th, 1st)", "Father and dharma (9th)", "Government and authority relationships"]
+    intensity: "Short duration (6 years in all three systems) but often decisive — Surya periods concentrate events rather than spreading them out."
+
+  - graha: graha.chandra
+    general_theme: "Emotional life, mother, mind, domestic affairs, and public interaction (Chandra karakatvas) are activated."
+    positive: ["Emotional stability and nurturing relationships", "Domestic happiness, property or vehicle gains", "Public popularity, intuitive decision-making"]
+    negative: ["Mood swings and emotional volatility, especially if Chandra is waning or afflicted", "Disputes involving mother or home", "Overdependence on others' approval"]
+    life_areas_activated: ["Mother and home (4th)", "Mind and emotional constitution (1st)", "Travel and public dealings"]
+    intensity: "Middling duration, longest under Ashtottari (15 years) — results are strongly modulated by Chandra's waxing/waning state and dignity at birth."
+
+  - graha: graha.mangala
+    general_theme: "Courage, initiative, siblings, property, and conflict-related matters are activated; a graha-of-action period."
+    positive: ["Achievement through direct effort and courage", "Property or land gains", "Victory over rivals and competitors", "Physical strength and athletic success"]
+    negative: ["Accidents, injuries, or surgery", "Disputes, litigation, or aggression-driven conflict", "Strain in marriage if Mangal Dosha is present (see catalogues/yogas/dosha/mangal-dosha.yaml)"]
+    life_areas_activated: ["Siblings and courage (3rd)", "Property and domestic environment (4th)", "Disputes and competitors (6th)"]
+    intensity: "Short-to-moderate duration (7-8 years across systems) — often a high-intensity, event-dense period regardless of length."
+
+  - graha: graha.budha
+    general_theme: "Intellect, communication, commerce, and learning are activated; results are strongly coloured by planets associated with Budha at birth, consistent with its natural-neutral status."
+    positive: ["Academic or intellectual achievement", "Success in commerce, writing, or communication-based work", "Improved analytical clarity and adaptability"]
+    negative: ["Nervous tension or anxiety", "Scattered focus and overthinking", "Miscommunication or contractual disputes"]
+    life_areas_activated: ["Intellect and speech (2nd, 5th)", "Commerce and short journeys (3rd)", "Whatever house/graha Budha is most strongly associated with at birth"]
+    intensity: "Long, identical duration across all three systems (17 years) — the most temporally consistent graha, though qualitatively the most association-dependent."
+
+  - graha: graha.guru
+    general_theme: "Wisdom, fortune, children, higher education, and spiritual growth are activated; classically the most benefic dasha for overall life expansion."
+    positive: ["Marriage, childbirth, or growth in family", "Higher education, spiritual advancement, or teaching opportunities", "Financial prosperity and ethical/reputational growth"]
+    negative: ["Overconfidence, weight gain, or complacency", "Excessive idealism leading to poor practical judgment", "Health issues tied to liver or fat metabolism"]
+    life_areas_activated: ["Fortune and dharma (9th)", "Children and creativity (5th)", "Wealth and speech (2nd)"]
+    intensity: "Long duration under Vimshottari/Shodashottari (16 years), shorter under Ashtottari (10 years) — generally regarded as one of the most favourable periods when Guru is well-dignified."
+
+  - graha: graha.shukra
+    general_theme: "Relationships, marriage, wealth, luxury, and creative/artistic pursuits are activated; the longest dasha in Vimshottari and Shodashottari, longer still in Ashtottari."
+    positive: ["Marriage or significant romantic relationship", "Financial prosperity, luxury, and material comfort", "Artistic or creative success", "Vehicle or property acquisition"]
+    negative: ["Overindulgence, complacency, or relationship instability", "Health issues tied to reproductive or kidney function", "Excess focus on pleasure at the expense of discipline"]
+    life_areas_activated: ["Marriage and partnership (7th)", "Wealth and family (2nd)", "Creativity and romance (5th)"]
+    intensity: "The longest graha-dasha of all (20-25 years depending on system) — its long duration means outcomes are rarely uniform across the whole period; antardasha analysis is essential."
+
+  - graha: graha.shani
+    general_theme: "Discipline, karma, service, delay, and long-term structural change are activated; classically the most feared but also most character-building dasha."
+    positive: ["Career advancement through sustained discipline and hard work", "Long-term stability once initial delays are overcome", "Karmic resolution and maturity"]
+    negative: ["Delays, obstacles, and prolonged hardship", "Health issues tied to bones, joints, or chronic conditions", "Isolation, loss, or depressive tendencies if Shani is afflicted"]
+    life_areas_activated: ["Service and obstacles (6th)", "Career and public standing (10th)", "Longevity and transformation (8th)"]
+    intensity: "Long duration under Vimshottari/Shodashottari (19 years), much shorter under Ashtottari (7 years) — Sade Sati (Shani's transit-based analog) reinforces this dasha's reputation for testing patience."
+
+  - graha: graha.rahu
+    general_theme: "Sudden ambition, unconventional paths, foreign connections, and material pursuit are activated; results are highly amplifying and unpredictable."
+    positive: ["Sudden and significant material gains", "Foreign travel, relocation, or cross-cultural success", "Breakthrough achievement in unconventional or technological fields"]
+    negative: ["Obsession, addiction, or ethically ambiguous choices", "Sudden upheaval, scandal, or loss of standing", "Health issues that are difficult to diagnose or unconventional in nature"]
+    life_areas_activated: ["Foreign lands and sudden events", "Whatever house/graha Rahu occupies or aspects most strongly"]
+    intensity: "Long duration (13-18 years depending on system) — outcomes vary more by chart specifics than for any other graha, given its shadow-graha, purely karmic-amplifying nature."
+
+  - graha: graha.ketu
+    general_theme: "Detachment, spirituality, endings, and liberation are activated; often experienced as a period of withdrawal or redirection rather than worldly achievement."
+    positive: ["Spiritual growth, insight, or liberation from past patterns", "Sudden clarity or breakthrough through research or introspection", "Release from burdens that no longer serve"]
+    negative: ["Sudden losses, separations, or disorientation", "Health issues that are vague, hard to diagnose, or psychosomatic", "Withdrawal from worldly ambition, sometimes to a detrimental degree"]
+    life_areas_activated: ["Liberation and hidden matters (12th, 8th)", "Whatever house/graha Ketu occupies or aspects most strongly"]
+    intensity: "Short-to-moderate duration under Vimshottari/Ashtottari (7 years), strikingly brief under Shodashottari (1 year) — one of the more difficult periods to generalize about given how sharply its character depends on chart specifics."
+
+sources:
+  - ref: source.BPHS
+    claim: "Chapter 46 (dasha-phala) — general principles for graha dasha result interpretation, combined with each graha's own karakatva citations already recorded in catalogues/grahas/*.yaml"
+    confidence: high
+
+notes: >
+  These are GENERAL themes independent of lagna, house lordship, and
+  chart-specific dignity — the same caveat that applies to
+  catalogues/jaimini/chara-dasha-effects.yaml applies here even more
+  strongly, since graha-dasha results are typically read together
+  with the dasha lord's house lordship (lagna-dependent, out of
+  scope — see cross-references/graha-bhava-functional-nature.yaml
+  scope_note) and its dignity at birth
+  (cross-references/graha-rashi-dignity-matrix.yaml). Antardasha
+  (sub-period) analysis within each mahadasha further modulates
+  these themes based on the antardasha lord's own nature and its
+  relationship to the mahadasha lord (see relationships field in
+  catalogues/grahas/*.yaml).
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial cross-reference entry — Phase 5 Dasha-Event relationship mapping"
+    author: "Chief Jyotish Knowledge Architect"

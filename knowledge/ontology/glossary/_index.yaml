@@ -1,0 +1,126 @@
+# ontology/glossary/_index.yaml
+
+id: index.glossary
+name: Jyotish Knowledge Glossary
+category: index
+status: active
+version: 1.0
+last_verified: 2026-07-15
+
+description: >
+  Complete index of all glossary terms in the Jyotish knowledge
+  base. Each term has a unique ID of the form term.<name>.
+
+terms:
+  # --- A ---
+  - id: term.argala
+    name: Argala
+    file: argala.yaml
+  - id: term.arudha
+    name: Arudha
+    file: arudha.yaml
+  - id: term.atmakaraka
+    name: Atmakaraka
+    file: atmakaraka.yaml
+  - id: term.ayanamsa
+    name: Ayanamsa
+    file: ayanamsa.yaml
+
+  # --- B ---
+  - id: term.bhakoot
+    name: Bhakoot
+    file: bhakoot.yaml
+  - id: term.bhava
+    name: Bhava
+    file: bhava.yaml
+
+  # --- D ---
+  - id: term.dasha
+    name: Dasha
+    file: dasha.yaml
+  - id: term.drekkana
+    name: Drekkana
+    file: drekkana.yaml
+  - id: term.drishti
+    name: Drishti
+    file: drishti.yaml
+  - id: term.dusthana
+    name: Dusthana
+    file: dusthana.yaml
+
+  # --- G ---
+  - id: term.gana
+    name: Gana
+    file: gana.yaml
+  - id: term.gochara
+    name: Gochara
+    file: gochara.yaml
+  - id: term.graha
+    name: Graha
+    file: graha.yaml
+
+  # --- K ---
+  - id: term.karaka
+    name: Karaka
+    file: karaka.yaml
+  - id: term.karakamsha
+    name: Karakamsha
+    file: karakamsha.yaml
+  - id: term.kendra
+    name: Kendra
+    file: kendra.yaml
+
+  # --- M ---
+  - id: term.marana-karaka-sthana
+    name: Marana Karaka Sthana
+    file: marana-karaka-sthana.yaml
+  - id: term.moolatrikona
+    name: Moolatrikona
+    file: moolatrikona.yaml
+
+  # --- N ---
+  - id: term.nakshatra
+    name: Nakshatra
+    file: nakshatra.yaml
+  - id: term.necha
+    name: Neecha
+    file: necha.yaml
+
+  # --- R ---
+  - id: term.rashi
+    name: Rashi
+    file: rashi.yaml
+
+  # --- T ---
+  - id: term.trik
+    name: Trik
+    file: trik.yaml
+  - id: term.trikona
+    name: Trikona
+    file: trikona.yaml
+
+  # --- U ---
+  - id: term.uchcha
+    name: Uchcha
+    file: uchcha.yaml
+  - id: term.upapada
+    name: Upapada
+    file: upapada.yaml
+
+  # --- V ---
+  - id: term.varga
+    name: Varga
+    file: varga.yaml
+  - id: term.varna
+    name: Varna
+    file: varna.yaml
+
+  # --- Y ---
+  - id: term.yoga
+    name: Yoga
+    file: yoga.yaml
+  - id: term.yoni
+    name: Yoni
+    file: yoni.yaml
+
+count: 29

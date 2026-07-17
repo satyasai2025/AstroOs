@@ -11,12 +11,18 @@ No business logic lives here — all computation is delegated to DivisionalEngin
 
 from __future__ import annotations
 
+import asyncio
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Path, status
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_ephemeris_service
+from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
 from apps.api.domain.divisional import VargaChart
+from apps.api.repositories.birth_chart_repository import BirthChartRepository
+from apps.api.repositories.divisional_chart_repository import DivisionalChartRepository
+from apps.api.repositories.divisional_planet_repository import DivisionalPlanetRepository
 from apps.api.schemas.divisional import (
     AllVargaChartsResponse,
     VargaAscendantResponse,
@@ -25,7 +31,6 @@ from apps.api.schemas.divisional import (
     VargaPlanetResponse,
 )
 from apps.api.services.divisional_engine import SUPPORTED_VARGAS, DivisionalEngine
-from apps.api.services.ephemeris_service import EphemerisService
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 logger = logging.getLogger(__name__)
@@ -39,19 +44,22 @@ _VALID_VARGAS = sorted(SUPPORTED_VARGAS)
 
 
 def _get_divisional_engine(
-    ephe_svc: EphemerisService = Depends(get_ephemeris_service),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+    session: AsyncSession = Depends(get_db_session),
 ) -> DivisionalEngine:
     """
-    Build a DivisionalEngine by reusing the EphemerisWrapper pattern from the
-    horoscope router — creates a wrapper from settings sharing the same swe path.
+    Build a DivisionalEngine using the process-wide EphemerisWrapper singleton,
+    plus request-scoped repositories for persistence.
+
+    Does NOT construct a new EphemerisWrapper — see get_ephemeris_wrapper's
+    docstring for why that would reintroduce a global-state race condition.
     """
-    from apps.api.config import get_settings
-    settings = get_settings()
-    wrapper = EphemerisWrapper(
-        ephemeris_path=settings.EPHEMERIS_PATH,
-        ayanamsa="lahiri",
+    return DivisionalEngine(
+        wrapper,
+        birth_chart_repo=BirthChartRepository(session),
+        divisional_chart_repo=DivisionalChartRepository(session),
+        divisional_planet_repo=DivisionalPlanetRepository(session),
     )
-    return DivisionalEngine(wrapper)
 
 
 # ── Serialisation helper ──────────────────────────────────────────────────────
@@ -106,7 +114,11 @@ async def compute_all_vargas(
     engine: DivisionalEngine = Depends(_get_divisional_engine),
 ) -> AllVargaChartsResponse:
     try:
-        all_charts = engine.compute_all(
+        # Blocking pyswisseph call — offload to a worker thread so it does
+        # not freeze the event loop. See horoscope.py's generate_d1_chart
+        # for the full rationale.
+        all_charts = await asyncio.to_thread(
+            engine.compute_all,
             birth_datetime_utc=body.birth_datetime_utc,
             latitude=body.latitude,
             longitude=body.longitude,
@@ -121,6 +133,25 @@ async def compute_all_vargas(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to compute divisional charts.",
         )
+
+    try:
+        await engine.persist_all(
+            all_charts,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+    except SQLAlchemyError as exc:
+        logger.exception("Failed to persist divisional charts: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=(
+                "Charts were computed successfully but could not be saved. "
+                "Please retry."
+            ),
+        ) from exc
 
     serialised = {code: _serialise_chart(chart) for code, chart in all_charts.items()}
     # Pick any chart for shared metadata
@@ -158,7 +189,11 @@ async def compute_varga(
         )
 
     try:
-        chart = engine.compute(
+        # Blocking pyswisseph call — offload to a worker thread so it does
+        # not freeze the event loop. See horoscope.py's generate_d1_chart
+        # for the full rationale.
+        chart = await asyncio.to_thread(
+            engine.compute,
             birth_datetime_utc=body.birth_datetime_utc,
             latitude=body.latitude,
             longitude=body.longitude,
@@ -174,5 +209,24 @@ async def compute_varga(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to compute {varga_upper} chart.",
         )
+
+    try:
+        await engine.persist_chart(
+            chart,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+    except SQLAlchemyError as exc:
+        logger.exception("Failed to persist %s chart: %s", varga_upper, exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=(
+                f"{varga_upper} chart was computed successfully but could "
+                "not be saved. Please retry."
+            ),
+        ) from exc
 
     return _serialise_chart(chart)

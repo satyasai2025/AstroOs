@@ -1,0 +1,213 @@
+# cross-references/yoga-graha-index.yaml
+# Phase 5 — Relationship Mapping: Yoga-Graha map
+
+id: cross-reference.yoga-graha-index
+name: Yoga-Graha Reverse Index
+aliases: ["Graha-to-Yoga Map", "Which Yogas Involve Which Graha"]
+category: cross-reference
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Reverse-indexes the 20 yogas in catalogues/yogas/ (see
+  catalogues/yogas/_index.yaml) by graha participant, answering "which
+  yogas can this graha be involved in" — the inverse of the yoga
+  catalogue's own organization by yoga type. Distinguishes four kinds
+  of involvement, since yoga conditions reference grahas in
+  structurally different ways.
+
+participation_types:
+  fixed_participant: "The yoga's defining condition names this specific graha; it must be involved for the yoga to exist at all."
+  reference_point: "The yoga is measured relative to this graha's position (chiefly the Moon in Chandra-yogas) without the graha itself being a required participant."
+  conditional_participant: "This graha can satisfy an 'any of several' or aspecting condition, but is not individually required."
+  house_lord_dependent: "This yoga is defined by house lordship (e.g. 'lord of the 2nd and 11th'), which graha rules those houses depends entirely on the lagna — any graha could potentially fill this role for some ascendant."
+
+graha_yoga_participation:
+  - graha: graha.surya
+    fixed_participant:
+      - { yoga: yoga.raja.budha-aditya, role: "Conjoins with Mercury" }
+      - { yoga: yoga.chandra.maha-bhagya, role: "One of three required grahas (with Moon, Jupiter)" }
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from Moon" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+    excluded_from:
+      - { yoga: yoga.chandra.sunapha, reason: "Explicitly excluded — condition requires 'any planet other than the Sun'" }
+      - { yoga: yoga.chandra.anapha, reason: "Explicitly excluded — same exclusion" }
+      - { yoga: yoga.chandra.durudhura, reason: "Explicitly excluded — same exclusion" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Surya is debilitated in Tula and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.lakshmi-yoga
+      - yoga.dhana.dhana-yoga-2
+      - yoga.dhana.kubera-yoga
+      - yoga.special.viparita-raja
+
+  - graha: graha.chandra
+    fixed_participant:
+      - { yoga: yoga.raja.chandra-mangala, role: "Conjoins/aspects Mars" }
+      - { yoga: yoga.chandra.maha-bhagya, role: "One of three required grahas (with Sun, Jupiter)" }
+      - { yoga: yoga.chandra.gauri-yoga, role: "Must occupy Vrishabha or Karka and receive Jupiter's aspect" }
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from itself (trivially satisfied, Moon in 1st from itself)" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+    reference_point:
+      - { yoga: yoga.raja.gaja-keshari, role: "Jupiter's Kendra placement is measured from the Moon" }
+      - { yoga: yoga.chandra.sunapha, role: "The 2nd-house-from-Moon placement of any other graha is measured from the Moon" }
+      - { yoga: yoga.chandra.anapha, role: "The 12th-house-from-Moon placement of any other graha is measured from the Moon" }
+      - { yoga: yoga.chandra.durudhura, role: "Both 2nd and 12th house placements are measured from the Moon" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Chandra is debilitated in Vrishchika and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.lakshmi-yoga
+      - yoga.dhana.dhana-yoga-2
+      - yoga.dhana.kubera-yoga
+      - yoga.special.viparita-raja
+
+  - graha: graha.mangala
+    fixed_participant:
+      - { yoga: yoga.raja.chandra-mangala, role: "Conjoins/aspects Moon" }
+      - { yoga: yoga.dosha.mangal-dosha, role: "The sole defining graha — its own house placement from Lagna creates the dosha" }
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from Moon" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+      - { yoga: yoga.special.pancha-mahapurusha, role: "Forms Ruchaka Yoga when in own sign or exaltation in a Kendra from Lagna" }
+    conditional_participant:
+      - { yoga: yoga.dosha.sarpadosha, role: "Can supply the malefic influence afflicting the Rahu-Ketu axis" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Mangala is debilitated in Karka and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.lakshmi-yoga
+      - yoga.dhana.dhana-yoga-2
+      - yoga.dhana.kubera-yoga
+      - yoga.special.viparita-raja
+
+  - graha: graha.budha
+    fixed_participant:
+      - { yoga: yoga.raja.budha-aditya, role: "Conjoins with Sun" }
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from Moon" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+      - { yoga: yoga.special.pancha-mahapurusha, role: "Forms Bhadra Yoga when in own sign or exaltation in a Kendra from Lagna" }
+    conditional_participant:
+      - { yoga: yoga.dhana.kubera-yoga, role: "Can supply the benefic aspect on the 2nd house alongside Jupiter/Venus" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Budha is debilitated in Meena and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.lakshmi-yoga
+      - yoga.dhana.dhana-yoga-2
+      - yoga.dhana.kubera-yoga
+      - yoga.special.viparita-raja
+
+  - graha: graha.guru
+    fixed_participant:
+      - { yoga: yoga.raja.gaja-keshari, role: "The sole defining graha — must be in Kendra from Moon" }
+      - { yoga: yoga.chandra.maha-bhagya, role: "One of three required grahas (with Sun, Moon)" }
+      - { yoga: yoga.chandra.gauri-yoga, role: "Must aspect Moon in Vrishabha or Karka" }
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from Moon" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+      - { yoga: yoga.special.pancha-mahapurusha, role: "Forms Hamsa Yoga when in own sign or exaltation in a Kendra from Lagna" }
+    conditional_participant:
+      - { yoga: yoga.dhana.kubera-yoga, role: "Can supply the benefic aspect on the 2nd house alongside Venus/Mercury" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Guru is debilitated in Makara and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.lakshmi-yoga
+      - yoga.dhana.dhana-yoga-2
+      - yoga.dhana.kubera-yoga
+      - yoga.special.viparita-raja
+
+  - graha: graha.shukra
+    fixed_participant:
+      - { yoga: yoga.dhana.lakshmi-yoga, role: "Must be in own sign (Vrishabha/Tula) or exalted (Meena), alongside the 9th lord in a Kendra" }
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from Moon" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+      - { yoga: yoga.special.pancha-mahapurusha, role: "Forms Malavya Yoga when in own sign or exaltation in a Kendra from Lagna" }
+    conditional_participant:
+      - { yoga: yoga.dhana.kubera-yoga, role: "Can supply the benefic aspect on the 2nd house alongside Jupiter/Mercury" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Shukra is debilitated in Kanya and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.dhana-yoga-2
+      - yoga.special.viparita-raja
+
+  - graha: graha.shani
+    fixed_participant:
+      - { yoga: yoga.chandra.kapata, role: "One of the seven classical grahas required in Kendra from Moon" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One of the seven classical grahas that must fall on one side of the Rahu-Ketu axis" }
+      - { yoga: yoga.special.pancha-mahapurusha, role: "Forms Shasha Yoga when in own sign or exaltation in a Kendra from Lagna" }
+    conditional_participant:
+      - { yoga: yoga.dosha.sarpadosha, role: "Can supply the malefic influence afflicting the Rahu-Ketu axis" }
+    possible_participant:
+      - { yoga: yoga.special.neechabhanga-raja, condition: "If Shani is debilitated in Mesha and the debilitation is cancelled" }
+    house_lord_dependent:
+      - yoga.raja.dhana-yoga-1
+      - yoga.raja.vasumad
+      - yoga.dhana.lakshmi-yoga
+      - yoga.dhana.dhana-yoga-2
+      - yoga.special.viparita-raja
+
+  - graha: graha.rahu
+    fixed_participant:
+      - { yoga: yoga.dosha.sarpadosha, role: "One half of the defining axis (with Ketu)" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One end of the defining axis that hems all seven classical grahas" }
+    excluded_from:
+      - { yoga: yoga.chandra.kapata, reason: "Kedara Yoga is explicitly restricted to the seven classical grahas, excluding Rahu and Ketu" }
+    possible_participant: []
+    house_lord_dependent_note: >
+      Rahu owns no signs in the primary system used by this knowledge
+      base (see catalogues/grahas/rahu.yaml own_signs_notes), so it is
+      not treated as eligible for house-lord-dependent yogas here,
+      though some traditions assign it co-lordship of Kumbha or Kanya.
+
+  - graha: graha.ketu
+    fixed_participant:
+      - { yoga: yoga.dosha.sarpadosha, role: "One half of the defining axis (with Rahu)" }
+      - { yoga: yoga.dosha.kaal-sarpadosha, role: "One end of the defining axis that hems all seven classical grahas" }
+    excluded_from:
+      - { yoga: yoga.chandra.kapata, reason: "Kedara Yoga is explicitly restricted to the seven classical grahas, excluding Rahu and Ketu" }
+    possible_participant: []
+    house_lord_dependent_note: >
+      Ketu owns no signs in the primary system used by this knowledge
+      base (see catalogues/grahas/ketu.yaml own_signs_notes), so it is
+      not treated as eligible for house-lord-dependent yogas here,
+      though some traditions assign it co-lordship of Vrishchika or
+      Meena.
+
+summary_statistics:
+  most_yoga_active_grahas: >
+    Guru and Shukra participate as fixed_participant in the most
+    yogas relative to their single-role requirement (Guru: 6 fixed
+    roles; Shukra: 4 fixed roles), consistent with their classical
+    reputation as the principal benefic architects of raja and dhana
+    yogas.
+  pancha_mahapurusha_coverage: "Exactly 5 grahas (Mangala, Budha, Guru, Shukra, Shani) are eligible — by design, since Pancha Mahapurusha Yoga is defined only for these five."
+  kaal_sarpadosha_coverage: "All 9 grahas participate — Surya through Shani as the hemmed set, Rahu-Ketu as the axis."
+  rahu_ketu_yoga_scope: "Rahu and Ketu participate only in the two axis-based yogas (Sarpadosha, Kaal Sarpadosha) and are structurally excluded from Kedara Yoga and all Pancha Mahapurusha sub-yogas."
+
+sources:
+  - ref: source.BPHS
+    claim: "Derived index — underlying yoga conditions are cited individually in each catalogues/yogas/**/*.yaml record"
+    confidence: high
+
+notes: >
+  This is a structural cross-reference built by reading the
+  `definition.conditions` field of all 20 yogas in the catalogue; it
+  introduces no new classical claims beyond what each yoga's own
+  record already states, but makes the graha-centric view directly
+  queryable without opening 20 separate files.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial cross-reference entry — Phase 5 Yoga-Graha relationship mapping"
+    author: "Chief Jyotish Knowledge Architect"
