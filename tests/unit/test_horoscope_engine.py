@@ -22,8 +22,6 @@ from apps.api.services.horoscope_engine import (
     _DUSTHANA_HOUSES,
 )
 
-pytestmark = pytest.mark.asyncio
-
 _EPHE_PATH = "data/ephemeris"
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────

@@ -1,13 +1,12 @@
 """
-AstroOS — Fact Builder (Module 13)
+AstroOS — Fact Builder (Module 13, Phase B — Expanded)
 
 The ONLY place in the Rule Engine pipeline that calls astrology
 calculation engines. Translates their outputs into standardized Facts.
 RuleEngine itself never touches an engine directly — this is the
 boundary. Phase 1 scope: the fact vocabulary given in the review's
 specification (planet.*, house.*, yoga.*, shadbala.*, ashtakavarga.*,
-transit.*), not attempting exhaustive coverage of every possible fact
-derivable from every engine.
+transit.*). Phase B adds dasha.* and varga.* facts.
 
 Ordinary orchestration code, not itself under the "never perform
 astrology calculations" constraint — that constraint applies to
@@ -17,8 +16,10 @@ class produces.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
+from apps.api.domain.dasha import DashaTree
+from apps.api.domain.divisional import VargaChart
 from apps.api.domain.facts import Fact
 from apps.api.domain.horoscope import D1Chart
 from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
@@ -169,10 +170,67 @@ class FactBuilder:
                 registry.add_fact(Fact("transit.saturn.sade_sati", result.is_sade_sati, "transit_engine"))
                 registry.add_fact(Fact("transit.saturn.ashtama_shani", result.is_ashtama_shani, "transit_engine"))
 
+    def _build_dasha_facts(
+        self,
+        dasha_tree: DashaTree | None,
+        transit_datetime_utc: datetime | None,
+        registry: FactRegistry,
+    ) -> None:
+        """Produce dasha.* facts for the active dasha period."""
+        if dasha_tree is None:
+            return
+
+        registry.add_fact(Fact(
+            "dasha.active_system", dasha_tree.system, "dasha_engine",
+        ))
+        registry.add_fact(Fact(
+            "dasha.trigger_planet", dasha_tree.trigger_planet, "dasha_engine",
+        ))
+
+        # Find the current mahadasha by checking date range against
+        # the transit datetime (or today).
+        target = (
+            transit_datetime_utc.date()
+            if transit_datetime_utc is not None
+            else date.today()
+        )
+        for md in dasha_tree.mahadashas:
+            if md.start_date <= target <= md.end_date:
+                registry.add_fact(Fact(
+                    "dasha.current_lord", md.lord, "dasha_engine",
+                ))
+                registry.add_fact(Fact(
+                    "dasha.current_mahadasha", md.lord, "dasha_engine",
+                ))
+                break
+
+    def _build_varga_facts(
+        self,
+        vargas: dict[str, VargaChart] | None,
+        registry: FactRegistry,
+    ) -> None:
+        """Produce varga.* facts: planet's rashi and house in each divisional."""
+        if vargas is None:
+            return
+
+        for varga_code, varga_chart in vargas.items():
+            for pos in varga_chart.planet_positions:
+                planet = pos.planet
+                registry.add_fact(Fact(
+                    f"varga.{planet}.{varga_code}.rashi",
+                    pos.varga_rashi, "divisional_engine",
+                ))
+                registry.add_fact(Fact(
+                    f"varga.{planet}.{varga_code}.house",
+                    pos.varga_house_number, "divisional_engine",
+                ))
+
     def build_facts(
         self,
         chart: D1Chart,
         transit_datetime_utc: datetime | None = None,
+        dasha_tree: DashaTree | None = None,
+        vargas: dict[str, VargaChart] | None = None,
     ) -> FactRegistry:
         """
         Builds every fact computable from what this FactBuilder was
@@ -180,6 +238,9 @@ class FactBuilder:
         ShadbalaEngine was provided; Transit facts are skipped if no
         TransitEngine AND transit_datetime_utc were both provided —
         never a partial/broken fact, just an absent one.
+
+        Phase B: accepts optional dasha_tree and vargas for additional
+        fact categories used by new rule modules.
         """
         registry = FactRegistry()
 
@@ -190,5 +251,7 @@ class FactBuilder:
         self._build_ashtakavarga_facts(chart, registry)
         if transit_datetime_utc is not None:
             self._build_transit_facts(chart, transit_datetime_utc, registry)
+        self._build_dasha_facts(dasha_tree, transit_datetime_utc, registry)
+        self._build_varga_facts(vargas, registry)
 
         return registry

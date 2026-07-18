@@ -46,8 +46,8 @@ def generate_rsa_key_pair(key_size: int = 2048) -> None:
     )
     PUBLIC_KEY_PATH.chmod(0o644)
 
-    print(f"[OK] Private key → {PRIVATE_KEY_PATH}")
-    print(f"[OK] Public  key → {PUBLIC_KEY_PATH}")
+    print(f"[OK] Private key -> {PRIVATE_KEY_PATH}")
+    print(f"[OK] Public  key -> {PUBLIC_KEY_PATH}")
 
 
 if __name__ == "__main__":

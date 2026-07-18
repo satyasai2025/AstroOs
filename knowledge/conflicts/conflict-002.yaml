@@ -129,10 +129,45 @@ notes: >
   Surya's aspects, and Surya conjunctions. Practitioners should
   be aware of both traditions when reading charts.
 
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "GRAHA-SUN"
+      file: apps/api/services/ontology_registry.py (_populate_graha)
+      field: "metadata.natural_classification"
+      value: "malefic"
+      note: >
+        The ontology's natural_classification for GRAHA-SUN is derived
+        directly from NATURAL_MALEFICS below, so it inherits the same
+        fixed classification the recommended_position documents —
+        without the exalted/own-sign/moolatrikona exception this
+        conflict's resolution calls for.
+  rule_engine:
+    - reference: "NATURAL_MALEFICS"
+      file: apps/api/services/yoga_predicates.py:49
+      snippet: 'NATURAL_MALEFICS = {"sun", "mars", "saturn", "rahu", "ketu"}'
+      note: >
+        The codebase has hard-committed to the classical Parashari
+        position for Surya (fixed natural malefic) with no chart-context
+        override, exception for dignity, or "contextual" mode. This
+        implements the letter of the recommended_position (classify as
+        malefic per BPHS) but not its documented exception clause
+        (benefic when exalted/own-sign/moolatrikona) — that nuance
+        exists only in this knowledge-base record, not in code.
+  validation_status: >
+    Confirmed 2026-07-16 — code matches the Parashari default but omits
+    the dignity-based exception this record recommends documenting.
+    Flagged as an implementation gap, not a knowledge-base error.
+
 # === HISTORY ===
 
 history:
   - version: 1.0
     date: 2026-07-15
     change: "Initial conflict entry documenting three traditions"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.1
+    date: 2026-07-16
+    change: "Phase 6 — added Ontology and Rule Engine cross-references; verified NATURAL_MALEFICS implements the classical default but not the dignity-based exception this record recommends"
     author: "Chief Jyotish Knowledge Architect"

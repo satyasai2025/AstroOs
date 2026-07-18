@@ -29,10 +29,10 @@ from apps.api.models import user as _user_models  # noqa: F401 — registers Use
 async def _truncate_committed_data(test_engine):
     """Remove committed rows that leak across tests via birth_chart_id or persist_d1."""
     async with test_engine.begin() as conn:
-        await conn.execute(text("TRUNCATE TABLE dashas, planet_positions, houses, divisional_planet_positions, divisional_charts, events, birth_charts RESTART IDENTITY CASCADE"))
+        await conn.execute(text("TRUNCATE TABLE datasets, dashas, planet_positions, houses, divisional_planet_positions, divisional_charts, events, birth_charts RESTART IDENTITY CASCADE"))
     yield
     async with test_engine.begin() as conn:
-        await conn.execute(text("TRUNCATE TABLE dashas, planet_positions, houses, divisional_planet_positions, divisional_charts, events, birth_charts RESTART IDENTITY CASCADE"))
+        await conn.execute(text("TRUNCATE TABLE datasets, dashas, planet_positions, houses, divisional_planet_positions, divisional_charts, events, birth_charts RESTART IDENTITY CASCADE"))
 
 
 @pytest_asyncio.fixture

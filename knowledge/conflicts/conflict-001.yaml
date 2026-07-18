@@ -121,10 +121,37 @@ notes: >
   defaulting to Parashari should note when KP or Jaimini conventions
   would produce different results.
 
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "BHAVA-1 .. BHAVA-12"
+      file: apps/api/domain/ontology.py
+      note: >
+        OntologyEntity has no separate "Lagna" entity_type distinct from
+        "Bhava" — the ontology conflates Lagna and Bhava 1 by construction,
+        implementing the recommended Parashari default from this conflict.
+  rule_engine:
+    - reference: "house_number computation"
+      file: apps/api/services/ephemeris_wrapper.py:684
+      snippet: "house_number = ((rashi_idx - lagna_rashi_index) % 12) + 1"
+      note: >
+        House number is derived purely from rashi offset from the Lagna's
+        rashi (whole-sign), not from cuspal degree boundaries. Confirms
+        the codebase implements the Parashari whole-sign position
+        end-to-end; no KP cuspal house system exists in the Rule Engine
+        or Fact Layer. The KP and Jaimini positions documented above
+        remain undocumented alternatives, not implemented paths.
+  validation_status: "Confirmed 2026-07-16 — code matches recommended_position."
+
 # === HISTORY ===
 
 history:
   - version: 1.0
     date: 2026-07-15
     change: "Initial conflict entry documenting three house-system traditions"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.1
+    date: 2026-07-16
+    change: "Phase 6 — added Ontology and Rule Engine cross-references; verified the codebase implements the Parashari whole-sign default recommended in this record"
     author: "Chief Jyotish Knowledge Architect"

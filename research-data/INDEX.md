@@ -64,12 +64,12 @@ metadata:
 | Type Code | Dataset | Taxonomy § | Status |
 |-----------|---------|------------|--------|
 | RS-COHORT | Birth Chart Cohorts | §3.2.1 | ✅ Stable v1.0.0 |
-| RS-EVENT | Life Event Datasets | §3.2.2 | 🟡 Candidacy v0.1.0 |
+| RS-EVENT | Life Event Datasets | §3.2.2 | 🟡 Candidacy v0.1.0 (60 seed events) — an unendorsed, fabricated `v1.0.0` file was found on disk and deleted 2026-07-17; see resolved finding GD-RDO-001 below |
 | RS-MARRIAGE | Marriage Datasets | §3.2.3 | 🟡 Candidacy v0.1.0 |
 | RS-CAREER | Career Datasets | §3.2.4 | 🟡 Candidacy v0.1.0 |
-| RS-HEALTH | Health Datasets | §3.2.5 | 🔴 Not started |
-| RS-WEALTH | Wealth & Financial Datasets | §3.2.6 | 🔴 Not started |
-| RS-SPIRITUAL | Spiritual & Progeny Datasets | §3.2.7 | 🔴 Not started |
+| RS-HEALTH | Health Datasets | §3.2.5 | 🔴 Not started — a fabricated v0.1.0 existed 2026-07-16–17 (derived from the same fabricated data as RS-EVENT), deleted 2026-07-17; see GD-RDO-001 §7 |
+| RS-WEALTH | Wealth & Financial Datasets | §3.2.6 | 🔴 Not started — same history as RS-HEALTH; see GD-RDO-001 §7 |
+| RS-SPIRITUAL | Spiritual & Progeny Datasets | §3.2.7 | 🔴 Not started — same history as RS-HEALTH; see GD-RDO-001 §7 |
 | RS-FLAT | Flattened Chart Records | §3.2.8 | 🔴 Not started |
 
 ### Benchmark (BM) — 8 types
@@ -204,6 +204,16 @@ metadata:
 | [Handbook: CQRS](handbook-cqrs.md) | Handbook | Query/analysis separation pattern |
 | [Enterprise Research Platform](architecture/enterprise/research-platform.md) | Architecture | FROZEN platform design |
 | [AstroOS v2.0 Technology Research](astrosos-v2-technology-research.md) | Research | Data format analysis (Parquet, Arrow) |
+
+---
+
+## 7. Open Governance Findings
+
+| ID | Finding | Status | Detail |
+|----|---------|--------|--------|
+| GD-RDO-001 | RS-EVENT `v1.0.0` file (`research-data/research/event/ASTRO-RS-EVENT-v1.0.0/`) was template-generated data self-labeled as curated/verified/Stable; never endorsed by this office's own STATUS/ROADMAP, which correctly still show RS-EVENT at Candidacy v0.1.0. Deleted 2026-07-17 — never committed to git, zero code/test consumers, so removal has no code or history impact. | 🟢 RESOLVED | [governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md](governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md) |
+
+See STATUS.md §4 for the full Open Governance Decisions table.
 
 ---
 

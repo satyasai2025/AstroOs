@@ -52,23 +52,22 @@
 
 ## Phase E — Test Infrastructure
 
-**Status: 🟡 Requires Remediation**
+**Status: ✅ Complete (2026-07-16)**
 
 | Task | Priority | Status |
 |---|---|---|
-| E1: Fix test isolation failure (`test_repeated_d1_requests_reuse_birth_chart_row`) | High | 🔴 Open |
-| E2: Clean up 101 async-marker warnings | Low | 🔴 Open |
+| E1: Fix test isolation failure (`test_repeated_d1_requests_reuse_birth_chart_row`) | High | ✅ Done — `_truncate_committed_data` autouse fixture (see ENGINEERING_STATUS.md Defect Status) |
+| E2: Clean up 101 async-marker warnings | Low | ✅ Done — removed redundant module-level `pytestmark = pytest.mark.asyncio` from 16 test files; `asyncio_mode = auto` already handles async detection without it |
 | E3: Remove temp debug files (`_*.py`) | Done | ✅ |
+| E4: Fix CI missing `TEST_DATABASE_URL` | High | ✅ Done — `.github/workflows/ci.yml` set `DATABASE_URL` but never `TEST_DATABASE_URL`, which `tests/conftest.py` hard-requires; CI would have failed at collection. Added the missing env var. |
 
-### E1 Implementation Options
+### E1 Implementation Options (resolved — Option B taken)
 
 | Option | Complexity | Impact | Notes |
 |---|---|---|---|
 | A: Add `TRUNCATE` at end of `birth_chart_id` cleanup | Low | Fixes isolation | Requires session-scoped cleanup |
-| B: Add session-scoped cleanup fixture using `test_engine` | Low | Fixes isolation + future-proof | Cleanest approach |
+| B: Add session-scoped cleanup fixture using `test_engine` | Low | Fixes isolation + future-proof | ✅ **Taken** — cleanest approach |
 | C: Make `birth_chart_id` not commit (use flush only) | Low | Fixes isolation | May break tests that depend on committed data |
-
-**Recommended:** Option B — add a session-scoped finalizer to `test_engine` that truncates test tables.
 
 ## Phase F — Documentation
 
@@ -86,7 +85,7 @@
 | M2: ENUM types created in test DB | ✅ Jul 2026 | All 7 ENUM types working |
 | M3: Single engine/session architecture | ✅ Jul 2026 | No duplicate fixtures, single test_engine |
 | M4: Test suite green (0 failures) | ✅ Jul 2026 | 0 failures, 1529 passed |
-| M5: Warning-free test run | 🔴 Open | 101 async-marker warnings |
+| M5: Warning-free test run | ✅ Jul 2026 | 0 async-marker warnings (was 101) — verified via `pytest --collect-only`, full live run blocked locally by an unrelated `.env` credential placeholder |
 | M6: Module 14 tests passing | ✅ Jul 2026 | All 25 event repository/router tests pass |
 | M7: Full regression clean for 3 runs | ✅ Jul 2026 | 3 consecutive passes with 0 failures |
 

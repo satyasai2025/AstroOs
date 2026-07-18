@@ -83,6 +83,20 @@ class _AIAPI(_APIBase):
         })
 
 
+class _ReportsAPI(_APIBase):
+    def generate_chart(self, **data: Any) -> dict[str, Any]:
+        return self._client._post("/report/chart", json=data)
+
+    def generate_pdf(self, **data: Any) -> bytes:
+        return self._client._download("/report/chart/pdf", json=data)
+
+    def generate_csv(self, **data: Any) -> str:
+        return self._client._get("/report/chart/csv", params=data)
+
+    def list_templates(self) -> list[str]:
+        return self._client._get("/report/templates")
+
+
 class AstroOSClient:
     """
     Client for the AstroOS API.
@@ -91,6 +105,7 @@ class AstroOSClient:
         client = AstroOSClient(api_key="...")
         chart = client.chart.compute(...)
         events = client.events.list(chart_id=...)
+        pdf = client.reports.generate_pdf(...)
     """
 
     def __init__(
@@ -110,6 +125,7 @@ class AstroOSClient:
         self.dasha = _DashaAPI(self)
         self.events = _EventsAPI(self)
         self.ai = _AIAPI(self)
+        self.reports = _ReportsAPI(self)
 
     @property
     def base_url(self) -> str:
@@ -155,6 +171,20 @@ class AstroOSClient:
 
     def _post(self, path: str, json: Optional[dict] = None) -> Any:
         return self._request("POST", path, json=json)
+
+    def _download(self, path: str, json: Optional[dict] = None) -> bytes:
+        """Download binary content."""
+        import httpx
+        url = urljoin(self.base_url, path.lstrip("/"))
+        headers: dict[str, str] = {
+            "Accept": "application/pdf",
+        }
+        if self._config.api_key:
+            headers["x-api-key"] = self._config.api_key
+        with httpx.Client(timeout=self._config.timeout) as client:
+            response = client.request("POST", url, json=json, headers=headers)
+            response.raise_for_status()
+            return response.content
 
     def _delete(self, path: str) -> Any:
         return self._request("DELETE", path)

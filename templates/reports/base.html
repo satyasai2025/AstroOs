@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ report.title }} - AstroOS</title>
+    <style>
+        @page { size: A4; margin: 2cm; @bottom-center { content: counter(page); } }
+        body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; }
+        .header { text-align: center; border-bottom: 2px solid #b45309; padding-bottom: 1em; margin-bottom: 1.5em; }
+        .section { margin-bottom: 1.5em; page-break-inside: avoid; }
+        .section-title { font-size: 16pt; color: #b45309; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.3em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 0.5em; }
+        th, td { border: 1px solid #e5e7eb; padding: 0.4em; text-align: left; font-size: 10pt; }
+        th { background: #fef3c7; font-weight: bold; }
+        pre { background: #f9fafb; padding: 0.8em; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ report.title }}</h1>
+        <div>Subject: {{ report.subject_name }}</div>
+    </div>
+    {% for section in report.sections %}
+    <div class="section">
+        <h2 class="section-title">{{ section.title }}</h2>
+        {% if section.data.planets %}
+        <table>
+            <thead><tr><th>Planet</th><th>Rashi</th><th>House</th><th>Dignity</th></tr></thead>
+            <tbody>
+            {% for p in section.data.planets %}
+            <tr>
+                <td>{{ p.name | planet }}</td>
+                <td>{{ p.rashi | rashi }}</td>
+                <td>{{ p.house }}</td>
+                <td>{{ p.dignity or "neutral" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <pre>{{ section.data | tojson(indent=2) }}</pre>
+        {% endif %}
+    </div>
+    {% endfor %}
+</body>
+</html>

@@ -21,8 +21,6 @@ from apps.api.services.aspect_engine import AspectEngine
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
 
-pytestmark = pytest.mark.asyncio
-
 _EPHE_PATH = "data/ephemeris"
 _BIRTH_DT = datetime(1990, 6, 15, 10, 30, 0, tzinfo=timezone.utc)
 _LAT = 28.6139

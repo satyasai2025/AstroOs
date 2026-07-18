@@ -7,23 +7,49 @@ Configuration is dependency-injected where needed.
 """
 
 import logging
+import ssl
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from fastapi import FastAPI, Request, status
+import httpx
+import truststore
+from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from timezonefinder import TimezoneFinder
 
 from apps.api.config import get_settings
+from apps.api.dependencies import require_admin, require_authenticated, require_researcher
+from apps.api.routers import admin as admin_router
+from apps.api.routers import ai as ai_router
+from apps.api.routers import ai_phase_e as ai_phase_e_router
+from apps.api.routers import benchmark as benchmark_router
+from apps.api.routers import dataset_import as dataset_import_router
+from apps.api.routers import datasets as datasets_router
+from apps.api.routers import ashtakavarga as ashtakavarga_router
 from apps.api.routers import auth
 from apps.api.routers import dasha as dasha_router
 from apps.api.routers import divisional as divisional_router
 from apps.api.routers import events as events_router
+from apps.api.routers import export as export_router
+from apps.api.routers import geocoding as geocoding_router
 from apps.api.routers import horoscope as horoscope_router
+from apps.api.routers import knowledge as knowledge_router
+from apps.api.routers import knowledge_graph as knowledge_graph_router
+from apps.api.routers import report as report_router
+from apps.api.routers import research as research_router
+from apps.api.routers import shadbala as shadbala_router
+from apps.api.routers import statistics as statistics_router
+from apps.api.routers import timeline as timeline_router
+from apps.api.routers import transit as transit_router
+from apps.api.routers import visualization as visualization_router
+from apps.api.routers import workflow as workflow_router
+from apps.api.routers import yoga as yoga_router
 from apps.api.schemas.auth import HealthResponse
 from apps.api.schemas.ephemeris import EphemerisStatusSchema
 from apps.api.services.ephemeris_service import EphemerisService
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
+from apps.api.services.geocoding_service import GeocodingService
 
 logger = logging.getLogger(__name__)
 _settings = get_settings()
@@ -48,6 +74,22 @@ def _make_ephemeris_wrapper() -> EphemerisWrapper:
     )
 
 
+def _make_geocoding_service(http_client: httpx.AsyncClient) -> GeocodingService:
+    """
+    Build the single, process-wide GeocodingService instance — see the
+    same rationale as _make_ephemeris_wrapper: TimezoneFinder()'s
+    bundled spatial index is expensive to construct, and the
+    httpx.AsyncClient's connection pool should be shared, not
+    reopened per request.
+    """
+    return GeocodingService(
+        provider_url=_settings.GEOCODING_PROVIDER_URL,
+        user_agent=_settings.GEOCODING_USER_AGENT,
+        http_client=http_client,
+        timezone_finder=TimezoneFinder(),
+    )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Startup / shutdown lifecycle hooks."""
@@ -67,6 +109,23 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # re-created per request.
     app.state.ephemeris_wrapper = _make_ephemeris_wrapper()
 
+    # Single shared httpx client + GeocodingService for the whole process.
+    #
+    # verify=truststore.SSLContext(...) makes outbound HTTPS calls trust
+    # the OS-native certificate store instead of the certifi bundle
+    # Python normally uses. This matters concretely on this machine:
+    # local antivirus software (Avast) performs HTTPS-scanning by MITM-ing
+    # TLS connections with its own injected root CA, which Windows (and
+    # therefore browsers) already trusts but certifi's bundled public-CA
+    # list does not — every outbound call otherwise fails with
+    # CERTIFICATE_VERIFY_FAILED. truststore is the standard, secure fix
+    # (verification still happens, just against the OS trust store) —
+    # not a `verify=False` workaround.
+    ssl_context = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    http_client = httpx.AsyncClient(verify=ssl_context)
+    app.state.http_client = http_client
+    app.state.geocoding_service = _make_geocoding_service(http_client)
+
     startup_status = ephe_svc.get_status()
     logger.info(
         "Swiss Ephemeris ready",
@@ -81,6 +140,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     yield
 
     ephe_svc.close()
+    await http_client.aclose()
     logger.info("AstroOS API shutting down.")
 
 
@@ -118,11 +178,58 @@ def create_app() -> FastAPI:
 
     # ── Routers ───────────────────────────────────────────────────────────────
 
+    # Auth itself stays ungated (register/login/refresh are necessarily
+    # public; /me and /logout already extract+verify their own token).
     app.include_router(auth.router, prefix="/api/v1")
-    app.include_router(horoscope_router.router, prefix="/api/v1")
-    app.include_router(divisional_router.router, prefix="/api/v1")
-    app.include_router(dasha_router.router, prefix="/api/v1")
-    app.include_router(events_router.router, prefix="/api/v1")
+
+    # Authenticated (any role) — core chart-computation and user-facing
+    # product surface. Gated here, once, at the router level rather than
+    # annotating every individual endpoint function.
+    _authenticated = [Depends(require_authenticated)]
+    app.include_router(horoscope_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(divisional_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(dasha_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(events_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(ashtakavarga_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(shadbala_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(yoga_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(transit_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(timeline_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(visualization_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(report_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(export_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(ai_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(ai_phase_e_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(workflow_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(benchmark_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(geocoding_router.router, prefix="/api/v1", dependencies=_authenticated)
+
+    # Knowledge: mixed — public reads (search/list/get), researcher-gated
+    # writes (create/update/delete). Gated per-endpoint inside
+    # routers/knowledge.py instead of here; no router-level dependency.
+    app.include_router(knowledge_router.router, prefix="/api/v1")
+
+    # Knowledge Graph: public reads over the ontology (entities, relationships).
+    # The ontology is built from in-memory constants at first call; no DB needed.
+    app.include_router(knowledge_graph_router.router, prefix="/api/v1")
+
+    # Researcher or Admin — Research Data Office / Statistics surface.
+    _researcher = [Depends(require_researcher)]
+    app.include_router(research_router.router, prefix="/api/v1", dependencies=_researcher)
+    app.include_router(statistics_router.router, prefix="/api/v1", dependencies=_researcher)
+
+    # Admin only.
+    app.include_router(admin_router.router, prefix="/api/v1", dependencies=[Depends(require_admin)])
+
+    # Pre-existing v1 router, outside this RBAC pass's scope — see
+    # ASTROOS_V2_STATUS.md's Phase A objective 4 notes.
+    app.include_router(dataset_import_router.router)
+    app.include_router(datasets_router.router)
+
+    # ── Monitoring ────────────────────────────────────────────────────────────
+
+    from apps.api.monitoring import setup_monitoring_routes
+    setup_monitoring_routes(app)
 
     # ── Health ────────────────────────────────────────────────────────────────
 

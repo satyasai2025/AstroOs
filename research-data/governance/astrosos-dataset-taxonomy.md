@@ -1064,13 +1064,8 @@ Pending final evaluation, the following known external sources are tentatively c
 
 | Source | Type | Category | Notes |
 |---|---|---|---|
-| LOKPA_Persons_WithEvents.csv | Birth charts + events | PB | 28,247 records; needs license evaluation |
 | Swiss Ephemeris (existing) | Ephemeris data | RF-EPHEM | Already in use; dual-license |
 | Wikipedia infobox data | Birth charts | PB-WIKI | CC-BY-SA; extraction needed |
-| Wikidata SPARQL query | Birth data | PB-WIKIDATA | CC-0; structured; query needed |
-| AstroDatabank | Birth charts | PB (or LC) | Public research data; verify license |
-| Astro-Databank (Astrodienst) | Birth charts | LC-CHART | Commercial; verify license terms |
-| JPL Horizons API | Ephemeris | RF-EPHEM | Public; API query needed |
 | IANA tzdata | Timezones | RF-TZ | Public domain; quarterly updates |
 | Classical Jyotish texts | Reference | RF-* | Public domain (ancient texts) |
 | User submissions | Birth charts | UC-USER | Privacy-intensive; requires consent framework |

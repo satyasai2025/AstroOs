@@ -3,7 +3,7 @@ AstroOS — Rule Engine Pipeline Integration Tests (Module 13)
 
 Exercises the full pipeline (Birth Chart -> Calculation Engines ->
 FactBuilder -> FactRegistry -> RuleEngine -> RuleResults) against real
-chart data, using the actual 20 registered production rules — not
+chart data, using the actual 47 registered production rules — not
 synthetic facts.
 """
 
@@ -47,13 +47,13 @@ def full_facts(wrapper, natal_chart):
     return builder.build_facts(natal_chart, transit_datetime_utc=datetime(2026, 7, 12, tzinfo=timezone.utc))
 
 
-def test_exactly_36_rules_registered():
-    assert len(all_rules()) == 36
+def test_exactly_47_rules_registered():
+    assert len(all_rules()) == 47
 
 
 def test_evaluate_all_returns_a_result_for_every_rule(full_facts):
     results = RuleEngine().evaluate_all(full_facts)
-    assert len(results) == 36
+    assert len(results) == 47
     assert {r.rule_id for r in results} == {rule.rule_id for rule in all_rules()}
 
 
@@ -113,7 +113,7 @@ def test_pipeline_works_without_shadbala_or_transit_engines(natal_chart):
     builder = FactBuilder()
     facts = builder.build_facts(natal_chart)
     results = RuleEngine().evaluate_all(facts)
-    assert len(results) == 36
+    assert len(results) == 47
     shadbala_rule = next(r for r in results if r.rule_id == "RULE-STRENGTH-001")
     assert shadbala_rule.matched is False
     transit_rule = next(r for r in results if r.rule_id == "RULE-TRANSIT-001")

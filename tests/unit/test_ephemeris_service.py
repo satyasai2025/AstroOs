@@ -22,8 +22,6 @@ from apps.api.services.ephemeris_service import (
     EphemerisStatusDTO,
 )
 
-pytestmark = pytest.mark.asyncio
-
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 OFFICIAL_EPHE_PATH = os.path.abspath("data/ephemeris")

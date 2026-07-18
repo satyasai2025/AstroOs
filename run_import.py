@@ -1,7 +1,9 @@
 """
-Run the AstroDatabank import pipeline and produce the Import Validation Report.
+Run a cohort data import pipeline and produce the Import Validation Report.
 
-Usage: python run_import.py
+Usage: python run_import.py [source_file]
+
+The source file path defaults to ./data/cohort_source.xlsx if not provided.
 """
 
 import os
@@ -11,7 +13,7 @@ import json
 sys.path.insert(0, os.path.dirname(__file__))
 
 from apps.api.services.dataset_import.framework import ImportConfig, ImportPipeline
-from apps.api.services.dataset_import.adapters.astrodatabank_adapter import AstroDatabankAdapter
+from apps.api.services.dataset_import.adapters.cohort_excel_adapter import CohortExcelAdapter
 from apps.api.services.dataset_import.validator import (
     Severity, ValidationLevel, ValidationRule,
     latitude_in_range, longitude_in_range, required_field_not_none,
@@ -19,11 +21,13 @@ from apps.api.services.dataset_import.validator import (
 
 
 def main():
-    adapter = AstroDatabankAdapter()
-    source_file = r"C:\Users\rkmau\Downloads\AstroDatabank.xlsx"
+    adapter = CohortExcelAdapter()
+    default_source = os.path.join(os.path.dirname(__file__), "data", "cohort_source.xlsx")
+    source_file = sys.argv[1] if len(sys.argv) > 1 else default_source
 
     if not os.path.exists(source_file):
         print(f"ERROR: {source_file} not found")
+        print(f"Provide the source file path as an argument, or place it at {default_source}")
         sys.exit(1)
 
     output_dir = os.path.join(os.path.dirname(__file__), "datasets", "rs", "cohort", "ASTRO-RS-COHORT-v0.1.0")

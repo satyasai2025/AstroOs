@@ -1,9 +1,9 @@
 # AstroOS Benchmark Office — INDEX
 
 > **Status:** ACTIVE
-> **Owner:** Chief QA & Benchmark Architect (Agent 4)
-> **Version:** 1.0
-> **Date:** 2026-07-15
+> **Owner:** Atlas (Lead Implementation Agent)
+> **Version:** 1.1
+> **Date:** 2026-07-18
 
 ---
 
@@ -14,7 +14,8 @@
 | 1 | Benchmark Audit Report | 1 | *(inline)* | ✅ FROZEN |
 | 2 | Benchmark Implementation Roadmap | — | [BENCHMARK_ROADMAP.md](BENCHMARK_ROADMAP.md) | ✅ ACTIVE |
 | 3 | Benchmark Status Report | — | [BENCHMARK_STATUS.md](BENCHMARK_STATUS.md) | ✅ ACTIVE |
-| 4 | Benchmark Index (this file) | — | [BENCHMARK_INDEX.md](BENCHMARK_INDEX.md) | ✅ ACTIVE |
+| 4 | Benchmark Foundation Report | — | [BENCHMARK_FOUNDATION_REPORT.md](BENCHMARK_FOUNDATION_REPORT.md) | ✅ FOUNDATION COMPLETE |
+| 5 | Benchmark Index (this file) | — | [BENCHMARK_INDEX.md](BENCHMARK_INDEX.md) | ✅ ACTIVE |
 
 ---
 
@@ -24,9 +25,9 @@
 
 | ID | Name | AstroOS Module | Specification Status | Data Dependencies |
 |----|------|----------------|---------------------|-------------------|
-| BM-CALC | Planet Position Calculation | M2 — Chart Engine | ✅ FROZEN | Swiss Ephemeris, JPL Horizons |
-| BM-HOUSE | House Cusp Calculation | M3 — House Engine | ✅ FROZEN | GC-MASTER |
-| BM-VARGA | Divisional Chart Calculation | M6 — Divisional Charts | 🔴 NOT STARTED | GC-MASTER |
+| BM-CALC | Planet Position Calculation | M2 — Chart Engine | ✅ FROZEN + ✅ EXECUTABLE | Swiss Ephemeris, GC-MASTER |
+| BM-HOUSE | House Cusp Calculation | M3 — House Engine | ✅ FROZEN + ✅ EXECUTABLE | GC-MASTER |
+| BM-VARGA | Divisional Chart Calculation | M6 — Divisional Charts | ✅ FROZEN + ✅ EXECUTABLE | GC-MASTER |
 | BM-ONT | Ontology Verification | M12 — Astrology Ontology | 🔴 NOT STARTED | OntologyRegistry |
 
 ### Planetary Analysis Benchmarks (Phase B)

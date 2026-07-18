@@ -66,11 +66,8 @@ metadata:
 | PB-WIKIDATA (v0.1.0) — candidacy | P1 | None | SPARQL query design |
 | PB-EVENTS (v0.1.0) | P1 | PB-WIKI (chart refs) | Event extraction from biographies |
 | RS-FLAT (v0.1.0) | P1 | PB-WIKI, SY-RANDOM | Computation pipeline |
-| **LOKPA candidate assessment** | P0 | License review | Evaluate LOKPA_Persons_WithEvents.csv |
 
 **Gate:** PB-WIKI v1.0.0 Stable with ≥10K records.
-
-**External dependency:** License evaluation of LOKPA_Persons_WithEvents.csv. **Governance decision needed:** Can this file be used? Under what terms?
 
 ---
 
@@ -133,7 +130,7 @@ metadata:
 |---------|----------|-------------|-------------|
 | PB-TWIN (v0.1.0) | P1 | PB-WIKI | Twin pair identification |
 | SY-CONTROLLED (v0.1.0) | P1 | RF-* (all) | Controlled experiment design |
-| RS-COHORT (v0.1.0) | P1 | PB-WIKI, RS-FLAT | Cohort definitions |
+| ~~RS-COHORT (v0.1.0)~~ | P1 | PB-WIKI, RS-FLAT | ✅ Already Stable at v1.0.0 as of 2026-07-16 — see STATUS.md/INDEX.md. Left struck through here rather than removed, since this table's original P1 slot is what triggered the build. |
 | LC-CHART assessment | P2 | Legal review | Evaluate commercial data options |
 
 **Gate:** At least 3 domain-specific studies initiated.
@@ -159,7 +156,6 @@ metadata:
 
 | Dependency | Required For | Status | Action Needed |
 |------------|-------------|--------|---------------|
-| **LOKPA file license assessment** | PB incorporation | PENDING | Legal review of CSV file |
 | **IANA tzdata release schedule** | RF-TZ updates | ON TRACK | Quarterly sync |
 | **Swiss Ephemeris license** | RF-EPHEM distribution | ON TRACK | Annual review |
 | **JPL Horizons API access** | BM-CALC reference values | AVAILABLE | Query script |
@@ -172,7 +168,6 @@ metadata:
 
 | Decision | Context | Needed By | Recommended |
 |----------|---------|-----------|-------------|
-| **LOKPA data usage terms** | 28K-record CSV needs license evaluation | Phase C start | Evaluate as Public or Licensed |
 | **Public figure privacy threshold** | When does a person qualify as "public figure" for privacy tier | Phase C start | Wikipedia notability as proxy |
 | **Ethics board formation** | Who reviews datasets for ethical concerns | Phase C start | Cross-functional team (Curator + Privacy + Legal) |
 | **Cohort sharing policy** | Can users share cohorts publicly? | Phase D end | Opt-in with privacy audit |
@@ -201,7 +196,7 @@ metadata:
 |-----------|------|-------------|--------|
 | M1: Reference Baseline | 2026-08-15 | RF-* v1.0.0 (8 datasets), BM-CALC/ASPECT/DASHA v1.0.0 | ✅ COMPLETED 2026-07-15 |
 | M2: Stats Foundation | 2026-09-01 | SY-RANDOM 100K, SY-NULL, BM-TRANSIT | ✅ COMPLETED 2026-07-15 |
-| M3: First Real Charts | 2026-10-15 | PB-WIKI v1.0.0 (≥10K), RS-FLAT v0.1.0, LOKPA decision | 🔄 IN PROGRESS |
+| M3: First Real Charts | 2026-10-15 | PB-WIKI v1.0.0 (≥10K), RS-FLAT v0.1.0 | 🔄 IN PROGRESS |
 | M4: Events Online | 2026-11-15 | RS-EVENT v1.0.0 (≥1K), RS-MARRIAGE, RS-CAREER | ⏳ PENDING |
 | M5: Full Benchmarks | 2027-01-15 | All BM-* and QT-* Stable, CI-integrated | ⏳ PENDING |
 | M6: AI Evaluation | 2027-03-15 | AI-FACT, AI-INTERP, AI-HALLUC v1.0.0 | ⏳ PENDING |

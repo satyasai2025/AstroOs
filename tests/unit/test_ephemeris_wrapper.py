@@ -45,8 +45,6 @@ from packages.shared.constants import (
     DEGREES_PER_RASHI,
 )
 
-pytestmark = pytest.mark.asyncio
-
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 _EPHE_PATH = "data/ephemeris"

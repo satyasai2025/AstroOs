@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrosos.local/schemas/record-envelope-v1.json",
+  "title": "AstroOS Record Envelope Schema",
+  "description": "Validates individual records in the AstroOS Research Dataset Repository universal format. Codifies the unified data model from RDO Phase 6 §1.",
+  "type": "object",
+  "required": [
+    "_record_id", "_dataset_id", "_record_type", "_version",
+    "_created_at", "_updated_at"
+  ],
+  "properties": {
+    "_record_id": {
+      "type": "string",
+      "pattern": "^ASTRO-REC-[A-Z]+-\\d{6}$",
+      "description": "Permanent unique record ID (ASTRO-REC-{TYPE}-{SEQUENCE})"
+    },
+    "_dataset_id": {
+      "type": "string",
+      "pattern": "^ASTRO-[A-Z]{2}-[A-Z]+-v\\d+\\.\\d+\\.\\d+$"
+    },
+    "_record_type": {
+      "type": "string",
+      "enum": ["chart", "event", "person", "relationship", "synthetic", "reference"]
+    },
+    "_version": { "type": "integer", "minimum": 1 },
+    "_is_deleted": { "type": "boolean", "default": false },
+    "_created_at": { "type": "string", "format": "date-time" },
+    "_updated_at": { "type": "string", "format": "date-time" },
+    "_person": {
+      "type": "object",
+      "properties": {
+        "chart_record_id": { "type": "string" },
+        "person_name_display": { "type": "string", "minLength": 1 },
+        "person_name_original_script": { "type": "string" },
+        "gender": { "type": "string", "enum": ["male", "female", "other", null] },
+        "nationality": { "type": "array", "items": { "type": "string" } },
+        "known_for": { "type": "array", "items": { "type": "string" } },
+        "occupations": { "type": "array", "items": { "type": "string" } },
+        "occupation_categories": { "type": "array", "items": { "type": "string" } },
+        "birth_name": { "type": "string" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "is_public_figure": { "type": "boolean", "default": false },
+        "notability_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "death_date": { "type": "string", "format": "date" },
+        "death_date_accuracy": { "type": "string" },
+        "death_place": { "type": "string" },
+        "death_cause": { "type": "string" },
+        "biography_summary": { "type": "string" }
+      }
+    },
+    "_birth": {
+      "type": "object",
+      "properties": {
+        "birth_date": { "type": "string", "format": "date" },
+        "birth_date_accuracy": {
+          "type": "string",
+          "enum": ["exact", "estimated_year", "estimated_decade", "estimated_range", "unknown"]
+        },
+        "birth_time": { "type": "string", "pattern": "^\\d{2}:\\d{2}:\\d{2}$" },
+        "birth_time_accuracy": {
+          "type": "string",
+          "enum": [
+            "exact", "estimated_window_lt_1h", "estimated_window_gt_1h",
+            "rectified", "unknown"
+          ]
+        },
+        "birth_time_source": {
+          "type": "string",
+          "enum": [
+            "birth_certificate", "family_record", "biography",
+            "astrological_rectification", "unknown"
+          ]
+        },
+        "birth_timezone": { "type": "string" },
+        "timezone_offset_minutes": { "type": "integer" },
+        "birth_place": { "type": "string" },
+        "birth_latitude": { "type": "number", "minimum": -90.0, "maximum": 90.0 },
+        "birth_longitude": { "type": "number", "minimum": -180.0, "maximum": 180.0 },
+        "birth_altitude_m": { "type": "number" },
+        "birth_place_accuracy": { "type": "string" },
+        "country_code": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "julian_day": { "type": "number" },
+        "julian_day_source": { "type": "string" }
+      }
+    },
+    "_source": {
+      "type": "object",
+      "properties": {
+        "primary_source": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "uri": { "type": "string", "format": "uri" },
+            "attribution": { "type": "string" },
+            "license": { "type": "string" }
+          }
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": [
+            "verified_multiple_sources", "verified_single_source",
+            "single_source", "unverified", "rectified"
+          ]
+        },
+        "last_verified_at": { "type": "string", "format": "date" },
+        "field_sources": { "type": "object" }
+      }
+    },
+    "_confidence": {
+      "type": "object",
+      "properties": {
+        "overall_tier": {
+          "type": "string",
+          "enum": [
+            "verified", "estimated_close", "estimated_approximate",
+            "rectified", "synthetic", "unknown"
+          ]
+        },
+        "overall_notes": { "type": "string" },
+        "overall_confidence_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "field_confidence": { "type": "object" }
+      }
+    },
+    "_privacy": {
+      "type": "object",
+      "properties": {
+        "record_privacy_tier": {
+          "type": "string",
+          "enum": ["public", "anonymous", "pseudonymous", "private", "restricted"]
+        },
+        "contains_pii": { "type": "boolean" },
+        "pii_fields": { "type": "array", "items": { "type": "string" } },
+        "consent_status": {
+          "type": "string",
+          "enum": ["granted", "not_applicable", "unknown"]
+        }
+      }
+    },
+    "_research": {
+      "type": "object",
+      "properties": {
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "research_domains": { "type": "array", "items": { "type": "string" } },
+        "curator_notes": { "type": "string" }
+      }
+    },
+    "_computation": {
+      "type": "object",
+      "properties": {
+        "engine_version": { "type": "string" },
+        "computed_at": { "type": "string", "format": "date-time" },
+        "ayanamsa": { "type": "string" },
+        "house_system": { "type": "string" },
+        "parameters": { "type": "object" }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Domain-specific payload. Structure depends on _record_type."
+    }
+  }
+}

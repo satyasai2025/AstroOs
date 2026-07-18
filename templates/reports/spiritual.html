@@ -1,0 +1,4 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Spiritual Report</title>
+<style>@page { size: A4; margin: 2cm; } body { font-family: serif; }</style></head>
+<body><h1>Spiritual Report</h1>{% for s in report.sections %}<h2>{{ s.title }}</h2><pre>{{ s.data | tojson }}</pre>{% endfor %}</body></html>

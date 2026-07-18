@@ -1,0 +1,140 @@
+"""
+AstroOS — Admin Router (Module 23 — HTTP surface)
+
+HTTP adapter layer over AdminEngine. No business logic lives here — only
+request parsing, DTO<->schema conversion, and HTTP error mapping, same
+convention as routers/events.py.
+
+No auth/role-gating is applied here (matches every other router in this
+codebase — none currently require a JWT dependency). If this endpoint is
+ever exposed outside a trusted network, gating should be added as its
+own separately-scoped change.
+"""
+
+from __future__ import annotations
+
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from apps.api.dependencies import get_db_session, get_ephemeris_service, get_user_repo
+from apps.api.repositories.user_repository import UserRepository
+from apps.api.schemas.admin import (
+    AdminUserListResponse,
+    AdminUserSummaryResponse,
+    ModuleHealthResponse,
+    ModuleRegistryResponse,
+    SystemStatusResponse,
+    UpdateUserRoleRequest,
+)
+from apps.api.services.admin_engine import AdminEngine
+from apps.api.services.ephemeris_service import EphemerisService
+
+router = APIRouter(prefix="/admin", tags=["Admin"])
+
+
+async def _get_admin_engine(
+    session: AsyncSession = Depends(get_db_session),
+    user_repo: UserRepository = Depends(get_user_repo),
+    ephemeris_service: EphemerisService = Depends(get_ephemeris_service),
+) -> AdminEngine:
+    return AdminEngine(user_repo=user_repo, session=session, ephemeris_service=ephemeris_service)
+
+
+def _summary_to_response(u) -> AdminUserSummaryResponse:
+    return AdminUserSummaryResponse(
+        id=u.id, email=u.email, display_name=u.display_name, role=u.role,
+        status=u.status, created_at=u.created_at, last_login_at=u.last_login_at,
+    )
+
+
+# ── System health ─────────────────────────────────────────────────────────────
+
+
+@router.get("/status", response_model=SystemStatusResponse, summary="Aggregated system health")
+async def get_system_status(
+    engine: AdminEngine = Depends(_get_admin_engine),
+) -> SystemStatusResponse:
+    status_dto = await engine.get_system_status()
+    return SystemStatusResponse(
+        status=status_dto.status,
+        modules={
+            name: ModuleHealthResponse(
+                module_name=m.module_name, status=m.status, version=m.version, message=m.message
+            )
+            for name, m in status_dto.modules.items()
+        },
+        ephemeris_mode=status_dto.ephemeris_mode,
+        version=status_dto.version,
+    )
+
+
+@router.get(
+    "/module-registry", response_model=ModuleRegistryResponse, summary="Registered module list"
+)
+async def get_module_registry() -> ModuleRegistryResponse:
+    return ModuleRegistryResponse(modules=AdminEngine.get_module_registry())
+
+
+# ── User management ───────────────────────────────────────────────────────────
+
+
+@router.get("/users", response_model=AdminUserListResponse, summary="List users")
+async def list_users(
+    status_filter: str | None = None,
+    role: str | None = None,
+    limit: int = 100,
+    offset: int = 0,
+    engine: AdminEngine = Depends(_get_admin_engine),
+) -> AdminUserListResponse:
+    users = await engine.list_users(status=status_filter, role=role, limit=limit, offset=offset)
+    total = await engine.count_users(status=status_filter, role=role)
+    return AdminUserListResponse(
+        users=[_summary_to_response(u) for u in users], total=total
+    )
+
+
+@router.get("/users/{user_id}", response_model=AdminUserSummaryResponse, summary="Get a user")
+async def get_user(
+    user_id: uuid.UUID, engine: AdminEngine = Depends(_get_admin_engine)
+) -> AdminUserSummaryResponse:
+    user = await engine.get_user(user_id)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+    return _summary_to_response(user)
+
+
+@router.patch(
+    "/users/{user_id}/role", response_model=AdminUserSummaryResponse, summary="Change a user's role"
+)
+async def update_user_role(
+    user_id: uuid.UUID,
+    body: UpdateUserRoleRequest,
+    engine: AdminEngine = Depends(_get_admin_engine),
+) -> AdminUserSummaryResponse:
+    user = await engine.update_user_role(user_id, body.role)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="User not found or invalid role.",
+        )
+    return _summary_to_response(user)
+
+
+@router.post("/users/{user_id}/suspend", status_code=status.HTTP_204_NO_CONTENT, summary="Suspend a user")
+async def suspend_user(
+    user_id: uuid.UUID, engine: AdminEngine = Depends(_get_admin_engine)
+) -> None:
+    suspended = await engine.suspend_user(user_id)
+    if not suspended:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+
+
+@router.post("/users/{user_id}/activate", status_code=status.HTTP_204_NO_CONTENT, summary="Activate a user")
+async def activate_user(
+    user_id: uuid.UUID, engine: AdminEngine = Depends(_get_admin_engine)
+) -> None:
+    activated = await engine.activate_user(user_id)
+    if not activated:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")

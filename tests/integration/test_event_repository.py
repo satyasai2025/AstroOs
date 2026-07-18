@@ -16,8 +16,6 @@ from sqlalchemy.exc import IntegrityError
 from apps.api.domain.events import EventRecord
 from apps.api.repositories.event_repository import EventRepository
 
-pytestmark = pytest.mark.asyncio
-
 
 class TestCreate:
     async def test_create_returns_event_record_with_generated_id(self, db_session, birth_chart_id):

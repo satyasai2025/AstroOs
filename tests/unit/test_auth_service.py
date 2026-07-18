@@ -27,8 +27,6 @@ from apps.api.services.auth_service import (
 from apps.api.services.dtos import AuthResultDTO, AuthTokensDTO
 from tests.conftest import make_user
 
-pytestmark = pytest.mark.asyncio
-
 # ── Shared mock tokens ────────────────────────────────────────────────────────
 
 _MOCK_ACCESS = "mock.access.token"

@@ -37,15 +37,38 @@ Cross-office work flows through formal requests (ER/ADR·RFC/KR/BR/RDR), same di
 
 **Status:** Objective 1 is substantially complete — see `ASTROOS_V2_STATUS.md`. Objectives 2–4 not started.
 
-### Phase B — Research Engine
+### Phase B — Knowledge & Intelligence Expansion
 
-**Objectives:** Execute Research Data Office datasets; Dataset Registry; Statistical Engine; Event Correlation; Research Dashboard.
+**Objectives:** Knowledge Engine versioning + bulk import + citation validation; Rule Engine priority engine + operator expansion + rule catalog; Research Engine dedicated experiment tables + provenance; Verification & Benchmark execution foundation.
 
-**Deliverable:** AstroOS Research Platform.
+**Deliverable:** AstroOS Knowledge & Intelligence Platform.
+
+**Status:** ✅ COMPLETE (2026-07-18) — FROZEN (retroactive), see `PHASE_B_COMPLETION_REPORT.md`
+
+| Deliverable | Status |
+|-------------|--------|
+| Knowledge Engine versioning (soft-append model) | ✅ 4 tables, updates create new version rows |
+| YAML catalogue import pipeline | ✅ 27 books, 10 karakatvas imported |
+| Rule Engine priority + IN/NOT IN + ConditionGroup | ✅ 47 rules across 10 categories |
+| Research Engine dedicated experiment tables | ✅ Migrations 0008 + 0009 applied |
+| BenchmarkEngine + GC-MASTER dataset | ✅ 5 reference charts, planet validation |
+| Confidence scoring in VerificationEngine | ✅ 0.0–1.0 confidence_score |
 
 ### Phase C — Benchmark Execution
 
-Unlike v1 (which produced specifications only), v2 executes them: run BM-CALC, BM-HOUSE, BM-VARGA, BM-ONT and generate measurable benchmark reports.
+Unlike v1 (which produced specifications only), v2 executes them: run BM-CALC, BM-HOUSE, BM-VARGA and generate measurable benchmark reports.
+
+**Status:** ✅ COMPLETE (2026-07-18) — FROZEN, see `PHASE_C_COMPLETION_REPORT.md`
+
+| Deliverable | Status |
+|-------------|--------|
+| BM-CALC execution (planet positions) | ✅ 9 planets, Tier A/B tolerance |
+| BM-HOUSE execution (house cusps) | ✅ 4 house systems, per-system tolerance |
+| BM-VARGA execution (divisional charts) | ✅ 15 vargas, 675 checks |
+| GC-MASTER dataset (5 reference charts) | ✅ STABLE — all expected data populated |
+| Dedicated benchmark API | ✅ `POST /api/v1/benchmark/validate` and `/validate/all` |
+| Regression test suite | ✅ 31 pytest tests across CALC/HOUSE/VARGA |
+| Quality scoring integration | ✅ Verified — auto-computed on import |
 
 ### Phase D — Knowledge Intelligence
 
@@ -94,8 +117,12 @@ This is a complete vertical slice of AstroOS, not isolated components — see `A
 
 ## Open dependency
 
-`planning/vision/AstroOS v2.0 Vision.txt` recommended committing and tagging `v1.0.0-foundation` as a clean baseline before v2 coding began. Following extensive Phase A0 and Phase A1 completion, all open blockers have been resolved. The baseline is officially frozen, and instead of a foundation tag, the completion of Phase A allows us to push and tag `v1.0.0-alpha` directly.
+`planning/vision/AstroOS v2.0 Vision.txt` recommended committing and tagging `v1.0.0-foundation` as a clean baseline before v2 coding began. That specific tag name was never cut. Instead, **a `v1.0.0-alpha` tag already exists** — created directly by the repository owner on commit `d98fd01` ("chore(release): prepare v1.0.0-alpha"), independent of this document's planned `v1.0.0-foundation` → `v2.0.0-alpha.1` sequence. See `ALPHA_RELEASE_READINESS_REPORT.md` for the full reconciliation of what that tag does and does not contain.
+
+`GD-RDO-001` (`research-data/governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md`) — the RS-EVENT v1.0.0 dataset tree fabricating verified/curated status for template-generated data — is **now RESOLVED (2026-07-17)**: the fabricated tree was deleted, and it was confirmed (`git ls-tree -r d98fd01`) to have never been part of any commit, including the already-tagged `v1.0.0-alpha`. It was not a blocker for that tag and is not a blocker for any future tag.
+
+The tagged `v1.0.0-alpha` commit does, however, predate this session's completion of Phase A objectives 2–4 (geocoding UI wiring, Research Data correlation, report citation-merging, and this GD-RDO-001 closure itself) — none of that work is in the tagged tree, all of it exists only as uncommitted working-tree changes as of this writing. See the Alpha Release Readiness Report for the recommendation on what to do about that gap.
 
 ---
 
-*Last updated: 2026-07-17*
+*Last updated: 2026-07-18*

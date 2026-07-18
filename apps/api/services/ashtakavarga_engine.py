@@ -52,14 +52,25 @@ class AshtakavargaEngine:
         contributor_rashis = self._contributor_rashis(chart)
         return self._calculator.calculate_all(contributor_rashis)
 
-    def compute_sarvashtakavarga(self, chart: D1Chart) -> SarvashtakavargaResult:
+    def compute_sarvashtakavarga(
+        self,
+        chart: D1Chart,
+        bhinna_results: list[BhinnashtakavargaResult] | None = None,
+    ) -> SarvashtakavargaResult:
         """
         Sum of all 7 planetary Bhinnashtakavargas (Lagna's own is
         excluded from the sum, per classical convention). Always
         unreduced — Shodhana applies only to Bhinnashtakavarga, per the
         source (see shodhana_calculator.py).
+
+        `bhinna_results` lets a caller that already computed
+        Bhinnashtakavarga for this chart (e.g. compute_all) pass it
+        straight through instead of triggering a second full
+        recalculation. Defaults to None, which computes it fresh —
+        existing single-argument callers are unaffected.
         """
-        bhinna_results = self.compute_bhinnashtakavarga(chart)
+        if bhinna_results is None:
+            bhinna_results = self.compute_bhinnashtakavarga(chart)
         bindus_by_rashi = [0] * 12
         for result in bhinna_results:
             for i, count in enumerate(result.bindus_by_rashi):
@@ -72,25 +83,41 @@ class AshtakavargaEngine:
         )
 
     def compute_reduced_bhinnashtakavarga(
-        self, chart: D1Chart
+        self,
+        chart: D1Chart,
+        bhinna_results: list[BhinnashtakavargaResult] | None = None,
     ) -> list[BhinnashtakavargaResult]:
         """
         All 7 planets' Bhinnashtakavarga after both classical Shodhana
         (reduction) passes — Trikona Shodhana then Ekadhipatya Shodhana,
         applied sequentially per the source. See shodhana_calculator.py.
+
+        `bhinna_results` reuses an already-computed (unreduced)
+        Bhinnashtakavarga list instead of recomputing it — see
+        compute_sarvashtakavarga's docstring for the same pattern.
         """
         occupied = self._occupied_rashis(chart)
+        if bhinna_results is None:
+            bhinna_results = self.compute_bhinnashtakavarga(chart)
         return [
             self._shodhana.apply_both(bhinna, occupied)
-            for bhinna in self.compute_bhinnashtakavarga(chart)
+            for bhinna in bhinna_results
         ]
 
-    def verify_checksum(self, chart: D1Chart) -> bool:
+    def verify_checksum(
+        self,
+        chart: D1Chart,
+        sarvashtakavarga: SarvashtakavargaResult | None = None,
+    ) -> bool:
         """
         Classical validation: Sarvashtakavarga must always total exactly
         337 bindus across the 12 rashis, on any correctly computed
         chart. Exposed as a public method so callers (and tests) can
         confirm engine correctness directly against this invariant.
+
+        `sarvashtakavarga` lets a caller that already computed it pass
+        it straight through instead of recomputing — see
+        compute_sarvashtakavarga's docstring for the same pattern.
         """
-        sav = self.compute_sarvashtakavarga(chart)
+        sav = sarvashtakavarga if sarvashtakavarga is not None else self.compute_sarvashtakavarga(chart)
         return sav.total_bindus == EXPECTED_GRAND_TOTAL

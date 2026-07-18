@@ -14,6 +14,8 @@
 
 **Architecture Library Validation Audit (2026-07-15): FROZEN.** 7 findings (0 Critical, 0 High, 1 Medium, 4 Low, 2 Informational). One AMP (Architecture Maintenance Proposal) filed per finding in `decisions/` — see [INDEX.md](INDEX.md#decisions-amps--architecture-maintenance-proposals) for the full list. No frozen document has been modified; every AMP awaits its own separate approval.
 
+**Cross-office referral (2026-07-16): AMP-008.** Engineering Office closed ER-002 (investigation of `apps/api/services/ontology_registry.py`'s zero-caller status) without implementing any change, per instruction, and referred the dependency-model decision here instead. AMP-008 asks the Architecture Office to decide (a) whether Module 13 (Rule Engine) should ever consume Module 12 (Ontology) given Module 13's own Facts-only design discipline, and (b) whether Module 24 (AI Engine) should adopt Module 12 as its canonical name source instead of its current hardcoded duplicate. Awaiting approval; see `decisions/AMP-008-ontology-registry-dependency-model.md`. Only once an option is selected should a new Engineering Request be opened to implement it.
+
 **Governance artifact taxonomy:** AMP (Architecture Maintenance Proposal) = correction to an existing defect/inconsistency. AIP (Architecture Improvement Proposal) = new capability or enhancement beyond fixing a defect. (ACP is not used — the principal explicitly deferred/dropped it.)
 
 Tracks the lifecycle of every document in the Enterprise Architecture Library. Updated on every freeze per the Standard Workflow. See [ROADMAP.md](ROADMAP.md) for the full planned scope across all phases (Foundation / Platform / Enterprise / Future).

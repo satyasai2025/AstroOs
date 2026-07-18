@@ -10,8 +10,6 @@ from sqlalchemy import select
 from apps.api.domain.ephemeris import HouseCusp
 from apps.api.models.astrology import HouseModel
 
-pytestmark = pytest.mark.asyncio
-
 _BIRTH_DT = datetime(1990, 6, 15, 10, 30, 0, tzinfo=timezone.utc)
 
 

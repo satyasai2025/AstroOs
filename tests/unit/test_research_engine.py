@@ -12,8 +12,6 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-pytestmark = pytest.mark.asyncio
-
 from apps.api.domain.research import (
     AstrologicalSnapshot,
     ResearchExperiment,

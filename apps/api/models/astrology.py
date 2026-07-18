@@ -14,7 +14,10 @@ Design notes:
 import uuid
 from datetime import date, datetime
 from decimal import Decimal
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
+
+if TYPE_CHECKING:
+    from apps.api.models.dataset import DatasetModel
 
 from sqlalchemy import (
     Boolean, Date, DateTime, ForeignKey, Integer,
@@ -424,6 +427,13 @@ class BookModel(AstroBase):
     period_ce: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     tradition: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default=text("1"))
+    version_comment: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    superseded_by: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("books.id", ondelete="SET NULL"),
+        nullable=True,
+    )
 
     verses: Mapped[List["VerseModel"]] = relationship(
         "VerseModel", back_populates="book", cascade="all, delete-orphan"
@@ -444,6 +454,13 @@ class VerseModel(AstroBase):
     transliteration: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     translation: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     commentary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default=text("1"))
+    version_comment: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    superseded_by: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("verses.id", ondelete="SET NULL"),
+        nullable=True,
+    )
 
     book: Mapped["BookModel"] = relationship("BookModel", back_populates="verses")
 
@@ -466,6 +483,13 @@ class RuleModel(AstroBase):
     interpretation: Mapped[str] = mapped_column(Text, nullable=False)
     tradition: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     confidence: Mapped[Optional[Decimal]] = mapped_column(Numeric(3, 2), nullable=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default=text("1"))
+    version_comment: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    superseded_by: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("rules.id", ondelete="SET NULL"),
+        nullable=True,
+    )
 
 
 class KarakatvaModel(AstroBase):
@@ -484,6 +508,13 @@ class KarakatvaModel(AstroBase):
         nullable=True,
     )
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default=text("1"))
+    version_comment: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    superseded_by: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("karakatvas.id", ondelete="SET NULL"),
+        nullable=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -503,9 +534,17 @@ class ResearchProjectModel(AstroBase):
     methodology: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft")
     conclusions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    dataset_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("datasets.id", ondelete="SET NULL"),
+        nullable=True,
+    )
 
     snapshots: Mapped[List["ResearchSnapshotModel"]] = relationship(
         "ResearchSnapshotModel", back_populates="project", cascade="all, delete-orphan"
+    )
+    dataset: Mapped[Optional["DatasetModel"]] = relationship(
+        "DatasetModel", back_populates=None,
     )
 
 
@@ -529,3 +568,41 @@ class ResearchSnapshotModel(AstroBase):
     project: Mapped["ResearchProjectModel"] = relationship(
         "ResearchProjectModel", back_populates="snapshots"
     )
+
+
+class ResearchExperimentModel(AstroBase):
+    __tablename__ = "research_experiments"
+
+    project_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("research_projects.id", ondelete="CASCADE"),
+        nullable=False, index=True,
+    )
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    hypothesis: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    methodology: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(50), nullable=False, default="draft")
+    findings: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    rule_registry_hash: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    dataset_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("datasets.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+
+
+class ExperimentExecutionModel(AstroBase):
+    __tablename__ = "experiment_executions"
+
+    experiment_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("research_experiments.id", ondelete="CASCADE"),
+        nullable=False, index=True,
+    )
+    snapshot_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("research_snapshots.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    execution_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

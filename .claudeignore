@@ -1,0 +1,27 @@
+# Hard system cuts
+.git/
+.github/
+.vscode/
+.claude/
+node_modules/
+__pycache__/
+.venv/
+venv/
+env/
+
+# Stop reading massive data/media blocks
+*.json
+*.csv
+*.md
+*.log
+*.db
+*.sqlite3
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Exclude build targets
+dist/
+build/
+out/
