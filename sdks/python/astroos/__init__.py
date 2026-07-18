@@ -4,7 +4,7 @@ AstroOS Python SDK
 Official Python client for the AstroOS Vedic Astrology API.
 
 Usage:
-    from astroos import AstroOSClient
+    from astroos import AstroOSClient, AstroOSError, ChartReportRequest, ChartReportResponse
 
     client = AstroOSClient(api_key="...")
     chart = client.chart.compute(
@@ -15,5 +15,25 @@ Usage:
 
 from .client import AstroOSClient
 from .config import SdkConfig
+from .exceptions import (
+    AstroOSError,
+    AstroOSAuthError,
+    AstroOSValidationError,
+    AstroOSRateLimitError,
+    AstroOSServerError,
+    AstroOSNotFoundError,
+)
+from .models import ChartReportRequest, ChartReportResponse
 
-__all__ = ["AstroOSClient", "SdkConfig"]
+__all__ = [
+    "AstroOSClient",
+    "SdkConfig",
+    "AstroOSError",
+    "AstroOSAuthError",
+    "AstroOSValidationError",
+    "AstroOSRateLimitError",
+    "AstroOSServerError",
+    "AstroOSNotFoundError",
+    "ChartReportRequest",
+    "ChartReportResponse",
+]

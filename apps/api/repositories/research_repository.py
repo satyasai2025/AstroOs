@@ -1,15 +1,9 @@
 """
-AstroOS — Research Repository (Module 17, Phase 1)
+AstroOS — Research Repository (Module 17, Phase B — Enhanced)
 
-Persistence for research projects, experiments, and astrological snapshots.
-Uses the existing `research_projects` and `research_snapshots` tables
-(migration 0002). ResearchExperiment data is stored in the project table's
-existing hypothesis/methodology/conclusions columns for Phase 1 (one
-active experiment per project); a future migration can add a dedicated
-experiments table.
-
-Returns domain objects, never ORM models directly — same convention as
-every other repository in this codebase.
+Persistence for research projects, experiments, executions, and snapshots.
+Phase B replaces the project-column hack for experiments with dedicated
+research_experiments and experiment_executions tables (migration 0009).
 """
 
 from __future__ import annotations
@@ -19,61 +13,66 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.domain.research import (
     AstrologicalSnapshot,
+    ExperimentExecution,
     ResearchExperiment,
     ResearchProject,
 )
-from apps.api.models.astrology import ResearchProjectModel, ResearchSnapshotModel
+from apps.api.models.astrology import (
+    ExperimentExecutionModel,
+    ResearchExperimentModel,
+    ResearchProjectModel,
+    ResearchSnapshotModel,
+)
 
-# Fields on ResearchProject that map to ResearchExperiment.
-_EXPERIMENT_FIELDS = {"hypothesis", "methodology", "conclusions"}
 
-
-def _project_to_domain(model: ResearchProjectModel) -> ResearchProject:
+def _project_to_domain(m: ResearchProjectModel) -> ResearchProject:
     return ResearchProject(
-        id=model.id,
-        user_id=model.user_id,
-        title=model.title,
-        description=model.hypothesis,  # reuse hypothesis column as description for now
-        status=model.status,
-        created_at=model.created_at,
-        updated_at=model.updated_at,
+        id=m.id, user_id=m.user_id, title=m.title,
+        description=m.hypothesis, status=m.status,
+        created_at=m.created_at, updated_at=m.updated_at,
+        dataset_id=m.dataset_id,
     )
 
 
-def _project_to_experiment(model: ResearchProjectModel) -> ResearchExperiment:
+def _experiment_to_domain(m: ResearchExperimentModel) -> ResearchExperiment:
     return ResearchExperiment(
-        id=model.id,
-        project_id=model.id,
-        title=model.title,
-        hypothesis=model.hypothesis or "",
-        methodology=model.methodology or "",
-        status="completed" if model.conclusions else "draft",
-        findings=model.conclusions,
-        created_at=model.created_at,
-        updated_at=model.updated_at,
+        id=m.id, project_id=m.project_id, title=m.title,
+        hypothesis=m.hypothesis or "", methodology=m.methodology or "",
+        status=m.status, findings=m.findings,
+        rule_registry_hash=m.rule_registry_hash,
+        dataset_id=m.dataset_id,
+        created_at=m.created_at, updated_at=m.updated_at,
     )
 
 
-def _snapshot_to_domain(model: ResearchSnapshotModel) -> AstrologicalSnapshot:
-    data = json.loads(model.snapshot_json) if model.snapshot_json else {}
+def _execution_to_domain(m: ExperimentExecutionModel) -> ExperimentExecution:
+    return ExperimentExecution(
+        id=m.id, experiment_id=m.experiment_id,
+        snapshot_id=m.snapshot_id,
+        execution_order=m.execution_order, notes=m.notes,
+        created_at=m.created_at,
+    )
+
+
+def _snapshot_to_domain(m: ResearchSnapshotModel) -> AstrologicalSnapshot:
+    data = json.loads(m.snapshot_json) if m.snapshot_json else {}
     return AstrologicalSnapshot(
-        id=model.id,
-        project_id=model.project_id,
-        chart_id=model.chart_id,
-        label=model.label,
-        captured_at=model.created_at or datetime.now(timezone.utc),
-        chart_ref=None,  # populated from chart_id lookup when accessed
+        id=m.id, project_id=m.project_id, chart_id=m.chart_id,
+        label=m.label,
+        captured_at=m.created_at or datetime.now(timezone.utc),
+        chart_ref=None,
+        dataset_id=data.get("dataset_id"),
         snapshot_version=data.get("version", "1.0"),
     )
 
 
 class ResearchRepository:
-    """Data access for research projects and snapshots."""
+    """Data access for research projects, experiments, and snapshots."""
 
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
@@ -81,21 +80,19 @@ class ResearchRepository:
     # ── Projects ──────────────────────────────────────────────────────────
 
     async def create_project(
-        self,
-        user_id: uuid.UUID,
-        title: str,
+        self, user_id: uuid.UUID, title: str,
         description: Optional[str] = None,
+        dataset_id: Optional[uuid.UUID] = None,
     ) -> ResearchProject:
-        model = ResearchProjectModel(
-            user_id=user_id,
-            title=title,
-            hypothesis=description,  # reuse hypothesis column for description
-            status="active",
+        m = ResearchProjectModel(
+            user_id=user_id, title=title,
+            hypothesis=description, status="active",
+            dataset_id=dataset_id,
         )
-        self._session.add(model)
+        self._session.add(m)
         await self._session.flush()
-        await self._session.refresh(model)
-        return _project_to_domain(model)
+        await self._session.refresh(m)
+        return _project_to_domain(m)
 
     async def get_project(
         self, project_id: uuid.UUID,
@@ -104,13 +101,11 @@ class ResearchRepository:
             ResearchProjectModel.id == project_id,
             ResearchProjectModel.deleted_at.is_(None),
         )
-        result = await self._session.execute(stmt)
-        row = result.scalar_one_or_none()
+        row = (await self._session.execute(stmt)).scalar_one_or_none()
         return _project_to_domain(row) if row else None
 
     async def list_projects(
-        self, user_id: uuid.UUID,
-        status: Optional[str] = None,
+        self, user_id: uuid.UUID, status: Optional[str] = None,
     ) -> tuple[ResearchProject, ...]:
         stmt = (
             select(ResearchProjectModel)
@@ -120,13 +115,12 @@ class ResearchRepository:
         if status:
             stmt = stmt.where(ResearchProjectModel.status == status)
         stmt = stmt.order_by(ResearchProjectModel.created_at.desc())
-        result = await self._session.execute(stmt)
-        return tuple(_project_to_domain(row) for row in result.scalars().all())
+        rows = (await self._session.execute(stmt)).scalars().all()
+        return tuple(_project_to_domain(r) for r in rows)
 
     async def update_project(
         self, project_id: uuid.UUID, **fields: Any,
     ) -> Optional[ResearchProject]:
-        # Map domain fields back to ORM fields.
         orm_fields: dict[str, Any] = {}
         if "title" in fields:
             orm_fields["title"] = fields["title"]
@@ -142,11 +136,9 @@ class ResearchRepository:
             update(ResearchProjectModel)
             .where(ResearchProjectModel.id == project_id)
             .where(ResearchProjectModel.deleted_at.is_(None))
-            .values(**orm_fields)
-            .returning(ResearchProjectModel.id)
+            .values(**orm_fields).returning(ResearchProjectModel.id)
         )
-        result = await self._session.execute(stmt)
-        if result.scalar_one_or_none() is None:
+        if (await self._session.execute(stmt)).scalar_one_or_none() is None:
             return None
         return await self.get_project(project_id)
 
@@ -156,103 +148,119 @@ class ResearchRepository:
             update(ResearchProjectModel)
             .where(ResearchProjectModel.id == project_id)
             .where(ResearchProjectModel.deleted_at.is_(None))
-            .values(deleted_at=now)
-            .returning(ResearchProjectModel.id)
+            .values(deleted_at=now).returning(ResearchProjectModel.id)
         )
-        result = await self._session.execute(stmt)
-        return result.scalar_one_or_none() is not None
+        return (await self._session.execute(stmt)).scalar_one_or_none() is not None
 
-    # ── Experiments (stored in project table) ─────────────────────────────
+    # ── Experiments (dedicated table) ─────────────────────────────────────
 
     async def create_experiment(
-        self,
-        project_id: uuid.UUID,
-        title: str,
-        hypothesis: str,
-        methodology: str,
+        self, project_id: uuid.UUID, title: str,
+        hypothesis: str, methodology: str,
+        rule_registry_hash: Optional[str] = None,
+        dataset_id: Optional[uuid.UUID] = None,
     ) -> ResearchExperiment:
-        # Update the existing project row with experiment data.
-        stmt = (
-            update(ResearchProjectModel)
-            .where(ResearchProjectModel.id == project_id)
-            .where(ResearchProjectModel.deleted_at.is_(None))
-            .values(title=title, hypothesis=hypothesis, methodology=methodology, conclusions=None)
-            .returning(ResearchProjectModel.id)
+        m = ResearchExperimentModel(
+            project_id=project_id, title=title,
+            hypothesis=hypothesis, methodology=methodology,
+            status="draft", rule_registry_hash=rule_registry_hash,
+            dataset_id=dataset_id,
         )
-        result = await self._session.execute(stmt)
-        if result.scalar_one_or_none() is None:
-            raise ValueError(f"Project {project_id} not found or deleted")
-
-        # Re-fetch to get the full model.
-        model = await self._session.get(ResearchProjectModel, project_id)
-        return _project_to_experiment(model)
+        self._session.add(m)
+        await self._session.flush()
+        await self._session.refresh(m)
+        return _experiment_to_domain(m)
 
     async def get_experiment(
         self, experiment_id: uuid.UUID,
     ) -> Optional[ResearchExperiment]:
-        project = await self.get_project(experiment_id)
-        if project is None:
-            return None
-        model = await self._session.get(ResearchProjectModel, experiment_id)
-        return _project_to_experiment(model)
+        stmt = select(ResearchExperimentModel).where(
+            ResearchExperimentModel.id == experiment_id,
+            ResearchExperimentModel.deleted_at.is_(None),
+        )
+        row = (await self._session.execute(stmt)).scalar_one_or_none()
+        return _experiment_to_domain(row) if row else None
 
     async def list_experiments(
         self, project_id: uuid.UUID,
     ) -> tuple[ResearchExperiment, ...]:
-        """Return experiments for a project. Phase 1: returns one."""
-        model = await self._session.get(ResearchProjectModel, project_id)
-        if model is None or model.deleted_at is not None:
-            return ()
-        return (_project_to_experiment(model),)
-
-    async def assign_snapshots_to_experiment(
-        self,
-        experiment_id: uuid.UUID,
-        snapshot_ids: list[uuid.UUID],
-    ) -> Optional[ResearchExperiment]:
-        # Phase 1: snapshots are linked to the project.
-        # No schema change needed — snapshot.project_id already links them.
-        project = await self.get_project(experiment_id)
-        if project is None:
-            return None
-        return await self.get_experiment(experiment_id)
+        stmt = (
+            select(ResearchExperimentModel)
+            .where(ResearchExperimentModel.project_id == project_id)
+            .where(ResearchExperimentModel.deleted_at.is_(None))
+            .order_by(ResearchExperimentModel.created_at.desc())
+        )
+        return tuple(
+            _experiment_to_domain(r)
+            for r in (await self._session.execute(stmt)).scalars().all()
+        )
 
     async def update_experiment(
         self, experiment_id: uuid.UUID, **fields: Any,
     ) -> Optional[ResearchExperiment]:
         orm_fields: dict[str, Any] = {}
-        if "title" in fields:
-            orm_fields["title"] = fields["title"]
-        if "hypothesis" in fields:
-            orm_fields["hypothesis"] = fields["hypothesis"]
-        if "methodology" in fields:
-            orm_fields["methodology"] = fields["methodology"]
-        if "findings" in fields:
-            orm_fields["conclusions"] = fields["findings"]
-        if "status" in fields:
-            orm_fields["status"] = fields["status"]
+        for key in ("title", "hypothesis", "methodology", "status", "findings", "rule_registry_hash"):
+            if key in fields:
+                orm_fields[key] = fields[key]
 
         if not orm_fields:
             return await self.get_experiment(experiment_id)
 
         stmt = (
-            update(ResearchProjectModel)
-            .where(ResearchProjectModel.id == experiment_id)
-            .where(ResearchProjectModel.deleted_at.is_(None))
-            .values(**orm_fields)
-            .returning(ResearchProjectModel.id)
+            update(ResearchExperimentModel)
+            .where(ResearchExperimentModel.id == experiment_id)
+            .where(ResearchExperimentModel.deleted_at.is_(None))
+            .values(**orm_fields).returning(ResearchExperimentModel.id)
         )
-        result = await self._session.execute(stmt)
-        if result.scalar_one_or_none() is None:
+        if (await self._session.execute(stmt)).scalar_one_or_none() is None:
             return None
         return await self.get_experiment(experiment_id)
+
+    async def delete_experiment(self, experiment_id: uuid.UUID) -> bool:
+        now = datetime.now(timezone.utc)
+        stmt = (
+            update(ResearchExperimentModel)
+            .where(ResearchExperimentModel.id == experiment_id)
+            .where(ResearchExperimentModel.deleted_at.is_(None))
+            .values(deleted_at=now).returning(ResearchExperimentModel.id)
+        )
+        return (await self._session.execute(stmt)).scalar_one_or_none() is not None
+
+    # ── Experiment Executions ─────────────────────────────────────────────
+
+    async def create_execution(
+        self, experiment_id: uuid.UUID,
+        snapshot_id: Optional[uuid.UUID] = None,
+        execution_order: int = 0,
+        notes: Optional[str] = None,
+    ) -> ExperimentExecution:
+        m = ExperimentExecutionModel(
+            experiment_id=experiment_id, snapshot_id=snapshot_id,
+            execution_order=execution_order, notes=notes,
+        )
+        self._session.add(m)
+        await self._session.flush()
+        await self._session.refresh(m)
+        return _execution_to_domain(m)
+
+    async def list_executions(
+        self, experiment_id: uuid.UUID,
+    ) -> tuple[ExperimentExecution, ...]:
+        stmt = (
+            select(ExperimentExecutionModel)
+            .where(ExperimentExecutionModel.experiment_id == experiment_id)
+            .order_by(ExperimentExecutionModel.execution_order)
+        )
+        return tuple(
+            _execution_to_domain(r)
+            for r in (await self._session.execute(stmt)).scalars().all()
+        )
 
     # ── Snapshots ─────────────────────────────────────────────────────────
 
     async def save_snapshot(
         self, snapshot: AstrologicalSnapshot,
     ) -> AstrologicalSnapshot:
-        """Persist a snapshot, serializing engine data to JSON."""
         serialized: dict[str, Any] = {
             "version": snapshot.snapshot_version,
             "captured_at": snapshot.captured_at.isoformat(),
@@ -265,16 +273,15 @@ class ResearchRepository:
             ]
         if snapshot.sarvashtakavarga is not None:
             serialized["sarvashtakavarga_total"] = snapshot.sarvashtakavarga.total_bindus
+        if snapshot.dataset_id is not None:
+            serialized["dataset_id"] = str(snapshot.dataset_id)
 
-        model = ResearchSnapshotModel(
-            id=snapshot.id,
-            project_id=snapshot.project_id,
-            chart_id=snapshot.chart_id,
-            label=snapshot.label,
+        m = ResearchSnapshotModel(
+            id=snapshot.id, project_id=snapshot.project_id,
+            chart_id=snapshot.chart_id, label=snapshot.label,
             snapshot_json=json.dumps(serialized),
         )
-        # Use merge for idempotent re-save.
-        model = await self._session.merge(model)
+        m = await self._session.merge(m)
         await self._session.flush()
         return snapshot
 
@@ -285,8 +292,7 @@ class ResearchRepository:
             ResearchSnapshotModel.id == snapshot_id,
             ResearchSnapshotModel.deleted_at.is_(None),
         )
-        result = await self._session.execute(stmt)
-        row = result.scalar_one_or_none()
+        row = (await self._session.execute(stmt)).scalar_one_or_none()
         return _snapshot_to_domain(row) if row else None
 
     async def list_snapshots(
@@ -298,8 +304,10 @@ class ResearchRepository:
             .where(ResearchSnapshotModel.deleted_at.is_(None))
             .order_by(ResearchSnapshotModel.created_at.desc())
         )
-        result = await self._session.execute(stmt)
-        return tuple(_snapshot_to_domain(row) for row in result.scalars().all())
+        return tuple(
+            _snapshot_to_domain(r)
+            for r in (await self._session.execute(stmt)).scalars().all()
+        )
 
     async def delete_snapshot(self, snapshot_id: uuid.UUID) -> bool:
         now = datetime.now(timezone.utc)
@@ -307,8 +315,6 @@ class ResearchRepository:
             update(ResearchSnapshotModel)
             .where(ResearchSnapshotModel.id == snapshot_id)
             .where(ResearchSnapshotModel.deleted_at.is_(None))
-            .values(deleted_at=now)
-            .returning(ResearchSnapshotModel.id)
+            .values(deleted_at=now).returning(ResearchSnapshotModel.id)
         )
-        result = await self._session.execute(stmt)
-        return result.scalar_one_or_none() is not None
+        return (await self._session.execute(stmt)).scalar_one_or_none() is not None

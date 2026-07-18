@@ -118,3 +118,4 @@ class VerificationFindings:
     rule_summaries: tuple[RuleVerificationSummary, ...]
     verification_pairs: tuple[VerificationPair, ...]
     engine_version: str = "1.0"
+    confidence_score: float = 0.0

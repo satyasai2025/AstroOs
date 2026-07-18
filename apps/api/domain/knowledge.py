@@ -32,7 +32,7 @@ class KnowledgeReference:
 
 @dataclass(frozen=True)
 class KnowledgeBook:
-    """A classical astrology text."""
+    """A classical astrology text — versioned."""
 
     id: uuid.UUID
     title: str
@@ -41,11 +41,14 @@ class KnowledgeBook:
     period_ce: Optional[str] = None
     tradition: Optional[str] = None
     description: Optional[str] = None
+    version: int = 1
+    version_comment: Optional[str] = None
+    superseded_by: Optional[uuid.UUID] = None
 
 
 @dataclass(frozen=True)
 class KnowledgeVerse:
-    """One verse from a classical text, with translations."""
+    """One verse from a classical text, with translations — versioned."""
 
     id: uuid.UUID
     book_id: uuid.UUID
@@ -55,12 +58,15 @@ class KnowledgeVerse:
     transliteration: Optional[str] = None
     translation: Optional[str] = None
     commentary: Optional[str] = None
+    version: int = 1
+    version_comment: Optional[str] = None
+    superseded_by: Optional[uuid.UUID] = None
 
 
 @dataclass(frozen=True)
 class KnowledgeRule:
     """
-    A classical interpretation rule.
+    A classical interpretation rule — versioned.
 
     Distinct from Module 13's RuleDefinition — this is a knowledge-base
     entry, not an evaluable rule. May optionally reference its evaluable
@@ -74,12 +80,15 @@ class KnowledgeRule:
     rule_definition_id: Optional[str] = None
     tradition: Optional[str] = None
     confidence: Optional[float] = None
+    version: int = 1
+    version_comment: Optional[str] = None
+    superseded_by: Optional[uuid.UUID] = None
 
 
 @dataclass(frozen=True)
 class Karakatva:
     """
-    A signification — e.g. "Sun signifies soul."
+    A signification — e.g. "Sun signifies soul." — versioned.
 
     Links a subject to a graha, sign, or house, optionally citing a
     source verse.
@@ -93,6 +102,9 @@ class Karakatva:
     tradition: Optional[str] = None
     source: Optional[KnowledgeReference] = None
     description: Optional[str] = None
+    version: int = 1
+    version_comment: Optional[str] = None
+    superseded_by: Optional[uuid.UUID] = None
 
 
 @dataclass(frozen=True)

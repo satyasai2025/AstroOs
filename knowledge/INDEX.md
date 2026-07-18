@@ -1,7 +1,8 @@
 # Jyotish Knowledge Repository — INDEX
 
-**Total Records:** 202 (Phase 2B + Phase 3 frozen + Phase 4 + Phase 5 + 2 source registry additions)
+**Total Records:** 206 (Phase 2B + Phase 3 frozen + Phase 4 + Phase 5 + Phase 6 + 2 source registry additions)
 **Last Updated:** 2026-07-16
+**Status:** Phase 6 complete — Knowledge Office in Governance Mode
 **Note:** A full repository audit ran 2026-07-16 — see STATUS.md's Audit section for the complete list of fixed ID-naming and factual-consistency issues.
 
 ---
@@ -10,14 +11,15 @@
 
 - [ROADMAP.md](ROADMAP.md) — Implementation roadmap
 - [STATUS.md](STATUS.md) — Current status
+- [KNOWLEDGE_COMPLETION_REPORT.md](KNOWLEDGE_COMPLETION_REPORT.md) — Phase 6 completion report
 
 ---
 
 ## Phase 2B — Foundation (114 records)
 
-### Sources (24) | Glossary (30) | Grahas (9) | Rashis (12) | Bhavas (12) | Nakshatras (27)
+### Sources (24 at Phase 2B; 26 current) | Glossary (30) | Grahas (9) | Rashis (12) | Bhavas (12) | Nakshatras (27)
 
-All in `sources/texts/`, `ontology/glossary/`, `catalogues/grahas/`, `catalogues/rashis/`, `catalogues/bhavas/`, `catalogues/nakshatras/`.
+All in `sources/texts/`, `ontology/glossary/`, `catalogues/grahas/`, `catalogues/rashis/`, `catalogues/bhavas/`, `catalogues/nakshatras/`. Source count grew from 24 to 26 during the 2026-07-16 repository audit — 2 previously-declared-but-missing files were created and 2 further sources newly registered to resolve dangling citations; see STATUS.md's Audit section for the full detail.
 
 ---
 
@@ -101,11 +103,21 @@ All in `sources/texts/`, `ontology/glossary/`, `catalogues/grahas/`, `catalogues
 
 ---
 
-## Conflicts (3)
+## Conflicts (7) — Phase 6 ✅ COMPLETE
 
-- conflict.001: Lagna vs Bhava 1 (partially-resolved)
-- conflict.002: Surya benefic vs malefic (unresolved)
-- conflict.003: Surya neutral signs (resolved)
+All records live under `conflicts/`. See `conflicts/_index.yaml` for
+full detail, including each conflict's `cross_references` to classical
+sources, the Rule Engine, and the Ontology.
+
+| File | Domain | Status |
+|---|---|---|
+| conflict-001 | Lagna vs Bhava 1 (house system) | partially-resolved |
+| conflict-002 | Surya benefic vs malefic | unresolved |
+| conflict-003 | Surya neutral signs (BPHS vs Phaladeepika) | resolved |
+| conflict-004 | Ayanamsa selection | partially-resolved |
+| conflict-005 | Rahu/Ketu special aspects (5th/9th) | partially-resolved |
+| conflict-006 | Rahu/Ketu exaltation signs | partially-resolved |
+| conflict-007 | Kaal Sarpa Dosha classical legitimacy | unresolved |
 
 ---
 
@@ -176,3 +188,13 @@ All records live under `cross-references/`.
 | dasha-graha-event-themes | Dasha x Graha | Consolidated Mahadasha life-event themes across Vimshottari/Ashtottari/Shodashottari |
 
 See `cross-references/_index.yaml` for full detail.
+
+---
+
+## Phase 6 — Conflict Analysis (4 new + 3 enriched records)
+
+See the **Conflicts (7)** section above for the full table. All 7
+conflict records now carry verified `cross_references` to classical
+sources, the Rule Engine, and the Ontology. See
+[KNOWLEDGE_COMPLETION_REPORT.md](KNOWLEDGE_COMPLETION_REPORT.md) for
+full methodology and findings.

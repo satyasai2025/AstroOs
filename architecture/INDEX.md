@@ -104,7 +104,7 @@ Two governance artifact types are used in this library:
 - **AMP — Architecture Maintenance Proposal**: proposes a correction to an existing defect/inconsistency (e.g., an audit finding). Filed in this section.
 - **AIP — Architecture Improvement Proposal**: proposes a new capability or enhancement beyond fixing a defect. None filed yet.
 
-The seven AMPs below were filed from the Architecture Library Validation Audit (2026-07-15, frozen). Each proposes a correction only; none has been applied — every one requires its own governance approval before any frozen document is touched.
+AMPs 001–007 below were filed from the Architecture Library Validation Audit (2026-07-15, frozen). AMP-008 has a different origin — a cross-office referral from the Engineering Office (ER-002) concerning runtime module dependency structure, not the Enterprise Architecture Library itself; it is filed in the same section because it is the same artifact type (a correction/decision proposal, not a new-capability proposal). Each proposes a correction or decision only; none has been applied — every one requires its own governance approval before any document or code is touched.
 
 | ID | Title | Severity | Status | Path |
 |---|---|---|---|---|
@@ -115,6 +115,7 @@ The seven AMPs below were filed from the Architecture Library Validation Audit (
 | AMP-005 | Digital Twin cardinal/ordinal phrasing inconsistency | Low/Informational | Proposed | [decisions/AMP-005-digital-twin-phrasing-inconsistency.md](decisions/AMP-005-digital-twin-phrasing-inconsistency.md) |
 | AMP-006 | "Category: enterprise" field does not distinguish roadmap phases | Low | Proposed | [decisions/AMP-006-category-field-phase-ambiguity.md](decisions/AMP-006-category-field-phase-ambiguity.md) |
 | AMP-007 | Completion Report undercounts distinct audit-catalog proposals | Informational | Proposed | [decisions/AMP-007-completion-report-proposal-count.md](decisions/AMP-007-completion-report-proposal-count.md) |
+| AMP-008 | Ontology Registry (Module 12) has no approved dependency model — contradicts its own docstring, duplicated by AI Engine | Medium | Proposed | [decisions/AMP-008-ontology-registry-dependency-model.md](decisions/AMP-008-ontology-registry-dependency-model.md) |
 
 ## RFCs
 

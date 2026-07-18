@@ -4,6 +4,14 @@
 > Method: full `git status` inventory (654 entries), direct file inspection, two independent research passes (governance-office audit; implementation-completeness audit), and a direct hygiene/secrets scan of the working tree, staged diff, and git history.
 > Date: 2026-07-16
 > **No commits, tags, or index changes were made in the course of this review.**
+>
+> **⚠️ ADDENDUM (2026-07-17) — read before trusting the §9 verdict below.** This document's own final verdict ("NOT READY FOR FOUNDATION RELEASE") was committed verbatim, unmodified, in the commit that the repository owner subsequently tagged `v1.0.0-alpha` (`d98fd01`) — i.e., a tag was cut on top of a review that, as committed, still says not ready. Status of the four §7 blocking items as of 2026-07-17, checked directly against the repository rather than assumed:
+> 1. **RSA key** — Resolved. Rotated (commit `029441a`, "Stop tracking development RSA keys"); addressed before the `v1.0.0-alpha` commit.
+> 2. **RS-EVENT license gap** — Superseded and resolved. Re-investigation found the real issue wasn't licensing but data fabrication (see `research-data/governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md`); the fabricated tree was deleted 2026-07-17 and confirmed to have never been part of any commit, including `v1.0.0-alpha`.
+> 3. **RS-COHORT duplication** — Resolved, per the `d98fd01` commit message ("Deduplicate RS-COHORT dataset").
+> 4. **Staging completeness** — Resolved as of `d98fd01`, which added 650 files. Not re-audited item-by-item against this review's original list.
+>
+> See `ALPHA_RELEASE_READINESS_REPORT.md` (2026-07-17) for the current, authoritative readiness assessment. This document is retained as the historical record of the 2026-07-16 review and is not being rewritten.
 
 ---
 
@@ -117,7 +125,7 @@ These are the items this review treats as genuinely blocking — deliberately ke
 
 ---
 
-## 9. Final Verdict
+## 9. Final Verdict (as of 2026-07-16 — see the 2026-07-17 addendum at the top of this document; this verdict is superseded)
 
 **NOT READY FOR FOUNDATION RELEASE**
 

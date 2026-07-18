@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "alerts.yml"
+
+scrape_configs:
+  - job_name: "astroos-api"
+    static_configs:
+      - targets: ["astroos-api:8000"]
+    metrics_path: "/metrics"
+    scrape_interval: 10s
+
+  - job_name: "astroos-postgres"
+    static_configs:
+      - targets: ["astroos-postgres:9187"]
+
+  - job_name: "astroos-redis"
+    static_configs:
+      - targets: ["astroos-redis:9121"]

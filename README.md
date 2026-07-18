@@ -135,7 +135,7 @@ REDIS_URL=redis://localhost:6379/0
 
 # Optional overrides (defaults shown)
 APP_NAME="AstroOS API"
-APP_VERSION="0.1.0"
+APP_VERSION="2.0.0"
 ENVIRONMENT=development
 DEBUG=true
 EPHEMERIS_PATH=data/ephemeris
@@ -209,7 +209,7 @@ curl http://localhost:8000/api/healthz
 ```json
 {
   "status": "ok",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "environment": "development",
   "ephemeris": { "mode": "moshier", "official_data": false }
 }

@@ -1,9 +1,10 @@
 # Jyotish Knowledge Repository — STATUS
 
-**Current Phase:** 5 — Relationship Mapping COMPLETE
+**Current Phase:** 6 — Conflict Analysis COMPLETE
 **Last Updated:** 2026-07-16
-**Total Records:** 202 (Phase 2B + Phase 3 + Phase 4 + Phase 5 + 2 source registry additions)
+**Total Records:** 206 (Phase 2B + Phase 3 + Phase 4 + Phase 5 + Phase 6 + 2 source registry additions)
 **Repository Audit:** Full cross-phase audit completed 2026-07-16 — see Audit section below
+**Governance:** Knowledge Office frozen in Governance Mode — see `KNOWLEDGE_COMPLETION_REPORT.md`
 
 ---
 
@@ -83,11 +84,17 @@ day (see catalogues/grahas/chandra.yaml history).
 
 ---
 
-## Conflicts — 3 records ✅ FROZEN
+## Conflicts — 7 records ✅ FROZEN (Phase 6)
 
 - conflict.001: Lagna vs Bhava 1 (partially-resolved)
 - conflict.002: Surya benefic vs malefic (unresolved)
 - conflict.003: Surya neutral signs (resolved)
+- conflict.004: Ayanamsa selection (partially-resolved)
+- conflict.005: Rahu/Ketu special aspects (partially-resolved)
+- conflict.006: Rahu/Ketu exaltation signs (partially-resolved)
+- conflict.007: Kaal Sarpa Dosha legitimacy (unresolved)
+
+See `conflicts/_index.yaml` and Phase 6 section below for full detail.
 
 ---
 
@@ -207,10 +214,71 @@ references remaining anywhere in the repository.
 
 ---
 
-## Next Phase: Phase 6 — Conflict Analysis (PENDING)
+## Phase 6 — Conflict Analysis — 2026-07-16 ✅ COMPLETE
 
-- Comprehensive conflict documentation
-- Reconciliation recommendations
+All 3 carried-over conflicts were reviewed and enriched with verified
+`cross_references` blocks linking each to the Rule Engine
+(`apps/api/services/rules/`, `aspect_engine.py`) and the Ontology
+(`apps/api/domain/ontology.py`, `ontology_registry.py`). A full-repository
+survey (grep for "debated"/"disputed"/"contradicts"/"internal
+inconsistency" across all catalogues, cross-references, and the
+glossary) surfaced 4 additional doctrinal conflicts not previously
+promoted to formal records:
+
+- **conflict.004** — Ayanamsa selection (Lahiri/Raman/KP/Yukteshwar/
+  Fagan-Bradley/True Chitra). Previously only noted as a "controversy"
+  in `ontology/glossary/ayanamsa.yaml`'s notes field.
+- **conflict.005** — Rahu/Ketu special 5th/9th aspects. Previously
+  extensively narrated but not indexed as a conflict in
+  `catalogues/aspects/rahu-ketu-aspects.yaml`.
+- **conflict.006** — Rahu/Ketu exaltation signs (Gemini/Sagittarius vs
+  Taurus/Scorpio). Resolves the "internal inconsistency" flagged but
+  left open in `cross-references/graha-rashi-dignity-matrix.yaml`'s
+  Phase 5 `data_quality_note`.
+- **conflict.007** — Kaal Sarpa Dosha's classical legitimacy. Confirmed
+  via source-registry cross-check that only 2 of 20 cataloged yogas/
+  doshas (this one and Sarpadosha) cite no primary classical text.
+
+**Every conflict's cross-references were verified against the actual
+codebase**, not asserted from memory — file paths and line numbers were
+read or grepped directly during this phase. Where no Rule Engine or
+Ontology implementation exists for a conflict's subject (conflict.003's
+graha friendship/enmity table; conflict.007's Kaal Sarpa Dosha), the
+record states that plainly as a confirmed implementation gap rather
+than fabricating a link.
+
+**One code-side documentation drift was found and flagged** (not
+fixed, out of Knowledge Office scope): the Ontology's
+`ASPECT-SPECIAL-GRAHA` entity description ("Mars/Jupiter/Saturn's...")
+omits Rahu/Ketu even though `aspect_engine.py` implements special
+aspects for both nodes. See conflict.005's `cross_references`.
+
+**Result:** 7 conflicts total (1 resolved, 4 partially resolved, 2
+unresolved), `conflicts/_index.yaml` created, `KNOWLEDGE_COMPLETION_REPORT.md`
+produced. See that report for full methodology and findings.
+
+---
+
+## External Requests (Knowledge Office → Other Offices)
+
+| ID | Request | Target Office | Status | Context |
+|---|---|---|---|---|
+| **ER-001** | Fix `ASPECT-SPECIAL-GRAHA` ontology description drift (`apps/api/services/ontology_registry.py`'s `_populate_aspect()` description omits Rahu/Ketu despite `aspect_engine.py` computing their special aspects) | Engineering Office | 🟡 IN PROGRESS — work session started 2026-07-16 | Found during Phase 6 Conflict Analysis; see `conflicts/conflict-005.yaml` cross_references |
+
+This supersedes the informal background-task suggestion raised during
+Phase 6 review. Per governance requirement, out-of-office fixes
+surfaced during a phase are logged here as a formal request rather
+than actioned ad hoc. See also `ENGINEERING_STATUS.md`'s corresponding
+inbound-request entry.
+
+---
+
+## Governance Mode (2026-07-16)
+
+Phase 6 is frozen. The Knowledge Office returns to Governance Mode:
+no further edits to `catalogues/`, `cross-references/`, `ontology/`,
+`sources/`, or `conflicts/` without a newly authorized phase. Phase 7
+(Verse Catalogue) is the only remaining open item — see ROADMAP.md.
 
 ---
 

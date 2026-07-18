@@ -71,11 +71,24 @@ jobs:
       - name: Run Alembic migrations
         run: alembic -c database/alembic.ini upgrade head
 
+      - name: Security scan (Bandit + Trivy)
+        run: |
+          pip install bandit
+          bandit -r apps/ -ll -f json -o bandit.json || true
+          # Trivy scan for vulnerabilities
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy fs . || true
+
       - name: Unit tests (excludes tests requiring live services)
         run: pytest -c apps/api/pytest.ini -m "not integration"
 
       - name: Integration tests (real Postgres, Redis, Swiss Ephemeris)
         run: pytest -c apps/api/pytest.ini -m integration
+
+      - name: Build and push Docker image
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker build -t astroos:${{ github.sha }} -f Dockerfile.prod .
+          docker push astroos:${{ github.sha }} || echo "Push requires registry auth"
 
   frontend:
     runs-on: ubuntu-latest

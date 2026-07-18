@@ -1,8 +1,8 @@
 # Jyotish Knowledge Repository — ROADMAP
 
 **Authority:** Chief Jyotish Knowledge Architect
-**Current Phase:** 5 — Relationship Mapping COMPLETE
-**Status:** Phase 5 Complete; full repository audit completed 2026-07-16 (see STATUS.md)
+**Current Phase:** 6 — Conflict Analysis COMPLETE
+**Status:** Phase 6 Complete; Knowledge Office frozen in Governance Mode (see STATUS.md and KNOWLEDGE_COMPLETION_REPORT.md)
 **Last Updated:** 2026-07-16
 
 ---
@@ -72,14 +72,32 @@
 
 ---
 
-## Phase 6 — Conflict Analysis (PENDING)
+## Phase 6 — Conflict Analysis (COMPLETE)
 
-- [ ] Comprehensive conflict documentation
-- [ ] Reconciliation recommendations
+- [x] Reviewed and enriched all 3 carried-over conflict records
+- [x] Full-repository survey for undocumented doctrinal conflicts
+- [x] 4 new conflicts documented (ayanamsa selection, Rahu/Ketu special
+      aspects, Rahu/Ketu exaltation signs, Kaal Sarpa Dosha legitimacy)
+- [x] Every conflict linked to classical sources, the Rule Engine, and
+      the Ontology, with links verified against the actual codebase
+      (not asserted from memory)
+- [x] Conflicts resolved where evidence permitted (1 resolved, 4
+      partially resolved); marked unresolved where evidence was
+      genuinely split (2 unresolved) — see `conflicts/_index.yaml`
+- [x] `conflicts/_index.yaml` created
+- [x] `KNOWLEDGE_COMPLETION_REPORT.md` produced
+- [x] Knowledge Office returned to Governance Mode
 
 ---
 
 ## Phase 7 — Verse Catalogue (PENDING)
+
+> **Provenance note (2026-07-16):** Verified against the pre-migration
+> source roadmap (`jyotish-knowledge-base/ROADMAP.md`) — this phase was
+> already present there, verbatim, marked PENDING, prior to the
+> migration into `AstroOS/knowledge/`. It is original approved-roadmap
+> content, not introduced during Phase 6, and is retained here as
+> documented. Requires separate authorization to begin.
 
 - [ ] Full verse indexing of all primary texts
 
@@ -95,4 +113,5 @@
 | M4 — Specialized catalogues | Yogas, Karakatvas, Dashas | ✅ FROZEN |
 | M5 — Advanced systems | Jaimini, KP, Lal Kitab, Tajika | ✅ |
 | M6 — Full relationship maps | All cross-references | ✅ |
-| M7 — Complete knowledge repository | All catalogues frozen | ⏳ |
+| M6.5 — Conflict analysis | All conflicts documented and cross-referenced | ✅ |
+| M7 — Complete knowledge repository | All catalogues frozen | ⏳ (blocked on Phase 7) |

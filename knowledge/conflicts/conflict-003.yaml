@@ -132,6 +132,35 @@ notes: >
   subsequent analysis. It is also relevant to the methodology of
   graha friendship and enmity classification more broadly.
 
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "GRAHA-SUN, GRAHA-MARS, GRAHA-SATURN"
+      file: apps/api/domain/ontology.py / ontology_registry.py
+      note: >
+        No "Friendly" / "Neutral" / "Enemy" OntologyRelationship type
+        exists anywhere in the registry — only Owns, ExaltedIn,
+        DebilitatedIn, MoolatrikonaIn, RuledBy, PartOf, Requires, and
+        SignifiesFor are populated (see _populate_dignity_relationships).
+        The graha friendship/enmity table this conflict is about is not
+        represented in the Ontology at all.
+  rule_engine:
+    - reference: "none found"
+      note: >
+        No RuleDefinition in apps/api/services/rules/*.py conditions on
+        a friendship/enmity/neutral fact for any graha-rashi pair.
+        packages/shared/constants.py likewise has no NEUTRAL_SIGNS,
+        FRIENDLY_SIGNS, or ENEMY_SIGNS table.
+  validation_status: >
+    Not implemented anywhere in code as of 2026-07-16. This record's
+    resolution (adopt Phaladeepika's corrected neutral-sign list) is a
+    knowledge-base-only decision with no corresponding Rule Engine or
+    Ontology artifact to validate against or contradict. Recorded here
+    so a future engineering phase implementing graha friendship/enmity
+    has a documented, already-adjudicated source of truth to build from
+    rather than re-deriving it from raw BPHS text.
+
 # === HISTORY ===
 
 history:
@@ -142,4 +171,8 @@ history:
   - version: 1.1
     date: 2026-07-15
     change: "Resolved: adopted Phaladeepika's correction; documented BPHS variant"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.2
+    date: 2026-07-16
+    change: "Phase 6 — confirmed no Rule Engine or Ontology implementation of graha friendship/enmity exists yet; documented as an open implementation gap rather than a cross-reference"
     author: "Chief Jyotish Knowledge Architect"

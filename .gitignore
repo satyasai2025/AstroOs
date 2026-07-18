@@ -10,6 +10,10 @@ htmlcov/
 # Node / frontend
 node_modules/
 .next/
+*.tsbuildinfo
+dist/
+build/
+package-lock.json
 
 # Environment / secrets
 .env
@@ -24,3 +28,14 @@ attached_assets/
 .local/
 .replit
 replit.nix
+
+# Local Claude configuration
+.claude/settings.json
+
+# Local archive files
+apps.7z
+apps.zip
+packages.zip
+
+# Temporary documentation
+\## Docs & architecture.txt

@@ -185,15 +185,32 @@ class VerificationEngine:
         # Count unique rule_ids across all pairs.
         unique_rule_ids = len({p.rule_id for p in pairs})
 
+        # Compute confidence score (0.0–1.0).
+        total_pairs = len(pairs)
+        confirmed = sum(1 for p in pairs if p.alignment == Alignment.CONFIRMED)
+        matched = sum(1 for p in pairs if p.rule_matched)
+        verified_events = sum(1 for p in pairs if p.event_is_verified)
+
+        if total_pairs > 0 and unique_rule_ids > 0 and timeline.total_events > 0:
+            confidence_score = (
+                (confirmed / max(total_pairs, 1))
+                * (matched / max(unique_rule_ids, 1))
+                * (verified_events / max(timeline.total_events, 1))
+            )
+            confidence_score = round(min(confidence_score, 1.0), 4)
+        else:
+            confidence_score = 0.0
+
         return VerificationFindings(
             chart_id=chart_id,
             period_covered=(earliest, latest),
             total_events=timeline.total_events,
             total_rules_evaluated=unique_rule_ids,
-            total_pairs=len(pairs),
+            total_pairs=total_pairs,
             rule_summaries=summaries,
             verification_pairs=tuple(pairs),
             engine_version=_ENGINE_VERSION,
+            confidence_score=confidence_score,
         )
 
     # ── Convenience methods ──────────────────────────────────────────────

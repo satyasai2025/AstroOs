@@ -1,5 +1,5 @@
 """
-AstroOS — Rule Domain Objects (Module 13)
+AstroOS — Rule Domain Objects (Module 13, Phase B — Enhanced)
 
 Rules and their Conditions are pure declarative data, not custom
 evaluator callables (unlike Yoga Engine's registry, Module 8). A
@@ -7,21 +7,36 @@ Condition is just (fact_key, operator, expected_value) — RuleEngine
 contains ONE generic comparison mechanism that evaluates every rule's
 conditions the same way, so adding a rule never means adding code,
 avoiding the if/elif chain by construction rather than by discipline.
+
+Phase B additions:
+  - ConditionGroup for AND/OR nesting across conditions
+  - priority field on RuleResult for caller visibility
+  - IN/NOT IN operator support via _OPERATORS
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Literal
 
 
 @dataclass(frozen=True)
 class Condition:
     """One comparison against a single Fact. fact_key must match a Fact.key exactly."""
     fact_key: str
-    operator: str  # "==", "!=", ">", "<", ">=", "<="
+    operator: str  # "==", "!=", ">", "<", ">=", "<=", "in", "not_in"
     expected_value: Any
     description: str = ""  # human-readable, for trace/explanation output
+
+
+@dataclass(frozen=True)
+class ConditionGroup:
+    """
+    A group of conditions combined with AND or OR logic. Supports
+    recursive nesting: a ConditionGroup can contain other ConditionGroups.
+    """
+    operator: Literal["AND", "OR"]
+    conditions: tuple[Condition | ConditionGroup, ...]
 
 
 @dataclass(frozen=True)
@@ -43,7 +58,7 @@ class RuleDefinition:
     source_text: str
     priority: int
     category: str
-    conditions: tuple[Condition, ...]
+    conditions: tuple[Condition | ConditionGroup, ...]
     conclusion: Conclusion
     explanation: str
     tags: tuple[str, ...] = field(default_factory=tuple)
@@ -60,3 +75,6 @@ class RuleResult:
     explanation: str
     evaluation_trace: tuple[str, ...]
     execution_time: float  # seconds
+    priority: int = 0  # from the originating RuleDefinition
+    rule_name: str = ""
+    rule_category: str = ""

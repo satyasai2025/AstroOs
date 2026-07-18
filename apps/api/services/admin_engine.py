@@ -10,11 +10,11 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 
 from apps.api.config import get_settings
 from apps.api.domain.admin import AdminUserSummary, ModuleHealth, SystemStatus
-from apps.api.domain.user import UserRole, UserStatus
+from apps.api.domain.user import UserId, UserRole, UserStatus
 from apps.api.models.user import UserModel
 from apps.api.repositories.user_repository import UserRepository
 from apps.api.services.ephemeris_service import EphemerisService
@@ -72,6 +72,18 @@ class AdminEngine:
 
     # ── User management ───────────────────────────────────────────────────
 
+    @staticmethod
+    def _filtered_users_stmt(status: Optional[str], role: Optional[str]):
+        """Shared status/role filter, reused by list_users and count_users
+        so pagination's total always reflects the exact same WHERE clause
+        as the page it's counting."""
+        stmt = select(UserModel).where(UserModel.deleted_at.is_(None))
+        if status:
+            stmt = stmt.where(UserModel.status == status)
+        if role:
+            stmt = stmt.where(UserModel.role == role)
+        return stmt
+
     async def list_users(
         self,
         status: Optional[str] = None,
@@ -81,20 +93,31 @@ class AdminEngine:
     ) -> tuple[AdminUserSummary, ...]:
         if self._session is None:
             return ()
-        stmt = select(UserModel).where(UserModel.deleted_at.is_(None))
-        if status:
-            stmt = stmt.where(UserModel.status == status)
-        if role:
-            stmt = stmt.where(UserModel.role == role)
+        stmt = self._filtered_users_stmt(status, role)
         stmt = stmt.order_by(UserModel.created_at.desc()).limit(limit).offset(offset)
         result = await self._session.execute(stmt)
-        rows = await result.scalars().all()
+        rows = result.scalars().all()
         return tuple(_user_to_summary(r) for r in rows)
+
+    async def count_users(
+        self,
+        status: Optional[str] = None,
+        role: Optional[str] = None,
+    ) -> int:
+        """True count of users matching the filter, independent of
+        limit/offset — used by callers that need pagination totals
+        rather than the current page's size."""
+        if self._session is None:
+            return 0
+        stmt = self._filtered_users_stmt(status, role)
+        count_stmt = select(func.count()).select_from(stmt.subquery())
+        result = await self._session.execute(count_stmt)
+        return result.scalar_one()
 
     async def get_user(self, user_id: uuid.UUID) -> Optional[AdminUserSummary]:
         if self._user_repo is None:
             return None
-        domain_user = await self._user_repo.get_by_id(user_id)
+        domain_user = await self._user_repo.get_by_id(UserId(user_id))
         if domain_user is None:
             return None
         return AdminUserSummary(

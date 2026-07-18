@@ -62,6 +62,18 @@ class Settings(BaseSettings):
 
     EPHEMERIS_CACHE_TTL: int = 3600  # 1 hour; results are deterministic per input
 
+    # ── Geocoding (birth place search) ────────────────────────────────────────
+    GEOCODING_PROVIDER_URL: str = "https://nominatim.openstreetmap.org/search"
+    """
+    OpenStreetMap Nominatim's public instance — free, no API key required.
+    Nominatim's usage policy (https://operations.osmfoundation.org/policies/nominatim/)
+    requires a descriptive User-Agent (below) and caps heavy/production use at
+    ~1 request/second; the frontend debounces search input to stay well under
+    that. Swap this for a self-hosted Nominatim instance or a paid provider
+    (Google/Mapbox) before any real production traffic.
+    """
+    GEOCODING_USER_AGENT: str = "AstroOS/1.0 (development)"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

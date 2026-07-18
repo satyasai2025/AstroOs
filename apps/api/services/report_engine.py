@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from apps.api.domain.horoscope import D1Chart
+from apps.api.domain.knowledge import KnowledgeSearchResult
 from apps.api.domain.research import AstrologicalSnapshot
 from apps.api.domain.statistics import AggregateReport
 from apps.api.domain.timeline import Timeline
@@ -117,6 +118,26 @@ def _extract_verification_summary(vf: VerificationFindings) -> ReportContent:
     )
 
 
+def _extract_knowledge_citations(citations: tuple[KnowledgeSearchResult, ...]) -> ReportContent:
+    return ReportContent(
+        section_type="knowledge_citations",
+        data={
+            "citations": [
+                {
+                    "entity_type": c.entity_type,
+                    "entity_id": str(c.entity_id),
+                    "title": c.title,
+                    "snippet": c.snippet,
+                    "book_title": c.book_title,
+                    "tradition": c.tradition,
+                }
+                for c in citations
+            ],
+            "count": len(citations),
+        },
+    )
+
+
 def _extract_statistics_summary(stats: AggregateReport) -> ReportContent:
     dists = []
     for d in stats.distributions:
@@ -151,6 +172,7 @@ class ReportEngine:
         timeline: Timeline | None = None,
         verification: VerificationFindings | None = None,
         stats: AggregateReport | None = None,
+        citations: tuple[KnowledgeSearchResult, ...] | None = None,
         title: str = "Chart Analysis",
         subject_name: str = "Unnamed",
         generated_by: str | None = None,
@@ -190,6 +212,13 @@ class ReportEngine:
             sections.append(ReportSection(
                 "Statistics", "statistics_summary",
                 _extract_statistics_summary(stats), order=order,
+            ))
+            order += 1
+
+        if citations:
+            sections.append(ReportSection(
+                "Knowledge Citations", "knowledge_citations",
+                _extract_knowledge_citations(citations), order=order,
             ))
             order += 1
 

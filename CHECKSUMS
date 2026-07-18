@@ -1,0 +1,24 @@
+# AstroOS v2.0.0 — Manifest Checksums (SHA-256)
+#
+# Scope: the source-of-truth manifest/config files that define this release's
+# build (not built binaries — none have been published yet; see
+# GA_RELEASE_GOVERNANCE_AUDIT.md Phase 9). Regenerate with:
+#   sha256sum pyproject.toml apps/api/requirements.txt apps/web/package.json \
+#     sdks/python/pyproject.toml sdks/typescript/astroos/package.json \
+#     Dockerfile.prod .github/workflows/ci.yml
+#
+# Generated: 2026-07-19 (post-blocker-resolution pass), working tree on top of
+# commit d98fd01 (v1.0.0-alpha). All 8 release-blocking defects found in the
+# initial Governance Audit have been fixed and re-verified — see
+# GA_RELEASE_GOVERNANCE_AUDIT.md "Post-Resolution Update" for the re-run
+# evidence. `sdks/typescript/package.json` (the disconnected, orphaned
+# duplicate manifest) was deleted as part of the fix and is intentionally no
+# longer listed here.
+
+e5b90544fa2d59bdc24645f4a81dc35d345a2feaafd44c5afe32ee739cf28ff0  pyproject.toml
+62e5546b36a5e22cee33644296e007042805d48c00b02044e8844badb61da93c  apps/api/requirements.txt
+6f441212307d701fe38663100fd36fece29fcfd5159aac4df78150d2a5bfb8f9  apps/web/package.json
+55692194b6830a716922654537272f45837754fd8679ff7575f08db012a1babc  sdks/python/pyproject.toml
+f550757a587e136ce2852f34a5ddc5b2d59629b7e3c0b4a31f7a510b400d29de  sdks/typescript/astroos/package.json
+068f80f14b20259d63e7d81c3dd5356e778838bd3252d0bb7087887d3fb35e0a  Dockerfile.prod
+6c9b7e8e638c4d3488ddc116ccbb89ac5a3b75f8ea4793663a44a94957d720e6  .github/workflows/ci.yml

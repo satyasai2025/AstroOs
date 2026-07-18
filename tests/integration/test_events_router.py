@@ -14,8 +14,6 @@ from datetime import date
 import pytest
 import pytest_asyncio
 from fastapi import FastAPI
-
-pytestmark = pytest.mark.asyncio
 from httpx import ASGITransport, AsyncClient
 
 from apps.api.dependencies import get_db_session

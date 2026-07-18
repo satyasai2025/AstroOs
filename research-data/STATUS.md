@@ -57,13 +57,13 @@ metadata:
 
 | Dataset | Status | Version | Quality Score | Tier | Notes |
 |---------|--------|---------|---------------|------|-------|
-| RS-COHORT | ✅ STABLE | v1.0.0 | 1.0 | A | 49,964 records imported from AstroDatabank; 16 fields; CC-BY-4.0 |
+| RS-COHORT | ✅ STABLE | v1.0.0 | 1.0 | A | 49,964 records imported via dataset import framework; 16 fields; CC-BY-4.0 |
 | RS-EVENT | 🟡 CANDIDACY | v0.1.0 | — | — | 60 seed events from 12 public figures |
 | RS-MARRIAGE | 🟡 CANDIDACY | v0.1.0 | — | — | 3 marriage events from RS-EVENT |
 | RS-CAREER | 🟡 CANDIDACY | v0.1.0 | — | — | 31 career events from RS-EVENT |
-| RS-HEALTH | 🔴 NOT STARTED | — | — | — | Depends on RS-EVENT |
-| RS-WEALTH | 🔴 NOT STARTED | — | — | — | Depends on RS-EVENT |
-| RS-SPIRITUAL | 🔴 NOT STARTED | — | — | — | Depends on RS-EVENT |
+| RS-HEALTH | 🔴 NOT STARTED | — | — | — | Depends on RS-EVENT. A v0.1.0 (183 records) existed 2026-07-16–17 but was a filtered derivative of the fabricated RS-EVENT v1.0.0 tree — deleted 2026-07-17 as part of GD-RDO-001's closure; see governance/GD-RDO-001. |
+| RS-WEALTH | 🔴 NOT STARTED | — | — | — | Depends on RS-EVENT. Same history as RS-HEALTH above — deleted fabricated v0.1.0 (44 of 183 rows had literal unfilled template placeholders). |
+| RS-SPIRITUAL | 🔴 NOT STARTED | — | — | — | Depends on RS-EVENT. Same history as RS-HEALTH above — deleted fabricated v0.1.0. |
 | RS-FLAT | 🔴 NOT STARTED | — | — | — | Pipeline spec complete; needs computation |
 
 ### Benchmark Datasets (BM)
@@ -151,11 +151,11 @@ metadata:
 | Dataset types CANDIDACY | 20 (RF-DASHA, RF-EPHEM, RF-AYAN, PB-WIKI, PB-WIKIDATA, PB-EVENTS, SY-NULL, RS-FLAT, RS-EVENT, RS-MARRIAGE, RS-CAREER, BM-ASPECT, BM-DASHA, BM-BALA, BM-ASTAK, BM-DIV, VL-CONSISTENCY, BM-TRANSIT, BM-CALC, AI-FACT) |
 | Dataset types PLACEHOLDER | 1 (RF-TZ) |
 | Dataset types NOT STARTED | 23 |
-| Candidate datasets evaluated | 1 (LOKPA — recommendation: REJECT) |
+| Candidate datasets evaluated | 0 |
 | Milestones completed | M1, M2, M3 |
 | Milestones in progress | M4 (Phase D) |
 | Governance decisions pending | 5 (GD-002 through GD-006) |
-| Governance decisions resolved | 1 (GD-001: LOKPA rejected) |
+| Governance decisions resolved | 1 (GD-RDO-001) |
 
 ---
 
@@ -163,12 +163,12 @@ metadata:
 
 | ID | Decision | Context | Needed By | Status |
 |----|----------|---------|-----------|--------|
-| GD-001 | LOKPA_Persons_WithEvents.csv usage terms | 28K-record CSV file from unknown source | Phase C start | ✅ RESOLVED — Reject |
 | GD-002 | Public figure privacy threshold | When does person qualify as "public" | Phase C start | ⏳ PENDING |
 | GD-003 | Ethics board composition | Who oversees dataset ethics | Phase C start | ⏳ PENDING |
 | GD-004 | Community cohort sharing policy | User cohort visibility rules | Phase D end | ⏳ PENDING |
 | GD-005 | AI training data policy | Can public datasets train AI models | Phase F start | ⏳ PENDING |
 | GD-006 | Commercial data budget | Budget for licensed chart data | Phase G | ⏳ PENDING |
+| **GD-RDO-001** | **RS-EVENT v1.0.0 data integrity** — `research-data/research/event/ASTRO-RS-EVENT-v1.0.0/` was template-generated (fixed seed, 44/1,098 rows with unfilled `{placeholder}` text) but self-labeled as `Curated`/`manual_curation`/`verified_multi_source`/`Stable`. Never referenced or endorsed by this office's own STATUS/INDEX/ROADMAP. See [governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md](governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md) for full evidence and closure record. | Disposition decided 2026-07-17: **deleted** — never committed to git, so removal has no history impact; not relabeled as synthetic because the fabricated events name real, identifiable historical figures. | Before RS-EVENT v1.0.0 is ever treated as real | 🟢 RESOLVED (2026-07-17) |
 
 ---
 
@@ -176,8 +176,7 @@ metadata:
 
 | Dependency | Status | Owner | Notes |
 |------------|--------|-------|-------|
-| **ER-001: Dataset Import Framework** | ✅ COMPLETE | Engineering Office | AstroDatabank.xlsx import pipeline — RS-COHORT v1.0.0 (49,964 records) delivered and validated |
-| LOKPA file license | ✅ RESOLVED | Legal | Rejected — do not use |
+| **ER-001: Dataset Import Framework** | ✅ COMPLETE | Engineering Office | Excel import pipeline — RS-COHORT v1.0.0 (49,964 records) delivered and validated |
 | IANA tzdata | ON TRACK | External | Quarterly releases |
 | Swiss Ephemeris | ON TRACK | External | Annual license renewal |
 | JPL Horizons API | AVAILABLE | NASA/JPL | Public API, rate-limited |
@@ -202,6 +201,8 @@ metadata:
 3. **Validate all event subsets** — Apply RDO quality standards
 4. **Update management documents** — STATUS.md, INDEX.md
 5. **Reassess M4 gate** — Verify ≥1,000 events, Tier A quality
+
+**Process-integrity note (added 2026-07-17, see GD-RDO-001):** a template-generated file matching this exact gate's numeric target (1,098 events, self-claimed `verified_multi_source`/`Stable`) was found sitting in this directory and has been deleted — see `governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md` §6. Whatever satisfies "Scale RS-EVENT to ≥1,000 events" going forward must be individually source-traceable, not a bare count — a record count and a `verification_status` field alone are not sufficient evidence of real curation, as this incident demonstrated.
 
 **External Dependencies:** None (RS-COHORT provides chart data for event linking)
 

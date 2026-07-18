@@ -1,0 +1,6 @@
+# Hard exclude massive data blocks
+build/
+dist/
+*.json
+*.csv
+*.md

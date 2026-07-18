@@ -15,8 +15,6 @@ from apps.api.repositories.planet_position_repository import (
     _tropical_longitude,
 )
 
-pytestmark = pytest.mark.asyncio
-
 _BIRTH_DT = datetime(1990, 6, 15, 10, 30, 0, tzinfo=timezone.utc)
 
 

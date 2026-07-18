@@ -38,7 +38,7 @@ apps/api/services/dataset_import/
 └── adapters/
     ├── __init__.py
     ├── excel_adapter.py           # Generic Excel reader
-    └── astrodatabank_adapter.py   # AstroDatabank column mapping + metadata
+    └── cohort_excel_adapter.py    # Cohort Excel column mapping + metadata
 ```
 
 ## Extension Mechanism
@@ -104,10 +104,10 @@ Tier: A (≥0.90), B (≥0.75), C (≥0.50), D (≥0.25), F (<0.25)
 ## Testing Strategy
 
 - **Unit tests**: SchemaMapper, Validator, Deduplicator, Normalizer, QualityScorer, Exporter — pure logic, no I/O
-- **Integration tests**: Full pipeline against AstroDatabank.xlsx — adapter read, map, validate, dedup, score, export
+- **Integration tests**: Full pipeline against synthetic Excel fixtures — adapter read, map, validate, dedup, score, export
 - **Test fixtures**: Temporary directories for output; mocked adapters for unit tests
 
-## First Dataset: AstroDatabank
+## First Dataset: RS-COHORT
 
 **Dataset ID**: `ASTRO-RS-COHORT-v0.1.0`
 
@@ -121,4 +121,4 @@ Tier: A (≥0.90), B (≥0.75), C (≥0.50), D (≥0.25), F (<0.25)
 | Completeness | 99.7% |
 | Export format | CSV (5.6 MB) |
 
-Output: `datasets/rs/cohort/ASTRO-RS-COHORT-v0.1.0/`
+Output (original import): `datasets/rs/cohort/ASTRO-RS-COHORT-v0.1.0/` — superseded 2026-07-17 by the Research Data Office's promoted-to-Stable copy at `research-data/research/cohort/ASTRO-RS-COHORT-v1.0.0/` (identical content); the latter is now canonical.

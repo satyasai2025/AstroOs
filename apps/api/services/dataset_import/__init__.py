@@ -7,7 +7,7 @@ AstroOS canonical dataset format.
 Pipeline: Source Adapter → Schema Mapping → Validation → Normalization →
           Deduplication → Quality Assessment → Export
 
-AstroDatabank.xlsx is the first supported adapter.
+The CohortExcelAdapter is the first supported adapter for birth chart imports.
 """
 
 from apps.api.services.dataset_import.framework import ImportPipeline

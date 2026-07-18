@@ -1,16 +1,22 @@
 """
-AstroOS — Research Engine (Module 17, Phase 1)
+AstroOS — Research Engine (Module 17, Phase B — Enhanced)
 
 Manages research projects, experiments, and astrological snapshots. The
 capture, query, and comparison layer for chart data — never performs any
 astrology calculation itself.
 
 Project management  → delegates to ResearchRepository
-Experiment management → delegates to ResearchRepository
+Experiment management → delegates to ResearchRepository (dedicated table)
 Snapshot capture    → calls existing engines, bundles results into
                       AstrologicalSnapshot, persists via repository
 Snapshot query      → loads domain objects, evaluates via SnapshotAccessor
 Snapshot comparison → compares two snapshots via SnapshotAccessor.compare()
+
+Phase B additions:
+  - Experiments use dedicated research_experiments table (migration 0009)
+  - ExperimentExecutions link snapshots to experiments
+  - rule_registry_hash captured on experiment creation for reproducibility
+  - dataset_id embedded in snapshots for provenance
 """
 
 from __future__ import annotations
@@ -21,6 +27,7 @@ from typing import Any, Optional
 
 from apps.api.domain.research import (
     AstrologicalSnapshot,
+    ExperimentExecution,
     FieldDiff,
     ResearchExperiment,
     ResearchProject,
@@ -53,9 +60,11 @@ class ResearchEngine:
         user_id: uuid.UUID,
         title: str,
         description: Optional[str] = None,
+        dataset_id: Optional[uuid.UUID] = None,
     ) -> ResearchProject:
         return await self._repo.create_project(
             user_id=user_id, title=title, description=description,
+            dataset_id=dataset_id,
         )
 
     async def update_project(
@@ -85,9 +94,11 @@ class ResearchEngine:
         hypothesis: str,
         methodology: str,
     ) -> ResearchExperiment:
+        from apps.api.services.rule_registry import registry_hash
         return await self._repo.create_experiment(
             project_id=project_id, title=title,
             hypothesis=hypothesis, methodology=methodology,
+            rule_registry_hash=registry_hash(),
         )
 
     async def update_experiment(
@@ -105,14 +116,41 @@ class ResearchEngine:
     ) -> tuple[ResearchExperiment, ...]:
         return await self._repo.list_experiments(project_id)
 
+    async def delete_experiment(self, experiment_id: uuid.UUID) -> bool:
+        return await self._repo.delete_experiment(experiment_id)
+
+    # ── Executions ────────────────────────────────────────────────────────
+
+    async def capture_execution(
+        self,
+        experiment_id: uuid.UUID,
+        snapshot_id: Optional[uuid.UUID] = None,
+        notes: Optional[str] = None,
+    ) -> ExperimentExecution:
+        """Record one execution of an experiment against a snapshot."""
+        return await self._repo.create_execution(
+            experiment_id=experiment_id,
+            snapshot_id=snapshot_id,
+            notes=notes,
+        )
+
+    async def list_executions(
+        self, experiment_id: uuid.UUID,
+    ) -> tuple[ExperimentExecution, ...]:
+        return await self._repo.list_executions(experiment_id)
+
     async def assign_snapshots_to_experiment(
         self,
         experiment_id: uuid.UUID,
         snapshot_ids: list[uuid.UUID],
     ) -> Optional[ResearchExperiment]:
-        return await self._repo.assign_snapshots_to_experiment(
-            experiment_id, snapshot_ids,
-        )
+        """Link snapshots to an experiment via execution records."""
+        for i, sid in enumerate(snapshot_ids):
+            await self._repo.create_execution(
+                experiment_id=experiment_id, snapshot_id=sid,
+                execution_order=i,
+            )
+        return await self._repo.get_experiment(experiment_id)
 
     async def complete_experiment(
         self, experiment_id: uuid.UUID, findings: str,
@@ -138,15 +176,14 @@ class ResearchEngine:
         timeline_ref: Any = None,
         verification_ref: Any = None,
         events: Any = None,
+        dataset_id: Optional[uuid.UUID] = None,
     ) -> AstrologicalSnapshot:
         """
         Bundle already-computed engine outputs into an AstrologicalSnapshot
         and persist it. This method does NOT call any engine — callers
         compute engines first and pass results here.
 
-        This design keeps the Research Engine aligned with every other
-        engine's "compute once, reuse" discipline. A future convenience
-        wrapper can compute + capture in one call if needed.
+        Phase B: dataset_id is captured for provenance traceability.
         """
         captured_at = datetime.now(timezone.utc)
         snapshot = AstrologicalSnapshot(
@@ -166,6 +203,7 @@ class ResearchEngine:
             verification_ref=verification_ref,
             events=events,
             snapshot_version=self._SNAPSHOT_VERSION,
+            dataset_id=dataset_id,
         )
         return await self._repo.save_snapshot(snapshot)
 

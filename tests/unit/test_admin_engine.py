@@ -12,19 +12,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from apps.api.domain.admin import AdminUserSummary
 from apps.api.services.admin_engine import AdminEngine
 
-pytestmark = pytest.mark.asyncio
-
 
 def _make_session_mock() -> AsyncMock:
     session = AsyncMock(spec=AsyncSession)
-    # .scalars() is a sync property returning an object with async .all()
-    scalars_mock = AsyncMock()
-    scalars_mock.all = AsyncMock(return_value=[])
-    # .scalar_one_or_none() is async
-    scalars_mock.scalar_one_or_none = AsyncMock(return_value=None)
-    # execute() returns a result whose .scalars is a sync callable
+    # AsyncSession.execute() is the only async boundary — it returns an
+    # already-materialized, synchronous sqlalchemy.engine.Result. Every
+    # method on that Result (.scalars(), .all(), .scalar_one_or_none(), ...)
+    # is synchronous, matching admin_engine.py's real (non-awaited) usage.
+    scalars_mock = MagicMock()
+    scalars_mock.all = MagicMock(return_value=[])
+    scalars_mock.scalar_one_or_none = MagicMock(return_value=None)
     result_mock = MagicMock()
     result_mock.scalars = MagicMock(return_value=scalars_mock)
+    result_mock.scalar_one_or_none = MagicMock(return_value=None)
     session.execute = AsyncMock(return_value=result_mock)
     return session
 

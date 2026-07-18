@@ -117,7 +117,7 @@ Q3 2026          Q4 2026          Q1 2027          Q2 2027
 |-----------|------|------------------|
 | **M1** — Reference Baseline | 2026-08-15 | RF-* (8 datasets), BM-CALC/ASPECT/DASHA |
 | **M2** — Stats Foundation | 2026-09-01 | SY-RANDOM 100K, SY-NULL, BM-TRANSIT |
-| **M3** — First Real Charts | 2026-10-15 | PB-WIKI (≥10K), RS-FLAT v0.1, LOKPA decision |
+| **M3** — First Real Charts | 2026-10-15 | PB-WIKI (≥10K), RS-FLAT v0.1 |
 | **M4** — Events Online | 2026-11-15 | RS-EVENT (≥1K), RS-MARRIAGE, RS-CAREER |
 | **M5** — Full Benchmarks | 2027-01-15 | All BM-* & QT-* Stable, CI-integrated |
 | **M6** — AI Evaluation | 2027-03-15 | AI-FACT, AI-INTERP, AI-HALLUC v1.0 |
@@ -129,7 +129,6 @@ Q3 2026          Q4 2026          Q1 2027          Q2 2027
 
 | ID | Decision | Description | Needed By | Recommended |
 |----|----------|-------------|-----------|-------------|
-| GD-001 | LOKPA data usage | License assessment for 28K-record CSV | Phase C (2026-10) | Evaluate as Public or Licensed |
 | GD-002 | Public figure threshold | When is a person "public figure" for privacy | Phase C (2026-10) | Wikipedia notability as proxy |
 | GD-003 | Ethics board formation | Who reviews dataset ethics | Phase C (2026-10) | Curator + Privacy + Legal |
 | GD-004 | Cohort sharing policy | Can users share cohorts publicly | Phase D (2026-12) | Opt-in with privacy audit |
@@ -142,7 +141,6 @@ Q3 2026          Q4 2026          Q1 2027          Q2 2027
 
 | Dependency | Type | For | Status |
 |------------|------|-----|--------|
-| LOKPA_Persons_WithEvents.csv | License evaluation | PB incorporation | ⏳ PENDING |
 | IANA tzdata | Data source | RF-TZ updates | ✅ ON TRACK |
 | Swiss Ephemeris | Data source + License | RF-EPHEM | ✅ ON TRACK |
 | JPL Horizons API | Reference data | BM-CALC | ✅ AVAILABLE |
@@ -159,8 +157,8 @@ Q3 2026          Q4 2026          Q1 2027          Q2 2027
 | Dataset types defined | 51 |
 | Dataset types SEEDED (data exists) | 3 (SIGNS, NAK, PADA) |
 | Dataset types ready to build | 48 |
-| Governance decisions open | 6 |
-| External dependencies | 6 (5 ready, 1 pending) |
+| Governance decisions open | 5 |
+| External dependencies | 5 (5 ready) |
 
 ---
 
@@ -169,8 +167,7 @@ Q3 2026          Q4 2026          Q1 2027          Q2 2027
 1. **Build RF-* seed datasets** — Package migration 0005 data (SIGNS, NAK, PADA) into canonical formats per Phase 6. Immediate priority.
 2. **Build SY-RANDOM generator** — Create first synthetic dataset (100K records). Required for all statistical work.
 3. **Build PB-WIKI extractor** — Wikipedia infobox extraction for first real chart collection. Foundation for all research datasets.
-4. **Evaluate LOKPA file** — Legal license assessment of existing CSV. Could accelerate Phase C significantly.
-5. **Set up repository infrastructure** — Directory layout, Git LFS, JSON schemas, validators.
+4. **Set up repository infrastructure** — Directory layout, Git LFS, JSON schemas, validators.
 
 ---
 

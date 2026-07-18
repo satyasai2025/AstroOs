@@ -50,12 +50,13 @@ class TestResearchExperiment:
         )
         assert e.status == "draft"
 
-    def test_default_snapshot_ids_empty(self):
+    def test_default_rule_registry_hash_none(self):
         e = ResearchExperiment(
             id=uuid.uuid4(), project_id=uuid.uuid4(),
             title="Exp", hypothesis="H", methodology="M",
         )
-        assert e.snapshot_ids == ()
+        assert e.rule_registry_hash is None
+        assert e.dataset_id is None
 
     def test_optional_findings(self):
         e = ResearchExperiment(

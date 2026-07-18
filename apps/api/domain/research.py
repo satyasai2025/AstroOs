@@ -40,14 +40,16 @@ class ResearchProject:
     status: str = "active"  # active | archived
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    dataset_id: Optional[uuid.UUID] = None
 
 
 @dataclass(frozen=True)
 class ResearchExperiment:
     """
-    A single hypothesis and its execution over one or more snapshots.
+    A single hypothesis and its execution over one or more executions.
 
-    Created as draft, snapshots assigned, then run, then findings recorded.
+    Created as draft, executions assigned, then completed, then findings recorded.
+    Uses the dedicated research_experiments table (migration 0009).
     """
 
     id: uuid.UUID
@@ -56,10 +58,23 @@ class ResearchExperiment:
     hypothesis: str
     methodology: str
     status: str = "draft"  # draft | running | completed
-    snapshot_ids: tuple[uuid.UUID, ...] = field(default_factory=tuple)
     findings: Optional[str] = None
+    rule_registry_hash: Optional[str] = None
+    dataset_id: Optional[uuid.UUID] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+
+
+@dataclass(frozen=True)
+class ExperimentExecution:
+    """Links one snapshot to one experiment, with ordering and notes."""
+
+    id: uuid.UUID
+    experiment_id: uuid.UUID
+    snapshot_id: Optional[uuid.UUID] = None
+    execution_order: int = 0
+    notes: Optional[str] = None
+    created_at: Optional[datetime] = None
 
 
 @dataclass(frozen=True)
@@ -97,6 +112,7 @@ class AstrologicalSnapshot:
 
     # Metadata
     snapshot_version: str = "1.0"
+    dataset_id: Optional[uuid.UUID] = None
 
 
 @dataclass(frozen=True)

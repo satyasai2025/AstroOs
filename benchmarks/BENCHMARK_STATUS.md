@@ -1,8 +1,8 @@
 # AstroOS Benchmark Office — STATUS
 
-> **Status:** ACTIVE — reflects current state as of 2026-07-15
-> **Owner:** Chief QA & Benchmark Architect (Agent 4)
-> **Version:** 1.0
+> **Status:** ACTIVE — reflects current state as of 2026-07-18
+> **Owner:** Atlas (Lead Implementation Agent)
+> **Version:** 1.1
 
 ---
 
@@ -14,6 +14,7 @@
 | — | Benchmark Roadmap | ✅ ACTIVE | `BENCHMARK_ROADMAP.md` | 2026-07-15 |
 | — | Benchmark Status | ✅ ACTIVE | `BENCHMARK_STATUS.md` | 2026-07-15 |
 | — | Benchmark Index | ✅ ACTIVE | `BENCHMARK_INDEX.md` | 2026-07-15 |
+| **Phase C** | **Scientific Validation & QA** | **✅ FROZEN** | **`PHASE_C_COMPLETION_REPORT.md`** | **2026-07-18** |
 
 ---
 
@@ -23,9 +24,9 @@
 
 | Benchmark ID | Status | Version | Source Engine | Notes |
 |-------------|--------|---------|---------------|-------|
-| BM-CALC | ✅ FROZEN | 1.0.0 | EphemerisWrapper | Spec, expected results, validation matrix, regression suite complete |
-| BM-HOUSE | ✅ FROZEN | 1.0.0 | HouseEngine, EphemerisWrapper | Spec, expected results, validation matrix, regression suite complete |
-| BM-VARGA | 🔴 NOT STARTED | — | DivisionalEngine | Next — depends on BM-HOUSE |
+| BM-CALC | ✅ FROZEN | 1.0.0 | EphemerisWrapper | Spec + execution engine + 17 pytest regression tests. API: `/api/v1/benchmark/validate` |
+| BM-HOUSE | ✅ FROZEN | 1.0.0 | HouseEngine, EphemerisWrapper | Spec + execution engine + 8 pytest regression tests. Validates all 4 house systems (W/P/K/E) |
+| BM-VARGA | ✅ FROZEN | 1.1.0 | DivisionalEngine | Spec accepted + execution engine + 6 pytest regression tests. Validates all 15 vargas |
 | BM-ONT | 🔴 NOT STARTED | — | OntologyRegistry | Not started |
 
 ### Planetary Analysis Benchmarks (BM-YOGA, BM-BALA, BM-ASTAK, BM-TRANSIT)
@@ -107,7 +108,7 @@
 
 | Dataset ID | Status | Charts | Version | Notes |
 |------------|--------|--------|---------|-------|
-| GC-MASTER | 🔵 DESIGN | 0/5 | 1.0.0 | Dataset design complete; 2 Tier A + 3 Tier B candidates identified |
+| GC-MASTER | ✅ STABLE | 5/5 | 1.0.0 | 2 Tier A + 3 Tier B charts, all expected_planets + expected_house_cusps + expected_vargas populated |
 | GC-EDGE | 🔴 NOT STARTED | 0/50+ | — | Edge case collection |
 
 ---
@@ -130,17 +131,19 @@
 
 | Metric | Value |
 |--------|-------|
-| Phases complete | 1 of 7 |
+| Phases complete | 2 of 7 (Foundation + Phase C) |
 | Active roadmap milestones | M-BM1 target: 2026-08-01 |
 | Benchmark families defined | 20 |
-| Benchmark specifications COMPLETE | 2 of 20 (BM-CALC: 14 test cases, 90 checks; BM-HOUSE: 16 test cases, 92 checks) |
-| Benchmark specifications NOT STARTED | 18 of 20 |
-| Golden chart datasets available | 1 (GC-MASTER design, 5 candidates identified) |
-| Governance decisions pending | 6 (GD-BM-001 through GD-BM-006) |
+| Benchmark specifications COMPLETE | 3 of 20 (BM-CALC, BM-HOUSE, BM-VARGA) |
+| Benchmark execution engines COMPLETE | 3 of 20 (BM-CALC, BM-HOUSE, BM-VARGA via BenchmarkEngine) |
+| Benchmark specifications NOT STARTED | 17 of 20 |
+| Executable regression tests | 31 (17 CALC + 8 HOUSE + 6 VARGA) |
+| Golden chart datasets available | 1 (GC-MASTER, 5 charts fully populated) |
+| Benchmark API endpoints | 2 (`/api/v1/benchmark/validate` + `/validate/all`) |
+| Governance decisions resolved | 2 (GD-BM-002 tolerance, GD-BM-003 ayanamsa) |
+| Governance decisions pending | 4 (GD-BM-001, GD-BM-004, GD-BM-005, GD-BM-006) |
 | External dependencies | 7 (5 ready, 2 pending) |
-| Existing test coverage (AstroOS) | ~1103 pytest tests (not benchmarks) |
-| Validation checks defined | 90 (BM-CALC) |
-| Regression tests defined | 10 (BM-CALC) |
+| Existing test coverage (AstroOS) | ~1461 pytest tests (including 31 benchmark regression) |
 
 ---
 
@@ -159,9 +162,15 @@
 
 ## 7. Next Actions (Immediate)
 
-1. ✅ **BM-CALC** — Complete and frozen
-2. ✅ **BM-HOUSE** — Complete and frozen
-3. ⬅️ **BM-VARGA** — NEXT: Begin Phase 2 – Design divisional chart calculation benchmarks
+1. ✅ **BM-CALC** — Complete, frozen, and executable (pytest regression suite + API)
+2. ✅ **BM-HOUSE** — Complete, frozen, and executable (pytest regression suite + API)
+3. ✅ **BM-VARGA** — Complete, frozen, and executable (pytest regression suite + API)
+4. ✅ **GC-MASTER** — All 5 charts populated with expected planets, house cusps, and vargas
+5. ✅ **Benchmark API** — `/api/v1/benchmark/validate` and `/validate/all` operational
+6. ⬅️ **NEXT:** BM-ONT — Design ontology verification benchmarks (deferred to Phase D)
+7. ⬅️ **NEXT:** BM-YOGA, BM-BALA, BM-ASTAK, BM-TRANSIT — Planetary analysis benchmarks (Phase D)
+
+> **Phase D** is the next build phase. See [BENCHMARK_ROADMAP.md](BENCHMARK_ROADMAP.md) for the prioritized list.
 
 ---
 

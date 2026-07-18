@@ -21,7 +21,7 @@
 | `synthetic/` | `sy/` | 4 | SY-* synthetic datasets: null, random |
 | `validation/` | `vl/` | 1 | VL-* cross-engine consistency data |
 | `ai-eval/` | `ai/` | 1 | AI-* evaluation dataset: fact |
-| `pipelines/` | `import-framework/`, `candidate-datasets/` | 3 | Adapter mapping docs, standards-compliance review, LOKPA candidate evaluation |
+| `pipelines/` | `import-framework/` | 4 | Adapter mapping docs, compliance reviews, canonical mappings |
 | `governance/` | *(memory folder, not `datasets/`)* | 7 | Phase 1 audit report + 6 standards docs (taxonomy, standards, quality, record-standards, research-support, standard-formats) |
 | `ROADMAP.md`, `STATUS.md`, `INDEX.md`, `COMPLETION_REPORT.md` | `DATASET_ROADMAP.md`, `DATASET_STATUS.md`, `DATASET_INDEX.md`, `research-data-office-overview.md` | 4 | Top-level governance docs, renamed to match the other three offices' naming convention (Engineering/Architecture/Benchmark) |
 
@@ -63,11 +63,9 @@
   RF-NAK, RF-PADA) are seeded with real data; everything else is spec'd
   but not built. This is a stated gap in the source office itself, not
   something introduced by migration.
-- **6 governance decisions open** (GD-001 through GD-006 in `STATUS.md`) —
-  LOKPA licensing, public-figure privacy threshold, ethics board formation,
+- **5 governance decisions open** (GD-002 through GD-006 in `STATUS.md`) —
+  public-figure privacy threshold, ethics board formation,
   cohort sharing policy, AI training data policy, commercial data budget.
-- **1 external dependency pending**: `LOKPA_Persons_WithEvents.csv` license
-  evaluation (see `pipelines/candidate-datasets/LOKPA_Candidate_Evaluation_Report.md`).
 
 ---
 
