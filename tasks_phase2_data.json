@@ -1,0 +1,187 @@
+{
+  "metadata": {
+    "title": "Arundhati Pipeline v2.2.0",
+    "subtitle": "Local-First Scale & Hardening · 12 tasks · Phase II (amended)",
+    "generated_at": "2026-07-20T00-00-IST",
+    "source": "ASTROOS_PHASE_II_V2_2_ROADMAP.md + TaskList",
+    "amendment": "2026-07-20: Tasks 6, 7, 18 (containers/Helm/K8s) permanently removed per user directive; scope realigned to CLAUDE_START_HERE.md local-first mandate. Task 8 now depends on task 1."
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "label": "AMP Governance",
+      "owner": "Governance",
+      "status": "completed",
+      "blocks": [
+        8
+      ],
+      "dependencies": [],
+      "description": "Resolve open AMPs and ADR decisions from Phase I before Phase II begins",
+      "completed_at": "2026-07-19T18-30-IST"
+    },
+    {
+      "id": 8,
+      "label": "Observability & SRE (Local-First)",
+      "owner": "Engineering",
+      "status": "completed",
+      "completed_at": "2026-07-20",
+      "blocks": [
+        9,
+        10
+      ],
+      "dependencies": [
+        1
+      ],
+      "description": "Phase II.2: Prometheus metrics, local Grafana dashboard configs, alert rules, OpenTelemetry tracing, structured logging with correlation IDs, SLI/SLO definitions — all runnable on the local machine, no Helm/K8s"
+    },
+    {
+      "id": 9,
+      "label": "Architecture Review: Observability",
+      "owner": "Architecture",
+      "status": "completed",
+      "completed_at": "2026-07-20",
+      "blocks": [
+        10
+      ],
+      "dependencies": [
+        8
+      ],
+      "description": "Phase II.2: ADRs for observability stack, log retention policy, trace propagation, incident runbooks"
+    },
+    {
+      "id": 10,
+      "label": "SDK Public Release & Developer Experience",
+      "owner": "Engineering",
+      "status": "completed",
+      "completed_at": "2026-07-20",
+      "blocks": [
+        11
+      ],
+      "dependencies": [
+        9
+      ],
+      "description": "Phase II.3: Python SDK to PyPI, TypeScript SDK to npm, auto-generated API docs, Jupyter notebooks, versioning policy"
+    },
+    {
+      "id": 11,
+      "label": "Worker Pools & Batch Scaling (Local-First)",
+      "owner": "Engineering",
+      "status": "completed",
+      "completed_at": "2026-07-20",
+      "blocks": [
+        12
+      ],
+      "dependencies": [
+        10
+      ],
+      "description": "Phase II.4: Worker pools (CPU/I/O/AI), queue-depth-based local worker scaling, task monitoring UI, batch job API (1000+ records) — no K8s HPA"
+    },
+    {
+      "id": 12,
+      "label": "Architecture Review: Worker Topology",
+      "owner": "Architecture",
+      "status": "pending",
+      "blocks": [
+        13
+      ],
+      "dependencies": [
+        11
+      ],
+      "description": "Phase II.4: ADRs for worker pool topology, message broker choice, retry policies, task priority routing"
+    },
+    {
+      "id": 13,
+      "label": "AI Model Hardening & Calculator Integration",
+      "owner": "Engineering (AI)",
+      "status": "pending",
+      "blocks": [
+        14
+      ],
+      "dependencies": [
+        12
+      ],
+      "description": "Phase II.5: LLM-as-Judge yoga scoring, deterministic chart comparison, hypothesis grounding in Knowledge Graph, AI fallback to rule-based, gold-standard validation"
+    },
+    {
+      "id": 14,
+      "label": "Documentation & Developer Tools",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [
+        15
+      ],
+      "dependencies": [
+        13
+      ],
+      "description": "Phase II.6: Developer onboarding guide, IDE configs, pre-commit hooks, changelog, migration guide v2.1→v2.2, deprecation policy"
+    },
+    {
+      "id": 15,
+      "label": "Quality Gate: Full Test Suite",
+      "owner": "QA",
+      "status": "pending",
+      "blocks": [
+        16
+      ],
+      "dependencies": [
+        14
+      ],
+      "description": "Per-phase QA: local-first output parity, performance SLOs, security scans, regression suite"
+    },
+    {
+      "id": 16,
+      "label": "Governance: Compliance Audit",
+      "owner": "Governance",
+      "status": "pending",
+      "blocks": [
+        17
+      ],
+      "dependencies": [
+        15
+      ],
+      "description": "Phase II governance: local-first compliance, SDK API stability, AI model transparency"
+    },
+    {
+      "id": 17,
+      "label": "Release: v2.2.0 Tag, Changelog, Notes",
+      "owner": "Release",
+      "status": "pending",
+      "dependencies": [
+        16
+      ],
+      "description": "v2.2.0 Release: Git tag, PyPI + npm publish readiness, release notes, migration guide — no Helm/OCI/container registry"
+    },
+    {
+      "id": 19,
+      "label": "Benchmark: AI Accuracy Gold Standard",
+      "owner": "Benchmark",
+      "status": "pending",
+      "dependencies": [
+        13
+      ],
+      "description": "Phase II.5 Benchmark: Gold-standard yoga dataset, AI agreement rate > 90%, A/B testing vs domain experts, adversarial edge-case testing"
+    }
+  ],
+  "removed_tasks": {
+    "note": "Removed 2026-07-20 per user directive — out of scope under CLAUDE_START_HERE.md local-first mandate (no Docker/K8s/Helm/cloud). Do not re-add without an explicit Architecture Office ADR and a decision recorded in ASTROOS_V2_STATUS.md.",
+    "ids": [
+      6,
+      7,
+      18
+    ]
+  },
+  "phases_completed": {
+    "Phase I": "v2.1.0 Vistara — Docs, Calc, UI, Research, Yoga",
+    "Phase A-H": "v2.0.0 GA — Platform, Research, Benchmark, Knowledge, AI, Reports, SDK, Production"
+  },
+  "success_criteria": {
+    "M2": [
+      "pip install astroos + npm install @astroos/sdk from public registries",
+      "Prometheus metrics + local Grafana dashboards + defined alerts + tracing",
+      "Worker pools scale on queue depth locally, workers recover from failures",
+      "AI model deterministic (same inputs = same outputs), accuracy > 90%",
+      "Developer onboarding in <30 minutes from docs",
+      "Local-first compliance verified: no Docker/K8s/Helm/cloud required"
+    ]
+  }
+}

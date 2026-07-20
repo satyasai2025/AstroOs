@@ -1,8 +1,8 @@
-# astroos-sdk
+# astroos
 
-Official Python SDK for AstroOS Vedic Astrology API.
+Official Python SDK for the AstroOS Vedic Astrology API.
 
-[![PyPI version](https://badge.fury.io/py/astroos-sdk.svg)](https://badge.fury.io/py/astroos-sdk)
+[![PyPI version](https://badge.fury.io/py/astroos.svg)](https://badge.fury.io/py/astroos)
 
 ## Installation
 

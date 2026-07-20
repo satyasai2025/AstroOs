@@ -68,6 +68,7 @@ class TimelineBuildRequest(BaseModel):
 
 
 class TimelineEntryResponse(BaseModel):
+    """Response payload describing timeline entry data."""
     event_id: uuid.UUID
     event_date: date
     title: str
@@ -80,6 +81,7 @@ class TimelineEntryResponse(BaseModel):
 
 
 class TimelineSummaryResponse(BaseModel):
+    """Response payload describing timeline summary data."""
     total_events: int
     date_range: tuple[date, date]
     events_per_category: dict[str, int]
@@ -89,6 +91,7 @@ class TimelineSummaryResponse(BaseModel):
 
 
 class TimelineDashaPeriodSpanResponse(BaseModel):
+    """Response payload describing timeline dasha period span data."""
     system: str
     lord: str
     level: int
@@ -99,6 +102,7 @@ class TimelineDashaPeriodSpanResponse(BaseModel):
 
 
 class TemporalClusterResponse(BaseModel):
+    """Response payload describing temporal cluster data."""
     start_date: date
     end_date: date
     center_date: date
@@ -108,6 +112,7 @@ class TemporalClusterResponse(BaseModel):
 
 
 class TimelineResponse(BaseModel):
+    """Response payload describing timeline data."""
     chart_id: uuid.UUID
     entries: list[TimelineEntryResponse]
     summary: TimelineSummaryResponse

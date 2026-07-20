@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "title": "Saraswati Pipeline v3.0.0",
+    "subtitle": "Intelligence & Global Scale · 19 tasks · Phase V",
+    "generated_at": "2026-07-19T18-45-IST",
+    "source": "ASTROOS_PHASE_V_V3_0_ROADMAP.md + TaskList"
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "label": "AMP Governance",
+      "owner": "Governance",
+      "status": "pending",
+      "blocks": [6],
+      "dependencies": [],
+      "description": "Resolve open AMPs from Phase IV before Phase V begins"
+    },
+    {
+      "id": 6,
+      "label": "Federated Learning: Core Infrastructure",
+      "owner": "Engineering (ML)",
+      "status": "pending",
+      "blocks": [7],
+      "dependencies": [1],
+      "description": "Phase V.1: Federated averaging, secure aggregation (MPC), differential privacy (ε<0.10), cross-tenant training convergence monitoring"
+    },
+    {
+      "id": 7,
+      "label": "Federated Learning: Privacy & Validation",
+      "owner": "Engineering (ML)",
+      "status": "pending",
+      "blocks": [8],
+      "dependencies": [6],
+      "description": "Phase V.1: Privacy audit (no reconstruction), convergence benchmarks (within 5% of centralized model), federated monitoring dashboard"
+    },
+    {
+      "id": 8,
+      "label": "Predictive Astrology: Transformer Model",
+      "owner": "Engineering (ML/AI)",
+      "status": "pending",
+      "blocks": [9],
+      "dependencies": [7],
+      "description": "Phase V.2: Time-series transformer for transit predictions, personal event prediction (trained on birth-death datasets), confidence intervals"
+    },
+    {
+      "id": 9,
+      "label": "Predictive Astrology: Validation",
+      "owner": "Engineering (ML)",
+      "status": "pending",
+      "blocks": [10],
+      "dependencies": [8],
+      "description": "Phase V.2: Gold-standard prediction tests (withheld events), Brier score calibration, human expert comparison study, limitations disclosure"
+    },
+    {
+      "id": 10,
+      "label": "Community Knowledge Graph: Contribution System",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [11],
+      "dependencies": [9],
+      "description": "Phase V.3: KG contribution workflow (expert submit → peer review → merge), graph visualization explorer, citation tracking"
+    },
+    {
+      "id": 11,
+      "label": "Community Knowledge Graph: Trust & Reputation",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [12],
+      "dependencies": [10],
+      "description": "Phase V.3: Expert reputation system, vandalism detection, merge conflict resolution, per-node versioning, trust model"
+    },
+    {
+      "id": 12,
+      "label": "Global Compute Grid: Scaling",
+      "owner": "Engineering (DevOps)",
+      "status": "pending",
+      "blocks": [13],
+      "dependencies": [10],
+      "description": "Phase V.4: Kubernetes cluster autoscaling, spot/preemptible instances + job checkpointing, regional sharding (EU→EU, US→US)"
+    },
+    {
+      "id": 13,
+      "label": "Global Compute Grid: CDN & Cost",
+      "owner": "Engineering (DevOps)",
+      "status": "pending",
+      "blocks": [14],
+      "dependencies": [12],
+      "description": "Phase V.4: CDN for charts/reports, cost optimization (target $0.014/chart), 1M chart computation benchmark"
+    },
+    {
+      "id": 14,
+      "label": "Ethics & Governance: Provenance",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [15],
+      "dependencies": [11],
+      "description": "Phase V.5: Content provenance tracking (chart→calculation→model→input), audit trails for AI outputs, data lineage"
+    },
+    {
+      "id": 15,
+      "label": "Ethics & Governance: AI Safety Board",
+      "owner": "Governance",
+      "status": "pending",
+      "blocks": [16],
+      "dependencies": [9, 14],
+      "description": "Phase V.5: AI Safety policy, human Oversight Board, prediction scope limits, classical knowledge curation policy, bias audit"
+    },
+    {
+      "id": 16,
+      "label": "Partnerships: API & White-Label",
+      "owner": "Engineering",
+      "status": "pending",
+      "dependencies": [15],
+      "description": "Phase V.6: Partner API (licensing, white-label, custom branding), embeddable widgets (chart, transit), SSO federation, revenue-sharing settlement"
+    },
+    {
+      "id": 17,
+      "label": "Knowledge: Classical Data Curation",
+      "owner": "Knowledge",
+      "status": "pending",
+      "dependencies": [11],
+      "description": "Phase V.5 curation: define acceptable prediction scope (astrology), curate prediction-relevant texts (Gochara, Prana Phala, Tajik), bias audit across traditions"
+    },
+    {
+      "id": 18,
+      "label": "Benchmark: Federated & Predictive Models",
+      "owner": "Benchmark",
+      "status": "pending",
+      "dependencies": [7, 9],
+      "description": "Phase V.1+V.2 benchmark: Federated model convergence vs centralized, prediction model accuracy (target >65%), Brier score <0.30, user study with experts"
+    },
+    {
+      "id": 19,
+      "label": "QA: Distributed Systems Chaos Engineering",
+      "owner": "QA",
+      "status": "pending",
+      "blocks": [20],
+      "dependencies": [13, 14, 16, 18],
+      "description": "Phase V QA. Multi-region failover, distributed compute stress test, spot instance preemption recovery, provenance audit (full chain traced)"
+    },
+    {
+      "id": 20,
+      "label": "Security: Global Infrastructure Audit",
+      "owner": "Security",
+      "status": "pending",
+      "blocks": [21],
+      "dependencies": [19],
+      "description": "Phase V security. Cross-region pen-test, federated node compromise simulation, AI model output poisoning detection, content provenance audit"
+    },
+    {
+      "id": 21,
+      "label": "Documentation: Full Platform Handbook",
+      "owner": "Documentation",
+      "status": "pending",
+      "dependencies": [20],
+      "description": "Phase V docs. SaaS deployment guide, federated learning setup, predictive model integration guide, partner API docs, AI ethics handbook"
+    },
+    {
+      "id": 22,
+      "label": "Release: v3.0.0 Tag, GA Declaration",
+      "owner": "Release",
+      "status": "pending",
+      "dependencies": [21],
+      "description": "v3.0.0 Release. Git tag v3.0.0, federated learning published, prediction engine GA, knowledge graph community launches, partner ecosystem live, migration guide v2.4→v3.0, changelog"
+    },
+    {
+      "id": 23,
+      "label": "Infrastructure: Global SaaS Launch",
+      "owner": "Release",
+      "status": "pending",
+      "dependencies": [16, 22],
+      "description": "Phase V.6. SaaS GA launch with 3 regions (us-east-1, eu-west-1, ap-southeast-1), partner APIs made available, global CDN configured, monitoring dashboard live"
+    }
+  ],
+  "phases_completed": {
+    "Phase IV": "v2.4.0 Ganesha — SaaS, AI, Scale",
+    "Phase III": "v2.3.0 Lakshmi — Mobile, Plugins, Collaboration",
+    "Phase II": "v2.2.0 Arundhati — Enterprise Ready",
+    "Phase I": "v2.1.0 Vistara — Local First Enhancement",
+    "Phase A-H": "v2.0.0 GA — Platform Foundation"
+  },
+  "success_criteria": {
+    "M5": [
+      "Federated learning: Model trained across 5+ tenants, quality within 5% of centralized baseline",
+      "Predictive accuracy: >65% correctness on benchmark, Brier score <0.30",
+      "Knowledge Graph: 100+ expert contributions, under 1% vandalism rate",
+      "Global compute: 1M charts processed in distributed grid at <$0.014 per chart",
+      "AI governance: Oversight Board established, provenance tracking at 100% coverage",
+      "Partnerships: 5+ formal partners, revenue-sharing settlement active"
+    ]
+  }
+}

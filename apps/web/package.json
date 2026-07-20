@@ -12,27 +12,29 @@
   "dependencies": {
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "^5.62.0",
+    "clsx": "catalog:",
+    "d3": "^7.9.0",
+    "date-fns": "^4.1.0",
+    "js-cookie": "^3.0.5",
     "next": "^15.1.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "clsx": "catalog:",
     "tailwind-merge": "catalog:",
     "zod": "catalog:",
-    "zustand": "^5.0.2",
-    "js-cookie": "^3.0.5",
-    "date-fns": "^4.1.0"
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/d3": "^7.4.3",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
-    "typescript": "~5.9.3",
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.0",
-    "@eslint/eslintrc": "^3.2.0"
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.9.3"
   }
 }

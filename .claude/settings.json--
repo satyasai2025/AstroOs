@@ -1,0 +1,21 @@
+{
+  "env": {
+    "PATH": "C:\\Windows\\system32;C:\\Windows;C:\\Users\\rkmau\\AppData\\Local\\Programs\\Python\\Python311\\Scripts",
+    "ANTHROPIC_API_KEY": " sk-40c052f56510fab4-194fc9-8f429b6a",
+    "ANTHROPIC_BASE_URL": "http://localhost:20128/v1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "auto/best-free",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "auto/best-free",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "auto/best-free",
+    "ANTHROPIC_MODEL": "auto/best-free"
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit"
+    ],
+    "defaultMode": "bypassPermissions"
+  }
+}

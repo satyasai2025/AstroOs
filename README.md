@@ -1,4 +1,6 @@
-# AstroOS (v1.0.0-alpha) — Vedic Astrology Research Platform
+# AstroOS — Vedic Astrology Research Platform
+
+> **v2.0.0 GA** (frozen) · active development: **v2.2.0 "Arundhati"** · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
 
 A production-grade Vedic Astrology Research Platform for scholars, practitioners, and researchers. Built on Swiss Ephemeris with full divisional chart support (D1–D60), six Dasha systems, and a clean REST API.
 
@@ -135,7 +137,7 @@ REDIS_URL=redis://localhost:6379/0
 
 # Optional overrides (defaults shown)
 APP_NAME="AstroOS API"
-APP_VERSION="2.0.0"
+APP_VERSION="2.2.0"
 ENVIRONMENT=development
 DEBUG=true
 EPHEMERIS_PATH=data/ephemeris
@@ -209,7 +211,7 @@ curl http://localhost:8000/api/healthz
 ```json
 {
   "status": "ok",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "environment": "development",
   "ephemeris": { "mode": "moshier", "official_data": false }
 }
@@ -230,7 +232,27 @@ The frontend runs at `http://localhost:3000`. API calls are proxied via Next.js 
 
 ---
 
+### One-command dev environment
+
+Instead of steps 7–8, you can start both with hot reload via:
+
+```bash
+./scripts/dev.sh          # API (:8000) + frontend (:3000)
+./scripts/dev.sh --api    # API only
+./scripts/dev.sh --web    # frontend only
+```
+
+The script is portable bash (Linux, macOS, and Windows Git Bash), auto-detects the Python interpreter, and generates the RSA keys if missing.
+
+If setup fails at any step, see [docs/troubleshooting.md](docs/troubleshooting.md).
+
+---
+
 ## API Reference
+
+> Curated overview below. For the full endpoint catalogue with examples see
+> [docs/api-reference.md](docs/api-reference.md) and the interactive Swagger UI at
+> `http://localhost:8000/api/docs` (available when `DEBUG=true`).
 
 All endpoints are prefixed with `/api/v1`.
 
@@ -401,8 +423,19 @@ integration`).
 │   ├── unit/                     Unit tests (no DB required)
 │   └── integration/              Integration tests (require live DB)
 │
+├── scripts/
+│   └── dev.sh                    Start API + frontend with hot reload
+│
 ├── docs/
-│   └── architecture.md           Full architecture reference
+│   ├── architecture.md           Full architecture reference
+│   ├── api-reference.md          Curated API reference with examples
+│   ├── troubleshooting.md        Local setup troubleshooting guide
+│   ├── contributing.md           Contribution guide
+│   ├── developer-onboarding.md   Developer onboarding guide
+│   ├── migration-v2.1-to-v2.2.md Migration guide v2.1 → v2.2
+│   ├── deprecation-policy.md     API deprecation lifecycle
+│   ├── pre-commit-setup.md       Pre-commit hooks setup
+│   └── sdk/                      SDK versioning and publishing docs
 │
 ├── attached_assets/              Project specification documents
 ├── replit.md                     Replit-specific project notes
@@ -421,14 +454,30 @@ integration`).
 | 4 — Nakshatra Module | ✅ Complete | Lunar mansions, pada, ruling planets |
 | 5 — Divisional Charts | ✅ Complete | D1–D60 varga computation (15 vargas) |
 | 6 — Dasha Module | ✅ Complete | 6 dasha systems, 5-level sub-periods |
-| 7 — Ashtakavarga | ⬜ Planned | Bindu, Sarvashtakavarga |
-| 8 — Yoga Module | ⬜ Planned | Raj Yoga, Dhana Yoga detection |
-| 9 — Research Tools | ⬜ Planned | Search, comparison, statistics |
-| 10 — Visualization | ⬜ Planned | D3.js charts, Cytoscape.js |
+| 7 — Ashtakavarga | ✅ Complete | Bindu, Sarvashtakavarga (`/api/v1/ashtakavarga`) |
+| 8 — Yoga Module | ✅ Complete | Yoga detection Phases 1–3 (`/api/v1/yoga`) |
+| 9 — Research Tools | ✅ Complete | Projects, snapshots, statistics (`/api/v1/research`, `/api/v1/statistics`) |
+| 10 — Visualization | ✅ Complete | Visualization payload engine (`/api/v1/visualization`) |
+| 5+ | — Shadbala, Transit, Timeline, Reports, AI, Knowledge Graph, Workflow, Benchmark | ✅ Complete | See `/api/docs` and [docs/api-reference.md](docs/api-reference.md) |
 
 ---
 
-## Architecture Notes
+## Architecture
+
+**Local-First Architecture:**
+```
+User
+ ↓
+Next.js (Frontend)
+ ↓
+FastAPI (Backend API)
+ ↓
+PostgreSQL (Primary Data Store)
+ ↓
+Swiss Ephemeris (Astronomical Calculations)
+```
+
+All components run locally on a single machine. No external services required for core functionality. Swiss Ephemeris provides accurate planetary positions; PostgreSQL stores all computed charts and research data.
 
 **Clean Architecture** — Domain → Repository → Service → Router. Each layer only imports inward.
 

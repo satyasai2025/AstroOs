@@ -20,14 +20,17 @@ from pydantic import BaseModel, Field
 
 
 class ProjectScopedRequest(BaseModel):
+    """Request payload for project scoped operations."""
     project_id: uuid.UUID = Field(description="Snapshots in this project are analyzed.")
 
 
 class PlanetDistributionRequest(ProjectScopedRequest):
+    """Request payload for planet distribution operations."""
     planet: str = "jupiter"
 
 
 class CrosstabRequest(ProjectScopedRequest):
+    """Request payload for crosstab operations."""
     row_field: str = Field(
         description="Dotted SnapshotAccessor path, e.g. 'chart_ref.ascendant.rashi'."
     )
@@ -35,6 +38,7 @@ class CrosstabRequest(ProjectScopedRequest):
 
 
 class FullReportRequest(ProjectScopedRequest):
+    """Request payload for full report operations."""
     title: str = "Statistical Analysis"
     experiment_id: Optional[uuid.UUID] = None
     filtered_sample_size: Optional[int] = None
@@ -44,6 +48,7 @@ class FullReportRequest(ProjectScopedRequest):
 
 
 class DistributionResponse(BaseModel):
+    """Response payload describing distribution data."""
     label: str
     variable: str
     bins: list[str]
@@ -52,6 +57,7 @@ class DistributionResponse(BaseModel):
 
 
 class NumericSummaryResponse(BaseModel):
+    """Response payload describing numeric summary data."""
     label: str
     variable: str
     count: int
@@ -66,6 +72,7 @@ class NumericSummaryResponse(BaseModel):
 
 
 class CrosstabResponse(BaseModel):
+    """Response payload describing crosstab data."""
     label: str
     row_variable: str
     column_variable: str
@@ -76,6 +83,7 @@ class CrosstabResponse(BaseModel):
 
 
 class DatasetMetadataResponse(BaseModel):
+    """Response payload describing dataset metadata data."""
     sample_size: int
     snapshot_count: int
     filtered_sample_size: Optional[int]
@@ -85,6 +93,7 @@ class DatasetMetadataResponse(BaseModel):
 
 
 class AggregateReportResponse(BaseModel):
+    """Response payload describing aggregate report data."""
     title: str
     metadata: DatasetMetadataResponse
     distributions: list[DistributionResponse]

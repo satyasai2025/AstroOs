@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "title": "Lakshmi Pipeline v2.3.0",
+    "subtitle": "Expansion & Integration · 18 tasks · Phase III",
+    "generated_at": "2026-07-19T18-45-IST",
+    "source": "ASTROOS_PHASE_III_V2_3_ROADMAP.md + TaskList"
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "label": "AMP Governance",
+      "owner": "Governance",
+      "status": "pending",
+      "blocks": [6],
+      "dependencies": [],
+      "description": "Resolve open AMPs from Phase II before Phase III begins"
+    },
+    {
+      "id": 6,
+      "label": "Mobile App: iOS Core",
+      "owner": "Engineering (Mobile)",
+      "status": "pending",
+      "blocks": [7],
+      "dependencies": [1],
+      "description": "Phase III.1: React Native iOS app, chart generation, offline SQLite sync, D1/D9 visualizations, Dasha timeline"
+    },
+    {
+      "id": 7,
+      "label": "Mobile App: Android Core",
+      "owner": "Engineering (Mobile)",
+      "status": "pending",
+      "blocks": [8],
+      "dependencies": [6],
+      "description": "Phase III.1: React Native Android app, parity with iOS, Google Play submission, push notifications (FCM)"
+    },
+    {
+      "id": 8,
+      "label": "Mobile App: Polish & Store Deployment",
+      "owner": "Engineering (Mobile)",
+      "status": "pending",
+      "blocks": [9],
+      "dependencies": [7],
+      "description": "Phase III.1: In-app purchases, App Store submission, Play Store review fix, RTL testing, device lab validation"
+    },
+    {
+      "id": 9,
+      "label": "Plugin API & Sandbox Design",
+      "owner": "Architecture",
+      "status": "pending",
+      "blocks": [10],
+      "dependencies": [8],
+      "description": "Phase III.2: Plugin API spec, sandbox isolation model (CPU/memory/network limits), signing mechanism"
+    },
+    {
+      "id": 10,
+      "label": "Plugin Marketplace Backend",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [11],
+      "dependencies": [9],
+      "description": "Phase III.2: Marketplace listing, search, ratings, versioning, Stripe payments, developer portal"
+    },
+    {
+      "id": 11,
+      "label": "Plugin Runtime & CLI",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [12],
+      "dependencies": [10],
+      "description": "Phase III.2: Plugin installation/uninstallation, CLI for plugin dev, sandbox execution engine"
+    },
+    {
+      "id": 12,
+      "label": "Real-Time Collaboration: Core",
+      "owner": "Engineering",
+      "status": "pending",
+      "blocks": [13],
+      "dependencies": [11],
+      "description": "Phase III.3: WebSocket infrastructure, OT/CRDT sync, presence indicators, cursor sharing"
+    },
+    {
+      "id": 13,
+      "label": "Real-Time Collaboration: UI",
+      "owner": "Engineering (FE)",
+      "status": "pending",
+      "blocks": [14],
+      "dependencies": [12],
+      "description": "Phase III.3: Inline comments, @mentions, chat threads, project sharing UI, version history explorer"
+    },
+    {
+      "id": 14,
+      "label": "Advanced Analytics: Query Builder",
+      "owner": "Engineering (Rsch)",
+      "status": "pending",
+      "blocks": [15],
+      "dependencies": [13],
+      "description": "Phase III.4: Drag-drop query builder, cohort segmentation UI, variable picker, filter chains"
+    },
+    {
+      "id": 15,
+      "label": "Advanced Analytics: Statistical Engine",
+      "owner": "Engineering (Data)",
+      "status": "pending",
+      "blocks": [16],
+      "dependencies": [14],
+      "description": "Phase III.4: Statistical methods (correlation, chi-squared, t-test, Bayes), significance calculation, visualization output"
+    },
+    {
+      "id": 16,
+      "label": "i18n Infrastructure",
+      "owner": "Engineering (I18n)",
+      "status": "pending",
+      "blocks": [17],
+      "dependencies": [15],
+      "description": "Phase III.5: Message extraction, translation memory, locale switching, RTL layout testing"
+    },
+    {
+      "id": 17,
+      "label": "Localization: Languages",
+      "owner": "Knowledge",
+      "status": "pending",
+      "blocks": [18],
+      "dependencies": [16],
+      "description": "Phase III.5: Translate UI and docs to 5 languages (ES, HI, FR, DE, AR), terminology normalization"
+    },
+    {
+      "id": 18,
+      "label": "Public API: OAuth & Keys",
+      "owner": "Engineering",
+      "status": "pending",
+      "dependencies": [17],
+      "description": "Phase III.6: OAuth 2.0 flow, API key portal, rate limiting, webhook triggers, developer playground"
+    },
+    {
+      "id": 19,
+      "label": "QA: Mobile Device Lab Testing",
+      "owner": "QA (Mobile)",
+      "status": "pending",
+      "dependencies": [8],
+      "description": "Phase III.1 QA: Physical device testing (iOS 14-16, Android 10-13), offline/online transitions, push notification delivery"
+    },
+    {
+      "id": 20,
+      "label": "Security: Plugin Sandbox Audit",
+      "owner": "Security",
+      "status": "pending",
+      "dependencies": [11],
+      "description": "Phase III.2 security: Penetration testing of plugin sandbox, resource exhaustion attacks, data leakage vulnerabilities"
+    },
+    {
+      "id": 21,
+      "label": "Privacy: GDPR Compliance",
+      "owner": "Governance",
+      "status": "pending",
+      "dependencies": [13, 18],
+      "description": "Phase III.3+III.6 privacy: User data export/deletion workflow, consent management, anonymization for research datasets"
+    },
+    {
+      "id": 22,
+      "label": "Release: v2.3.0 Tag, Changelog, Notes",
+      "owner": "Release",
+      "status": "pending",
+      "dependencies": [18, 19, 20, 21],
+      "description": "v2.3.0 Release: Git tag, mobile app store submissions, plugin marketplace launch, Public API beta, migration guide v2.2→v2.3"
+    }
+  ],
+  "phases_completed": {
+    "Phase II": "v2.2.0 Arundhati — Enterprise Ready",
+    "Phase I": "v2.1.0 Vistara — Local First Enhancement",
+    "Phase A-H": "v2.0.0 GA — Platform Foundation"
+  },
+  "success_criteria": {
+    "M3": [
+      "Mobile apps published to iOS App Store + Google Play, offline chart generation works",
+      "Plugin marketplace live with 10+ third-party plugins, 1000+ downloads",
+      "Real-time collaboration: 10+ concurrent users on same project, no data corruption",
+      "Advanced analytics: statistical significance testing (p<0.05) on cohort dataset",
+      "i18n: 5 languages localized (ES, HI, FR, DE, AR), RTL layout correct",
+      "Public API: 10+ developers with API keys, 1000+ authenticated requests/day"
+    ]
+  }
+}

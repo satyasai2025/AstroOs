@@ -18,7 +18,7 @@ class TestExportFormat:
         assert ExportFormat.DOCX.value == "docx"
 
     def test_all_members(self):
-        assert len(ExportFormat) == 5
+        assert len(ExportFormat) == 6  # JSON, MARKDOWN, HTML, PDF, DOCX, CSV
 
 
 class TestExportResult:

@@ -20,6 +20,7 @@ HouseSystemCode = Literal["W", "P", "K", "E"]
 # ── Chart Comparison ──────────────────────────────────────────────────────────
 
 class ComparisonDimensionResponse(BaseModel):
+    """Response payload describing comparison dimension data."""
     dimension: str
     chart_a_value: str
     chart_b_value: str
@@ -29,6 +30,7 @@ class ComparisonDimensionResponse(BaseModel):
 
 
 class ChartComparisonResponse(BaseModel):
+    """Response payload describing chart comparison data."""
     summary: str
     overall_similarity: float
     key_differences: list[ComparisonDimensionResponse] = []
@@ -39,6 +41,7 @@ class ChartComparisonResponse(BaseModel):
 
 
 class ChartComparisonRequest(BaseModel):
+    """Request payload for chart comparison operations."""
     birth_datetime_utc_a: datetime = Field(
         description="UTC birth datetime for Chart A (ISO-8601, must include timezone offset)."
     )
@@ -61,6 +64,7 @@ class ChartComparisonRequest(BaseModel):
 # ── Research Assistant ────────────────────────────────────────────────────────
 
 class ResearchEvidenceResponse(BaseModel):
+    """Response payload describing research evidence data."""
     source: str
     reference: str
     text: str
@@ -70,6 +74,7 @@ class ResearchEvidenceResponse(BaseModel):
 
 
 class ResearchAnswerResponse(BaseModel):
+    """Response payload describing research answer data."""
     question: str
     summary: str
     body: str
@@ -80,6 +85,7 @@ class ResearchAnswerResponse(BaseModel):
 
 
 class ResearchQueryRequest(BaseModel):
+    """Request payload for research query operations."""
     question: str = Field(min_length=1, max_length=1000)
     domain_filter: Optional[str] = Field(
         default=None,
@@ -90,18 +96,21 @@ class ResearchQueryRequest(BaseModel):
 
 
 class AvailableDomainResponse(BaseModel):
+    """Response payload describing available domain data."""
     id: str
     name: str
     description: str
 
 
 class AvailableDomainsResponse(BaseModel):
+    """Response payload describing available domains data."""
     domains: list[AvailableDomainResponse]
 
 
 # ── Hypothesis Generation ─────────────────────────────────────────────────────
 
 class HypothesisTemplateResponse(BaseModel):
+    """Response payload describing hypothesis template data."""
     hypothesis_id: str
     title: str
     description: str
@@ -114,6 +123,7 @@ class HypothesisTemplateResponse(BaseModel):
 
 
 class GeneratedHypothesisResponse(BaseModel):
+    """Response payload describing generated hypothesis data."""
     hypothesis_id: str
     title: str
     description: str
@@ -126,19 +136,23 @@ class GeneratedHypothesisResponse(BaseModel):
     related_rules: list[str] = []
     related_yogas: list[str] = []
     confidence: str
+    graph_grounded: bool = False
 
 
 class HypothesisListResponse(BaseModel):
+    """Response payload describing hypothesis list data."""
     hypotheses: list[GeneratedHypothesisResponse]
     total: int
 
 
 class HypothesisTemplatesResponse(BaseModel):
+    """Response payload describing hypothesis templates data."""
     templates: list[HypothesisTemplateResponse]
     total: int
 
 
 class HypothesisGenerateRequest(BaseModel):
+    """Request payload for hypothesis generate operations."""
     birth_datetime_utc: datetime = Field(
         description="UTC birth datetime (ISO-8601, must include timezone offset)."
     )
@@ -153,6 +167,7 @@ class HypothesisGenerateRequest(BaseModel):
 # ── Enhanced QA ───────────────────────────────────────────────────────────────
 
 class EnhancedQuestionRequest(BaseModel):
+    """Request payload for enhanced question operations."""
     birth_datetime_utc: datetime = Field(
         description="UTC birth datetime (ISO-8601, must include timezone offset)."
     )
@@ -165,3 +180,67 @@ class EnhancedQuestionRequest(BaseModel):
     include_dashas: bool = Field(default=True, description="Include dasha data in context.")
     include_transits: bool = Field(default=True, description="Include transit data in context.")
     include_strengths: bool = Field(default=True, description="Include strength data in context.")
+
+
+# ── Verification Report ────────────────────────────────────────────────────────
+
+
+class VerificationReportRequest(BaseModel):
+    """Request payload to generate a verification report."""
+    chart_id: str = Field(description="UUID of the chart to generate the report for.")
+    event_ids: Optional[list[str]] = Field(
+        default=None,
+        description="Optional list of specific event UUIDs to include in the report.",
+    )
+
+
+class VerificationReportResponse(BaseModel):
+    """Response payload for a verification report."""
+    response_type: str = "verification_report"
+    title: str
+    summary: str
+    body: str
+    sources: list[str] = []
+    confidence: str = "medium"
+    version: str = "1.0"
+
+
+# ── Research Insight ────────────────────────────────────────────────────────────
+
+
+class ResearchInsightRequest(BaseModel):
+    """Request payload to generate research insights."""
+    experiment_ids: list[str] = Field(
+        description="List of experiment UUIDs to generate insights from."
+    )
+
+
+class ResearchInsightResponse(BaseModel):
+    """Response payload for a research insight."""
+    response_type: str = "research_insight"
+    title: str
+    summary: str
+    body: str
+    sources: list[str] = []
+    confidence: str = "medium"
+    version: str = "1.0"
+
+
+# ── Recommendation ──────────────────────────────────────────────────────────────
+
+
+class RecommendationRequest(BaseModel):
+    """Request payload to generate recommendations."""
+    chart_id: str = Field(description="UUID of the chart to generate recommendations for.")
+
+
+class RecommendationResponse(BaseModel):
+    """Response payload for recommendations."""
+    response_type: str = "recommendation"
+    title: str
+    summary: str
+    body: str
+    recommendations: list[str] = []
+    sources: list[str] = []
+    confidence: str = "medium"
+    version: str = "1.0"

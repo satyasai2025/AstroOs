@@ -1,7 +1,7 @@
 ---
 id: AMP-008
 title: Ontology Registry (Module 12) has no approved dependency model — contradicts its own docstring and is duplicated by AI Engine
-status: Proposed — Awaiting Approval
+status: CLOSED — ACCEPTED (Decision A: Option A1; Decision B: Option B2) — 2026-07-19
 severity: Medium
 source: Engineering Request ER-002 (2026-07-16) — see ONTOLOGY_REGISTRY_INTEGRATION_ASSESSMENT.md
 target_documents:
@@ -43,6 +43,11 @@ Two separate dependency-model decisions are needed. The Architecture Office shou
 - **Reversibility:** All options are fully reversible — no data migration, no schema change, no external API contract affected (Module 12 has no HTTP route). Option B1 is the only one requiring new code; A1, C1, A2, and B2 are documentation or small, isolated edits.
 - **Urgency:** Low. `ontology_registry.py` is correct, tested, and self-verifying against the systems it mirrors — nothing is currently broken. This AMP addresses design-intent clarity and a latent duplication-drift risk, not an active defect.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No file has been modified by this AMP. Per governance workflow: once the Architecture Office selects an option for Decision A and/or Decision B, a new, separately-scoped Engineering Request should be opened to implement the approved design — no implementation should proceed from this AMP directly.
+**ACCEPTED. CLOSED.**
+
+- **Decision A — Option A1 (correct the docstring, close the question).** The Rule Engine's Facts-only vocabulary discipline (Module 13, `domain/facts.py`, as actually built and tested) is authoritative; Module 12's stale "Module 13 consumes this" claim is retired. `apps/api/domain/ontology.py`'s docstring has been corrected accordingly (documentation-only change, no business logic touched — applied directly since it modifies no runtime behavior and no frozen ADR). Ontology remains descriptive/reference infrastructure with no Rule Engine integration, now or planned, absent a future governance decision. Option B1 (FactBuilder translation) is declined for v2.1.0: it adds new cross-module code for no current rule requirement, contrary to the Vistara mandate of local-first enhancement without speculative plumbing. It may be revisited via a new AMP/ADR if a concrete rule ever needs ontology-level metadata.
+- **Decision B — Option B2 (leave AI Engine as-is, accept the duplication).** The 21-name overlap in `apps/api/services/ai_engine.py` is small, rarely-changing data already cross-verified against `packages/shared/constants.py` by OntologyRegistry's own tests, which act as a drift tripwire. Introducing a new Module 24 → Module 12 dependency to eliminate it would modify working business logic, which is prohibited for this task and unjustified by the low risk. The duplication risk is hereby recorded as **accepted, not overlooked**. Option A2 may be proposed later via a separately-scoped Engineering Request if drift is ever observed.
+
+No Engineering Request is required: Decision A's approved outcome was documentation-only and has been applied; Decision B's approved outcome is no change.

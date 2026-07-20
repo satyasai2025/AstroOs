@@ -4,7 +4,11 @@ AstroOS — Domain Ontology Objects (Module 12)
 A Domain Ontology only, per explicit scope: entities, relationships,
 stable identifiers, and metadata. Deliberately NOT a knowledge graph
 (no Neo4j/RDF/OWL/SPARQL), NOT a query/inference engine, and NOT Rule
-Engine behavior — Module 13 consumes this, it does not define it.
+Engine behavior. Per AMP-008 (Decision A, Option A1, approved 2026-07-19):
+the Rule Engine (Module 13) does NOT consume this module — Module 13's
+Facts-only vocabulary discipline (see domain/facts.py) is authoritative.
+This ontology is descriptive/reference infrastructure with no Rule
+Engine integration, now or planned, absent a future governance decision.
 
 Two primitives:
   - OntologyEntity: one classical concept (a Graha, a Rashi, a Yoga...)

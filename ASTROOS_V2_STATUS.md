@@ -67,6 +67,25 @@
 
 See `ASTROOS_V2_MILESTONES.md` — 🟢 All 10 criteria met (2026-07-18). Phase C (Benchmark) is now complete, closing criterion 10.
 
+## Phase II "Arundhati" (v2.2.0) — Amended Scope Decision (2026-07-20)
+
+**Decision (user directive, 2026-07-20):** Phase II proceeds under the local-first mandate of `CLAUDE_START_HERE.md`. Tasks 6 (Container Orchestration & Deploy Automation), 7 (Architecture Review: Containers & Helm), and 18 (Deployment Validation on kind/minikube) are **permanently removed** from the Phase II pipeline. They must not be re-added without an explicit Architecture Office ADR and a decision recorded here.
+
+Rationale: the Phase II roadmap (status PLANNING) presumed Phase I delivered K8s/Helm groundwork; it did not — Phase I's governance audit (`architecture/GOVERNANCE_v2_1_AUDIT.md`) verified no infra creep. Docker/K8s/Helm/cloud remain out of scope.
+
+**Phase II progress (12 tasks, per `tasks_phase2_data.json` / `arundhati_pipeline_progress.html`):**
+
+| Task | Name | Status |
+|---|---|---|
+| 1 | AMP Governance | ✅ Complete (2026-07-19) |
+| 8 | Observability & SRE (Local-First) | ✅ Complete (2026-07-20) — `apps/api/observability.py` (JSON logs w/ correlation IDs, W3C traceparent, spans, request metrics middleware), `observability/` (Prometheus config, alert rules, Grafana dashboard, SLO.md), 17 unit tests passing |
+| 9 | Architecture Review: Observability | ✅ Complete (2026-07-20) — ADR-OBS-001 (stack), ADR-OBS-002 (log retention), ADR-OBS-003 (trace propagation) in `architecture/adr/`; incident runbooks in `observability/runbooks/` |
+| 10 | SDK Public Release & DX | ✅ Complete (2026-07-20) — `astroos` 2.2.0 (PyPI-ready: twine check passed, py.typed, clean-room wheel import verified) and `@astroos/sdk` 2.2.0 (npm-ready: dual ESM+CJS+types build verified via require/import smoke tests); `docs/sdk/VERSIONING.md`, `docs/sdk/PUBLISHING.md`, Jupyter quickstart in `examples/notebooks/`. Actual publish is a manual credentialed step (see PUBLISHING.md) |
+| 11 | Worker Pools & Batch Scaling (Local-First) | ✅ Complete (2026-07-20) — `apps/api/services/worker_pool.py` (cpu/io/ai pools, priority queue, retry+backoff, dead-letter, local autoscaling, Prometheus metrics), batch job API (`POST /api/v1/batch/chart-reports` + poll/download/cancel), job monitor (`GET /api/v1/jobs`, `/jobs/monitor/html`). 20 tests passing; verified end-to-end against real Swiss Ephemeris data. **Discovered and filed AMP-009/AMP-010** — pre-existing Phase F defects (PDF/HTML report export was never actually functional; CSV export works). See `architecture/decisions/`. |
+| 12–17, 19 | Remaining pipeline | Pending (blocked) |
+
+**⚠ Known issue carried from Phase F (not caused by Phase II):** PDF and HTML report rendering (`ReportTemplateEngine.render_pdf`/`render_html`, and the `/report/chart/pdf`, `/report/chart/csv` router endpoints) do not work — AMP-009 (router bug) and AMP-010 (missing `templates/reports/` directory, no template files exist in the repo). CSV export works correctly. Both AMPs are Proposed, not yet approved/applied, per governance rules for frozen modules.
+
 ---
 
-*Last updated: 2026-07-18*
+*Last updated: 2026-07-20*

@@ -9,9 +9,16 @@ from typing import Optional
 
 @dataclass
 class SdkConfig:
-    """Configuration for the AstroOS client."""
+    """Configuration for the AstroOS client.
 
-    base_url: str = "https://api.astroos.dev/v1"
+    Defaults to localhost:8000 — the local-first development target.
+    Override ``base_url`` for production (e.g. ``https://api.astroos.dev/api/v1/``).
+
+    Note the trailing slash: Python's ``urllib.parse.urljoin`` requires it on
+    the base URL for correct relative-path resolution.
+    """
+
+    base_url: str = "http://localhost:8000/api/v1/"
     api_key: Optional[str] = None
     access_token: Optional[str] = None
     timeout: int = 30
@@ -22,7 +29,9 @@ class SdkConfig:
     def from_env(cls) -> "SdkConfig":
         """Load configuration from environment variables."""
         return cls(
-            base_url=os.environ.get("ASTROOS_BASE_URL", "https://api.astroos.dev/v1"),
+            base_url=os.environ.get(
+                "ASTROOS_BASE_URL", "http://localhost:8000/api/v1/"
+            ),
             api_key=os.environ.get("ASTROOS_API_KEY"),
             access_token=os.environ.get("ASTROOS_ACCESS_TOKEN"),
             timeout=int(os.environ.get("ASTROOS_TIMEOUT", "30")),

@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 
 
 class EventCreateRequest(BaseModel):
+    """Request payload for event create operations."""
     chart_id: uuid.UUID
     event_date: date
     title: str = Field(min_length=1, max_length=300)
@@ -46,6 +47,7 @@ class EventUpdateRequest(BaseModel):
 
 
 class EventResponse(BaseModel):
+    """Response payload describing event data."""
     id: uuid.UUID
     chart_id: uuid.UUID
     user_id: Optional[uuid.UUID]
@@ -57,5 +59,6 @@ class EventResponse(BaseModel):
 
 
 class EventListResponse(BaseModel):
+    """Response payload describing event list data."""
     events: list[EventResponse]
     total: int

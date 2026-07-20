@@ -18,6 +18,7 @@ from apps.api.schemas.ephemeris import EphemerisStatusSchema
 
 
 class RegisterRequest(BaseModel):
+    """Request payload for register operations."""
     email: EmailStr = Field(..., description="Valid email address.")
     display_name: str = Field(
         ...,
@@ -52,11 +53,13 @@ class RegisterRequest(BaseModel):
 
 
 class LoginRequest(BaseModel):
+    """Request payload for login operations."""
     email: EmailStr
     password: str = Field(..., min_length=1, max_length=128)
 
 
 class RefreshTokenRequest(BaseModel):
+    """Request payload for refresh token operations."""
     refresh_token: str = Field(..., description="Opaque refresh token string.")
 
 
@@ -64,6 +67,7 @@ class RefreshTokenRequest(BaseModel):
 
 
 class UserResponse(BaseModel):
+    """Response payload describing user data."""
     id: UUID
     email: str
     display_name: str
@@ -76,6 +80,7 @@ class UserResponse(BaseModel):
 
 
 class TokenPairResponse(BaseModel):
+    """Response payload describing token pair data."""
     access_token: str
     refresh_token: str
     token_type: str = "Bearer"
@@ -83,11 +88,13 @@ class TokenPairResponse(BaseModel):
 
 
 class AuthResponse(BaseModel):
+    """Response payload describing auth data."""
     user: UserResponse
     tokens: TokenPairResponse
 
 
 class MessageResponse(BaseModel):
+    """Response payload describing message data."""
     message: str
 
 

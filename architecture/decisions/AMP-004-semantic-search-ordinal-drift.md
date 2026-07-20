@@ -1,7 +1,7 @@
 ---
 id: AMP-004
 title: Semantic Search's "seventh confirmation" claim is off-by-one from its own enumerated list
-status: Proposed — Awaiting Approval
+status: CLOSED — REJECTED (deferred; no superseding ADRs warranted) — 2026-07-19
 severity: Low
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -24,6 +24,8 @@ Correct Semantic Search's label from "seventh" to "sixth," and Knowledge Graph's
 - **Frozen documents affected:** Semantic Search (ADR-EAL-031) and Knowledge Graph (ADR-EAL-032) — superseding ADRs would be required to touch either.
 - **Reversibility:** Trivial; word-level correction with no architectural consequence.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No frozen document has been modified by this AMP.
+**REJECTED (deferred). CLOSED.**
+
+Rationale: Same disposition as AMP-003. The off-by-one ordinal labels in Semantic Search (ADR-EAL-031) and Knowledge Graph (ADR-EAL-032) are narrative tallies with no architectural content. Both are frozen FUTURE-phase enterprise documents outside the local-first v2.1.0 "Vistara" scope; superseding two ADRs for word-level cosmetic corrections is disproportionate. This AMP stands as the errata record; fold the corrections in if either ADR is ever superseded for substantive reasons. No frozen document was modified.

@@ -58,6 +58,7 @@ def all_yogas() -> list[YogaDefinition]:
 
 
 def get_yoga(yoga_id: str) -> Optional[YogaDefinition]:
+    """Look up a registered yoga definition by its id, or None if unknown."""
     return _REGISTRY.get(yoga_id)
 
 

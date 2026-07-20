@@ -116,3 +116,4 @@ class GeneratedHypothesis:
     related_rules: tuple[str, ...] = field(default_factory=tuple)
     related_yogas: tuple[str, ...] = field(default_factory=tuple)
     confidence: str = "medium"
+    graph_grounded: bool = False  # True when KG evidence was successfully retrieved

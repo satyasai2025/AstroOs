@@ -50,10 +50,12 @@ NATURAL_MALEFICS = {"sun", "mars", "saturn", "rahu", "ketu"}
 
 
 def is_natural_benefic(planet: str) -> bool:
+    """True if the planet is a natural benefic (Jupiter, Venus, Mercury, Moon)."""
     return planet in NATURAL_BENEFICS
 
 
 def is_natural_malefic(planet: str) -> bool:
+    """True if the planet is a natural malefic (Sun, Mars, Saturn, Rahu, Ketu)."""
     return planet in NATURAL_MALEFICS
 
 
@@ -89,10 +91,12 @@ class YogaContext:
 # ---------------------------------------------------------------------------
 
 def get_planet(ctx: YogaContext, name: str) -> SiderealPosition | None:
+    """Return the sidereal position of the named planet, or None if absent."""
     return ctx.planets_by_name.get(name)
 
 
 def get_house(ctx: YogaContext, house_number: int) -> HouseInfo:
+    """Return house metadata (sign, lord) for the given house number (1-12)."""
     return ctx.houses_by_number[house_number]
 
 
@@ -140,6 +144,7 @@ def house_of_lord(ctx: YogaContext, house_number: int) -> int | None:
 
 
 def is_conjunct(ctx: YogaContext, planet_a: str, planet_b: str) -> bool:
+    """True if both planets occupy the same house in this chart context."""
     a, b = get_planet(ctx, planet_a), get_planet(ctx, planet_b)
     if a is None or b is None:
         return False
@@ -147,6 +152,7 @@ def is_conjunct(ctx: YogaContext, planet_a: str, planet_b: str) -> bool:
 
 
 def is_aspecting(ctx: YogaContext, from_planet: str, to_planet: str) -> bool:
+    """True if from_planet casts a graha drishti aspect onto to_planet."""
     return any(
         asp.from_planet == from_planet and asp.to_planet == to_planet
         for asp in ctx.chart.aspects

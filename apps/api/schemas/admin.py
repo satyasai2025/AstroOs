@@ -18,6 +18,7 @@ from pydantic import BaseModel, Field
 
 
 class ModuleHealthResponse(BaseModel):
+    """Response payload describing module health data."""
     module_name: str
     status: str
     version: str
@@ -25,6 +26,7 @@ class ModuleHealthResponse(BaseModel):
 
 
 class SystemStatusResponse(BaseModel):
+    """Response payload describing system status data."""
     status: str
     modules: dict[str, ModuleHealthResponse]
     ephemeris_mode: str
@@ -32,6 +34,7 @@ class SystemStatusResponse(BaseModel):
 
 
 class ModuleRegistryResponse(BaseModel):
+    """Response payload describing module registry data."""
     modules: dict[str, str]
 
 
@@ -39,6 +42,7 @@ class ModuleRegistryResponse(BaseModel):
 
 
 class AdminUserSummaryResponse(BaseModel):
+    """Response payload describing admin user summary data."""
     id: uuid.UUID
     email: str
     display_name: str
@@ -49,9 +53,11 @@ class AdminUserSummaryResponse(BaseModel):
 
 
 class AdminUserListResponse(BaseModel):
+    """Response payload describing admin user list data."""
     users: list[AdminUserSummaryResponse]
     total: int
 
 
 class UpdateUserRoleRequest(BaseModel):
+    """Request payload for update user role operations."""
     role: str = Field(description="One of the UserRole enum values, e.g. 'admin', 'user'.")

@@ -1,7 +1,7 @@
 ---
 id: AMP-001
 title: Disaster Recovery presumes Multi Tenancy's "tenant tier" before it exists
-status: Proposed — Awaiting Approval
+status: CLOSED — ACCEPTED (Option C, defer as tracked gap) — 2026-07-19
 severity: Medium
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -30,6 +30,8 @@ This AMP does not select an option — it surfaces the choice for governance dec
 - **Frozen documents affected if corrected:** Disaster Recovery (ADR-EAL-029) and/or Multi Tenancy (ADR-EAL-021) — either requires a new ADR to supersede/amend, per the "no redesign of approved modules without a governance decision" discipline.
 - **Reversibility:** Fully reversible; this is a documentation/dependency-sequencing gap, not a runtime defect. No system behavior depends on this today since neither document is implemented yet.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No frozen document has been modified by this AMP.
+**ACCEPTED — Option C (defer as tracked gap). CLOSED.**
+
+Rationale: AstroOS v2.1.0 "Vistara" is a local-first, single-user platform. Multi Tenancy and Disaster Recovery are unimplemented enterprise documents describing multi-tenant/multi-region concerns that are explicitly out of current scope (`CLAUDE_START_HERE.md`). No runtime behavior depends on the forward reference, so no superseding ADR is warranted now. The gap is hereby recorded as an implementation-phase blocker: tenant tiering (Multi Tenancy §18) must exist before Disaster Recovery's tier-based RTO/RPO logic may be built. Options A/B (superseding ADRs) are declined as disproportionate for out-of-scope documents. No frozen document was modified.

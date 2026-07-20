@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import type { HypothesisTemplateResponse, GeneratedHypothesisResponse } from "@/lib/types";
 import { aiApi, type BirthDataInput } from "@/lib/ai";
+import { hypothesisValidationApi } from "@/lib/research";
 
 interface Props {
   birthData: BirthDataInput;
@@ -14,6 +15,8 @@ export function HypothesisPanel({ birthData }: Props) {
   const [domainFilter, setDomainFilter] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [flaggedIds, setFlaggedIds] = useState<Set<string>>(new Set());
+  const [flagging, setFlagging] = useState<string | null>(null);
 
   useEffect(() => {
     aiApi.listHypothesisTemplates()
@@ -35,6 +38,27 @@ export function HypothesisPanel({ birthData }: Props) {
       setError(err instanceof Error ? err.message : "Hypothesis generation failed.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleFlagForValidation(h: GeneratedHypothesisResponse) {
+    setFlagging(h.hypothesis_id);
+    try {
+      await hypothesisValidationApi.flag({
+        hypothesis_id: h.hypothesis_id,
+        chart_id: "00000000-0000-0000-0000-000000000000", // placeholder; set by researcher in project context
+        project_id: "00000000-0000-0000-0000-000000000000", // placeholder; set by researcher in project context
+        title: h.title,
+        description: h.description,
+        domain: h.domain,
+        hypothesis_data: h as unknown as Record<string, unknown>,
+        ai_generated: true,
+      });
+      setFlaggedIds((prev) => new Set(prev).add(h.hypothesis_id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to flag hypothesis.");
+    } finally {
+      setFlagging(null);
     }
   }
 
@@ -148,6 +172,24 @@ export function HypothesisPanel({ birthData }: Props) {
                   <span className="rounded bg-white/5 px-1.5 py-0.5">
                     Yogas: {h.related_yogas.join(", ")}
                   </span>
+                )}
+              </div>
+
+              {/* Flag for Validation */}
+              <div className="flex items-center gap-2 pt-1">
+                {flaggedIds.has(h.hypothesis_id) ? (
+                  <span className="rounded-full bg-green-900/30 px-2 py-0.5 text-xs text-green-300">
+                    Flagged for Review
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleFlagForValidation(h)}
+                    disabled={flagging === h.hypothesis_id}
+                    className="rounded-lg border border-purple-900/30 bg-purple-900/10 px-2.5 py-1 text-xs text-purple-300 hover:bg-purple-900/20 disabled:opacity-40 transition-colors"
+                  >
+                    {flagging === h.hypothesis_id ? "Flagging..." : "Flag for Human Review"}
+                  </button>
                 )}
               </div>
             </div>

@@ -86,6 +86,7 @@ class ShadbalaTotalResponse(BaseModel):
 
 
 class RuleResultResponse(BaseModel):
+    """Response payload describing rule result data."""
     rule_id: str
     rule_name: str
     rule_category: str
@@ -99,6 +100,7 @@ class RuleResultResponse(BaseModel):
 
 
 class VerificationPairSummaryResponse(BaseModel):
+    """Response payload describing verification pair summary data."""
     rule_id: str
     rule_name: str
     event_id: uuid.UUID
@@ -124,6 +126,7 @@ class VerificationSummaryResponse(BaseModel):
 
 
 class PlanetBenchmarkResponse(BaseModel):
+    """Response payload describing planet benchmark data."""
     planet: str
     computed_longitude: float
     expected_longitude: float
@@ -155,6 +158,7 @@ class BenchmarkResponse(BaseModel):
 
 
 class WorkflowAnalysisResponse(BaseModel):
+    """Response payload describing workflow analysis data."""
     chart_id: uuid.UUID
     chart: D1ChartResponse
     vargas: Optional[AllVargaChartsResponse] = None

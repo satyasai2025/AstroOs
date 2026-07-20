@@ -167,6 +167,7 @@ class ComparisonReportRequest(BaseModel):
 
 
 class ReportSectionResponse(BaseModel):
+    """Response payload describing report section data."""
     title: str
     section_type: str
     data: dict = Field(default_factory=dict)
@@ -174,6 +175,7 @@ class ReportSectionResponse(BaseModel):
 
 
 class ReportMetadataResponse(BaseModel):
+    """Response payload describing report metadata data."""
     report_id: uuid.UUID
     report_type: str
     report_version: str
@@ -185,6 +187,7 @@ class ReportMetadataResponse(BaseModel):
 
 
 class ChartReportResponse(BaseModel):
+    """Response payload describing chart report data."""
     metadata: ReportMetadataResponse
     title: str
     subject_name: str
@@ -192,6 +195,7 @@ class ChartReportResponse(BaseModel):
 
 
 class ResearchReportResponse(BaseModel):
+    """Response payload describing research report data."""
     metadata: ReportMetadataResponse
     title: str
     snapshot_count: int
@@ -199,6 +203,7 @@ class ResearchReportResponse(BaseModel):
 
 
 class ComparisonReportResponse(BaseModel):
+    """Response payload describing comparison report data."""
     metadata: ReportMetadataResponse
     title: str
     # No chart_ids: ReportEngine.build_comparison_report's `charts` input is

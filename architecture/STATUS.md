@@ -12,9 +12,9 @@
 - Architecture conformance audits
 - Architecture support for implementation
 
-**Architecture Library Validation Audit (2026-07-15): FROZEN.** 7 findings (0 Critical, 0 High, 1 Medium, 4 Low, 2 Informational). One AMP (Architecture Maintenance Proposal) filed per finding in `decisions/` — see [INDEX.md](INDEX.md#decisions-amps--architecture-maintenance-proposals) for the full list. No frozen document has been modified; every AMP awaits its own separate approval.
+**Architecture Library Validation Audit (2026-07-15): FROZEN.** 7 findings (0 Critical, 0 High, 1 Medium, 4 Low, 2 Informational). One AMP (Architecture Maintenance Proposal) filed per finding in `decisions/` — see [INDEX.md](INDEX.md#decisions-amps--architecture-maintenance-proposals) for the full list. **All 8 AMPs (AMP-001 through AMP-008) resolved and closed 2026-07-19** — see [AMP-RESOLUTION-REPORT.md](AMP-RESOLUTION-REPORT.md). No frozen document has been modified.
 
-**Cross-office referral (2026-07-16): AMP-008.** Engineering Office closed ER-002 (investigation of `apps/api/services/ontology_registry.py`'s zero-caller status) without implementing any change, per instruction, and referred the dependency-model decision here instead. AMP-008 asks the Architecture Office to decide (a) whether Module 13 (Rule Engine) should ever consume Module 12 (Ontology) given Module 13's own Facts-only design discipline, and (b) whether Module 24 (AI Engine) should adopt Module 12 as its canonical name source instead of its current hardcoded duplicate. Awaiting approval; see `decisions/AMP-008-ontology-registry-dependency-model.md`. Only once an option is selected should a new Engineering Request be opened to implement it.
+**Cross-office referral (2026-07-16): AMP-008.** Engineering Office closed ER-002 (investigation of `apps/api/services/ontology_registry.py`'s zero-caller status) without implementing any change, per instruction, and referred the dependency-model decision here instead. AMP-008 asks the Architecture Office to decide (a) whether Module 13 (Rule Engine) should ever consume Module 12 (Ontology) given Module 13's own Facts-only design discipline, and (b) whether Module 24 (AI Engine) should adopt Module 12 as its canonical name source instead of its current hardcoded duplicate. **Resolved 2026-07-19:** Decision A → Option A1 (docstring corrected; Module 13's Facts-only discipline is authoritative); Decision B → Option B2 (duplication accepted, not overlooked). No Engineering Request needed. See `decisions/AMP-008-ontology-registry-dependency-model.md`.
 
 **Governance artifact taxonomy:** AMP (Architecture Maintenance Proposal) = correction to an existing defect/inconsistency. AIP (Architecture Improvement Proposal) = new capability or enhancement beyond fixing a defect. (ACP is not used — the principal explicitly deferred/dropped it.)
 
@@ -29,48 +29,46 @@ Tracks the lifecycle of every document in the Enterprise Architecture Library. U
 
 ## Completed (Frozen)
 
-| Document | Category | Version | Frozen Date | Path |
-|---|---|---|---|---|
-| Enterprise Plugin Lifecycle Management | enterprise | 1.1 | 2026-07-15 | [architecture/enterprise/plugin-lifecycle-management.md](enterprise/plugin-lifecycle-management.md) |
-| Enterprise Module Registry | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/module-registry.md](enterprise/module-registry.md) |
-| Enterprise Capability Registry | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/capability-registry.md](enterprise/capability-registry.md) |
-| Enterprise Service Registry | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/service-registry.md](enterprise/service-registry.md) |
-| Enterprise Configuration Framework | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/configuration-framework.md](enterprise/configuration-framework.md) |
-| Enterprise Feature Flag Framework | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/feature-flag-framework.md](enterprise/feature-flag-framework.md) |
-| Enterprise Dependency Management | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/dependency-management.md](enterprise/dependency-management.md) |
-| Enterprise Version Compatibility Strategy | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/version-compatibility-strategy.md](enterprise/version-compatibility-strategy.md) |
-| Enterprise Error Handling Framework | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/error-handling-framework.md](enterprise/error-handling-framework.md) |
-| Enterprise Observability Architecture | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/observability-architecture.md](enterprise/observability-architecture.md) |
-| Enterprise AI Platform Architecture | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/ai-platform-architecture.md](enterprise/ai-platform-architecture.md) |
-| Enterprise Research Platform | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/research-platform.md](enterprise/research-platform.md) |
-| Enterprise Workflow Engine | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/workflow-engine.md](enterprise/workflow-engine.md) |
-| Enterprise Event Bus | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/event-bus.md](enterprise/event-bus.md) |
-| Enterprise Notification Framework | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/notification-framework.md](enterprise/notification-framework.md) |
-| Enterprise Scheduling | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/scheduling.md](enterprise/scheduling.md) |
-| Enterprise Security Architecture | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/security-architecture.md](enterprise/security-architecture.md) |
-| Enterprise Identity & Access | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/identity-and-access.md](enterprise/identity-and-access.md) |
-| Enterprise Audit Framework | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/audit-framework.md](enterprise/audit-framework.md) |
-| Enterprise API Gateway | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/api-gateway.md](enterprise/api-gateway.md) |
-| Enterprise Multi Tenancy | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/multi-tenancy.md](enterprise/multi-tenancy.md) |
-| Enterprise Licensing | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/licensing.md](enterprise/licensing.md) |
-| Enterprise Marketplace | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/marketplace.md](enterprise/marketplace.md) |
-| Enterprise SDK | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/sdk.md](enterprise/sdk.md) |
-| Enterprise Integration Framework | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/integration-framework.md](enterprise/integration-framework.md) |
-| Enterprise Deployment | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/deployment.md](enterprise/deployment.md) |
-| Enterprise Scalability | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/scalability.md](enterprise/scalability.md) |
-| Enterprise High Availability | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/high-availability.md](enterprise/high-availability.md) |
-| Enterprise Disaster Recovery | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/disaster-recovery.md](enterprise/disaster-recovery.md) |
-| Enterprise Digital Twin | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/digital-twin.md](enterprise/digital-twin.md) |
-| Enterprise Semantic Search | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/semantic-search.md](enterprise/semantic-search.md) |
-| Enterprise Knowledge Graph | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/knowledge-graph.md](enterprise/knowledge-graph.md) |
-| Enterprise Agent Platform | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/agent-platform.md](enterprise/agent-platform.md) |
-| Enterprise Autonomous Systems | enterprise | 1.0 | 2026-07-15 | [architecture/enterprise/autonomous-systems.md](enterprise/autonomous-systems.md) |
+| Document | Category | Phase | Version | Frozen Date | Path |
+|---|---|---|---|---|---|
+| Enterprise Plugin Lifecycle Management | enterprise | FOUNDATION | 1.1 | 2026-07-15 | [architecture/enterprise/plugin-lifecycle-management.md](enterprise/plugin-lifecycle-management.md) |
+| Enterprise Module Registry | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/module-registry.md](enterprise/module-registry.md) |
+| Enterprise Capability Registry | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/capability-registry.md](enterprise/capability-registry.md) |
+| Enterprise Service Registry | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/service-registry.md](enterprise/service-registry.md) |
+| Enterprise Configuration Framework | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/configuration-framework.md](enterprise/configuration-framework.md) |
+| Enterprise Feature Flag Framework | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/feature-flag-framework.md](enterprise/feature-flag-framework.md) |
+| Enterprise Dependency Management | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/dependency-management.md](enterprise/dependency-management.md) |
+| Enterprise Version Compatibility Strategy | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/version-compatibility-strategy.md](enterprise/version-compatibility-strategy.md) |
+| Enterprise Error Handling Framework | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/error-handling-framework.md](enterprise/error-handling-framework.md) |
+| Enterprise Observability Architecture | enterprise | FOUNDATION | 1.0 | 2026-07-15 | [architecture/enterprise/observability-architecture.md](enterprise/observability-architecture.md) |
+| Enterprise AI Platform Architecture | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/ai-platform-architecture.md](enterprise/ai-platform-architecture.md) |
+| Enterprise Research Platform | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/research-platform.md](enterprise/research-platform.md) |
+| Enterprise Workflow Engine | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/workflow-engine.md](enterprise/workflow-engine.md) |
+| Enterprise Event Bus | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/event-bus.md](enterprise/event-bus.md) |
+| Enterprise Notification Framework | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/notification-framework.md](enterprise/notification-framework.md) |
+| Enterprise Scheduling | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/scheduling.md](enterprise/scheduling.md) |
+| Enterprise Security Architecture | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/security-architecture.md](enterprise/security-architecture.md) |
+| Enterprise Identity & Access | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/identity-and-access.md](enterprise/identity-and-access.md) |
+| Enterprise Audit Framework | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/audit-framework.md](enterprise/audit-framework.md) |
+| Enterprise API Gateway | enterprise | PLATFORM | 1.0 | 2026-07-15 | [architecture/enterprise/api-gateway.md](enterprise/api-gateway.md) |
+| Enterprise Multi Tenancy | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/multi-tenancy.md](enterprise/multi-tenancy.md) |
+| Enterprise Licensing | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/licensing.md](enterprise/licensing.md) |
+| Enterprise Marketplace | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/marketplace.md](enterprise/marketplace.md) |
+| Enterprise SDK | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/sdk.md](enterprise/sdk.md) |
+| Enterprise Integration Framework | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/integration-framework.md](enterprise/integration-framework.md) |
+| Enterprise Deployment | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/deployment.md](enterprise/deployment.md) |
+| Enterprise Scalability | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/scalability.md](enterprise/scalability.md) |
+| Enterprise High Availability | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/high-availability.md](enterprise/high-availability.md) |
+| Enterprise Disaster Recovery | enterprise | ENTERPRISE | 1.0 | 2026-07-15 | [architecture/enterprise/disaster-recovery.md](enterprise/disaster-recovery.md) |
+| Enterprise Digital Twin | enterprise | FUTURE | 1.0 | 2026-07-15 | [architecture/enterprise/digital-twin.md](enterprise/digital-twin.md) |
+| Enterprise Semantic Search | enterprise | FUTURE | 1.0 | 2026-07-15 | [architecture/enterprise/semantic-search.md](enterprise/semantic-search.md) |
+| Enterprise Knowledge Graph | enterprise | FUTURE | 1.0 | 2026-07-15 | [architecture/enterprise/knowledge-graph.md](enterprise/knowledge-graph.md) |
+| Enterprise Agent Platform | enterprise | FUTURE | 1.0 | 2026-07-15 | [architecture/enterprise/agent-platform.md](enterprise/agent-platform.md) |
+| Enterprise Autonomous Systems | enterprise | FUTURE | 1.0 | 2026-07-15 | [architecture/enterprise/autonomous-systems.md](enterprise/autonomous-systems.md) |
 
 ## Current (In Progress)
 
 _None. All 34 planned documents are frozen. Roadmap complete._
-
-_(PLATFORM phase complete — 10/10. ENTERPRISE phase in progress.)_
 
 ## Open Governance Questions
 

@@ -1,7 +1,7 @@
 ---
 id: AMP-002
 title: Stale contradictory note in STATUS.md's "Current (In Progress)" section
-status: Proposed — Awaiting Approval
+status: CLOSED — ACCEPTED (correction applied to STATUS.md) — 2026-07-19
 severity: Low
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -29,6 +29,8 @@ Delete the stale parenthetical line entirely. STATUS.md is a tracking file, not 
 - **Frozen documents affected:** None — STATUS.md is a tracking artifact, not one of the 34 frozen ADR documents.
 - **Reversibility:** Trivial; a one-line deletion with no architectural consequence.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No file has been modified by this AMP.
+**ACCEPTED. CLOSED.**
+
+Rationale: STATUS.md is a tracking file, not a frozen ADR document; the stale contradictory parenthetical is a pure defect with zero architectural consequence. Correction applied as routine maintenance: the line "_(PLATFORM phase complete — 10/10. ENTERPRISE phase in progress.)_" has been deleted from STATUS.md's "Current (In Progress)" section. Consistent with local-first governance (documentation hygiene, no scope change).

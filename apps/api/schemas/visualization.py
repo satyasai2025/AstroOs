@@ -33,12 +33,14 @@ HouseSystemCode = Literal["W", "P", "K", "E"]
 
 
 class VisualizationOptionsMixin(BaseModel):
+    """Mixin providing shared visualization options fields."""
     theme_name: str = "light"
     width: int = Field(default=800, ge=100, le=4000)
     height: int = Field(default=600, ge=100, le=4000)
 
 
 class ChartWheelRequest(VisualizationOptionsMixin):
+    """Request payload for chart wheel operations."""
     birth_datetime_utc: datetime = Field(
         description="UTC birth datetime (ISO-8601, must include timezone offset)."
     )
@@ -56,22 +58,26 @@ class ChartWheelRequest(VisualizationOptionsMixin):
 
 
 class DistributionVisualizationRequest(VisualizationOptionsMixin):
+    """Request payload for distribution visualization operations."""
     project_id: uuid.UUID
     distribution_type: Literal["planet-house", "planet-rashi", "yoga", "verification-strength"]
     planet: str = "jupiter"
 
 
 class CrosstabVisualizationRequest(VisualizationOptionsMixin):
+    """Request payload for crosstab visualization operations."""
     project_id: uuid.UUID
     row_field: str
     col_field: str
 
 
 class SnapshotGroupVisualizationRequest(VisualizationOptionsMixin):
+    """Request payload for snapshot group visualization operations."""
     project_id: uuid.UUID
 
 
 class VisualizationResultResponse(BaseModel):
+    """Response payload describing visualization result data."""
     visualization_type: str
     renderer: str
     version: str
@@ -82,6 +88,7 @@ class VisualizationResultResponse(BaseModel):
 
 
 class AvailableVisualizationResponse(BaseModel):
+    """Response payload describing available visualization data."""
     type: str
     renderer: str
     description: str
@@ -91,4 +98,5 @@ class AvailableVisualizationResponse(BaseModel):
 
 
 class AvailableVisualizationsResponse(BaseModel):
+    """Response payload describing available visualizations data."""
     visualizations: list[AvailableVisualizationResponse]

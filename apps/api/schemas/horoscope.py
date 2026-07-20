@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field
 
 
 class AscendantSchema(BaseModel):
+    """Schema representing ascendant data."""
     longitude: float = Field(description="Tropical ecliptic longitude (°)")
     sidereal_longitude: float = Field(description="Sidereal longitude (°)")
     rashi: str = Field(description="Zodiac sign (English slug)")
@@ -22,6 +23,7 @@ class AscendantSchema(BaseModel):
 
 
 class HouseCuspSchema(BaseModel):
+    """Schema representing house cusp data."""
     house_number: int = Field(ge=1, le=12)
     longitude: float
     sidereal_longitude: float
@@ -29,6 +31,7 @@ class HouseCuspSchema(BaseModel):
 
 
 class PlanetPositionSchema(BaseModel):
+    """Schema representing planet position data."""
     planet: str
     sidereal_longitude: float
     rashi: str
@@ -43,6 +46,7 @@ class PlanetPositionSchema(BaseModel):
 
 
 class AspectSchema(BaseModel):
+    """Schema representing aspect data."""
     from_planet: str
     to_planet: str
     aspect_type: str
@@ -51,6 +55,7 @@ class AspectSchema(BaseModel):
 
 
 class PlanetStrengthSchema(BaseModel):
+    """Schema representing planet strength data."""
     planet: str
     dignity: Optional[str] = None
     is_retrograde: bool
@@ -66,6 +71,7 @@ class PlanetStrengthSchema(BaseModel):
 
 
 class TithiSchema(BaseModel):
+    """Schema representing tithi data."""
     number: int = Field(ge=1, le=30)
     name: str
     paksha: str
@@ -73,24 +79,28 @@ class TithiSchema(BaseModel):
 
 
 class YogaSchema(BaseModel):
+    """Schema representing yoga data."""
     number: int = Field(ge=1, le=27)
     name: str
     completion_percent: float
 
 
 class KaranaSchema(BaseModel):
+    """Schema representing karana data."""
     number: int
     name: str
     is_fixed: bool
 
 
 class VaraSchema(BaseModel):
+    """Schema representing vara data."""
     number: int = Field(ge=0, le=6)
     name: str
     lord: str
 
 
 class NakshatraInfoSchema(BaseModel):
+    """Schema representing nakshatra info data."""
     nakshatra: str
     nakshatra_number: int = Field(ge=1, le=27)
     pada: int = Field(ge=1, le=4)
@@ -100,6 +110,7 @@ class NakshatraInfoSchema(BaseModel):
 
 
 class PanchangaSchema(BaseModel):
+    """Schema representing panchanga data."""
     tithi: TithiSchema
     nakshatra: NakshatraInfoSchema
     yoga: YogaSchema
@@ -110,6 +121,7 @@ class PanchangaSchema(BaseModel):
 
 
 class D1ChartRequest(BaseModel):
+    """Request payload for d1 chart operations."""
     birth_datetime_utc: datetime = Field(
         description="Birth date and time in UTC (ISO 8601 with timezone)"
     )
@@ -126,6 +138,7 @@ class D1ChartRequest(BaseModel):
 
 
 class D1ChartResponse(BaseModel):
+    """Response payload describing d1 chart data."""
     ascendant: AscendantSchema
     houses: list[HouseCuspSchema]
     planets: list[PlanetPositionSchema]

@@ -50,6 +50,11 @@ class YogaResult:
     including yogas that did NOT fire (is_present=False) — so a research
     query can ask "how close did this chart come" and not just "did it
     fire." See the Yoga Engine Design Audit, §4, for the rationale.
+
+    Phase 2 additions (v2.1.0 "Vistara"):
+      - strength_score: 0–100 numerical strength based on planetary dignity,
+        house placement, benefic/malefic aspects, and conjunctions.
+      - counter_examples: classical conditions that weaken or cancel this yoga.
     """
     yoga_id: str
     name: str
@@ -63,3 +68,6 @@ class YogaResult:
     satisfied: tuple[str, ...] = field(default_factory=tuple)
     missing: tuple[str, ...] = field(default_factory=tuple)
     trace: tuple[str, ...] = field(default_factory=tuple)
+    # Phase 2: numerical strength (0-100) and counter-examples
+    strength_score: Optional[int] = None
+    counter_examples: tuple[str, ...] = field(default_factory=tuple)

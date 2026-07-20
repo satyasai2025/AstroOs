@@ -1,7 +1,7 @@
 ---
 id: AMP-006
 title: "Category: enterprise" frontmatter field does not distinguish the four ROADMAP.md phases
-status: Proposed — Awaiting Approval
+status: CLOSED — ACCEPTED (Option B applied; Option A rejected) — 2026-07-19
 severity: Low
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -30,6 +30,8 @@ Since STATUS.md is a tracking file (not a frozen ADR document), Option B can pro
 - **Frozen documents affected if Option B is chosen:** None — STATUS.md only.
 - **Reversibility:** Fully reversible either way; purely additive metadata.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No file has been modified by this AMP.
+**ACCEPTED — Option B. Option A REJECTED. CLOSED.**
+
+Rationale: Option B (a "Phase" column in STATUS.md's Completed table, populated from ROADMAP.md) fully resolves the reader-facing ambiguity and is routine maintenance on a tracking file — applied. Option A (frontmatter edits to all 34 frozen documents) is rejected: even metadata-only touches to frozen enterprise documents create churn with no benefit beyond what Option B already provides, and those documents are outside the active local-first v2.1.0 scope. STATUS.md has been updated with the Phase column (FOUNDATION/PLATFORM/ENTERPRISE/FUTURE). No frozen document was modified.

@@ -23,6 +23,7 @@ from apps.api.dependencies import require_admin, require_authenticated, require_
 from apps.api.routers import admin as admin_router
 from apps.api.routers import ai as ai_router
 from apps.api.routers import ai_phase_e as ai_phase_e_router
+from apps.api.routers import batch as batch_router
 from apps.api.routers import benchmark as benchmark_router
 from apps.api.routers import dataset_import as dataset_import_router
 from apps.api.routers import datasets as datasets_router
@@ -34,10 +35,12 @@ from apps.api.routers import events as events_router
 from apps.api.routers import export as export_router
 from apps.api.routers import geocoding as geocoding_router
 from apps.api.routers import horoscope as horoscope_router
+from apps.api.routers import jobs as jobs_router
 from apps.api.routers import knowledge as knowledge_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import report as report_router
 from apps.api.routers import research as research_router
+from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
 from apps.api.routers import timeline as timeline_router
@@ -50,6 +53,7 @@ from apps.api.schemas.ephemeris import EphemerisStatusSchema
 from apps.api.services.ephemeris_service import EphemerisService
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.geocoding_service import GeocodingService
+from apps.api.services.research_middleware import research_mode_logging_middleware
 
 logger = logging.getLogger(__name__)
 _settings = get_settings()
@@ -71,6 +75,25 @@ def _make_ephemeris_wrapper() -> EphemerisWrapper:
     return EphemerisWrapper(
         ephemeris_path=_settings.EPHEMERIS_PATH,
         ayanamsa="lahiri",
+    )
+
+
+def _make_worker_pool_manager():
+    """
+    Build the single, process-wide WorkerPoolManager instance (Phase II.4).
+
+    Same rationale as _make_ephemeris_wrapper: pool executors and their
+    dispatcher/autoscaler threads must exist exactly once per process, not
+    be recreated per request.
+    """
+    from apps.api.services.worker_pool import WorkerPoolManager
+
+    return WorkerPoolManager(
+        cpu_range=(_settings.WORKER_CPU_MIN, _settings.WORKER_CPU_MAX),
+        io_range=(_settings.WORKER_IO_MIN, _settings.WORKER_IO_MAX),
+        ai_range=(_settings.WORKER_AI_MIN, _settings.WORKER_AI_MAX),
+        autoscale_interval=_settings.WORKER_AUTOSCALE_INTERVAL_SECONDS,
+        job_ttl_seconds=_settings.WORKER_JOB_TTL_SECONDS,
     )
 
 
@@ -126,6 +149,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     app.state.http_client = http_client
     app.state.geocoding_service = _make_geocoding_service(http_client)
 
+    # Single shared WorkerPoolManager (cpu/io/ai pools) for batch jobs —
+    # Phase II.4, local-first (no Celery/Redis broker/K8s required).
+    app.state.worker_pool_manager = _make_worker_pool_manager()
+
     startup_status = ephe_svc.get_status()
     logger.info(
         "Swiss Ephemeris ready",
@@ -139,6 +166,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     yield
 
+    app.state.worker_pool_manager.shutdown()
     ephe_svc.close()
     await http_client.aclose()
     logger.info("AstroOS API shutting down.")
@@ -163,6 +191,18 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Research mode logging middleware (logs queries when research mode is on)
+    app.middleware("http")(research_mode_logging_middleware)
+
+    # Observability (Phase II.2): correlation IDs, request metrics, tracing.
+    # Registered last so it wraps all other middleware (outermost).
+    from apps.api.observability import (
+        observability_middleware,
+        setup_structured_logging,
+    )
+    setup_structured_logging()
+    app.middleware("http")(observability_middleware)
 
     # ── Global exception handler ──────────────────────────────────────────────
 
@@ -203,6 +243,8 @@ def create_app() -> FastAPI:
     app.include_router(workflow_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(benchmark_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(geocoding_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(batch_router.router, dependencies=_authenticated)
+    app.include_router(jobs_router.router, dependencies=_authenticated)
 
     # Knowledge: mixed — public reads (search/list/get), researcher-gated
     # writes (create/update/delete). Gated per-endpoint inside
@@ -216,6 +258,7 @@ def create_app() -> FastAPI:
     # Researcher or Admin — Research Data Office / Statistics surface.
     _researcher = [Depends(require_researcher)]
     app.include_router(research_router.router, prefix="/api/v1", dependencies=_researcher)
+    app.include_router(research_tools_router.router, prefix="/api/v1", dependencies=_researcher)
     app.include_router(statistics_router.router, prefix="/api/v1", dependencies=_researcher)
 
     # Admin only.

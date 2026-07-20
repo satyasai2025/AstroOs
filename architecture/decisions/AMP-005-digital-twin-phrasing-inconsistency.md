@@ -1,7 +1,7 @@
 ---
 id: AMP-005
 title: Digital Twin mixes cardinal and ordinal phrasing for the same confirmation count
-status: Proposed — Awaiting Approval
+status: CLOSED — REJECTED (cosmetic; no superseding ADR warranted) — 2026-07-19
 severity: Low (Informational)
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -23,6 +23,8 @@ Reword §12's "after five consecutive confirmations" to "after the fifth consecu
 - **Frozen documents affected:** Digital Twin (ADR-EAL-030) — a superseding ADR would be required to touch it.
 - **Reversibility:** Trivial; wording polish only.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No frozen document has been modified by this AMP.
+**REJECTED. CLOSED.**
+
+Rationale: The AMP itself notes the numbers are arithmetically consistent — this is style-only, not even an error. Digital Twin (ADR-EAL-030) is a frozen FUTURE-phase document outside local-first v2.1.0 scope. A superseding ADR for wording polish is not justified under any circumstances, let alone for an out-of-scope document. No further action; no frozen document was modified.
