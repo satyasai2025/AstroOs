@@ -64,8 +64,8 @@ All components run locally on a single machine. No external services required fo
 
 | Item | Value |
 |------|-------|
-| Current Version | v2.1.0 (released, tag `v2.1.0`) |
-| Active Development | v2.2.0 "Arundhati" (Phase II, local-first scope — see `ASTROOS_V2_STATUS.md`) |
+| Current Version | v2.2.0 (released, tag `v2.2.0`) |
+| Active Development | v2.3.0 "Lakshmi" (Phase III, local-first scope — see `ASTROOS_PHASE_III_V2_3_ROADMAP.md`) |
 | Architecture | Local-First |
 | Database | PostgreSQL 15+ (native) |
 | Cache | Redis (optional) |
