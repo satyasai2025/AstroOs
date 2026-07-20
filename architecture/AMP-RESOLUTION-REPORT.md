@@ -24,6 +24,13 @@ Decisions follow the local-first mandate in `CLAUDE_START_HERE.md` and `ASTROOS_
 | AMP-007 | Completion Report "four proposals" count | **REJECTED** | AMP file only |
 | AMP-008 | Ontology Registry dependency model | **ACCEPTED — A: Option A1; B: Option B2** | apps/api/domain/ontology.py (docstring), AMP file |
 
+## AMP-009/010 — Applied (Phase III, 2026-07-20)
+
+| AMP | Title | Decision | Fix applied |
+|---|---|---|---|
+| AMP-009 | `/report/chart/pdf` and `/report/chart/csv` call `.model_dump()` on plain dataclass | **FIXED** — ChartReport dataclass converted to ChartReportResponse Pydantic model before `.model_dump()` | `apps/api/routers/report.py` |
+| AMP-010 | `templates/reports/` directory missing | **FIXED** — Template path corrected to `apps/api/templates/reports/`; 7 template files created (base.html + horoscope, marriage, career, health, wealth, spiritual, transit) | `apps/api/services/report_template_engine.py`, `apps/api/templates/reports/*` |
+
 ## Rationale Per AMP
 
 ### AMP-001 — ACCEPTED (Option C: defer as tracked gap)
