@@ -45,6 +45,7 @@ from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
+from apps.api.routers import transit_patterns as transit_patterns_router
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
 from apps.api.routers import yoga as yoga_router
@@ -234,6 +235,7 @@ def create_app() -> FastAPI:
     app.include_router(shadbala_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(yoga_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(transit_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(transit_patterns_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(timeline_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(visualization_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(report_router.router, prefix="/api/v1", dependencies=_authenticated)

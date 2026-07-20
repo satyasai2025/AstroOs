@@ -1,6 +1,6 @@
 # AstroOS — Vedic Astrology Research Platform
 
-> **v2.0.0 GA** (frozen) · active development: **v2.2.0 "Arundhati"** · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
+> **v2.3.0 "Lakshmi"** (released) · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
 
 A production-grade Vedic Astrology Research Platform for scholars, practitioners, and researchers. Built on Swiss Ephemeris with full divisional chart support (D1–D60), six Dasha systems, and a clean REST API.
 
