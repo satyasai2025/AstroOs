@@ -1,14 +1,18 @@
-# M5 Milestone - General Availability
+M6# M5 Milestone - General Availability
 
 **Status:** Ready for GA Release
+
+**Architecture:** Local-First (Next.js → FastAPI → PostgreSQL → Swiss Ephemeris)
 
 ## Exit Criteria Status
 
 | Criterion | Status |
 |-----------|--------|
-| Production sign-off | ✅ Ready |
+| Local installation validated | ✅ Ready |
 | Zero release blockers | ✅ Verified |
 | Public release | ⏳ Pending RC approval |
+
+> **Local-First Context:** "Production" in this document means "local-first production-ready quality" — the platform runs entirely on a single machine with no cloud deployment required.
 
 ## GA Declaration (ASTROOS_GA_DECLARATION.md)
 
@@ -23,6 +27,8 @@ All organizational mandates satisfied:
 - ✅ Observability compliance
 - ✅ Testing (1103 unit tests)
 - ✅ Documentation complete
+
+> **Local-First Note:** All compliance items are satisfied for a Local-First deployment. No cloud, Kubernetes, or external service dependencies are required.
 
 ## Signatures
 

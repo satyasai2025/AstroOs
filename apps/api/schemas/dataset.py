@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 
 class DatasetCreateRequest(BaseModel):
+    """Request payload for dataset create operations."""
     dataset_id: str = Field(
         ..., pattern=r"^ASTRO-[A-Z]{2}-[A-Z]+-v\d+\.\d+\.\d+$",
         description="External dataset identifier",
@@ -28,6 +29,7 @@ class DatasetCreateRequest(BaseModel):
 
 
 class DatasetUpdateRequest(BaseModel):
+    """Request payload for dataset update operations."""
     name: Optional[str] = Field(default=None, min_length=1, max_length=200)
     description: Optional[str] = None
     record_count: Optional[int] = None
@@ -42,6 +44,7 @@ class DatasetUpdateRequest(BaseModel):
 
 
 class DatasetResponse(BaseModel):
+    """Response payload describing dataset data."""
     id: uuid.UUID
     dataset_id: str
     name: str
@@ -63,5 +66,6 @@ class DatasetResponse(BaseModel):
 
 
 class DatasetListResponse(BaseModel):
+    """Response payload describing dataset list data."""
     datasets: list[DatasetResponse]
     total: int

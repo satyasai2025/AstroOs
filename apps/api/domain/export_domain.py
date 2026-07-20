@@ -16,6 +16,7 @@ class ExportFormat(str, Enum):
     JSON = "json"
     MARKDOWN = "markdown"
     HTML = "html"
+    CSV = "csv"      # Tabular data export with citations
     PDF = "pdf"      # Phase 2
     DOCX = "docx"    # Phase 2
 

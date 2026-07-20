@@ -41,13 +41,15 @@ from apps.api.services.auth_service import AuthService
 
 # ── Test database ─────────────────────────────────────────────────────────────
 
-TEST_DB_URL: str = os.environ.get("TEST_DATABASE_URL")
-if not TEST_DB_URL:
-    raise RuntimeError(
-        "TEST_DATABASE_URL environment variable is required. "
-        "PostgreSQL 16 is the only supported database. "
-        "Set TEST_DATABASE_URL=postgresql+asyncpg://user:pass@host:5432/dbname"
-    )
+TEST_DB_URL = os.environ.get("TEST_DATABASE_URL")
+
+_DB_SKIP_REASON = (
+    "TEST_DATABASE_URL environment variable is not set. "
+    "PostgreSQL 16 is the only supported database. "
+    "Set TEST_DATABASE_URL=postgresql+asyncpg://user:pass@host:5432/dbname "
+    "to run database-backed tests. (DB-free tests — e.g. tests/precision/ — "
+    "run regardless.)"
+)
 
 # ── PostgreSQL ENUM types ─────────────────────────────────────────────────────
 # The model column factories (astrology.py) use create_type=False because
@@ -85,6 +87,13 @@ ENUM_DEFINITIONS = {
         "vimshottari", "ashtottari", "yogini", "kalachakra", "chara", "narayana",
     ),
 }
+
+
+def require_test_db() -> None:
+    """Skip-collector: raise SkipTest at module level if no test DB."""
+    if not TEST_DB_URL:
+        import pytest
+        raise pytest.skip(_DB_SKIP_REASON)
 
 
 async def _ensure_enums(conn):

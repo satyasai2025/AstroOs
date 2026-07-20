@@ -1,0 +1,42 @@
+# AstroOS alert rules (Phase II.2 — local-first)
+# Loaded by prometheus.yml; usable with local Alertmanager if desired.
+groups:
+  - name: astroos-api
+    rules:
+      - alert: HighP95Latency
+        expr: histogram_quantile(0.95, sum(rate(api_request_duration_seconds_bucket[5m])) by (le)) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 API latency above 5s"
+          description: "95th percentile request latency has exceeded 5s for 5 minutes (SLO: p95 < 5s)."
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(api_request_duration_seconds_count{status_code=~"5.."}[5m]))
+            / sum(rate(api_request_duration_seconds_count[5m])) > 0.02
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "5xx error rate above 2%"
+          description: "Server error rate exceeded 2% of requests for 5 minutes (SLO: <1%)."
+
+      - alert: ApiDown
+        expr: up{job="astroos-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "AstroOS API is down"
+          description: "Prometheus cannot scrape /metrics on localhost:8000."
+
+      - alert: SlowChartComputation
+        expr: histogram_quantile(0.95, sum(rate(chart_computation_duration_seconds_bucket[10m])) by (le)) > 2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Chart computation p95 above 2s"
+          description: "Swiss Ephemeris chart computation is slower than the 2s SLO."

@@ -12,6 +12,7 @@ from pydantic import BaseModel
 
 
 class ConditionExplanationResponse(BaseModel):
+    """Response payload describing condition explanation data."""
     condition_text: str
     satisfied: bool
     fact_key: str
@@ -21,6 +22,7 @@ class ConditionExplanationResponse(BaseModel):
 
 
 class ExplanationResponse(BaseModel):
+    """Response payload describing explanation data."""
     rule_id: str
     rule_name: str
     rule_category: str
@@ -35,6 +37,7 @@ class ExplanationResponse(BaseModel):
 
 
 class FailureAnalysisResponse(BaseModel):
+    """Response payload describing failure analysis data."""
     rule_id: str
     rule_name: str
     summary: str

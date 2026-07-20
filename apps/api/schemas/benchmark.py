@@ -34,6 +34,7 @@ class BenchmarkValidateAllRequest(BaseModel):
 
 
 class PlanetBenchmarkResultResponse(BaseModel):
+    """Response payload describing planet benchmark result data."""
     planet: str
     computed_longitude: float
     expected_longitude: float
@@ -42,6 +43,7 @@ class PlanetBenchmarkResultResponse(BaseModel):
 
 
 class HouseCuspBenchmarkResponse(BaseModel):
+    """Response payload describing house cusp benchmark data."""
     house_number: int
     house_system: str
     computed_cusp: float
@@ -51,6 +53,7 @@ class HouseCuspBenchmarkResponse(BaseModel):
 
 
 class VargaBenchmarkResponse(BaseModel):
+    """Response payload describing varga benchmark data."""
     varga_code: str
     planet: str
     computed_rashi: str
@@ -79,5 +82,6 @@ class BenchmarkSummaryResponse(BaseModel):
 
 
 class BenchmarkValidateResponse(BaseModel):
+    """Response payload describing benchmark validate data."""
     status: str  # "passed" | "failed"
     summary: BenchmarkSummaryResponse

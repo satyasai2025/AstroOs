@@ -24,6 +24,7 @@ QueryOperator = Literal["==", "!=", ">", "<", ">=", "<=", "in"]
 
 
 class ResearchProjectCreateRequest(BaseModel):
+    """Request payload for research project create operations."""
     user_id: uuid.UUID
     title: str = Field(min_length=1, max_length=300)
     description: Optional[str] = None
@@ -44,6 +45,7 @@ class ResearchProjectUpdateRequest(BaseModel):
 
 
 class ResearchProjectResponse(BaseModel):
+    """Response payload describing research project data."""
     id: uuid.UUID
     user_id: uuid.UUID
     title: str
@@ -55,6 +57,7 @@ class ResearchProjectResponse(BaseModel):
 
 
 class ResearchProjectListResponse(BaseModel):
+    """Response payload describing research project list data."""
     projects: list[ResearchProjectResponse]
     total: int
 
@@ -63,12 +66,14 @@ class ResearchProjectListResponse(BaseModel):
 
 
 class ResearchExperimentCreateRequest(BaseModel):
+    """Request payload for research experiment create operations."""
     title: str = Field(min_length=1, max_length=300)
     hypothesis: str = Field(min_length=1)
     methodology: str = Field(min_length=1)
 
 
 class ResearchExperimentUpdateRequest(BaseModel):
+    """Request payload for research experiment update operations."""
     title: Optional[str] = Field(default=None, min_length=1, max_length=300)
     hypothesis: Optional[str] = None
     methodology: Optional[str] = None
@@ -77,14 +82,17 @@ class ResearchExperimentUpdateRequest(BaseModel):
 
 
 class ResearchExperimentCompleteRequest(BaseModel):
+    """Request payload for research experiment complete operations."""
     findings: str = Field(min_length=1)
 
 
 class ResearchExperimentAssignSnapshotsRequest(BaseModel):
+    """Request payload for research experiment assign snapshots operations."""
     snapshot_ids: list[uuid.UUID] = Field(min_length=1)
 
 
 class ResearchExperimentResponse(BaseModel):
+    """Response payload describing research experiment data."""
     id: uuid.UUID
     project_id: uuid.UUID
     title: str
@@ -98,6 +106,7 @@ class ResearchExperimentResponse(BaseModel):
 
 
 class ResearchExperimentListResponse(BaseModel):
+    """Response payload describing research experiment list data."""
     experiments: list[ResearchExperimentResponse]
     total: int
 
@@ -125,6 +134,7 @@ class SnapshotCaptureRequest(BaseModel):
 
 
 class SnapshotResponse(BaseModel):
+    """Response payload describing snapshot data."""
     id: uuid.UUID
     project_id: uuid.UUID
     chart_id: uuid.UUID
@@ -134,6 +144,7 @@ class SnapshotResponse(BaseModel):
 
 
 class SnapshotListResponse(BaseModel):
+    """Response payload describing snapshot list data."""
     snapshots: list[SnapshotResponse]
     total: int
 
@@ -142,6 +153,7 @@ class SnapshotListResponse(BaseModel):
 
 
 class SnapshotConditionSchema(BaseModel):
+    """Schema representing snapshot condition data."""
     field: str = Field(
         description=(
             "Dotted path navigable by SnapshotAccessor, e.g. "
@@ -160,6 +172,7 @@ class SnapshotQueryRequest(BaseModel):
 
 
 class SnapshotQueryResponse(BaseModel):
+    """Response payload describing snapshot query data."""
     snapshots: list[SnapshotResponse]
     total: int
 
@@ -168,11 +181,13 @@ class SnapshotQueryResponse(BaseModel):
 
 
 class SnapshotCompareRequest(BaseModel):
+    """Request payload for snapshot compare operations."""
     snapshot_a_id: uuid.UUID
     snapshot_b_id: uuid.UUID
 
 
 class ChartCompareRequest(BaseModel):
+    """Request payload for chart compare operations."""
     project_id: uuid.UUID = Field(
         description="Project both charts' snapshots must belong to."
     )
@@ -181,12 +196,14 @@ class ChartCompareRequest(BaseModel):
 
 
 class FieldDiffResponse(BaseModel):
+    """Response payload describing field diff data."""
     field: str
     value_a: Any
     value_b: Any
 
 
 class SnapshotComparisonResponse(BaseModel):
+    """Response payload describing snapshot comparison data."""
     snapshot_a_id: uuid.UUID
     snapshot_b_id: uuid.UUID
     chart_id_a: uuid.UUID

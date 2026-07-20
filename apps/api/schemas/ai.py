@@ -28,6 +28,7 @@ DashaSystem = Literal["vimshottari", "yogini", "ashtottari", "kalachakra", "char
 
 
 class BirthDataInput(BaseModel):
+    """Model representing birth data input data."""
     birth_datetime_utc: datetime = Field(
         description="UTC birth datetime (ISO-8601, must include timezone offset)."
     )
@@ -45,14 +46,17 @@ class BirthDataInput(BaseModel):
 
 
 class ChartSummaryRequest(BirthDataInput):
+    """Request payload for chart summary operations."""
     style: str = "concise"
 
 
 class YogaExplanationRequest(BirthDataInput):
+    """Request payload for yoga explanation operations."""
     pass
 
 
 class DashaInterpretationRequest(BirthDataInput):
+    """Request payload for dasha interpretation operations."""
     system: DashaSystem = "vimshottari"
     target_date: Optional[date] = Field(
         default=None, description="Defaults to today if omitted."
@@ -60,12 +64,14 @@ class DashaInterpretationRequest(BirthDataInput):
 
 
 class TransitReadingRequest(BirthDataInput):
+    """Request payload for transit reading operations."""
     transit_datetime_utc: Optional[datetime] = Field(
         default=None, description="Defaults to now (UTC) if omitted."
     )
 
 
 class QuestionRequest(BirthDataInput):
+    """Request payload for question operations."""
     question: str = Field(min_length=1)
 
 
@@ -78,6 +84,7 @@ class ExplainRuleRequest(BirthDataInput):
 
 
 class CitationResponse(BaseModel):
+    """Response payload describing citation data."""
     source: str
     reference: str
     text: str
@@ -85,6 +92,7 @@ class CitationResponse(BaseModel):
 
 
 class AIResponseSchema(BaseModel):
+    """Schema representing ai response data."""
     response_type: str
     title: str
     summary: str

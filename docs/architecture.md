@@ -2,7 +2,21 @@
 
 ## System Overview
 
-AstroOS is a Vedic Astrology Research Platform built on Clean Architecture + Domain-Driven Design.
+AstroOS is a Vedic Astrology Research Platform built on Clean Architecture + Domain-Driven Design. It follows a **Local-First architecture** where all components run on a single machine:
+
+```
+User
+ ↓
+Next.js (Frontend)
+ ↓
+FastAPI (Backend API)
+ ↓
+PostgreSQL (Primary Data Store)
+ ↓
+Swiss Ephemeris (Astronomical Calculations)
+```
+
+No external services are required for core functionality. Redis is optional and only used for JWT token revocation (auth denylist). The system is designed for personal, single-user operation on a local computer.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐

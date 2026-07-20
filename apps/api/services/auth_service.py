@@ -47,6 +47,7 @@ class AuthError(Exception):
 
 
 class RegistrationError(AuthError):
+    """Raised when a registration failure occurs."""
     def __init__(self, message: str) -> None:
         super().__init__(message, status_code=409)
 

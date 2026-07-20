@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 
 
 class KnowledgeReferenceResponse(BaseModel):
+    """Response payload describing knowledge reference data."""
     book_id: uuid.UUID
     chapter: Optional[int] = None
     verse_number: Optional[int] = None
@@ -28,6 +29,7 @@ class KnowledgeReferenceResponse(BaseModel):
 
 
 class BookCreateRequest(BaseModel):
+    """Request payload for book create operations."""
     title: str = Field(min_length=1, max_length=300)
     author: Optional[str] = None
     language: Optional[str] = None
@@ -38,6 +40,7 @@ class BookCreateRequest(BaseModel):
 
 
 class BookUpdateRequest(BaseModel):
+    """Request payload for book update operations."""
     title: Optional[str] = Field(default=None, min_length=1, max_length=300)
     author: Optional[str] = None
     language: Optional[str] = None
@@ -48,6 +51,7 @@ class BookUpdateRequest(BaseModel):
 
 
 class BookResponse(BaseModel):
+    """Response payload describing book data."""
     id: uuid.UUID
     title: str
     author: Optional[str]
@@ -61,6 +65,7 @@ class BookResponse(BaseModel):
 
 
 class BookListResponse(BaseModel):
+    """Response payload describing book list data."""
     books: list[BookResponse]
     total: int
 
@@ -69,6 +74,7 @@ class BookListResponse(BaseModel):
 
 
 class VerseCreateRequest(BaseModel):
+    """Request payload for verse create operations."""
     book_id: uuid.UUID
     original_text: str = Field(min_length=1)
     chapter: Optional[int] = None
@@ -80,6 +86,7 @@ class VerseCreateRequest(BaseModel):
 
 
 class VerseUpdateRequest(BaseModel):
+    """Request payload for verse update operations."""
     original_text: Optional[str] = Field(default=None, min_length=1)
     chapter: Optional[int] = None
     verse_number: Optional[int] = None
@@ -90,6 +97,7 @@ class VerseUpdateRequest(BaseModel):
 
 
 class VerseResponse(BaseModel):
+    """Response payload describing verse data."""
     id: uuid.UUID
     book_id: uuid.UUID
     original_text: str
@@ -104,6 +112,7 @@ class VerseResponse(BaseModel):
 
 
 class VerseListResponse(BaseModel):
+    """Response payload describing verse list data."""
     verses: list[VerseResponse]
     total: int
 
@@ -112,6 +121,7 @@ class VerseListResponse(BaseModel):
 
 
 class RuleCreateRequest(BaseModel):
+    """Request payload for rule create operations."""
     title: str = Field(min_length=1, max_length=300)
     interpretation: str = Field(min_length=1)
     verse_id: Optional[uuid.UUID] = None
@@ -121,6 +131,7 @@ class RuleCreateRequest(BaseModel):
 
 
 class RuleUpdateRequest(BaseModel):
+    """Request payload for rule update operations."""
     title: Optional[str] = Field(default=None, min_length=1, max_length=300)
     interpretation: Optional[str] = Field(default=None, min_length=1)
     tradition: Optional[str] = None
@@ -129,6 +140,7 @@ class RuleUpdateRequest(BaseModel):
 
 
 class RuleResponse(BaseModel):
+    """Response payload describing rule data."""
     id: uuid.UUID
     title: str
     interpretation: str
@@ -141,6 +153,7 @@ class RuleResponse(BaseModel):
 
 
 class RuleListResponse(BaseModel):
+    """Response payload describing rule list data."""
     rules: list[RuleResponse]
     total: int
 
@@ -149,6 +162,7 @@ class RuleListResponse(BaseModel):
 
 
 class KarakatvaCreateRequest(BaseModel):
+    """Request payload for karakatva create operations."""
     subject: str = Field(min_length=1, max_length=300)
     graha: Optional[str] = None
     sign_id: Optional[int] = None
@@ -160,6 +174,7 @@ class KarakatvaCreateRequest(BaseModel):
 
 
 class KarakatvaUpdateRequest(BaseModel):
+    """Request payload for karakatva update operations."""
     subject: Optional[str] = Field(default=None, min_length=1, max_length=300)
     graha: Optional[str] = None
     sign_id: Optional[int] = None
@@ -170,6 +185,7 @@ class KarakatvaUpdateRequest(BaseModel):
 
 
 class KarakatvaResponse(BaseModel):
+    """Response payload describing karakatva data."""
     id: uuid.UUID
     subject: str
     graha: Optional[str]
@@ -184,6 +200,7 @@ class KarakatvaResponse(BaseModel):
 
 
 class KarakatvaListResponse(BaseModel):
+    """Response payload describing karakatva list data."""
     karakatvas: list[KarakatvaResponse]
     total: int
 
@@ -192,6 +209,7 @@ class KarakatvaListResponse(BaseModel):
 
 
 class KnowledgeSearchRequest(BaseModel):
+    """Request payload for knowledge search operations."""
     text: str = Field(min_length=1)
     entity_type: Optional[str] = Field(
         default=None, description="Restrict to one of: book, verse."
@@ -204,6 +222,7 @@ class KnowledgeSearchRequest(BaseModel):
 
 
 class KnowledgeSearchResultResponse(BaseModel):
+    """Response payload describing knowledge search result data."""
     entity_type: str
     entity_id: uuid.UUID
     title: str
@@ -214,5 +233,6 @@ class KnowledgeSearchResultResponse(BaseModel):
 
 
 class KnowledgeSearchResponse(BaseModel):
+    """Response payload describing knowledge search data."""
     results: list[KnowledgeSearchResultResponse]
     total: int

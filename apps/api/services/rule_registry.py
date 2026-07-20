@@ -19,6 +19,7 @@ _REGISTRY: dict[str, RuleDefinition] = {}
 
 
 def register_rule(rule: RuleDefinition) -> None:
+    """Register a rule definition; raises ValueError on duplicate rule_id."""
     if rule.rule_id in _REGISTRY:
         raise ValueError(f"Duplicate rule_id registered: {rule.rule_id!r}")
     _REGISTRY[rule.rule_id] = rule
@@ -30,6 +31,7 @@ def all_rules() -> list[RuleDefinition]:
 
 
 def get_rule(rule_id: str) -> RuleDefinition | None:
+    """Look up a registered rule by its rule_id, or None if unknown."""
     return _REGISTRY.get(rule_id)
 
 

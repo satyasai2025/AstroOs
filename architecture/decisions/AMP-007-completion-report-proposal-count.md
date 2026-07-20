@@ -1,7 +1,7 @@
 ---
 id: AMP-007
 title: Completion Report undercounts distinct Audit Framework catalog-inclusion proposals
-status: Proposed — Awaiting Approval
+status: CLOSED — REJECTED (grouping is editorially defensible; report stays frozen) — 2026-07-19
 severity: Informational
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -23,6 +23,8 @@ Reword COMPLETION_REPORT.md §5 and §7 to state "five distinct proposals from f
 - **Frozen documents affected:** COMPLETION_REPORT.md only — a wording correction, no change to any of the 34 ADR documents.
 - **Reversibility:** Trivial; a phrasing/count clarification.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No file has been modified by this AMP.
+**REJECTED. CLOSED.**
+
+Rationale: The AMP itself concedes the grouping is "defensible editorially" — Agent Platform's and Autonomous Systems' recommendations are closely related and would share one governance answer. COMPLETION_REPORT.md is frozen by its own terms, and unfreezing it to change "four" to "five" for an Informational finding is not warranted. For the record: the literal count is five distinct `designateMandatory()` proposals (Licensing §18, Deployment §18, Disaster Recovery §17-18, Agent Platform, Autonomous Systems), grouped as four review items. Anyone using the report as a checklist should consult this AMP. All five proposals concern out-of-scope enterprise documents in any case. No file was modified.

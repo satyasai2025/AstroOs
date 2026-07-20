@@ -7,9 +7,9 @@
 
 ## Context
 
-AstroOS Phase E delivered a functional ReportEngine that assembles structured JSON reports from computed domain objects (D1Chart, Timeline, VerificationFindings, AggregateReport). The current API returns `ReportSection` lists with arbitrary `data` dicts.
+AstroOS is a Local-First Vedic Astrology Research Platform (Next.js → FastAPI → PostgreSQL → Swiss Ephemeris). Phase E delivered a functional ReportEngine that assembles structured JSON reports from computed domain objects (D1Chart, Timeline, VerificationFindings, AggregateReport). The current API returns `ReportSection` lists with arbitrary `data` dicts.
 
-Phase F requires professional horoscope reports (9 types: Horoscope, Dasha, Transit, Marriage, Career, Health, Wealth, Spiritual, Research) exportable as PDF/JSON/CSV. The existing infrastructure is JSON-only and template-less.
+Phase F requires professional horoscope reports (9 types: Horoscope, Dasha, Transit, Marriage, Career, Health, Wealth, Spiritual, Research) exportable as PDF/JSON/CSV. The existing infrastructure is JSON-only and template-less. All reporting runs locally; no external rendering service is required.
 
 ## Decision
 
@@ -33,7 +33,7 @@ Adopt a **Template-First Reporting Architecture** with three layers:
 
 ### Key Decisions
 
-1. **PDF Generation:** Use WeasyPrint (Python) for HTML→PDF conversion. It supports CSS print media, page breaks, headers/footers, and embedded fonts. Converts HTML templates to PDF without browser automation.
+1. **PDF Generation:** Use WeasyPrint (Python) for HTML→PDF conversion. It supports CSS print media, page breaks, headers/footers, and embedded fonts. Converts HTML templates to PDF without browser automation — runs entirely locally, no external service.
 
 2. **Template Engine:** Jinja2 with custom filters for astrology terms (rashi names, nakshatra, yoga descriptions). Templates versioned in `templates/reports/`.
 

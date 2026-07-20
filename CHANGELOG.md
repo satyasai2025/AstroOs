@@ -4,11 +4,111 @@ All notable changes to AstroOS are documented here at the release-summary level.
 
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased] — targeting 2.0.0
+## [2.2.0] — 2026-07-20 — "Arundhati" (Phase II)
 
-Everything below is currently in the working tree on top of commit `d98fd01` (tag `v1.0.0-alpha`) and **has not yet been committed or tagged**. See `RELEASE_MANIFEST.md` for build status per component and `GA_RELEASE_GOVERNANCE_AUDIT.md` for the full validation record.
+Phase II of the v2.2.0 release cycle, codenamed "Arundhati". All features are
+local-first — no Kubernetes, Helm, or cloud services.
 
 ### Added
+
+- **AMP Governance (Task 1):** All 8 Actionable Maturity Process items resolved
+  and closed. Governance audit completed. Full local-first compliance confirmed.
+- **Observability & SRE (Task 8, Local-First):** Structured JSON logging with
+  W3C `traceparent` correlation IDs (`trace_id`, `span_id`), request/response
+  timing spans, Prometheus metrics middleware (`apps/api/observability.py`).
+  Native configs for Prometheus, alert rules, and Grafana in `observability/`.
+  17 new unit tests.
+- **Architecture ADRs — Observability (Task 9):** ADR-OBS-001 (observability
+  stack), ADR-OBS-002 (log retention policy), ADR-OBS-003 (trace propagation
+  format) in `architecture/adr/`. Incident runbooks in `observability/runbooks/`.
+- **SDK Public Release & DX (Task 10):** Python SDK `astroos` 2.2.0 (PyPI-ready:
+  twine check passed, py.typed, clean-room wheel import verified) and TypeScript
+  SDK `@astroos/sdk` 2.2.0 (npm-ready: dual ESM+CJS+types build verified via
+  require/import smoke tests). New `docs/sdk/VERSIONING.md`,
+  `docs/sdk/PUBLISHING.md`, Jupyter quickstart in
+  `examples/notebooks/astroos_sdk_quickstart.ipynb`. Publishing is a manual,
+  credentialed step.
+- **Worker Pools & Batch Scaling (Task 11, Local-First):**
+  `apps/api/services/worker_pool.py` with CPU/I/O/AI pools, priority queue,
+  retry/backoff, dead-letter queue, local queue-depth autoscaling, Prometheus
+  metrics. Batch chart-reports API (`POST /api/v1/batch/chart-reports` + poll/
+  download/cancel). Job monitoring (`GET /api/v1/jobs`,
+  `/jobs/monitor/html`). 20 new tests. Verifed end-to-end against real Swiss
+  Ephemeris data.
+- **Architecture ADRs — Worker Pools (Task 11):** ADR-WKR-001 (worker pool
+  topology), ADR-WKR-002 (broker choice), ADR-WKR-003 (retry policy),
+  ADR-WKR-004 (priority routing) in `architecture/adr/`.
+- **AI Model Hardening & Calculator Integration (Task 13):** AI tool schema
+  hardening, calculator integration into AI tools, hypothesis validation
+  service, query log service, research middleware, CSV export improvements.
+  Improved error handling across AI-powered features.
+- **Developer Documentation & Tooling (Task 14):** Migration guide
+  (`docs/migration-v2.1-to-v2.2.md`), developer onboarding guide
+  (`docs/developer-onboarding.md`), pre-commit hooks config
+  (`.pre-commit-config.yaml` + `docs/pre-commit-setup.md`), VS Code IDE configs
+  (`.vscode/extensions.json`, `.vscode/settings.json`), deprecation policy
+  (`docs/deprecation-policy.md`). CHANGELOG updated with v2.2.0 entry.
+
+### Changed
+
+- Version updated from 2.1.0 to 2.2.0 for all components.
+- Phase II scope amended per user directive: tasks 6/7/18 (Docker, Kubernetes,
+  Helm, cloud validation) permanently removed from pipeline. Local-first
+  mandate reaffirmed.
+
+### Quality
+
+- No breaking changes to API contract, database schema, or SDK public surface.
+- All existing unit, integration, regression, and precision tests pass.
+- Worker pools and batch jobs verified end-to-end against real Swiss Ephemeris.
+- SDK builds verified: Python `twine check` + clean import, TypeScript dual
+  ESM/CJS/types build.
+
+### Known Issues
+
+- **AMP-009 / AMP-010 (carried from Phase F):** PDF and HTML report rendering
+  (`ReportTemplateEngine.render_pdf`/`render_html`) do not work. CSV export
+  works correctly. Both AMPs are Proposed, not yet approved. See
+  `architecture/decisions/`.
+- **Premature v2.1.0 documentation in CLAUDE_START_HERE.md:** The "Current
+  Version" field still reads v2.1.0. The "Recent Documentation Changes" section
+  below it contains the accurate Phase II entries.
+
+## [2.1.0] — 2026-07-19 — "Vistara" (Local-First Enhancement)
+
+Phase I of the v2.1.0 release cycle, codenamed "Vistara". All features are local-first — no Kubernetes, Helm, or cloud services.
+
+### Added
+
+- **Shadbala Engine (Phase I.2):** Full 6-fold planetary strength computation covering Naisargika, Dig, Drik, Chesta, Sthana (Uchcha, Kendradi, Drekkana, Saptavargaja, Ojayugmarasyamsa), and Kala Bala (Paksha, Tribhaga, Ayana, Nathonnata, Dina-Hora, Yuddha) sub-components. All 9 grahas supported.
+- **Ashtakavarga Engine (Phase I.2):** Bhinnashtakavarga for all 7 classical grahas, Sarvashtakavarga summation (classical total = 337), Shodhana (Trikona + Ekadhipatya) reduction passes.
+- **Swiss Ephemeris Precision (Phase I.2):** Golden-reference precision tests in `tests/precision/` validating planet positions within <1 arc-second. Graceful Moshier polynomial fallback when `.se1` files are absent.
+- **D3.js Chart Visualizations (Phase I.3):** North Indian diamond-style chart rendering, interactive Dasha timeline with Mahadasha→Pratyantar countdown, Nakshatra/Pada interactive selector with search.
+- **Dark Mode (Phase I.3):** Light/dark theme toggle persisted to `localStorage`. Respects system `prefers-color-scheme`.
+- **Research Tools (Phase I.4):** Research project CRUD UI at `/research/projects`, snapshot/version comparison, CSV/JSON export with knowledge citations, research mode toggle (logs all queries for reproducibility), hypothesis validation workflow (flag/confirm/reject AI-generated sources).
+- **Yoga Detection Enhancements (Phase I.5):** Phase 2 yogas (Chandra, Nabhasa, Arishta, Sanyasa, Solar, Gajakesari, Neecha Bhanga) added. Strength scoring (0–100) per yoga. Composite/multi-planet/house yoga detection. Activation timeline during Dasha periods. Counter-example (weakness) conditions.
+- **Governance Compliance:** All 8 AMPs resolved. Governance audit report generated. Full local-first compliance confirmed.
+
+### Changed
+
+- Version updated from 2.0.0 to 2.1.0.
+- Documentation updated for local-first setup: README, API reference, troubleshooting guide, contributing guide, `scripts/dev.sh` launcher.
+
+### Quality
+
+- Precision tests added for planetary positions, Shadbala components, and Ashtakavarga bindus. All existing unit/integration/regression tests pass.
+# Changelog
+
+All notable changes to AstroOS are documented here at the release-summary level. For the full, dated, blow-by-blow engineering log (including in-progress work between releases), see `CHANGELOG_V2.md`.
+
+Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
+
+## [2.0.0] — 2026-07-19 — General Availability
+
+First stable release of AstroOS as a complete, local-first Vedic Astrology Research Platform. All dependencies pinned, all tests passing, all phases A–H frozen.
+
+### Added
+- Local-first architecture with Next.js frontend, FastAPI backend, PostgreSQL database, and Swiss Ephemeris — all running on a single local machine with no external service dependencies for core functionality.
 - Unified Analysis Pipeline: `POST /api/v1/workflow/analyze`, connecting the Rule Engine, Knowledge Engine, and Report Engine against real (not placeholder) data.
 - Full analysis dashboard frontend (`apps/web/src/app/dashboard/`, `apps/web/src/components/workflow/`) with 10 result panels (Chart, Vargas, Dasha, Yogas, Strength, Transits, Rules, Knowledge, Verification, Report).
 - Birth-place search with geocoding + timezone auto-resolution (`/geocode/search`, `/geocode/timezone`), with manual-coordinate override.

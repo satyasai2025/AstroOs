@@ -13,6 +13,7 @@ from pydantic import BaseModel
 
 
 class NodeResponse(BaseModel):
+    """Response payload describing node data."""
     id: str
     label: str
     type: str
@@ -20,6 +21,7 @@ class NodeResponse(BaseModel):
 
 
 class RelationshipResponse(BaseModel):
+    """Response payload describing relationship data."""
     source_id: str
     target_id: str
     relationship_type: str
@@ -34,5 +36,6 @@ class EntityResponse(BaseModel):
 
 
 class RelationshipListResponse(BaseModel):
+    """Response payload describing relationship list data."""
     relationships: list[RelationshipResponse] = []
     total: int = 0

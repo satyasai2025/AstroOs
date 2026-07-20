@@ -7,7 +7,7 @@
 
 ## Theme
 
-**From Foundation to Intelligent Astrology Platform.** v1 produced specifications, documentation, and a governed but largely API-unexposed engine. v2 shifts the emphasis to execution, integration, user experience, and research — turning what v1 specified and built into something a user or researcher can actually run against.
+**From Foundation to Intelligent Astrology Platform.** v1 produced specifications, documentation, and a governed but largely API-unexposed engine. v2 shifts the emphasis to execution, integration, user experience, and research — turning what v1 specified and built into something a user or researcher can actually run against locally, without requiring external services.
 
 ## Operating model
 
@@ -35,7 +35,9 @@ Cross-office work flows through formal requests (ER/ADR·RFC/KR/BR/RDR), same di
 
 **Deliverable:** AstroOS Platform Alpha.
 
-**Status:** Objective 1 is substantially complete — see `ASTROOS_V2_STATUS.md`. Objectives 2–4 not started.
+**Status:** ✅ COMPLETE (2026-07-18) — FROZEN, see `ASTROOS_V2_STATUS.md`
+
+> **Local-First**: All objectives target local operation on a single machine. No cloud dependencies.
 
 ### Phase B — Knowledge & Intelligence Expansion
 
@@ -88,7 +90,48 @@ Complete Python SDK, REST SDK, CLI, plugin architecture.
 
 ### Phase H — Production
 
-Docker, monitoring, logging, backups, deployment, versioning, release pipeline.
+Optional production deployment patterns (containerization, Kubernetes, CI/CD, monitoring) for users who wish to deploy AstroOS as a service. The core platform remains local-first — no external dependencies required for normal use.
+
+**Status:** ✅ COMPLETE (2026-07-19) — FROZEN, see `PHASE_H_COMPLETION_REPORT.md`
+
+| Deliverable | Status |
+|-------------|--------|
+| Multi-stage Dockerfile with non-root user | ✅ Done |
+| GitHub Actions CI/CD (Bandit + Trivy) | ✅ Done |
+| Prometheus metrics + Grafana config | ✅ Done |
+| Health endpoints (/health/live, /health/ready, /metrics) | ✅ Done |
+| Flask/FastAPI production config | ✅ Done |
+| GA Release Notes | ✅ Done |
+| SDK publication scripts | ✅ Done |
+
+---
+
+## v2.0.0 GA Release
+
+**Status:** ✅ RELEASED (2026-07-19)
+
+Tag: `v2.0.0` on commit `e9bd90a`
+
+See:
+- `GA_RELEASE_NOTES.md`
+- `ASTROOS_GA_DECLARATION.md`
+- `WORK_STATUS_SUMMARY.md`
+
+---
+
+## Phase I — v2.1.0 "Vistara"
+
+Theme: **From Platform to Enterprise Scale**
+
+> See `ASTROOS_PHASE_I_V2_1_ROADMAP.md` for full Phase I plan.
+
+| Sub-Phase | Name | Duration | Target |
+|-----------|------|----------|--------|
+| I.1 | Kubernetes & Helm | 2 weeks | M4 |
+| I.2 | Multi-Region & Observability | 2 weeks | M5 |
+| I.3 | SDK Publication & Streaming | 2 weeks | M5 |
+| I.4 | Celery & Batch Jobs | 2 weeks | M6 |
+| I.5 | Advanced Yoga & AI Enhancements | 2 weeks | M6 |
 
 ## First v2 Milestone — M1
 

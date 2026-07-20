@@ -11,7 +11,7 @@
 
 **AstroOS v2.0.0 is hereby declared FULLY COMPLIANT FOR GENERAL AVAILABILITY RELEASE.**
 
-All organizational mandates have been satisfied. The platform meets enterprise-grade standards for production deployment.
+All organizational mandates have been satisfied. The platform is **Local-First** by design — all core functionality runs on a single machine with no external service dependencies. Production deployment patterns (Kubernetes, Docker, CI/CD) are provided as optional tooling for users who wish to deploy AstroOS as a service.
 
 ---
 
@@ -36,13 +36,15 @@ All organizational mandates have been satisfied. The platform meets enterprise-g
 - Accessible responsive UI
 - TypeScript strict mode
 
-### ✅ DevOps/Infrastructure
-- Multi-stage Docker build
-- GitHub Actions CI/CD
+### ✅ DevOps/Infrastructure (Optional)
+- Multi-stage Docker build (for containerized deployment)
+- GitHub Actions CI/CD (for contributors)
 - Trivy vulnerability scanning
 - Bandit security scanning
-- Prometheus metrics
-- Health endpoints
+- Prometheus metrics (local and deployed)
+- Health endpoints (local and deployed)
+
+> **Note:** These are optional production enhancements. AstroOS runs entirely locally without Docker, CI/CD, or any external infrastructure.
 
 ### ✅ Security (OWASP Top 10)
 - Rate limiting (slowapi)

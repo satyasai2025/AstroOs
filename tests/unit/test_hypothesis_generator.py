@@ -11,6 +11,8 @@ from apps.api.domain.ephemeris import Ascendant, DignityType, HouseCusp, Siderea
 from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.yoga import YogaResult
 from apps.api.services.hypothesis_generator import HypothesisGenerator
+from apps.api.services.knowledge_graph_engine import KnowledgeGraphEngine
+from apps.api.services.ontology_registry import build_default_ontology
 
 
 def _make_chart(exalted_planets: list[str] | None = None,
@@ -51,6 +53,10 @@ def _make_chart(exalted_planets: list[str] | None = None,
     return D1Chart(ephemeris=None, ascendant=asc, houses=houses, planets=planets,
                    aspects=[], planet_strengths=[], panchanga=None,
                    ayanamsa_system="lahiri", house_system="W")
+
+
+def _default_kg() -> KnowledgeGraphEngine:
+    return KnowledgeGraphEngine(build_default_ontology())
 
 
 class TestHypothesisGenerator:
@@ -138,3 +144,74 @@ class TestHypothesisDomain:
             testable_prediction="P", suggested_dataset="GC-MASTER", priority=5,
         )
         assert h.confidence == "medium"
+
+    def test_generated_graph_grounded_default(self):
+        """graph_grounded defaults to False."""
+        h = GeneratedHypothesis(
+            hypothesis_id="HYP-001", title="T", description="D", domain="test",
+            supporting_evidence=("ev1",), contradicting_evidence=(),
+            testable_prediction="P", suggested_dataset="GC-MASTER", priority=5,
+        )
+        assert h.graph_grounded is False
+
+    def test_generated_graph_grounded_custom(self):
+        """graph_grounded can be set to True."""
+        h = GeneratedHypothesis(
+            hypothesis_id="HYP-001", title="T", description="D", domain="test",
+            supporting_evidence=("ev1",), contradicting_evidence=(),
+            testable_prediction="P", suggested_dataset="GC-MASTER", priority=5,
+            graph_grounded=True,
+        )
+        assert h.graph_grounded is True
+
+
+class TestHypothesisGeneratorWithKG:
+    """Tests for KG-aware hypothesis generation."""
+
+    def test_kg_adds_evidence_for_exalted(self):
+        """KG evidence is appended for exalted planets."""
+        chart = _make_chart(exalted_planets=["sun", "mars"])
+        kg = _default_kg()
+        hypotheses = HypothesisGenerator.generate_for_chart(
+            chart, yogas=[], knowledge_graph=kg,
+        )
+        hyp_001 = next((h for h in hypotheses if h.hypothesis_id == "HYP-001"), None)
+        assert hyp_001 is not None
+        assert hyp_001.graph_grounded is True
+        # Check that at least one KG evidence string was added.
+        kg_evidence = [e for e in hyp_001.supporting_evidence if e.startswith("KG:")]
+        assert len(kg_evidence) > 0
+
+    def test_kg_adds_evidence_for_debilitated(self):
+        """KG evidence is appended for debilitated planets."""
+        chart = _make_chart(debilitated_planets=["venus", "saturn"])
+        kg = _default_kg()
+        hypotheses = HypothesisGenerator.generate_for_chart(
+            chart, yogas=[], knowledge_graph=kg,
+        )
+        hyp_008 = next((h for h in hypotheses if h.hypothesis_id == "HYP-008"), None)
+        assert hyp_008 is not None
+        assert hyp_008.graph_grounded is True
+        kg_evidence = [e for e in hyp_008.supporting_evidence if e.startswith("KG:")]
+        assert len(kg_evidence) > 0
+
+    def test_kg_does_not_break_without_kg(self):
+        """generate_for_chart works when no KG is provided."""
+        chart = _make_chart(exalted_planets=["sun"])
+        hypotheses = HypothesisGenerator.generate_for_chart(chart, yogas=[])
+        assert len(hypotheses) > 0
+        for h in hypotheses:
+            assert hasattr(h, "graph_grounded")
+
+    def test_kg_adds_house_data_for_ashtakavarga(self):
+        """KG adds dusthana house data for HYP-004."""
+        chart = _make_chart()
+        kg = _default_kg()
+        hypotheses = HypothesisGenerator.generate_for_chart(
+            chart, yogas=[], domain_filter="ashtakavarga", knowledge_graph=kg,
+        )
+        hyp_004 = next((h for h in hypotheses if h.hypothesis_id == "HYP-004"), None)
+        assert hyp_004 is not None
+        assert hyp_004.graph_grounded is True
+        dusthana_evidence = [e for e in hyp_004.supporting_evidence if "dusthana" in e.lower()]
+        assert len(dusthana_evidence) > 0

@@ -74,6 +74,26 @@ class Settings(BaseSettings):
     """
     GEOCODING_USER_AGENT: str = "AstroOS/1.0 (development)"
 
+    # ── Worker Pools (Phase II.4 — local-first) ─────────────────────────────────
+    WORKER_CPU_MIN: int = 1
+    WORKER_CPU_MAX: int = 4
+    WORKER_IO_MIN: int = 2
+    WORKER_IO_MAX: int = 16
+    WORKER_AI_MIN: int = 1
+    WORKER_AI_MAX: int = 4
+    WORKER_AUTOSCALE_INTERVAL_SECONDS: float = 5.0
+    """
+    How often the local autoscaler re-evaluates each pool's queue depth and
+    grows/shrinks it within [MIN, MAX]. In-process only — no HPA/K8s.
+    """
+    WORKER_MAX_RETRIES: int = 3
+    WORKER_RETRY_BASE_DELAY_SECONDS: float = 1.0
+    """Exponential backoff base: delay = BASE * 2^(attempt-1)."""
+    WORKER_JOB_TTL_SECONDS: int = 24 * 60 * 60
+    """How long completed/failed job records are kept in memory before eviction."""
+    BATCH_OUTPUT_DIR: str = "data/batch_output"
+    """Local directory where batch job result archives (zips) are written."""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

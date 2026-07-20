@@ -47,7 +47,7 @@ def test_yoga_engine_every_result_has_required_fields(real_chart):
     results = engine.evaluate_all(real_chart)
     for r in results:
         assert r.yoga_id.startswith("BPHS-")
-        assert r.rule_version in ("1.0", "1.1")
+        assert r.rule_version in ("1.0", "1.1", "2.0")
         assert r.source_text == "BPHS"
         assert isinstance(r.trace, tuple)
         # Every result has either satisfied or missing content — never both empty
@@ -107,10 +107,10 @@ def test_yoga_engine_across_multiple_charts_varies_results():
     assert set(results_a.keys()) == set(results_b.keys())
 
 
-def test_all_18_phase_1_yogas_registered():
-    """Sanity check on the expected full catalog size after Phase 1 + 2 + 3."""
+def test_all_70_yogas_registered():
+    """Sanity check on the expected full catalog size after Phase I.5."""
     ids = {y.yoga_id for y in all_yogas()}
-    assert len(ids) == 38
+    assert len(ids) == 70
     assert "BPHS-PM-001" in ids
     assert "BPHS-OMY-001" in ids
     assert "BPHS-DY-001" in ids

@@ -1,0 +1,17 @@
+# AstroOS local Prometheus config (Phase II.2 — local-first, optional)
+# Run natively: prometheus --config.file=observability/prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - alert_rules.yml
+
+scrape_configs:
+  - job_name: astroos-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["localhost:8000"]
+        labels:
+          service: astroos-api
+          deployment: local

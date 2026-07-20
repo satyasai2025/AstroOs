@@ -20,12 +20,15 @@ ExportFormatCode = Literal["json", "markdown", "html"]
 
 
 class ChartExportRequest(ChartReportRequest):
+    """Request payload for chart export operations."""
     format: ExportFormatCode = "json"
 
 
 class ResearchExportRequest(ResearchReportRequest):
+    """Request payload for research export operations."""
     format: ExportFormatCode = "json"
 
 
 class ComparisonExportRequest(ComparisonReportRequest):
+    """Request payload for comparison export operations."""
     format: ExportFormatCode = "json"

@@ -1,7 +1,7 @@
 ---
 id: AMP-003
 title: Disaster Recovery internally disagrees on the sole-orchestrator confirmation ordinal
-status: Proposed — Awaiting Approval
+status: CLOSED — REJECTED (deferred; no superseding ADR warranted) — 2026-07-19
 severity: Low
 source: Architecture Library Validation Audit (2026-07-15)
 target_documents:
@@ -23,6 +23,8 @@ Correct §7's label from "fourth" to "fifth" to match §17 and the actual count 
 - **Frozen documents affected:** Disaster Recovery (ADR-EAL-029) — a superseding ADR would be required to touch it.
 - **Reversibility:** Trivial; a one-word correction with no architectural consequence.
 
-## Status
+## Resolution (Architecture Office, 2026-07-19)
 
-Awaiting approval. No frozen document has been modified by this AMP.
+**REJECTED (deferred). CLOSED.**
+
+Rationale: The correction itself is sound ("fourth" should read "fifth"), but Disaster Recovery (ADR-EAL-029) is a frozen enterprise document describing multi-region DR that is explicitly out of scope for local-first v2.1.0 "Vistara" (`CLAUDE_START_HERE.md`). Issuing a superseding ADR to fix one cosmetic ordinal word in an out-of-scope, unimplemented document is disproportionate governance overhead. The discrepancy is a narrative tally, not an architectural claim; this AMP file itself serves as the permanent errata record. If ADR-EAL-029 is ever superseded for substantive reasons, the correction should be folded in then. No frozen document was modified.

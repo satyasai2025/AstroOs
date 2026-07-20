@@ -1,3 +1,12 @@
+# =============================================================================
+# DISCLAIMER: This file is OPTIONAL / FUTURE REFERENCE ONLY.
+# AstroOS v2.1.0+ is a LOCAL-FIRST platform. The primary deployment target is
+# native PostgreSQL + FastAPI + Next.js on a single machine — no Kubernetes
+# required. This manifest is retained from earlier iterations for users who
+# wish to experiment with K8s clustering; it is NOT part of the supported
+# deployment path and may be out of date.
+# =============================================================================
+#
 # AstroOS Kubernetes Deployment (M3)
 # Place in deploy/k8s/
 

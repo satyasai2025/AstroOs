@@ -1,17 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { BirthDetailsForm } from "@/components/workflow/BirthDetailsForm";
 import { AnalysisResults } from "@/components/workflow/AnalysisResults";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { ApiError } from "@/lib/api";
+import { useWorkflowStore } from "@/lib/store";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
 
 export default function DashboardPage() {
   const analyze = useAnalyzeWorkflow();
+  const setResult = useWorkflowStore((s) => s.setResult);
   const [lastRequest, setLastRequest] =
     useState<WorkflowAnalysisRequest | null>(null);
+
+  // Persist latest result to global store so /charts pages can read it
+  useEffect(() => {
+    if (analyze.isSuccess && analyze.data && lastRequest) {
+      setResult(analyze.data, lastRequest);
+    }
+  }, [analyze.isSuccess, analyze.data, lastRequest, setResult]);
 
   const errorMessage =
     analyze.error instanceof ApiError

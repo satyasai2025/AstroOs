@@ -234,6 +234,16 @@ async def get_ephemeris_wrapper(request: Request) -> EphemerisWrapper:
     return request.app.state.ephemeris_wrapper
 
 
+async def get_worker_pool_manager(request: Request):
+    """
+    Return the process-wide WorkerPoolManager created during lifespan startup
+    (see apps.api.main._make_worker_pool_manager). Owns the cpu/io/ai pools
+    used by the batch job API (Phase II.4) — one instance per process, same
+    rationale as the EphemerisWrapper/GeocodingService singletons above.
+    """
+    return request.app.state.worker_pool_manager
+
+
 async def get_geocoding_service(request: Request):
     """
     Return the process-wide GeocodingService instance created during

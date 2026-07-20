@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 
 class ConflictPositionResponse(BaseModel):
+    """Response payload describing conflict position data."""
     tradition: str
     source_ref: str
     position: str
@@ -18,6 +19,7 @@ class ConflictPositionResponse(BaseModel):
 
 
 class ConflictEvidenceResponse(BaseModel):
+    """Response payload describing conflict evidence data."""
     analysis: str = ""
     for_parashari: list[str] = []
     for_kp: list[str] = []
@@ -25,6 +27,7 @@ class ConflictEvidenceResponse(BaseModel):
 
 
 class ConflictResolutionResponse(BaseModel):
+    """Response payload describing conflict resolution data."""
     status: str
     resolution: str = ""
     recommended_position: str = ""
@@ -32,6 +35,7 @@ class ConflictResolutionResponse(BaseModel):
 
 
 class ConflictSummaryResponse(BaseModel):
+    """Response payload describing conflict summary data."""
     id: str
     name: str
     domain: str = ""
@@ -40,11 +44,13 @@ class ConflictSummaryResponse(BaseModel):
 
 
 class ConflictListResponse(BaseModel):
+    """Response payload describing conflict list data."""
     conflicts: list[ConflictSummaryResponse]
     total: int
 
 
 class ConflictDetailResponse(BaseModel):
+    """Response payload describing conflict detail data."""
     id: str
     name: str
     topic: str = ""

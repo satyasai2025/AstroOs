@@ -4,6 +4,34 @@ AstroOS — AI Engine (Module 24, Phase 1)
 Template-based natural language generation from existing domain objects.
 8 generators consuming all completed modules. No external LLM, no
 network calls, no astrology calculations.
+
+Calculator Integration Pattern (Task #13):
+  AI services that need computed astrological values should call into
+  the corresponding calculator engine directly:
+
+  +-------------------+------------------------------------------+
+  | Calculator        | Service class                            |
+  +-------------------+------------------------------------------+
+  | Shadbala (6 balas)| ShadbalaEngine                           |
+  | Ashtakavarga      | AshtakavargaEngine                       |
+  | Yoga detection    | YogaEngine                               |
+  | Dasha computation | DashaEngine                              |
+  | Transit positions | TransitEngine                            |
+  | Horoscope/D1 chart| HoroscopeEngine                          |
+  | Divisional charts | DivisionalEngine                         |
+  +-------------------+------------------------------------------+
+
+  WorkerPool ranges (for thread/process isolation):
+    - ``WorkerPool.calculator`` (range 0-999) — planetary calculators
+    - ``WorkerPool.ai``        (range 1000-1999) — AI/nlg generators
+
+  Fallback chain (see apps/api/services/ai_fallback.py):
+    Try AI generator ➜ low-confidence/empty ➜ fallback to rule-based
+    calculator (ShadbalaEngine, YogaEngine, etc.) ➜ still fails ➜
+    return structural error.
+
+  All generators in this module are deterministic — they produce the
+  same output for the same domain objects, every time.
 """
 
 from __future__ import annotations

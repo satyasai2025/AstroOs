@@ -1,0 +1,32 @@
+{
+    "recommendations": [
+        // Python
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+
+        // TypeScript / JavaScript
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+
+        // Web
+        "bradlc.vscode-tailwindcss",
+
+        // YAML / JSON
+        "redhat.vscode-yaml",
+        "zainchen.json",
+
+        // Docker
+        "ms-azuretools.vscode-docker",
+
+        // GitHub Actions
+        "github.vscode-github-actions",
+
+        // Git
+        "eamodio.gitlens",
+
+        // Markdown
+        "yzhang.markdown-all-in-one"
+    ]
+}

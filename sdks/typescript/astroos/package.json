@@ -1,11 +1,27 @@
 {
-  "name": "astroos-sdk",
-  "version": "2.0.0",
-  "description": "AstroOS Vedic Astrology API TypeScript SDK",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "@astroos/sdk",
+  "version": "2.2.0",
+  "description": "Official TypeScript SDK for the AstroOS Vedic Astrology API",
+  "license": "MIT",
+  "keywords": ["astrology", "vedic", "jyotish", "horoscope", "sdk"],
+  "homepage": "https://astroos.io",
+  "sideEffects": false,
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public" },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json && tsc -p tsconfig.types.json && node scripts/fixup-dist.mjs",
+    "prepublishOnly": "npm run build",
     "test": "jest"
   },
   "dependencies": {
@@ -14,6 +30,5 @@
   "devDependencies": {
     "typescript": "^5.5.0",
     "@types/node": "^22.0.0"
-  },
-  "license": "MIT"
+  }
 }

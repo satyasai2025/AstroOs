@@ -7,14 +7,14 @@
 
 ## Context
 
-AstroOS Phase E delivered a functional backend API with versioning metadata in `SdkService`. The `sdks/` directory contains stubs for Python and TypeScript packages, but they lack:
+AstroOS is a Local-First Vedic Astrology Research Platform (Next.js → FastAPI → PostgreSQL → Swiss Ephemeris). Phase E delivered a functional backend API with versioning metadata in `SdkService`. The `sdks/` directory contains stubs for Python and TypeScript packages, but they lack:
 - Client libraries with typed methods
 - Authentication helpers
 - Retry/timeout configuration
 - Error handling aligned with the `ApiResponse` envelope
 - Offline caching or data models
 
-Phase G requires production-ready SDKs for Python and TypeScript that external integrators can use to consume AstroOS APIs without hand-rolling HTTP clients.
+Phase G requires production-ready SDKs for Python and TypeScript that external integrators can use to consume AstroOS APIs — the default target is `http://localhost:8000` (local-first), with optional remote URLs for deployed instances.
 
 ## Decision
 
@@ -73,7 +73,11 @@ Adopt a **Thin SDK Architecture** with three components:
 ```python
 from astroos_sdk import AstroOSClient, AstroOSAuthError, AstroOSRateLimitError
 
-client = AstroOSClient(base_url="https://api.astroos.example.com", api_key="...")
+# Local-first default: connects to a local AstroOS instance
+client = AstroOSClient(base_url="http://localhost:8000", api_key="...")
+
+# Or connect to a deployed instance
+# client = AstroOSClient(base_url="https://astoros.example.com", api_key="...")
 
 # Typed request/response
 chart = await client.horoscope.create_birth_chart(BirthChartRequest(...))
@@ -89,7 +93,11 @@ async for batch in client.datasets.list_gc_master(limit=100):
 ```typescript
 import { AstroOSClient, AstroOSAuthError } from "@astroos/sdk";
 
-const client = new AstroOSClient({ baseURL: "https://api.astroos.example.com", apiKey: "..." });
+// Local-first default: connects to a local AstroOS instance
+const client = new AstroOSClient({ baseURL: "http://localhost:8000", apiKey: "..." });
+
+// Or connect to a deployed instance
+// const client = new AstroOSClient({ baseURL: "https://astoros.example.com", apiKey: "..." });
 
 const chart = await client.horoscope.createBirthChart(birthChartRequest);
 const report = await client.report.generate({ chartId: chart.id, format: "pdf" });

@@ -378,6 +378,8 @@ class ExportEngine:
             return MarkdownRenderer.render(report)
         elif format == ExportFormat.HTML:
             return HtmlRenderer.render(report)
+        elif format == ExportFormat.CSV:
+            raise NotImplementedError("Use CsvResearchExporter for CSV export with citations.")
         else:
             raise ValueError(f"Unsupported format: {format.value}")
 
