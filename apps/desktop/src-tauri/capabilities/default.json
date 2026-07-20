@@ -1,0 +1,23 @@
+{
+  "identifier": "default",
+  "description": "Default capability set for the AstroOS desktop app",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-close",
+    "core:window:allow-set-focus",
+    "core:window:allow-center",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "shell:default",
+    "shell:allow-execute",
+    "shell:allow-open",
+    "dialog:default",
+    "dialog:allow-message",
+    "dialog:allow-ask",
+    "dialog:allow-confirm"
+  ]
+}
