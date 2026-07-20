@@ -10,7 +10,7 @@ from typing import Any, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 _TEMPLATES_DIR = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "..", "templates", "reports"
+    os.path.dirname(__file__), "..", "templates", "reports"
 )
 
 _env = Environment(

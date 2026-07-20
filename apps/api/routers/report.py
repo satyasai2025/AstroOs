@@ -290,7 +290,15 @@ async def generate_chart_pdf(
         subject_name=body.subject_name,
         generated_by=body.generated_by,
     )
-    pdf_bytes = ReportTemplateEngine.render_pdf(report.model_dump())
+    # Convert domain dataclass → Pydantic model before calling .model_dump()
+    # (AMP-009 fix: ChartReport is a plain @dataclass, not a BaseModel)
+    resp = ChartReportResponse(
+        metadata=_metadata_response(report.metadata),
+        title=report.title,
+        subject_name=report.subject_name or "",
+        sections=_sections_response(report.sections),
+    )
+    pdf_bytes = ReportTemplateEngine.render_pdf(resp.model_dump())
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",
@@ -323,7 +331,15 @@ async def generate_chart_csv(
         subject_name=body.subject_name,
         generated_by=body.generated_by,
     )
-    csv_content = ReportTemplateEngine.render_csv(report.model_dump())
+    # Convert domain dataclass → Pydantic model before calling .model_dump()
+    # (AMP-009 fix: ChartReport is a plain @dataclass, not a BaseModel)
+    resp = ChartReportResponse(
+        metadata=_metadata_response(report.metadata),
+        title=report.title,
+        subject_name=report.subject_name or "",
+        sections=_sections_response(report.sections),
+    )
+    csv_content = ReportTemplateEngine.render_csv(resp.model_dump())
     return Response(
         content=csv_content,
         media_type="text/csv",
