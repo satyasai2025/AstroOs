@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "updated": "2026-07-20",
+  "plugins": [
+    {
+      "name": "example-calculator",
+      "version": "0.1.0",
+      "description": "Example plugin demonstrating the AstroOS plugin API",
+      "author": "AstroOS Project",
+      "url": "https://github.com/astroos/plugins/releases/download/v0.1.0/example-calculator.tar.gz",
+      "checksum": "sha256-1234567890abcdef",
+      "api_version": "1.0",
+      "sandbox": {
+        "cpu_limit": 1,
+        "memory_mb": 128,
+        "network": false
+      }
+    },
+    {
+      "name": "report-theme-classic",
+      "version": "0.1.0",
+      "description": "Classic black-and-white report theme",
+      "author": "AstroOS Project",
+      "url": "https://github.com/astroos/plugins/releases/download/v0.1.0/report-theme-classic.tar.gz",
+      "checksum": "sha256-abcdef1234567890",
+      "api_version": "1.0",
+      "sandbox": {
+        "cpu_limit": 1,
+        "memory_mb": 64,
+        "network": false
+      }
+    }
+  ]
+}
