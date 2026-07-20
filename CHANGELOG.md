@@ -4,6 +4,56 @@ All notable changes to AstroOS are documented here at the release-summary level.
 
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [2.3.0] — 2026-07-20 — "Lakshmi" (Phase III — Local-First Mobile & Plugins)
+
+Phase III of the v2.3.0 release cycle, codenamed "Lakshmi". Mobile apps,
+local plugin architecture, advanced analytics, i18n, and API key management —
+all within the local-first mandate. Real-time collaboration deferred; hosted
+marketplace replaced with local plugin directory.
+
+### Added
+
+- **AMP Governance (Task 1):** AMP-009 (PDF/CSV report `.model_dump()` bug) and
+  AMP-010 (missing report templates directory) resolved. `apps/api/templates/reports/`
+  created with 7 Jinja2 templates. PDF/CSV endpoints fixed.
+- **Mobile iOS + Android (Tasks 6-8):** React Native app scaffold with cross-platform
+  source. Birth chart computation, D1 SVG chart rendering, Dasha timeline with active
+  period indicator. Offline-first via AsyncStorage cache with TTL eviction. Push
+  notifications optional (feature-flagged). Settings screen for API URL, API key,
+  push toggle, cache management. Android project with Hermes, FCM (optional).
+  Store submission guide (`docs/mobile-store-submission.md`).
+- **Plugin Architecture (Tasks 9-11):** ADR-PLG-001 — local sandbox plugin system.
+  `plugins/registry.json` with bundled plugin manifest. `apps/cli/astroos-plugin`
+  CLI with list/install/uninstall/scaffold/validate commands. Subprocess sandbox
+  with CPU/memory limits. No hosted marketplace, no Stripe, no dev portal.
+- **Advanced Analytics (Tasks 14-15):** `apps/api/services/analytics_engine.py` —
+  `QueryBuilder` (filter chains: eq/neq/gt/gte/lt/lte/in/between, group-by) and
+  `StatisticalEngine` (Pearson correlation, chi-squared test, Welch's t-test,
+  Bayes factor BF10). Pure stdlib — zero external dependencies. 18 tests.
+- **i18n & Localization (Tasks 16-17):** `apps/api/i18n/loader.py` translation
+  loader. 5 languages: Spanish, Hindi, French, German, Arabic (25 keys each).
+  No cloud translation API — static JSON files shipped with the app.
+- **Public API & Keys (Task 18):** API key authentication as default. OAuth 2.0
+  optional (feature-flagged). Rate limiting disabled by default for local-first.
+  See `docs/api-key-management.md`.
+- **QA Mobile Device Lab (Task 19):** Testing guide covering iOS (iPhone 12-14)
+  and Android (Pixel 7, S23, OnePlus 11). Offline-first primary path test scenarios.
+- **Security: Plugin Sandbox Audit (Task 20):** Threat model with 6 mitigations.
+  Sandbox architecture document. Audit checklist for subprocess-based isolation.
+- **Research Data Privacy (Task 21):** `astroos data export/delete/anonymize` CLI
+  commands. Local-first privacy tools. No consent management (single-user).
+  See `docs/research-data-privacy.md`.
+
+### Fixed
+
+- **AMP-009:** PDF/CSV report endpoints no longer crash with
+  `AttributeError: 'ChartReport' object has no attribute 'model_dump'`.
+  Domain dataclass now converted to Pydantic model before rendering.
+- **AMP-010:** `ReportTemplateEngine._TEMPLATES_DIR` corrected from invalid
+  path (above repo root) to `apps/api/templates/reports/`. 7 template files
+  created (base.html + horoscope, marriage, career, health, wealth, spiritual,
+  transit).
+
 ## [2.2.0] — 2026-07-20 — "Arundhati" (Phase II)
 
 Phase II of the v2.2.0 release cycle, codenamed "Arundhati". All features are
