@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+"""
+AstroOS Plugin CLI — local-first plugin management.
+
+Usage:
+    astroos-plugin list                    List available plugins
+    astroos-plugin install <name>          Install a plugin
+    astroos-plugin uninstall <name>        Remove a plugin
+    astroos-plugin list-installed          Show installed plugins
+    astroos-plugin scaffold <name>         Create a new plugin scaffold
+    astroos-plugin validate <path>         Validate a plugin manifest
+
+No hosted marketplace required. Plugins are distributed as static tarballs
+referenced in plugins/registry.json.
+"""
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+from pathlib import Path
+from typing import Any
+
+# ── Paths ──────────────────────────────────────────────────────────────────────
+
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+REGISTRY_PATH = REPO_ROOT / "plugins" / "registry.json"
+PLUGIN_DIR = Path.home() / ".astroos" / "plugins"
+SANDBOX_TEMPLATE = REPO_ROOT / "plugins" / "sandbox_template"
+
+
+def _load_registry() -> dict[str, Any]:
+    with open(REGISTRY_PATH) as f:
+        return json.load(f)
+
+
+def _plugin_path(name: str) -> Path:
+    return PLUGIN_DIR / name
+
+
+# ── Commands ────────────────────────────────────────────────────────────────────
+
+def cmd_list() -> None:
+    """List all available plugins from the registry."""
+    registry = _load_registry()
+    print(f"Plugin registry (v{registry['version']}, updated {registry['updated']})\n")
+    for p in registry["plugins"]:
+        print(f"  {p['name']:30s} {p['version']:10s} {p['description']}")
+
+
+def cmd_list_installed() -> None:
+    """List installed plugins."""
+    if not PLUGIN_DIR.exists():
+        print("No plugins installed.")
+        return
+    for d in sorted(PLUGIN_DIR.iterdir()):
+        manifest_path = d / "plugin.json"
+        if manifest_path.exists():
+            with open(manifest_path) as f:
+                m = json.load(f)
+            print(f"  {m['name']:30s} {m.get('version', '?'):10s} {m.get('description', '')}")
+
+
+def cmd_install(name: str) -> None:
+    """Install a plugin from the registry."""
+    registry = _load_registry()
+    plugin = next((p for p in registry["plugins"] if p["name"] == name), None)
+    if not plugin:
+        print(f"Error: plugin '{name}' not found in registry.", file=sys.stderr)
+        sys.exit(1)
+
+    target = _plugin_path(name)
+    if target.exists():
+        print(f"Plugin '{name}' already installed at {target}")
+        return
+
+    print(f"Installing '{name}' v{plugin['version']}...")
+    url = plugin["url"]
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tarball = Path(tmp) / "plugin.tar.gz"
+        try:
+            # Requires curl or wget
+            if shutil.which("curl"):
+                subprocess.run(["curl", "-sSL", url, "-o", str(tarball)], check=True)
+            elif shutil.which("wget"):
+                subprocess.run(["wget", "-q", url, "-O", str(tarball)], check=True)
+            else:
+                print("Error: curl or wget required to download plugins.", file=sys.stderr)
+                sys.exit(1)
+        except subprocess.CalledProcessError:
+            print(f"Error: failed to download {url}", file=sys.stderr)
+            sys.exit(1)
+
+        # Verify checksum
+        if plugin.get("checksum"):
+            algo, expected = plugin["checksum"].split("-", 1)
+            h = hashlib.new(algo)
+            h.update(tarball.read_bytes())
+            if h.hexdigest() != expected:
+                print(f"Error: checksum mismatch for {name}", file=sys.stderr)
+                sys.exit(1)
+
+        # Extract
+        target.mkdir(parents=True, exist_ok=True)
+        with tarfile.open(tarball, "r:gz") as tar:
+            tar.extractall(target)
+
+    print(f"Installed '{name}' at {target}")
+
+
+def cmd_uninstall(name: str) -> None:
+    """Remove an installed plugin."""
+    target = _plugin_path(name)
+    if not target.exists():
+        print(f"Plugin '{name}' is not installed.", file=sys.stderr)
+        sys.exit(1)
+    shutil.rmtree(target)
+    print(f"Uninstalled '{name}'.")
+
+
+def cmd_scaffold(name: str) -> None:
+    """Scaffold a new plugin project in the current directory."""
+    target = Path.cwd() / name
+    if target.exists():
+        print(f"Directory '{name}' already exists.", file=sys.stderr)
+        sys.exit(1)
+
+    target.mkdir(parents=True)
+    manifest = {
+        "name": name,
+        "version": "0.1.0",
+        "description": "",
+        "api_version": "1.0",
+        "sandbox": {"cpu_limit": 1, "memory_mb": 128, "network": False},
+        "entry": "main.py",
+    }
+    with open(target / "plugin.json", "w") as f:
+        json.dump(manifest, f, indent=2)
+
+    main_py = target / "main.py"
+    main_py.write_text(
+        '#!/usr/bin/env python3\n"""AstroOS plugin: %s"""\n\nimport json\nimport sys\n\n\ndef run(input_data: dict) -> dict:\n    """Process chart data and return results."""\n    return {"plugin": "%s", "result": input_data}\n\n\nif __name__ == "__main__":\n    data = json.load(sys.stdin)\n    output = run(data)\n    json.dump(output, sys.stdout)\n' % (name, name)
+    )
+    print(f"Scaffolded plugin at {target}")
+
+
+def cmd_validate(path: str) -> None:
+    """Validate a plugin manifest."""
+    manifest_path = Path(path) / "plugin.json"
+    if not manifest_path.exists():
+        print(f"Error: no plugin.json found in {path}", file=sys.stderr)
+        sys.exit(1)
+
+    with open(manifest_path) as f:
+        manifest = json.load(f)
+
+    required = {"name", "version", "api_version", "entry"}
+    missing = required - set(manifest.keys())
+    if missing:
+        print(f"Error: missing required fields: {', '.join(missing)}", file=sys.stderr)
+        sys.exit(1)
+
+    entry_path = Path(path) / manifest["entry"]
+    if not entry_path.exists():
+        print(f"Error: entry file '{manifest['entry']}' not found", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Plugin '{manifest['name']}' v{manifest['version']} — VALID")
+
+
+# ── Main ────────────────────────────────────────────────────────────────────────
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="AstroOS Plugin CLI")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    sub.add_parser("list", help="List available plugins from registry")
+    sub.add_parser("list-installed", help="List installed plugins")
+
+    install_parser = sub.add_parser("install", help="Install a plugin")
+    install_parser.add_argument("name")
+
+    uninstall_parser = sub.add_parser("uninstall", help="Remove a plugin")
+    uninstall_parser.add_argument("name")
+
+    scaffold_parser = sub.add_parser("scaffold", help="Create a new plugin")
+    scaffold_parser.add_argument("name")
+
+    validate_parser = sub.add_parser("validate", help="Validate a plugin manifest")
+    validate_parser.add_argument("path")
+
+    args = parser.parse_args()
+
+    commands = {
+        "list": cmd_list,
+        "list-installed": cmd_list_installed,
+        "install": lambda: cmd_install(args.name),
+        "uninstall": lambda: cmd_uninstall(args.name),
+        "scaffold": lambda: cmd_scaffold(args.name),
+        "validate": lambda: cmd_validate(args.path),
+    }
+    commands[args.command]()
+
+
+if __name__ == "__main__":
+    main()
