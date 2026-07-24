@@ -5,10 +5,16 @@ HTTP adapter layer over AdminEngine. No business logic lives here — only
 request parsing, DTO<->schema conversion, and HTTP error mapping, same
 convention as routers/events.py.
 
-No auth/role-gating is applied here (matches every other router in this
-codebase — none currently require a JWT dependency). If this endpoint is
-ever exposed outside a trusted network, gating should be added as its
-own separately-scoped change.
+Every route on this router IS gated: app.include_router() in main.py
+wires `dependencies=[Depends(require_admin)]` at inclusion time (not
+per-route here), which is easy to miss reading this file in isolation —
+an earlier version of this docstring incorrectly said "no auth/role-
+gating is applied here," which was never true and was corrected as part
+of the Phase 10 retroactive review (2026-07-23) specifically because a
+stale claim like that risks someone trusting it and removing the real
+gate, or duplicating this router's inclusion elsewhere without the
+`dependencies=` kwarg. If you're verifying this yourself: see
+apps/api/main.py's `app.include_router(admin_router.router, ...)` call.
 """
 
 from __future__ import annotations
@@ -16,9 +22,8 @@ from __future__ import annotations
 import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_db_session, get_ephemeris_service, get_user_repo
+from apps.api.dependencies import get_ephemeris_service, get_user_repo
 from apps.api.repositories.user_repository import UserRepository
 from apps.api.schemas.admin import (
     AdminUserListResponse,
@@ -35,11 +40,10 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 
 
 async def _get_admin_engine(
-    session: AsyncSession = Depends(get_db_session),
     user_repo: UserRepository = Depends(get_user_repo),
     ephemeris_service: EphemerisService = Depends(get_ephemeris_service),
 ) -> AdminEngine:
-    return AdminEngine(user_repo=user_repo, session=session, ephemeris_service=ephemeris_service)
+    return AdminEngine(user_repo=user_repo, ephemeris_service=ephemeris_service)
 
 
 def _summary_to_response(u) -> AdminUserSummaryResponse:

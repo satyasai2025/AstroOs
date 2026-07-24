@@ -85,6 +85,7 @@ export interface WorkflowAnalysisRequest {
   transit_datetime_utc?: string | null;
   include_vargas: boolean;
   subject_name: string;
+  place_name?: string | null;
   generated_by?: string | null;
   research_project_id?: string | null;
 }
@@ -98,6 +99,12 @@ export interface AscendantSchema {
   rashi_degree: number;
   nakshatra: string;
   pada: number;
+  /** Star Lord (KP) */
+  nakshatra_lord: string;
+  /** Sub Lord (KP) */
+  sub_lord: string;
+  /** Sub Sub Lord (KP) */
+  sub_sub_lord: string;
 }
 
 export interface HouseCuspSchema {
@@ -105,6 +112,12 @@ export interface HouseCuspSchema {
   longitude: number;
   sidereal_longitude: number;
   rashi: string;
+  /** Star Lord (KP) */
+  nakshatra_lord: string;
+  /** Cuspal Sub Lord (KP) — the primary KP significator tool */
+  sub_lord: string;
+  /** Cuspal Sub Sub Lord (KP) */
+  sub_sub_lord: string;
 }
 
 export interface PlanetPositionSchema {
@@ -112,6 +125,7 @@ export interface PlanetPositionSchema {
   sidereal_longitude: number;
   rashi: string;
   rashi_degree: number;
+  /** Bhava Chalit (cuspal) house — real cusp-to-cusp span for the requested house_system */
   house_number: number;
   nakshatra: string;
   pada: number;
@@ -119,6 +133,14 @@ export interface PlanetPositionSchema {
   is_combust: boolean;
   combustion_orb: number | null;
   dignity: string | null;
+  /** Star Lord (KP) */
+  nakshatra_lord: string;
+  /** Sub Lord (KP) */
+  sub_lord: string;
+  /** Sub Sub Lord (KP) */
+  sub_sub_lord: string;
+  /** Rashi (sign-counting) house — signs from the lagna's sign; can differ from house_number */
+  rashi_house_number: number;
 }
 
 export interface AspectSchema {
@@ -174,6 +196,64 @@ export interface D1ChartResponse {
   ayanamsa_value: number;
 }
 
+// ── Admin ────────────────────────────────────────────────────────────────────
+
+export interface ModuleHealth {
+  module_name: string;
+  status: string;
+  version: string;
+  message: string;
+}
+
+export interface SystemStatus {
+  status: string;
+  modules: Record<string, ModuleHealth>;
+  ephemeris_mode: string;
+  version: string;
+}
+
+export interface ModuleRegistry {
+  modules: Record<string, string>;
+}
+
+export interface AdminUserSummary {
+  id: string;
+  email: string;
+  display_name: string;
+  role: string;
+  status: string;
+  created_at: string | null;
+  last_login_at: string | null;
+}
+
+export interface AdminUserListResponse {
+  users: AdminUserSummary[];
+  total: number;
+}
+
+// ── Saved charts ─────────────────────────────────────────────────────────────
+
+export interface BirthChartSummary {
+  id: string;
+  subject_name: string;
+  birth_datetime_utc: string;
+  birth_latitude: number;
+  birth_longitude: number;
+  place_name: string | null;
+  ayanamsa: string;
+  house_system: string;
+  lagna_rashi: string | null;
+  moon_nakshatra: string | null;
+  created_at: string;
+}
+
+export interface BirthChartListResponse {
+  charts: BirthChartSummary[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 // ── Vargas ────────────────────────────────────────────────────────────────────
 
 export interface VargaAscendantResponse {
@@ -221,7 +301,7 @@ export interface DashaPeriodResponse {
   end_date: string;
   duration_days: number;
   level: number;
-  children: DashaPeriodResponse[];
+  sub_periods: DashaPeriodResponse[];
 }
 
 export interface DashaTreeResponse {
@@ -289,10 +369,19 @@ export interface TransitPlanetResponse {
   ashtakavarga_bindus: number | null;
   is_sade_sati: boolean;
   is_ashtama_shani: boolean;
-  is_good_house: boolean | null;
+  is_favorable_house: boolean | null;
   has_vedha: boolean;
   has_vipreet_vedha: boolean;
   vedha_planet: string | null;
+  /** 28-system (Abhijit-aware) Sarvatobhadra Chakra nakshatra — scoped only
+   * to Nakshatra Vedha; every other nakshatra field in this app uses the
+   * standard 27-system. */
+  transit_nakshatra_sbc: string;
+  has_nakshatra_vedha: boolean;
+  nakshatra_vedha_planet: string | null;
+  /** "forward" (direct motion) or "backward" (retrograde). */
+  nakshatra_vedha_type: string | null;
+  nakshatra_vedha_target: string | null;
   rule_version: string;
 }
 

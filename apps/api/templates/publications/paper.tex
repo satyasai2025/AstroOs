@@ -1,0 +1,51 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\newcommand{\papertitle}{@TITLE@}
+\newcommand{\paperauthor}{@AUTHOR@}
+\newcommand{\paperdate}{@DATE@}
+\newcommand{\paperaffiliation}{@AFFILIATION@}
+\newcommand{\paperabstract}{@ABSTRACT@}
+\newcommand{\paperkeywords}{@KEYWORDS@}
+\hypersetup{colorlinks=true, linkcolor=blue!70!black, urlcolor=blue!70!black, citecolor=blue!70!black, pdftitle={\papertitle}, pdfauthor={\paperauthor}, pdfkeywords={\paperkeywords}}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small \textsc{AstroOS Research Publication}}
+\fancyhead[R]{\small \paperdate}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{\small \href{https://astroos.dev}{astroos.dev}}
+\title{\textbf{\papertitle}}
+\author{\paperauthor \\ \small \paperaffiliation}
+\date{\paperdate}
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+\begin{abstract}
+\paperabstract
+\end{abstract}
+\noindent\textbf{Keywords:} \paperkeywords
+\vspace{1em}
+\hrule
+\vspace{1em}
+@BODY@
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

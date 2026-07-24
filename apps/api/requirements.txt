@@ -20,5 +20,14 @@ pyswisseph==2.10.3.2
 email-validator==2.3.0
 openpyxl==3.1.5
 timezonefinder==8.2.4
+tzdata==2025.2
 truststore==0.10.4
 slowapi==0.1.10
+
+# Declared in pyproject.toml but previously missing here -- main.py's
+# import chain needs these at startup (worker_pool.py imports
+# prometheus_client directly), so `pip install -r requirements.txt` alone
+# used to leave the app unrunnable. See DOCUMENTATION_REALITY_AUDIT.md.
+weasyprint==69.0
+prometheus-client==0.25.0
+jinja2==3.1.6

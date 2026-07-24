@@ -405,3 +405,167 @@ class KnowledgeEngine:
             resolution=resolution,
             related_conflicts=tuple(data.get("related_conflicts", [])),
         )
+
+    # ── Nakshatra Knowledge Base (Level 2 of the context-selector vision) ───
+
+    def load_nakshatras(self) -> list:
+        """Load the full 27-nakshatra reference catalogue from YAML files
+        in knowledge/catalogues/nakshatras/, sorted in classical sequential
+        order (Ashvini → Revati)."""
+        import yaml
+
+        nak_dir = Path(__file__).parent.parent.parent.parent / "knowledge" / "catalogues" / "nakshatras"
+        index_path = nak_dir / "_index.yaml"
+        if not index_path.is_file():
+            return []
+
+        with open(index_path, encoding="utf-8") as f:
+            index = yaml.safe_load(f) or {}
+
+        results: list = []
+        for entry in index.get("nakshatras", []):
+            nak_id = entry.get("id", "")
+            slug = nak_id.split(".", 1)[-1] if "." in nak_id else nak_id
+            file_path = nak_dir / f"{slug}.yaml"
+            if not file_path.is_file():
+                continue
+            try:
+                with open(file_path, encoding="utf-8") as nf:
+                    data = yaml.safe_load(nf) or {}
+                nak = self._parse_nakshatra_yaml(data, sequential=entry.get("sequential", 0))
+            except yaml.YAMLError:
+                # One malformed catalogue file shouldn't 500 the whole list —
+                # skip it so the other 26 still load. (Found via rohini.yaml
+                # having an unescaped quote in a plain scalar; fixed at the
+                # source, but this stays as a defensive backstop.)
+                continue
+            if nak is not None:
+                results.append(nak)
+        results.sort(key=lambda n: n.sequential)
+        return results
+
+    def load_nakshatra(self, nakshatra_id: str):
+        """Load a single nakshatra by id ('nakshatra.ashvini'), file slug
+        ('ashvini'), or display name ('Ashvini'), case-insensitive."""
+        import yaml
+
+        nak_dir = Path(__file__).parent.parent.parent.parent / "knowledge" / "catalogues" / "nakshatras"
+        index_path = nak_dir / "_index.yaml"
+        if not index_path.is_file():
+            return None
+
+        with open(index_path, encoding="utf-8") as f:
+            index = yaml.safe_load(f) or {}
+
+        needle = nakshatra_id.strip().lower()
+        for entry in index.get("nakshatras", []):
+            nak_id = entry.get("id", "")
+            slug = nak_id.split(".", 1)[-1] if "." in nak_id else nak_id
+            name = entry.get("name", "")
+            if needle not in (nak_id.lower(), slug.lower(), name.lower()):
+                continue
+            file_path = nak_dir / f"{slug}.yaml"
+            if not file_path.is_file():
+                return None
+            with open(file_path, encoding="utf-8") as nf:
+                data = yaml.safe_load(nf) or {}
+            return self._parse_nakshatra_yaml(data, sequential=entry.get("sequential", 0))
+        return None
+
+    def _parse_nakshatra_yaml(self, data: dict, sequential: int = 0):
+        from apps.api.domain.nakshatra import (
+            NakshatraDeity,
+            NakshatraKnowledge,
+            NakshatraNature,
+            NakshatraPada,
+            NakshatraShakti,
+            NakshatraSourceCitation,
+        )
+
+        deity_data = data.get("deity") or {}
+        deity = NakshatraDeity(
+            name=deity_data.get("name", ""),
+            description=deity_data.get("description", ""),
+            attributes=tuple(deity_data.get("attributes", [])),
+        ) if deity_data else None
+
+        shakti_data = data.get("shakti") or {}
+        shakti = NakshatraShakti(
+            name=shakti_data.get("name", ""),
+            meaning=shakti_data.get("meaning", ""),
+            power=shakti_data.get("power", ""),
+        ) if shakti_data else None
+
+        nature_data = data.get("nature") or {}
+        nature = NakshatraNature(
+            temperament=nature_data.get("temperament", ""),
+            guna=nature_data.get("guna", ""),
+            gana=nature_data.get("gana", ""),
+            yoni=nature_data.get("yoni", ""),
+            # rohini.yaml uses "nadis" (plural) instead of "nadi" — accept both
+            # rather than silently dropping the value for that one file.
+            nadi=nature_data.get("nadi") or nature_data.get("nadis") or "",
+        ) if nature_data else None
+
+        padas = tuple(
+            NakshatraPada(
+                pada=p.get("pada", 0),
+                degrees=p.get("degrees", ""),
+                rashi=str(p.get("rashi", "")).split(".", 1)[-1],
+                navamsha_rashi=str(p.get("navamsha_rashi", "")).split(".", 1)[-1],
+            )
+            for p in data.get("padas", [])
+        )
+
+        sources = tuple(
+            NakshatraSourceCitation(
+                ref=str(s.get("ref", "")).split(".", 1)[-1],
+                claim=s.get("claim", ""),
+                confidence=s.get("confidence", "high"),
+            )
+            for s in data.get("sources", [])
+        )
+
+        ruler_data = data.get("ruler") or {}
+        ruler = str(ruler_data.get("ref", "")).split(".", 1)[-1] if ruler_data else ""
+
+        karakatvas = tuple(
+            k.get("concept", "") if isinstance(k, dict) else str(k)
+            for k in data.get("karakatvas", [])
+        )
+
+        compatible = tuple(
+            str(c.get("ref", "")).split(".", 1)[-1] if isinstance(c, dict) else str(c)
+            for c in data.get("compatible_nakshatras", [])
+        )
+        incompatible = tuple(
+            str(c.get("ref", "")).split(".", 1)[-1] if isinstance(c, dict) else str(c)
+            for c in data.get("incompatible_nakshatras", [])
+        )
+        rashi_span = tuple(
+            str(r.get("ref", "")).split(".", 1)[-1] if isinstance(r, dict) else str(r)
+            for r in data.get("rashi_span", [])
+        )
+
+        return NakshatraKnowledge(
+            id=data.get("id", ""),
+            name=data.get("name", ""),
+            sequential=sequential,
+            aliases=tuple(data.get("aliases", [])),
+            classical_name=data.get("classical_name", ""),
+            devanagari=data.get("devanagari", ""),
+            meaning=data.get("meaning", ""),
+            ruler=ruler,
+            starting_degree=float(data.get("starting_degree", 0.0)),
+            ending_degree=float(data.get("ending_degree", 0.0)),
+            rashi_span=rashi_span,
+            padas=padas,
+            deity=deity,
+            shakti=shakti,
+            nature=nature,
+            karakatvas=karakatvas,
+            compatible_nakshatras=compatible,
+            incompatible_nakshatras=incompatible,
+            sources=sources,
+            notes=data.get("notes", ""),
+        )

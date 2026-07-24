@@ -6,9 +6,121 @@
  * - Attaches the Authorization header from the token store
  * - Handles 401 → token refresh → retry (once)
  * - Normalises errors into ApiError instances
+ * - Normalises planet/sign/nakshatra casing (see _normalizeAstroCasing below)
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
+
+/**
+ * The backend's internal domain layer uses lowercase tokens for grahas and
+ * rashis throughout (apps/api/services/ephemeris_wrapper.py's GRAHA_ORDER
+ * etc. — confirmed by reading the code: "sun", "moon", "mesha", ...), and
+ * nothing capitalizes them before they're serialized into API responses.
+ * Every frontend component (old and new) that displays these values or
+ * matches them against the capitalized constants in lib/astro.ts (e.g.
+ * PLANET_SYMBOLS["Sun"], RASHI_LORDS["Mesha"]) was written assuming
+ * Title-Case input. Rather than patch every consumer individually — and
+ * definitely rather than touch the backend's internal lowercase-keyed
+ * lookups (dignity tables, combustion checks, etc. all depend on the raw
+ * lowercase values staying exactly as-is internally) — this normalizes
+ * casing ONCE, generically, at the one place every response passes
+ * through: right after JSON parsing, before any component sees the data.
+ *
+ * Deliberately scoped to a fixed, explicit list of field names that are
+ * known to carry a single planet/rashi/nakshatra token (or a short
+ * space-separated one, e.g. "purva phalguni" -> "Purva Phalguni"). Fields
+ * NOT in this list are left untouched — notably "graha" (the Karakatva
+ * Explorer's lib/karakatva.ts already expects the DB's lowercase enum
+ * values there), "role", "status", "category", and every enum-code field
+ * (ayanamsa, house_system, dasha_system) that other code matches exactly
+ * against its lowercase/coded form.
+ */
+const _ASTRO_CASING_KEYS = new Set([
+  "planet",
+  "from_planet",
+  "to_planet",
+  "lord",
+  "trigger_planet",
+  "vedha_planet",
+  "rashi",
+  "varga_rashi",
+  "d1_rashi",
+  "natal_moon_rashi",
+  "transit_rashi",
+  "lagna_rashi",
+  "nakshatra",
+  "moon_nakshatra",
+  "trigger_nakshatra",
+  "nakshatra_lord",
+  "sub_lord",
+  "sub_sub_lord",
+  // Added after the retroactive domain-correctness review (2026-07-23)
+  // found these two: YogaResultResponse.involved_planets (string[]) and
+  // BhinnashtakavargaResponse.target_planet (string) both carry lowercase
+  // planet tokens from the backend and were silently missed by the
+  // original casing fix — involved_planets in particular caused
+  // PlanetDetailPanel's "yogas involving this planet" cross-reference to
+  // always return empty, since it compared a normalized (capitalized)
+  // planet name against un-normalized lowercase array entries.
+  "involved_planets",
+  "target_planet",
+  // Added for Nakshatra Vedha / Sarvatobhadra Chakra (2026-07-23) — same
+  // lowercase-token issue, on 3 new TransitPlanetResponse fields.
+  "nakshatra_vedha_planet",
+  "nakshatra_vedha_target",
+  "transit_nakshatra_sbc",
+]);
+
+/**
+ * Fixed 2026-07-23 (found while wiring Nakshatra Vedha, which passes
+ * multi-word nakshatra tokens like "purva_phalguni" through this same
+ * path): the backend's Nakshatra enum values are snake_case
+ * ("purva_phalguni"), not space-separated ("purva phalguni") like this
+ * function originally assumed — splitting only on " " left the
+ * underscore in place, producing "Purva_phalguni" instead of "Purva
+ * Phalguni" for all 12 of the 27 nakshatras that are two words. That
+ * silently broke any exact-match lookup keyed by the properly-spaced
+ * name (e.g. lib/astro.ts's karakatva/nakshatra-lord tables) for those
+ * 12 nakshatras specifically — single-word nakshatras were unaffected,
+ * which is presumably why it went unnoticed. Now replaces underscores
+ * with spaces before splitting.
+ */
+function _titleCaseToken(value: string): string {
+  return value
+    .replace(/_/g, " ")
+    .split(" ")
+    .map((word) => (word.length > 0 ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word))
+    .join(" ");
+}
+
+/**
+ * keyHint carries the object key this value was found under, one level
+ * up. It's needed because arrays of strings (e.g. involved_planets:
+ * string[]) don't carry their own "key" once you're inside
+ * Array.prototype.map — without threading the parent key through, an
+ * array field in _ASTRO_CASING_KEYS would only ever recurse into
+ * _normalizeAstroCasing(item) for each string item with no key context,
+ * hit the plain-string fallback at the bottom, and return unchanged.
+ * (Found in the 2026-07-23 domain review — involved_planets was added to
+ * the key set in an earlier pass but never actually took effect because
+ * of this gap.)
+ */
+function _normalizeAstroCasing(value: unknown, keyHint?: string): unknown {
+  if (Array.isArray(value)) {
+    if (keyHint && _ASTRO_CASING_KEYS.has(keyHint)) {
+      return value.map((item) => (typeof item === "string" ? _titleCaseToken(item) : _normalizeAstroCasing(item)));
+    }
+    return value.map((item) => _normalizeAstroCasing(item));
+  }
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
+      out[key] = typeof v === "string" && _ASTRO_CASING_KEYS.has(key) ? _titleCaseToken(v) : _normalizeAstroCasing(v, key);
+    }
+    return out;
+  }
+  return value;
+}
 
 export class ApiError extends Error {
   constructor(
@@ -54,22 +166,42 @@ const TOKEN_KEY = "astro_access_token";
 const REFRESH_KEY = "astro_refresh_token";
 
 export const tokenStore = {
-  getAccess: (): string | null =>
-    typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) : null,
+  getAccess: (): string | null => {
+    if (typeof window === "undefined") return null;
+    try {
+      return localStorage.getItem(TOKEN_KEY);
+    } catch {
+      return null; // storage access blocked by browser/privacy settings
+    }
+  },
 
-  getRefresh: (): string | null =>
-    typeof window !== "undefined" ? localStorage.getItem(REFRESH_KEY) : null,
+  getRefresh: (): string | null => {
+    if (typeof window === "undefined") return null;
+    try {
+      return localStorage.getItem(REFRESH_KEY);
+    } catch {
+      return null;
+    }
+  },
 
   set: (access: string, refresh: string): void => {
     if (typeof window === "undefined") return;
-    localStorage.setItem(TOKEN_KEY, access);
-    localStorage.setItem(REFRESH_KEY, refresh);
+    try {
+      localStorage.setItem(TOKEN_KEY, access);
+      localStorage.setItem(REFRESH_KEY, refresh);
+    } catch {
+      // storage access blocked — session won't persist across reloads
+    }
   },
 
   clear: (): void => {
     if (typeof window === "undefined") return;
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(REFRESH_KEY);
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(REFRESH_KEY);
+    } catch {
+      // ignore
+    }
   },
 };
 
@@ -114,7 +246,8 @@ async function _fetch<T>(
   }
 
   if (res.status === 204) return undefined as T;
-  return res.json() as Promise<T>;
+  const json = await res.json();
+  return _normalizeAstroCasing(json) as T;
 }
 
 async function _tryRefresh(): Promise<boolean> {

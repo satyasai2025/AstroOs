@@ -48,6 +48,9 @@ from packages.shared.constants import (
     PADAS_PER_NAKSHATRA,
     SWEPH_PLANET_IDS,
     TOTAL_NAKSHATRAS,
+    VIMSHOTTARI_DASHA_YEARS,
+    VIMSHOTTARI_SEQUENCE,
+    VIMSHOTTARI_TOTAL_YEARS,
 )
 from packages.shared.dignity import compute_dignity_value
 from packages.shared.enums import AyanamsaSystem, Graha, Nakshatra, Rashi
@@ -188,6 +191,120 @@ def longitude_to_nakshatra(lon: float) -> NakshatraInfo:
         degree_in_nakshatra=nak_deg,
         degree_in_pada=deg_in_pada,
     )
+
+
+def longitude_to_sub_lord(lon: float) -> str:
+    """
+    KP (Krishnamurti Paddhati) Sub Lord for any sidereal ecliptic longitude.
+
+    Each nakshatra (13°20' span) is further divided into 9 unequal
+    sub-divisions, one per Vimshottari planet, sized proportionally to
+    that planet's Vimshottari period (e.g. Venus = 20/120 of the span,
+    Ketu = 7/120). The sub-division sequence starts at the nakshatra's
+    own Star Lord (its Vimshottari nakshatra-lord) and then cycles
+    through VIMSHOTTARI_SEQUENCE in order, wrapping around.
+
+    This is the classical KP "Sub Lord" used for cuspal/planetary
+    significator analysis — a static positional classification, not a
+    time-based dasha period (KP still uses standard Vimshottari Dasha for
+    period timing; see dasha_engine.py).
+
+    Source: K.S. Krishnamurti, "Reader" series (Sub Lord theory), which
+    itself builds directly on the BPHS Vimshottari proportions already
+    used elsewhere in this module.
+    """
+    lon = _normalize(lon)
+    nak_index = int(lon / DEGREES_PER_NAKSHATRA)
+    nak_deg = lon - nak_index * DEGREES_PER_NAKSHATRA
+
+    star_lord_idx = nak_index % 9
+    rotated = VIMSHOTTARI_SEQUENCE[star_lord_idx:] + VIMSHOTTARI_SEQUENCE[:star_lord_idx]
+
+    offset = 0.0
+    for planet in rotated:
+        span = (VIMSHOTTARI_DASHA_YEARS[planet] / VIMSHOTTARI_TOTAL_YEARS) * DEGREES_PER_NAKSHATRA
+        if nak_deg < offset + span or planet == rotated[-1]:
+            return planet
+        offset += span
+    return rotated[-1]  # unreachable in practice; guards float rounding at the boundary
+
+
+def _subdivide(span_deg: float, position_in_span: float, start_planet: str) -> tuple[str, float, float]:
+    """
+    Proportionally divide a span (conceptually starting at 0) into 9
+    unequal parts sized by each Vimshottari planet's period, cycling
+    through VIMSHOTTARI_SEQUENCE starting from `start_planet`. Shared by
+    longitude_to_sub_lord()'s logic and longitude_to_sub_sub_lord() below
+    (which applies the exact same method one level deeper).
+
+    Returns (chosen_planet, position_within_chosen_planet's_own_segment,
+    chosen_segment's_span_in_degrees) — the latter two let a caller
+    recurse into that segment for a finer subdivision.
+    """
+    start_idx = VIMSHOTTARI_SEQUENCE.index(start_planet)
+    rotated = VIMSHOTTARI_SEQUENCE[start_idx:] + VIMSHOTTARI_SEQUENCE[:start_idx]
+
+    offset = 0.0
+    for planet in rotated:
+        seg_span = (VIMSHOTTARI_DASHA_YEARS[planet] / VIMSHOTTARI_TOTAL_YEARS) * span_deg
+        if position_in_span < offset + seg_span or planet == rotated[-1]:
+            return planet, position_in_span - offset, seg_span
+        offset += seg_span
+    last = rotated[-1]  # unreachable in practice; guards float rounding at the boundary
+    last_span = (VIMSHOTTARI_DASHA_YEARS[last] / VIMSHOTTARI_TOTAL_YEARS) * span_deg
+    return last, position_in_span - offset, last_span
+
+
+def longitude_to_sub_sub_lord(lon: float) -> str:
+    """
+    KP (Krishnamurti Paddhati) Sub Sub Lord — one further proportional
+    subdivision within the Sub Lord's own segment, applying the exact same
+    method as longitude_to_sub_lord() one level deeper: the Sub Lord's
+    segment (itself proportional to that planet's Vimshottari years within
+    the nakshatra) is divided into 9 unequal parts sized by Vimshottari
+    years again, with the rotation starting from the Sub Lord itself. This
+    is the standard classical KP fractal/proportional-subdivision method
+    (K.S. Krishnamurti, Reader series), same source as longitude_to_sub_lord().
+    """
+    lon = _normalize(lon)
+    nak_index = int(lon / DEGREES_PER_NAKSHATRA)
+    nak_deg = lon - nak_index * DEGREES_PER_NAKSHATRA
+    star_lord = VIMSHOTTARI_SEQUENCE[nak_index % 9]
+
+    sub_lord, position_in_sub_span, sub_span_deg = _subdivide(DEGREES_PER_NAKSHATRA, nak_deg, star_lord)
+    sub_sub_lord, _, _ = _subdivide(sub_span_deg, position_in_sub_span, sub_lord)
+    return sub_sub_lord
+
+
+def _house_number_from_cusps(sid_lon: float, cusp_sidereal_longitudes: list[float]) -> int:
+    """
+    Bhava Chalit (cuspal) house placement: which of the 12 real house
+    spans — cusp[i] to cusp[i+1], wrapping at 360° — a sidereal longitude
+    falls into.
+
+    cusp_sidereal_longitudes must be ordered house 1..12 (index 0 = house
+    1's cusp, etc.), which is how house_cusps is always built below.
+
+    For Whole Sign house_system, the cusps are exactly the 12 rashi
+    boundaries from the lagna sign, so this reduces to the previous
+    "which sign relative to the lagna sign" logic — this one function
+    covers both cases correctly, whereas computing a planet's house from
+    its rashi alone (the old approach) silently ignored the cusp
+    degrees entirely for Placidus/Koch/Equal, always falling back to
+    Whole-Sign-style placement regardless of the selected house system.
+    """
+    lon = _normalize(sid_lon)
+    for i in range(12):
+        start = cusp_sidereal_longitudes[i]
+        end = cusp_sidereal_longitudes[(i + 1) % 12]
+        if start <= end:
+            if start <= lon < end:
+                return i + 1
+        else:
+            # House span wraps past 360°/0°
+            if lon >= start or lon < end:
+                return i + 1
+    return 12  # unreachable in practice; guards float rounding at the last boundary
 
 
 def _angular_distance(a: float, b: float) -> float:
@@ -637,6 +754,9 @@ class EphemerisWrapper:
             rashi_degree=asc_rashi_deg,
             nakshatra=asc_nak.nakshatra,
             pada=asc_nak.pada,
+            nakshatra_lord=asc_nak.lord,
+            sub_lord=longitude_to_sub_lord(asc_sid),
+            sub_sub_lord=longitude_to_sub_sub_lord(asc_sid),
         )
 
         # ── Sidereal house cusps ──────────────────────────────────────────────
@@ -651,6 +771,15 @@ class EphemerisWrapper:
                         (lagna_rashi_index + i) * DEGREES_PER_RASHI
                     ),
                     rashi=_RASHI_LIST[(lagna_rashi_index + i) % 12],
+                    nakshatra_lord=longitude_to_nakshatra(
+                        _normalize((lagna_rashi_index + i) * DEGREES_PER_RASHI)
+                    ).lord,
+                    sub_lord=longitude_to_sub_lord(
+                        _normalize((lagna_rashi_index + i) * DEGREES_PER_RASHI)
+                    ),
+                    sub_sub_lord=longitude_to_sub_sub_lord(
+                        _normalize((lagna_rashi_index + i) * DEGREES_PER_RASHI)
+                    ),
                 )
                 for i in range(12)
             ]
@@ -663,6 +792,15 @@ class EphemerisWrapper:
                     rashi=longitude_to_rashi(
                         self.to_sidereal(cusp_tropicals[i], ayanamsa_val)
                     )[0],
+                    nakshatra_lord=longitude_to_nakshatra(
+                        self.to_sidereal(cusp_tropicals[i], ayanamsa_val)
+                    ).lord,
+                    sub_lord=longitude_to_sub_lord(
+                        self.to_sidereal(cusp_tropicals[i], ayanamsa_val)
+                    ),
+                    sub_sub_lord=longitude_to_sub_sub_lord(
+                        self.to_sidereal(cusp_tropicals[i], ayanamsa_val)
+                    ),
                 )
                 for i in range(12)
             ]
@@ -671,7 +809,18 @@ class EphemerisWrapper:
         sun_tropical = tropical_positions["sun"].longitude
 
         # ── Sidereal planet positions ─────────────────────────────────────────
-        lagna_rashi_index = _RASHI_LIST.index(asc_rashi)
+        # Bhava Chalit (cuspal) placement — see _house_number_from_cusps.
+        # This is the actual house-cusp boundaries for whichever
+        # house_system was requested (Whole Sign / Placidus / Koch /
+        # Equal), not a Whole-Sign-only shortcut.
+        cusp_sidereal_longitudes = [h.sidereal_longitude for h in house_cusps]
+        # Separately, the Rashi (sign-counting) house — always "how many
+        # signs is this planet's sign from the lagna's sign", independent
+        # of which house_system's cusps are in play. Kept alongside the
+        # cuspal house_number because KP-style analysis and classical
+        # sign-based reasoning both need this, and the two numbers can
+        # legitimately differ for the same planet.
+        lagna_rashi_index_for_planets = _RASHI_LIST.index(asc_rashi)
 
         sidereal_positions: list[SiderealPosition] = []
         for planet, trop_pos in tropical_positions.items():
@@ -679,9 +828,9 @@ class EphemerisWrapper:
             rashi, rashi_deg = longitude_to_rashi(sid_lon)
             nak_info = longitude_to_nakshatra(sid_lon)
 
-            # House number in Whole Sign
+            house_number = _house_number_from_cusps(sid_lon, cusp_sidereal_longitudes)
             rashi_idx = _RASHI_LIST.index(rashi)
-            house_number = ((rashi_idx - lagna_rashi_index) % 12) + 1
+            rashi_house_number = ((rashi_idx - lagna_rashi_index_for_planets) % 12) + 1
 
             # Combustion (use tropical longitudes for angular distance)
             combust, comb_orb = self.is_combust(
@@ -714,6 +863,10 @@ class EphemerisWrapper:
                 distance_au=trop_pos.distance_au,
                 speed_deg_per_day=trop_pos.speed_deg_per_day,
                 declination_deg=declination,
+                nakshatra_lord=nak_info.lord,
+                sub_lord=longitude_to_sub_lord(sid_lon),
+                sub_sub_lord=longitude_to_sub_sub_lord(sid_lon),
+                rashi_house_number=rashi_house_number,
             ))
 
         # ── Panchanga ─────────────────────────────────────────────────────────

@@ -23,6 +23,16 @@ from apps.api.schemas.conflict import (
     ConflictListResponse,
     ConflictSummaryResponse,
 )
+from apps.api.schemas.nakshatra import (
+    NakshatraDeityResponse,
+    NakshatraDetailResponse,
+    NakshatraListResponse,
+    NakshatraNatureResponse,
+    NakshatraPadaResponse,
+    NakshatraShaktiResponse,
+    NakshatraSourceResponse,
+    NakshatraSummaryResponse,
+)
 from apps.api.schemas.knowledge import (
     BookCreateRequest,
     BookListResponse,
@@ -406,3 +416,74 @@ async def get_conflict(
     if conflict is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conflict not found.")
     return _conflict_detail(conflict)
+
+
+# ── Nakshatra Knowledge Base (context-selector vision, Level 2) ────────────────
+
+def _nakshatra_summary(n) -> NakshatraSummaryResponse:
+    return NakshatraSummaryResponse(
+        id=n.id, name=n.name, sequential=n.sequential,
+        ruler=n.ruler, classical_name=n.classical_name,
+    )
+
+
+def _nakshatra_detail(n) -> NakshatraDetailResponse:
+    deity = NakshatraDeityResponse(
+        name=n.deity.name, description=n.deity.description,
+        attributes=list(n.deity.attributes),
+    ) if n.deity else None
+    shakti = NakshatraShaktiResponse(
+        name=n.shakti.name, meaning=n.shakti.meaning, power=n.shakti.power,
+    ) if n.shakti else None
+    nature = NakshatraNatureResponse(
+        temperament=n.nature.temperament, guna=n.nature.guna,
+        gana=n.nature.gana, yoni=n.nature.yoni, nadi=n.nature.nadi,
+    ) if n.nature else None
+    padas = [
+        NakshatraPadaResponse(
+            pada=p.pada, degrees=p.degrees, rashi=p.rashi,
+            navamsha_rashi=p.navamsha_rashi,
+        ) for p in n.padas
+    ]
+    sources = [
+        NakshatraSourceResponse(ref=s.ref, claim=s.claim, confidence=s.confidence)
+        for s in n.sources
+    ]
+    return NakshatraDetailResponse(
+        id=n.id, name=n.name, sequential=n.sequential,
+        aliases=list(n.aliases), classical_name=n.classical_name,
+        devanagari=n.devanagari, meaning=n.meaning, ruler=n.ruler,
+        starting_degree=n.starting_degree, ending_degree=n.ending_degree,
+        rashi_span=list(n.rashi_span), padas=padas,
+        deity=deity, shakti=shakti, nature=nature,
+        karakatvas=list(n.karakatvas),
+        compatible_nakshatras=list(n.compatible_nakshatras),
+        incompatible_nakshatras=list(n.incompatible_nakshatras),
+        sources=sources, notes=n.notes,
+    )
+
+
+@router.get("/nakshatras", response_model=NakshatraListResponse)
+async def list_nakshatras(
+    engine: KnowledgeEngine = Depends(get_knowledge_engine),
+) -> NakshatraListResponse:
+    """List all 27 nakshatras (summary only) in classical sequential order."""
+    nakshatras = engine.load_nakshatras()
+    return NakshatraListResponse(
+        nakshatras=[_nakshatra_summary(n) for n in nakshatras],
+        total=len(nakshatras),
+    )
+
+
+@router.get("/nakshatras/{nakshatra_id}", response_model=NakshatraDetailResponse)
+async def get_nakshatra(
+    nakshatra_id: str,
+    engine: KnowledgeEngine = Depends(get_knowledge_engine),
+) -> NakshatraDetailResponse:
+    """Full classical reference entry for one nakshatra (deity, shakti,
+    nature, per-pada Navamsha mapping, karakatvas, sources). Accepts an id
+    ('nakshatra.ashvini'), file slug ('ashvini'), or display name ('Ashvini')."""
+    nakshatra = engine.load_nakshatra(nakshatra_id)
+    if nakshatra is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Nakshatra not found.")
+    return _nakshatra_detail(nakshatra)

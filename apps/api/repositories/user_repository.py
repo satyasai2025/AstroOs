@@ -15,7 +15,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.domain.user import User, UserId, UserRole, UserStatus
@@ -165,3 +165,76 @@ class UserRepository:
             .values(revoked_at=now)
         )
         await self._session.execute(stmt)
+
+    # ── Admin listing/moderation ──────────────────────────────────────────
+    # Moved here from AdminEngine (Phase 10 R3 cleanup, 2026-07-23) — that
+    # engine was querying UserModel directly with a raw session, the one
+    # place in the codebase that bypassed the repository layer every other
+    # engine uses. Behavior is unchanged, just relocated so DB access for
+    # the User aggregate lives in exactly one place.
+
+    @staticmethod
+    def _filtered_users_stmt(status: Optional[str], role: Optional[str]):
+        """Shared status/role filter for list_all/count_all, so a caller's
+        pagination total always reflects the exact same WHERE clause as
+        the page it's counting."""
+        stmt = select(UserModel).where(UserModel.deleted_at.is_(None))
+        if status:
+            stmt = stmt.where(UserModel.status == status)
+        if role:
+            stmt = stmt.where(UserModel.role == role)
+        return stmt
+
+    async def list_all(
+        self,
+        *,
+        status: Optional[str] = None,
+        role: Optional[str] = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> list[User]:
+        stmt = (
+            self._filtered_users_stmt(status, role)
+            .order_by(UserModel.created_at.desc())
+            .limit(limit)
+            .offset(offset)
+        )
+        result = await self._session.execute(stmt)
+        return [_model_to_domain(row) for row in result.scalars().all()]
+
+    async def count_all(
+        self,
+        *,
+        status: Optional[str] = None,
+        role: Optional[str] = None,
+    ) -> int:
+        stmt = self._filtered_users_stmt(status, role)
+        count_stmt = select(func.count()).select_from(stmt.subquery())
+        result = await self._session.execute(count_stmt)
+        return result.scalar_one()
+
+    async def set_role(self, user_id: UserId, new_role: UserRole) -> Optional[User]:
+        """Atomic role update. Returns the updated User, or None if no
+        matching (non-deleted) user exists."""
+        stmt = (
+            update(UserModel)
+            .where(UserModel.id == user_id.value, UserModel.deleted_at.is_(None))
+            .values(role=new_role)
+            .returning(UserModel.id)
+        )
+        result = await self._session.execute(stmt)
+        if result.scalar_one_or_none() is None:
+            return None
+        return await self.get_by_id(user_id)
+
+    async def set_status(self, user_id: UserId, new_status: UserStatus) -> bool:
+        """Atomic status update (used for suspend/activate). Returns
+        whether a matching (non-deleted) user was found and updated."""
+        stmt = (
+            update(UserModel)
+            .where(UserModel.id == user_id.value, UserModel.deleted_at.is_(None))
+            .values(status=new_status)
+            .returning(UserModel.id)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none() is not None

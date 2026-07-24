@@ -1,0 +1,15 @@
+{
+    "name": "sample-astronomy-plugin",
+    "version": "0.1.0",
+    "description": "Sample astronomy calculator plugin for testing",
+    "cli_command": "astroos plugin calculate-dimension",
+    "dependencies": [],
+    "scripts": {
+        "calculate": "python calculate.py"
+    },
+    "sandbox": {
+        "max_cpu": 25,
+        "max_memory": 50,
+        "network_limit": "none"
+    }
+}

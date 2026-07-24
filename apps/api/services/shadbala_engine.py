@@ -53,6 +53,7 @@ from apps.api.services.shadbala.dig_bala import DigBalaCalculator
 from apps.api.services.shadbala.dina_hora_bala import DinaHoraBalaCalculator
 from apps.api.services.shadbala.drekkana_bala import DrekkanaBalaCalculator
 from apps.api.services.shadbala.drik_bala import DrikBalaCalculator
+from apps.api.services.shadbala.ishta_kashta_bala import IshtaKashtaBalaCalculator
 from apps.api.services.shadbala.kendradi_bala import KendradiBalaCalculator
 from apps.api.services.shadbala.naisargika_bala import NaisargikaBalaCalculator
 from apps.api.services.shadbala.nathonnata_bala import NathonnataBalaCalculator
@@ -101,6 +102,7 @@ class ShadbalaEngine:
         self._kendradi = kendradi_calculator or KendradiBalaCalculator()
         self._drekkana = drekkana_calculator or DrekkanaBalaCalculator()
         self._yuddha = yuddha_calculator or YuddhaBalaCalculator()
+        self._ishta_kashta = IshtaKashtaBalaCalculator()
         self._saptavargaja = (
             SaptavargajaBalaCalculator(divisional_engine) if divisional_engine is not None else None
         )
@@ -138,6 +140,23 @@ class ShadbalaEngine:
             "ayana_bala": self._ayana.calculate_all(chart.planets),
             "yuddha_bala": self._yuddha.calculate_all(chart.planets),
         }
+
+    def compute_ishta_kashta_bala(
+        self, chart: D1Chart
+    ) -> dict[str, list[BalaComponentResult]]:
+        """
+        Ishta Bala (benefic/auspicious strength) and Kashta Bala
+        (malefic/difficult strength) — derived from Uchcha Bala x Chesta
+        Bala, needing only the already-built D1 chart. See
+        shadbala/ishta_kashta_bala.py's module docstring for the formula
+        and the 5-planet scope (inherited from Chesta Bala's own scope —
+        Sun/Moon are not classically scored for Chesta Bala here, so they
+        have no Ishta/Kashta figure either, rather than a fabricated one).
+        """
+        uchcha_results = self._uchcha.calculate_all(chart.planets)
+        chesta_results = self._chesta.calculate_all(chart.planets)
+        ishta, kashta = self._ishta_kashta.calculate_all(uchcha_results, chesta_results)
+        return {"ishta_bala": ishta, "kashta_bala": kashta}
 
     def compute_sthana_bala_components(
         self, chart: D1Chart
@@ -272,6 +291,7 @@ class ShadbalaEngine:
             "sthana_bala.uchcha_bala", "sthana_bala.kendradi_bala",
             "sthana_bala.drekkana_bala", "sthana_bala.saptavargaja_bala",
             "sthana_bala.ojayugmarasyamsa_bala",
+            "ishta_bala", "kashta_bala",
         ]
 
     def not_yet_implemented_components(self) -> list[str]:

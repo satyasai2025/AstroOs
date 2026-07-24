@@ -46,6 +46,54 @@ export const RASHI_LORDS: Record<RashiName, string> = {
   Meena: "Jupiter",
 };
 
+/**
+ * The backend's Rashi enum (packages/shared/enums.py) has Sanskrit
+ * *names* but English *values* — Rashi.MESHA.value == "aries" — and it's
+ * the English value that actually gets serialized into every API
+ * response (chart.houses[].rashi, chart.ascendant.rashi, etc.), Title-
+ * Cased by lib/api.ts's casing normalization ("Aries", not "aries" or
+ * "Mesha"). RASHI_LORDS above, and the RASHIS array, are both keyed with
+ * Sanskrit names for display purposes throughout this file. That means
+ * `RASHI_LORDS[someRealChart.rashi]` has always silently resolved to
+ * undefined for every real chart — found 2026-07-24 while debugging
+ * "Health Risk: Unknown" (kpiScoring.ts's getHouseLordStrength, and by
+ * extension every KPI built on it — Career/Marriage/Wealth/Mental
+ * Stability/Prediction Chain Explorer — plus HouseDependencyNetwork.tsx
+ * and the Ascendant-lord line on /charts, all depend on this lookup).
+ *
+ * This map + rashiLordFromApiName() below is the fix: anywhere you have
+ * a rashi string that came from the API (not from this file's own
+ * RASHIS array), look up its lord through rashiLordFromApiName(), not
+ * RASHI_LORDS[...] directly.
+ */
+const _ENGLISH_TO_SANSKRIT_RASHI: Record<string, RashiName> = {
+  aries: "Mesha",
+  taurus: "Vrishabha",
+  gemini: "Mithuna",
+  cancer: "Karka",
+  leo: "Simha",
+  virgo: "Kanya",
+  libra: "Tula",
+  scorpio: "Vrischika",
+  sagittarius: "Dhanu",
+  capricorn: "Makara",
+  aquarius: "Kumbha",
+  pisces: "Meena",
+};
+
+/**
+ * Look up a sign's ruling lord from a rashi string as it actually comes
+ * back from the API — English, any casing ("Aries", "aries", "ARIES").
+ * Falls back to treating the input as already-Sanskrit (a RashiName) so
+ * this is also safe to call with values sourced from this file's own
+ * RASHIS array. Returns null if the input matches neither.
+ */
+export function rashiLordFromApiName(rashi: string | null | undefined): string | null {
+  if (!rashi) return null;
+  const sanskritKey = _ENGLISH_TO_SANSKRIT_RASHI[rashi.toLowerCase()] ?? (rashi as RashiName);
+  return RASHI_LORDS[sanskritKey] ?? null;
+}
+
 // ── Nakshatras ─────────────────────────────────────────────────────────────────
 
 export const NAKSHATRAS = [
@@ -231,10 +279,29 @@ export const NORTH_INDIAN_HOUSE_POSITIONS = [
   { house: 12, x: -0.75, y: 0 }, // inner left
 ] as const;
 
-/** Map a rashi name to a 0-11 index for house placement. */
+/** Map a rashi name to a 0-11 index for house placement. Sanskrit-keyed — see
+ * rashiIndexFromApiName() below for the version that also accepts real API
+ * (English) rashi names. */
 export const RASHI_TO_INDEX: Record<string, number> = Object.fromEntries(
   RASHIS.map((r, i) => [r, i])
 );
+
+/**
+ * Same Sanskrit-vs-English problem as rashiLordFromApiName() above, but for
+ * RASHI_TO_INDEX: real chart data (chart.planets[].rashi, chart.ascendant.rashi)
+ * is English ("Aries"), RASHI_TO_INDEX is Sanskrit-keyed ("Mesha"). Looking
+ * real data up directly in RASHI_TO_INDEX silently resolved to undefined →
+ * `?? 0` for every planet AND the ascendant alike, which put every single
+ * planet in the same house (house 1) — found 2026-07-23 from a chart
+ * screenshot showing every graha stacked in one row under Lagna. Use this
+ * anywhere a rashi string came from the API; RASHI_TO_INDEX directly is only
+ * safe for this file's own Sanskrit RASHIS array.
+ */
+export function rashiIndexFromApiName(rashi: string | null | undefined): number {
+  if (!rashi) return 0;
+  const sanskritKey = _ENGLISH_TO_SANSKRIT_RASHI[rashi.toLowerCase()] ?? (rashi as RashiName);
+  return RASHI_TO_INDEX[sanskritKey] ?? 0;
+}
 
 /** Color palette for chart rendering in both themes. */
 export const CHART_COLORS = {
@@ -255,6 +322,46 @@ export const CHART_COLORS = {
     sextile: "#38bdf8",
   },
 } as const;
+
+// ── Classical Reference Data (static, not computed) ────────────────────────────
+//
+// These two tables are fixed classical astrological reference data (BPHS-derived),
+// not anything the backend calculates per-chart. They're shown in the Interactive
+// Kundli's side panel alongside real computed data (house, sign, aspects, strength,
+// etc.) — kept clearly separate so it's obvious what's "this chart's computed data"
+// vs. "general classical reference for this planet."
+
+/** Natural (permanent) friend / enemy / neutral relationships — classical, fixed. */
+export const NATURAL_RELATIONSHIPS: Record<
+  string,
+  { friends: string[]; enemies: string[]; neutrals: string[] }
+> = {
+  Sun: { friends: ["Moon", "Mars", "Jupiter"], enemies: ["Venus", "Saturn"], neutrals: ["Mercury"] },
+  Moon: { friends: ["Sun", "Mercury"], enemies: [], neutrals: ["Mars", "Jupiter", "Venus", "Saturn"] },
+  Mars: { friends: ["Sun", "Moon", "Jupiter"], enemies: ["Mercury"], neutrals: ["Venus", "Saturn"] },
+  Mercury: { friends: ["Sun", "Venus"], enemies: ["Moon"], neutrals: ["Mars", "Jupiter", "Saturn"] },
+  Jupiter: { friends: ["Sun", "Moon", "Mars"], enemies: ["Mercury", "Venus"], neutrals: ["Saturn"] },
+  Venus: { friends: ["Mercury", "Saturn"], enemies: ["Sun", "Moon"], neutrals: ["Mars", "Jupiter"] },
+  Saturn: { friends: ["Mercury", "Venus"], enemies: ["Sun", "Moon", "Mars"], neutrals: ["Jupiter"] },
+  Rahu: { friends: ["Venus", "Saturn", "Mercury"], enemies: ["Sun", "Moon", "Mars"], neutrals: ["Jupiter"] },
+  Ketu: { friends: ["Mars", "Venus", "Saturn"], enemies: ["Sun", "Moon"], neutrals: ["Mercury", "Jupiter"] },
+};
+
+/** A short list of classical significations (karakatva) per planet — a small
+ * hand-picked reference set, not the full 25,000+ karakatva database planned
+ * for the dedicated Karakatva Explorer module (that's a separate, much larger
+ * content workstream — see ASTROOS_VISION_V3_ROADMAP.md Phase 5). */
+export const KARAKATVA_BASIC: Record<string, string[]> = {
+  Sun: ["Soul", "Father", "Authority", "Government", "Health", "Vitality", "Ego"],
+  Moon: ["Mind", "Mother", "Emotions", "Public", "Comfort", "Fluids", "Nurturing"],
+  Mars: ["Courage", "Siblings", "Land", "Energy", "Conflict", "Surgery", "Sports"],
+  Mercury: ["Intellect", "Communication", "Business", "Education", "Speech", "Analysis"],
+  Jupiter: ["Wisdom", "Wealth", "Children", "Guru", "Spirituality", "Expansion", "Fortune"],
+  Venus: ["Marriage", "Love", "Luxury", "Art", "Beauty", "Vehicles", "Comforts"],
+  Saturn: ["Career", "Discipline", "Longevity", "Delays", "Labor", "Old Age", "Structure"],
+  Rahu: ["Obsession", "Foreign", "Illusion", "Ambition", "Technology", "Sudden Events"],
+  Ketu: ["Detachment", "Spirituality", "Past Karma", "Isolation", "Moksha", "Intuition"],
+};
 
 // ── Varga Divisors ─────────────────────────────────────────────────────────────
 

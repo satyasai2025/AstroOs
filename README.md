@@ -82,6 +82,19 @@ git clone <your-repo-url> astroos
 cd astroos
 ```
 
+Create and activate a Python virtual environment (keeps AstroOS's pinned
+dependency versions isolated from other projects / your system Python):
+
+```bash
+python3 -m venv .venv
+
+# macOS/Linux
+source .venv/bin/activate
+
+# Windows (PowerShell/cmd)
+.venv\Scripts\activate
+```
+
 Install Python dependencies:
 
 ```bash

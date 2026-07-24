@@ -1,0 +1,144 @@
+{
+  "name": "Obsidian Dark SaaS Theme",
+  "description": "Design tokens for the Obsidian Dark SaaS theme - deep cosmic dark with indigo accents",
+  "version": "1.0.0",
+  "tokens": {
+    "color": {
+      "background": {
+        "canvas": {
+          "value": "#0B0E14",
+          "description": "Main canvas background - Deep Obsidian Dark"
+        },
+        "surface": {
+          "value": "#121824",
+          "description": "Surface/Card background - Dark Navy Slate"
+        },
+        "surfaceHover": {
+          "value": "#161D2C",
+          "description": "Surface hover state"
+        },
+        "input": {
+          "value": "#121824",
+          "description": "Input field background"
+        }
+      },
+      "border": {
+        "primary": {
+          "value": "#1F293D",
+          "description": "Subtle 1px borders"
+        },
+        "hover": {
+          "value": "#374151",
+          "description": "Border hover state"
+        },
+        "focus": {
+          "value": "rgba(99, 102, 241, 0.6)",
+          "description": "Border focus state (indigo with opacity)"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "#F3F4F6",
+          "description": "Bright crisp white for primary text"
+        },
+        "secondary": {
+          "value": "#9CA3AF",
+          "description": "Muted slate for secondary text"
+        },
+        "muted": {
+          "value": "#6B7280",
+          "description": "Muted text for placeholders"
+        }
+      },
+      "accent": {
+        "primary": {
+          "value": "#6366F1",
+          "description": "Indigo/Purple accent color"
+        },
+        "primaryHover": {
+          "value": "#4F46E5",
+          "description": "Darker indigo for hover states"
+        },
+        "success": {
+          "value": "#10B981",
+          "description": "Emerald green for success/active states"
+        },
+        "warning": {
+          "value": "#F59E0B",
+          "description": "Amber for warning/moderate states"
+        },
+        "deep": {
+          "value": "#8B5CF6",
+          "description": "Deep purple for special highlights"
+        }
+      },
+      "status": {
+        "successBg": {
+          "value": "rgba(6, 78, 59, 0.2)",
+          "description": "Success status background (emerald-950/40)"
+        },
+        "warningBg": {
+          "value": "rgba(120, 53, 15, 0.2)",
+          "description": "Warning status background (amber-950/40)"
+        }
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "sans": ["Inter", "system-ui", "sans-serif"],
+        "mono": ["JetBrains Mono", "Fira Code", "monospace"],
+        "display": ["var(--font-noto-serif)", "Georgia", "serif"]
+      },
+      "fontSize": {
+        "header": {
+          "sm": {
+            "value": "20px",
+            "lineHeight": "1.5"
+          },
+          "md": {
+            "value": "24px",
+            "lineHeight": "1.4"
+          }
+        },
+        "label": {
+          "sm": {
+            "value": "12px",
+            "lineHeight": "1.5"
+          },
+          "md": {
+            "value": "14px",
+            "lineHeight": "1.4"
+          }
+        },
+        "body": {
+          "value": "16px",
+          "lineHeight": "1.6"
+        }
+      },
+      "fontWeight": {
+        "bold": "700",
+        "semibold": "600",
+        "medium": "500",
+        "normal": "400"
+      }
+    },
+    "border": {
+      "radius": {
+        "container": {
+          "value": "0.75rem",
+          "tailwind": "rounded-xl"
+        },
+        "inner": {
+          "value": "0.5rem",
+          "tailwind": "rounded-lg"
+        }
+      }
+    },
+    "icon": {
+      "backgroundOpacity": {
+        "value": "0.4",
+        "description": "Opacity for soft icon background boxes"
+      }
+    }
+  }
+}

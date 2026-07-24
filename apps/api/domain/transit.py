@@ -36,4 +36,17 @@ class TransitPlanetResult:
     has_vedha: bool = False
     has_vipreet_vedha: bool = False
     vedha_planet: Optional[str] = None
+    # Added in Module 11 Phase 3 (Nakshatra Vedha / Sarvatobhadra Chakra).
+    # A DIFFERENT system from the Rashi Vedha fields above — nakshatra-
+    # based, not house-based, and not classified favorable/unfavorable
+    # (Saravali presents it as a general obstruction relationship, not a
+    # good/bad-house judgment). transit_nakshatra_sbc is the 28-system
+    # (Abhijit-aware) nakshatra, scoped only to this feature — every
+    # other nakshatra field in this app stays on the standard 27-system.
+    # See packages/shared/sarvatobhadra_grid.py for sourcing.
+    transit_nakshatra_sbc: str = ""
+    has_nakshatra_vedha: bool = False
+    nakshatra_vedha_planet: Optional[str] = None
+    nakshatra_vedha_type: Optional[str] = None  # "forward" (direct) or "backward" (retrograde)
+    nakshatra_vedha_target: Optional[str] = None  # the SBC nakshatra this planet's ray points at
     rule_version: str = "1.0"

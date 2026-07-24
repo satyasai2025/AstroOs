@@ -60,8 +60,10 @@ export function AnalysisResults({
     <div className="animate-fade-in space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-400">
-          Analysis complete for chart{" "}
-          <span className="font-mono text-xs text-slate-300">{result.chart_id}</span>
+          Analysis complete for{" "}
+          <span className="font-semibold text-slate-200">{request.subject_name}</span>
+          {" "}
+          <span className="font-mono text-[10px] text-slate-500">({result.chart_id})</span>
         </p>
         <button type="button" onClick={onReset} className="btn-ghost text-xs px-3 py-1.5">
           New Analysis
