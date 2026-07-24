@@ -1,0 +1,17 @@
+Here is a concise breakdown of the Sarvatobhadra Chakra (SBC) geometric rules, grid layout, and line directions, so whenever you're ready to build Nakshatra Vedha into the backend, you'll have the verified classical framework ready to go.Sarvatobhadra Chakra (SBC) Core ArchitectureSBC is a $9 \times 9$ (81-square) grid where planetary positions cross-pierce (Vedha) target Nakshatras, Rashis, Vowels (Swaras), Consonants (Varnas), and Tithis across straight and diagonal ray paths.1. The 28-Nakshatra Boundary LayoutUnlike standard 27-Nakshatra Gochara, SBC strictly requires the 28-Nakshatra system (including Abhijit). The outer border consists of 28 perimeter squares starting from Krittika:[Top Border: 7 Nakshatras]    --> Krittika to Visakha
+[Right Border: 7 Nakshatras]  --> Anuradha to Sravana
+[Bottom Border: 7 Nakshatras] --> Abhijit to Purva Bhadrapada
+[Left Border: 7 Nakshatras]   --> Uttara Bhadrapada to Bharani
+2. Dynamic Ray Rules (Directional Motion)In SBC, a planet does not pierce in all directions simultaneously. The aspect rays emitted by a planet depend strictly on its directional speed and state of motion:Motion StateSpeed ConditionPrimary Vedha DirectionSecondary Ray(s)Direct (Raji / Sama)Normal speedLeft DiagonalStraight acrossFast Direct (Atichara)Swift motionRight DiagonalStraight acrossRetrograde (Vakra)Negative speedRight DiagonalLeft Diagonal & StraightStationary (Manda / Vikala)~0 speedDirect FrontalStraight acrossKey Rule: Malefics in Retrograde cause severe (Teevra) Vedha, while Benefics in Retrograde exert a protective or neutralising influence depending on whether they hit a Swara or a Nakshtra.3. The 3 Primary Aspect Lines from Any Outer CellFrom any perimeter Nakshatra cell $N_i$ on the $9 \times 9$ grid, a planet casts 3 visual rays:Straight Ray (Samamukha): Shoots directly across the grid to the opposite side (e.g., cell $(1, y) \to (9, y)$).Left Cross Ray (Vama Cross): Angular ray extending $45^\circ$ to the left outer edge.Right Cross Ray (Dakshina Cross): Angular ray extending $45^\circ$ to the right outer edge.4. Backend Engine Data Model (When You Build It)To implement this without re-calculating geometry at runtime, store the 28-Nakshatra static ray map as a JSON lookup table in your backend:JSON{
+  "Krittika": {
+    "straight_target": "Abhijit",
+    "left_diagonal_target": "Sravana",
+    "right_diagonal_target": "Visakha"
+  },
+  "Rohini": {
+    "straight_target": "Uttara Ashadha",
+    "left_diagonal_target": "Anuradha",
+    "right_diagonal_target": "Anuradha"
+  }
+}
+When evaluating Nakshatra Vedha:Fetch the planet's motion state (is_retrograde, is_atichara).Map the active ray direction (Left, Right, or Straight) based on motion.Lookup the targeted cell from the matrix and evaluate the hit.Summary of Current BuildYour current multi-tab setup—Active Vedhas, Dasha–Transit Vedha, and All Rashi Vedha Rules—provides an honest, fully traceable baseline. Keeping Nakshatra Vedha out until the 28-Nakshatra SBC line matrix is wired into the engine was definitely the right call!
