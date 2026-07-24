@@ -59,11 +59,22 @@ interface GraphLink {
 }
 
 /**
- * Graha Yuddha (planetary war) — classically only among these 5 grahas
- * (BPHS); Sun/Moon/Rahu/Ketu are excluded (Sun causes combustion instead,
- * not war; Rahu/Ketu are shadow points with no physical war). Two of these
- * are "at war" when conjunct within 1 degree of longitude.
+ * Per-graha traditional colors — adapted from Vedic symbolism (Jyotish color
+ * attributions) for legibility on a dark background. These are AstroOS UI
+ * conventions, not absolute classical prescriptions (different texts vary).
  */
+const GRAHA_COLOR: Record<string, string> = {
+  Sun: "#f59e0b",      // amber — fire/gold
+  Moon: "#e2e8f0",     // silver-white — lunar
+  Mars: "#ef4444",     // red — fire/warrior
+  Mercury: "#22c55e",  // green — earth/merchant
+  Jupiter: "#eab308",  // yellow-gold — wisdom/expansion
+  Venus: "#f472b6",    // rose-pink — beauty/venus
+  Saturn: "#6366f1",   // indigo-blue — karma/time
+  Rahu: "#94a3b8",     // slate-gray — smoke/shadow ascending
+  Ketu: "#a8a29e",     // warm stone — smoke/shadow descending
+};
+
 const YUDDHA_ELIGIBLE = new Set(["Mercury", "Venus", "Mars", "Jupiter", "Saturn"]);
 const YUDDHA_ORB_DEGREES = 1;
 
@@ -609,6 +620,7 @@ export function PlanetRelationshipGraph({
           const active = selected === planet;
           const dimmed = isDimmed(planet);
           const dashaLevel = activeDashaLordLevel.get(planet);
+          const grahaColor = GRAHA_COLOR[planet] ?? "var(--accent)";
           return (
             <g
               key={planet}
@@ -626,17 +638,22 @@ export function PlanetRelationshipGraph({
                   <title>{`${planet}'s own ${dashaLevel} is running right now`}</title>
                 </circle>
               )}
+              {/* Soft glow halo using the graha's traditional color */}
+              {active && (
+                <circle r={25} fill={grahaColor} opacity={0.18} />
+              )}
               <circle
                 r={active ? 22 : 18}
-                fill={active ? "var(--accent)" : "var(--bg-card)"}
-                stroke="var(--accent)"
-                strokeWidth={active ? 0 : 1.5}
+                fill={active ? grahaColor : "var(--bg-card)"}
+                stroke={grahaColor}
+                strokeWidth={active ? 0 : 1.8}
+                style={{ filter: active ? `drop-shadow(0 0 6px ${grahaColor})` : undefined }}
               />
               <text
                 textAnchor="middle"
                 dominantBaseline="central"
                 fontSize={14}
-                fill={active ? "var(--accent-text)" : "var(--text-primary)"}
+                fill={active ? "#000" : grahaColor}
                 fontWeight={600}
               >
                 {PLANET_SYMBOLS[planet] ?? planet.slice(0, 2)}

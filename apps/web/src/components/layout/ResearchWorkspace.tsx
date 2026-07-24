@@ -5,6 +5,7 @@ import { useState, useCallback, useMemo } from "react";
 import NavPanel from "./NavPanel";
 import ResearchDashboard from "../dashboard/ResearchDashboard";
 import InteractiveKundliView from "../charts/InteractiveKundliView";
+import { PlanetRelationshipGraph } from "../charts/PlanetRelationshipGraph";
 import ReverseSearchView from "../dashboard/ReverseSearchView";
 import ClassicalLiteratureView from "../dashboard/ClassicalLiteratureView";
 import type { D1ChartResponse } from "@/lib/types";
@@ -137,7 +138,15 @@ const VIEW_COMPONENTS = {
   "workspace-planets": () => <PlaceholderView module="04" title="Planet Explorer" />,
   "workspace-houses": () => <PlaceholderView module="04" title="House Explorer" />,
   "workspace-divisional": () => <PlaceholderView module="04" title="Divisional Charts" />,
-  "workspace-relationships": () => <PlaceholderView module="04" title="Planet Relationship Graph" />,
+  "workspace-relationships": () => (
+    <div className="p-6">
+      <PlanetRelationshipGraph
+        planets={MOCK_CHART.planets}
+        aspects={MOCK_CHART.aspects}
+        size={520}
+      />
+    </div>
+  ),
 
   // Analysis
   "analysis-dasha": () => <PlaceholderView module="05" title="Dasha Analysis" />,
