@@ -210,3 +210,17 @@ class SnapshotComparisonResponse(BaseModel):
     chart_id_b: uuid.UUID
     matching_fields: list[str]
     differing_fields: list[FieldDiffResponse]
+
+
+# ── Publication ────────────────────────────────────────────────────────────────
+
+
+class PublicationResponse(BaseModel):
+    """Response payload describing a generated publication bundle."""
+    project_id: uuid.UUID
+    output_dir: str
+    tex_path: str
+    bib_path: str
+    pdf_url: Optional[str] = None
+    error: Optional[str] = None
+    generated_at: str

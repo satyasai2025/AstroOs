@@ -7,7 +7,7 @@ const LEVEL_NAMES = ["Mahadasha", "Antardasha", "Pratyantar", "Sookshma", "Prana
 
 function PeriodRow({ period, depth }: { period: DashaPeriodResponse; depth: number }) {
   const [expanded, setExpanded] = useState(false);
-  const hasChildren = period.children.length > 0;
+  const hasChildren = period.sub_periods.length > 0;
 
   return (
     <div style={{ marginLeft: depth * 16 }}>
@@ -29,7 +29,7 @@ function PeriodRow({ period, depth }: { period: DashaPeriodResponse; depth: numb
         </span>
       </button>
       {expanded &&
-        period.children.map((sub, i) => (
+        period.sub_periods.map((sub, i) => (
           <PeriodRow key={`${sub.lord}-${sub.start_date}-${i}`} period={sub} depth={depth + 1} />
         ))}
     </div>

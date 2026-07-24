@@ -22,10 +22,17 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_db_session, get_ephemeris_wrapper, get_knowledge_engine
+from apps.api.dependencies import (
+    get_current_user_from_bearer,
+    get_db_session,
+    get_ephemeris_wrapper,
+    get_knowledge_engine,
+)
+from apps.api.middleware.rate_limit import limiter
+from apps.api.domain.user import User
 from apps.api.repositories.birth_chart_repository import BirthChartRepository
 from apps.api.repositories.divisional_chart_repository import DivisionalChartRepository
 from apps.api.repositories.divisional_planet_repository import DivisionalPlanetRepository
@@ -164,7 +171,11 @@ def _result_to_response(result: WorkflowAnalysisResult) -> WorkflowAnalysisRespo
     else:
         benchmark = BenchmarkResponse(
             status="not_applicable",
-            detail="Chart does not match any GC-MASTER reference or GC-MASTER data is not loaded.",
+            detail=(
+                "Benchmark validation only runs against AstroOS's 5 internal "
+                "reference charts (used to verify calculation accuracy) — "
+                "this isn't one of them, so there's nothing to validate here."
+            ),
         )
 
     return WorkflowAnalysisResponse(
@@ -223,12 +234,15 @@ def _result_to_response(result: WorkflowAnalysisResult) -> WorkflowAnalysisRespo
         "placeholder (v2 Phase C has not started)."
     ),
 )
+@limiter.limit("6/minute")
 async def analyze_workflow(
+    request: Request,
     body: WorkflowAnalysisRequest,
+    current_user: User = Depends(get_current_user_from_bearer),
     orchestrator: WorkflowOrchestrator = Depends(_get_orchestrator),
 ) -> WorkflowAnalysisResponse:
     try:
-        result = await orchestrator.analyze(body)
+        result = await orchestrator.analyze(body, user_id=current_user.id.value)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
     except Exception as exc:

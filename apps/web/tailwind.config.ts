@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // AstroOS brand palette — deep cosmic navy + amber accents
+        // Obsidian Dark SaaS Theme - Deep cosmic navy + amber accents
         cosmos: {
           50:  "#f0f4ff",
           100: "#dde6ff",
@@ -30,6 +30,26 @@ const config: Config = {
           600: "#d97706",
         },
         saffron: "#ff9933",
+        // Obsidian Dark SaaS Theme color palette
+        obsidian: {
+          canvas: "#0B0E14",
+          surface: "#121824",
+          surfaceHover: "#161D2C",
+          input: "#121824",
+          border: "#1F293D",
+          borderHover: "#374151",
+          borderFocus: "rgba(99, 102, 241, 0.6)",
+          textPrimary: "#F3F4F6",
+          textSecondary: "#9CA3AF",
+          textMuted: "#6B7280",
+          accentPrimary: "#6366F1",
+          accentPrimaryHover: "#4F46E5",
+          accentSuccess: "#10B981",
+          accentWarning: "#F59E0B",
+          accentDeep: "#8B5CF6",
+          statusSuccessBg: "rgba(6, 78, 59, 0.2)",
+          statusWarningBg: "rgba(120, 53, 15, 0.2)",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],

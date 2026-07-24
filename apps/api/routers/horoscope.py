@@ -8,20 +8,28 @@ HTTP concerns: input validation, response serialisation, error mapping.
 
 import asyncio
 import logging
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
+from apps.api.dependencies import (
+    get_current_user_from_bearer,
+    get_db_session,
+    get_ephemeris_wrapper,
+)
 from apps.api.domain.ephemeris import DignityType
 from apps.api.domain.horoscope import D1Chart
+from apps.api.domain.user import User
 from apps.api.repositories.birth_chart_repository import BirthChartRepository
 from apps.api.repositories.house_repository import HouseRepository
 from apps.api.repositories.planet_position_repository import PlanetPositionRepository
 from apps.api.schemas.horoscope import (
     AscendantSchema,
     AspectSchema,
+    BirthChartListResponse,
+    BirthChartSummarySchema,
     D1ChartRequest,
     D1ChartResponse,
     HouseCuspSchema,
@@ -73,6 +81,9 @@ def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
         rashi_degree=round(chart.ascendant.rashi_degree, 6),
         nakshatra=chart.ascendant.nakshatra,
         pada=chart.ascendant.pada,
+        nakshatra_lord=chart.ascendant.nakshatra_lord,
+        sub_lord=chart.ascendant.sub_lord,
+        sub_sub_lord=chart.ascendant.sub_sub_lord,
     )
 
     houses = [
@@ -81,6 +92,9 @@ def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
             longitude=round(h.longitude, 6),
             sidereal_longitude=round(h.sidereal_longitude, 6),
             rashi=h.rashi,
+            nakshatra_lord=h.nakshatra_lord,
+            sub_lord=h.sub_lord,
+            sub_sub_lord=h.sub_sub_lord,
         )
         for h in chart.houses
     ]
@@ -98,6 +112,10 @@ def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
             is_combust=p.is_combust,
             combustion_orb=round(p.combustion_orb, 6) if p.combustion_orb is not None else None,
             dignity=p.dignity.value if p.dignity else None,
+            nakshatra_lord=p.nakshatra_lord,
+            sub_lord=p.sub_lord,
+            sub_sub_lord=p.sub_sub_lord,
+            rashi_house_number=p.rashi_house_number,
         )
         for p in chart.planets
     ]
@@ -258,3 +276,57 @@ async def generate_d1_chart(
         ) from exc
 
     return _chart_to_response(chart)
+
+
+@router.get(
+    "/my-charts",
+    response_model=BirthChartListResponse,
+    summary="List the logged-in user's saved charts",
+    description=(
+        "Returns the birth charts saved under the authenticated user's "
+        "account, most recently created first."
+    ),
+    status_code=status.HTTP_200_OK,
+)
+async def list_my_charts(
+    limit: int = 50,
+    offset: int = 0,
+    current_user: User = Depends(get_current_user_from_bearer),
+    session: AsyncSession = Depends(get_db_session),
+) -> BirthChartListResponse:
+    repo = BirthChartRepository(session)
+    user_id = current_user.id.value
+    charts = await repo.list_for_user(user_id, limit=limit, offset=offset)
+    total = await repo.count_for_user(user_id)
+    return BirthChartListResponse(
+        charts=[BirthChartSummarySchema.model_validate(c) for c in charts],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.delete(
+    "/charts/{chart_id}",
+    summary="Delete a saved chart",
+    description=(
+        "Soft-deletes one of the authenticated user's saved charts. The "
+        "underlying row (and its planet positions, houses, divisional "
+        "charts, dashas) is kept in the database with deleted_at set, not "
+        "actually removed — it just stops appearing in my-charts and "
+        "every other chart query."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def delete_chart(
+    chart_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_from_bearer),
+    session: AsyncSession = Depends(get_db_session),
+) -> None:
+    repo = BirthChartRepository(session)
+    deleted = await repo.soft_delete(chart_id, current_user.id.value)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No saved chart with that id, or it isn't yours.",
+        )

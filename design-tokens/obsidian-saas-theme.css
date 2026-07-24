@@ -1,0 +1,249 @@
+/*
+ * AstroOS v2.3 — Obsidian Dark SaaS Theme (Figma-matched)
+ * ==========================================================
+ * Colors matched to Figma "Design AstroOS v2.3 Infographic"
+ *
+ * Palette:
+ *   Canvas:    #0B0E14  (deep dark navy background)
+ *   Surface:   #121824  (card/panel background)
+ *   Border:    #1E2A3A  (subtle borders)
+ *   Primary:   #06CFFF  (cyan glow — Figma primary accent)
+ *   Secondary: #F5A623  (gold — Figma secondary accent)
+ *   Tertiary:  #8B5CF6  (violet — Figma tertiary accent)
+ *   Text:      #F0F4F8  (primary text)
+ *   Muted:     #5A6B80  (secondary/muted text)
+ *
+ * Typography: Outfit (headings) / Inter (body) / JetBrains Mono (mono)
+ * Grid: 8px base, 12-column
+ */
+
+/* ================================================================
+   01. CSS Custom Properties
+   ================================================================ */
+
+:root {
+  /* ── Canvas / Background ── */
+  --obsidian-canvas: #0B0E14;
+  --obsidian-surface: #121824;
+  --obsidian-surface-elevated: #1A2236;
+  --obsidian-surface-hover: #1E2A3A;
+  --obsidian-border: #1E2A3A;
+  --obsidian-border-strong: #2A3A52;
+
+  /* ── Text ── */
+  --obsidian-text-primary: #F0F4F8;
+  --obsidian-text-secondary: #B0BEC5;
+  --obsidian-text-muted: #5A6B80;
+
+  /* ── Primary Accent: Cyan ── */
+  --obsidian-accent-primary: #06CFFF;
+  --obsidian-accent-primary-soft: rgba(6, 207, 255, 0.12);
+  --obsidian-accent-primary-hover: rgba(6, 207, 255, 0.20);
+
+  /* ── Secondary Accent: Gold ── */
+  --obsidian-accent-secondary: #F5A623;
+  --obsidian-accent-secondary-soft: rgba(245, 166, 35, 0.12);
+
+  /* ── Tertiary Accent: Violet ── */
+  --obsidian-accent-tertiary: #8B5CF6;
+  --obsidian-accent-tertiary-soft: rgba(139, 92, 246, 0.12);
+
+  /* ── Status ── */
+  --obsidian-status-success: #22C55E;
+  --obsidian-status-success-bg: rgba(34, 197, 94, 0.10);
+  --obsidian-status-warning: #F59E0B;
+  --obsidian-status-warning-bg: rgba(245, 158, 11, 0.10);
+  --obsidian-status-error: #EF4444;
+  --obsidian-status-error-bg: rgba(239, 68, 68, 0.10);
+  --obsidian-status-info: #06CFFF;
+  --obsidian-status-info-bg: rgba(6, 207, 255, 0.10);
+
+  /* ── Glow Effects (from Figma) ── */
+  --obsidian-glow-cyan: 0 0 24px rgba(6, 207, 255, 0.35);
+  --obsidian-glow-gold: 0 0 24px rgba(245, 166, 35, 0.35);
+  --obsidian-glow-violet: 0 0 24px rgba(139, 92, 246, 0.35);
+
+  /* ── Typography (Outfit / Inter / JetBrains Mono) ── */
+  --font-heading: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Spacing (8px grid) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ── Border Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* ── Z-Index ── */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}
+
+/* ================================================================
+   02. Tailwind Extension Classes (via @apply)
+   ================================================================ */
+
+@layer base {
+  body {
+    @apply antialiased;
+    font-family: var(--font-body);
+    background-color: var(--obsidian-canvas);
+    color: var(--obsidian-text-primary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+}
+
+@layer components {
+  /* ── Buttons ── */
+  .obsidian-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all;
+    background: var(--obsidian-accent-primary);
+    color: #0B0E14;
+    box-shadow: var(--obsidian-glow-cyan);
+  }
+  .obsidian-btn-primary:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 0 32px rgba(6, 207, 255, 0.50);
+  }
+
+  .obsidian-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all;
+    background: var(--obsidian-surface-elevated);
+    color: var(--obsidian-text-primary);
+    border: 1px solid var(--obsidian-border);
+  }
+  .obsidian-btn-secondary:hover {
+    background: var(--obsidian-surface-hover);
+    border-color: var(--obsidian-border-strong);
+  }
+
+  /* ── Inputs ── */
+  .obsidian-input {
+    @apply w-full rounded-lg px-3 py-2 text-sm transition-all outline-none;
+    background: var(--obsidian-surface);
+    color: var(--obsidian-text-primary);
+    border: 1px solid var(--obsidian-border);
+  }
+  .obsidian-input:focus {
+    border-color: var(--obsidian-accent-primary);
+    box-shadow: 0 0 0 2px var(--obsidian-accent-primary-soft);
+  }
+  .obsidian-input::placeholder {
+    color: var(--obsidian-text-muted);
+  }
+
+  /* ── Cards ── */
+  .obsidian-card {
+    @apply rounded-xl transition-all;
+    background: var(--obsidian-surface);
+    border: 1px solid var(--obsidian-border);
+  }
+  .obsidian-card:hover {
+    border-color: var(--obsidian-border-strong);
+  }
+
+  .obsidian-card-glow {
+    @apply rounded-xl transition-all;
+    background: var(--obsidian-surface);
+    border: 1px solid var(--obsidian-border);
+  }
+  .obsidian-card-glow:hover {
+    border-color: var(--obsidian-accent-primary);
+    box-shadow: var(--obsidian-glow-cyan);
+  }
+
+  /* ── Badges ── */
+  .obsidian-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider;
+  }
+  .obsidian-badge-primary {
+    @apply obsidian-badge;
+    background: var(--obsidian-accent-primary-soft);
+    color: var(--obsidian-accent-primary);
+  }
+  .obsidian-badge-gold {
+    @apply obsidian-badge;
+    background: var(--obsidian-accent-secondary-soft);
+    color: var(--obsidian-accent-secondary);
+  }
+  .obsidian-badge-violet {
+    @apply obsidian-badge;
+    background: var(--obsidian-accent-tertiary-soft);
+    color: var(--obsidian-accent-tertiary);
+  }
+
+  /* ── Nav Items ── */
+  .obsidian-nav-module {
+    @apply flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors;
+  }
+  .obsidian-nav-module:hover {
+    background: var(--obsidian-surface-hover);
+  }
+
+  /* ── Active Nav Indicator (Cyan Dot) ── */
+  .obsidian-nav-active-dot {
+    @apply absolute left-0 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full;
+    background: var(--obsidian-accent-primary);
+    box-shadow: 0 0 8px var(--obsidian-accent-primary);
+  }
+
+  /* ── Glow Swatches (from Figma) ── */
+  .obsidian-glow-cyan {
+    box-shadow: var(--obsidian-glow-cyan);
+  }
+  .obsidian-glow-gold {
+    box-shadow: var(--obsidian-glow-gold);
+  }
+  .obsidian-glow-violet {
+    box-shadow: var(--obsidian-glow-violet);
+  }
+
+  /* ── Icon Background ── */
+  .obsidian-icon-bg {
+    @apply flex items-center justify-center rounded-lg;
+    background: var(--obsidian-accent-primary-soft);
+    color: var(--obsidian-accent-primary);
+  }
+
+  /* ── Divider ── */
+  .obsidian-divider {
+    @apply w-full;
+    height: 1px;
+    background: var(--obsidian-border);
+  }
+
+  /* ── Labels ── */
+  .obsidian-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--obsidian-text-muted);
+  }
+}

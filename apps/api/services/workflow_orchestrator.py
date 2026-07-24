@@ -149,7 +149,12 @@ class WorkflowOrchestrator:
         self._rule_engine = RuleEngine()
         self._benchmark_engine = BenchmarkEngine()
 
-    async def analyze(self, request: WorkflowAnalysisRequest) -> WorkflowAnalysisResult:
+    async def analyze(
+        self,
+        request: WorkflowAnalysisRequest,
+        *,
+        user_id: Optional[uuid.UUID] = None,
+    ) -> WorkflowAnalysisResult:
         transit_datetime_utc = request.transit_datetime_utc or datetime.now(timezone.utc)
 
         # ── Chart, Vargas, Dasha, Yoga, Shadbala, Ashtakavarga, Transit ──
@@ -245,6 +250,8 @@ class WorkflowOrchestrator:
             ayanamsa=request.ayanamsa,
             house_system=request.house_system,
             subject_name=request.subject_name,
+            user_id=user_id,
+            place_name=request.place_name,
         )
         if vargas is not None:
             await self._divisional_engine.persist_all(
@@ -254,6 +261,7 @@ class WorkflowOrchestrator:
                 longitude=request.longitude,
                 ayanamsa=request.ayanamsa,
                 house_system=request.house_system,
+                birth_chart_id=chart_id,
             )
 
         # ── Knowledge: best-effort correlation against present yogas ────
@@ -278,7 +286,7 @@ class WorkflowOrchestrator:
                 chart, dasha_system=request.dasha_system, dasha_tree=dasha_tree,
                 yoga_results=yoga_results, shadbala_components=shadbala_components,
                 bhinna_results=bhinna_results, sarva_result=sarva_result,
-                chart_id=chart_id, events=events,
+                chart_id=chart_id, events=events, vargas=vargas,
             )
             verification_findings = VerificationEngine.verify_timeline(timeline)
 
@@ -376,6 +384,7 @@ class WorkflowOrchestrator:
         sarva_result: SarvashtakavargaResult,
         chart_id: uuid.UUID,
         events: list[EventRecord],
+        vargas: Optional[dict[str, VargaChart]] = None,
     ):
         """Builds (natal_snapshot, timeline) for events already recorded
         against this chart. Unlike routers/timeline.py's placeholder

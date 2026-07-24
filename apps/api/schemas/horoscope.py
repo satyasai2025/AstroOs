@@ -6,6 +6,7 @@ The router converts D1Chart domain objects to these schemas.
 No service-layer code here — pure serialisation contracts.
 """
 
+import uuid
 from datetime import datetime
 from typing import Optional
 
@@ -20,6 +21,9 @@ class AscendantSchema(BaseModel):
     rashi_degree: float = Field(description="Degrees within sign (0–30)")
     nakshatra: str = Field(description="Nakshatra name")
     pada: int = Field(description="Pada (1–4)")
+    nakshatra_lord: str = Field(default="", description="Star Lord (KP)")
+    sub_lord: str = Field(default="", description="Sub Lord (KP)")
+    sub_sub_lord: str = Field(default="", description="Sub Sub Lord (KP)")
 
 
 class HouseCuspSchema(BaseModel):
@@ -28,6 +32,9 @@ class HouseCuspSchema(BaseModel):
     longitude: float
     sidereal_longitude: float
     rashi: str
+    nakshatra_lord: str = Field(default="", description="Star Lord (KP)")
+    sub_lord: str = Field(default="", description="Cuspal Sub Lord (KP) — the primary KP significator tool")
+    sub_sub_lord: str = Field(default="", description="Cuspal Sub Sub Lord (KP)")
 
 
 class PlanetPositionSchema(BaseModel):
@@ -36,13 +43,23 @@ class PlanetPositionSchema(BaseModel):
     sidereal_longitude: float
     rashi: str
     rashi_degree: float
-    house_number: int = Field(ge=1, le=12)
+    house_number: int = Field(
+        ge=1, le=12,
+        description="Bhava Chalit (cuspal) house — real cusp-to-cusp span for the requested house_system",
+    )
     nakshatra: str
     pada: int = Field(ge=1, le=4)
     is_retrograde: bool
     is_combust: bool
     combustion_orb: Optional[float] = None
     dignity: Optional[str] = None
+    nakshatra_lord: str = Field(default="", description="Star Lord (KP)")
+    sub_lord: str = Field(default="", description="Sub Lord (KP)")
+    sub_sub_lord: str = Field(default="", description="Sub Sub Lord (KP)")
+    rashi_house_number: int = Field(
+        default=0, ge=0, le=12,
+        description="Rashi (sign-counting) house — signs from the lagna's sign; can differ from house_number",
+    )
 
 
 class AspectSchema(BaseModel):
@@ -151,3 +168,28 @@ class D1ChartResponse(BaseModel):
     ayanamsa_value: float
 
     model_config = {"from_attributes": True}
+
+
+class BirthChartSummarySchema(BaseModel):
+    """One row in a user's saved-charts list."""
+    id: uuid.UUID
+    subject_name: str
+    birth_datetime_utc: datetime
+    birth_latitude: float
+    birth_longitude: float
+    place_name: Optional[str] = None
+    ayanamsa: str
+    house_system: str
+    lagna_rashi: Optional[str] = None
+    moon_nakshatra: Optional[str] = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class BirthChartListResponse(BaseModel):
+    """Paginated list of a user's saved charts."""
+    charts: list[BirthChartSummarySchema]
+    total: int
+    limit: int
+    offset: int

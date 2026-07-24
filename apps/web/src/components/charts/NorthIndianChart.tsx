@@ -4,7 +4,7 @@ import { useEffect, useRef, useMemo } from "react";
 import * as d3 from "d3";
 import {
   RASHIS,
-  RASHI_TO_INDEX,
+  rashiIndexFromApiName,
   PLANET_ABBREV,
   PLANET_SYMBOLS,
 } from "@/lib/astro";
@@ -40,6 +40,12 @@ interface NorthIndianChartProps {
   isVarga?: boolean;
   /** Varga divisor (e.g. 9 for D9). */
   vargaDivisor?: number;
+  /** Called with a planet name on hover-in, and null on hover-out. */
+  onPlanetHover?: (planet: string | null) => void;
+  /** Called with a planet name when clicked (pins the selection). */
+  onPlanetClick?: (planet: string) => void;
+  /** Currently hovered or selected planet — drawn with a highlight ring. */
+  activePlanet?: string | null;
 }
 
 /**
@@ -50,10 +56,20 @@ interface NorthIndianChartProps {
  *   - The outer diamond has 12 houses
  *   - Lines cross through the center forming 4 triangles
  *   - The ascendant (Lagna) house is always at the top
- *   - Houses proceed clockwise: 1(top) → 2 → 3(right) → 4 → 5(bottom) → 6 → 7(left) → 8
- *   - Inner triangle: 9(top) → 10(right) → 11(bottom) → 12(left)
+ *   - Houses proceed COUNTER-CLOCKWISE, per the standard North Indian
+ *     convention: 1(top) → 2(upper-left) → 3(left) → 4(lower-left) →
+ *     5(bottom) → 6(lower-right) → 7(right) → 8(upper-right) → back to 1.
+ *     (South Indian and East Indian style charts use different fixed
+ *     layouts — this component is North Indian style specifically.)
+ *   - Inner ring: 9(top) → 10(left) → 11(bottom) → 12(right), same
+ *     counter-clockwise direction.
  *
- * The diamond is split into 8 outer sections + 4 inner triangles = 12 houses.
+ * The diamond is split into 8 outer sections + 4 inner triangles = 12
+ * houses. Note this is a simplified schematic (evenly-spaced compass
+ * positions), not a pixel-accurate reproduction of the traditional
+ * kite/triangle house shapes — house-number direction is classically
+ * correct, but houses 1/4/7/10 (Kendras) aren't drawn as the larger
+ * quadrilaterals a hand-drawn chart would use.
  */
 export function NorthIndianChart({
   title,
@@ -63,15 +79,18 @@ export function NorthIndianChart({
   showFullNames = true,
   isVarga = false,
   vargaDivisor,
+  onPlanetHover,
+  onPlanetClick,
+  activePlanet,
 }: NorthIndianChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Map planets into their houses based on rashi placement
   const housePlanets = useMemo(() => {
-    const ascIdx = RASHI_TO_INDEX[ascendant.rashi] ?? 0;
+    const ascIdx = rashiIndexFromApiName(ascendant.rashi);
     const map: Record<number, PlanetPlacement[]> = {};
     for (const p of planets) {
-      const pIdx = RASHI_TO_INDEX[p.rashi] ?? 0;
+      const pIdx = rashiIndexFromApiName(p.rashi);
       const house = ((pIdx - ascIdx + 12) % 12) + 1;
       if (!map[house]) map[house] = [];
       map[house].push(p);
@@ -81,7 +100,7 @@ export function NorthIndianChart({
 
   // Map rashi label for each house
   const houseRashis = useMemo(() => {
-    const ascIdx = RASHI_TO_INDEX[ascendant.rashi] ?? 0;
+    const ascIdx = rashiIndexFromApiName(ascendant.rashi);
     const map: Record<number, string> = {};
     for (let h = 1; h <= 12; h++) {
       map[h] = RASHIS[(ascIdx + h - 1) % 12];
@@ -154,38 +173,41 @@ export function NorthIndianChart({
       .style("stroke", lineColor).style("stroke-width", 1);
 
     // ── House positions (centroids for placing text) ───────────────────────
-    // North Indian chart house positions (12 houses in the diamond)
+    // North Indian chart house positions (12 houses in the diamond).
+    // Numbering runs COUNTER-CLOCKWISE from the top (house 1), per the
+    // standard convention — e.g. house 4 sits on the LEFT and house 10 on
+    // the RIGHT, not the other way around.
     const housePositions: { house: number; x: number; y: number }[] = [
       // Outer triangle positions (houses 1-8)
       { house: 1, x: cx, y: cy - r * 0.65 },          // top center
-      { house: 2, x: cx + r * 0.55, y: cy - r * 0.4 }, // upper right
-      { house: 3, x: cx + r * 0.65, y: cy },            // right
-      { house: 4, x: cx + r * 0.55, y: cy + r * 0.4 },  // lower right
+      { house: 2, x: cx - r * 0.55, y: cy - r * 0.4 }, // upper left
+      { house: 3, x: cx - r * 0.65, y: cy },            // left
+      { house: 4, x: cx - r * 0.55, y: cy + r * 0.4 },  // lower left
       { house: 5, x: cx, y: cy + r * 0.65 },           // bottom center
-      { house: 6, x: cx - r * 0.55, y: cy + r * 0.4 },  // lower left
-      { house: 7, x: cx - r * 0.65, y: cy },            // left
-      { house: 8, x: cx - r * 0.55, y: cy - r * 0.4 },  // upper left
+      { house: 6, x: cx + r * 0.55, y: cy + r * 0.4 },  // lower right
+      { house: 7, x: cx + r * 0.65, y: cy },            // right
+      { house: 8, x: cx + r * 0.55, y: cy - r * 0.4 },  // upper right
       // Inner triangle positions (houses 9-12)
       { house: 9, x: cx, y: cy - halfR * 0.45 },        // inner top
-      { house: 10, x: cx + halfR * 0.45, y: cy },        // inner right
+      { house: 10, x: cx - halfR * 0.45, y: cy },        // inner left
       { house: 11, x: cx, y: cy + halfR * 0.45 },        // inner bottom
-      { house: 12, x: cx - halfR * 0.45, y: cy },        // inner left
+      { house: 12, x: cx + halfR * 0.45, y: cy },        // inner right
     ];
 
     // ── Rashi labels (small, in each house corner) ─────────────────────────
     const rashiPositions: { house: number; x: number; y: number }[] = [
       { house: 1, x: cx, y: cy - r * 0.95 },
-      { house: 2, x: cx + r * 0.85, y: cy - r * 0.6 },
-      { house: 3, x: cx + r * 0.95, y: cy },
-      { house: 4, x: cx + r * 0.85, y: cy + r * 0.6 },
+      { house: 2, x: cx - r * 0.85, y: cy - r * 0.6 },
+      { house: 3, x: cx - r * 0.95, y: cy },
+      { house: 4, x: cx - r * 0.85, y: cy + r * 0.6 },
       { house: 5, x: cx, y: cy + r * 0.95 },
-      { house: 6, x: cx - r * 0.85, y: cy + r * 0.6 },
-      { house: 7, x: cx - r * 0.95, y: cy },
-      { house: 8, x: cx - r * 0.85, y: cy - r * 0.6 },
-      { house: 9, x: cx + halfR * 0.3, y: cy - halfR * 0.7 },
-      { house: 10, x: cx + halfR * 0.7, y: cy + halfR * 0.3 },
-      { house: 11, x: cx - halfR * 0.3, y: cy + halfR * 0.7 },
-      { house: 12, x: cx - halfR * 0.7, y: cy - halfR * 0.3 },
+      { house: 6, x: cx + r * 0.85, y: cy + r * 0.6 },
+      { house: 7, x: cx + r * 0.95, y: cy },
+      { house: 8, x: cx + r * 0.85, y: cy - r * 0.6 },
+      { house: 9, x: cx - halfR * 0.3, y: cy - halfR * 0.7 },
+      { house: 10, x: cx - halfR * 0.7, y: cy + halfR * 0.3 },
+      { house: 11, x: cx + halfR * 0.3, y: cy + halfR * 0.7 },
+      { house: 12, x: cx + halfR * 0.7, y: cy - halfR * 0.3 },
     ];
 
     const chartText = "var(--chart-text)";
@@ -210,7 +232,9 @@ export function NorthIndianChart({
     housePositions.forEach(({ house, x: hx, y: hy }) => {
       // Small house number indicator
       if (house <= 8) {
-        const angle = ((house - 1) * 45 - 90) * (Math.PI / 180);
+        // Negative increment — same counter-clockwise direction as the
+        // house/rashi position tables above.
+        const angle = (-(house - 1) * 45 - 90) * (Math.PI / 180);
         const labelR = r * 1.06;
         const lx = cx + labelR * Math.cos(angle);
         const ly = cy + labelR * Math.sin(angle);
@@ -240,13 +264,28 @@ export function NorthIndianChart({
         const abbrev = PLANET_ABBREV[planet.planet] ?? planet.planet.slice(0, 2);
         const symbol = PLANET_SYMBOLS[planet.planet] ?? "";
         const isAsc = i === 0 && house === 1;
+        const isActive = activePlanet === planet.planet;
 
         // Stack planets vertically if multiple in same house
         const offsetX = ps.length > 1 ? (i - (ps.length - 1) / 2) * 30 : 0;
         const py = pos.y + 6; // slight offset below center
 
         const g = svg.append("g")
-          .attr("transform", `translate(${pos.x + offsetX}, ${py})`);
+          .attr("transform", `translate(${pos.x + offsetX}, ${py})`)
+          .style("cursor", onPlanetHover || onPlanetClick ? "pointer" : "default")
+          .on("mouseenter", () => onPlanetHover?.(planet.planet))
+          .on("mouseleave", () => onPlanetHover?.(null))
+          .on("click", () => onPlanetClick?.(planet.planet));
+
+        // Highlight ring behind the active (hovered/selected) planet
+        if (isActive) {
+          g.append("circle")
+            .attr("cx", 0)
+            .attr("cy", -2)
+            .attr("r", 16)
+            .style("fill", "var(--accent)")
+            .style("opacity", 0.18);
+        }
 
         // Planet symbol
         g.append("text")
@@ -263,7 +302,7 @@ export function NorthIndianChart({
           .attr("y", 6)
           .attr("text-anchor", "middle")
           .style("font-size", "11px")
-          .style("font-weight", "bold")
+          .style("font-weight", isActive ? "900" : "bold")
           .style("fill", isAsc ? ascColor : accentColor)
           .text(abbrev);
 
@@ -305,7 +344,7 @@ export function NorthIndianChart({
         .text("LAGNA");
     }
 
-  }, [size, housePlanets, houseRashis, ascendant.rashi]);
+  }, [size, housePlanets, houseRashis, ascendant.rashi, activePlanet, onPlanetHover, onPlanetClick]);
 
   const chartTitle =
     title ??
@@ -347,14 +386,27 @@ export function NorthIndianChart({
           {planets.map((p) => {
             const abbrev = PLANET_ABBREV[p.planet] ?? p.planet.slice(0, 2);
             const full = p.planet;
+            const isActive = activePlanet === p.planet;
             return (
-              <span key={p.planet} className="flex items-center gap-1">
-                <span style={{ color: "var(--accent)" }}>{abbrev}</span>
+              <button
+                key={p.planet}
+                type="button"
+                className="flex items-center gap-1 rounded px-1 transition"
+                style={{
+                  backgroundColor: isActive ? "var(--accent)" : "transparent",
+                  color: isActive ? "var(--accent-text)" : undefined,
+                  cursor: onPlanetHover || onPlanetClick ? "pointer" : "default",
+                }}
+                onMouseEnter={() => onPlanetHover?.(p.planet)}
+                onMouseLeave={() => onPlanetHover?.(null)}
+                onClick={() => onPlanetClick?.(p.planet)}
+              >
+                <span style={{ color: isActive ? "inherit" : "var(--accent)" }}>{abbrev}</span>
                 <span>{full}</span>
                 {p.is_retrograde && (
-                  <span style={{ color: "var(--chart-ascendant)" }}>(R)</span>
+                  <span style={{ color: isActive ? "inherit" : "var(--chart-ascendant)" }}>(R)</span>
                 )}
-              </span>
+              </button>
             );
           })}
         </div>

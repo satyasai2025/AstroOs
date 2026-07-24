@@ -406,6 +406,39 @@ async def compute_dina_hora(
 
 
 @router.post(
+    "/ishta-kashta",
+    response_model=dict,
+    summary="Compute Ishta + Kashta Bala",
+    description=(
+        "Benefic (Ishta) and malefic (Kashta) strength, derived from "
+        "Uchcha Bala x Chesta Bala — needs only the already-built D1 "
+        "chart. Scoped to the 5 planets Chesta Bala covers here "
+        "(Mars/Mercury/Jupiter/Venus/Saturn); Sun/Moon are omitted rather "
+        "than given a fabricated figure."
+    ),
+)
+async def compute_ishta_kashta(
+    body: ShadbalaRequest,
+    horoscope_engine: HoroscopeEngine = Depends(_get_horoscope_engine),
+    engine: ShadbalaEngine = Depends(_get_shadbala_engine),
+) -> dict:
+    chart = await _build_chart(horoscope_engine, body)
+    try:
+        components = await asyncio.to_thread(engine.compute_ishta_kashta_bala, chart)
+    except Exception as exc:
+        logger.exception("Error computing Ishta/Kashta Bala: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to compute Ishta/Kashta Bala.",
+        ) from exc
+
+    return {
+        "ishta_bala": _serialise_list(components["ishta_bala"]),
+        "kashta_bala": _serialise_list(components["kashta_bala"]),
+    }
+
+
+@router.post(
     "/all",
     response_model=AllShadbalaResponse,
     summary="Compute every implemented Shadbala component",
@@ -454,6 +487,7 @@ async def compute_all_shadbala(
         dina_hora = await asyncio.to_thread(
             engine.compute_dina_hora_bala, chart, latitude=body.latitude, longitude=body.longitude
         )
+        ishta_kashta = await asyncio.to_thread(engine.compute_ishta_kashta_bala, chart)
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
@@ -487,6 +521,8 @@ async def compute_all_shadbala(
         tribhaga_bala=_serialise_list(tribhaga),
         nathonnata_bala=_serialise_list(nathonnata),
         dina_hora_bala=_serialise_list(dina_hora),
+        ishta_bala=_serialise_list(ishta_kashta["ishta_bala"]),
+        kashta_bala=_serialise_list(ishta_kashta["kashta_bala"]),
         implemented_components=engine.implemented_components(),
         not_yet_implemented_components=engine.not_yet_implemented_components(),
     )

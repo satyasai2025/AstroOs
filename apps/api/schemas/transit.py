@@ -111,6 +111,25 @@ class TransitPlanetResponse(BaseModel):
         default=False, description="Bad-house effect is currently relieved by vedha_planet."
     )
     vedha_planet: Optional[str] = None
+    transit_nakshatra_sbc: str = Field(
+        default="",
+        description=(
+            "28-system (Abhijit-aware) nakshatra on the Sarvatobhadra Chakra grid — "
+            "scoped only to Nakshatra Vedha; every other nakshatra field in this API "
+            "uses the standard 27-system."
+        ),
+    )
+    has_nakshatra_vedha: bool = Field(
+        default=False,
+        description="A different planet currently occupies this planet's SBC Vedha target nakshatra.",
+    )
+    nakshatra_vedha_planet: Optional[str] = None
+    nakshatra_vedha_type: Optional[str] = Field(
+        default=None, description="'forward' (direct motion) or 'backward' (retrograde)."
+    )
+    nakshatra_vedha_target: Optional[str] = Field(
+        default=None, description="The SBC nakshatra this planet's Vedha ray points at."
+    )
     rule_version: str = "1.0"
 
 

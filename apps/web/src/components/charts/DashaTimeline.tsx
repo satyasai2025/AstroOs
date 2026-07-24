@@ -55,24 +55,61 @@ function computeCountdown(endDate: string): string {
 }
 
 /**
- * Flatten the dasha tree to find the current running period
- * (the one whose start <= now <= end).
+ * Flatten the dasha tree to find the period active at a given instant
+ * (the one whose start <= at <= end) — generalizes the old "current
+ * period" lookup (which was always pinned to `new Date()`) so the same
+ * logic can answer "what period was active on this OTHER date" for the
+ * date-jump navigation control.
  */
-function findCurrentPeriod(periods: DashaPeriodResponse[]): DashaPeriodResponse | null {
-  const now = new Date();
+function findPeriodAt(periods: DashaPeriodResponse[], at: Date): DashaPeriodResponse | null {
   for (const p of periods) {
     const start = new Date(p.start_date);
     const end = new Date(p.end_date);
-    if (now >= start && now <= end) {
-      // Try to find a more granular child period
-      if (p.children.length > 0) {
-        const child = findCurrentPeriod(p.children);
+    if (at >= start && at <= end) {
+      if (p.sub_periods.length > 0) {
+        const child = findPeriodAt(p.sub_periods, at);
         if (child) return child;
       }
       return p;
     }
   }
   return null;
+}
+
+function findCurrentPeriod(periods: DashaPeriodResponse[]): DashaPeriodResponse | null {
+  return findPeriodAt(periods, new Date());
+}
+
+/**
+ * Dasha Sandhi (junction) — the transition zone at the boundary between
+ * two consecutive periods at the SAME level, classically considered an
+ * unstable/weak window. Classical texts don't agree on one universal
+ * exact fraction (unlike, say, Uchcha Bala's exaltation-degree formula),
+ * so this uses the commonly-repeated heuristic of the last/first 1/8 of
+ * each adjacent period's own duration — an approximation, not a verified
+ * classical-text-exact figure. Labeled as such in the UI, same honesty
+ * standard as this codebase's other approximated components (e.g. Chesta
+ * Bala, Drik Bala).
+ */
+const SANDHI_FRACTION = 1 / 8;
+
+function sandhiWindowsForLevel(periods: DashaPeriodResponse[]): { start: Date; end: Date }[] {
+  const windows: { start: Date; end: Date }[] = [];
+  for (let i = 0; i < periods.length - 1; i++) {
+    const a = periods[i];
+    const b = periods[i + 1];
+    const aStart = new Date(a.start_date).getTime();
+    const aEnd = new Date(a.end_date).getTime();
+    const bStart = new Date(b.start_date).getTime();
+    const bEnd = new Date(b.end_date).getTime();
+    const preWindow = (aEnd - aStart) * SANDHI_FRACTION;
+    const postWindow = (bEnd - bStart) * SANDHI_FRACTION;
+    windows.push({
+      start: new Date(aEnd - preWindow),
+      end: new Date(bStart + postWindow),
+    });
+  }
+  return windows;
 }
 
 /**
@@ -86,11 +123,11 @@ function findNextPeriod(
     if (new Date(md.start_date) > now) return md;
     if (new Date(md.end_date) > now) {
       // We're inside this mahadasha — check its antardashas
-      if (md.children.length > 0) {
-        for (const ad of md.children) {
+      if (md.sub_periods.length > 0) {
+        for (const ad of md.sub_periods) {
           if (new Date(ad.start_date) > now) return ad;
-          if (new Date(ad.end_date) > now && ad.children.length > 0) {
-            return findNextPeriod(ad.children) ?? ad;
+          if (new Date(ad.end_date) > now && ad.sub_periods.length > 0) {
+            return findNextPeriod(ad.sub_periods) ?? ad;
           }
         }
       }
@@ -111,6 +148,9 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<DashaPeriodResponse | null>(null);
   const [countdownTarget, setCountdownTarget] = useState<string | null>(null);
   const [countdownText, setCountdownText] = useState<string>("");
+  const [zoomTransform, setZoomTransform] = useState<d3.ZoomTransform>(d3.zoomIdentity);
+  const [jumpDate, setJumpDate] = useState<string>("");
+  const zoomBehaviorRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
 
   // Observe container width for responsive sizing
   useEffect(() => {
@@ -183,9 +223,28 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
       dasha.mahadashas[dasha.mahadashas.length - 1]?.end_date ?? now,
     );
 
-    const xScale = d3.scaleTime()
+    const baseXScale = d3.scaleTime()
       .domain([startDate, endDate])
       .range([0, innerWidth]);
+
+    // Zoomable — the visible xScale is the base scale rescaled by
+    // whatever zoom/pan transform the user (or the date-jump control)
+    // has applied. Zoom state itself lives in React (zoomTransform), not
+    // recomputed here, so panning/zooming doesn't fight with re-renders.
+    const xScale = zoomTransform.rescaleX(baseXScale);
+
+    const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([1, 40])
+      .translateExtent([[0, 0], [innerWidth, innerHeight]])
+      .extent([[0, 0], [innerWidth, innerHeight]])
+      .on("zoom", (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
+        setZoomTransform(event.transform);
+      });
+    zoomBehaviorRef.current = zoomBehavior;
+    svg.call(zoomBehavior);
+    // Keep d3-zoom's internal transform in sync with React state without
+    // re-triggering the "zoom" handler (avoids an infinite render loop).
+    svg.property("__zoom", zoomTransform);
 
     // Mahadasha band (top row)
     const mdHeight = innerHeight * 0.4;
@@ -263,7 +322,7 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
       const mdX = xScale(new Date(md.start_date));
       const mdW = xScale(new Date(md.end_date)) - mdX;
 
-      md.children.forEach((ad) => {
+      md.sub_periods.forEach((ad) => {
         const adX = xScale(new Date(ad.start_date));
         const adW = Math.max(1, xScale(new Date(ad.end_date)) - adX);
         const isCurrentAD =
@@ -297,7 +356,7 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
         }
 
         // Pratyantar dasha blocks
-        ad.children.forEach((pd) => {
+        ad.sub_periods.forEach((pd) => {
           const pdX = xScale(new Date(pd.start_date));
           const pdW = Math.max(1, xScale(new Date(pd.end_date)) - pdX);
           const isCurrentPD =
@@ -333,6 +392,41 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
       });
     });
 
+    // ── Dasha Sandhi (junction) overlays ── see sandhiWindowsForLevel()'s
+    // doc-comment for the "1/8 of each adjacent period" heuristic and its
+    // honesty caveat. Drawn as a diagonal-hatched band spanning both the
+    // Mahadasha and Antardasha rows at each same-level junction.
+    const sandhiPattern = svg.append("defs")
+      .append("pattern")
+      .attr("id", "sandhi-hatch")
+      .attr("width", 6)
+      .attr("height", 6)
+      .attr("patternTransform", "rotate(45)")
+      .attr("patternUnits", "userSpaceOnUse");
+    sandhiPattern.append("rect").attr("width", 6).attr("height", 6).attr("fill", "transparent");
+    sandhiPattern.append("line")
+      .attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 6)
+      .attr("stroke", "#f97316").attr("stroke-width", 2).attr("stroke-opacity", 0.5);
+
+    for (const w of sandhiWindowsForLevel(dasha.mahadashas)) {
+      const x = xScale(w.start);
+      const wid = Math.max(1, xScale(w.end) - x);
+      g.append("rect")
+        .attr("x", x).attr("y", 0).attr("width", wid).attr("height", mdHeight)
+        .attr("fill", "url(#sandhi-hatch)")
+        .attr("pointer-events", "none");
+    }
+    dasha.mahadashas.forEach((md) => {
+      for (const w of sandhiWindowsForLevel(md.sub_periods)) {
+        const x = xScale(w.start);
+        const wid = Math.max(1, xScale(w.end) - x);
+        g.append("rect")
+          .attr("x", x).attr("y", mdHeight + 4).attr("width", wid).attr("height", adHeight)
+          .attr("fill", "url(#sandhi-hatch)")
+          .attr("pointer-events", "none");
+      }
+    });
+
     // ── Current time indicator line ──
     const nowX = xScale(now);
     if (nowX >= 0 && nowX <= innerWidth) {
@@ -355,11 +449,13 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
         .text("NOW");
     }
 
-    // ── Time axis ──
-    const timeFormatter = d3.timeFormat("%Y");
+    // ── Time axis ── auto ticks (not a fixed 5-year interval) so the
+    // axis stays readable whether zoomed out to decades or in to months.
+    const yearFormatter = d3.timeFormat("%Y");
+    const monthFormatter = d3.timeFormat("%b %Y");
     const xAxis = d3.axisBottom(xScale)
-      .ticks(d3.timeYear.every(5))
-      .tickFormat((d) => timeFormatter(d as Date));
+      .ticks(8)
+      .tickFormat((d) => (zoomTransform.k > 6 ? monthFormatter(d as Date) : yearFormatter(d as Date)));
 
     const axisGroup = g.append("g")
       .attr("transform", `translate(0,${innerHeight})`);
@@ -371,7 +467,58 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
     g.selectAll(".domain").style("stroke", "var(--border-primary)");
     g.selectAll(".tick line").style("stroke", "var(--border-primary)");
 
-  }, [dasha, containerWidth, height, currentPeriod, currentTime, now]);
+  }, [dasha, containerWidth, height, currentPeriod, currentTime, now, zoomTransform]);
+
+  // ── Date-jump navigation ── centers the timeline on an arbitrary date
+  // (not just "now") and selects whatever period was active then.
+  const jumpToDate = useCallback(
+    (dateStr: string) => {
+      if (!dateStr || !svgRef.current) return;
+      const target = new Date(dateStr);
+      if (Number.isNaN(target.getTime())) return;
+
+      const periodAtDate = findPeriodAt(dasha.mahadashas, target);
+      if (periodAtDate) {
+        setSelectedPeriod(periodAtDate);
+        setCountdownTarget(periodAtDate.end_date);
+      }
+
+      const startDate = new Date(dasha.mahadashas[0]?.start_date ?? target);
+      const endDate = new Date(dasha.mahadashas[dasha.mahadashas.length - 1]?.end_date ?? target);
+      const margin = { left: 20, right: 20 };
+      const innerWidth = containerWidth - margin.left - margin.right;
+      const baseXScale = d3.scaleTime().domain([startDate, endDate]).range([0, innerWidth]);
+
+      // Zoom in to roughly a 4-year window centered on the target date.
+      const fullSpanMs = endDate.getTime() - startDate.getTime();
+      const windowMs = 4 * 365 * 24 * 60 * 60 * 1000;
+      const scale = Math.min(40, Math.max(1, fullSpanMs / windowMs));
+      const targetX = baseXScale(target);
+      const translateX = innerWidth / 2 - targetX * scale;
+      const transform = d3.zoomIdentity.translate(translateX, 0).scale(scale);
+
+      if (zoomBehaviorRef.current) {
+        d3.select(svgRef.current)
+          .transition()
+          .duration(500)
+          .call(zoomBehaviorRef.current.transform, transform);
+      } else {
+        setZoomTransform(transform);
+      }
+    },
+    [dasha, containerWidth],
+  );
+
+  const resetZoom = useCallback(() => {
+    if (zoomBehaviorRef.current && svgRef.current) {
+      d3.select(svgRef.current)
+        .transition()
+        .duration(400)
+        .call(zoomBehaviorRef.current.transform, d3.zoomIdentity);
+    } else {
+      setZoomTransform(d3.zoomIdentity);
+    }
+  }, []);
 
   return (
     <div
@@ -392,12 +539,38 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
             {dasha.total_cycle_years} year cycle
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            Click any period to see details
-          </p>
+        <div className="flex items-center gap-2">
+          <label htmlFor="dasha-jump-date" className="sr-only">
+            Jump to date
+          </label>
+          <input
+            id="dasha-jump-date"
+            type="date"
+            value={jumpDate}
+            onChange={(e) => {
+              setJumpDate(e.target.value);
+              jumpToDate(e.target.value);
+            }}
+            className="field-input px-2 py-1 text-xs"
+            style={{ colorScheme: "dark" }}
+            aria-label="Jump timeline to a specific date"
+          />
+          <button
+            type="button"
+            onClick={resetZoom}
+            className="btn-ghost px-2 py-1 text-xs"
+            aria-label="Reset timeline zoom"
+          >
+            Reset zoom
+          </button>
         </div>
       </div>
+
+      <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+        Click any period for details · scroll/pinch on the timeline to zoom, drag to pan · orange
+        hatching marks Dasha Sandhi (junction) windows — an approximate transition zone, not an
+        exact classical figure (see tooltip).
+      </p>
 
       {/* Legend */}
       <div

@@ -79,11 +79,11 @@ async def get_research_mode(
 ) -> ResearchModeResponse:
     """Check if research mode is enabled for the current user."""
     service = QueryLogService(session)
-    enabled = await service.is_research_mode(current_user.id)
-    count = await service.count_logs(user_id=current_user.id)
+    enabled = await service.is_research_mode(current_user.id.value)
+    count = await service.count_logs(user_id=current_user.id.value)
     return ResearchModeResponse(
         enabled=enabled,
-        user_id=current_user.id,
+        user_id=current_user.id.value,
         total_logged_queries=count,
     )
 
@@ -96,12 +96,12 @@ async def set_research_mode(
 ) -> ResearchModeResponse:
     """Enable or disable research mode for the current user."""
     service = QueryLogService(session)
-    await service.set_research_mode(current_user.id, body.enabled)
-    enabled = await service.is_research_mode(current_user.id)
-    count = await service.count_logs(user_id=current_user.id)
+    await service.set_research_mode(current_user.id.value, body.enabled)
+    enabled = await service.is_research_mode(current_user.id.value)
+    count = await service.count_logs(user_id=current_user.id.value)
     return ResearchModeResponse(
         enabled=enabled,
-        user_id=current_user.id,
+        user_id=current_user.id.value,
         total_logged_queries=count,
     )
 
@@ -117,9 +117,9 @@ async def list_query_logs(
     """List query logs for the current user."""
     service = QueryLogService(session)
     logs = await service.get_logs(
-        user_id=current_user.id, action=action, limit=limit, offset=offset
+        user_id=current_user.id.value, action=action, limit=limit, offset=offset
     )
-    total = await service.count_logs(user_id=current_user.id, action=action)
+    total = await service.count_logs(user_id=current_user.id.value, action=action)
     return QueryLogListResponse(
         logs=[_log_to_response(l) for l in logs],
         total=total,
@@ -135,7 +135,7 @@ async def clear_query_logs(
 ) -> None:
     """Clear all query logs for the current user."""
     service = QueryLogService(session)
-    await service.clear_logs(user_id=current_user.id)
+    await service.clear_logs(user_id=current_user.id.value)
 
 
 # ── Hypothesis Validation ──────────────────────────────────────────────────
@@ -223,11 +223,11 @@ async def update_validation(
     service = HypothesisValidationService(session)
     if body.status == "confirmed":
         validation = await service.confirm_hypothesis(
-            validation_id, current_user.id, notes=body.reviewer_notes
+            validation_id, current_user.id.value, notes=body.reviewer_notes
         )
     elif body.status == "rejected":
         validation = await service.reject_hypothesis(
-            validation_id, current_user.id, notes=body.reviewer_notes
+            validation_id, current_user.id.value, notes=body.reviewer_notes
         )
     else:
         raise HTTPException(

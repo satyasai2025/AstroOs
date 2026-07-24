@@ -1,0 +1,104 @@
+
+
+Is tarah ka complete Product Blueprint / Presentation UI banane ke liye Claude ko dene ke liye prompt framework yeh raha:
+
+---
+
+## 1. Claude Prompt Framework (System Architecture Blueprint)
+
+Claude ko ye prompt paste karke do:
+
+```text
+Act as a Principal Product Architect and Lead UI/UX Designer. Create a comprehensive, multi-section product architecture layout dashboard (like the AstroOS Blueprint UI) using React and Tailwind CSS.
+
+### Overall Visual Style
+- Theme: Ultra-clean Dark Theme (`#0B0E14` main canvas, `#121824` components/cards, `#1F293D` crisp 1px borders).
+- Layout: Multi-panel grid with distinct numbered sections (1. Dashboard, 2. Interactive Workspace, 3. User Flow, 4. Architecture Overview, 5. Data Flow, 6. Key Highlights).
+- Color Accent System:
+  - Section Indicators: Purple/Blue neon pill badges.
+  - Active Controls: Bright Indigo (`#6366F1`) & Emerald Green (`#10B981`).
+  - Diagram Connectors: Subtle purple/gray dashed SVG arrows.
+
+---
+
+### Section Requirements
+
+1. SECTION 1: DASHBOARD (Top Left)
+   - Left fixed navigation sidebar with organized categories (CHARTS, ANALYSIS, RESEARCH, AI & INSIGHTS).
+   - Top Stat summary cards (Total Charts, Active Dashas, Active Yogas) with subtle glowing icon boxes.
+   - Main content cards with dark glassmorphic styling, progress bars, and status tags (Strong, Moderate).
+
+2. SECTION 2: INTERACTIVE WORKSPACE (Top Right)
+   - Kundli Chart Canvas: Dark background chart grid with neon blue/gold planet positions.
+   - Side Data Panel: Tabbed navigation (Details, Strength, Aspects, Yogas) showing key metrics in clean table rows.
+   - Floating control bar at bottom of chart (Zoom, Pan, Select, Undo, Reset).
+
+3. SECTION 3 & 5: USER FLOW & DATA FLOW DIAGRAMS (Bottom Left)
+   - Step-by-step horizontal process cards (Numbered 1 to 6).
+   - Diagram flow with dashed SVG connecting arrows between steps.
+   - Flow sequence: User Input -> Validation -> Ephemeris Calculation -> Chart Computation -> DB Storage -> Render Display -> Real-time Updates.
+
+4. SECTION 4: ARCHITECTURE & BACKEND (Middle Right)
+   - Tech Stack System Diagram divided into columns:
+     * CLIENT LAYER (Next.js / Web UI)
+     * SERVICE LAYER (FastAPI microservices: Chart, Dasha, Transit, AI Engine)
+     * DATA LAYER (PostgreSQL)
+     * EXTERNAL ENGINES (Swiss Ephemeris, Timezone DB)
+   - HTTPS/REST & WebSocket bidirectional arrows between Client and Service layers.
+
+5. SECTION 6: HIGHLIGHTS & FOOTER BADGES (Bottom Right & Base)
+   - Grid of feature highlight cards with glowing icons (Interactive Chart, Multi-chart Support, Accurate Calculations, AI-Powered).
+   - Footer security/architecture tags: [Secure], [Scalable], [Research-Driven], [AI Enhanced], [Privacy First].
+
+Generate clean, highly modular React components with Tailwind CSS for this architecture canvas.
+
+```
+
+---
+
+## 2. Key UI Patterns (Design Techniques)
+
+Aise layout ke liye kuch important CSS / Tailwind tricks jo Claude se request karni hain:
+
+### A. Numbered Section Headers (Header Badges)
+
+Diagram/Flow layout me visual order lane ke liye text pill badges zaroori hote hain:
+
+```jsx
+{/* Section Tag Component */}
+<div className="flex items-center gap-2 mb-4">
+  <span className="bg-indigo-950 text-indigo-400 border border-indigo-800 text-xs font-bold px-2.5 py-1 rounded-md">
+    3. USER FLOW
+  </span>
+  <h2 className="text-sm font-semibold text-slate-200 uppercase tracking-wider">
+    How Interactive Kundli Works
+  </h2>
+</div>
+
+```
+
+### B. Flow Arrows (Data Flow Connectors)
+
+Process flows ke beech subtle arrows pane ke liye flex gap aur Lucide SVG icons use karo:
+
+```jsx
+{/* Step Card with Connector Arrow */}
+<div className="flex items-center gap-3">
+  <div className="bg-[#121824] border border-[#1F293D] p-3 rounded-lg text-center w-36">
+    <p className="text-xs text-slate-400">Step 1</p>
+    <p className="text-sm font-medium text-white">User Input</p>
+  </div>
+  {/* Connected Arrow */}
+  <span className="text-indigo-500 font-bold">→</span>
+</div>
+
+```
+
+---
+
+## 3. Top Pro-Tip Claude se Output Nikalwane Ke Liye
+
+
+1. **First Prompt:** Design System + Top Architecture Layout structure maango.
+2. **Second Prompt:** *"Now write Section 2 (Interactive Chart & Side Details Panel)"*
+3. **Third Prompt:** *"Now write Section 4 & 5 (FastAPI Architecture & Data Flow Diagrams)"*

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { useWorkflowStore } from "@/lib/store";
-import { VARGA_DIVISORS, RASHI_LORDS } from "@/lib/astro";
+import { VARGA_DIVISORS } from "@/lib/astro";
 
 /**
  * /charts/compare — Side-by-side D1 + D9 chart comparison view.

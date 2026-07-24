@@ -19,17 +19,22 @@ from fastapi.responses import JSONResponse
 from timezonefinder import TimezoneFinder
 
 from apps.api.config import get_settings
-from apps.api.dependencies import require_admin, require_authenticated, require_researcher
+from apps.api.dependencies import (
+    require_admin,
+    require_authenticated,
+    require_researcher,
+)
 from apps.api.routers import admin as admin_router
+from apps.api.routers import admin_auth as admin_auth_router
 from apps.api.routers import ai as ai_router
 from apps.api.routers import ai_phase_e as ai_phase_e_router
-from apps.api.routers import batch as batch_router
-from apps.api.routers import benchmark as benchmark_router
-from apps.api.routers import dataset_import as dataset_import_router
-from apps.api.routers import datasets as datasets_router
 from apps.api.routers import ashtakavarga as ashtakavarga_router
 from apps.api.routers import auth
+from apps.api.routers import batch as batch_router
+from apps.api.routers import benchmark as benchmark_router
 from apps.api.routers import dasha as dasha_router
+from apps.api.routers import dataset_import as dataset_import_router
+from apps.api.routers import datasets as datasets_router
 from apps.api.routers import divisional as divisional_router
 from apps.api.routers import events as events_router
 from apps.api.routers import export as export_router
@@ -41,6 +46,7 @@ from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import report as report_router
 from apps.api.routers import research as research_router
 from apps.api.routers import research_tools as research_tools_router
+from apps.api.routers import avastha as avastha_router
 from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
 from apps.api.routers import timeline as timeline_router
@@ -48,6 +54,7 @@ from apps.api.routers import transit as transit_router
 from apps.api.routers import transit_patterns as transit_patterns_router
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
+from apps.api.routers import ws as ws_router
 from apps.api.routers import yoga as yoga_router
 from apps.api.schemas.auth import HealthResponse
 from apps.api.schemas.ephemeris import EphemerisStatusSchema
@@ -193,6 +200,25 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Rate limiting (Phase 10 cleanup, 2026-07-23): setup_rate_limiting()
+    # and the `limiter` instance already existed in
+    # apps/api/middleware/rate_limit.py but were never wired in anywhere
+    # — the retroactive security review flagged POST /workflow/analyze
+    # (the CPU-expensive full pipeline: D1 + 15 vargas + dasha + yogas +
+    # shadbala + ashtakavarga + transits + rules, all per request) as
+    # reachable with zero throttling by any authenticated user. This
+    # activates the global per-remote-address default (100/hour,
+    # 10/minute — see rate_limit.py); /workflow/analyze additionally
+    # carries its own stricter decorator-based limit (see
+    # routers/workflow.py) since it's the one endpoint expensive enough
+    # to matter most.
+    from slowapi.errors import RateLimitExceeded
+    from slowapi import _rate_limit_exceeded_handler
+    from apps.api.middleware.rate_limit import setup_rate_limiting
+
+    setup_rate_limiting(app)
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
     # Research mode logging middleware (logs queries when research mode is on)
     app.middleware("http")(research_mode_logging_middleware)
 
@@ -202,6 +228,7 @@ def create_app() -> FastAPI:
         observability_middleware,
         setup_structured_logging,
     )
+
     setup_structured_logging()
     app.middleware("http")(observability_middleware)
 
@@ -227,24 +254,61 @@ def create_app() -> FastAPI:
     # product surface. Gated here, once, at the router level rather than
     # annotating every individual endpoint function.
     _authenticated = [Depends(require_authenticated)]
-    app.include_router(horoscope_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(divisional_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(dasha_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(events_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(ashtakavarga_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(shadbala_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(yoga_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(transit_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(transit_patterns_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(timeline_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(visualization_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(report_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(export_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(
+        horoscope_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        divisional_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        dasha_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        events_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        ashtakavarga_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        shadbala_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        avastha_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        yoga_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        transit_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        transit_patterns_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        timeline_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        visualization_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        report_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        export_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
     app.include_router(ai_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(ai_phase_e_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(workflow_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(benchmark_router.router, prefix="/api/v1", dependencies=_authenticated)
-    app.include_router(geocoding_router.router, prefix="/api/v1", dependencies=_authenticated)
+    app.include_router(
+        ai_phase_e_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        workflow_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        benchmark_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        geocoding_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
     app.include_router(batch_router.router, dependencies=_authenticated)
     app.include_router(jobs_router.router, dependencies=_authenticated)
 
@@ -259,21 +323,39 @@ def create_app() -> FastAPI:
 
     # Researcher or Admin — Research Data Office / Statistics surface.
     _researcher = [Depends(require_researcher)]
-    app.include_router(research_router.router, prefix="/api/v1", dependencies=_researcher)
-    app.include_router(research_tools_router.router, prefix="/api/v1", dependencies=_researcher)
-    app.include_router(statistics_router.router, prefix="/api/v1", dependencies=_researcher)
+    app.include_router(
+        research_router.router, prefix="/api/v1", dependencies=_researcher
+    )
+    app.include_router(
+        research_tools_router.router, prefix="/api/v1", dependencies=_researcher
+    )
+    app.include_router(
+        statistics_router.router, prefix="/api/v1", dependencies=_researcher
+    )
 
-    # Admin only.
-    app.include_router(admin_router.router, prefix="/api/v1", dependencies=[Depends(require_admin)])
+    # Admin Auth (public — login, me, logout)
+    app.include_router(
+        admin_auth_router.router, prefix="/api/v1"
+    )
+
+    # Admin only (management routes) — uses HS256 admin token verification.
+    from apps.api.routers.admin_auth import require_admin_token
+    app.include_router(
+        admin_router.router, prefix="/api/v1", dependencies=[Depends(require_admin_token)]
+    )
 
     # Pre-existing v1 router, outside this RBAC pass's scope — see
     # ASTROOS_V2_STATUS.md's Phase A objective 4 notes.
     app.include_router(dataset_import_router.router)
     app.include_router(datasets_router.router)
 
+    # ── Collaboration (RTCollab WebSocket) ────────────────────────────────────
+    app.include_router(ws_router.router, prefix="/ws")
+
     # ── Monitoring ────────────────────────────────────────────────────────────
 
     from apps.api.monitoring import setup_monitoring_routes
+
     setup_monitoring_routes(app)
 
     # ── Health ────────────────────────────────────────────────────────────────

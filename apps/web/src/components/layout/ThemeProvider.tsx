@@ -57,7 +57,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const mql = window.matchMedia("(prefers-color-scheme: light)");
     const handler = () => {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(STORAGE_KEY);
+      } catch {
+        // ignore — storage access blocked by browser/privacy settings
+      }
       if (!stored) {
         setThemeState(mql.matches ? "light" : "dark");
       }

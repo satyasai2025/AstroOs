@@ -259,6 +259,30 @@ produced. See that report for full methodology and findings.
 
 ---
 
+## Bridge Endpoints (Knowledge Graph ↔ Analytics)
+
+The **Knowledge Graph Bridge** (`POST /api/v1/knowledge-graph/analyze`) was
+implemented 2026-07-20, wiring `EntityLinker` and `GraphAnalytics` together
+under a single HTTP endpoint. This was the last unimplemented surface in the
+schemas defined during Phase D / Module 12 — the `AnalyzeRequest` and
+`AnalyzeResponse` schemas existed since Phase III design but were never
+wired into a router handler.
+
+The endpoint performs:
+1. Entity linking (chart planets/houses/signs → KG entities by name/alias)
+2. Proximity relationship surfacing between linked entities
+3. Statistical correlation (Welch's t-test / Cohen's d) between entity presence
+   and a numeric dataset field
+4. Frequency distribution over a dataset column
+
+All computation is deterministic and pure-local (in-memory OntologyRegistry +
+StatisticalEngine) — no external services, no LLM calls.
+
+See `apps/api/routers/knowledge_graph.py`'s `analyze_bridge()` handler and
+`apps/api/services/graph_analytics.py` for the implementation.
+
+---
+
 ## External Requests (Knowledge Office → Other Offices)
 
 | ID | Request | Target Office | Status | Context |

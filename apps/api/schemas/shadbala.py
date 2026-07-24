@@ -122,5 +122,7 @@ class AllShadbalaResponse(BaseModel):
     tribhaga_bala: list[BalaComponentResponse]
     nathonnata_bala: list[BalaComponentResponse]
     dina_hora_bala: list[BalaComponentResponse]
+    ishta_bala: list[BalaComponentResponse] = Field(default_factory=list)
+    kashta_bala: list[BalaComponentResponse] = Field(default_factory=list)
     implemented_components: list[str]
     not_yet_implemented_components: list[str]

@@ -26,7 +26,9 @@ from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.transit import TransitPlanetResult
 from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd, longitude_to_rashi
+from apps.api.services.nakshatra_vedha_calculator import NakshatraVedhaCalculator
 from apps.api.services.vedha_calculator import VedhaCalculator
+from packages.shared.sarvatobhadra_grid import longitude_to_sbc_nakshatra
 
 _RASHI_LIST = [
     "aries", "taurus", "gemini", "cancer", "leo", "virgo",
@@ -63,10 +65,12 @@ class TransitEngine:
         wrapper: EphemerisWrapper,
         ashtakavarga_engine: AshtakavargaEngine | None = None,
         vedha_calculator: VedhaCalculator | None = None,
+        nakshatra_vedha_calculator: NakshatraVedhaCalculator | None = None,
     ) -> None:
         self._wrapper = wrapper
         self._ashtakavarga_engine = ashtakavarga_engine or AshtakavargaEngine()
         self._vedha_calculator = vedha_calculator or VedhaCalculator()
+        self._nakshatra_vedha_calculator = nakshatra_vedha_calculator or NakshatraVedhaCalculator()
 
     def _transiting_rashi(self, planet: str, jd: float) -> str:
         tropical_position = self._wrapper.get_planet_position(planet, jd)
@@ -74,6 +78,16 @@ class TransitEngine:
         sidereal_lon = self._wrapper.to_sidereal(tropical_position.longitude, ayanamsa_val)
         rashi, _ = longitude_to_rashi(sidereal_lon)
         return rashi
+
+    def _transiting_position(self, planet: str, jd: float) -> tuple[str, float, bool]:
+        """(rashi, sidereal_longitude, is_retrograde) at the transit moment —
+        the sidereal longitude and retrograde state are what
+        Nakshatra Vedha (SBC) needs on top of the rashi Gochara already uses."""
+        tropical_position = self._wrapper.get_planet_position(planet, jd)
+        ayanamsa_val = self._wrapper.get_ayanamsa(jd)
+        sidereal_lon = self._wrapper.to_sidereal(tropical_position.longitude, ayanamsa_val)
+        rashi, _ = longitude_to_rashi(sidereal_lon)
+        return rashi, sidereal_lon, tropical_position.is_retrograde
 
     def compute_transit(
         self,
@@ -92,7 +106,9 @@ class TransitEngine:
         Vedha/Vipreet Vedha (Module 11 Phase 2) needs every planet's
         house-from-Moon computed first — one planet's obstruction status
         depends on where every OTHER planet currently is — so this runs
-        as a second pass after all 9 houses are known.
+        as a second pass after all 9 houses are known. Nakshatra Vedha
+        (SBC, Module 11 Phase 3) needs the same two-pass shape, but keyed
+        on each planet's 28-system SBC nakshatra instead of its house.
         """
         natal_moon = next(p for p in natal_chart.planets if p.planet == "moon")
         natal_moon_rashi = natal_moon.rashi
@@ -104,15 +120,21 @@ class TransitEngine:
             for r in self._ashtakavarga_engine.compute_bhinnashtakavarga(natal_chart)
         }
 
-        # Pass 1: transiting rashi + house-from-Moon for all 9 planets.
+        # Pass 1: transiting rashi, house-from-Moon, SBC nakshatra and
+        # retrograde state for all 9 planets.
         houses_from_moon: dict[str, int] = {}
         transit_rashis: dict[str, str] = {}
+        transit_nakshatras_sbc: dict[str, str] = {}
+        is_retrograde_by_planet: dict[str, bool] = {}
         for planet in _ALL_PLANETS:
-            transit_rashi = self._transiting_rashi(planet, jd)
+            transit_rashi, sidereal_lon, is_retrograde = self._transiting_position(planet, jd)
             transit_rashis[planet] = transit_rashi
             houses_from_moon[planet] = _house_from_reference(natal_moon_rashi, transit_rashi)
+            transit_nakshatras_sbc[planet] = longitude_to_sbc_nakshatra(sidereal_lon)
+            is_retrograde_by_planet[planet] = is_retrograde
 
-        # Pass 2: assemble results, including Vedha (needs all 9 houses known).
+        # Pass 2: assemble results, including both Vedha systems (each
+        # needs all 9 planets' positions known first).
         results = []
         for planet in _ALL_PLANETS:
             transit_rashi = transit_rashis[planet]
@@ -131,6 +153,16 @@ class TransitEngine:
                 planet, house_from_moon, other_houses,
             )
 
+            other_nakshatras_sbc = {p: n for p, n in transit_nakshatras_sbc.items() if p != planet}
+            has_nakshatra_vedha, nakshatra_vedha_planet, nakshatra_vedha_type, nakshatra_vedha_target = (
+                self._nakshatra_vedha_calculator.check(
+                    planet,
+                    transit_nakshatras_sbc[planet],
+                    is_retrograde_by_planet[planet],
+                    other_nakshatras_sbc,
+                )
+            )
+
             results.append(TransitPlanetResult(
                 planet=planet,
                 transit_rashi=transit_rashi,
@@ -142,6 +174,11 @@ class TransitEngine:
                 has_vedha=has_vedha,
                 has_vipreet_vedha=has_vipreet_vedha,
                 vedha_planet=vedha_planet,
+                transit_nakshatra_sbc=transit_nakshatras_sbc[planet],
+                has_nakshatra_vedha=has_nakshatra_vedha,
+                nakshatra_vedha_planet=nakshatra_vedha_planet,
+                nakshatra_vedha_type=nakshatra_vedha_type,
+                nakshatra_vedha_target=nakshatra_vedha_target,
                 rule_version=_RULE_VERSION,
             ))
 

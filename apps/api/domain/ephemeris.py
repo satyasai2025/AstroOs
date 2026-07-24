@@ -56,6 +56,26 @@ class SiderealPosition:
     distance_au: float = 0.0             # geocentric distance, Astronomical Units
     speed_deg_per_day: float = 0.0       # longitude speed; negative = retrograde (magnitude needed for Chesta Bala)
     declination_deg: float = 0.0         # equatorial declination (needed for Ayana Bala)
+    # Added for KP (Krishnamurti Paddhati) support: the nakshatra's ruling
+    # Graha (Star Lord — same lord as NakshatraInfo.lord, duplicated here so
+    # API consumers don't need a second lookup) and the finer Sub Lord,
+    # the planet whose proportional (Vimshottari-years-based) slice of the
+    # nakshatra this exact longitude falls in. See
+    # ephemeris_wrapper.longitude_to_sub_lord for the computation.
+    nakshatra_lord: str = ""             # Star Lord
+    sub_lord: str = ""                   # KP Sub Lord
+    sub_sub_lord: str = ""               # KP Sub Sub Lord (one level finer than sub_lord)
+    # Added for Bhava Chalit support: `house_number` (above) is the
+    # cuspal/Chalit house — which real cusp-to-cusp span (for whichever
+    # house_system was requested) this planet's longitude falls in. This
+    # is a SEPARATE number: the Rashi (sign-counting) house, i.e. "how
+    # many signs is this planet's sign from the lagna's sign" — the
+    # method every house_number used to use unconditionally before the
+    # Chalit fix. The two can differ for the same planet whenever a
+    # planet sits near a sign boundary and the real cusp doesn't land
+    # exactly on that boundary (true for any non-Whole-Sign house
+    # system). Classical KP analysis needs both simultaneously.
+    rashi_house_number: int = 0
 
 
 @dataclass(frozen=True)
@@ -67,6 +87,9 @@ class Ascendant:
     rashi_degree: float
     nakshatra: str
     pada: int
+    nakshatra_lord: str = ""         # Star Lord (KP)
+    sub_lord: str = ""               # Sub Lord (KP)
+    sub_sub_lord: str = ""           # Sub Sub Lord (KP)
 
 
 @dataclass(frozen=True)
@@ -76,6 +99,12 @@ class HouseCusp:
     longitude: float                 # tropical longitude of cusp
     sidereal_longitude: float
     rashi: str
+    # KP practice reads predictions primarily off cuspal Star Lord / Sub
+    # Lord (the "significators" method), not just the cusp's rashi — see
+    # ephemeris_wrapper.longitude_to_sub_lord.
+    nakshatra_lord: str = ""         # Star Lord (KP)
+    sub_lord: str = ""               # Sub Lord (KP)
+    sub_sub_lord: str = ""           # Sub Sub Lord (KP)
 
 
 @dataclass(frozen=True)

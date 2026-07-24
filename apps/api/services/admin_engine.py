@@ -7,15 +7,11 @@ User management and system health aggregation for the admin portal.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Optional
-
-from sqlalchemy import func, select, update
+from typing import Optional
 
 from apps.api.config import get_settings
 from apps.api.domain.admin import AdminUserSummary, ModuleHealth, SystemStatus
-from apps.api.domain.user import UserId, UserRole, UserStatus
-from apps.api.models.user import UserModel
+from apps.api.domain.user import User, UserId, UserRole, UserStatus
 from apps.api.repositories.user_repository import UserRepository
 from apps.api.services.ephemeris_service import EphemerisService
 
@@ -45,44 +41,39 @@ _MODULE_REGISTRY: dict[str, str] = {
 }
 
 
-def _user_to_summary(model: UserModel) -> AdminUserSummary:
+def _user_to_summary(user: User) -> AdminUserSummary:
     return AdminUserSummary(
-        id=model.id,
-        email=model.email,
-        display_name=model.display_name or model.email,
-        role=model.role.value if hasattr(model.role, "value") else str(model.role),
-        status=model.status.value if hasattr(model.status, "value") else str(model.status),
-        created_at=model.created_at,
-        last_login_at=model.last_login_at,
+        id=user.id.value,
+        email=user.email,
+        display_name=user.display_name or user.email,
+        role=user.role.value,
+        status=user.status.value,
+        created_at=user.created_at,
+        last_login_at=user.last_login_at,
     )
 
 
 class AdminEngine:
-    """Admin operations for user management and system health."""
+    """
+    Admin operations for user management and system health.
+
+    All User-aggregate DB access goes through UserRepository (see its
+    "Admin listing/moderation" section) — this engine used to hold a raw
+    AsyncSession and query UserModel directly, the one place in the
+    codebase that bypassed the repository layer every other engine uses.
+    Fixed as part of Phase 10's cleanup pass (2026-07-23); behavior is
+    unchanged, this is purely a layering fix.
+    """
 
     def __init__(
         self,
         user_repo: Optional[UserRepository] = None,
-        session: Any = None,
         ephemeris_service: Optional[EphemerisService] = None,
     ) -> None:
         self._user_repo = user_repo
-        self._session = session
         self._ephemeris_service = ephemeris_service
 
     # ── User management ───────────────────────────────────────────────────
-
-    @staticmethod
-    def _filtered_users_stmt(status: Optional[str], role: Optional[str]):
-        """Shared status/role filter, reused by list_users and count_users
-        so pagination's total always reflects the exact same WHERE clause
-        as the page it's counting."""
-        stmt = select(UserModel).where(UserModel.deleted_at.is_(None))
-        if status:
-            stmt = stmt.where(UserModel.status == status)
-        if role:
-            stmt = stmt.where(UserModel.role == role)
-        return stmt
 
     async def list_users(
         self,
@@ -91,13 +82,12 @@ class AdminEngine:
         limit: int = 100,
         offset: int = 0,
     ) -> tuple[AdminUserSummary, ...]:
-        if self._session is None:
+        if self._user_repo is None:
             return ()
-        stmt = self._filtered_users_stmt(status, role)
-        stmt = stmt.order_by(UserModel.created_at.desc()).limit(limit).offset(offset)
-        result = await self._session.execute(stmt)
-        rows = result.scalars().all()
-        return tuple(_user_to_summary(r) for r in rows)
+        users = await self._user_repo.list_all(
+            status=status, role=role, limit=limit, offset=offset,
+        )
+        return tuple(_user_to_summary(u) for u in users)
 
     async def count_users(
         self,
@@ -107,12 +97,9 @@ class AdminEngine:
         """True count of users matching the filter, independent of
         limit/offset — used by callers that need pagination totals
         rather than the current page's size."""
-        if self._session is None:
+        if self._user_repo is None:
             return 0
-        stmt = self._filtered_users_stmt(status, role)
-        count_stmt = select(func.count()).select_from(stmt.subquery())
-        result = await self._session.execute(count_stmt)
-        return result.scalar_one()
+        return await self._user_repo.count_all(status=status, role=role)
 
     async def get_user(self, user_id: uuid.UUID) -> Optional[AdminUserSummary]:
         if self._user_repo is None:
@@ -120,59 +107,29 @@ class AdminEngine:
         domain_user = await self._user_repo.get_by_id(UserId(user_id))
         if domain_user is None:
             return None
-        return AdminUserSummary(
-            id=domain_user.id.value,
-            email=domain_user.email,
-            display_name=domain_user.display_name,
-            role=domain_user.role.value,
-            status=domain_user.status.value,
-            created_at=domain_user.created_at,
-            last_login_at=domain_user.last_login_at,
-        )
+        return _user_to_summary(domain_user)
 
     async def update_user_role(
         self, user_id: uuid.UUID, new_role: str,
     ) -> Optional[AdminUserSummary]:
-        if self._session is None:
+        if self._user_repo is None:
             return None
         try:
             role_enum = UserRole(new_role)
         except ValueError:
             return None
-        stmt = (
-            update(UserModel)
-            .where(UserModel.id == user_id, UserModel.deleted_at.is_(None))
-            .values(role=role_enum)
-            .returning(UserModel.id)
-        )
-        result = await self._session.execute(stmt)
-        if result.scalar_one_or_none() is None:
-            return None
-        return await self.get_user(user_id)
+        updated = await self._user_repo.set_role(UserId(user_id), role_enum)
+        return _user_to_summary(updated) if updated else None
 
     async def suspend_user(self, user_id: uuid.UUID) -> bool:
-        if self._session is None:
+        if self._user_repo is None:
             return False
-        stmt = (
-            update(UserModel)
-            .where(UserModel.id == user_id, UserModel.deleted_at.is_(None))
-            .values(status=UserStatus.SUSPENDED)
-            .returning(UserModel.id)
-        )
-        result = await self._session.execute(stmt)
-        return result.scalar_one_or_none() is not None
+        return await self._user_repo.set_status(UserId(user_id), UserStatus.SUSPENDED)
 
     async def activate_user(self, user_id: uuid.UUID) -> bool:
-        if self._session is None:
+        if self._user_repo is None:
             return False
-        stmt = (
-            update(UserModel)
-            .where(UserModel.id == user_id, UserModel.deleted_at.is_(None))
-            .values(status=UserStatus.ACTIVE)
-            .returning(UserModel.id)
-        )
-        result = await self._session.execute(stmt)
-        return result.scalar_one_or_none() is not None
+        return await self._user_repo.set_status(UserId(user_id), UserStatus.ACTIVE)
 
     # ── System health ─────────────────────────────────────────────────────
 

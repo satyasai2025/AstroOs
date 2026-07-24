@@ -1,0 +1,27 @@
+% ── Chart Insert Template ─────────────────────────────────────────────────────
+% This file is included by paper.tex via \input{chart-insert} at the @BODY@
+% position. The publication pipeline replaces @CHART_FIGURE@ and @CHART_TABLE@
+% with generated content.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{@CHART_FIGURE@}
+    \caption{@CHART_CAPTION@}
+    \label{fig:chart-@CHART_LABEL@}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \caption{@TABLE_CAPTION@}
+    \label{tab:chart-data-@CHART_LABEL@}
+    \begin{tabularx}{\textwidth}{@TABLE_COLUMNS@}
+        \toprule
+        @TABLE_HEADER@ \\
+        \midrule
+        @TABLE_ROWS@ \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\vspace{1em}
+\noindent\textit{Source:} @SOURCE_NOTE@

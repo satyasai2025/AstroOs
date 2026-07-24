@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
+from typing import Optional
 
 from apps.api.domain.divisional import VargaAscendant, VargaChart, VargaPosition
 from apps.api.services.ephemeris_wrapper import (
@@ -577,25 +578,37 @@ class DivisionalEngine:
         house_system: str = "W",
         user_id=None,
         subject_name: str = "Unnamed",
+        birth_chart_id: Optional[uuid.UUID] = None,
     ) -> uuid.UUID:
         """
         Persist the full dict returned by compute_all() — one
         birth_charts row shared across all 15 vargas, one
         divisional_charts row per varga.
 
+        birth_chart_id: pass this when the caller already resolved the
+        birth_charts row (e.g. WorkflowOrchestrator.analyze() always
+        calls HoroscopeEngine.persist_d1() first) — skips a redundant
+        natural-key SELECT against Postgres that would otherwise re-run
+        get_or_create()'s full lookup for a row we already have the id
+        for. Standalone callers (e.g. a divisional-only API request with
+        no prior D1 persistence) can omit it and get_or_create() runs as
+        before. Fixed as part of Phase 10's cleanup pass (2026-07-23),
+        flagged by the retroactive performance review.
+
         Returns the shared birth_chart_id.
         """
         self._require_persistence_repos()
 
-        birth_chart_id = await self._birth_chart_repo.get_or_create(
-            birth_datetime_utc=birth_datetime_utc,
-            latitude=latitude,
-            longitude=longitude,
-            ayanamsa=ayanamsa,
-            house_system=house_system,
-            user_id=user_id,
-            subject_name=subject_name,
-        )
+        if birth_chart_id is None:
+            birth_chart_id = await self._birth_chart_repo.get_or_create(
+                birth_datetime_utc=birth_datetime_utc,
+                latitude=latitude,
+                longitude=longitude,
+                ayanamsa=ayanamsa,
+                house_system=house_system,
+                user_id=user_id,
+                subject_name=subject_name,
+            )
 
         for chart in charts.values():
             divisional_chart_id = await self._divisional_chart_repo.replace_for_birth_chart(

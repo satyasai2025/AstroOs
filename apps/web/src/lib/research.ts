@@ -263,7 +263,12 @@ export const researchExportApi = {
     format: "csv" | "json" = "csv",
     includeDetail: boolean = true
   ): Promise<Blob> => {
-    const access = localStorage.getItem("astro_access_token");
+    let access: string | null = null;
+    try {
+      access = localStorage.getItem("astro_access_token");
+    } catch {
+      // storage access blocked by browser/privacy settings
+    }
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };

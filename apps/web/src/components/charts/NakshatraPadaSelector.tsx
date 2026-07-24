@@ -8,6 +8,7 @@ import {
   RASHI_LORDS,
   type NakshatraName,
 } from "@/lib/astro";
+import { useNakshatraDetail } from "@/lib/nakshatraKnowledge";
 import type { PlanetPositionSchema } from "@/lib/types";
 
 interface NakshatraPadaSelectorProps {
@@ -20,6 +21,15 @@ interface NakshatraPadaSelectorProps {
 }
 
 const PADA_DEGREES = 13.3333 / 4; // each pada is 3°20'
+
+function KV({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <span style={{ color: "var(--text-muted)" }}>{label}: </span>
+      <span className="font-medium" style={{ color: "var(--text-primary)" }}>{value}</span>
+    </div>
+  );
+}
 
 export function NakshatraPadaSelector({
   planets = [],
@@ -99,6 +109,11 @@ export function NakshatraPadaSelector({
 
   const activeNakshatra = highlightNakshatra ?? selectedNakshatra;
 
+  // Level 2 — real classical knowledge base, fetched from the backend's
+  // nakshatra catalogue (the 27 YAML files under knowledge/catalogues/
+  // nakshatras) once a nakshatra is selected. See lib/nakshatraKnowledge.ts.
+  const { data: nakDetail, isLoading: nakLoading } = useNakshatraDetail(selectedNakshatra);
+
   return (
     <div
       className="glass-card p-5 space-y-4"
@@ -111,6 +126,37 @@ export function NakshatraPadaSelector({
       >
         Nakshatra / Pada Selector
       </h3>
+
+      {/* Context selector: jump straight to any chart planet's actual
+          nakshatra + pada, instead of hunting for it in the grid below. */}
+      {planets.length > 0 && (
+        <div>
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+            Jump to Graha
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {planets.map((p) => {
+              const isActive = selectedNakshatra === p.nakshatra && selectedPada === p.pada;
+              return (
+                <button
+                  key={p.planet}
+                  type="button"
+                  onClick={() => handleSelect(p.nakshatra as NakshatraName, p.pada)}
+                  className="rounded-full border px-2.5 py-1 text-xs font-medium transition"
+                  style={{
+                    borderColor: isActive ? "var(--accent)" : "var(--border-primary)",
+                    backgroundColor: isActive ? "var(--accent)" : "var(--bg-card)",
+                    color: isActive ? "var(--accent-text)" : "var(--text-secondary)",
+                  }}
+                  title={`${p.planet}: ${p.nakshatra} Pada ${p.pada}`}
+                >
+                  {p.planet}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Search input */}
       <div className="relative">
@@ -298,6 +344,106 @@ export function NakshatraPadaSelector({
             )}
             ° sidereal
           </p>
+        </div>
+      )}
+
+      {/* Level 2 — Classical Knowledge Base panel, real data from the
+          backend's nakshatra catalogue (deity, shakti, nature, per-pada
+          Navamsha mapping, karakatvas, cited sources). Only the fields the
+          catalogue actually has are shown — no invented attributes. */}
+      {selectedNakshatra && (
+        <div
+          className="space-y-3 rounded-lg border p-4"
+          style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+          aria-live="polite"
+        >
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+              Classical Knowledge — {selectedNakshatra}
+            </h4>
+            {!!nakDetail?.sources.length && (
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+                {nakDetail.sources.length} cited source{nakDetail.sources.length > 1 ? "s" : ""}
+              </span>
+            )}
+          </div>
+
+          {nakLoading && (
+            <p className="text-xs" style={{ color: "var(--text-muted)" }}>Loading…</p>
+          )}
+
+          {nakDetail && (
+            <>
+              {nakDetail.meaning && (
+                <p className="text-sm italic" style={{ color: "var(--text-secondary)" }}>
+                  {nakDetail.meaning}
+                </p>
+              )}
+
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs sm:grid-cols-3">
+                {nakDetail.deity?.name && <KV label="Deity" value={nakDetail.deity.name} />}
+                {nakDetail.shakti?.name && <KV label="Shakti" value={nakDetail.shakti.name} />}
+                {nakDetail.nature?.guna && <KV label="Guna" value={nakDetail.nature.guna} />}
+                {nakDetail.nature?.gana && <KV label="Gana" value={nakDetail.nature.gana} />}
+                {nakDetail.nature?.yoni && <KV label="Yoni" value={nakDetail.nature.yoni} />}
+                {nakDetail.nature?.nadi && <KV label="Nadi" value={nakDetail.nature.nadi} />}
+              </div>
+
+              {/* This is the real classical link between Nakshatra Pada and
+                  the Navamsha (D9) chart — each pada maps to a fixed D9
+                  sign, straight from the catalogue's per-pada data. */}
+              {selectedPada && (
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                  Pada {selectedPada} → Navamsha (D9) sign:{" "}
+                  <span className="font-medium" style={{ color: "var(--text-primary)" }}>
+                    {nakDetail.padas.find((p) => p.pada === selectedPada)?.navamsha_rashi ?? "—"}
+                  </span>
+                </p>
+              )}
+
+              {nakDetail.deity?.description && (
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                  {nakDetail.deity.description.trim()}
+                </p>
+              )}
+
+              {nakDetail.karakatvas.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {nakDetail.karakatvas.map((k) => (
+                    <span
+                      key={k}
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ backgroundColor: "var(--bg-card-hover)", border: "1px solid var(--border-primary)", color: "var(--text-secondary)" }}
+                    >
+                      {k}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {nakDetail.compatible_nakshatras.length > 0 && (
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  Compatible: {nakDetail.compatible_nakshatras.join(", ")}
+                </p>
+              )}
+
+              {nakDetail.sources.length > 0 && (
+                <details className="text-xs">
+                  <summary className="cursor-pointer" style={{ color: "var(--text-muted)" }}>
+                    Sources
+                  </summary>
+                  <ul className="mt-1 space-y-1 pl-3" style={{ color: "var(--text-secondary)" }}>
+                    {nakDetail.sources.map((s, i) => (
+                      <li key={i}>
+                        <span className="font-medium">{s.ref}</span>
+                        {s.claim && <>: "{s.claim.trim()}"</>}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </>
+          )}
         </div>
       )}
 

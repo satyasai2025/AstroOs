@@ -91,6 +91,11 @@ def _serialise_planet(result: TransitPlanetResult) -> TransitPlanetResponse:
         has_vedha=result.has_vedha,
         has_vipreet_vedha=result.has_vipreet_vedha,
         vedha_planet=result.vedha_planet,
+        transit_nakshatra_sbc=result.transit_nakshatra_sbc,
+        has_nakshatra_vedha=result.has_nakshatra_vedha,
+        nakshatra_vedha_planet=result.nakshatra_vedha_planet,
+        nakshatra_vedha_type=result.nakshatra_vedha_type,
+        nakshatra_vedha_target=result.nakshatra_vedha_target,
         rule_version=result.rule_version,
     )
 

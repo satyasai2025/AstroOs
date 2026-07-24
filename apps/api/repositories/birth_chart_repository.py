@@ -23,11 +23,11 @@ birth_charts row instead of creating a new one each time.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.models.astrology import BirthChartModel
@@ -63,13 +63,24 @@ class BirthChartRepository:
         house_system: str,
         user_id: Optional[uuid.UUID] = None,
         subject_name: str = _DEFAULT_SUBJECT_NAME,
+        place_name: Optional[str] = None,
     ) -> uuid.UUID:
         """
         Find an existing birth_charts row for this exact birth input, or
         create one. Returns the row's id either way.
+
+        place_name was previously accepted nowhere in this pipeline —
+        WorkflowAnalysisRequest had no such field, so every saved chart's
+        place_name column stayed NULL regardless of what place the user
+        searched for on the frontend. Now: on create, it's stored. On a
+        dedup match against an existing row, if that row's place_name is
+        still NULL and this call supplies one, it's backfilled — so a
+        chart saved before this fix gets its place filled in the next
+        time it's recomputed with the same birth data, without ever
+        overwriting a place_name some other call already set.
         """
         stmt = (
-            select(BirthChartModel.id)
+            select(BirthChartModel)
             .where(BirthChartModel.birth_datetime_utc == birth_datetime_utc)
             .where(BirthChartModel.birth_latitude == Decimal(str(latitude)))
             .where(BirthChartModel.birth_longitude == Decimal(str(longitude)))
@@ -80,9 +91,12 @@ class BirthChartRepository:
         if user_id is not None:
             stmt = stmt.where(BirthChartModel.user_id == user_id)
 
-        existing_id = (await self._session.execute(stmt)).scalar_one_or_none()
-        if existing_id is not None:
-            return existing_id
+        existing = (await self._session.execute(stmt)).scalar_one_or_none()
+        if existing is not None:
+            if place_name and not existing.place_name:
+                existing.place_name = place_name
+                await self._session.flush()
+            return existing.id
 
         model = BirthChartModel(
             id=uuid.uuid4(),
@@ -94,6 +108,7 @@ class BirthChartRepository:
             timezone_offset_minutes=_utc_offset_minutes(birth_datetime_utc),
             ayanamsa=ayanamsa,
             house_system=house_system,
+            place_name=place_name,
         )
         self._session.add(model)
         await self._session.flush()
@@ -123,3 +138,61 @@ class BirthChartRepository:
         model.lagna_degree = Decimal(str(lagna_degree))
         model.moon_nakshatra = moon_nakshatra
         await self._session.flush()
+
+    async def list_for_user(
+        self,
+        user_id: uuid.UUID,
+        *,
+        limit: int = 50,
+        offset: int = 0,
+    ) -> list[BirthChartModel]:
+        """
+        List a user's saved charts, most recently created first. Used by
+        the "my saved charts" history endpoint.
+        """
+        stmt = (
+            select(BirthChartModel)
+            .where(BirthChartModel.user_id == user_id)
+            .where(BirthChartModel.deleted_at.is_(None))
+            .order_by(BirthChartModel.created_at.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())
+
+    async def count_for_user(self, user_id: uuid.UUID) -> int:
+        """Total count of a user's saved charts, for pagination."""
+        stmt = (
+            select(func.count())
+            .select_from(BirthChartModel)
+            .where(BirthChartModel.user_id == user_id)
+            .where(BirthChartModel.deleted_at.is_(None))
+        )
+        return (await self._session.execute(stmt)).scalar_one()
+
+    async def soft_delete(self, chart_id: uuid.UUID, user_id: uuid.UUID) -> bool:
+        """
+        Soft-delete a saved chart: sets deleted_at rather than removing the
+        row, consistent with every other query in this repository already
+        filtering `deleted_at.is_(None)` — the row (and everything hanging
+        off it via FK: planet_positions, houses, divisional_charts, dashas)
+        stays in the database, just excluded from all normal reads.
+
+        Only deletes if the chart belongs to user_id — returns False (not
+        an exception) for "doesn't exist", "already deleted", or "belongs
+        to someone else", so the router can uniformly 404 on any of those
+        without leaking which case it was.
+        """
+        stmt = (
+            select(BirthChartModel)
+            .where(BirthChartModel.id == chart_id)
+            .where(BirthChartModel.user_id == user_id)
+            .where(BirthChartModel.deleted_at.is_(None))
+        )
+        model = (await self._session.execute(stmt)).scalar_one_or_none()
+        if model is None:
+            return False
+        model.deleted_at = datetime.now(timezone.utc)
+        await self._session.flush()
+        return True

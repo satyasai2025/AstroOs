@@ -55,6 +55,10 @@ class WorkflowAnalysisRequest(BaseModel):
         default=True, description="Compute all 15 divisional charts. Set false to skip for speed."
     )
     subject_name: str = "Unnamed"
+    place_name: Optional[str] = Field(
+        default=None,
+        description="Human-readable birth place, if resolved on the client (e.g. from place search). Saved on the birth_charts row for display on the saved-charts list.",
+    )
     generated_by: Optional[str] = None
     research_project_id: Optional[uuid.UUID] = Field(
         default=None,

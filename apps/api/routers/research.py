@@ -26,6 +26,7 @@ from apps.api.repositories.research_repository import ResearchRepository
 from apps.api.schemas.research import (
     ChartCompareRequest,
     FieldDiffResponse,
+    PublicationResponse,
     ResearchExperimentAssignSnapshotsRequest,
     ResearchExperimentCompleteRequest,
     ResearchExperimentCreateRequest,
@@ -45,6 +46,7 @@ from apps.api.schemas.research import (
     SnapshotResponse,
 )
 from apps.api.services.research_engine import ResearchEngine
+from apps.api.services.publication_pipeline import PublicationError, generate_publication
 
 router = APIRouter(prefix="/research", tags=["Research"])
 
@@ -316,3 +318,39 @@ async def compare_charts(
             detail="Both charts must have a snapshot in this project.",
         )
     return _comparison_response(comparison)
+
+
+# ── Publication ────────────────────────────────────────────────────────────────
+
+
+@router.post(
+    "/{project_id}/publish",
+    response_model=PublicationResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+async def publish_project(
+    project_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db_session),
+) -> PublicationResponse:
+    """Generate a LaTeX publication bundle for a research project.
+
+    Produces paper.tex, references.bib, and chart-insert.tex files
+    in data/publications/<project_id>/. Returns paths to the generated
+    artifacts.
+    """
+    try:
+        bundle = await generate_publication(project_id, session)
+        return PublicationResponse(
+            project_id=bundle.project_id,
+            output_dir=bundle.output_dir,
+            tex_path=bundle.tex_path,
+            bib_path=bundle.bib_path,
+            pdf_url=bundle.pdf_url,
+            error=bundle.error,
+            generated_at=bundle.generated_at,
+        )
+    except PublicationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        )

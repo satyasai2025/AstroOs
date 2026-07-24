@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   AyanamsaCode,
   DashaSystemCode,
@@ -26,6 +26,17 @@ const HOUSE_SYSTEM_OPTIONS: { value: HouseSystemCode; label: string }[] = [
   { value: "K", label: "Koch" },
   { value: "E", label: "Equal" },
 ];
+
+// Informational only — NOT enforced. Unlike KP (which has one strict,
+// universally-followed rule: KP Ayanamsa + Placidus), most ayanamsas have
+// no single "correct" house system in classical practice; different
+// traditions/authors legitimately pair them differently. This only
+// surfaces a known convention as a note so the user can make an informed
+// choice — it never disables the House System dropdown.
+const AYANAMSA_HOUSE_SYSTEM_ADVISORY: Partial<Record<AyanamsaCode, string>> = {
+  yukteshwar:
+    "Sri Yukteshwar ayanamsa is conventionally paired with Whole Sign (Rashi) houses. (Sripathi/Bhava Chalit, the other traditional pairing, isn't supported as a house system yet.)",
+};
 
 const DASHA_SYSTEM_OPTIONS: { value: DashaSystemCode; label: string }[] = [
   { value: "vimshottari", label: "Vimshottari" },
@@ -88,6 +99,18 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
   const [includeVargas, setIncludeVargas] = useState(true);
   const [validationError, setValidationError] = useState<string | null>(null);
 
+  // KP (Krishnamurti Paddhati) practice specifically pairs KP Ayanamsa with
+  // the Placidus house system — mixing KP Ayanamsa with any other house
+  // system isn't a recognized classical combination. Lock the house system
+  // to Placidus (and disable the dropdown) whenever KP Ayanamsa is chosen,
+  // rather than letting an invalid pairing through silently.
+  const houseSystemLockedByKp = ayanamsa === "kp";
+  useEffect(() => {
+    if (houseSystemLockedByKp) {
+      setHouseSystem("P");
+    }
+  }, [houseSystemLockedByKp]);
+
   // Effective coordinates: manual entry wins when the override is on,
   // otherwise whatever the place search resolved.
   const manualLatNum = manualLatitude === "" ? null : Number(manualLatitude);
@@ -138,6 +161,7 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
       dasha_system: dashaSystem,
       include_vargas: includeVargas,
       subject_name: subjectName.trim() || "Unnamed",
+      place_name: manualOverride ? null : resolvedPlace?.display_name ?? null,
     });
   };
 
@@ -293,6 +317,9 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
               </option>
             ))}
           </select>
+          {AYANAMSA_HOUSE_SYSTEM_ADVISORY[ayanamsa] && (
+            <p className="mt-1 text-xs text-slate-500">{AYANAMSA_HOUSE_SYSTEM_ADVISORY[ayanamsa]}</p>
+          )}
         </div>
         <div>
           <label htmlFor="houseSystem" className="field-label">
@@ -303,7 +330,7 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
             value={houseSystem}
             onChange={(e) => setHouseSystem(e.target.value as HouseSystemCode)}
             className="field-input"
-            disabled={disabled}
+            disabled={disabled || houseSystemLockedByKp}
           >
             {HOUSE_SYSTEM_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>
@@ -311,6 +338,11 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
               </option>
             ))}
           </select>
+          {houseSystemLockedByKp && (
+            <p className="mt-1 text-xs text-slate-500">
+              Locked to Placidus — KP practice requires KP Ayanamsa + Placidus.
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="dashaSystem" className="field-label">

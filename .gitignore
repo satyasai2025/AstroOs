@@ -22,6 +22,17 @@ apps/api/security/keys/*.pem
 # Editor/OS
 .DS_Store
 
+# Junk files from broken Windows-style shell commands (e.g. `dir /s /b > nul`
+# run in a POSIX shell — /s and /b get treated as extra args, nul becomes a
+# real file instead of the null device). See DOCUMENTATION_REALITY_AUDIT.md §5.
+nul
+alembic
+docker
+echo
+env.py
+location
+uvicorn
+
 # Replit / agent session artifacts — not application code
 attached_assets/
 .agents/
