@@ -71,7 +71,7 @@ def _get_horoscope_engine(
     )
 
 
-def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
+def _chart_to_response(chart: D1Chart, chart_id: uuid.UUID | None = None) -> D1ChartResponse:
     """Convert a D1Chart domain object to the HTTP response schema."""
 
     ascendant = AscendantSchema(
@@ -185,6 +185,7 @@ def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
     )
 
     return D1ChartResponse(
+        id=chart_id,
         ascendant=ascendant,
         houses=houses,
         planets=planets,
@@ -211,6 +212,7 @@ def _chart_to_response(chart: D1Chart) -> D1ChartResponse:
 )
 async def generate_d1_chart(
     request: D1ChartRequest,
+    user: User = Depends(get_current_user_from_bearer),
     engine: HoroscopeEngine = Depends(_get_horoscope_engine),
 ) -> D1ChartResponse:
     """
@@ -257,13 +259,14 @@ async def generate_d1_chart(
     # rolls back automatically once this exception propagates out of the
     # request, so a failed persist never leaves a partial chart committed.
     try:
-        await engine.persist_d1(
+        chart_id = await engine.persist_d1(
             chart,
             birth_datetime_utc=request.birth_datetime_utc,
             latitude=request.latitude,
             longitude=request.longitude,
             ayanamsa=request.ayanamsa,
             house_system=request.house_system,
+            user_id=user.id.value,
         )
     except SQLAlchemyError as exc:
         logger.exception("Failed to persist D1 chart: %s", exc)
@@ -275,7 +278,7 @@ async def generate_d1_chart(
             ),
         ) from exc
 
-    return _chart_to_response(chart)
+    return _chart_to_response(chart, chart_id=chart_id)
 
 
 @router.get(

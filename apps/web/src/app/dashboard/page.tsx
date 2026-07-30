@@ -1,41 +1,39 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
-import { BirthDetailsForm } from "@/components/workflow/BirthDetailsForm";
-import { AnalysisResults } from "@/components/workflow/AnalysisResults";
-import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
-import { DashboardSearchBar } from "@/components/dashboard/DashboardSearchBar";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
+import { CreateChartModal } from "@/components/dashboard/CreateChartModal";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const analyze = useAnalyzeWorkflow();
   const setResult = useWorkflowStore((s) => s.setResult);
   const clearResult = useWorkflowStore((s) => s.clear);
-  // The shared store — not this component's own mutation state — is the
-  // source of truth for "is there a result to show". The form submission
-  // below writes into it via the effect, but so does RecomputeChartModal
-  // (from Saved Charts), which uses its own separate useAnalyzeWorkflow()
-  // mutation instance. Two different useMutation() calls never share
-  // isSuccess/data state with each other — only the store is shared —
-  // so gating the render on this component's local `analyze.isSuccess`
-  // meant a successful recompute updated the store but Dashboard kept
-  // showing the blank form, since ITS OWN mutation was never triggered.
+  const createModalOpen = useWorkflowStore((s) => s.createModalOpen);
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
+  const closeCreateModal = useWorkflowStore((s) => s.closeCreateModal);
   const storeResult = useWorkflowStore((s) => s.result);
   const storeRequest = useWorkflowStore((s) => s.request);
   const [lastRequest, setLastRequest] =
     useState<WorkflowAnalysisRequest | null>(null);
 
-  // Persist latest result to global store so /charts pages can read it
+  // A newly-generated chart is no longer shown inline on the dashboard —
+  // it's saved (setResult, so /charts pages can still read it) and the
+  // user is taken to My Charts, where the chart itself lives, rather than
+  // the dashboard growing a second full analysis view under the overview.
   useEffect(() => {
     if (analyze.isSuccess && analyze.data && lastRequest) {
       setResult(analyze.data, lastRequest);
+      closeCreateModal();
+      router.push(`/charts/${analyze.data.chart_id}`);
     }
-  }, [analyze.isSuccess, analyze.data, lastRequest, setResult]);
+  }, [analyze.isSuccess, analyze.data, lastRequest, setResult, closeCreateModal, router]);
 
   const errorMessage =
     analyze.error instanceof ApiError
@@ -46,61 +44,27 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      {/* Overview stays visible regardless of whether a chart is currently
-          loaded — it's the home/landing content (mockup: "Dashboard
-          Overview"), not tied to the single-chart workflow below it. */}
-      <div className="mb-8">
-        <DashboardOverview
-          activeResult={storeResult}
-          activeSubjectName={storeRequest?.subject_name}
-          onStartNewChart={() => {
-            clearResult();
-            analyze.reset();
-            setLastRequest(null);
-          }}
-        />
-      </div>
+      <DashboardOverview
+        activeResult={storeResult}
+        activeSubjectName={storeRequest?.subject_name}
+        onStartNewChart={() => {
+          clearResult();
+          analyze.reset();
+          setLastRequest(null);
+          openCreateModal();
+        }}
+      />
 
-      <div className="mb-6 border-t pt-6" style={{ borderColor: "var(--border-primary)" }}>
-        <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
-          {storeResult ? "Analysis Result" : "New Chart"}
-        </h2>
-        <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-          {storeResult
-            ? "Chart → Vargas → Dasha → Yoga → Shadbala → Ashtakavarga → Transit → Rule Engine → Knowledge → Verification → Report."
-            : "Submit birth data to run the full analysis pipeline."}
-        </p>
-      </div>
-
-      <div className="mb-6">
-        <DashboardSearchBar />
-      </div>
-
-      {storeResult && storeRequest ? (
-        <div className="space-y-6">
-          <KpiScorecards result={storeResult} />
-          <AnalysisResults
-            result={storeResult}
-            request={storeRequest}
-            onReset={() => {
-              clearResult();
-              analyze.reset();
-              setLastRequest(null);
-            }}
-          />
-        </div>
-      ) : (
-        <div className="mx-auto max-w-xl">
-          <BirthDetailsForm
-            onSubmit={(request) => {
-              setLastRequest(request);
-              analyze.mutate(request);
-            }}
-            isPending={analyze.isPending}
-            errorMessage={errorMessage}
-          />
-        </div>
-      )}
+      <CreateChartModal
+        open={createModalOpen}
+        onClose={closeCreateModal}
+        onSubmit={(request) => {
+          setLastRequest(request);
+          analyze.mutate(request);
+        }}
+        isPending={analyze.isPending}
+        errorMessage={errorMessage}
+      />
     </AppShell>
   );
 }

@@ -18,7 +18,7 @@ import uuid
 from datetime import date, datetime
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from apps.api.schemas.ashtakavarga import AllAshtakavargaResponse
 from apps.api.schemas.dasha import DashaTreeResponse
@@ -70,6 +70,26 @@ class WorkflowAnalysisRequest(BaseModel):
             "entirely if not supplied — not every analysis is research."
         ),
     )
+    persist: bool = Field(
+        default=True,
+        description=(
+            "Set false to recompute an already-saved chart (e.g. for "
+            "display or comparison) without writing a new birth_charts "
+            "row — Swiss Ephemeris recompute is deterministic, so this "
+            "reproduces the exact same chart from its stored birth data. "
+            "Requires chart_id. Divisional charts are likewise not "
+            "persisted in this mode."
+        ),
+    )
+    chart_id: Optional[uuid.UUID] = Field(
+        default=None,
+        description=(
+            "The existing saved chart this recompute belongs to. Required "
+            "when persist=false; ignored when persist=true (a new/"
+            "matching birth_charts row is resolved via get_or_create "
+            "instead)."
+        ),
+    )
 
     @field_validator("birth_datetime_utc")
     @classmethod
@@ -77,6 +97,56 @@ class WorkflowAnalysisRequest(BaseModel):
         if v.tzinfo is None:
             raise ValueError("birth_datetime_utc must be timezone-aware.")
         return v
+
+    @model_validator(mode="after")
+    def chart_id_required_when_not_persisting(self) -> "WorkflowAnalysisRequest":
+        if not self.persist and self.chart_id is None:
+            raise ValueError("chart_id is required when persist=false.")
+        return self
+
+
+# ── Bulk Import (CSV/JSON upload of birth data) ──────────────────────────────
+
+
+class BulkImportRow(BaseModel):
+    """One row of a bulk-import file — just enough to run through the same
+    analysis pipeline as WorkflowAnalysisRequest, with saner client-side
+    defaults (vargas skipped for speed, matching the recompute-for-display
+    path elsewhere in this API)."""
+
+    subject_name: str = "Unnamed"
+    birth_datetime_utc: datetime
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    place_name: Optional[str] = None
+    ayanamsa: AyanamsaCode = "lahiri"
+    house_system: HouseSystemCode = "W"
+
+    @field_validator("birth_datetime_utc")
+    @classmethod
+    def must_be_timezone_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError("birth_datetime_utc must be timezone-aware.")
+        return v
+
+
+class BulkImportRequest(BaseModel):
+    rows: list[BulkImportRow] = Field(min_length=1, max_length=100)
+
+
+class BulkImportRowResult(BaseModel):
+    row_index: int
+    subject_name: str
+    success: bool
+    chart_id: Optional[uuid.UUID] = None
+    error: Optional[str] = None
+
+
+class BulkImportResponse(BaseModel):
+    total: int
+    succeeded: int
+    failed: int
+    results: list[BulkImportRowResult]
 
 
 # ── New response pieces (no existing schema covered these engines) ───────────

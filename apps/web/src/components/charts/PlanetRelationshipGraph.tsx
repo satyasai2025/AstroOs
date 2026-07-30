@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import * as d3 from "d3";
 import { NATURAL_RELATIONSHIPS, PLANET_SYMBOLS, rashiLordFromApiName } from "@/lib/astro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
@@ -59,21 +59,126 @@ interface GraphLink {
 }
 
 /**
- * Per-graha traditional colors — adapted from Vedic symbolism (Jyotish color
- * attributions) for legibility on a dark background. These are AstroOS UI
- * conventions, not absolute classical prescriptions (different texts vary).
+ * Per-graha visual theme — extracted from the Figma design. Each planet gets:
+ *   glow    – color for the outer r=30 blur halo (applied via SVG filter)
+ *   stops   – radialGradient color stops (bright center → dark edge)
+ *   stroke  – ring color on the main r=20 circle
+ *   cx/cy/r – radialGradient focal point (relative %)
  */
-const GRAHA_COLOR: Record<string, string> = {
-  Sun: "#f59e0b",      // amber — fire/gold
-  Moon: "#e2e8f0",     // silver-white — lunar
-  Mars: "#ef4444",     // red — fire/warrior
-  Mercury: "#22c55e",  // green — earth/merchant
-  Jupiter: "#eab308",  // yellow-gold — wisdom/expansion
-  Venus: "#f472b6",    // rose-pink — beauty/venus
-  Saturn: "#6366f1",   // indigo-blue — karma/time
-  Rahu: "#94a3b8",     // slate-gray — smoke/shadow ascending
-  Ketu: "#a8a29e",     // warm stone — smoke/shadow descending
+interface PlanetTheme {
+  glow: string;
+  stroke: string;
+  cx: string;
+  cy: string;
+  r: string;
+  stops: { offset: string; color: string }[];
+}
+
+const PLANET_THEME: Record<string, PlanetTheme> = {
+  Sun: {
+    glow: "#FF8C00",
+    stroke: "#FFB340",
+    cx: "40%", cy: "36%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#fff8c0" },
+      { offset: "28%", color: "#ffcc44" },
+      { offset: "62%", color: "#ff8800" },
+      { offset: "100%", color: "#cc4000" },
+    ],
+  },
+  Moon: {
+    glow: "#90B0C8",
+    stroke: "#C8D8E8",
+    cx: "55%", cy: "40%", r: "64%",
+    stops: [
+      { offset: "0%", color: "#e8eaf2" },
+      { offset: "38%", color: "#b0b8c8" },
+      { offset: "75%", color: "#7a8090" },
+      { offset: "100%", color: "#5a606a" },
+    ],
+  },
+  Mars: {
+    glow: "#CC2020",
+    stroke: "#E8453C",
+    cx: "40%", cy: "36%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#ffa888" },
+      { offset: "28%", color: "#dd5533" },
+      { offset: "65%", color: "#aa2200" },
+      { offset: "100%", color: "#771100" },
+    ],
+  },
+  Mercury: {
+    glow: "#20C8B0",
+    stroke: "#5DE8D0",
+    cx: "45%", cy: "40%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#d8d0c0" },
+      { offset: "45%", color: "#9a9080" },
+      { offset: "100%", color: "#6a6050" },
+    ],
+  },
+  Jupiter: {
+    glow: "#E07800",
+    stroke: "#FF9500",
+    cx: "40%", cy: "38%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#f8e0b8" },
+      { offset: "30%", color: "#d49050" },
+      { offset: "65%", color: "#a86030" },
+      { offset: "100%", color: "#804018" },
+    ],
+  },
+  Venus: {
+    glow: "#E0408C",
+    stroke: "#FF6B9D",
+    cx: "42%", cy: "38%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#fffce8" },
+      { offset: "35%", color: "#eed498" },
+      { offset: "75%", color: "#c8a840" },
+      { offset: "100%", color: "#a88820" },
+    ],
+  },
+  Saturn: {
+    glow: "#5078A0",
+    stroke: "#7B9FC8",
+    cx: "44%", cy: "38%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#f0e8c8" },
+      { offset: "38%", color: "#c8b880" },
+      { offset: "78%", color: "#a09058" },
+      { offset: "100%", color: "#807040" },
+    ],
+  },
+  Rahu: {
+    glow: "#7C3AED",
+    stroke: "#A78BFA",
+    cx: "45%", cy: "42%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#9070d8" },
+      { offset: "40%", color: "#5038a8" },
+      { offset: "80%", color: "#302068" },
+      { offset: "100%", color: "#100820" },
+    ],
+  },
+  Ketu: {
+    glow: "#4ADE80",
+    stroke: "#86EFAC",
+    cx: "44%", cy: "39%", r: "62%",
+    stops: [
+      { offset: "0%", color: "#98c898" },
+      { offset: "40%", color: "#608860" },
+      { offset: "80%", color: "#405848" },
+      { offset: "100%", color: "#203428" },
+    ],
+  },
 };
+
+/** Quick access for legacy code that only needs the solid color. */
+const GRAHA_COLOR: Record<string, string> = Object.fromEntries(
+  Object.entries(PLANET_THEME).map(([k, v]) => [k, v.stroke]),
+);
 
 const YUDDHA_ELIGIBLE = new Set(["Mercury", "Venus", "Mars", "Jupiter", "Saturn"]);
 const YUDDHA_ORB_DEGREES = 1;
@@ -93,18 +198,18 @@ const DASHA_LEVEL_NAMES = ["Mahadasha", "Antardasha", "Pratyantardasha", "Sooksh
  * keep kinds that aren't Friend/Enemy/Yoga visually distinct from each
  * other — not an attempt to invent new classical color symbolism.
  */
-const LINK_STYLE: Record<LinkKind, { stroke: string; dash?: string; label: string }> = {
-  aspect: { stroke: "#60a5fa", label: "Aspect (this chart)" },
-  mutualAspect: { stroke: "#38bdf8", label: "Mutual Aspect (both planets aspect each other)" },
-  friend: { stroke: "#34d399", dash: "4 3", label: "Natural Friend (classical)" },
-  enemy: { stroke: "#f87171", dash: "4 3", label: "Natural Enemy (classical)" },
-  dispositor: { stroke: "#818cf8", dash: "2 4", label: "Dispositor (rules this planet's sign)" },
-  nakshatraLord: { stroke: "#c084fc", dash: "1 3", label: "Nakshatra (Star) Lord" },
-  conjunction: { stroke: "#22d3ee", label: "Conjunction (same house)" },
-  parivartana: { stroke: "#facc15", label: "Parivartana (mutual sign exchange)" },
-  yuddha: { stroke: "#fb7185", label: "Graha Yuddha (planetary war, < 1° orb)" },
-  yoga: { stroke: "#a78bfa", label: "Yoga Participation" },
-  dasha: { stroke: "#fb923c", label: "Dasha Relationship (currently running)" },
+const LINK_STYLE: Record<LinkKind, { stroke: string; width: number; dash?: string; label: string }> = {
+  aspect:        { stroke: "#406880", width: 0.8, label: "Aspect (this chart)" },
+  mutualAspect:  { stroke: "#503060", width: 1.2, label: "Mutual Aspect (both planets aspect each other)" },
+  friend:        { stroke: "#304860", width: 0.8, dash: "4 3", label: "Natural Friend (classical)" },
+  enemy:         { stroke: "#503060", width: 0.8, dash: "4 3", label: "Natural Enemy (classical)" },
+  dispositor:    { stroke: "#406880", width: 0.6, dash: "2 4", label: "Dispositor (rules this planet's sign)" },
+  nakshatraLord: { stroke: "#304860", width: 0.6, dash: "1 3", label: "Nakshatra (Star) Lord" },
+  conjunction:   { stroke: "#503060", width: 1.0, label: "Conjunction (same house)" },
+  parivartana:   { stroke: "#406880", width: 1.2, label: "Parivartana (mutual sign exchange)" },
+  yuddha:        { stroke: "#503060", width: 1.2, dash: "3 2", label: "Graha Yuddha (planetary war, < 1° orb)" },
+  yoga:          { stroke: "#304860", width: 1.0, label: "Yoga Participation" },
+  dasha:         { stroke: "#e07800", width: 1.0, label: "Dasha Relationship (currently running)" },
 };
 
 /**
@@ -179,6 +284,25 @@ export function PlanetRelationshipGraph({
   const [selected, setSelected] = useState<string | null>(null);
   const [positions, setPositions] = useState<Record<string, { x: number; y: number }>>({});
   const [activeKinds, setActiveKinds] = useState<Set<LinkKind>>(new Set(ALL_KINDS));
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [measuredWidth, setMeasuredWidth] = useState(size);
+
+  // Responsive: measure the container width and use it as the graph size.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const w = entry.contentRect.width;
+      if (w > 100) setMeasuredWidth(Math.floor(w));
+    });
+    observer.observe(el);
+    // Initial measurement
+    const w = el.getBoundingClientRect().width;
+    if (w > 100) setMeasuredWidth(Math.floor(w));
+    return () => observer.disconnect();
+  }, []);
+
+  const graphSize = measuredWidth;
 
   const planetNames = useMemo(() => planets.map((p) => p.planet), [planets]);
 
@@ -418,11 +542,11 @@ export function PlanetRelationshipGraph({
         d3
           .forceLink<GraphNode, d3.SimulationLinkDatum<GraphNode>>(simLinks as unknown as d3.SimulationLinkDatum<GraphNode>[])
           .id((d) => (d as GraphNode).id)
-          .distance(110),
+          .distance(graphSize * 0.22),
       )
-      .force("charge", d3.forceManyBody().strength(-220))
-      .force("center", d3.forceCenter(size / 2, size / 2))
-      .force("collide", d3.forceCollide(36))
+      .force("charge", d3.forceManyBody().strength(-graphSize * 0.5))
+      .force("center", d3.forceCenter(graphSize / 2, graphSize / 2))
+      .force("collide", d3.forceCollide(graphSize * 0.075))
       .stop();
 
     // Run synchronously to a settled layout instead of animating ticks.
@@ -432,12 +556,12 @@ export function PlanetRelationshipGraph({
     for (const n of nodes) {
       const margin = 40;
       next[n.id] = {
-        x: Math.max(margin, Math.min(size - margin, n.x ?? size / 2)),
-        y: Math.max(margin, Math.min(size - margin, n.y ?? size / 2)),
+        x: Math.max(margin, Math.min(graphSize - margin, n.x ?? graphSize / 2)),
+        y: Math.max(margin, Math.min(graphSize - margin, n.y ?? graphSize / 2)),
       };
     }
     setPositions(next);
-  }, [planetNames, allLinks, size]);
+  }, [planetNames, allLinks, graphSize]);
 
   if (planetNames.length === 0 || Object.keys(positions).length === 0) {
     return (
@@ -587,8 +711,25 @@ export function PlanetRelationshipGraph({
         )}
       </div>
 
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Planet relationship network graph">
-        {/* Edges */}
+      <div ref={containerRef} style={{ width: "100%" }}>
+      <svg width={graphSize} height={graphSize} viewBox={`0 0 ${graphSize} ${graphSize}`} role="img" aria-label="Planet relationship network graph">
+        <defs>
+          <filter id="glow-sm" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          {Object.entries(PLANET_THEME).map(([planet, theme]) => (
+            <radialGradient key={planet} id={`pg-${planet}`} cx={theme.cx} cy={theme.cy} r={theme.r}>
+              {theme.stops.map((stop, idx) => (
+                <stop key={idx} offset={stop.offset} stopColor={stop.color} />
+              ))}
+            </radialGradient>
+          ))}
+        </defs>
+        {/* Edges – cubic bezier curves */}
         {links.map((l, i) => {
           const s = positions[l.source];
           const t = positions[l.target];
@@ -597,14 +738,30 @@ export function PlanetRelationshipGraph({
           const dimmed = selected && !highlighted;
           const style = LINK_STYLE[l.kind];
           const weight = pairWeight.get([l.source, l.target].sort().join("|")) ?? LINK_WEIGHT[l.kind];
-          const strokeWidth = Math.min(highlighted ? 6.5 : 5, (highlighted ? 1.8 : 1) + weight / 4);
+          const dynamicWidth = (weight / 10) * 1.5;
+          const strokeWidth = highlighted ? style.width + dynamicWidth : style.width + dynamicWidth * 0.6;
+
+          // cubic bezier: offset control points perpendicular to the line
+          const dx = t.x - s.x;
+          const dy = t.y - s.y;
+          const len = Math.hypot(dx, dy);
+          const midX = (s.x + t.x) / 2;
+          const midY = (s.y + t.y) / 2;
+          // perpendicular offset (short arrow shape) – push midpoint outward a bit
+          const perpLen = len * 0.25;
+          const nx = -dy / len * perpLen;
+          const ny = dx / len * perpLen;
+          const cp1x = s.x + dx * 0.5 + nx;
+          const cp1y = s.y + dy * 0.5 + ny;
+          const cp2x = t.x - dx * 0.5 + nx;
+          const cp2y = t.y - dy * 0.5 + ny;
+          const pathD = `M ${s.x} ${s.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${t.x} ${t.y}`;
+
           return (
             <g key={i} opacity={dimmed ? 0.12 : 1} className="transition-opacity">
-              <line
-                x1={s.x}
-                y1={s.y}
-                x2={t.x}
-                y2={t.y}
+              <path
+                d={pathD}
+                fill="none"
                 stroke={style.stroke}
                 strokeWidth={strokeWidth}
                 strokeDasharray={style.dash}
@@ -620,7 +777,7 @@ export function PlanetRelationshipGraph({
           const active = selected === planet;
           const dimmed = isDimmed(planet);
           const dashaLevel = activeDashaLordLevel.get(planet);
-          const grahaColor = GRAHA_COLOR[planet] ?? "var(--accent)";
+          const theme = PLANET_THEME[planet] ?? { glow: "var(--accent)", stroke: "var(--accent)", stops: [], cx: "50%", cy: "50%", r: "62%" };
           return (
             <g
               key={planet}
@@ -630,46 +787,53 @@ export function PlanetRelationshipGraph({
               opacity={dimmed ? 0.3 : 1}
               className="transition-opacity"
             >
-              {/* Amber outer ring — this planet's own dasha level is
-                  running right now (Dasha Relationship, real dasha-tree
-                  data, same as KP Significators' "Dasha Now" column). */}
+              {/* Outer glow halo – large blurred circle behind the planet */}
+              <circle r={30} fill={theme.glow} opacity={0.06} filter="url(#glow-sm)" style={{ pointerEvents: "none" }} />
+
+              {/* Dasha indicator ring – planet's own MD is currently running */}
               {dashaLevel && (
-                <circle r={active ? 27 : 23} fill="none" stroke="#fb923c" strokeWidth={2} strokeDasharray="3 2">
+                <circle r={active ? 27 : 23} fill="none" stroke="#e07800" strokeWidth={1.5} strokeDasharray="3 2">
                   <title>{`${planet}'s own ${dashaLevel} is running right now`}</title>
                 </circle>
               )}
-              {/* Soft glow halo using the graha's traditional color */}
+
+              {/* Active selection ring */}
               {active && (
-                <circle r={25} fill={grahaColor} opacity={0.18} />
+                <circle r={25} fill={theme.glow} opacity={0.12} style={{ pointerEvents: "none" }} />
               )}
+
+              {/* Main planet sphere – radial gradient fill */}
               <circle
-                r={active ? 22 : 18}
-                fill={active ? grahaColor : "var(--bg-card)"}
-                stroke={grahaColor}
-                strokeWidth={active ? 0 : 1.8}
-                style={{ filter: active ? `drop-shadow(0 0 6px ${grahaColor})` : undefined }}
+                r={active ? 22 : 20}
+                fill={`url(#pg-${planet})`}
+                stroke={theme.stroke}
+                strokeWidth={0.8}
+                opacity={0.95}
               />
+
+              {/* Inner highlight dot – small white reflection */}
+              <circle r={active ? 13 : 11} cx={-4} cy={-4.4} fill="white" opacity={0.07} style={{ pointerEvents: "none" }} />
+
+              {/* Planet label – uppercase Cinzel, matches Figma exactly */}
               <text
+                y={active ? 35 : 33}
                 textAnchor="middle"
-                dominantBaseline="central"
-                fontSize={14}
-                fill={active ? "#000" : grahaColor}
-                fontWeight={600}
+                style={{
+                  fontSize: 8.5,
+                  fill: "#4a5080",
+                  fontFamily: "Cinzel, serif",
+                  letterSpacing: "0.1em",
+                  pointerEvents: "none",
+                  userSelect: "none",
+                } as React.CSSProperties}
               >
-                {PLANET_SYMBOLS[planet] ?? planet.slice(0, 2)}
-              </text>
-              <text
-                y={active ? 34 : 30}
-                textAnchor="middle"
-                fontSize={10}
-                fill="var(--text-secondary)"
-              >
-                {planet}
+                {planet.toUpperCase()}
               </text>
             </g>
           );
         })}
       </svg>
+      </div>
 
       <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
         Click a planet to highlight its connections{result ? " and open its full detail panel" : ""}. Use the

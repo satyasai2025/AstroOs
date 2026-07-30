@@ -1,2 +1,0 @@
-_record_id,_dataset_id,_record_type,_version,_is_deleted,ephemeris_set,format,file_names,version,body_count,date_range_start,date_range_end,source,license_status
-ASTRO-REC-EPHEM-000001,ASTRO-RF-EPHEM-v1.0.0,reference,1,false,Swiss Ephemeris v1.8,SE1 (binary),seas_18.se1|semo_18.se1|sepl_18.se1,18,planets+Moon+4 asteroids,1900,2100,https://www.astro.com/swisseph/,Licensed — dual license (research free, commercial paid)

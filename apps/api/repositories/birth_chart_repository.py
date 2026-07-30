@@ -139,6 +139,15 @@ class BirthChartRepository:
         model.moon_nakshatra = moon_nakshatra
         await self._session.flush()
 
+    async def get_by_id(self, chart_id: uuid.UUID) -> Optional[BirthChartModel]:
+        """Fetch a single birth_charts row by id, or None if missing/deleted."""
+        stmt = (
+            select(BirthChartModel)
+            .where(BirthChartModel.id == chart_id)
+            .where(BirthChartModel.deleted_at.is_(None))
+        )
+        return (await self._session.execute(stmt)).scalar_one_or_none()
+
     async def list_for_user(
         self,
         user_id: uuid.UUID,

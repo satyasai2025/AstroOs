@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCurrentUser, useLogout } from "@/lib/auth";
 import { tokenStore } from "@/lib/api";
+import { useWorkflowStore } from "@/lib/store";
 import { useTheme } from "./ThemeProvider";
 import { ResearchModeToggle } from "@/components/research/ResearchModeToggle";
 
@@ -38,7 +39,7 @@ interface NavSection {
  * 9-tab /charts page doesn't have separate routes per view, so Analysis
  * items deep-link via ?view=, which apps/charts/page.tsx now reads on
  * mount (see useSearchParams effect there). Items with no real backing
- * page/view (Import Chart, Yogas & Combinations, Ashtakavarga, Jaimini
+ * page/view (Yogas & Combinations, Ashtakavarga, Jaimini
  * Analysis, the AI & Insights pages, Knowledge Base, Pattern Discovery,
  * Case Studies, Settings, Documentation) are marked disabled rather than
  * fabricated — this app's standing rule is not to build UI that implies a
@@ -52,7 +53,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/dashboard", label: "New Chart", icon: "plus" },
       { href: "/charts/history", label: "My Charts", icon: "grid" },
       { href: "/charts/compare", label: "Compare Charts", icon: "layers" },
-      { href: "#", label: "Import Chart", icon: "upload", disabled: true },
+      { href: "/charts/import", label: "Import Chart", icon: "upload" },
     ],
   },
   {
@@ -285,6 +286,8 @@ export function AppShell({
   const pathname = usePathname();
   const { data: user, isLoading, isError } = useCurrentUser();
   const logout = useLogout();
+  const clearWorkflowResult = useWorkflowStore((s) => s.clear);
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const { theme, toggle } = useTheme();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -395,6 +398,19 @@ export function AppShell({
                         onMouseLeave={(e) => {
                           if (!isActive(item.href)) e.currentTarget.style.color = "var(--text-secondary)";
                         }}
+                        onClick={
+                          item.href === "/dashboard" && item.label === "New Chart"
+                            ? () => {
+                                // Same-route Link clicks don't re-run anything in
+                                // Next.js, so without this a user already on
+                                // /dashboard sees literally no response from
+                                // clicking this — open the Create Chart modal
+                                // ourselves instead of relying on navigation.
+                                clearWorkflowResult();
+                                openCreateModal();
+                              }
+                            : undefined
+                        }
                         aria-current={isActive(item.href) ? "page" : undefined}
                       >
                         <NavIcon name={item.icon} />

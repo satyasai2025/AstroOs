@@ -1,8 +1,0 @@
-_record_id,_dataset_id,_record_type,_version,_is_deleted,dasha_type,lord_sequence,total_years,lord_years,basis,source
-ASTRO-REC-DASHA-000001,ASTRO-RF-DASHA-v1.0.0,reference,1,false,vimshottari,ketu|venus|sun|moon|mars|rahu|jupiter|saturn|mercury,120,7|20|6|10|7|18|16|19|17,nakshatra,BPHS Chapter 46
-ASTRO-REC-DASHA-000002,ASTRO-RF-DASHA-v1.0.0,reference,1,false,yogini,mangala|pingala|dhanya|bhramari|bhadrika|ulka|siddha|sankata,36,1|2|3|4|5|6|7|8,nakshatra,BPHS Chapter 47
-ASTRO-REC-DASHA-000003,ASTRO-RF-DASHA-v1.0.0,reference,1,false,yogini_graha_mapping,moon|sun|jupiter|mars|mercury|saturn|venus|rahu,,1|2|3|4|5|6|7|8,nakshatra,BPHS Chapter 47
-ASTRO-REC-DASHA-000004,ASTRO-RF-DASHA-v1.0.0,reference,1,false,ashtottari,sun|moon|mars|mercury|saturn|jupiter|rahu|venus,108,6|15|8|17|10|19|12|21,nakshatra,BPHS Chapter 47
-ASTRO-REC-DASHA-000005,ASTRO-RF-DASHA-v1.0.0,reference,1,false,kalachakra,,,nakshatra_pada,Classical texts
-ASTRO-REC-DASHA-000006,ASTRO-RF-DASHA-v1.0.0,reference,1,false,chara,,,rashi,Jaimini system
-ASTRO-REC-DASHA-000007,ASTRO-RF-DASHA-v1.0.0,reference,1,false,narayana,,,rashi,Jaimini system

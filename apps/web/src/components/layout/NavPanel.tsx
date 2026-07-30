@@ -53,6 +53,7 @@ const NAV_GROUPS: NavGroup[] = [
           { href: "/register", label: "Register", subtitle: "Create account", icon: "register", viewId: "auth-register" },
           { href: "/forgot-password", label: "Forgot Password", icon: "key", disabled: true },
           { href: "/profile/setup", label: "Profile Setup", icon: "settings", disabled: true },
+          { href: "/charts/compare", label: "Compare Charts", subtitle: "Compare two or more charts", icon: "comparison", viewId: "compare-charts", disabled: false },
         ],
       },
       {
@@ -116,6 +117,7 @@ const NAV_GROUPS: NavGroup[] = [
           { href: "/charts?view=houses", label: "House Explorer", subtitle: "Bhava analysis", icon: "house", viewId: "workspace-houses" },
           { href: "/charts?view=divisional", label: "Divisional Charts", subtitle: "D-1 through D-60", icon: "grid", viewId: "workspace-divisional" },
           { href: "/charts?view=relationships", label: "Planet Relationships", subtitle: "Aspect graph", icon: "network", viewId: "workspace-relationships" },
+          { href: "/charts?view=relationships-v2", label: "Relationships v2", subtitle: "Center-focused graph", icon: "network", viewId: "workspace-relationships-v2" },
         ],
       },
       {

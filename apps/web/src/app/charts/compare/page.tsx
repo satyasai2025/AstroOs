@@ -1,284 +1,291 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
-import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
-import { useWorkflowStore } from "@/lib/store";
-import { VARGA_DIVISORS } from "@/lib/astro";
+import { useMyCharts } from "@/lib/charts";
+import { useAnalyzeWorkflow } from "@/lib/workflow";
+import { ApiError } from "@/lib/api";
+import type { WorkflowAnalysisRequest, WorkflowAnalysisResponse } from "@/lib/types";
+import { CompareChartsModal } from "./components/CompareChartsModal";
+import { ComparisonWorkspace, type ComparedChart } from "./components/ComparisonWorkspace";
+import { useSavedComparisons } from "./hooks/useSavedComparisons";
+
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, { dateStyle: "medium" });
+  } catch {
+    return iso;
+  }
+}
 
 /**
- * /charts/compare — Side-by-side D1 + D9 chart comparison view.
- *
- * Displays the Rashi (D1) and Navamsha (D9) charts rendered as
- * North Indian diamond charts, allowing the user to visually compare
- * planetary placements across the two divisional charts.
+ * /charts/compare — side-by-side comparison of 2-4 saved charts (planets,
+ * houses, dasha, yogas, summary), with CSV/PDF export and locally saved
+ * comparison sets for quick re-opening.
  */
 export default function ChartComparePage() {
-  const result = useWorkflowStore((s) => s.result);
-  const request = useWorkflowStore((s) => s.request);
+  const { data: chartsData, isLoading: chartsLoading, isError: chartsErrored } = useMyCharts();
+  const analyze = useAnalyzeWorkflow();
+  const {
+    savedComparisons,
+    saveComparison,
+    deleteComparison,
+    togglePin,
+  } = useSavedComparisons();
 
-  if (!result) {
-    return (
-      <AppShell>
-        <div
-          className="flex flex-col items-center justify-center gap-4 py-20"
-          role="status"
-        >
-          <div className="glass-card flex flex-col items-center gap-4 p-8 text-center">
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              aria-hidden="true"
-              style={{ color: "var(--text-muted)" }}
-            >
-              <rect x="2" y="3" width="8" height="18" rx="1" />
-              <rect x="14" y="3" width="8" height="18" rx="1" />
-            </svg>
-            <h2
-              className="text-lg font-semibold"
-              style={{ color: "var(--text-primary)" }}
-            >
-              No Chart Data Available
-            </h2>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Run an analysis on the Dashboard first to populate chart data.
-            </p>
-            <Link href="/dashboard" className="btn-primary">
-              Go to Dashboard
-            </Link>
-          </div>
-        </div>
-      </AppShell>
-    );
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [compared, setCompared] = useState<ComparedChart[] | null>(null);
+  const [isComparing, setIsComparing] = useState(false);
+  const [compareError, setCompareError] = useState<string | null>(null);
+  const [activeChartIds, setActiveChartIds] = useState<string[]>([]);
 
-  const { chart, vargas } = result;
+  // Swiss Ephemeris recompute is deterministic — a chart's analysis never
+  // changes for the same stored birth parameters — so once fetched within
+  // this page visit, reuse it instead of re-calling the rate-limited
+  // /workflow/analyze endpoint (6/minute) every time a comparison re-runs
+  // or a saved comparison is reopened.
+  const resultCache = useRef<Map<string, WorkflowAnalysisResponse>>(new Map());
 
-  // D1 planet placements
-  const d1Planets = chart.planets.map((p) => ({
-    planet: p.planet,
-    rashi: p.rashi,
-    house_number: p.house_number,
-    is_retrograde: p.is_retrograde,
-    rashi_degree: p.rashi_degree,
+  const availableCharts = (chartsData?.charts ?? []).map((c) => ({
+    id: c.id,
+    name: c.subject_name,
+    subtitle: `${formatDate(c.birth_datetime_utc)}${c.place_name ? ` · ${c.place_name}` : ""}`,
   }));
 
-  // D9 planet placements
-  const d9Data = vargas?.charts["D9"];
-  const d9Planets = d9Data
-    ? d9Data.planet_positions.map((p) => ({
-        planet: p.planet,
-        rashi: p.varga_rashi,
-        house_number: p.varga_house_number,
-        is_retrograde: p.is_retrograde,
-        rashi_degree: p.varga_rashi_degree,
-      }))
-    : null;
+  const runComparison = async (chartIds: string[]) => {
+    setCompareError(null);
+    setIsComparing(true);
+    setActiveChartIds(chartIds);
+    try {
+      // Sequential, not Promise.all: keeps us well under the 6/minute cap
+      // on /workflow/analyze and lets already-cached charts resolve
+      // instantly without consuming any of that budget at all.
+      const results: ComparedChart[] = [];
+      for (const id of chartIds) {
+        const summary = chartsData?.charts.find((c) => c.id === id);
+        if (!summary) throw new Error("One of the selected charts is no longer available.");
 
-  const d9Ascendant = d9Data
-    ? {
-        rashi: d9Data.ascendant.varga_rashi,
-        rashi_degree: d9Data.ascendant.varga_rashi_degree,
+        const cached = resultCache.current.get(id);
+        if (cached) {
+          results.push({ id, name: summary.subject_name, result: cached });
+          continue;
+        }
+
+        const request: WorkflowAnalysisRequest = {
+          birth_datetime_utc: summary.birth_datetime_utc,
+          latitude: summary.birth_latitude,
+          longitude: summary.birth_longitude,
+          ayanamsa: summary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+          house_system: summary.house_system as WorkflowAnalysisRequest["house_system"],
+          dasha_system: "vimshottari",
+          include_vargas: false,
+          subject_name: summary.subject_name,
+          place_name: summary.place_name,
+          persist: false,
+          chart_id: summary.id,
+        };
+        const result = await analyze.mutateAsync(request);
+        resultCache.current.set(id, result);
+        results.push({ id, name: summary.subject_name, result });
       }
-    : null;
-
-  const d1Ascendant = {
-    rashi: chart.ascendant.rashi,
-    rashi_degree: chart.ascendant.rashi_degree,
+      setCompared(results);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 429) {
+        setCompareError("Too many chart recomputes in a short time — please wait about a minute and try again.");
+      } else {
+        setCompareError(err instanceof ApiError ? err.detail : "Could not load one or more charts for comparison.");
+      }
+      setCompared(null);
+    } finally {
+      setIsComparing(false);
+    }
   };
 
-  // Build comparison summary
-  const d1Placements = new Map(
-    chart.planets.map((p) => [p.planet, p.rashi]),
-  );
-  const d9Placements = d9Data
-    ? new Map(d9Data.planet_positions.map((p) => [p.planet, p.varga_rashi]))
-    : new Map();
+  const handleCompare = (chartIds: string[]) => {
+    setIsModalOpen(false);
+    void runComparison(chartIds);
+  };
 
-  const planets = [
-    "Sun",
-    "Moon",
-    "Mars",
-    "Mercury",
-    "Jupiter",
-    "Venus",
-    "Saturn",
-    "Rahu",
-    "Ketu",
-  ];
+  const handleSave = (name: string) => {
+    saveComparison({
+      name,
+      charts: activeChartIds,
+      comparisonType: "multi",
+      userNotes: "",
+      aiSummary: "",
+      pinned: false,
+    });
+  };
 
-  const samePlacement = planets.filter(
-    (p) => d1Placements.get(p) && d9Placements.get(p) && d1Placements.get(p) === d9Placements.get(p),
-  );
+  const handleOpenSaved = (chartIds: string[]) => {
+    const allStillExist = chartIds.every((id) => chartsData?.charts.some((c) => c.id === id));
+    if (!allStillExist) {
+      setCompareError("One or more charts in this saved comparison have been deleted.");
+      return;
+    }
+    void runComparison(chartIds);
+  };
+
+  // Consumes a shared comparison link (?ids=a,b,c,d) — only works for
+  // charts the signed-in account itself owns, since saved charts are
+  // per-user; sharing across accounts isn't meaningful here.
+  const searchParams = useSearchParams();
+  const sharedIdsLoaded = useRef(false);
+  useEffect(() => {
+    if (sharedIdsLoaded.current || chartsLoading || !chartsData) return;
+    const idsParam = searchParams.get("ids");
+    if (!idsParam) return;
+    sharedIdsLoaded.current = true;
+    const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+    if (ids.length < 2) {
+      setCompareError("This link doesn't include enough charts to compare.");
+      return;
+    }
+    const allExist = ids.every((id) => chartsData.charts.some((c) => c.id === id));
+    if (!allExist) {
+      setCompareError("One or more charts in this shared link aren't available on this account.");
+      return;
+    }
+    void runComparison(ids);
+    // runComparison intentionally omitted: it's redefined every render but
+    // reads current chartsData/resultCache via closure, and this effect
+    // should only ever fire once per page load (guarded by sharedIdsLoaded).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chartsLoading, chartsData, searchParams]);
 
   return (
     <AppShell>
-      {/* Page header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1
-            className="text-2xl font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Chart Comparison
+          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+            Compare Charts
           </h1>
           <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-            Side-by-side D1 (Rashi) and D9 (Navamsha) chart comparison.
-            {request && (
-              <>
-                {" "}
-                Subject: <span className="font-medium">{request.subject_name}</span>
-              </>
-            )}
+            Pick 2-4 saved charts to compare planets, houses, dasha, and yogas side by side.
           </p>
         </div>
-        <Link
-          href="/charts"
-          className="btn-ghost text-xs px-3 py-1.5"
-          aria-label="Back to chart view"
-        >
-          Back to Charts
-        </Link>
+        <button type="button" onClick={() => setIsModalOpen(true)} className="obsidian-btn-primary text-sm">
+          + Choose Charts
+        </button>
       </div>
 
-      {/* Side-by-side charts */}
-      <div
-        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
-        role="region"
-        aria-label="D1 and D9 charts side by side"
-      >
-        {/* D1 Chart */}
-        <div className="glass-card p-6">
-          <NorthIndianChart
-            title="D1 — Rashi Chart"
-            ascendant={d1Ascendant}
-            planets={d1Planets}
-            size={380}
-          />
-        </div>
-
-        {/* D9 Chart */}
-        {d9Planets && d9Ascendant ? (
-          <div className="glass-card p-6">
-            <NorthIndianChart
-              title="D9 — Navamsha Chart"
-              ascendant={d9Ascendant}
-              planets={d9Planets}
-              size={380}
-              isVarga
-              vargaDivisor={9}
-            />
-          </div>
-        ) : (
-          <div className="glass-card flex items-center justify-center p-6">
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-              D9 (Navamsha) chart data not available.
-              Ensure "Include Vargas" was checked during analysis.
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Comparison summary table */}
-      <div className="mt-6 glass-card overflow-x-auto p-5">
-        <h3
-          className="mb-3 text-sm font-semibold uppercase tracking-wide"
-          style={{ color: "var(--accent)" }}
-        >
-          Placement Comparison — D1 vs D9
-        </h3>
-
-        <table className="w-full text-left text-sm" role="table">
-          <thead>
-            <tr
-              className="border-b text-xs uppercase tracking-wide"
-              style={{
-                borderColor: "var(--border-primary)",
-                color: "var(--text-muted)",
-              }}
-            >
-              <th className="py-2 pr-3" scope="col">Planet</th>
-              <th className="py-2 pr-3" scope="col">D1 Rashi</th>
-              <th className="py-2 pr-3" scope="col">D9 Rashi</th>
-              <th className="py-2 pr-3" scope="col">Same?</th>
-              <th className="py-2 pr-3" scope="col">D1 House</th>
-              <th className="py-2" scope="col">D9 House</th>
-            </tr>
-          </thead>
-          <tbody>
-            {planets.map((planet) => {
-              const d1Rashi = d1Placements.get(planet) ?? "—";
-              const d9Rashi = d9Placements.get(planet) ?? "—";
-              const isSame = d1Rashi === d9Rashi && d1Rashi !== "—";
-              const d1Planet = chart.planets.find((p) => p.planet === planet);
-              const d9Planet = d9Data?.planet_positions.find(
-                (p) => p.planet === planet,
-              );
-
-              return (
-                <tr
-                  key={planet}
-                  className="border-b"
-                  style={{
-                    borderColor: "var(--border-primary)",
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  <td className="py-2 pr-3 font-medium capitalize">{planet}</td>
-                  <td className="py-2 pr-3 capitalize">{d1Rashi}</td>
-                  <td className="py-2 pr-3 capitalize">{d9Rashi}</td>
-                  <td className="py-2 pr-3">
-                    <span
-                      className="inline-block h-2 w-2 rounded-full"
-                      style={{
-                        backgroundColor: isSame
-                          ? "#34d399"
-                          : "var(--text-muted)",
-                      }}
-                      aria-label={isSame ? "Same placement in D1 and D9" : "Different placement"}
-                    />
-                  </td>
-                  <td className="py-2 pr-3">{d1Planet?.house_number ?? "—"}</td>
-                  <td className="py-2">{d9Planet?.varga_house_number ?? "—"}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        {/* Summary */}
+      {compareError && (
         <div
-          className="mt-4 rounded-lg border p-3"
-          style={{
-            borderColor: "var(--border-primary)",
-            backgroundColor: "var(--bg-card)",
-          }}
+          className="obsidian-card mb-4 p-3 text-sm"
+          style={{ color: "var(--obsidian-status-danger, #ef4444)" }}
+          role="alert"
         >
-          <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-            {samePlacement.length > 0 ? (
-              <>
-                <span style={{ color: "var(--accent)" }}>
-                  {samePlacement.length} planet{samePlacement.length !== 1 ? "s" : ""}
-                </span>{" "}
-                {samePlacement.length === 1 ? "has" : "have"} the same rashi placement
-                in both D1 and D9:{" "}
-                <span className="font-medium">
-                  {samePlacement.join(", ")}
-                </span>
-                .
-              </>
-            ) : (
-              <span>
-                No planets share the same rashi placement between D1 and D9.
-              </span>
-            )}
-          </p>
+          {compareError}
         </div>
-      </div>
+      )}
+
+      {isComparing && (
+        <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+          Loading charts for comparison…
+        </div>
+      )}
+
+      {!isComparing && compared && (
+        <div className="mb-6">
+          <ComparisonWorkspace charts={compared} onClose={() => setCompared(null)} onSave={handleSave} />
+        </div>
+      )}
+
+      {!isComparing && !compared && (
+        <>
+          {chartsLoading && (
+            <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+              Loading your saved charts…
+            </div>
+          )}
+
+          {chartsErrored && (
+            <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
+              Could not load your saved charts.
+            </div>
+          )}
+
+          {!chartsLoading && !chartsErrored && availableCharts.length < 2 && (
+            <div className="obsidian-card flex flex-col items-center gap-4 p-10 text-center">
+              <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+                Not Enough Saved Charts
+              </h2>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                You need at least 2 saved charts to compare. Generate more from the Dashboard.
+              </p>
+              <Link href="/dashboard" className="obsidian-btn-primary text-sm">
+                Go to Dashboard
+              </Link>
+            </div>
+          )}
+
+          {!chartsLoading && !chartsErrored && availableCharts.length >= 2 && (
+            <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+              Choose 2-4 charts above to see them compared side by side.
+            </div>
+          )}
+
+          {savedComparisons.length > 0 && (
+            <div className="obsidian-card mt-6 p-5">
+              <h2 className="mb-3 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                Saved Comparisons
+              </h2>
+              <ul className="space-y-2">
+                {savedComparisons.map((sc) => (
+                  <li
+                    key={sc.id}
+                    className="flex items-center justify-between rounded-lg border p-3"
+                    style={{ borderColor: "var(--border-primary)" }}
+                  >
+                    <div>
+                      <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                        {sc.pinned ? "📌 " : ""}
+                        {sc.name}
+                      </p>
+                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                        {sc.charts.length} charts · saved {formatDate(sc.createdAt)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenSaved(sc.charts)}
+                        className="obsidian-btn-secondary text-xs"
+                      >
+                        Open
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => togglePin(sc.id)}
+                        className="obsidian-btn-secondary text-xs"
+                      >
+                        {sc.pinned ? "Unpin" : "Pin"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => deleteComparison(sc.id)}
+                        className="px-2 py-1 text-xs font-medium"
+                        style={{ color: "var(--obsidian-status-danger, #ef4444)" }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+
+      <CompareChartsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCompare={handleCompare}
+        availableCharts={availableCharts}
+      />
     </AppShell>
   );
 }

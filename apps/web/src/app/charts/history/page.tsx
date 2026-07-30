@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { useDeleteChart, useMyCharts } from "@/lib/charts";
 import { ApiError } from "@/lib/api";
@@ -137,7 +138,11 @@ export default function ChartHistoryPage() {
                   className="border-b"
                   style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}
                 >
-                  <td className="py-2 pr-3 font-medium">{c.subject_name}</td>
+                  <td className="py-2 pr-3 font-medium">
+                    <Link href={`/charts/${c.id}`} className="hover:underline">
+                      {c.subject_name}
+                    </Link>
+                  </td>
                   <td className="py-2 pr-3">{formatDateTime(c.birth_datetime_utc)}</td>
                   <td className="py-2 pr-3" style={{ color: "var(--text-secondary)" }}>
                     {c.place_name ?? "—"}

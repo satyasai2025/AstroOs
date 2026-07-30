@@ -242,27 +242,35 @@ class WorkflowOrchestrator:
         ) = await asyncio.to_thread(_compute_natal_bundle)
 
         # ── Persistence (chart_id anchors everything else) ──────────────
-        chart_id = await self._horoscope_engine.persist_d1(
-            chart,
-            birth_datetime_utc=request.birth_datetime_utc,
-            latitude=request.latitude,
-            longitude=request.longitude,
-            ayanamsa=request.ayanamsa,
-            house_system=request.house_system,
-            subject_name=request.subject_name,
-            user_id=user_id,
-            place_name=request.place_name,
-        )
-        if vargas is not None:
-            await self._divisional_engine.persist_all(
-                vargas,
+        # request.persist=False is the recompute-only path: the caller
+        # (chart detail page reload, chart comparison) already has a
+        # saved chart_id and just wants its analysis reproduced for
+        # display, not a new — or duplicate — birth_charts row. Schema
+        # validation guarantees chart_id is set whenever persist is False.
+        if request.persist:
+            chart_id = await self._horoscope_engine.persist_d1(
+                chart,
                 birth_datetime_utc=request.birth_datetime_utc,
                 latitude=request.latitude,
                 longitude=request.longitude,
                 ayanamsa=request.ayanamsa,
                 house_system=request.house_system,
-                birth_chart_id=chart_id,
+                subject_name=request.subject_name,
+                user_id=user_id,
+                place_name=request.place_name,
             )
+            if vargas is not None:
+                await self._divisional_engine.persist_all(
+                    vargas,
+                    birth_datetime_utc=request.birth_datetime_utc,
+                    latitude=request.latitude,
+                    longitude=request.longitude,
+                    ayanamsa=request.ayanamsa,
+                    house_system=request.house_system,
+                    birth_chart_id=chart_id,
+                )
+        else:
+            chart_id = request.chart_id
 
         # ── Knowledge: best-effort correlation against present yogas ────
         knowledge_citations = await self._gather_knowledge_citations(yoga_results)

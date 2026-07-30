@@ -1,7 +1,0 @@
-_record_id,_dataset_id,_record_type,_version,_is_deleted,ayanamsa_system,name,sid_mode,base_formula,current_value_deg,precession_rate_deg_per_year,epoch_date,reference_source
-ASTRO-REC-AYAN-000001,ASTRO-RF-AYAN-v1.0.0,reference,1,false,lahiri,Lahiri/Chitrapaksha,SIDM_LAHIRI,Newcomb precession with 1945 epoch fixed offset,PLACEHOLDER,0.0139,1945-01-01,Indian Astronomical Ephemeris (IAE)
-ASTRO-REC-AYAN-000002,ASTRO-RF-AYAN-v1.0.0,reference,1,false,kp,Krishnamurti (KP),SIDM_KRISHNAMURTI,Same as Lahiri with 1° adjustment,PLACEHOLDER,0.0139,1972-01-01,KP system
-ASTRO-REC-AYAN-000003,ASTRO-RF-AYAN-v1.0.0,reference,1,false,raman,Raman,SIDM_RAMAN,B.V. Raman's calculation,PLACEHOLDER,0.0139,1900-01-01,B.V. Raman
-ASTRO-REC-AYAN-000004,ASTRO-RF-AYAN-v1.0.0,reference,1,false,yukteshwar,Yukteshwar,SIDM_YUKTESHWAR,24° fixed offset,PLACEHOLDER,0.0,1900-01-01,Sri Yukteshwar
-ASTRO-REC-AYAN-000005,ASTRO-RF-AYAN-v1.0.0,reference,1,false,fagan_bradley,Fagan-Bradley,SIDM_FAGAN_BRADLEY,Western sidereal with Fagan's adjustment,PLACEHOLDER,0.0139,1950-01-01,Fagan
-ASTRO-REC-AYAN-000006,ASTRO-RF-AYAN-v1.0.0,reference,1,false,true_chitra,True Chitrapaksha,SIDM_TRUE_CITRA,Chitra star (Spica) at 180° exactly,PLACEHOLDER,0.0139,1972-01-01,True Chitra system
