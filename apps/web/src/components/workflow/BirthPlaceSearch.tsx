@@ -41,7 +41,7 @@ export function BirthPlaceSearch({ value, onChange, onSelect, disabled }: Props)
         onFocus={() => setIsOpen(true)}
         onBlur={() => setIsOpen(false)}
         placeholder="Search a city, e.g. Pune, Maharashtra, India"
-        className="field-input"
+        className="obsidian-input"
         disabled={disabled}
         autoComplete="off"
       />

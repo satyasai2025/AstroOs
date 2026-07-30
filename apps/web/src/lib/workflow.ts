@@ -10,11 +10,23 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { api } from "./api";
-import type { WorkflowAnalysisRequest, WorkflowAnalysisResponse } from "./types";
+import type {
+  BulkImportRow,
+  BulkImportResponse,
+  WorkflowAnalysisRequest,
+  WorkflowAnalysisResponse,
+} from "./types";
 
 export function useAnalyzeWorkflow() {
   return useMutation<WorkflowAnalysisResponse, Error, WorkflowAnalysisRequest>({
     mutationFn: (payload) =>
       api.post<WorkflowAnalysisResponse>("/api/v1/workflow/analyze", payload),
+  });
+}
+
+export function useBulkImportCharts() {
+  return useMutation<BulkImportResponse, Error, BulkImportRow[]>({
+    mutationFn: (rows) =>
+      api.post<BulkImportResponse>("/api/v1/workflow/bulk-import", { rows }),
   });
 }

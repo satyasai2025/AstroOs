@@ -156,6 +156,7 @@ class D1ChartRequest(BaseModel):
 
 class D1ChartResponse(BaseModel):
     """Response payload describing d1 chart data."""
+    id: Optional[uuid.UUID] = None
     ascendant: AscendantSchema
     houses: list[HouseCuspSchema]
     planets: list[PlanetPositionSchema]

@@ -88,6 +88,10 @@ export interface WorkflowAnalysisRequest {
   place_name?: string | null;
   generated_by?: string | null;
   research_project_id?: string | null;
+  /** Set false to recompute an already-saved chart for display/comparison without saving a new row. Requires chart_id. */
+  persist?: boolean;
+  /** The existing saved chart this recompute belongs to. Required when persist is false. */
+  chart_id?: string | null;
 }
 
 // ── Chart (D1) ──────────────────────────────────────────────────────────────
@@ -502,6 +506,33 @@ export interface WorkflowAnalysisResponse {
   benchmark: BenchmarkResponse;
   report: ChartReportResponse;
   research_snapshot_id: string | null;
+}
+
+// ── Bulk Import (CSV/JSON upload of birth data) ──────────────────────────────
+
+export interface BulkImportRow {
+  subject_name: string;
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  place_name?: string | null;
+  ayanamsa?: AyanamsaCode;
+  house_system?: HouseSystemCode;
+}
+
+export interface BulkImportRowResult {
+  row_index: number;
+  subject_name: string;
+  success: boolean;
+  chart_id: string | null;
+  error: string | null;
+}
+
+export interface BulkImportResponse {
+  total: number;
+  succeeded: number;
+  failed: number;
+  results: BulkImportRowResult[];
 }
 
 // ── AI / Explanation (Phase D) ────────────────────────────────────────────────

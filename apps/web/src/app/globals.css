@@ -178,6 +178,27 @@
   --accent-hover: #05a8d1;
   --accent-text: #0B0E14;
 
+  /* These "obsidian-*"/"chart-*" variables mirror the tokens above but are
+   * used directly by many components (see .obsidian-btn-secondary etc.
+   * below) — without light-mode overrides here they silently fall back
+   * to :root's dark values, pairing a dark surface with the now-dark
+   * --text-primary above and making that text illegible. */
+  --obsidian-canvas: #f8fafc;
+  --obsidian-surface: #ffffff;
+  --obsidian-surface-elevated: #f1f5f9;
+  --obsidian-surface-hover: #e2e8f0;
+  --obsidian-border: #e2e8f0;
+  --obsidian-border-strong: #cbd5e1;
+  --obsidian-text-primary: #1e293b;
+  --obsidian-text-secondary: #475569;
+  --obsidian-text-muted: #94a3b8;
+
+  --chart-bg: #ffffff;
+  --chart-border: rgba(194, 65, 12, 0.45);
+  --chart-text: #c2410c;
+  --chart-planet: #c2410c;
+  --chart-ascendant: #dc2626;
+
   --section-charts: #06CFFF;
   --section-charts-hover: #05a8d1;
   --section-analysis: #f97316;
@@ -305,6 +326,51 @@
   }
   .obsidian-glow-violet {
     box-shadow: var(--obsidian-glow-violet);
+  }
+
+  /* ── Legacy aliases ──────────────────────────────────────────────────
+   * These class names are referenced across ~40 components (login,
+   * register, the birth-details/recompute forms, most chart panels) but
+   * were never actually defined anywhere in this stylesheet — every one
+   * of those elements was silently falling back to unstyled browser
+   * defaults (a plain white input/select, no card background, etc.)
+   * this whole time. Aliasing them to the real obsidian-* classes fixes
+   * every call site at once without touching ~40 files individually. */
+  .field-input {
+    @apply obsidian-input;
+  }
+  .field-label {
+    @apply mb-1 block text-xs font-medium;
+    color: var(--text-secondary);
+  }
+  .glass-card {
+    @apply obsidian-card;
+  }
+  .btn-primary {
+    @apply obsidian-btn-primary;
+  }
+  .btn-ghost {
+    @apply obsidian-btn-secondary;
+  }
+  .text-error {
+    color: var(--status-danger);
+  }
+
+  /* Native <select> dropdown lists are OS/browser-rendered and mostly
+   * unstyleable, but Chromium-based browsers do respect the select
+   * element's own background/color for the popup list — setting them
+   * here (rather than relying only on .obsidian-input/.field-input)
+   * is what actually fixes the white-background dropdown, not just the
+   * closed control. */
+  select.obsidian-input,
+  select.field-input {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+  select.obsidian-input option,
+  select.field-input option {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
   }
 
   .obsidian-icon-bg {

@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
 import NavPanel from "./NavPanel";
 import ResearchDashboard from "../dashboard/ResearchDashboard";
 import InteractiveKundliView from "../charts/InteractiveKundliView";
 import { PlanetRelationshipGraph } from "../charts/PlanetRelationshipGraph";
+import PlanetRelationshipGraph2 from "../charts/PlanetRelationshipGraph2";
+import { HouseDependencyNetwork } from "../charts/HouseDependencyNetwork";
 import ReverseSearchView from "../dashboard/ReverseSearchView";
 import ClassicalLiteratureView from "../dashboard/ClassicalLiteratureView";
 import type { D1ChartResponse } from "@/lib/types";
@@ -136,7 +138,15 @@ const VIEW_COMPONENTS = {
   // Chart Workspace
   "workspace-kundli": () => <InteractiveKundliView chart={MOCK_CHART} />,
   "workspace-planets": () => <PlaceholderView module="04" title="Planet Explorer" />,
-  "workspace-houses": () => <PlaceholderView module="04" title="House Explorer" />,
+  "workspace-houses": () => (
+    <div className="p-6">
+      <HouseDependencyNetwork
+        houses={MOCK_CHART.houses}
+        planetStrengths={MOCK_CHART.planet_strengths}
+        planets={MOCK_CHART.planets}
+      />
+    </div>
+  ),
   "workspace-divisional": () => <PlaceholderView module="04" title="Divisional Charts" />,
   "workspace-relationships": () => (
     <div className="p-6">
@@ -144,6 +154,14 @@ const VIEW_COMPONENTS = {
         planets={MOCK_CHART.planets}
         aspects={MOCK_CHART.aspects}
         size={520}
+      />
+    </div>
+  ),
+  "workspace-relationships-v2": () => (
+    <div className="p-6">
+      <PlanetRelationshipGraph2
+        planets={MOCK_CHART.planets}
+        aspects={MOCK_CHART.aspects}
       />
     </div>
   ),
@@ -212,6 +230,15 @@ const DEFAULT_VIEW: ViewId = "research-dashboard";
 export default function ResearchWorkspace() {
   const [currentView, setCurrentView] = useState<ViewId>(DEFAULT_VIEW);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Sync URL ?view= on mount (for direct linking)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const viewParam = params.get('view');
+    if (viewParam && viewParam in VIEW_COMPONENTS) {
+      setCurrentView(viewParam as ViewId);
+    }
+  }, []);
 
   const handleNavigate = useCallback((viewId: string) => {
     if (viewId in VIEW_COMPONENTS) {

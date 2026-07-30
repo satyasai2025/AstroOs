@@ -36,6 +36,7 @@ from apps.api.routers import dasha as dasha_router
 from apps.api.routers import dataset_import as dataset_import_router
 from apps.api.routers import datasets as datasets_router
 from apps.api.routers import divisional as divisional_router
+from apps.api.routers import digital_twin as digital_twin_router
 from apps.api.routers import events as events_router
 from apps.api.routers import export as export_router
 from apps.api.routers import geocoding as geocoding_router
@@ -325,6 +326,9 @@ def create_app() -> FastAPI:
     _researcher = [Depends(require_researcher)]
     app.include_router(
         research_router.router, prefix="/api/v1", dependencies=_researcher
+    )
+    app.include_router(
+        digital_twin_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         research_tools_router.router, prefix="/api/v1", dependencies=_researcher

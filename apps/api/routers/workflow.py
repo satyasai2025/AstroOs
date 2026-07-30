@@ -54,6 +54,9 @@ from apps.api.schemas.report import ChartReportResponse
 from apps.api.schemas.transit import TransitResponse
 from apps.api.schemas.workflow import (
     BenchmarkResponse,
+    BulkImportRequest,
+    BulkImportResponse,
+    BulkImportRowResult,
     PlanetBenchmarkResponse,
     RuleResultResponse,
     ShadbalaTotalResponse,
@@ -252,3 +255,74 @@ async def analyze_workflow(
             detail="Failed to run the analysis pipeline.",
         )
     return _result_to_response(result)
+
+
+@router.post(
+    "/bulk-import",
+    response_model=BulkImportResponse,
+    summary="Bulk-import saved charts from birth-data rows (e.g. a CSV/JSON upload)",
+    description=(
+        "Creates one saved chart per row by running each through the same "
+        "analysis pipeline as POST /workflow/analyze (persist=true, "
+        "divisional charts skipped for speed). Rows are processed "
+        "independently in one request — an invalid row is reported in "
+        "the response, not raised as an error that fails the whole batch. "
+        "Capped at 100 rows per call."
+    ),
+)
+@limiter.limit("5/hour")
+async def bulk_import(
+    request: Request,
+    body: BulkImportRequest,
+    current_user: User = Depends(get_current_user_from_bearer),
+    orchestrator: WorkflowOrchestrator = Depends(_get_orchestrator),
+) -> BulkImportResponse:
+    results: list[BulkImportRowResult] = []
+
+    for i, row in enumerate(body.rows):
+        try:
+            analyze_request = WorkflowAnalysisRequest(
+                birth_datetime_utc=row.birth_datetime_utc,
+                latitude=row.latitude,
+                longitude=row.longitude,
+                ayanamsa=row.ayanamsa,
+                house_system=row.house_system,
+                dasha_system="vimshottari",
+                include_vargas=False,
+                subject_name=row.subject_name,
+                place_name=row.place_name,
+                persist=True,
+            )
+            result = await orchestrator.analyze(analyze_request, user_id=current_user.id.value)
+            results.append(
+                BulkImportRowResult(
+                    row_index=i,
+                    subject_name=row.subject_name,
+                    success=True,
+                    chart_id=result.chart_id,
+                )
+            )
+        except ValueError as exc:
+            results.append(
+                BulkImportRowResult(
+                    row_index=i, subject_name=row.subject_name, success=False, error=str(exc),
+                )
+            )
+        except Exception as exc:
+            logger.exception("Bulk import row %d failed: %s", i, exc)
+            results.append(
+                BulkImportRowResult(
+                    row_index=i,
+                    subject_name=row.subject_name,
+                    success=False,
+                    error="Failed to compute this chart.",
+                )
+            )
+
+    succeeded = sum(1 for r in results if r.success)
+    return BulkImportResponse(
+        total=len(results),
+        succeeded=succeeded,
+        failed=len(results) - succeeded,
+        results=results,
+    )

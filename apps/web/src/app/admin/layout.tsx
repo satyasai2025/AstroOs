@@ -15,7 +15,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useAdminCurrentUser, useAdminLogout } from "@/lib/adminAuth";
+import { adminTokenStore, useAdminCurrentUser, useAdminLogout } from "@/lib/adminAuth";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 
 export default function AdminLayout({
@@ -29,22 +29,31 @@ export default function AdminLayout({
   const logoutMutation = useAdminLogout();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Hydration guard: avoid SSR/client mismatch (localStorage unavailable on server)
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  // useAdminCurrentUser()'s query is enabled only when a token exists (see
+  // lib/adminAuth.ts), so with no token it sits in isError=false, isLoading
+  // =false limbo forever — isError alone can never catch "no token at all",
+  // only "token present but rejected by the server". Checking token
+  // presence directly closes that gap so a fully unauthenticated visit
+  // actually redirects instead of silently rendering the admin shell.
+  const hasToken = hydrated && !!adminTokenStore.getAccess();
+  const shouldRedirect = hydrated && (!hasToken || (!isLoading && isError));
 
   // Redirect to admin login if not authenticated
   useEffect(() => {
-    if (!isLoading && isError) {
+    if (shouldRedirect) {
       router.push("/admin-login");
     }
-  }, [isLoading, isError, router]);
+  }, [shouldRedirect, router]);
 
-  // Logout handler
-  const handleLogout = async () => {
-    await logoutMutation.mutateAsync();
-    router.push("/admin-login");
-  };
-
-  // Loading state
-  if (isLoading) {
+  // Show loading skeleton until hydrated + auth checked
+  if (!hydrated || (hasToken && isLoading)) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-[var(--bg-primary)]">
         <div className="flex items-center gap-3 text-[var(--text-secondary)]">
@@ -55,8 +64,14 @@ export default function AdminLayout({
     );
   }
 
-  // Not authenticated
-  if (isError) {
+  // Logout handler
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+    router.push("/admin-login");
+  };
+
+  // Not authenticated (no token, or the server rejected it)
+  if (shouldRedirect) {
     return null; // Will redirect in useEffect
   }
 

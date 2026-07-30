@@ -26,6 +26,16 @@ interface WorkflowState {
   ) => void;
   /** Clear everything. */
   clear: () => void;
+  /**
+   * Whether the "Create New Chart" modal is open. Lives here (not in
+   * DashboardPage's local state) because the sidebar's "New Chart" link
+   * is rendered by AppShell — a separate component tree with no direct
+   * access to the dashboard page's state — and needs to be able to open
+   * it too.
+   */
+  createModalOpen: boolean;
+  openCreateModal: () => void;
+  closeCreateModal: () => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>((set) => ({
@@ -33,4 +43,7 @@ export const useWorkflowStore = create<WorkflowState>((set) => ({
   request: null,
   setResult: (result, request) => set({ result, request }),
   clear: () => set({ result: null, request: null }),
+  createModalOpen: false,
+  openCreateModal: () => set({ createModalOpen: true }),
+  closeCreateModal: () => set({ createModalOpen: false }),
 }));

@@ -109,7 +109,9 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
     analyze.mutate(request, {
       onSuccess: (data) => {
         setResult(data, request);
-        router.push("/dashboard");
+        // Charts live under My Charts now, not the dashboard — see
+        // apps/web/src/app/charts/[chartId]/page.tsx.
+        router.push(`/charts/${data.chart_id}`);
       },
     });
   }
