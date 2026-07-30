@@ -50,7 +50,7 @@ export function AdminStatsBar({ stats }: StatsBarProps) {
     {
       label: "Active Plugins",
       value: stats.activePlugins,
-      subtitle: `${stats.totalPlugins || 0} installed`,
+      subtitle: "Installed & running",
       color: "from-[rgba(239,68,68,0.2)] to-[rgba(239,68,68,0.1)]",
       border: "border-[rgba(239,68,68,0.3)]",
     },

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ResearchWorkspace from "@/components/layout/ResearchWorkspace";
+import { AppShell } from "@/components/layout/AppShell";
 
 export const metadata: Metadata = {
   title: "Knowledge Base",
@@ -11,5 +11,5 @@ export default function KnowledgeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ResearchWorkspace />;
+  return <AppShell sectionColor="--section-research">{children}</AppShell>;
 }

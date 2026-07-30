@@ -1,8 +1,11 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { NATURAL_RELATIONSHIPS, KARAKATVA_BASIC, PLANET_SYMBOLS } from "@/lib/astro";
+import { Tabs } from "@/components/ui";
 import type { WorkflowAnalysisResponse } from "@/lib/types";
+
+type DetailTab = "overview" | "relationships" | "strength" | "research";
 
 interface PlanetDetailPanelProps {
   /** Planet name, e.g. "Mars". Null renders an empty-state prompt. */
@@ -52,6 +55,8 @@ function SectionLabel({ children }: { children: ReactNode }) {
  * only shows what's real today.
  */
 export function PlanetDetailPanel({ planet, result, pinned, onUnpin }: PlanetDetailPanelProps) {
+  const [tab, setTab] = useState<DetailTab>("overview");
+
   if (!planet) {
     return (
       <div
@@ -93,7 +98,7 @@ export function PlanetDetailPanel({ planet, result, pinned, onUnpin }: PlanetDet
       const vp = vc?.planet_positions.find((p) => p.planet === planet);
       return vp ? { code, rashi: vp.varga_rashi, house: vp.varga_house_number } : null;
     })
-    .filter((v): v is { code: string; rashi: string; house: number } => v !== null);
+    .filter((v): v is { code: "D9" | "D10" | "D60"; rashi: string; house: number } => v !== null);
 
   if (!position) {
     return (
@@ -141,129 +146,168 @@ export function PlanetDetailPanel({ planet, result, pinned, onUnpin }: PlanetDet
         )}
       </div>
 
-      <SectionLabel>Position (this chart)</SectionLabel>
-      <Row label="Rashi House (sign-counted)" value={position.rashi_house_number} />
-      <Row label="Chalit House (cuspal)" value={position.house_number} />
-      <Row label="Sign (Rashi)" value={position.rashi} />
-      <Row label="Degree" value={`${position.rashi_degree.toFixed(2)}°`} />
-      <Row label="Nakshatra" value={position.nakshatra} />
-      <Row label="Pada" value={position.pada} />
-      <Row label="Star Lord (KP)" value={position.nakshatra_lord || "—"} />
-      <Row label="Sub Lord (KP)" value={position.sub_lord || "—"} />
-      <Row label="Sub Sub Lord (KP)" value={position.sub_sub_lord || "—"} />
-      <Row label="Dignity" value={position.dignity ?? "—"} />
-      {position.is_combust && (
-        <Row label="Combustion Orb" value={`${position.combustion_orb?.toFixed(2) ?? "—"}°`} />
-      )}
+      <div className="mb-3">
+        <Tabs
+          tabs={[
+            { key: "overview", label: "Overview" },
+            { key: "relationships", label: "Relationships" },
+            { key: "strength", label: "Strength" },
+            { key: "research", label: "Research" },
+          ]}
+          active={tab}
+          onChange={(k) => setTab(k as DetailTab)}
+        />
+      </div>
 
-      {strength && (
+      {tab === "overview" && (
         <>
-          <SectionLabel>Strength</SectionLabel>
-          <Row label="Strength Score" value={`${strength.strength_score.toFixed(1)} / 10`} />
-          {shadbalaEntry && <Row label="Shadbala" value={`${shadbalaEntry.total_rupas.toFixed(2)} rupas`} />}
-          <Row
-            label="Placement"
-            value={
-              [
-                strength.is_exalted && "Exalted",
-                strength.is_debilitated && "Debilitated",
-                strength.is_in_own_sign && "Own Sign",
-                strength.is_in_kendra && "Kendra",
-                strength.is_in_trikona && "Trikona",
-                strength.is_in_dusthana && "Dusthana",
-              ]
-                .filter(Boolean)
-                .join(", ") || "Neutral"
-            }
-          />
+          <SectionLabel>Position (this chart)</SectionLabel>
+          <Row label="Rashi House (sign-counted)" value={position.rashi_house_number} />
+          <Row label="Chalit House (cuspal)" value={position.house_number} />
+          <Row label="Sign (Rashi)" value={position.rashi} />
+          <Row label="Degree" value={`${position.rashi_degree.toFixed(2)}°`} />
+          <Row label="Nakshatra" value={position.nakshatra} />
+          <Row label="Pada" value={position.pada} />
+          <Row label="Star Lord (KP)" value={position.nakshatra_lord || "—"} />
+          <Row label="Sub Lord (KP)" value={position.sub_lord || "—"} />
+          <Row label="Sub Sub Lord (KP)" value={position.sub_sub_lord || "—"} />
+          <Row label="Dignity" value={position.dignity ?? "—"} />
+          {position.is_combust && (
+            <Row label="Combustion Orb" value={`${position.combustion_orb?.toFixed(2) ?? "—"}°`} />
+          )}
         </>
       )}
 
-      {conjunctions.length > 0 && (
+      {tab === "relationships" && (
         <>
-          <SectionLabel>Conjunctions (same house)</SectionLabel>
-          <p className="text-sm" style={{ color: "var(--text-primary)" }}>
-            {conjunctions.join(", ")}
-          </p>
-        </>
-      )}
-
-      {aspectsInvolving.length > 0 && (
-        <>
-          <SectionLabel>Aspects</SectionLabel>
-          <div className="space-y-1">
-            {aspectsInvolving.map((a, i) => (
-              <p key={i} className="text-sm" style={{ color: "var(--text-primary)" }}>
-                {a.from_planet} → {a.to_planet}{" "}
-                <span style={{ color: "var(--text-muted)" }}>
-                  ({a.aspect_type}, {a.orb_degrees.toFixed(1)}° orb{a.is_applying ? ", applying" : ""})
-                </span>
+          {conjunctions.length > 0 && (
+            <>
+              <SectionLabel>Conjunctions (same house)</SectionLabel>
+              <p className="text-sm" style={{ color: "var(--text-primary)" }}>
+                {conjunctions.join(", ")}
               </p>
-            ))}
-          </div>
+            </>
+          )}
+
+          {aspectsInvolving.length > 0 && (
+            <>
+              <SectionLabel>Aspects</SectionLabel>
+              <div className="space-y-1">
+                {aspectsInvolving.map((a, i) => (
+                  <p key={i} className="text-sm" style={{ color: "var(--text-primary)" }}>
+                    {a.from_planet} → {a.to_planet}{" "}
+                    <span style={{ color: "var(--text-muted)" }}>
+                      ({a.aspect_type}, {a.orb_degrees.toFixed(1)}° orb{a.is_applying ? ", applying" : ""})
+                    </span>
+                  </p>
+                ))}
+              </div>
+            </>
+          )}
+
+          {relationships && (
+            <>
+              <SectionLabel>Natural Relationships (classical)</SectionLabel>
+              <Row label="Friends" value={relationships.friends.join(", ") || "—"} />
+              <Row label="Enemies" value={relationships.enemies.join(", ") || "—"} />
+              <Row label="Neutral" value={relationships.neutrals.join(", ") || "—"} />
+            </>
+          )}
+
+          {conjunctions.length === 0 && aspectsInvolving.length === 0 && !relationships && (
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              No conjunctions, aspects, or classical relationships to show for {planet}.
+            </p>
+          )}
         </>
       )}
 
-      {relationships && (
+      {tab === "strength" && (
         <>
-          <SectionLabel>Natural Relationships (classical)</SectionLabel>
-          <Row label="Friends" value={relationships.friends.join(", ") || "—"} />
-          <Row label="Enemies" value={relationships.enemies.join(", ") || "—"} />
-          <Row label="Neutral" value={relationships.neutrals.join(", ") || "—"} />
+          {strength && (
+            <>
+              <SectionLabel>Strength</SectionLabel>
+              <Row label="Strength Score" value={`${strength.strength_score.toFixed(1)} / 10`} />
+              {shadbalaEntry && <Row label="Shadbala" value={`${shadbalaEntry.total_rupas.toFixed(2)} rupas`} />}
+              <Row
+                label="Placement"
+                value={
+                  [
+                    strength.is_exalted && "Exalted",
+                    strength.is_debilitated && "Debilitated",
+                    strength.is_in_own_sign && "Own Sign",
+                    strength.is_in_kendra && "Kendra",
+                    strength.is_in_trikona && "Trikona",
+                    strength.is_in_dusthana && "Dusthana",
+                  ]
+                    .filter(Boolean)
+                    .join(", ") || "Neutral"
+                }
+              />
+            </>
+          )}
+
+          {yogasInvolving.length > 0 && (
+            <>
+              <SectionLabel>Yogas Involving {planet}</SectionLabel>
+              <div className="space-y-1">
+                {yogasInvolving.map((y) => (
+                  <p key={y.yoga_id} className="text-sm" style={{ color: "var(--text-primary)" }}>
+                    {y.name}{" "}
+                    <span style={{ color: "var(--text-muted)" }}>({y.category})</span>
+                  </p>
+                ))}
+              </div>
+            </>
+          )}
+
+          {vargaPositions.length > 0 && (
+            <>
+              <SectionLabel>Varga Positions</SectionLabel>
+              {vargaPositions.map((v) => (
+                <Row key={v.code} label={v.code} value={`${v.rashi} · House ${v.house}`} />
+              ))}
+            </>
+          )}
+
+          {transitEntry && (
+            <>
+              <SectionLabel>Current Transit</SectionLabel>
+              <Row label="Transit Sign" value={transitEntry.transit_rashi} />
+              <Row label="From Natal Moon" value={`House ${transitEntry.house_from_natal_moon}`} />
+              {transitEntry.is_sade_sati && <Row label="Sade Sati" value="Active" />}
+              {transitEntry.is_ashtama_shani && <Row label="Ashtama Shani" value="Active" />}
+            </>
+          )}
         </>
       )}
 
-      {yogasInvolving.length > 0 && (
+      {tab === "research" && (
         <>
-          <SectionLabel>Yogas Involving {planet}</SectionLabel>
-          <div className="space-y-1">
-            {yogasInvolving.map((y) => (
-              <p key={y.yoga_id} className="text-sm" style={{ color: "var(--text-primary)" }}>
-                {y.name}{" "}
-                <span style={{ color: "var(--text-muted)" }}>({y.category})</span>
+          {karakatva ? (
+            <>
+              <SectionLabel>Karakatva (classical, general)</SectionLabel>
+              <div className="flex flex-wrap gap-1.5">
+                {karakatva.map((k) => (
+                  <span
+                    key={k}
+                    className="rounded-full px-2 py-0.5 text-xs"
+                    style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-primary)", color: "var(--text-secondary)" }}
+                  >
+                    {k}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
+                General classical reference, not specific to this chart. The full searchable
+                Karakatva database is a planned separate module.
               </p>
-            ))}
-          </div>
-        </>
-      )}
-
-      {vargaPositions.length > 0 && (
-        <>
-          <SectionLabel>Varga Positions</SectionLabel>
-          {vargaPositions.map((v) => (
-            <Row key={v.code} label={v.code} value={`${v.rashi} · House ${v.house}`} />
-          ))}
-        </>
-      )}
-
-      {transitEntry && (
-        <>
-          <SectionLabel>Current Transit</SectionLabel>
-          <Row label="Transit Sign" value={transitEntry.transit_rashi} />
-          <Row label="From Natal Moon" value={`House ${transitEntry.house_from_natal_moon}`} />
-          {transitEntry.is_sade_sati && <Row label="Sade Sati" value="Active" />}
-          {transitEntry.is_ashtama_shani && <Row label="Ashtama Shani" value="Active" />}
-        </>
-      )}
-
-      {karakatva && (
-        <>
-          <SectionLabel>Karakatva (classical, general)</SectionLabel>
-          <div className="flex flex-wrap gap-1.5">
-            {karakatva.map((k) => (
-              <span
-                key={k}
-                className="rounded-full px-2 py-0.5 text-xs"
-                style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-primary)", color: "var(--text-secondary)" }}
-              >
-                {k}
-              </span>
-            ))}
-          </div>
-          <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
-            General classical reference, not specific to this chart. The full searchable
-            Karakatva database is a planned separate module.
-          </p>
+            </>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              No classical Karakatva reference available for {planet}.
+            </p>
+          )}
         </>
       )}
     </div>

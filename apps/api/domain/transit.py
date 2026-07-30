@@ -50,3 +50,13 @@ class TransitPlanetResult:
     nakshatra_vedha_type: Optional[str] = None  # "forward" (direct) or "backward" (retrograde)
     nakshatra_vedha_target: Optional[str] = None  # the SBC nakshatra this planet's ray points at
     rule_version: str = "1.0"
+    # Added for the Transit Analysis console's detailed positions table —
+    # standard (27-system) nakshatra/pada, degree-in-rashi, motion state,
+    # and Gati (see services/gati_classifier.py for the classification
+    # rules and its accuracy caveats).
+    transit_rashi_degree: float = 0.0
+    transit_nakshatra: str = ""
+    transit_pada: int = 1
+    is_retrograde: bool = False
+    speed_deg_per_day: float = 0.0
+    gati: str = "sama"

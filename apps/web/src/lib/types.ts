@@ -387,12 +387,85 @@ export interface TransitPlanetResponse {
   nakshatra_vedha_type: string | null;
   nakshatra_vedha_target: string | null;
   rule_version: string;
+  transit_rashi_degree: number;
+  /** Standard 27-system nakshatra at the transit moment (distinct from transit_nakshatra_sbc above). */
+  transit_nakshatra: string;
+  transit_pada: number;
+  is_retrograde: boolean;
+  /** Sidereal longitude speed, degrees/day; negative = retrograde. */
+  speed_deg_per_day: number;
+  /** Classical Ashta Gati speed state — see the backend's gati_classifier.py
+   * for the classification rules and its accuracy caveats (Anuvakra/Kutila
+   * aren't distinguishable from a single instantaneous position). */
+  gati: "vakra" | "vikala" | "mandatara" | "manda" | "sama" | "chara" | "atichara";
 }
 
 export interface TransitResponse {
   transit_datetime_utc: string;
   natal_moon_rashi: string;
   planets: TransitPlanetResponse[];
+}
+
+export interface TransitRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  transit_datetime_utc?: string | null;
+}
+
+// ── Transit Patterns (/api/v1/transit/patterns) ───────────────────────────────
+
+export interface TransitPatternsRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  transit_datetime_utc?: string | null;
+  aspect_orb?: number;
+  return_orb?: number;
+}
+
+export interface SadeSatiResponse {
+  is_active: boolean;
+  /** 'first_year' (house 12), 'peak' (house 1), 'third_year' (house 2). Null if not active. */
+  phase: string | null;
+  house_from_moon: number | null;
+  start_date: string | null;
+  end_date: string | null;
+}
+
+export interface AshtamaShaniResponse {
+  is_active: boolean;
+  house_from_moon: number | null;
+  start_date: string | null;
+  end_date: string | null;
+}
+
+export interface ReturnPeriodResponse {
+  planet: string;
+  is_at_return: boolean;
+  orb: number;
+  estimated_return_date: string | null;
+}
+
+export interface TransitAspectResponse {
+  /** 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile'. */
+  aspect_type: string;
+  transiting_planet: string;
+  natal_planet: string;
+  orb: number;
+}
+
+export interface TransitPatternsResponse {
+  transit_datetime_utc: string;
+  natal_moon_rashi: string;
+  sade_sati: SadeSatiResponse;
+  ashtama_shani: AshtamaShaniResponse;
+  return_periods: ReturnPeriodResponse[];
+  aspects: TransitAspectResponse[];
 }
 
 // ── Rule Engine / Verification / Benchmark (new in the Workflow response) ────

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { ApiError } from "@/lib/api";
 import { KARAKATVA_GRAHAS, useKarakatvaSearch, type Karakatva } from "@/lib/karakatva";
+import { Badge, Card, Input, Select } from "@/components/ui";
 
 const GRAHA_LABELS: Record<string, string> = {
   sun: "Sun (Surya)",
@@ -24,39 +25,15 @@ function grahaLabel(graha: string | null): string {
 
 function KarakatvaCard({ item }: { item: Karakatva }) {
   return (
-    <div
-      className="glass-card p-4"
-      style={{ borderColor: "var(--border-primary)" }}
-    >
+    <Card>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
           {item.subject}
         </h3>
         <div className="flex flex-wrap gap-1.5">
-          {item.graha && (
-            <span
-              className="rounded-full px-2 py-0.5 text-xs"
-              style={{ backgroundColor: "var(--bg-secondary)", color: "var(--accent)" }}
-            >
-              {grahaLabel(item.graha)}
-            </span>
-          )}
-          {item.house_number != null && (
-            <span
-              className="rounded-full px-2 py-0.5 text-xs"
-              style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-secondary)" }}
-            >
-              House {item.house_number}
-            </span>
-          )}
-          {item.sign_id != null && (
-            <span
-              className="rounded-full px-2 py-0.5 text-xs"
-              style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-secondary)" }}
-            >
-              Sign #{item.sign_id}
-            </span>
-          )}
+          {item.graha && <Badge tone="cyan">{grahaLabel(item.graha)}</Badge>}
+          {item.house_number != null && <Badge tone="neutral">House {item.house_number}</Badge>}
+          {item.sign_id != null && <Badge tone="neutral">Sign #{item.sign_id}</Badge>}
         </div>
       </div>
 
@@ -71,7 +48,7 @@ function KarakatvaCard({ item }: { item: Karakatva }) {
           Source tradition: {item.tradition}
         </p>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -114,91 +91,60 @@ export default function KarakatvaExplorerPage() {
         </p>
       </div>
 
-      <div className="glass-card mb-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-end">
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
-          <label
-            htmlFor="karakatva-subject"
-            className="mb-1 block text-xs font-medium"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Search signification
-          </label>
-          <input
-            id="karakatva-subject"
-            type="text"
+          <Input
+            label="Search signification"
             value={subjectInput}
-            onChange={(e) => setSubjectInput(e.target.value)}
+            onChange={setSubjectInput}
             placeholder="e.g. career, blood, marriage, surgery..."
-            className="w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors"
-            style={{
-              borderColor: "var(--border-primary)",
-              backgroundColor: "var(--bg-input)",
-              color: "var(--text-primary)",
-            }}
           />
         </div>
 
         <div className="sm:w-48">
-          <label
-            htmlFor="karakatva-graha"
-            className="mb-1 block text-xs font-medium"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Planet (graha)
-          </label>
-          <select
-            id="karakatva-graha"
+          <Select
+            label="Planet (graha)"
             value={graha}
-            onChange={(e) => setGraha(e.target.value)}
-            className="w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors"
-            style={{
-              borderColor: "var(--border-primary)",
-              backgroundColor: "var(--bg-input)",
-              color: "var(--text-primary)",
-            }}
-          >
-            <option value="">All planets</option>
-            {KARAKATVA_GRAHAS.map((g) => (
-              <option key={g} value={g}>
-                {grahaLabel(g)}
-              </option>
-            ))}
-          </select>
+            onChange={setGraha}
+            placeholder="All planets"
+            options={[{ value: "", label: "All planets" }, ...KARAKATVA_GRAHAS.map((g) => ({ value: g, label: grahaLabel(g) }))]}
+          />
         </div>
       </div>
 
       {!hasQuery && (
-        <div className="glass-card p-8 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
-          Type at least 2 characters, or pick a planet, to search the karakatva
-          catalogue.
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            Type at least 2 characters, or pick a planet, to search the karakatva catalogue.
+          </p>
+        </Card>
       )}
 
       {hasQuery && (isLoading || isFetching) && (
-        <div className="glass-card p-8 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
-          Searching…
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Searching…</p>
+        </Card>
       )}
 
       {hasQuery && isError && (
-        <div
-          className="glass-card p-8 text-center text-sm"
-          style={{ color: "var(--chart-ascendant)" }}
-          role="alert"
-        >
-          {errorMessage}
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
+            {errorMessage}
+          </p>
+        </Card>
       )}
 
       {hasQuery && !isLoading && !isFetching && !isError && results.length === 0 && (
-        <div className="glass-card p-8 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
-          No matching significations found. This catalogue currently holds a
-          few hundred classical entries (grahas, houses, nakshatras) sourced
-          from BPHS — if searches keep coming back empty even for common
-          terms like &quot;career&quot; or &quot;marriage&quot;, the one-time
-          knowledge base seed script (<code>python -m apps.api.scripts.seed_knowledge</code>)
-          may not have been run against this database yet.
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            No matching significations found. This catalogue currently holds a
+            few hundred classical entries (grahas, houses, nakshatras) sourced
+            from BPHS — if searches keep coming back empty even for common
+            terms like &quot;career&quot; or &quot;marriage&quot;, the one-time
+            knowledge base seed script (<code>python -m apps.api.scripts.seed_knowledge</code>)
+            may not have been run against this database yet.
+          </p>
+        </Card>
       )}
 
       {hasQuery && !isLoading && !isFetching && !isError && results.length > 0 && (

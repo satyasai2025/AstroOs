@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { AllVargaChartsResponse } from "@/lib/types";
+import { Card, Table, type TableColumn } from "@/components/ui";
+import type { AllVargaChartsResponse, VargaPlanetResponse } from "@/lib/types";
 
 export function VargaPanel({ vargas }: { vargas: AllVargaChartsResponse | null }) {
   const codes = vargas ? Object.keys(vargas.charts).sort() : [];
@@ -9,64 +10,60 @@ export function VargaPanel({ vargas }: { vargas: AllVargaChartsResponse | null }
 
   if (!vargas) {
     return (
-      <div className="glass-card p-5 text-sm text-slate-400">
-        Vargas were not computed for this analysis (unchecked at submission time).
-      </div>
+      <Card>
+        <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+          Vargas were not computed for this analysis (unchecked at submission time).
+        </p>
+      </Card>
     );
   }
 
   const chart = vargas.charts[selected] ?? vargas.charts[codes[0]];
 
+  const columns: TableColumn<VargaPlanetResponse>[] = [
+    { key: "planet", label: "Planet" },
+    { key: "varga_rashi", label: "Varga Rashi" },
+    { key: "varga_rashi_degree", label: "Degree", render: (p) => `${p.varga_rashi_degree.toFixed(2)}°` },
+    { key: "varga_house_number", label: "House" },
+    { key: "nakshatra", label: "Nakshatra", render: (p) => `${p.nakshatra} (${p.pada})` },
+  ];
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {codes.map((code) => (
-          <button
-            key={code}
-            type="button"
-            onClick={() => setSelected(code)}
-            className={
-              code === (selected || codes[0])
-                ? "rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-cosmos-950"
-                : "rounded-full border border-white/10 px-3 py-1 text-xs text-slate-300 hover:border-white/25"
-            }
-          >
-            {code}
-          </button>
-        ))}
+      {/* Horizontal scrollable D1..D60 pill selector, matching divisional-charts.html */}
+      <div className="flex flex-wrap gap-2 overflow-x-auto pb-1">
+        {codes.map((code) => {
+          const active = code === (selected || codes[0]);
+          return (
+            <button
+              key={code}
+              type="button"
+              onClick={() => setSelected(code)}
+              className="rounded-full px-3 py-1 text-xs font-semibold transition"
+              style={{
+                backgroundColor: active ? "var(--accent)" : "var(--bg-card)",
+                color: active ? "var(--accent-text)" : "var(--text-secondary)",
+                border: `1px solid ${active ? "var(--accent)" : "var(--border-primary)"}`,
+              }}
+              aria-pressed={active}
+            >
+              {code}
+            </button>
+          );
+        })}
       </div>
 
       {chart && (
-        <div className="glass-card overflow-x-auto p-5">
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-amber-300/80">
+        <Card>
+          <h3
+            className="mb-3 text-sm font-semibold uppercase tracking-wide"
+            style={{ color: "var(--accent)" }}
+          >
             {chart.varga} (÷{chart.divisor}) — Lagna {chart.ascendant.varga_rashi}{" "}
             {chart.ascendant.varga_rashi_degree.toFixed(2)}°
           </h3>
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
-                <th className="py-2 pr-4">Planet</th>
-                <th className="py-2 pr-4">Varga Rashi</th>
-                <th className="py-2 pr-4">Degree</th>
-                <th className="py-2 pr-4">House</th>
-                <th className="py-2">Nakshatra</th>
-              </tr>
-            </thead>
-            <tbody>
-              {chart.planet_positions.map((p) => (
-                <tr key={p.planet} className="border-b border-white/5 text-slate-200">
-                  <td className="py-2 pr-4 font-medium capitalize">{p.planet}</td>
-                  <td className="py-2 pr-4 capitalize">{p.varga_rashi}</td>
-                  <td className="py-2 pr-4">{p.varga_rashi_degree.toFixed(2)}°</td>
-                  <td className="py-2 pr-4">{p.varga_house_number}</td>
-                  <td className="py-2">
-                    {p.nakshatra} ({p.pada})
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+          <Table columns={columns} rows={chart.planet_positions} />
+        </Card>
       )}
     </div>
   );

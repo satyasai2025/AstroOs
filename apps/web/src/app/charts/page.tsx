@@ -19,10 +19,13 @@ import { AvasthaPanel } from "@/components/charts/AvasthaPanel";
 import { NakshatraPadaSelector } from "@/components/charts/NakshatraPadaSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
+import InteractiveKundliView from "@/components/charts/InteractiveKundliView";
 import { useWorkflowStore } from "@/lib/store";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
+import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 
 type ViewMode =
+  | "kundli"
   | "chart"
   | "nakshatra"
   | "dasha"
@@ -34,7 +37,7 @@ type ViewMode =
   | "kp";
 
 const VALID_VIEWS: ViewMode[] = [
-  "chart", "nakshatra", "dasha", "strength", "relationships",
+  "kundli", "chart", "nakshatra", "dasha", "strength", "relationships",
   "houses", "timeline", "predictions", "kp",
 ];
 
@@ -205,6 +208,7 @@ export default function ChartsPage() {
         aria-label="Chart view options"
       >
         {([
+          { key: "kundli" as ViewMode, label: "Interactive Kundli" },
           { key: "chart" as ViewMode, label: "Chart View" },
           { key: "nakshatra" as ViewMode, label: "Nakshatra / Pada" },
           { key: "dasha" as ViewMode, label: "Dasha Timeline" },
@@ -236,6 +240,98 @@ export default function ChartsPage() {
           </button>
         ))}
       </div>
+
+      {/* Interactive Kundli Panel — the standalone hover/click explorer
+          (chart + planet/house/aspect tabs in one widget), plus a toolbar
+          and a bottom row summarizing dasha/transit/status/notifications
+          at a glance. */}
+      {view === "kundli" && (
+        <div id="panel-kundli" role="tabpanel" aria-label="Interactive Kundli panel" className="space-y-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/dashboard" className="btn-ghost text-xs px-3 py-1.5">
+              Edit Chart
+            </Link>
+            <Link href="/dashboard" className="btn-ghost text-xs px-3 py-1.5">
+              New Chart
+            </Link>
+            <Link href="/charts/history" className="btn-ghost text-xs px-3 py-1.5 ml-auto">
+              View All
+            </Link>
+          </div>
+
+          <div className="glass-card h-[600px] overflow-hidden p-0">
+            <InteractiveKundliView chart={chart} />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <button
+              type="button"
+              onClick={() => setView("dasha")}
+              className="glass-card p-4 text-left transition hover:opacity-90"
+            >
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+                Dasha Timeline
+              </h4>
+              <p className="text-sm" style={{ color: "var(--text-primary)" }}>
+                {currentDasha(result)}
+              </p>
+              <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
+                Currently active period · view full timeline
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setView("timeline")}
+              className="glass-card p-4 text-left transition hover:opacity-90"
+            >
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+                Transit Timeline
+              </h4>
+              <p className="text-sm" style={{ color: "var(--text-primary)" }}>
+                {currentTransitSummary(result)}
+              </p>
+              <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
+                Today's transits from natal Moon
+              </p>
+            </button>
+
+            <div className="glass-card p-4">
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+                Status
+              </h4>
+              <dl className="space-y-0.5 text-xs" style={{ color: "var(--text-secondary)" }}>
+                <div className="flex justify-between">
+                  <dt style={{ color: "var(--text-muted)" }}>Ayanamsa</dt>
+                  <dd>{chart.ayanamsa_system}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt style={{ color: "var(--text-muted)" }}>House System</dt>
+                  <dd>{chart.house_system}</dd>
+                </div>
+                {result.verification && (
+                  <div className="flex justify-between">
+                    <dt style={{ color: "var(--text-muted)" }}>Verification Confidence</dt>
+                    <dd>{(result.verification.confidence_score * 100).toFixed(0)}%</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+
+            {/* AI Notifications — no backend notification/alert feed exists yet
+                (there's no push/poll endpoint for chart-triggered alerts), so
+                this is an explicit placeholder rather than fabricated content. */}
+            <div className="glass-card p-4">
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+                AI Notifications
+              </h4>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                No notifications yet — proactive AI alerts are a planned feature.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Chart View Panel — 4-column workspace (mockup layout): a narrow
           left sidebar (chart details + quick view + varga selector), the

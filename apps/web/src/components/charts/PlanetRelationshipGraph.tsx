@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import { NATURAL_RELATIONSHIPS, PLANET_SYMBOLS, rashiLordFromApiName } from "@/lib/astro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
+import { Select } from "@/components/ui";
 import type {
   AspectSchema,
   DashaPeriodResponse,
@@ -303,6 +304,15 @@ export function PlanetRelationshipGraph({
   }, []);
 
   const graphSize = measuredWidth;
+
+  // View Mode / Event Context are UI placeholders — "Relationships" is the
+  // only mode this backend actually computes (a single right-now snapshot,
+  // no arbitrary-date transit forecasting; see the file-level comment).
+  // Event Context would need an event-outcome correlation pipeline this app
+  // doesn't have. Kept here, not wired to anything, per explicit direction
+  // to stage the UI ahead of that backend work rather than omit it.
+  const [viewMode, setViewMode] = useState("relationships");
+  const [eventContext, setEventContext] = useState("general");
 
   const planetNames = useMemo(() => planets.map((p) => p.planet), [planets]);
 
@@ -611,12 +621,12 @@ export function PlanetRelationshipGraph({
   const filterPanel = (
     <div className="glass-card p-4">
       <h4 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-        Relationship Types
+        Relationship Layers
       </h4>
       {/* Dynamic filtering — toggle which relationship types are shown.
           Layout stays fixed (see the simulation effect above) so toggling
           doesn't reshuffle the graph. */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1">
         {ALL_KINDS.map((kind) => {
           const style = LINK_STYLE[kind];
           const active = activeKinds.has(kind);
@@ -626,9 +636,8 @@ export function PlanetRelationshipGraph({
               key={kind}
               type="button"
               onClick={() => toggleKind(kind)}
-              className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-left text-xs transition"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition"
               style={{
-                border: `1px solid ${active ? style.stroke : "var(--border-primary)"}`,
                 color: active ? "var(--text-primary)" : "var(--text-muted)",
                 opacity: count === 0 ? 0.4 : 1,
               }}
@@ -636,14 +645,84 @@ export function PlanetRelationshipGraph({
               aria-pressed={active}
             >
               <span
-                className="inline-block h-0.5 w-3 shrink-0"
-                style={{ backgroundColor: active ? style.stroke : "var(--border-primary)" }}
-              />
+                className="flex h-4 w-4 shrink-0 items-center justify-center rounded"
+                style={{
+                  border: `1.5px solid ${active ? style.stroke : "var(--border-default)"}`,
+                  background: active ? style.stroke : "transparent",
+                }}
+              >
+                {active && (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--bg-navy-950)" strokeWidth="3">
+                    <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </span>
               <span className="flex-1">{style.label.split(" (")[0]}</span>
               <span style={{ color: "var(--text-muted)" }}>{count}</span>
             </button>
           );
         })}
+      </div>
+    </div>
+  );
+
+  const dashaTimelinePanel = mahadashas && mahadashas.length > 0 && (
+    <div className="glass-card p-4">
+      <h4 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+        Dasha Timeline (Vimshottari)
+      </h4>
+      <div className="flex gap-3 overflow-x-auto pb-1">
+        {mahadashas.map((md) => {
+          const isCurrent = dashaChain[0]?.lord === md.lord && dashaChain[0]?.start_date === md.start_date;
+          return (
+            <div
+              key={`${md.lord}-${md.start_date}`}
+              className="shrink-0 rounded-lg px-3 py-2 text-xs"
+              style={{
+                border: `1px solid ${isCurrent ? GRAHA_COLOR[md.lord] ?? "var(--accent)" : "var(--border-primary)"}`,
+                minWidth: 110,
+              }}
+            >
+              <p className="font-semibold" style={{ color: isCurrent ? GRAHA_COLOR[md.lord] ?? "var(--accent)" : "var(--text-primary)" }}>
+                {md.lord} MD
+              </p>
+              <p style={{ color: "var(--text-muted)" }}>
+                {new Date(md.start_date).getFullYear()}–{new Date(md.end_date).getFullYear()}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  /**
+   * Transit Timeline (Major Transits) — UI placeholder. The backend only
+   * computes transits for a single instant (see TransitTimeline.tsx's own
+   * doc comment), so it can't produce genuine forward-dated transit events
+   * like "Jupiter transits Gemini on 20 May". This strip is staged here per
+   * explicit direction (same as the Knowledge Home placeholder stats) —
+   * the content below is illustrative, not computed.
+   */
+  const transitTimelinePlaceholder = (
+    <div className="glass-card p-4">
+      <h4 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+        Transit Timeline (Major Transits)
+      </h4>
+      <div className="flex gap-3 overflow-x-auto pb-1">
+        {[
+          { planet: "Jupiter", label: "transits Gemini" },
+          { planet: "Saturn", label: "retrograde begins" },
+          { planet: "Rahu", label: "enters Pisces" },
+          { planet: "Ketu", label: "enters Virgo" },
+        ].map((t) => (
+          <div key={t.planet} className="shrink-0 rounded-lg px-3 py-2 text-xs" style={{ border: "1px solid var(--border-primary)", minWidth: 110 }}>
+            <p className="font-semibold" style={{ color: GRAHA_COLOR[t.planet] ?? "var(--text-primary)" }}>
+              {PLANET_SYMBOLS[t.planet] ?? ""} {t.planet}
+            </p>
+            <p style={{ color: "var(--text-muted)" }}>{t.label}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -845,29 +924,55 @@ export function PlanetRelationshipGraph({
   );
 
   return (
-    <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-      {/* Left column: chart summary + relationship-type filter */}
-      <div className="w-full space-y-4 lg:w-60 lg:shrink-0">
-        {infoPanel}
-        {filterPanel}
-      </div>
-
-      {/* Center column: the graph itself */}
-      <div className="min-w-0 flex-1">{graphBody}</div>
-
-      {/* Right column: ranked top relationships + (when available) the
-          full detail panel for whichever planet is selected. */}
-      <div className="w-full space-y-4 lg:w-80 lg:shrink-0">
-        {topPairsPanel}
-        {result && (
-          <PlanetDetailPanel
-            planet={selected}
-            result={result}
-            pinned={selected !== null}
-            onUnpin={() => setSelected(null)}
+    <div className="space-y-5">
+      {/* Toolbar — View Mode / Event Context are placeholders (see state
+          comment above); only one real mode exists today. */}
+      <div className="flex flex-wrap items-end gap-3">
+        <div className="w-40">
+          <Select label="View Mode" value={viewMode} onChange={setViewMode} options={[{ value: "relationships", label: "Relationships" }]} />
+        </div>
+        <div className="w-48">
+          <Select
+            label="Event Context"
+            value={eventContext}
+            onChange={setEventContext}
+            options={[
+              { value: "general", label: "General" },
+              { value: "career", label: "Career (Promotion)" },
+              { value: "marriage", label: "Marriage" },
+              { value: "health", label: "Health" },
+            ]}
           />
-        )}
+        </div>
       </div>
+
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+        {/* Left column: chart summary + relationship-type filter */}
+        <div className="w-full space-y-4 lg:w-60 lg:shrink-0">
+          {infoPanel}
+          {filterPanel}
+        </div>
+
+        {/* Center column: the graph itself */}
+        <div className="min-w-0 flex-1">{graphBody}</div>
+
+        {/* Right column: ranked top relationships + (when available) the
+            full detail panel for whichever planet is selected. */}
+        <div className="w-full space-y-4 lg:w-80 lg:shrink-0">
+          {topPairsPanel}
+          {result && (
+            <PlanetDetailPanel
+              planet={selected}
+              result={result}
+              pinned={selected !== null}
+              onUnpin={() => setSelected(null)}
+            />
+          )}
+        </div>
+      </div>
+
+      {dashaTimelinePanel}
+      {transitTimelinePlaceholder}
     </div>
   );
 }

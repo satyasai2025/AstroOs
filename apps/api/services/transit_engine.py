@@ -25,7 +25,13 @@ from datetime import datetime
 from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.transit import TransitPlanetResult
 from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
-from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd, longitude_to_rashi
+from apps.api.services.ephemeris_wrapper import (
+    EphemerisWrapper,
+    datetime_to_jd,
+    longitude_to_nakshatra,
+    longitude_to_rashi,
+)
+from apps.api.services.gati_classifier import classify_gati
 from apps.api.services.nakshatra_vedha_calculator import NakshatraVedhaCalculator
 from apps.api.services.vedha_calculator import VedhaCalculator
 from packages.shared.sarvatobhadra_grid import longitude_to_sbc_nakshatra
@@ -79,15 +85,16 @@ class TransitEngine:
         rashi, _ = longitude_to_rashi(sidereal_lon)
         return rashi
 
-    def _transiting_position(self, planet: str, jd: float) -> tuple[str, float, bool]:
-        """(rashi, sidereal_longitude, is_retrograde) at the transit moment —
-        the sidereal longitude and retrograde state are what
-        Nakshatra Vedha (SBC) needs on top of the rashi Gochara already uses."""
+    def _transiting_position(self, planet: str, jd: float) -> tuple[str, float, bool, float]:
+        """(rashi, sidereal_longitude, is_retrograde, speed_deg_per_day) at
+        the transit moment — the sidereal longitude and retrograde state
+        are what Nakshatra Vedha (SBC) needs on top of the rashi Gochara
+        already uses; speed is additionally needed for Gati."""
         tropical_position = self._wrapper.get_planet_position(planet, jd)
         ayanamsa_val = self._wrapper.get_ayanamsa(jd)
         sidereal_lon = self._wrapper.to_sidereal(tropical_position.longitude, ayanamsa_val)
         rashi, _ = longitude_to_rashi(sidereal_lon)
-        return rashi, sidereal_lon, tropical_position.is_retrograde
+        return rashi, sidereal_lon, tropical_position.is_retrograde, tropical_position.speed_deg_per_day
 
     def compute_transit(
         self,
@@ -124,14 +131,24 @@ class TransitEngine:
         # retrograde state for all 9 planets.
         houses_from_moon: dict[str, int] = {}
         transit_rashis: dict[str, str] = {}
+        transit_rashi_degrees: dict[str, float] = {}
         transit_nakshatras_sbc: dict[str, str] = {}
+        transit_nakshatras: dict[str, str] = {}
+        transit_padas: dict[str, int] = {}
         is_retrograde_by_planet: dict[str, bool] = {}
+        speeds_by_planet: dict[str, float] = {}
         for planet in _ALL_PLANETS:
-            transit_rashi, sidereal_lon, is_retrograde = self._transiting_position(planet, jd)
+            transit_rashi, sidereal_lon, is_retrograde, speed = self._transiting_position(planet, jd)
             transit_rashis[planet] = transit_rashi
+            _, rashi_degree = longitude_to_rashi(sidereal_lon)
+            transit_rashi_degrees[planet] = rashi_degree
             houses_from_moon[planet] = _house_from_reference(natal_moon_rashi, transit_rashi)
             transit_nakshatras_sbc[planet] = longitude_to_sbc_nakshatra(sidereal_lon)
+            nak_info = longitude_to_nakshatra(sidereal_lon)
+            transit_nakshatras[planet] = nak_info.nakshatra
+            transit_padas[planet] = nak_info.pada
             is_retrograde_by_planet[planet] = is_retrograde
+            speeds_by_planet[planet] = speed
 
         # Pass 2: assemble results, including both Vedha systems (each
         # needs all 9 planets' positions known first).
@@ -180,6 +197,12 @@ class TransitEngine:
                 nakshatra_vedha_type=nakshatra_vedha_type,
                 nakshatra_vedha_target=nakshatra_vedha_target,
                 rule_version=_RULE_VERSION,
+                transit_rashi_degree=transit_rashi_degrees[planet],
+                transit_nakshatra=transit_nakshatras[planet],
+                transit_pada=transit_padas[planet],
+                is_retrograde=is_retrograde_by_planet[planet],
+                speed_deg_per_day=speeds_by_planet[planet],
+                gati=classify_gati(planet, speeds_by_planet[planet], is_retrograde_by_planet[planet]),
             ))
 
         return results

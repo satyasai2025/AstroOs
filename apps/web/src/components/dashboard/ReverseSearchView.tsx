@@ -31,6 +31,12 @@ interface ReverseSearchViewProps {
   };
 }
 
+/** Shape expected from a future yoga-catalog endpoint (not built yet — see
+ * yogaCatalog below, which stays null until that endpoint exists). */
+interface YogaCatalogResponse {
+  modules: Record<string, { id: string; name: string }[]>;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */

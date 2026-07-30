@@ -87,6 +87,7 @@ const MOCK_CHART: D1ChartResponse = {
     ayanamsa_deg: 24.0821,
   },
   ayanamsa_system: "lahiri",
+  ayanamsa_value: 24.0821,
   house_system: "W",
   julian_day: 2458000.5,
 };

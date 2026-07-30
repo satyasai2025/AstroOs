@@ -87,7 +87,7 @@ async function adminApiRequest<T>(
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({ detail: "Request failed" }));
-    throw new ApiError(body.detail || `HTTP ${res.status}`, res.status);
+    throw new ApiError(res.status, body.detail || `HTTP ${res.status}`);
   }
 
   return res.json();

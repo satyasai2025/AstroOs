@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
@@ -8,7 +8,11 @@ import { useDeleteChart, useMyCharts } from "@/lib/charts";
 import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
 import { RecomputeChartModal } from "@/components/charts/RecomputeChartModal";
+import { initialsOf, paletteFor } from "@/components/dashboard/DashboardOverview";
+import { Badge, Button, Card, SearchInput, Select, Table, type TableColumn } from "@/components/ui";
 import type { BirthChartSummary } from "@/lib/types";
+
+type SortMode = "recent" | "name" | "oldest";
 
 function formatDateTime(iso: string): string {
   try {
@@ -29,6 +33,26 @@ export default function ChartHistoryPage() {
   const deleteChart = useDeleteChart();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortMode>("recent");
+
+  const visibleCharts = useMemo(() => {
+    const charts = data?.charts ?? [];
+    const q = search.trim().toLowerCase();
+    const filtered = q
+      ? charts.filter(
+          (c) =>
+            c.subject_name.toLowerCase().includes(q) ||
+            (c.place_name ?? "").toLowerCase().includes(q) ||
+            (c.lagna_rashi ?? "").toLowerCase().includes(q),
+        )
+      : charts;
+    const sorted = [...filtered];
+    if (sort === "name") sorted.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
+    else if (sort === "oldest") sorted.sort((a, b) => a.created_at.localeCompare(b.created_at));
+    else sorted.sort((a, b) => b.created_at.localeCompare(a.created_at));
+    return sorted;
+  }, [data, search, sort]);
 
   const errorMessage =
     error instanceof ApiError
@@ -53,6 +77,72 @@ export default function ChartHistoryPage() {
     });
   };
 
+  const columns: TableColumn<BirthChartSummary>[] = [
+    {
+      key: "subject_name",
+      label: "Native",
+      render: (c) => {
+        const color = paletteFor(c.id);
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                flexShrink: 0,
+                background: color.fg,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 11,
+                fontWeight: 700,
+                color: "#fff",
+              }}
+            >
+              {initialsOf(c.subject_name)}
+            </div>
+            <Link href={`/charts/${c.id}`} style={{ fontWeight: "var(--weight-medium)" }} className="hover:underline">
+              {c.subject_name}
+            </Link>
+          </div>
+        );
+      },
+    },
+    { key: "birth_datetime_utc", label: "Birth (UTC)", render: (c) => formatDateTime(c.birth_datetime_utc), mono: true },
+    { key: "place_name", label: "Place", render: (c) => c.place_name ?? "—" },
+    { key: "lagna_rashi", label: "Lagna", render: (c) => <span style={{ textTransform: "capitalize" }}>{c.lagna_rashi ?? "—"}</span> },
+    { key: "moon_nakshatra", label: "Moon Nakshatra", render: (c) => <span style={{ textTransform: "capitalize" }}>{c.moon_nakshatra ?? "—"}</span> },
+    { key: "created_at", label: "Saved", render: (c) => formatDateTime(c.created_at), mono: true },
+    { key: "type", label: "Type", render: () => <Badge tone="violet">D1 Chart</Badge> },
+    {
+      key: "actions",
+      label: "",
+      align: "right",
+      render: (c) => (
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setRecomputeChart(c)}
+            title="View this chart with a different Ayanamsa, House System, or Dasha System"
+          >
+            Recompute
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => handleDelete(c)}
+            disabled={deletingId === c.id}
+            title="Delete this saved chart"
+          >
+            {deletingId === c.id ? "Deleting…" : "Delete"}
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <AppShell>
       <div className="mb-6 flex items-center justify-between">
@@ -61,11 +151,10 @@ export default function ChartHistoryPage() {
             Saved Charts
           </h1>
           <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-            Charts you&apos;ve generated while signed in, most recent first.
+            {data ? `${data.total} chart${data.total === 1 ? "" : "s"} saved to your account.` : "Charts you've generated while signed in, most recent first."}
           </p>
         </div>
-        <button
-          type="button"
+        <Button
           onClick={() => {
             // Dashboard shows the last analysis result (from the shared
             // store) instead of the blank form if one exists — clear it
@@ -74,112 +163,68 @@ export default function ChartHistoryPage() {
             clearWorkflowResult();
             router.push("/dashboard");
           }}
-          className="btn-primary px-4 py-2 text-sm"
         >
           + Create Chart
-        </button>
+        </Button>
       </div>
 
       {deleteError && (
-        <div
-          className="glass-card mb-4 p-3 text-sm"
-          style={{ color: "var(--chart-ascendant)" }}
-          role="alert"
-        >
-          {deleteError}
-        </div>
+        <Card style={{ marginBottom: "1rem", padding: "0.75rem 1rem" }}>
+          <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
+            {deleteError}
+          </p>
+        </Card>
       )}
 
       {isLoading && (
-        <div className="glass-card p-8 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
-          Loading…
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Loading…</p>
+        </Card>
       )}
 
       {isError && (
-        <div
-          className="glass-card p-8 text-center text-sm"
-          style={{ color: "var(--chart-ascendant)" }}
-          role="alert"
-        >
-          {errorMessage}
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
+            {errorMessage}
+          </p>
+        </Card>
       )}
 
       {data && data.charts.length === 0 && (
-        <div className="glass-card p-8 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
-          No saved charts yet. Charts you generate on the Dashboard will appear here.
-        </div>
+        <Card style={{ padding: "2rem", textAlign: "center" }}>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            No saved charts yet. Charts you generate on the Dashboard will appear here.
+          </p>
+        </Card>
       )}
 
       {data && data.charts.length > 0 && (
-        <div className="glass-card overflow-x-auto p-5">
-          <table className="w-full text-left text-sm" role="table">
-            <thead>
-              <tr
-                className="border-b text-xs uppercase tracking-wide"
-                style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}
-              >
-                <th className="py-2 pr-3" scope="col">Subject</th>
-                <th className="py-2 pr-3" scope="col">Birth (UTC)</th>
-                <th className="py-2 pr-3" scope="col">Place</th>
-                <th className="py-2 pr-3" scope="col">Lagna</th>
-                <th className="py-2 pr-3" scope="col">Moon Nakshatra</th>
-                <th className="py-2 pr-3" scope="col">Saved</th>
-                <th className="py-2" scope="col">
-                  <span className="sr-only">Actions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.charts.map((c) => (
-                <tr
-                  key={c.id}
-                  className="border-b"
-                  style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}
-                >
-                  <td className="py-2 pr-3 font-medium">
-                    <Link href={`/charts/${c.id}`} className="hover:underline">
-                      {c.subject_name}
-                    </Link>
-                  </td>
-                  <td className="py-2 pr-3">{formatDateTime(c.birth_datetime_utc)}</td>
-                  <td className="py-2 pr-3" style={{ color: "var(--text-secondary)" }}>
-                    {c.place_name ?? "—"}
-                  </td>
-                  <td className="py-2 pr-3 capitalize">{c.lagna_rashi ?? "—"}</td>
-                  <td className="py-2 pr-3 capitalize">{c.moon_nakshatra ?? "—"}</td>
-                  <td className="py-2 pr-3" style={{ color: "var(--text-secondary)" }}>
-                    {formatDateTime(c.created_at)}
-                  </td>
-                  <td className="py-2">
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setRecomputeChart(c)}
-                        className="btn-ghost px-2 py-1 text-xs"
-                        title="View this chart with a different Ayanamsa, House System, or Dasha System"
-                      >
-                        Recompute
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(c)}
-                        disabled={deletingId === c.id}
-                        className="px-2 py-1 text-xs font-medium transition disabled:opacity-50"
-                        style={{ color: "var(--chart-ascendant)" }}
-                        title="Delete this saved chart"
-                      >
-                        {deletingId === c.id ? "Deleting…" : "Delete"}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
-            Showing {data.charts.length} of {data.total} saved chart{data.total === 1 ? "" : "s"}.
+        <div className="space-y-4">
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-end" }}>
+            <div style={{ flex: 1, maxWidth: 340 }}>
+              <SearchInput value={search} onChange={setSearch} placeholder="Search by name, place, lagna…" shortcut="" />
+            </div>
+            <div style={{ width: 200 }}>
+              <Select
+                value={sort}
+                onChange={(v) => setSort(v as SortMode)}
+                options={[
+                  { label: "Most recent", value: "recent" },
+                  { label: "Name (A–Z)", value: "name" },
+                  { label: "Oldest first", value: "oldest" },
+                ]}
+              />
+            </div>
+          </div>
+
+          <Card padding="0">
+            <div style={{ padding: "12px 20px 20px" }}>
+              <Table<BirthChartSummary> columns={columns} rows={visibleCharts} />
+            </div>
+          </Card>
+
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+            Showing {visibleCharts.length} of {data.total} saved chart{data.total === 1 ? "" : "s"}.
           </p>
         </div>
       )}
