@@ -97,6 +97,12 @@ def _serialise_planet(result: TransitPlanetResult) -> TransitPlanetResponse:
         nakshatra_vedha_type=result.nakshatra_vedha_type,
         nakshatra_vedha_target=result.nakshatra_vedha_target,
         rule_version=result.rule_version,
+        transit_rashi_degree=result.transit_rashi_degree,
+        transit_nakshatra=result.transit_nakshatra,
+        transit_pada=result.transit_pada,
+        is_retrograde=result.is_retrograde,
+        speed_deg_per_day=result.speed_deg_per_day,
+        gati=result.gati,
     )
 
 

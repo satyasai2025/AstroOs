@@ -69,6 +69,14 @@ const _ASTRO_CASING_KEYS = new Set([
   "nakshatra_vedha_planet",
   "nakshatra_vedha_target",
   "transit_nakshatra_sbc",
+  // Added for /transit/patterns (TransitAspectResponse) — same lowercase-
+  // token issue, on the two planet fields of each detected aspect.
+  "transiting_planet",
+  "natal_planet",
+  // Added for the Transit Analysis console's detailed positions table
+  // (2026-07-30) — same lowercase-token issue, on the standard 27-system
+  // nakshatra field (distinct from transit_nakshatra_sbc above).
+  "transit_nakshatra",
 ]);
 
 /**

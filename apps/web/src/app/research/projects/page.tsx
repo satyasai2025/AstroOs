@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/lib/auth";
 import { researchProjectsApi, snapshotsApi, researchExportApi, researchModeApi } from "@/lib/research";
 import type { ResearchProject, ResearchSnapshot, ResearchMode } from "@/lib/research";
+import { Badge, Button, Card, Input } from "@/components/ui";
 
 export default function ResearchProjectsPage() {
   const router = useRouter();
@@ -169,104 +170,69 @@ export default function ResearchProjectsPage() {
             Research Mode {researchMode?.enabled ? "ON" : "OFF"}
           </button>
 
-          <button
-            type="button"
-            onClick={() => setShowForm(!showForm)}
-            className="btn-primary text-xs px-4 py-1.5"
-          >
+          <Button size="sm" onClick={() => setShowForm(!showForm)}>
             {showForm ? "Cancel" : "+ New Project"}
-          </button>
+          </Button>
         </div>
       </div>
 
       {error && (
-        <div
-          className="rounded-lg border px-4 py-3 text-sm"
-          style={{
-            borderColor: "rgba(239, 68, 68, 0.3)",
-            backgroundColor: "rgba(239, 68, 68, 0.1)",
-            color: "#fca5a5",
-          }}
-          role="alert"
-        >
-          {error}
-          <button
-            type="button"
-            onClick={() => setError(null)}
-            className="ml-2 underline"
-            aria-label="Dismiss error"
-          >
-            Dismiss
-          </button>
-        </div>
+        <Card style={{ padding: "0.75rem 1rem" }}>
+          <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
+            {error}
+            <button
+              type="button"
+              onClick={() => setError(null)}
+              className="ml-2 underline"
+              aria-label="Dismiss error"
+            >
+              Dismiss
+            </button>
+          </p>
+        </Card>
       )}
 
       {/* New Project Form */}
       {showForm && (
-        <form
-          onSubmit={handleCreateProject}
-          className="rounded-xl border p-4 space-y-3"
-          style={{
-            borderColor: "var(--border-primary)",
-            backgroundColor: "var(--bg-card)",
-          }}
-        >
-          <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-            New Research Project
-          </h3>
-          <div>
-            <label
-              htmlFor="project-title"
-              className="mb-1 block text-xs"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              Title *
-            </label>
-            <input
-              id="project-title"
-              type="text"
+        <Card>
+          <form onSubmit={handleCreateProject} className="space-y-3">
+            <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              New Research Project
+            </h3>
+            <Input
+              label="Title *"
               value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
+              onChange={setNewTitle}
               required
               placeholder="e.g. Sade Sati Correlation Study"
-              className="w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors"
-              style={{
-                borderColor: "var(--border-primary)",
-                backgroundColor: "var(--bg-input)",
-                color: "var(--text-primary)",
-              }}
             />
-          </div>
-          <div>
-            <label
-              htmlFor="project-description"
-              className="mb-1 block text-xs"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              Description
-            </label>
-            <textarea
-              id="project-description"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Optional description of the research project..."
-              rows={3}
-              className="w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors"
-              style={{
-                borderColor: "var(--border-primary)",
-                backgroundColor: "var(--bg-input)",
-                color: "var(--text-primary)",
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={!newTitle.trim()}
-            className="rounded-lg bg-amber-600 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-500 disabled:opacity-40 transition-colors"
-          >
-            Create Project
-          </button>
-        </form>
+            <div>
+              <label
+                htmlFor="project-description"
+                className="mb-1 block text-xs"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Description
+              </label>
+              <textarea
+                id="project-description"
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                placeholder="Optional description of the research project..."
+                rows={3}
+                className="w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors"
+                style={{
+                  borderColor: "var(--border-primary)",
+                  backgroundColor: "var(--bg-input)",
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+            <Button type="submit" size="sm" disabled={!newTitle.trim()}>
+              Create Project
+            </Button>
+          </form>
+        </Card>
       )}
 
       {/* Status Filter */}
@@ -296,33 +262,20 @@ export default function ResearchProjectsPage() {
 
       {/* Projects List */}
       {projects.length === 0 ? (
-        <div
-          className="flex flex-col items-center justify-center rounded-xl border py-16"
-          style={{
-            borderColor: "var(--border-primary)",
-            backgroundColor: "var(--bg-card)",
-          }}
-        >
+        <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "4rem 1rem" }}>
           <p className="text-sm" style={{ color: "var(--text-muted)" }}>
             No research projects yet.
           </p>
           <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
             Create your first project to start tracking research.
           </p>
-        </div>
+        </Card>
       ) : (
         <div className="space-y-4">
           {projects.map((project) => {
             const projectSnapshots = snapshots[project.id] || [];
             return (
-              <div
-                key={project.id}
-                className="rounded-xl border p-4 transition-colors hover:opacity-90"
-                style={{
-                  borderColor: "var(--border-primary)",
-                  backgroundColor: "var(--bg-card)",
-                }}
-              >
+              <Card key={project.id}>
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -332,19 +285,7 @@ export default function ResearchProjectsPage() {
                       >
                         {project.title}
                       </h3>
-                      <span
-                        className="rounded-full px-2 py-0.5 text-xs uppercase tracking-wide"
-                        style={{
-                          backgroundColor:
-                            project.status === "active"
-                              ? "rgba(34, 197, 94, 0.15)"
-                              : "rgba(100, 116, 139, 0.15)",
-                          color:
-                            project.status === "active" ? "#22c55e" : "var(--text-muted)",
-                        }}
-                      >
-                        {project.status}
-                      </span>
+                      <Badge tone={project.status === "active" ? "success" : "neutral"}>{project.status}</Badge>
                     </div>
                     {project.description && (
                       <p
@@ -366,77 +307,23 @@ export default function ResearchProjectsPage() {
                   </div>
 
                   <div className="flex items-center gap-2 ml-4 flex-shrink-0">
-                    {/* View details */}
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/research/projects/${project.id}`)}
-                      className="rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
-                      style={{
-                        backgroundColor: "var(--accent)",
-                        color: "var(--accent-text)",
-                      }}
-                      aria-label={`View details for ${project.title}`}
-                    >
+                    <Button size="sm" onClick={() => router.push(`/research/projects/${project.id}`)} aria-label={`View details for ${project.title}`}>
                       View
-                    </button>
-
-                    {/* Export CSV */}
-                    <button
-                      type="button"
-                      onClick={() => handleExport(project.id, "csv")}
-                      className="rounded-lg px-3 py-1.5 text-xs transition-colors"
-                      style={{
-                        border: "1px solid var(--border-primary)",
-                        color: "var(--text-secondary)",
-                      }}
-                      aria-label={`Export ${project.title} as CSV`}
-                    >
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={() => handleExport(project.id, "csv")} aria-label={`Export ${project.title} as CSV`}>
                       CSV
-                    </button>
-
-                    {/* Export JSON */}
-                    <button
-                      type="button"
-                      onClick={() => handleExport(project.id, "json")}
-                      className="rounded-lg px-3 py-1.5 text-xs transition-colors"
-                      style={{
-                        border: "1px solid var(--border-primary)",
-                        color: "var(--text-secondary)",
-                      }}
-                      aria-label={`Export ${project.title} as JSON`}
-                    >
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={() => handleExport(project.id, "json")} aria-label={`Export ${project.title} as JSON`}>
                       JSON
-                    </button>
-
-                    {/* Archive */}
+                    </Button>
                     {project.status === "active" && (
-                      <button
-                        type="button"
-                        onClick={() => handleArchiveProject(project.id)}
-                        className="rounded-lg px-3 py-1.5 text-xs transition-colors"
-                        style={{
-                          border: "1px solid var(--border-primary)",
-                          color: "var(--text-muted)",
-                        }}
-                        aria-label={`Archive ${project.title}`}
-                      >
+                      <Button variant="secondary" size="sm" onClick={() => handleArchiveProject(project.id)} aria-label={`Archive ${project.title}`}>
                         Archive
-                      </button>
+                      </Button>
                     )}
-
-                    {/* Delete */}
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteProject(project.id)}
-                      className="rounded-lg px-3 py-1.5 text-xs transition-colors"
-                      style={{
-                        border: "1px solid rgba(239, 68, 68, 0.3)",
-                        color: "#fca5a5",
-                      }}
-                      aria-label={`Delete ${project.title}`}
-                    >
+                    <Button variant="danger" size="sm" onClick={() => handleDeleteProject(project.id)} aria-label={`Delete ${project.title}`}>
                       Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -448,16 +335,9 @@ export default function ResearchProjectsPage() {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {projectSnapshots.slice(0, 5).map((snap) => (
-                        <span
-                          key={snap.id}
-                          className="rounded-full px-2 py-0.5 text-xs"
-                          style={{
-                            backgroundColor: "var(--bg-secondary)",
-                            color: "var(--text-secondary)",
-                          }}
-                        >
+                        <Badge key={snap.id} tone="neutral">
                           {snap.label || snap.id.slice(0, 8)}
-                        </span>
+                        </Badge>
                       ))}
                       {projectSnapshots.length > 5 && (
                         <span className="rounded-full px-2 py-0.5 text-xs" style={{ color: "var(--text-muted)" }}>
@@ -467,7 +347,7 @@ export default function ResearchProjectsPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </Card>
             );
           })}
         </div>

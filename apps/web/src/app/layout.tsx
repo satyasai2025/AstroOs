@@ -4,9 +4,9 @@ import { Providers } from "./providers";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 
 // Google Fonts: Outfit (headings), Inter (body UI), JetBrains Mono (code)
-const fontHeadings = "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap";
+const fontHeadings = "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap";
 const fontBody = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap";
-const fontMono = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap";
+const fontMono = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap";
 
 export const metadata: Metadata = {
   title: {

@@ -55,6 +55,7 @@ import {
 } from "@/lib/research";
 import { getCurrentDashaChain, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisResponse, YogaResultResponse, BirthChartSummary } from "@/lib/types";
+import { Button, Card, KpiCard } from "@/components/ui";
 
 interface DashboardOverviewProps {
   /** Full result for whichever chart is currently loaded in the workflow
@@ -145,13 +146,13 @@ const PALETTE = [
   { fg: "#ec4899", bg: "rgba(236, 72, 153, 0.15)" }, // pink
 ];
 
-function paletteFor(seed: string) {
+export function paletteFor(seed: string) {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
   return PALETTE[hash % PALETTE.length];
 }
 
-function initialsOf(name: string): string {
+export function initialsOf(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return "?";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
@@ -203,35 +204,15 @@ function StatCard({
   value,
   caveat,
   icon,
-  color,
+  accent,
 }: {
   label: string;
   value: string;
   caveat: string;
   icon: "charts" | "research" | "hypotheses" | "confirmation";
-  color: { fg: string; bg: string };
+  accent: "cyan" | "violet" | "success" | "gold";
 }) {
-  return (
-    <div className="glass-card flex flex-col p-4">
-      <div className="flex items-start justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
-          {label}
-        </p>
-        <span
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border"
-          style={{ backgroundColor: color.bg, borderColor: `${color.fg}66`, color: color.fg }}
-        >
-          <StatIcon kind={icon} />
-        </span>
-      </div>
-      <p className="mt-1.5 text-2xl font-bold" style={{ color: color.fg }}>
-        {value}
-      </p>
-      <p className="mt-1.5 text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
-        {caveat}
-      </p>
-    </div>
-  );
+  return <KpiCard label={label} value={value} caveat={caveat} icon={<StatIcon kind={icon} />} accent={accent} />;
 }
 
 function ActiveYogaRow({ yoga }: { yoga: YogaResultResponse }) {
@@ -452,9 +433,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
             Here&apos;s what&apos;s happening with your research.
           </p>
         </div>
-        <button type="button" onClick={onStartNewChart} className="btn-primary px-4 py-2 text-sm">
-          + New Chart
-        </button>
+        <Button onClick={onStartNewChart}>+ New Chart</Button>
       </div>
 
       {/* Stats row — every number is a real count, not a mockup placeholder */}
@@ -464,35 +443,35 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           value={chartsLoading ? "…" : String(chartsData?.total ?? 0)}
           caveat="Charts saved to your account."
           icon="charts"
-          color={PALETTE[0]}
+          accent="cyan"
         />
         <StatCard
           label="Active Research"
           value={activeProjects ? String(activeProjects.total) : "—"}
           caveat="Research projects with status = active."
           icon="research"
-          color={PALETTE[1]}
+          accent="violet"
         />
         <StatCard
           label="Hypotheses Logged"
           value={allHypotheses ? String(allHypotheses.total) : "—"}
           caveat="AI-generated hypotheses flagged for review, total."
           icon="hypotheses"
-          color={PALETTE[2]}
+          accent="success"
         />
         <StatCard
           label="Confirmation Rate"
           value={confirmationRate !== null ? `${confirmationRate}%` : "No reviews yet"}
           caveat="Confirmed ÷ (confirmed + rejected) among reviewed hypotheses."
           icon="confirmation"
-          color={PALETTE[3]}
+          accent="gold"
         />
       </div>
 
       {/* Current Dasha & Transit + Active Yogas — only for a chart actually
           loaded this session; no placeholder/demo chart is substituted. */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="glass-card p-4">
+        <Card>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-charts)" }}>
             Current Dasha &amp; Transit
           </h3>
@@ -540,10 +519,10 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               Open or generate a chart to see its current dasha period and transit flags here.
             </p>
           )}
-        </div>
+        </Card>
 
-        <div className="glass-card p-4">
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "#34d399" }}>
+        <Card>
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--success-400)" }}>
             Active Yogas
           </h3>
           {activeResult ? (
@@ -563,12 +542,12 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               Open or generate a chart to see its present yogas here.
             </p>
           )}
-        </div>
+        </Card>
       </div>
 
       {/* Recent Charts + Research Activity + Quick Actions */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="glass-card p-4">
+        <Card>
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-charts)" }}>
               Recent Charts
@@ -590,9 +569,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               {chartsLoading ? "Loading…" : "No saved charts yet."}
             </p>
           )}
-        </div>
+        </Card>
 
-        <div className="glass-card p-4">
+        <Card>
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-research)" }}>
               Research Activity
@@ -614,9 +593,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               {hasSession ? "No research activity logged yet." : "Sign in to see your research activity."}
             </p>
           )}
-        </div>
+        </Card>
 
-        <div className="glass-card p-4">
+        <Card>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-ai)" }}>
             Quick Actions
           </h3>
@@ -659,7 +638,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               color={PALETTE[1]}
             />
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

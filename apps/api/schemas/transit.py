@@ -131,6 +131,26 @@ class TransitPlanetResponse(BaseModel):
         default=None, description="The SBC nakshatra this planet's Vedha ray points at."
     )
     rule_version: str = "1.0"
+    transit_rashi_degree: float = Field(
+        default=0.0, description="Degree within transit_rashi, [0, 30)."
+    )
+    transit_nakshatra: str = Field(
+        default="", description="Standard 27-system nakshatra at the transit moment."
+    )
+    transit_pada: int = Field(default=1, ge=1, le=4, description="Nakshatra pada (1-4).")
+    is_retrograde: bool = False
+    speed_deg_per_day: float = Field(
+        default=0.0, description="Sidereal longitude speed; negative = retrograde."
+    )
+    gati: str = Field(
+        default="sama",
+        description=(
+            "Classical Ashta Gati speed state: vakra, vikala, mandatara, manda, "
+            "sama, chara, or atichara. See services/gati_classifier.py for the "
+            "classification rules and its accuracy caveats — Anuvakra/Kutila are "
+            "not distinguishable from a single instantaneous position."
+        ),
+    )
 
 
 class TransitResponse(BaseModel):
