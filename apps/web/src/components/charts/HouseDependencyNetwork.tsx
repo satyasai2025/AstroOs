@@ -378,8 +378,9 @@ export function HouseDependencyNetwork({
     // 2. Aspect edges (Rashi Drishti)
     for (let h = 1; h <= 12; h++) {
       const ih = info(h);
-      if (!ih.lord) continue;
-      const aspects = aspectedHousesFromPlacement(ih.lord, h);
+      const ihLord = ih.lord;
+      if (!ihLord) continue;
+      const aspects = aspectedHousesFromPlacement(ihLord, h);
       aspects.forEach((target) => {
         const targetInfo = info(target);
         const isWeak = ih.weak || targetInfo.weak;
@@ -388,11 +389,11 @@ export function HouseDependencyNetwork({
           from: h,
           to: target,
           kind: "aspect",
-          lord: ih.lord,
-          label: `${ordinal(h)} lord (${ih.lord}) aspects ${houseRef(target)}`,
+          lord: ihLord,
+          label: `${ordinal(h)} lord (${ihLord}) aspects ${houseRef(target)}`,
           weak: isWeak,
           strengthScore: score(ih.lordStrength),
-          description: `${ih.lord} casts a classical aspect on ${houseRef(target)}.`,
+          description: `${ihLord} casts a classical aspect on ${houseRef(target)}.`,
         });
       });
     }
@@ -470,7 +471,8 @@ export function HouseDependencyNetwork({
     // 6. Argala: 2nd, 4th, 11th from a house intervene
     for (let h = 1; h <= 12; h++) {
       const ih = info(h);
-      if (!ih.lord) continue;
+      const ihLord = ih.lord;
+      if (!ihLord) continue;
       [2, 4, 11].forEach((offset) => {
         const target = wrapHouse(h + offset - 1);
         const targetInfo = info(target);
@@ -479,11 +481,11 @@ export function HouseDependencyNetwork({
           from: h,
           to: target,
           kind: "argala",
-          lord: ih.lord,
-          label: `${ih.lord} (${ordinal(h)}) gives Argala to ${ordinal(target)}`,
+          lord: ihLord,
+          label: `${ihLord} (${ordinal(h)}) gives Argala to ${ordinal(target)}`,
           weak: ih.weak || targetInfo.weak,
           strengthScore: score(ih.lordStrength),
-          description: `Argala (intervention): ${ih.lord} in ${ordinal(h)} actively supports/protects ${ordinal(target)}.`,
+          description: `Argala (intervention): ${ihLord} in ${ordinal(h)} actively supports/protects ${ordinal(target)}.`,
         });
       });
     }
