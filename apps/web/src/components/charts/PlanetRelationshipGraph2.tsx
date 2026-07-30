@@ -277,6 +277,8 @@ export default function PlanetaryRelationshipGraph2({
         id: name,
         x: center + radius * Math.cos(angle),
         y: center + radius * Math.sin(angle),
+        fx: null,
+        fy: null,
       };
     });
 

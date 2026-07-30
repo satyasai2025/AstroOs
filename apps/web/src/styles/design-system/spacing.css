@@ -1,0 +1,23 @@
+:root{
+/* 8px base spacing system */
+--space-0:0px;
+--space-0_5:4px;
+--space-1:8px;
+--space-1_5:12px;
+--space-2:16px;
+--space-2_5:20px;
+--space-3:24px;
+--space-4:32px;
+--space-5:40px;
+--space-6:48px;
+--space-8:64px;
+--space-10:80px;
+--space-12:96px;
+
+--grid-columns:12;
+--grid-gutter:24px;
+--grid-max-width:1600px;
+--sidebar-width:272px;
+--sidebar-width-collapsed:76px;
+--topbar-height:64px;
+}
