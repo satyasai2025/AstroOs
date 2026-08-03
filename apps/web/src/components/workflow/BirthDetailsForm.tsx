@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type {
   AyanamsaCode,
   DashaSystemCode,
@@ -10,42 +10,12 @@ import type {
 } from "@/lib/types";
 import { useTimezoneResolution } from "@/lib/geocoding";
 import { BirthPlaceSearch } from "./BirthPlaceSearch";
-
-const AYANAMSA_OPTIONS: { value: AyanamsaCode; label: string }[] = [
-  { value: "lahiri", label: "Lahiri" },
-  { value: "kp", label: "KP" },
-  { value: "raman", label: "Raman" },
-  { value: "yukteshwar", label: "Yukteshwar" },
-  { value: "fagan_bradley", label: "Fagan-Bradley" },
-  { value: "true_chitra", label: "True Chitra" },
-];
-
-const HOUSE_SYSTEM_OPTIONS: { value: HouseSystemCode; label: string }[] = [
-  { value: "W", label: "Whole Sign" },
-  { value: "P", label: "Placidus" },
-  { value: "K", label: "Koch" },
-  { value: "E", label: "Equal" },
-];
-
-// Informational only — NOT enforced. Unlike KP (which has one strict,
-// universally-followed rule: KP Ayanamsa + Placidus), most ayanamsas have
-// no single "correct" house system in classical practice; different
-// traditions/authors legitimately pair them differently. This only
-// surfaces a known convention as a note so the user can make an informed
-// choice — it never disables the House System dropdown.
-const AYANAMSA_HOUSE_SYSTEM_ADVISORY: Partial<Record<AyanamsaCode, string>> = {
-  yukteshwar:
-    "Sri Yukteshwar ayanamsa is conventionally paired with Whole Sign (Rashi) houses. (Sripathi/Bhava Chalit, the other traditional pairing, isn't supported as a house system yet.)",
-};
-
-const DASHA_SYSTEM_OPTIONS: { value: DashaSystemCode; label: string }[] = [
-  { value: "vimshottari", label: "Vimshottari" },
-  { value: "yogini", label: "Yogini" },
-  { value: "ashtottari", label: "Ashtottari" },
-  { value: "kalachakra", label: "Kalachakra" },
-  { value: "chara", label: "Chara (Jaimini)" },
-  { value: "narayana", label: "Narayana (Jaimini)" },
-];
+import {
+  AYANAMSA_OPTIONS,
+  HOUSE_SYSTEM_OPTIONS,
+  DASHA_SYSTEM_OPTIONS,
+  resolveAstrologicalAlignment,
+} from "@/lib/chart-alignment";
 
 interface Props {
   onSubmit: (request: WorkflowAnalysisRequest) => void;
@@ -99,17 +69,19 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
   const [includeVargas, setIncludeVargas] = useState(true);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // KP (Krishnamurti Paddhati) practice specifically pairs KP Ayanamsa with
-  // the Placidus house system — mixing KP Ayanamsa with any other house
-  // system isn't a recognized classical combination. Lock the house system
-  // to Placidus (and disable the dropdown) whenever KP Ayanamsa is chosen,
-  // rather than letting an invalid pairing through silently.
-  const houseSystemLockedByKp = ayanamsa === "kp";
+  // ── Alignment Matrix Resolution ──────────────────────────────────────────────
+  // Evaluate cascading astrological configuration rules on every state change.
+  const alignment = useMemo(
+    () => resolveAstrologicalAlignment({ ayanamsa, houseSystem, dashaSystem }, "init"),
+    [ayanamsa, houseSystem, dashaSystem],
+  );
+
+  // Sync the corrected values back after auto-switches
   useEffect(() => {
-    if (houseSystemLockedByKp) {
-      setHouseSystem("P");
-    }
-  }, [houseSystemLockedByKp]);
+    if (alignment.values.ayanamsa !== ayanamsa) setAyanamsa(alignment.values.ayanamsa);
+    if (alignment.values.houseSystem !== houseSystem) setHouseSystem(alignment.values.houseSystem);
+    if (alignment.values.dashaSystem !== dashaSystem) setDashaSystem(alignment.values.dashaSystem);
+  }, [alignment.values]);
 
   // Effective coordinates: manual entry wins when the override is on,
   // otherwise whatever the place search resolved.
@@ -312,14 +284,11 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
             disabled={disabled}
           >
             {AYANAMSA_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+              <option key={o.value} value={o.value} disabled={!!alignment.disabled.ayanamsa[o.value]}>
+                {o.label}{alignment.disabled.ayanamsa[o.value] ? ` — ${alignment.disabled.ayanamsa[o.value]}` : ""}
               </option>
             ))}
           </select>
-          {AYANAMSA_HOUSE_SYSTEM_ADVISORY[ayanamsa] && (
-            <p className="mt-1 text-xs text-slate-500">{AYANAMSA_HOUSE_SYSTEM_ADVISORY[ayanamsa]}</p>
-          )}
         </div>
         <div>
           <label htmlFor="houseSystem" className="field-label">
@@ -330,19 +299,14 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
             value={houseSystem}
             onChange={(e) => setHouseSystem(e.target.value as HouseSystemCode)}
             className="field-input"
-            disabled={disabled || houseSystemLockedByKp}
+            disabled={disabled}
           >
             {HOUSE_SYSTEM_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+              <option key={o.value} value={o.value} disabled={!!alignment.disabled.houseSystem[o.value]}>
+                {o.label}{alignment.disabled.houseSystem[o.value] ? ` — ${alignment.disabled.houseSystem[o.value]}` : ""}
               </option>
             ))}
           </select>
-          {houseSystemLockedByKp && (
-            <p className="mt-1 text-xs text-slate-500">
-              Locked to Placidus — KP practice requires KP Ayanamsa + Placidus.
-            </p>
-          )}
         </div>
         <div>
           <label htmlFor="dashaSystem" className="field-label">
@@ -356,13 +320,37 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
             disabled={disabled}
           >
             {DASHA_SYSTEM_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
+              <option key={o.value} value={o.value} disabled={!!alignment.disabled.dashaSystem[o.value]}>
+                {o.label}{alignment.disabled.dashaSystem[o.value] ? ` — ${alignment.disabled.dashaSystem[o.value]}` : ""}
               </option>
             ))}
           </select>
         </div>
       </div>
+
+      {/* Contextual Alignment Alert Banners */}
+      {alignment.banners.map((banner, idx) => (
+        <div
+          key={idx}
+          className="flex items-start gap-2 rounded-md border px-3 py-2 text-xs leading-relaxed"
+          style={{
+            borderColor:
+              banner.severity === "lock" ? "#818cf8" :
+              banner.severity === "advisory" ? "#f59e0b" :
+              "rgba(255,255,255,0.1)",
+            backgroundColor:
+              banner.severity === "lock" ? "rgba(129,140,248,0.08)" :
+              banner.severity === "advisory" ? "rgba(245,158,11,0.08)" :
+              "rgba(255,255,255,0.03)",
+            color: "#cbd5e1",
+          }}
+        >
+          <span className="mt-0.5 text-sm">
+            {banner.severity === "lock" ? "🔒" : banner.severity === "advisory" ? "⚠️" : "ℹ️"}
+          </span>
+          <span>{banner.message}</span>
+        </div>
+      ))}
 
       <label className="flex items-center gap-2 text-sm text-slate-300">
         <input

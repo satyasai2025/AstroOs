@@ -28,14 +28,15 @@ export function FilterBar({ filters = [], activeValues = {}, onChange, onClear }
             onChange={(e) => onChange && onChange(f.key, e.target.value)}
             style={{
               appearance: "none",
-              background: "var(--surface-glass-strong)",
-              border: "1px solid var(--border-default)",
+              background: "var(--bg-surface-700)",
+              border: "1px solid var(--border-strong)",
               borderRadius: "var(--radius-full)",
-              color: "var(--text-secondary)",
+              color: "var(--text-primary)",
               fontSize: "var(--text-sm)",
               padding: "7px 30px 7px 14px",
               cursor: "pointer",
               fontFamily: "var(--font-body)",
+              colorScheme: "dark",
             }}
           >
             <option value="">{f.label}</option>
