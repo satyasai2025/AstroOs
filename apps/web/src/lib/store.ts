@@ -10,8 +10,9 @@
 
 import { create } from "zustand";
 import type {
-  WorkflowAnalysisResponse,
+  BirthChartSummary,
   WorkflowAnalysisRequest,
+  WorkflowAnalysisResponse,
 } from "./types";
 
 interface WorkflowState {
@@ -36,14 +37,24 @@ interface WorkflowState {
   createModalOpen: boolean;
   openCreateModal: () => void;
   closeCreateModal: () => void;
+  /**
+   * The saved chart selected for a transit analysis. Lives here (not in
+   * CreateTransitModal's local state) so the /transit/[reportId] page can
+   * read it and build the correct transit request even when the workflow
+   * store's active chart (result/request) is null or a different chart.
+   */
+  transitChart: BirthChartSummary | null;
+  setTransitChart: (chart: BirthChartSummary | null) => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>((set) => ({
   result: null,
   request: null,
   setResult: (result, request) => set({ result, request }),
-  clear: () => set({ result: null, request: null }),
+  clear: () => set({ result: null, request: null, transitChart: null }),
   createModalOpen: false,
   openCreateModal: () => set({ createModalOpen: true }),
   closeCreateModal: () => set({ createModalOpen: false }),
+  transitChart: null,
+  setTransitChart: (chart) => set({ transitChart: chart }),
 }));
