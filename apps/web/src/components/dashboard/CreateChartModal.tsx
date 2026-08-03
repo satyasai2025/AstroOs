@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
+import { CreateCompatibilityModal } from "./CreateCompatibilityModal";
+import { CreateTransitModal } from "./CreateTransitModal";
+
+import {
+  AYANAMSA_OPTIONS,
+  DASHA_SYSTEM_OPTIONS,
+  HOUSE_SYSTEM_OPTIONS,
+  resolveAstrologicalAlignment
+} from "@/lib/chart-alignment";
+import { useTimezoneResolution } from "@/lib/geocoding";
 import type {
   AyanamsaCode,
   DashaSystemCode,
@@ -8,33 +18,7 @@ import type {
   PlaceResultResponse,
   WorkflowAnalysisRequest,
 } from "@/lib/types";
-import { useTimezoneResolution } from "@/lib/geocoding";
-import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
-
-const AYANAMSA_OPTIONS: { value: AyanamsaCode; label: string }[] = [
-  { value: "lahiri", label: "Lahiri" },
-  { value: "kp", label: "KP" },
-  { value: "raman", label: "Raman" },
-  { value: "yukteshwar", label: "Yukteshwar" },
-  { value: "fagan_bradley", label: "Fagan-Bradley" },
-  { value: "true_chitra", label: "True Chitra" },
-];
-
-const HOUSE_SYSTEM_OPTIONS: { value: HouseSystemCode; label: string }[] = [
-  { value: "W", label: "Whole Sign" },
-  { value: "P", label: "Placidus" },
-  { value: "K", label: "Koch" },
-  { value: "E", label: "Equal" },
-];
-
-const DASHA_SYSTEM_OPTIONS: { value: DashaSystemCode; label: string }[] = [
-  { value: "vimshottari", label: "Vimshottari" },
-  { value: "yogini", label: "Yogini" },
-  { value: "ashtottari", label: "Ashtottari" },
-  { value: "kalachakra", label: "Kalachakra" },
-  { value: "chara", label: "Chara (Jaimini)" },
-  { value: "narayana", label: "Narayana (Jaimini)" },
-];
+import { useEffect, useMemo, useState } from "react";
 
 type ChartTypeId =
   | "birth_chart"
@@ -67,7 +51,7 @@ const CHART_TYPES: {
     id: "compatibility",
     label: "Compatibility",
     sublabel: "Match Analysis",
-    enabled: false,
+    enabled: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
@@ -78,7 +62,7 @@ const CHART_TYPES: {
     id: "transit_chart",
     label: "Transit Chart",
     sublabel: "Transit Analysis",
-    enabled: false,
+    enabled: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="3" />
@@ -90,7 +74,7 @@ const CHART_TYPES: {
     id: "horary_chart",
     label: "Horary Chart",
     sublabel: "Prashna Analysis",
-    enabled: false,
+    enabled: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="9" />
@@ -103,7 +87,7 @@ const CHART_TYPES: {
     id: "event_chart",
     label: "Event Chart",
     sublabel: "Event Analysis",
-    enabled: false,
+    enabled: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="5" width="18" height="16" rx="2" />
@@ -115,7 +99,7 @@ const CHART_TYPES: {
     id: "import_chart",
     label: "Import Chart",
     sublabel: "From File",
-    enabled: false,
+    enabled: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 16V4M12 4l-4 4M12 4l4 4" />
@@ -181,10 +165,19 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   const [includeVargas, setIncludeVargas] = useState(true);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const houseSystemLockedByKp = ayanamsa === "kp";
+  // ── Alignment Matrix Resolution ──────────────────────────────────────────────
+  // Evaluate cascading astrological configuration rules on every state change.
+  const alignment = useMemo(
+    () => resolveAstrologicalAlignment({ ayanamsa, houseSystem, dashaSystem }, "init"),
+    [ayanamsa, houseSystem, dashaSystem],
+  );
+
+  // Sync the corrected values back after auto-switches
   useEffect(() => {
-    if (houseSystemLockedByKp) setHouseSystem("P");
-  }, [houseSystemLockedByKp]);
+    if (alignment.values.ayanamsa !== ayanamsa) setAyanamsa(alignment.values.ayanamsa);
+    if (alignment.values.houseSystem !== houseSystem) setHouseSystem(alignment.values.houseSystem);
+    if (alignment.values.dashaSystem !== dashaSystem) setDashaSystem(alignment.values.dashaSystem);
+  }, [alignment.values]);
 
   // Reset to a clean first step every time the modal is (re)opened, so a
   // previous session's data doesn't linger the next time it's opened.
@@ -222,6 +215,18 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   const canSubmit = !isPending && canContinueFromDetails && timezoneResolved;
 
   if (!open) return null;
+
+  // ── Redirect to CRM Compatibility Studio ─────────────────────────────────
+  // When user selects "Compatibility" and clicks Continue, show the full CRM suite!
+  if (chartType === "compatibility" && step > 1) {
+    return <CreateCompatibilityModal open={open} onClose={onClose} />;
+  }
+
+  // ── Redirect to dedicated Transit Chart creation modal ────────────────────
+  // When user selects "Transit Chart", render the dedicated transit modal
+  if (chartType === "transit_chart") {
+    return <CreateTransitModal open={open} onClose={onClose} />;
+  }
 
   function handleContinue() {
     setValidationError(null);
@@ -395,7 +400,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                       required
                       value={birthDate}
                       onChange={(e) => setBirthDate(e.target.value)}
-                      className="obsidian-input"
+                      className="obsidian-input w-full [color-scheme:dark]"
                       disabled={isPending}
                     />
                   </div>
@@ -407,7 +412,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                       required
                       value={birthTime}
                       onChange={(e) => setBirthTime(e.target.value)}
-                      className="obsidian-input"
+                      className="obsidian-input w-full [color-scheme:dark]"
                       disabled={isPending}
                     />
                   </div>
@@ -525,7 +530,9 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                       disabled={isPending}
                     >
                       {AYANAMSA_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>{o.label}</option>
+                        <option key={o.value} value={o.value} disabled={!!alignment.disabled.ayanamsa[o.value]}>
+                          {o.label}{alignment.disabled.ayanamsa[o.value] ? ` — ${alignment.disabled.ayanamsa[o.value]}` : ""}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -535,15 +542,14 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                       value={houseSystem}
                       onChange={(e) => setHouseSystem(e.target.value as HouseSystemCode)}
                       className="obsidian-input"
-                      disabled={isPending || houseSystemLockedByKp}
+                      disabled={isPending}
                     >
                       {HOUSE_SYSTEM_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>{o.label}</option>
+                        <option key={o.value} value={o.value} disabled={!!alignment.disabled.houseSystem[o.value]}>
+                          {o.label}{alignment.disabled.houseSystem[o.value] ? ` — ${alignment.disabled.houseSystem[o.value]}` : ""}
+                        </option>
                       ))}
                     </select>
-                    {houseSystemLockedByKp && (
-                      <p className="mt-1 text-[10px]" style={{ color: "var(--text-muted)" }}>Locked — KP requires KP Ayanamsa + Placidus.</p>
-                    )}
                   </div>
                   <div>
                     <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Dasha System</label>
@@ -554,11 +560,37 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                       disabled={isPending}
                     >
                       {DASHA_SYSTEM_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>{o.label}</option>
+                        <option key={o.value} value={o.value} disabled={!!alignment.disabled.dashaSystem[o.value]}>
+                          {o.label}{alignment.disabled.dashaSystem[o.value] ? ` — ${alignment.disabled.dashaSystem[o.value]}` : ""}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
+
+                {/* Contextual Alignment Alert Banners */}
+                {alignment.banners.map((banner, idx) => (
+                  <div
+                    key={idx}
+                    className="mt-2 flex items-start gap-2 rounded-md border px-3 py-2 text-[11px] leading-relaxed"
+                    style={{
+                      borderColor:
+                        banner.severity === "lock" ? "var(--obsidian-accent-tertiary, #818cf8)" :
+                        banner.severity === "advisory" ? "#f59e0b" :
+                        "var(--border-primary)",
+                      backgroundColor:
+                        banner.severity === "lock" ? "rgba(129,140,248,0.08)" :
+                        banner.severity === "advisory" ? "rgba(245,158,11,0.08)" :
+                        "rgba(255,255,255,0.03)",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    <span className="mt-0.5 text-xs">
+                      {banner.severity === "lock" ? "🔒" : banner.severity === "advisory" ? "⚠️" : "ℹ️"}
+                    </span>
+                    <span>{banner.message}</span>
+                  </div>
+                ))}
 
                 <label className="flex items-center gap-2 text-xs" style={{ color: "var(--text-secondary)" }}>
                   <input
