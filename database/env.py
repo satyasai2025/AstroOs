@@ -22,6 +22,16 @@ from apps.api.models.base import AstroBase  # noqa: E402
 from apps.api.models.user import AuditLogModel, UserModel, UserSessionModel  # noqa: E402
 from apps.api.models.dataset import DatasetModel  # noqa: E402
 from apps.api.models.digital_twin import DigitalTwinModel, TwinModificationModel  # noqa: E402
+from apps.api.models.research_case import (  # noqa: E402
+    AttachmentModel,
+    EventSnapshotModel,
+    LifeEventModel,
+    ResearchCaseModel,
+)
+from apps.api.models.pattern import (  # noqa: E402
+    DiscoveredPatternModel,
+    PatternDiscoveryRunModel,
+)
 
 # ── Alembic Config ────────────────────────────────────────────────────────────
 config = context.config

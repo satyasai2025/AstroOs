@@ -352,16 +352,22 @@ PYTHONPATH=. pytest tests/ -v --cov=apps --cov=packages --cov-report=term-missin
 PYTHONPATH=. pytest tests/unit/test_dasha_engine.py -v
 ```
 
-Current status: **1103 tests passing, 0 failures** (1099 through
-Rule Engine Phase 1, plus 4 new for Phase 2's catalog expansion — 20 to
-36 rules across 6 categories (added house-lord placement and compound
-multi-condition rules, plus 8 more individual rules), and one new fact
-category (`house.N.lord_house`), with no change to RuleEngine's
-evaluation mechanism itself: 100% coverage across all 13 Module 13
-files; 2 additional tests in `tests/integration/`
-require a real pyswisseph install with `.se1` data files and are excluded by
-default via `-m "not integration"`, run explicitly with `-m
-integration`).
+Current status: `apps/api/tests/unit/` and `apps/api/tests/research_case/`
+collect and pass (run with `PYTHONPATH=apps/api`). The shared
+`tests/conftest.py` (providing `require_test_db`, `minimal_chart`,
+`natal_snapshot`, `test_engine`, and `db_session` fixtures) had gone missing
+from the tree — silently breaking collection of the whole `apps/api/tests/`
+suite — and has been restored from git history, along with the DB-free
+`tests/precision/conftest.py`. A few tests that had drifted from refactored
+APIs (`AdminEngine`'s repo-only constructor, `EntityLinker`'s registry-based
+lookup) were updated to match. DB-backed tests still skip without
+`TEST_DATABASE_URL` set. See `docs/module-27-research-case-import-report.md`
+for the full list of what broke and why.
+
+Also working: **27 tests in `apps/api/tests/research_case/`** (15 validator
+unit tests + 10 schema-conversion/`SnapshotComputer` tests, ephemeris-gated +
+2 live-DB integration tests) — all passing. Module 27 (Research Case Import)
+is verified end-to-end against a live PostgreSQL.
 
 ---
 

@@ -12,8 +12,13 @@ from apps.api.services.analytics_engine import StatisticalEngine, CohortQuery, F
 
 class TestGraphAnalytics:
     def setup_method(self):
-        # Mock the KnowledgeGraphEngine
-        self.mock_kg_engine = Mock(spec=KnowledgeGraphEngine)
+        # Mock the KnowledgeGraphEngine. GraphAnalytics reads the engine's
+        # private `_registry` (an OntologyRegistry) directly, so the mock must
+        # expose it — a spec'd Mock would raise AttributeError on `_registry`.
+        self.mock_kg_engine = Mock()
+        self.mock_kg_engine._registry = Mock()
+        self.mock_kg_engine._registry.get_entity = Mock(return_value=MagicMock())
+        self.mock_kg_engine._registry.all_entities = Mock(return_value=[])
         self.graph_analytics = GraphAnalytics(self.mock_kg_engine)
 
     def test_entity_frequency_basic(self):
@@ -31,23 +36,23 @@ class TestGraphAnalytics:
             entity_field="entity_id"
         )
 
-        assert isinstance(frequencies, list)
-        assert len(frequencies) == 3
+        assert isinstance(frequencies.entities, list)
+        assert len(frequencies.entities) == 3
 
         # Check SUN frequency
-        sun_freq = next(f for f in frequencies if f.entity_id == "SUN")
+        sun_freq = next(f for f in frequencies.entities if f.entity_id == "SUN")
         assert sun_freq.count == 2
         assert sun_freq.proportion == 0.5
 
         # Check MOON frequency
-        moon_freq = next(f for f in frequencies if f.entity_id == "MOON")
+        moon_freq = next(f for f in frequencies.entities if f.entity_id == "MOON")
         assert moon_freq.count == 1
-        assert moon_freq.proportion == 0.2
+        assert moon_freq.proportion == 0.25  # 1 of 4 records
 
         # Check MARS frequency
-        mars_freq = next(f for f in frequencies if f.entity_id == "MARS")
+        mars_freq = next(f for f in frequencies.entities if f.entity_id == "MARS")
         assert mars_freq.count == 1
-        assert mars_freq.proportion == 0.2
+        assert mars_freq.proportion == 0.25  # 1 of 4 records
 
     def test_entity_frequency_empty_dataset(self):
         """Test entity frequency with empty dataset."""
@@ -55,7 +60,7 @@ class TestGraphAnalytics:
             dataset=[],
             entity_field="entity_id"
         )
-        assert frequencies == []
+        assert frequencies.entities == []
 
     def test_entity_frequency_single_entity(self):
         """Test entity frequency with single entity type."""
@@ -66,13 +71,13 @@ class TestGraphAnalytics:
 
         frequencies = self.graph_analytics.entity_frequency(
             dataset=dataset,
-            entity_column="entity_id"
+            entity_field="entity_id"
         )
 
-        assert len(frequencies) == 1
-        assert frequencies[0].entity_id == "SUN"
-        assert frequencies[0].count == 2
-        assert frequencies[0].proportion == 1.0
+        assert len(frequencies.entities) == 1
+        assert frequencies.entities[0].entity_id == "SUN"
+        assert frequencies.entities[0].count == 2
+        assert frequencies.entities[0].proportion == 1.0
 
     def test_correlate_entity_with_dataset(self):
         """Test correlation between entity presence and numeric field."""
@@ -89,7 +94,7 @@ class TestGraphAnalytics:
         correlation = self.graph_analytics.correlate_entity_with_dataset(
             dataset=dataset,
             entity_id="SUN",
-            entity_column="entity_id",
+            entity_field="entity_id",
             numeric_field="outcome"
         )
 
@@ -119,7 +124,7 @@ class TestGraphAnalytics:
         correlation = self.graph_analytics.correlate_entity_with_dataset(
             dataset=dataset,
             entity_id="SUN",  # Not in dataset
-            entity_column="entity_id",
+            entity_field="entity_id",
             numeric_field="outcome"
         )
 
@@ -136,12 +141,14 @@ class TestGraphAnalytics:
         correlation = self.graph_analytics.correlate_entity_with_dataset(
             dataset=dataset,
             entity_id="SUN",
-            entity_column="entity_id",
+            entity_field="entity_id",
             numeric_field="missing_field"
         )
 
-        # Should handle gracefully
-        assert correlation.absent_count + correlation.present_count == 2
+        # Numeric field absent from every record -> no present/absent buckets,
+        # degraded to an "insufficient data" interpretation.
+        assert correlation.absent_count + correlation.present_count == 0
+        assert "insufficient" in correlation.interpretation
 
     def test_correlation_interpretation(self):
         """Test that interpretation text is generated."""
@@ -155,7 +162,7 @@ class TestGraphAnalytics:
         correlation = self.graph_analytics.correlate_entity_with_dataset(
             dataset=dataset,
             entity_id="SUN",
-            entity_column="entity_id",
+            entity_field="entity_id",
             numeric_field="outcome"
         )
 
@@ -172,10 +179,10 @@ class TestGraphAnalytics:
 
         frequencies = self.graph_analytics.entity_frequency(
             dataset=dataset,
-            entity_column="planet"
+            entity_field="planet"
         )
 
-        assert len(frequencies) == 2
-        sun_freq = next(f for f in frequencies if f.entity_id == "SUN")
+        assert len(frequencies.entities) == 2
+        sun_freq = next(f for f in frequencies.entities if f.entity_id == "SUN")
         assert sun_freq.count == 2
-        assert sun_freq.proportion == 2/3
+        assert abs(sun_freq.proportion - 2 / 3) < 0.001

@@ -74,6 +74,31 @@ class Settings(BaseSettings):
     """
     GEOCODING_USER_AGENT: str = "AstroOS/1.0 (development)"
 
+    # ── LLM (pattern explanations + natural-language pattern Q&A) ────────────
+    OPENAI_API_KEY: str | None = None
+    """Set this in .env to enable AI-generated pattern explanations
+    (POST /research/cases/patterns/{pattern_id}/explain) and the
+    natural-language Ask tab (POST /research/cases/patterns/ask). Left
+    unset, those endpoints return a clear error rather than silently
+    degrading.
+
+    Despite the name, this is not OpenAI-only: any provider exposing an
+    OpenAI-compatible /chat/completions endpoint works by pointing
+    OPENAI_BASE_URL at it. For Google Gemini, use its OpenAI compatibility
+    layer — see OPENAI_BASE_URL below."""
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
+    """Base URL of an OpenAI-compatible API. ``/chat/completions`` is
+    appended to it.
+
+    OpenAI (default):
+        OPENAI_BASE_URL=https://api.openai.com/v1
+        OPENAI_MODEL=gpt-4o-mini
+    Google Gemini (OpenAI compatibility layer):
+        OPENAI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+        OPENAI_MODEL=gemini-2.0-flash
+    """
+    OPENAI_MODEL: str = "gpt-4o-mini"
+
     # ── Worker Pools (Phase II.4 — local-first) ─────────────────────────────────
     WORKER_CPU_MIN: int = 1
     WORKER_CPU_MAX: int = 4

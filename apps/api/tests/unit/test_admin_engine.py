@@ -7,44 +7,34 @@ from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.domain.admin import AdminUserSummary
 from apps.api.services.admin_engine import AdminEngine
 
 
-def _make_session_mock() -> AsyncMock:
-    session = AsyncMock(spec=AsyncSession)
-    # AsyncSession.execute() is the only async boundary — it returns an
-    # already-materialized, synchronous sqlalchemy.engine.Result. Every
-    # method on that Result (.scalars(), .all(), .scalar_one_or_none(), ...)
-    # is synchronous, matching admin_engine.py's real (non-awaited) usage.
-    scalars_mock = MagicMock()
-    scalars_mock.all = MagicMock(return_value=[])
-    scalars_mock.scalar_one_or_none = MagicMock(return_value=None)
-    result_mock = MagicMock()
-    result_mock.scalars = MagicMock(return_value=scalars_mock)
-    result_mock.scalar_one_or_none = MagicMock(return_value=None)
-    session.execute = AsyncMock(return_value=result_mock)
-    return session
+def _make_repo_mock(list_result=()) -> AsyncMock:
+    """UserRepository mock. AdminEngine now delegates all User access to
+    UserRepository (Phase 10 cleanup, 2026-07-23) — no raw session."""
+    repo = AsyncMock()
+    repo.list_all = AsyncMock(return_value=list_result)
+    repo.count_all = AsyncMock(return_value=0)
+    repo.get_by_id = AsyncMock(return_value=None)
+    return repo
 
 
 class TestListUsers:
     async def test_empty_result(self):
-        session = _make_session_mock()
-        engine = AdminEngine(session=session)
+        engine = AdminEngine(user_repo=_make_repo_mock())
         users = await engine.list_users()
         assert users == ()
 
     async def test_with_status_filter(self):
-        session = _make_session_mock()
-        engine = AdminEngine(session=session)
+        engine = AdminEngine(user_repo=_make_repo_mock())
         users = await engine.list_users(status="active")
         assert users == ()
 
     async def test_with_role_filter(self):
-        session = _make_session_mock()
-        engine = AdminEngine(session=session)
+        engine = AdminEngine(user_repo=_make_repo_mock())
         users = await engine.list_users(role="researcher")
         assert users == ()
 
@@ -63,7 +53,7 @@ class TestGetUser:
     async def test_user_not_found(self):
         repo = AsyncMock()
         repo.get_by_id = AsyncMock(return_value=None)
-        engine = AdminEngine(user_repo=repo, session=_make_session_mock())
+        engine = AdminEngine(user_repo=repo)
         result = await engine.get_user(uuid.uuid4())
         assert result is None
 

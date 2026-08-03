@@ -24,8 +24,12 @@ QueryOperator = Literal["==", "!=", ">", "<", ">=", "<=", "in"]
 
 
 class ResearchProjectCreateRequest(BaseModel):
-    """Request payload for research project create operations."""
-    user_id: uuid.UUID
+    """Request payload for research project create operations.
+
+    No user_id field: ownership is always derived from the authenticated
+    caller in the router, never accepted from the client — otherwise any
+    researcher could create a project "owned" by someone else's user_id.
+    """
     title: str = Field(min_length=1, max_length=300)
     description: Optional[str] = None
     dataset_id: Optional[uuid.UUID] = None

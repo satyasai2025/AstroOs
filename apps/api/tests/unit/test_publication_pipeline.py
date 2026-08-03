@@ -165,7 +165,14 @@ class TestGenerateReferences:
 
     def test_no_dataset_no_extra(self, sample_project):
         from apps.api.services.publication_pipeline import _generate_references
-        assert "ProjectDataset" not in _generate_references(sample_project)
+        # sample_project carries a dataset_id; build one without it to prove
+        # the extra @misc entry is only emitted for dataset-backed projects.
+        no_dataset = ResearchProject(
+            id=sample_project.id,
+            user_id=sample_project.user_id,
+            title=sample_project.title,
+        )
+        assert "ProjectDataset" not in _generate_references(no_dataset)
 
 
 class TestPublicationBundle:
@@ -235,4 +242,4 @@ class TestBuildPdf:
         from apps.api.services.publication_pipeline import build_pdf, PublicationError
         with patch("apps.api.services.publication_pipeline.shutil.which", return_value=None):
             with pytest.raises(PublicationError, match="pdflatex not found"):
-                await build_pdf("/tmp/dummy_tex_dir")
+                await build_pdf("/tmp/dummy_tex.tex", "/tmp/dummy_tex_dir")

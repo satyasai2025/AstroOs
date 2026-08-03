@@ -2,6 +2,19 @@
 
 > Dated log of v2 work. Untagged in-progress work is logged by date; tagged releases (see `ASTROOS_V2_RELEASE_PLAN.md`) get their own entry when cut.
 
+## 2026-07-31 — Module 27 Research Case Import (Phases 1–2)
+
+**Event-centric research case pipeline: 4-table model, import API, per-event snapshot computation, frontend import UI. Verified against the live DB.**
+
+- **Repaired pre-existing untracked work.** `apps/api/models/research_case.py` crashed at import (backend enums were `class _X(str)`, not `enum.Enum` → `SAEnum` raised `TypeError`); fixed to `class _X(str, Enum)` + string `server_default`s. `apps/api/services/research_validation.py` crashed on every call — fixed **7 runtime bugs** (undefined `_valid_age_range`, missing `SourceConfidence` import, `person_bon_confidence` typo, loop-var `e` vs `event`, two wrong schema field names, and `existing_hashes or set()` silently discarding the batch's shared hash set so cross-case duplicate detection never fired). Full list in `docs/module-27-research-case-import-report.md` §2.
+- **Created** `apps/api/domain/research_case.py` (the schemas referenced it; it was missing), `apps/api/services/import_service.py` (`SnapshotComputer` + `ResearchCaseImportService`), and `database/versions/0014_research_cases.py` (4 tables + 6 enum types, **applied live**; DB was at `0013`).
+- **Added 4 endpoints** to the researcher-gated Research router: `GET /cases/import/schema`, `POST /cases/validate`, `POST /cases/import`, `GET /cases`.
+- **Frontend:** research-case types in `apps/web/src/lib/types.ts`, `researchCasesApi` in `apps/web/src/lib/researchCases.ts`, drag-and-drop import page at `apps/web/src/app/research/import/page.tsx`, nav links in AppShell/NavPanel. Typecheck clean.
+- **Snapshot design:** D1 chart + dasha tree + yogas computed once per case; active dasha chain + transits resolved per event date (same "compute once, reuse per event" rule as EventEngine). Verified with real ephemeris — dasha shifts per event date (`rahu/rahu → rahu/mercury → rahu/saturn`), 7 yogas, 9 transit features.
+- **Correctness fix during verification:** a case-level snapshot failure originally rolled back the whole session, silently discarding earlier successful cases in the same batch. Now snapshots are computed before any DB write, so a failed case contributes nothing and never affects batch-mates (proven with a deliberately-invalid-timezone case).
+- **Artifacts:** `docs/research-case-schema.json`, `examples/research_cases_sample.json`.
+- **Deferred / not started:** async import job (`/cases/import/status/{job_id}`) — import is synchronous by design; Phase 3 Pattern Discovery and Phase 4 bulk verification remain. See `docs/module-27-research-case-import-report.md`.
+
 ## 2026-07-17 (continued, 7) — correction to the entry below
 
 The "(continued, 6)" entry immediately below states GD-RDO-001's fabricated data was "confirmed never part of any commit, including the tagged v1.0.0-alpha." **That was true only for the originally-scoped file.** Verifying release impact afterward surfaced three more fabricated datasets — `research-data/research/{health,wealth,spiritual}/ASTRO-RS-{HEALTH,WEALTH,SPIRITUAL}-v0.1.0/` (183 records each, filtered exports of the same fabricated source, one with 44 rows still carrying unfilled `{source}`-style template placeholders naming Lincoln, Newton, and Hawking) — that **were** already committed and **are** present in `d98fd01`, the commit tagged `v1.0.0-alpha`. Deleted these three under the same disposition decision already given for the original file. The already-published `v1.0.0-alpha` tag contains fabricated data as of this writing; a working-tree deletion cannot retroactively clean an existing commit/tag without a history rewrite, which was not performed. Full detail: `research-data/governance/GD-RDO-001_RS_EVENT_DATA_INTEGRITY.md` §7, and the corrected `ALPHA_RELEASE_READINESS_REPORT.md`.
