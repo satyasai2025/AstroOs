@@ -1,0 +1,74 @@
+# ontology/glossary/yoga.yaml
+
+id: term.yoga
+name: Yoga
+aliases:
+  - Yoga
+  - Combination
+  - Planetary Union
+  - योग
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    yoga — from yuj (to yoke, to unite, to join). Literally
+    "union, combination, or conjunction." In jyotisha, a
+    planetary combination formed when specific grahas occupy
+    defined houses, signs, nakshatras, or form specific
+    angular relationships.
+  english: >
+    A named planetary combination or configuration in the
+    horoscopic chart, formed by grahas occupying specific
+    houses, signs, or nakshatras, or by specific angular
+    relationships (conjunctions, aspects, lordships). Each
+    yoga has defined conditions for formation and produces
+    specific results. Examples include Gaja Kesari Yoga,
+    Dhana Yoga, Pancha Mahapurusha Yoga, etc.
+  technical: >
+    Yogas are classified by formation type: conjunction
+    yogas (grahas occupying the same house), aspect yogas
+    (grahas mutually aspecting), lordship yogas (bhava lords
+    in specific positions), and nakshatra yogas. They are
+    further classified by effect: dhana (wealth), raja
+    (power), daridra (poverty), dosha (affliction), etc.
+    A yoga is activated during the dasha (period) of its
+    key grahas. Not all potential yogas manifest equally —
+    strength of participating grahas determines magnitude.
+
+usage:
+  primary: "Identification of specific planetary combinations that produce defined life outcomes"
+  secondary: "Dasha-based activation analysis to determine when a yoga manifests"
+
+related_concepts:
+  - ref: term.bhava
+    relationship: "Yogas are formed by grahas occupying or ruling specific bhavas"
+  - ref: term.graha
+    relationship: "Grahas are the agents that form yogas through their positions and relationships"
+  - ref: term.rashi
+    relationship: "Sign placement determines graha dignity within a yoga formation"
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 1-20
+    claim: "Yogānāṃ vakṣye sarvaśaḥ — I shall describe all the yogas"
+    confidence: high
+
+notes: >
+  The classical texts describe hundreds of named yogas.
+  BPHS is the primary reference for Parashari yogas. Some
+  yogas are universally recognized (Gaja Kesari, Pancha
+  Mahapurusha) while others are tradition-specific. The
+  strength and dignity of participating grahas determine
+  whether a yoga produces its full results. A yoga is
+  activated during the dasha of its key graha(s).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

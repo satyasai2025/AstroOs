@@ -1,0 +1,70 @@
+id: aspect.graha-drishti.7th
+name: Standard Seventh-House Aspect
+aliases:
+  - Sapthama Drishti
+  - Universal Aspect
+  - 7th Aspect
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: graha-drishti
+
+statement: >
+  Every graha aspects the house exactly 7th from its position, without exception.
+  This is the universal aspect rule applicable to all nine grahas — Surya,
+  Chandra, Mangala, Budha, Guru, Shukra, Shani, Rahu, and Ketu.
+
+conditions:
+  - entity: graha.any
+    role: subject
+    notes: >
+      The aspecting graha casts its 7th aspect from whichever sign/house it
+      occupies in the birth chart.
+  - entity: house.7th-from-position
+    role: object
+    notes: >
+      The sign and any grahas occupying it that fall exactly 7 signs
+      (180 degrees) from the subject graha receive the aspect.
+
+effects:
+  - description: >
+      The 7th aspect creates a direct link between the aspecting graha and
+      the occupied sign/house, generating mutual influence. The nature of
+      the effect depends on the inherent qualities (guna, dosha) of the
+      aspecting graha.
+    intensity: moderate
+    notes: >
+      As a standard aspect, it carries moderate inherent strength unless
+      modified by dignity, retrograde, or combustion conditions.
+
+exceptions:
+  - condition: >
+      When the 7th sign from a graha is occupied by a benefic, the
+      aspect produces predominantly favourable results; when occupied by
+      a malefic, results are predominantly challenging.
+    reason: >
+      The receiving graha's nature modifies the outcome of the standard
+      aspect. BPHS describes this as a qualitative modifier.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: All grahas aspect the
+      7th house from their position. This is the foundational rule of
+      graha drishti.
+    confidence: high
+
+notes: >
+  The 7th aspect is the only aspect shared universally by all grahas.
+  Special aspects (5th/9th for Guru, 3rd/10th for Shani, 4th/8th for
+  Mangala) are additive — they do not replace or diminish the 7th aspect.
+  The 7th aspect remains active for every graha at all times.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

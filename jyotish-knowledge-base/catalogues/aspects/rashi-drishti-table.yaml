@@ -1,0 +1,78 @@
+id: aspect.rashi-drishti.table
+name: Rashi Aspect Reference Table
+aliases:
+  - Sign Aspect Table
+  - Jaimini Aspect Table
+  - Rashi-to-Rashi Drishti Table
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: rashi-drishti
+
+statement: >
+  Complete reference table of rashi-to-rashi aspects under the Jaimini
+  system. Each rashi aspects three other rashis based on its nature.
+  See aspect.rashi-drishti.rules for the governing rules.
+
+conditions:
+  - entity: rashi.all
+    role: subject
+    notes: >
+      This table applies the rashi drishti rules from
+      aspect.rashi-drishti.rules to all twelve rashis.
+
+effects:
+  - description: >
+      The table below provides the complete rashi aspect mapping for all
+      twelve rashis. Each rashi aspects exactly three other rashis.
+    intensity: moderate
+    notes: >
+      The asymmetry between movable-fixed aspecting (3 targets each)
+      and dual-dual aspecting (3 targets each) produces a uniform
+      three-aspect-per-rashi pattern.
+
+exceptions:
+  - condition: >
+      No exceptions beyond the standard rules documented in
+      aspect.rashi-drishti.rules.
+    reason: >
+      This is a reference table; rules and exceptions are in the
+      rules record.
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras define the complete rashi aspect framework.
+      This table is a systematic application of those rules.
+    confidence: high
+
+notes: >
+  Mesha (1, movable) aspects: Simha (5), Vrischika (8), Kumbha (11).
+  Vrishabha (2, fixed) aspects: Karka (4), Tula (7), Makara (10).
+  Mithuna (3, dual) aspects: Kanya (6), Dhanu (9), Meena (12).
+  Karka (4, movable) aspects: Vrischika (8), Kumbha (11), Vrishabha (2).
+  Simha (5, fixed) aspects: Tula (7), Makara (10), Mesha (1).
+  Kanya (6, dual) aspects: Dhanu (9), Meena (12), Mithuna (3).
+  Tula (7, movable) aspects: Kumbha (11), Vrishabha (2), Simha (5).
+  Vrischika (8, fixed) aspects: Makara (10), Mesha (1), Karka (4).
+  Dhanu (9, dual) aspects: Meena (12), Mithuna (3), Kanya (6).
+  Makara (10, movable) aspects: Vrishabha (2), Simha (5), Vrischika (8).
+  Kumbha (11, fixed) aspects: Mesha (1), Karka (4), Tula (7).
+  Meena (12, dual) aspects: Mithuna (3), Kanya (6), Dhanu (9).
+
+  Verification key:
+  - All movable signs aspect fixed signs (except adjacent): CONFIRMED
+  - All fixed signs aspect movable signs: CONFIRMED
+  - All dual signs aspect other dual signs: CONFIRMED
+
+  This record is a reference companion to aspect.rashi-drishti.rules.
+  The two should be read together.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

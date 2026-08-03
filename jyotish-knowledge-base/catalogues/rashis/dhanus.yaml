@@ -1,0 +1,87 @@
+# catalogues/rashis/dhanus.yaml
+
+id: rashi.dhanus
+name: Dhanus
+aliases:
+  - Sagittarius
+  - Dhanu
+  - धनु
+category: rashi
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Dhanu
+devanagari: धनु
+meaning: "The archer; the bow"
+element: fire
+quality: dual
+gender: male
+
+ruler:
+  ref: graha.guru
+  notes: Traditional Parashari rulership of Dhanus
+
+tattva_lord:
+  element: fire
+  lord: graha.mangala
+  notes: Mangala is the lord of the fire element (Tejas Tattva)
+
+degree_span:
+  start: 240
+  end: 270
+
+body_part: Thighs
+direction: East
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.moola
+    padas: [1, 2, 3, 4]
+    degrees: "240°00' - 253°20'"
+  - nakshatra: nakshatra.purvashadha
+    padas: [1, 2, 3, 4]
+    degrees: "253°20' - 266°40'"
+  - nakshatra: nakshatra.uttarashadha
+    padas: [1]
+    degrees: "266°40' - 270°00'"
+
+properties:
+  temperament: Optimistic, philosophical, adventurous
+  motivation: dharma
+  symbol: Archer
+
+karakatvas:
+  - concept: Wisdom and philosophy
+  - concept: Optimism and expansion
+  - concept: Spiritual pursuit and higher learning
+
+compatible_with:
+  - ref: rashi.mesham
+  - ref: rashi.simham
+incompatible_with:
+  - ref: rashi.mithunam
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Dhanus as a Dvisvabhava (dual), Urdhvamukha (looking upward), and Mriga (animal) sign ruled by Guru"
+    confidence: high
+
+notes: >
+  Dhanus is the ninth sign of the zodiac, governing wisdom, philosophy,
+  and higher aspirations. As a dual fire sign, it embodies optimism,
+  adventure, and a quest for meaning. Natives born under Dhanus are
+  said to be philosophical, generous, and driven by a sense of higher
+  purpose. The sign corresponds to the thighs (Uru) in the Kalapurusha
+  correspondence of the zodiac to the human body. Dhanus is the only
+  sign ruled by Guru (Jupiter).
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

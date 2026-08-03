@@ -1,0 +1,66 @@
+# ontology/glossary/nakshatra.yaml
+
+id: term.nakshatra
+name: Nakṣatra
+aliases:
+  - Nakshatra
+  - Lunar Mansion
+  - नक्षत्र
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    nakṣatra — from nakṣ (to approach, to attain) + tra
+    (protector, suffix). Literally "that which protects or
+    guides the approach." The 27 lunar mansions that divide
+    the zodiac into 13-degree-20-minute arcs.
+  english: >
+    One of the 27 (or 28) divisions of the zodiac, each
+    spanning 13 degrees and 20 minutes. Nakshatras are the
+    foundational division of the sky in jyotisha, predating
+    the 12-sign system. Each nakshatra has a unique set of
+    attributes: deity, lord, shakti (power), gana, yoni, and
+    planetary rulership.
+  technical: >
+    The zodiac of 360 degrees is divided into 27 nakshatras
+    of 13:20 each. Each nakshatra is further divided into 4
+    padas (quarters) of 3:20 each. The nakshatra of the Moon
+    at birth determines the starting dasha in Vimshottari
+    and carries deep significance for the native's
+    psychological makeup and karmic inheritance.
+
+usage:
+  primary: "Foundation of the Vimshottari dasha system through birth nakshatra"
+  secondary: "Assessment of karmic disposition, temperament, and compatibility through nakshatra attributes"
+
+related_concepts:
+  - ref: term.rashi
+    relationship: "Each nakshatra spans approximately 1.33 rashis (13:20 of 30 degrees)"
+  - ref: term.dasha
+    relationship: "The Moon's birth nakshatra determines the starting mahadasha in Vimshottari"
+  - ref: term.gana
+    relationship: "Each nakshatra has a fixed gana classification (Deva/Manushya/Rakshasa)"
+
+sources:
+  - ref: source.BPHS
+    chapter: 6
+    verse: 1-10
+    claim: "Aśvinyādyāni nakṣatrāṇi — nakshatras starting from Ashvini"
+    confidence: high
+
+notes: >
+  The nakshatra system is among the most ancient components
+  of jyotisha, with origins in the Atharva Veda. Each
+  nakshatra is ruled by one of the nine grahas in a fixed
+  seven-day cycle. The 28th nakshatra (Abhijit) is sometimes
+  included but most systems use the standard 27.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,47 @@
+id: kp.index
+name: KP System Catalogue Index
+aliases: ["Krishnamurti Paddhati Index", "KP Records"]
+category: kp
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: kp
+statement: >
+  Complete index of all KP (Krishnamurti Paddhati) system catalogue records
+  in the Jyotish Knowledge Base.
+
+records:
+  - id: kp.core.sublord-system
+    file: kp-sublord-system.yaml
+    topic: "Sub-lord Theory"
+    description: "Nakshatra sub-divisions, sub-lord determination, event timing via Vimshottari"
+
+  - id: kp.core.significators
+    file: kp-significators.yaml
+    topic: "Significator Table"
+    description: "House-to-sub-lord significator mapping for event prediction"
+
+  - id: kp.core.cuspal-houses
+    file: kp-cuspal-houses.yaml
+    topic: "Cuspal House System"
+    description: "Cusp-to-cusp house calculation, Placidus cusps, cuspal sub-lord interpretation"
+
+sources:
+  - ref: source.kp-system
+    claim: "KP System foundational texts by K.S. Krishnamurti"
+    confidence: high
+
+notes: >
+  The KP System (Krishnamurti Paddhati) was developed by Prof. K.S. Krishnamurti
+  as a refined predictive system within Jyotish. Its three pillars are: (1) Sub-lord
+  theory for precise event timing, (2) Significator tables linking houses to sub-lords,
+  and (3) Cuspal house system using Placidus calculations. All KP predictions are
+  grounded in these three foundational concepts.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

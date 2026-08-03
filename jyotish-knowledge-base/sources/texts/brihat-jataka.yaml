@@ -1,0 +1,71 @@
+id: source.brihat-jataka
+name: Brihat Jataka
+aliases:
+  - Brihajjataka
+  - Bṛhajjātaka
+  - Great Horoscopy
+  - The Great Birth Horoscopy
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Varahamihira
+date:
+  approximate: "550 CE"
+  confidence: medium
+language:
+  original: Sanskrit
+tradition: Classical
+system: Parashari Jyotish
+
+edition:
+  primary:
+    editor: B.V. Raman
+    publisher: IBH Prakashana
+    year: 1990
+    language: Sanskrit, English
+    notes: "Original Sanskrit text with English translation, transliteration, and commentary by B.V. Raman. Revised and enlarged edition. Earlier editions published from 1940s onward."
+
+chapter_structure:
+  total_chapters: 27
+  key_chapters:
+    - chapter: 1
+      topic: "Description of the Grahas"
+      verses: 12
+      relevance: "Physical attributes, gender, complexion, elemental nature, and directions of the nine grahas"
+    - chapter: 6
+      topic: "Rajayogas"
+      verses: 14
+      relevance: "Defines Raja Yogas formed by lords of kendras and trikonas"
+    - chapter: 7
+      topic: "Nabhasa, Akriti, and Sankhya Yogas"
+      verses: 12
+      relevance: "Classification of 32 Nabhasa Yogas based on planetary patterns"
+    - chapter: 16
+      topic: "Drekkana (Decanate) Analysis"
+      verses: 8
+      relevance: "Effects of grahas in each drekkana of a sign for all twelve lagnas"
+    - chapter: 27
+      topic: "Shodashavarga (16-fold Divisional Charts)"
+      verses: 10
+      relevance: "Complete description of the varga division system and their significations"
+
+related_texts:
+  - ref: source.BPHS
+    relationship: "Brihat Jataka systematizes the Parashari tradition and refines principles attributed to Parashara"
+  - ref: source.saravali
+    relationship: "Saravali expands extensively on principles summarized in Brihat Jataka; both are pillars of the Classical tradition"
+  - ref: source.yavana-jataka
+    relationship: "Varahamihira incorporates Greco-Babylonian concepts naturalized into the Indian astrological framework"
+
+significance: "Brihat Jataka is Varahamihira's magnum opus on horoscopy and the most extensively commented-upon Jyotish text after BPHS. Composed in elegant Sanskrit verse, it synthesizes earlier Siddhantic and Parashari traditions with Hellenistic astrological concepts into a coherent classical system. The text's clarity, conciseness, and comprehensive scope made it the standard curriculum text for Jyotish study across India for over a millennium."
+
+notes: "Varahamihira (fl. 505–587 CE) was one of the Navaratnas at the court of the Gupta emperor Vikramaditya. His works include Panchasiddhantika (five astronomical systems), Brihat Samhita (encyclopedia of omens and natural astrology), and three astrological texts. The earliest extant commentary on Brihat Jataka is by Bhattotpala (10th century CE). Some verses on marriage compatibility and timing techniques require contextual understanding of medieval social norms."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

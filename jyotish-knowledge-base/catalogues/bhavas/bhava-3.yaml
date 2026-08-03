@@ -1,0 +1,100 @@
+# catalogues/bhavas/bhava-3.yaml
+
+id: bhava.3
+name: Vikrama Bhava
+aliases:
+  - 3rd House
+  - Courage House
+  - विक्रम भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Vikrama
+number: 3
+meaning: "Courage; valor; strength; effort"
+
+natural_karaka:
+  ref: graha.mangala
+  notes: "Mangala is the natural karaka for courage, effort, and siblings"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana"
+
+karakatvas:
+  classical:
+    - concept: Siblings and relatives
+      source: source.BPHS
+    - concept: Courage and valor (Vikrama)
+      source: source.BPHS
+    - concept: Short travels
+      source: source.BPHS
+    - concept: Communication and hands
+      source: source.BPHS
+  traditional:
+    - concept: Siblings
+    - concept: Courage
+    - concept: Short travels
+    - concept: Communication
+    - concept: Hands
+
+conditions:
+  strong_when:
+    - Lord well-placed and strong
+    - Benefics present in the house
+    - Mangala strong (exalted or own sign)
+  weak_when:
+    - Afflicted by malefics
+    - Lord in Dusthana
+    - Weak or debilitated lord
+  afflicted_when:
+    - Malefics afflicting the house
+    - Papa kartari yoga
+    - Lord in enemy sign
+
+effects:
+  positive:
+    - Courage and bravery in endeavors
+    - Supportive relationships with siblings
+    - Successful short journeys
+    - Skilled hands and effective communication
+  negative:
+    - Timidity and lack of initiative
+    - Strained sibling relationships
+    - Obstacles in short travels
+    - Difficulty in communication
+
+related_bhavas:
+  - bhava: 2
+    relationship: effort
+    notes: "The 3rd house represents the effort required to acquire the wealth of the 2nd"
+  - bhava: 6
+    relationship: service
+    notes: "The 6th from the 3rd (bhava.8) shows obstacles overcome through courage"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Courage, siblings, short travels, and hands are significations of the 3rd house"
+    confidence: high
+
+notes: >
+  The 3rd house (Vikrama Bhava) represents courage, effort, and
+  communication. It is the second upachaya (growth) house, indicating
+  that matters of the 3rd house improve over time. Mangala as natural
+  karaka reinforces the martial, energetic quality of this bhava.
+  The 3rd house also governs hobbies, writing, and one's inherent
+  willpower.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

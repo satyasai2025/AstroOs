@@ -1,0 +1,87 @@
+# catalogues/rashis/kumbham.yaml
+
+id: rashi.kumbham
+name: Kumbham
+aliases:
+  - Aquarius
+  - Kumbha
+  - कुम्भ
+category: rashi
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Kumbha
+devanagari: कुम्भ
+meaning: "The water-bearer; the pitcher"
+element: air
+quality: fixed
+gender: male
+
+ruler:
+  ref: graha.shani
+  notes: Traditional Parashari rulership of Kumbha
+
+tattva_lord:
+  element: air
+  lord: graha.shani
+  notes: Shani is the lord of the air element (Vayu Tattva)
+
+degree_span:
+  start: 300
+  end: 330
+
+body_part: Calves
+direction: West
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.dhanishta
+    padas: [3, 4]
+    degrees: "300°00' - 306°40'"
+  - nakshatra: nakshatra.shatabhisha
+    padas: [1, 2, 3, 4]
+    degrees: "306°40' - 320°00'"
+  - nakshatra: nakshatra.purvabhadrapada
+    padas: [1, 2, 3]
+    degrees: "320°00' - 330°00'"
+
+properties:
+  temperament: Innovative, humanitarian, unconventional
+  motivation: kama
+  symbol: Water-bearer
+
+karakatvas:
+  - concept: Innovation and originality
+  - concept: Humanitarianism
+  - concept: Detachment and objectivity
+
+compatible_with:
+  - ref: rashi.mithunam
+  - ref: rashi.tulanam
+incompatible_with:
+  - ref: rashi.simham
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Kumbha as a Sthira (fixed), Sama (level), and Manushya (human) sign ruled by Shani"
+    confidence: high
+
+notes: >
+  Kumbha is the eleventh sign of the zodiac, governing innovation,
+  friendship, and collective vision. As a fixed air sign, it embodies
+  originality, intellectual independence, and a humanitarian outlook.
+  Natives born under Kumbha are said to be progressive, idealistic, and
+  driven by a desire for social reform. The sign corresponds to the
+  calves (Jangha) in the Kalapurusha correspondence of the zodiac to
+  the human body.
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

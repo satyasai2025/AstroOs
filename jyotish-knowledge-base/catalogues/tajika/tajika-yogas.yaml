@@ -1,0 +1,62 @@
+id: tajika.core.yogas
+name: Tajika Yogas
+aliases: ["Tajika Combinations", "Tajika Ittalaqa", "Tajika-specific Yogas"]
+category: tajika
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: tajika
+statement: >
+  Tajika yogas are planetary combinations specific to the Tajika system that
+  differ from Parashari yogas. The primary Tajika yoga is Ittalaqa (conjunction
+  or aspect between planets in the annual chart), where the nature and strength
+  of the aspect determines outcomes. Sahama (derived house points) provides
+  additional combination analysis. Tajika yogas are evaluated within the annual
+  chart context and use the same aspect system (7th-house aspect only, with
+  orb considerations) rather than Parashari's multiple aspects.
+
+conditions:
+  - entity: graha.conjunction
+    role: subject
+    detail: "Ittalaqa: conjunction or aspect between two planets in the annual chart"
+
+  - entity: sahama.point
+    role: framework
+    detail: "Sahama: derived points calculated from natal and annual positions for specific life areas"
+
+effects:
+  - description: "Ittalaqa between benefic planets in good houses produces favorable annual outcomes"
+    intensity: strong
+  - description: "Ittalaqa between malefic planets in challenging houses indicates year's difficulties"
+    intensity: strong
+  - description: "Sahama of wealth in a favorable position indicates financial gains during the year"
+    intensity: moderate
+  - description: "Tajika yogas must be evaluated in conjunction with natal promises and ongoing Dasha"
+    intensity: moderate
+
+sources:
+  - ref: source.tajika-nihanti
+    claim: "Tajika yogas: Ittalaqa (conjunction), Sahama, Tajika-specific combinations. Different from natal yogas."
+    confidence: high
+
+notes: >
+  Key Tajika yoga principles: (1) Ittalaqa is the fundamental Tajika combination —
+  when two planets are in conjunction or aspect each other in the annual chart,
+  the nature of their relationship determines the outcome. (2) Benefic Ittalaqa
+  (e.g., Jupiter-Sun conjunction) is generally favorable. (3) Malefic Ittalaqa
+  (e.g., Saturn-Mars conjunction) is generally unfavorable. (4) Mixed Ittalaqa
+  requires examining house ownership and placement. (5) Sahama points are
+  calculated for specific topics: wealth (Dhana Sahama), children (Putra Sahama),
+  etc. (6) The strength of a Tajika yoga depends on the dignity and house
+  placement of the participating planets. (7) Tajika yogas in the annual chart
+  are evaluated separately from natal yogas — both are considered together for
+  annual predictions. (8) The orb of aspect in Tajika is typically limited to
+  the exact same Rashi or within a close degree range.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

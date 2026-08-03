@@ -1,0 +1,152 @@
+# catalogues/grahas/budha.yaml
+
+id: graha.budha
+name: Budha
+aliases:
+  - Mercury
+  - Saumya
+  - Vachaspati
+  - Raja
+category: graha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Budha
+devanagari: बुध
+meaning: "The intelligent one; the learned one"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: 115.88
+  sidereal_period_days: 87.97
+  retrograde:
+    occurs: true
+    typical_duration_days: 21
+    typical_frequency: "3–4 times per year"
+  notes: "Retrograde for approximately 20–24 days, three to four times annually"
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: neuter
+  nature: natural neutral
+  caste: vaishya
+  element: earth
+  direction: north
+  color: green
+  gem: emerald
+  metal: bronze
+  grain: moong
+  body_parts:
+    - skin
+    - throat
+    - nervous_system
+  animal: parrot
+  deity: vishnu
+  quality: rajasic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: kanya
+    degrees: 15
+  debilitation:
+    sign: meena
+    degrees: 15
+  moolatrikona:
+    sign: kanya
+    range: "16°–20°"
+  own_signs:
+    - mithuna
+    - kanya
+  friendly_signs:
+    - simha
+    - karka
+    - dhanus
+    - meena
+  neutral_signs:
+    - mesha
+    - vrishchika
+    - vrishabha
+    - tula
+    - makara
+    - kumbha
+  inimical_signs: []
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - ashlesha
+    - jyeshtha
+    - revati
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.surya
+    - graha.chandra
+    - graha.guru
+  enemies: []
+  neutrals:
+    - graha.mangala
+    - graha.shukra
+    - graha.shani
+    - graha.rahu
+    - graha.ketu
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 17
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Speech (Vacha)"
+    - "Intellect (Buddhi)"
+    - "Learning"
+  traditional:
+    - "Commerce and trade"
+    - "Mathematics"
+    - "Writing"
+  modern:
+    - "Communication"
+    - "Adaptability"
+    - "Analytical thinking"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Budha"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Budha"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Budha is the prince of the grahas and rules over intellect,
+  communication, and commerce. As a natural neutral, its effect
+  depends heavily on association: it becomes benefic when conjoined
+  with benefic grahas and malefic with malefic grahas. Budha rules
+  both Mithuna and Kanya, making it the only graha with a dual-ruled
+  sign where one (Kanya) is also its exaltation and moolatrikona.
+  Its retrograde cycles are the most frequent among all grahas.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

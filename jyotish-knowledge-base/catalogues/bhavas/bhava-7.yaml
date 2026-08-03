@@ -1,0 +1,102 @@
+# catalogues/bhavas/bhava-7.yaml
+
+id: bhava.7
+name: Yuvati Bhava
+aliases:
+  - 7th House
+  - Marriage House
+  - Spouse House
+  - युवति भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Yuvati
+number: 7
+meaning: "Spouse; marriage; partnership"
+
+natural_karaka:
+  ref: graha.shukra
+  notes: "Shukra is the natural karaka for spouse, marriage, and partnerships"
+
+marakasthana:
+  is_maraka: true
+  universal: true
+  notes: "The 7th house is a universal marakasthana (house of killing) along with the 2nd"
+
+karakatvas:
+  classical:
+    - concept: Spouse and marriage (Kalatra)
+      source: source.BPHS
+    - concept: Partnerships and business alliances
+      source: source.BPHS
+    - concept: Foreign travel
+      source: source.BPHS
+    - concept: Public relationships
+      source: source.BPHS
+  traditional:
+    - concept: Spouse
+    - concept: Marriage
+    - concept: Partnership
+    - concept: Business
+    - concept: Foreign travel
+
+conditions:
+  strong_when:
+    - Strong lord in Kendra or Trikona
+    - Benefics occupying or aspecting the 7th house
+    - Well-placed Shukra
+  weak_when:
+    - Afflicted by malefics
+    - Lord in Dusthana
+    - Shukra weak or afflicted
+  afflicted_when:
+    - Malefics occupying the 7th house
+    - Lord in enemy sign or debilitated
+    - Papa kartari yoga
+
+effects:
+  positive:
+    - Harmonious marriage and fulfilling partnership
+    - Successful business collaborations
+    - Favorable foreign travel
+    - Strong public relationships
+  negative:
+    - Marital discord and separation
+    - Failed partnerships
+    - Obstacles in foreign travels
+    - Litigation with partners
+
+related_bhavas:
+  - bhava: 1
+    relationship: partner axis
+    notes: "The 7th house is the opposite end of the Lagna (bhava.1) axis — the 'other' in relationship to the self"
+  - bhava: 10
+    relationship: public life
+    notes: "The 10th from the 7th (bhava.4) shows the career of the spouse"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Spouse, marriage, partnerships, and foreign travel are significations of the 7th house"
+    confidence: high
+
+notes: >
+  The 7th house (Yuvati Bhava) is a Kendra (angular house) and a
+  marakasthana. It governs marriage, partnerships, and all forms
+  of one-to-one relationships. As the opposite of Lagna, it
+  represents the 'other' in relation to the self. Shukra as
+  natural karaka reinforces the romantic and partnership-oriented
+  nature of this bhava. The 7th lord (Kalatrapati) is a key
+  indicator of marital quality and timing.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

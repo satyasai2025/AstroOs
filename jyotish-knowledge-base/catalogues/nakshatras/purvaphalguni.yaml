@@ -1,0 +1,100 @@
+# catalogues/nakshatras/purvaphalguni.yaml
+
+id: nakshatra.purvaphalguni
+name: Purva Phalguni
+aliases:
+  - Pooram
+  - पूर्व फाल्गुनी
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Pūrva Phālgunī
+devanagari: पूर्व फाल्गुनी
+meaning: "The former reddish one; the fig tree"
+
+ruler:
+  ref: graha.shukra
+  system: vimshottari
+
+deity:
+  name: Bhaga
+  description: The god of wealth, fortune, and marital bliss, bestower of shared enjoyment
+  attributes:
+    - wealth
+    - fortune
+    - enjoyment
+    - marital bliss
+
+shakti:
+  name: Prasupta
+  meaning: "to procreate"
+  power: "the power of procreation, rest, and sensual enjoyment"
+
+star:
+  name: Zosma
+  alt_name: Delta Leonis
+
+starting_degree: 120.000
+ending_degree: 133.333
+rashi_span:
+  - ref: rashi.simham
+
+padas:
+  - pada: 1
+    degrees: "13°20' - 16°40'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.dhanus
+  - pada: 2
+    degrees: "16°40' - 20°00'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.makaram
+  - pada: 3
+    degrees: "20°00' - 23°20'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.kumbham
+  - pada: 4
+    degrees: "23°20' - 26°40'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.meenam
+
+nature:
+  temperament: Creative, playful
+  guna: rajasic
+  gana: manushya
+  yoni: rat
+  nadi: antya
+
+karakatvas:
+  - concept: Creative arts and entertainment
+  - concept: Marriage and partnership
+  - concept: Luxury and pleasure
+  - concept: Generosity and social charm
+
+compatible_nakshatras:
+  - ref: nakshatra.purvaphalguni
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Purva Phalguni is the eleventh nakshatra, ruled by Shukra, presided over by Bhaga"
+    confidence: high
+
+notes: >
+  Purva Phalguni is the eleventh nakshatra, the second in Simha,
+  spanning 13°20' to 26°40' Simha. Ruled by Shukra in the Vimshottari
+  system, it is presided over by Bhaga, the god of fortune and shared
+  enjoyment. Its shakti is the power of procreation and rest. All four
+  padas reside in Simha with navamsha progression through Dhanus-
+  Makara-Kumbha-Meena. As a manushya-gana, rajasic nakshatra with a
+  creative and playful temperament, it bestows artistic talent,
+  romantic charm, and the capacity for joyful creation and social
+  enjoyment.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

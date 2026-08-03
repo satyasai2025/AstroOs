@@ -1,0 +1,45 @@
+id: yoga.dosha.kaal-sarpadosha
+name: Kaal Sarpadosha
+aliases: ["Time-Serpent Dosha", "Kaal Sarp Yoga"]
+category: yoga
+type: dosha
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "All seven classical planets (Sun through Saturn) are hemmed between Rahu and Ketu, i.e., all planets fall on one side of the Rahu-Ketu axis"
+      entity: yoga.dosha.kaal-sarpadosha
+      role: subject
+      notes: "Rahu and Ketu must be opposite each other (as always), and all other planets must be between them on one side. If even one planet is outside this axis, the dosha is not formed. The dosha is classified into 12 types based on which house Rahu occupies (e.g., Rahu in 1st = Anant Kaal Sarp, Rahu in 7th = Viparit Kaal Sarp, etc.)."
+
+effects:
+  positive:
+    - "After initial struggles, can lead to extraordinary achievements"
+    - "Karmic resolution and spiritual evolution"
+    - "When Rahu matures (around age 42), significant transformation"
+    - "Strong willpower developed through adversity"
+  negative:
+    - "Delayed success in all areas of life"
+    - "Persistent obstacles and setbacks"
+    - "Ancestral karmic debts manifesting"
+    - "Health issues, especially related to the house Rahu occupies"
+    - "Psychological pressure and anxiety"
+    - "Fear of unknown and recurring obstacles"
+  intensity: strong
+
+sources:
+  - ref: source.traditional
+    chapter: null
+    verse: null
+
+notes: "A widely discussed dosha in traditional Jyotish, not always explicitly detailed in classical texts like BPHS but recognized across all regional traditions. 'Kaal' means time/death and 'Sarpa' means serpent. The dosha suggests strong karmic influences from past lives. There is scholarly debate about whether this is a classical yoga or a later addition to Jyotish. Despite the debate, it is one of the most frequently checked conditions in practice. The 12 classifications based on Rahu's house position provide nuanced interpretation."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,40 @@
+id: source.jaimini-sutras-sharma
+name: Jaimini Sutras (Sharma Commentary)
+aliases:
+  - Jaimini Sutras Sharma Edition
+  - Jaimini Sutras with Commentary by Sharma
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Jaimini (original); D.K. Sharma (commentator)
+date:
+  approximate: "~400-600 CE (original); 2003 (commentary)"
+  confidence: medium
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: D.K. Sharma
+  publisher: Sagar Publications
+  year: 2003
+  language: en
+  notes: "Commentary and translation of the Jaimini Sutras with explanatory notes."
+
+relationship_to_primary:
+  primary_text: source.jaimini-sutras
+  type: commentary
+  notes: "Comprehensive commentary on the Jaimini Sutras explaining the principles of Jaimini astrology."
+
+notes: "Sharma's commentary on the Jaimini Sutras provides detailed exposition of the cryptic sutras of Jaimini, covering chara karakas, yogas, and other Jaimini-specific principles."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

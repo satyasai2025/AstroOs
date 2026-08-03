@@ -1,0 +1,34 @@
+id: source.jaimini-upadesha-sutras
+name: Jaimini Upadesha Sutras
+aliases:
+  - Upadesha Sutras
+  - जैमिनि उपदेश सूत्र
+category: source
+status: active
+confidence: medium
+version: 1.0
+last_verified: 2026-07-16
+
+author: Jaimini (attributed)
+date:
+  approximate: "Uncertain; part of the broader Jaimini corpus"
+  confidence: low
+
+language:
+  original: Sanskrit
+
+tradition: Jaimini
+
+related_texts:
+  - ref: source.jaimini-sutras
+    relationship: "A supplementary/elaborative text within the Jaimini corpus, distinct from the core Jaimini Sutras but attributed to the same tradition. Cited for expanded Karakamsha interpretation principles not detailed in the core sutras."
+
+significance: "Cited within this knowledge base specifically for its elaboration on Karakamsha interpretation and the relationship between Atmakaraka position and soul-purpose analysis (see catalogues/jaimini/karakamsha.yaml)."
+
+notes: "Treated as a supplementary source within the Jaimini tradition rather than a primary citation; used alongside, not in place of, the core Jaimini Sutras. Confidence is medium given the more limited scope of use and less centrality compared to the primary Jaimini Sutras text."
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial catalogue entry — fills a registry gap where catalogues/jaimini/karakamsha.yaml cited source.JaiminiUpadeshaSutras since Phase 4 but the source was never registered in sources/texts/_index.yaml or given its own record"
+    author: "Chief Jyotish Knowledge Architect"

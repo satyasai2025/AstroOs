@@ -1,0 +1,627 @@
+# ============================================================================
+# ASTRO OS — Guru (Jupiter) Gochara — Foundational Catalogue
+# ============================================================================
+# Source: BPHS Chapter 42 — Gochara Phaladhyaya
+# Scope: Jupiter's transit effects through 12 houses from natal Lagna,
+#         including key house significations for fortune, expansion, and wisdom.
+# Orbital period: ~12 months per rashi (1 year)
+# Note:  Foundational rules only. No predictive interpretations beyond BPHS.
+# ============================================================================
+
+# ── Guru Transit from Lagna (each house) ──────────────────────────────────
+
+id: transit.guru.gochara.h1
+name: "Guru Gochara — 1st House"
+aliases: ["Jupiter Transit 1st House", "Guru in 1st from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 1st house (Lagna) from the natal Ascendant, the native
+  experiences enhanced self-confidence, optimism, and personal growth. There is a
+  general upliftment of health, status, and fortune. The native radiates wisdom and
+  may embark on new educational or spiritual ventures. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "1st house from Lagna"
+
+effects:
+  - description: "Increased self-confidence, optimism, and personal magnetism"
+    intensity: strong
+  - description: "Good health, vitality, and overall well-being"
+    intensity: moderate
+  - description: "New beginnings in education, philosophy, or spiritual matters"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 1st house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru occupies the first house from the Lagna, the person will be
+      happy, wealthy, and of good character, and will be respected by others."
+    confidence: high
+
+notes: >
+  Jupiter in the 1st house is broadly benevolent — it blesses the native with
+  wisdom and expansion of self. Effects are amplified when Jupiter is in exaltation
+  (Cancer) or its own sign (Sagittarius, Pisces).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h2
+name: "Guru Gochara — 2nd House"
+aliases: ["Jupiter Transit 2nd House", "Guru in 2nd from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 2nd house from the natal Ascendant, the native gains
+  wealth, family happiness, and improved speech. There may be an increase in
+  income, acquisition of food and luxuries, and harmonious family life. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "2nd house from Lagna"
+
+effects:
+  - description: "Wealth accumulation and financial improvement"
+    intensity: strong
+  - description: "Family happiness and harmonious relationships at home"
+    intensity: moderate
+  - description: "Improved speech, eloquence, and communication"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 2nd house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the second house from the Lagna, the native will gain
+      wealth and will enjoy good food and family happiness."
+    confidence: high
+
+notes: "2nd house is Dhana Sthana — Jupiter here amplifies financial prosperity."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h3
+name: "Guru Gochara — 3rd House"
+aliases: ["Jupiter Transit 3rd House", "Guru in 3rd from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 3rd house from the natal Ascendant, the native may
+  experience reduced initiative and courage, as Jupiter is in a Dusthana-like
+  position here. However, there may be benefits through siblings, short journeys,
+  and communication. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "3rd house from Lagna"
+
+effects:
+  - description: "Potential reduction in personal initiative and boldness"
+    intensity: mild
+  - description: "Benefits through siblings and communication"
+    intensity: moderate
+  - description: "Short journeys and intellectual pursuits"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 3rd house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the third house from the Lagna, the person may face some
+      obstacles but will gain through siblings and communication."
+    confidence: high
+
+notes: >
+  Jupiter in the 3rd is considered a moderate placement in transit — not as
+  powerful as in Kendra or Trikona houses, but it supports intellectual growth
+  and sibling relations.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h4
+name: "Guru Gochara — 4th House"
+aliases: ["Jupiter Transit 4th House", "Guru in 4th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 4th house from the natal Ascendant, the native
+  experiences happiness, domestic peace, acquisition of property, vehicles, and
+  comforts. The native benefits from mother's support and gains mental peace.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "4th house from Lagna"
+
+effects:
+  - description: "Domestic happiness, peace of mind, and emotional comfort"
+    intensity: strong
+  - description: "Acquisition of property, vehicles, or homes"
+    intensity: moderate
+  - description: "Support from mother and maternal connections"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 4th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru occupies the fourth house from the Lagna, the person will enjoy
+      happiness, conveyances, property, and the company of good people."
+    confidence: high
+
+notes: "4th house is Sukha Sthana — Jupiter here brings genuine domestic contentment."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h5
+name: "Guru Gochara — 5th House"
+aliases: ["Jupiter Transit 5th House", "Guru in 5th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 5th house from the natal Ascendant, the native
+  experiences fortune, blessed progeny, intellectual growth, and success in
+  education and creative endeavors. This is one of the most favorable transit
+  positions for Jupiter. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "5th house from Lagna"
+
+effects:
+  - description: "Blessings of progeny and good fortune"
+    intensity: strong
+  - description: "Success in education, speculation, and creative pursuits"
+    intensity: strong
+  - description: "Spiritual merit and philosophical growth"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 5th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the fifth house from the Lagna, the person will be blessed
+      with children and will enjoy fortune and intelligence."
+    confidence: high
+
+notes: >
+  5th house is Putra Sthana (house of children) and a Trikona — Jupiter here
+  is doubly auspicious, amplifying fortune and blessings across multiple domains.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h6
+name: "Guru Gochara — 6th House"
+aliases: ["Jupiter Transit 6th House", "Guru in 6th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 6th house from the natal Ascendant, the native may
+  face health concerns, legal disputes, or conflicts with enemies. However,
+  Jupiter's protective nature can mitigate the worst effects. There may be gains
+  through service or employment. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "6th house from Lagna"
+
+effects:
+  - description: "Potential health issues or service-related matters"
+    intensity: moderate
+  - description: "Legal or competitive matters requiring resolution"
+    intensity: moderate
+  - description: "Benefits through employment and service"
+    intensity: mild
+
+timing:
+  onset: "When Jupiter enters the 6th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru occupies the sixth house from the Lagna, the person may face
+      some difficulties but will ultimately overcome enemies."
+    confidence: high
+
+notes: >
+  The 6th house is a Dusthana — Jupiter here is weakened but its natural
+  beneficence still helps the native navigate adversarial situations.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h7
+name: "Guru Gochara — 7th House"
+aliases: ["Jupiter Transit 7th House", "Guru in 7th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 7th house from the natal Ascendant, the native
+  experiences beneficial partnerships, marriage prospects, and gains through
+  spouse or business associates. There is general prosperity through
+  relationships and public dealings. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "7th house from Lagna"
+
+effects:
+  - description: "Harmonious partnerships and marital happiness"
+    intensity: strong
+  - description: "Prosperity through business partnerships"
+    intensity: moderate
+  - description: "Good public relations and social standing"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 7th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the seventh house from the Lagna, the person will enjoy
+      marital happiness and will gain through partnerships."
+    confidence: high
+
+notes: "7th house is Kalatra Sthana — Jupiter here blesses partnerships and unions."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h8
+name: "Guru Gochara — 8th House"
+aliases: ["Jupiter Transit 8th House", "Guru in 8th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 8th house from the natal Ascendant, the native may
+  face obstacles, hidden anxieties, or sudden health concerns. Inheritance
+  matters may arise. However, Jupiter can also bring sudden unexpected gains and
+  spiritual transformation through this transit. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "8th house from Lagna"
+
+effects:
+  - description: "Hidden obstacles, anxieties, or sudden changes"
+    intensity: moderate
+  - description: "Matters related to inheritance or unearned wealth"
+    intensity: moderate
+  - description: "Deep spiritual transformation and occult interests"
+    intensity: mild
+
+timing:
+  onset: "When Jupiter enters the 8th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the eighth house from the Lagna, the person may face
+      obstacles but can also receive unearned wealth and transformation."
+    confidence: high
+
+notes: >
+  The 8th house is a Dusthana and house of hidden matters — Jupiter here
+  can both mitigate suffering and bring unexpected windfalls.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h9
+name: "Guru Gochara — 9th House"
+aliases: ["Jupiter Transit 9th House", "Guru in 9th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 9th house from the natal Ascendant, the native
+  experiences the highest fortune, spiritual growth, pilgrimages, blessings from
+  father and guru, and success in higher education. This is Jupiter's most
+  auspicious transit position. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "9th house from Lagna"
+
+effects:
+  - description: "Supreme fortune, luck, and divine blessings"
+    intensity: strong
+  - description: "Spiritual growth, pilgrimages, and philosophical expansion"
+    intensity: strong
+  - description: "Blessings from father, teachers, and mentors"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 9th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru occupies the ninth house from the Lagna, the person will be
+      extremely fortunate, blessed by father and teachers, and will succeed
+      in all endeavors."
+    confidence: high
+
+notes: >
+  9th house is Dharma Sthana — Jupiter is the Karaka (significator) of Dharma
+  and rules this house by association. Transit here is considered the peak of
+  Jupiter's benevolent influence.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h10
+name: "Guru Gochara — 10th House"
+aliases: ["Jupiter Transit 10th House", "Guru in 10th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 10th house from the natal Ascendant, the native
+  experiences career growth, professional recognition, and authority. There may
+  be promotions, new responsibilities, or expansion in professional sphere.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "10th house from Lagna"
+
+effects:
+  - description: "Career growth, promotions, and professional recognition"
+    intensity: strong
+  - description: "Authority and leadership opportunities"
+    intensity: strong
+  - description: "Expansion of professional responsibilities and influence"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 10th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the tenth house from the Lagna, the person will be
+      successful in profession and will gain respect and authority."
+    confidence: high
+
+notes: >
+  10th house is Karma Sthana — Jupiter here blesses the native's professional
+  karma with wisdom, expansion, and recognition.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h11
+name: "Guru Gochara — 11th House"
+aliases: ["Jupiter Transit 11th House", "Guru in 11th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 11th house from the natal Ascendant, the native
+  experiences fulfillment of desires, financial gains, and benefits from social
+  networks. Income increases and long-held ambitions are realized. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "11th house from Lagna"
+
+effects:
+  - description: "Fulfillment of desires and ambitions"
+    intensity: strong
+  - description: "Financial gains and income increase"
+    intensity: strong
+  - description: "Benefits from friends, networks, and associations"
+    intensity: moderate
+
+timing:
+  onset: "When Jupiter enters the 11th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru occupies the eleventh house from the Lagna, the person will
+      gain wealth and all desires will be fulfilled."
+    confidence: high
+
+notes: "11th house is Labha Sthana — Jupiter here delivers material and social rewards."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.guru.gochara.h12
+name: "Guru Gochara — 12th House"
+aliases: ["Jupiter Transit 12th House", "Guru in 12th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Jupiter transits the 12th house from the natal Ascendant, the native may
+  face expenditure, foreign travel, or spiritual withdrawal. While there can be
+  financial outflows, this transit also supports foreign connections, hospital
+  visits, and spiritual liberation. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.guru
+    role: subject
+    position: "12th house from Lagna"
+
+effects:
+  - description: "Expenditure, donations, or financial outflows"
+    intensity: moderate
+  - description: "Foreign travel, connections, or settlement abroad"
+    intensity: moderate
+  - description: "Spiritual pursuits, detachment, and moksha tendencies"
+    intensity: mild
+
+timing:
+  onset: "When Jupiter enters the 12th house from Lagna"
+  duration: "1 year (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Guru is in the twelfth house from the Lagna, the person will spend
+      wealth and may travel to foreign lands."
+    confidence: high
+
+notes: >
+  12th house is Vyaya Sthana — Jupiter here can bring beneficial foreign
+  connections and spiritual growth despite the expenditure theme.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

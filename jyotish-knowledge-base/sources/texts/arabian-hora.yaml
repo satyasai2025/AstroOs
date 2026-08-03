@@ -1,0 +1,35 @@
+id: source.arabian-hora
+name: Arabian Hora
+aliases:
+  - Arabica Hora
+  - Tajariba (translations)
+  - Persian-Arabic Astrological Works in Sanskrit
+category: source
+status: active
+confidence: medium
+version: 1.0
+last_verified: 2026-07-15
+
+author: Various (Arabic and Persian astrologers); anonymous Sanskrit translators
+date:
+  approximate: "~800 CE"
+  confidence: medium
+language:
+  original: ar
+  translations:
+    - language: sa
+tradition: vedic
+
+edition:
+  notes: "A corpus of Arabic and Persian astrological works translated into Sanskrit during the early medieval period, facilitating cross-cultural transmission of astrological knowledge."
+
+relationship_to_primary:
+  notes: "Historical corpus representing the transmission of Persian-Arabic astrological knowledge into the Sanskrit tradition. No single primary text; comprises multiple translated works."
+
+notes: "The Arabian Hora corpus represents a significant phase of cross-cultural transmission of astrological knowledge between the Islamic world and India (c. 800 CE onward). These translations introduced Persian-Arabic techniques such as the Tajika system and annual horoscopy into the Sanskrit astrological tradition. The exact titles and translators remain largely anonymous."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

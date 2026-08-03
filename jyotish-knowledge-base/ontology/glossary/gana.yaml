@@ -1,0 +1,67 @@
+# ontology/glossary/gana.yaml
+
+id: term.gana
+name: Gaṇa
+aliases:
+  - Gana
+  - Nature Type
+  - गण
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    gaṇa — from gaṇ (to count, to classify). Literally "a
+    class, category, or species." In jyotisha, one of the
+    threefold classifications of nakshatras used in the
+    ashtakoota compatibility system.
+  english: >
+    One of three essential natures (gaṇa) assigned to
+    nakshatras and thus to individuals based on their birth
+    nakshatra: Deva (divine), Manushya (human), and Rakshasa
+    (demonic). Compatibility is assessed based on whether the
+    couple's ganas are harmonious (same gana or Deva-Manushya
+    combination).
+  technical: >
+    Gana carries 6 points out of 36 in the ashtakoota system
+    (the highest possible weight). Each nakshatra has a fixed
+    gana: Ashvini (Deva), Bharani (Manushya), Krittika
+    (Rakshasa), etc. Compatibility is assessed by the gana
+    koota: same gana = best; Deva-Manushya = good;
+    Deva-Rakshasa or Manushya-Rakshasa = poor.
+
+usage:
+  primary: "Pre-marital compatibility assessment through nakshatra gana matching"
+  secondary: "Assessment of fundamental temperament and spiritual inclination"
+
+related_concepts:
+  - ref: term.nakshatra
+    relationship: "Each nakshatra has a fixed gana classification that determines temperament"
+  - ref: term.varna
+    relationship: "Varna is another of the eight kootas, complementary to gana in compatibility assessment"
+  - ref: term.yoni
+    relationship: "Yoni (animal type) is another koota that works alongside gana in matching"
+
+sources:
+  - ref: source.BPHS
+    chapter: 74
+    verse: 20-25
+    claim: "Gaṇaṃ ṣaṭ-phala-daṃ — gana gives six points"
+    confidence: high
+
+notes: >
+  Gana is the highest-weighted factor (6 points) in the
+  36-point ashtakoota system. Unlike some other kootas,
+  gana incompatibility is considered a serious obstacle
+  that may not be fully compensable by other factors.
+  Deva gana is considered the highest, followed by Manushya,
+  then Rakshasa.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

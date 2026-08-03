@@ -1,0 +1,43 @@
+id: yoga.raja.chandra-mangala
+name: Chandra Mangala Yoga
+aliases: ["Moon-Mars Yoga"]
+category: yoga
+type: raja
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Moon and Mars are in conjunction or mutual aspect (7th from each other)"
+      entity: yoga.raja.chandra-mangala
+      role: subject
+      notes: "The conjunction produces stronger results than the aspect. When Mars is in the 7th from Moon, the wealth results may come through the spouse. Mars should ideally not be debilitated."
+
+effects:
+  positive:
+    - "Wealth through independent effort and courage"
+    - "Financial prosperity through one's own hard work"
+    - "Assertiveness and pioneering spirit"
+    - "Success in business and trade"
+    - "Strong willpower and determination"
+  negative:
+    - "Temperamental tendencies when Moon is afflicted"
+    - "Conflict between emotions (Moon) and aggression (Mars)"
+    - "Possible disputes in relationships"
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 10
+
+notes: "Moon represents the mind and emotions; Mars represents courage, energy, and action. Their combination produces a dynamic personality who earns through self-effort. The nature of wealth earned can sometimes be linked to Mars-ruled fields (engineering, military, real estate, surgery). This yoga can also indicate earning through women or the spouse when Mars aspects the 7th from Moon."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

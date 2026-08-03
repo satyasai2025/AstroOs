@@ -1,0 +1,110 @@
+id: aspect.argala.rules
+name: Argala (Intervention) Rules
+aliases:
+  - Argala
+  - Virargala
+  - Planetary Intervention
+  - Aspectual Intervention
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: argala
+
+statement: >
+  Argala (intervention) is a system where specific houses from a graha
+  exert intervening influence. Argalas (interventions) operate from the
+  2nd, 4th, and 11th houses. Virargalas (counter-interventions/blocking)
+  operate from the 12th, 10th, and 3rd houses. Argalas support and
+  modify the effects of aspects; virargalas obstruct and block them.
+
+conditions:
+  - entity: graha.subject
+    role: subject
+    notes: >
+      Any graha can generate argalas from its position. The argala
+      system applies in addition to standard and special aspects.
+  - entity: house.2nd-from-graha
+    role: object
+    notes: >
+      The 2nd house argala represents material support and resources
+      directed toward the target.
+  - entity: house.4th-from-graha
+    role: object
+    notes: >
+      The 4th house argala represents foundational support and
+      internal strength behind the target.
+  - entity: house.11th-from-graha
+    role: object
+    notes: >
+      The 11th house argala represents gains, fulfilment, and
+      outcome support for the target.
+
+effects:
+  - description: >
+      Argalas from the 2nd, 4th, and 11th houses provide supporting
+      intervention that strengthens or facilitates the graha's primary
+      aspectual influence.
+    intensity: moderate
+    notes: >
+      Argalas are considered enhancing — they add resources, foundation,
+      and outcome support to a graha's primary aspects.
+  - description: >
+      Virargalas from the 12th, 10th, and 3rd houses provide blocking
+      intervention that obstructs or diminishes the graha's primary
+      aspectual influence.
+    intensity: moderate
+    notes: >
+      Virargalas are considered obstructing — they drain resources,
+      create obstacles, or undermine the foundation of a graha's
+      primary aspects.
+
+exceptions:
+  - condition: >
+      When argala and virargala from the same graha are equally strong
+      (same number of grahas in each), they may cancel each other out.
+    reason: >
+      Equal opposing forces negate each other, leaving the primary
+      aspect unmodified by argala influence.
+  - condition: >
+      A graha in the 2nd house from another graha provides argala
+      regardless of whether it is a benefic or malefic. The argala
+      exists structurally; its quality (beneficial or detrimental)
+      depends on the argala graha's nature.
+    reason: >
+      Argala is a positional relationship, not an inherently positive
+      or negative one. A malefic argala graha provides resources in
+      a hostile manner.
+  - condition: >
+      Virargalas from the 12th, 10th, and 3rd houses block argalas
+      from the 2nd, 4th, and 11th respectively (2 blocked by 12th,
+      4th blocked by 10th, 11th blocked by 3rd).
+    reason: >
+      BPHS Ch.11 describes specific virargala-argala pairings where
+      the blocking house directly counteracts the intervening house.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 11: Argala rules define
+      intervention from 2nd, 4th, and 11th houses and blocking from
+      12th, 10th, and 3rd houses. These modify the effects of primary
+      aspects.
+    confidence: high
+
+notes: >
+  Argala is a supplementary aspectual system that modifies and refines
+  the effects of primary graha drishti. It is applied after establishing
+  the primary aspects and their strength. Argala rules are more commonly
+  applied in Jaimini-influenced interpretive frameworks, though BPHS
+  documents them as part of the general aspectual framework. The system
+  adds granularity to aspect interpretation by accounting for supporting
+  and blocking influences around the primary aspect.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

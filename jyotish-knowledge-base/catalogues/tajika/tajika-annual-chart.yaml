@@ -1,0 +1,65 @@
+id: tajika.core.annual-chart
+name: Tajika Annual Chart
+aliases: ["Varshaphal", "Solar Return Chart", "Tajika Annual Horoscope", "Tajika Varshaphal"]
+category: tajika
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: tajika
+statement: >
+  The Tajika Annual Chart (Varshaphal) is cast for the exact moment when the
+  transiting Sun returns to its natal longitude each year. This solar return
+  chart governs events for the entire year until the next return. The Muntha
+  (progressed Lagna) is calculated by adding one Rashi per year from the natal
+  Lagna — its placement in the annual chart determines the year's theme. The
+  annual chart uses the same cuspal house system as the natal chart, cast for
+  the time and place of the solar return.
+
+conditions:
+  - entity: surya.return
+    role: subject
+    detail: "Solar return moment — when transiting Sun reaches exact natal Sun longitude"
+
+  - entity: muntha.placement
+    role: framework
+    detail: "Muntha = natal Lagna + 1 Rashi per year of age; its position in the annual chart indicates the year's focus"
+
+  - entity: bhava.annual
+    role: framework
+    detail: "Annual houses are calculated using Placidus cusps at the time and place of the solar return"
+
+effects:
+  - description: "Solar return chart sets the framework for all events during the year"
+    intensity: strong
+  - description: "Muntha in a favorable house brings gains and progress during the year"
+    intensity: strong
+  - description: "Muntha in an unfavorable house (6th, 8th, 12th) indicates challenges during the year"
+    intensity: strong
+  - description: "Annual chart planet positions modify natal promises for the specific year"
+    intensity: moderate
+
+sources:
+  - ref: source.tajika-nihanti
+    claim: "Tajika Annual Chart (Varshaphal): Solar return chart cast for the moment Sun returns to natal position. Muntha placement."
+    confidence: high
+
+notes: >
+  Tajika Annual Chart principles: (1) The solar return must be cast for the
+  exact time the Sun reaches the natal longitude — even a few seconds difference
+  changes house cusps. (2) Some practitioners adjust the location for the
+  return time if the native has moved significantly. (3) Muntha is the single
+  most important factor in Varshaphal — it shows WHERE the year's karma
+  manifests. (4) Muntha lord's placement and strength further refine the year's
+  prediction. (5) The annual chart is not used alone — it modifies and layers
+  over the natal chart and ongoing Dasha periods. (6) Tajika aspects in the
+  annual chart follow the same rules as natal Tajika aspects (conjunction,
+  square, trine, opposition). (7) The year of life begins at the solar return
+  and ends at the next solar return.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

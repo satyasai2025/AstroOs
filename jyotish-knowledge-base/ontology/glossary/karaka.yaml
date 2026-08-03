@@ -1,0 +1,66 @@
+# ontology/glossary/karaka.yaml
+
+id: term.karaka
+name: Kāraka
+aliases:
+  - Karaka
+  - Significator
+  - कारक
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    kāraka — from kṛ (to do, to make) + aka (agent suffix).
+    Literally "one who does, a maker, an agent, a significator."
+    In jyotisha, a graha that signifies or indicates a
+    specific domain of life.
+  english: >
+    A significator — a graha that has natural or acquired
+    relationship to specific life domains. Karakas exist in
+    two systems: the natural (naisargika) karakas (e.g.,
+    Surya karaka for the self, Jupiter for children) and the
+    Chara Karakas of Jaimini (eight planets ranked by
+    longitude, with Atmakāraka as the chief).
+  technical: >
+    Natural karakas are fixed: Surya (self), Chandra (mind),
+    Mangala (strength), Budha (speech), Brihaspati (wisdom,
+    children), Shukra (spouse), Shani (longevity). Jaimini's
+    Chara Karaka system assigns karaka status based on
+    planetary longitude in descending order. Karakas are used
+    in bhava analysis to supplement the house lord.
+
+usage:
+  primary: "Identification of natural and temporal significators for each bhava"
+  secondary: "Analysis of karaka-bhava relationships for specific life domain assessment"
+
+related_concepts:
+  - ref: term.atmakaraka
+    relationship: "Atmakaraka is the chief of the chara karakas, representing the soul's purpose"
+  - ref: term.graha
+    relationship: "Each graha has specific natural karakatva (significations) assigned in BPHS"
+  - ref: term.bhava
+    relationship: "Each bhava has a natural karaka whose placement and condition supplement house analysis"
+
+sources:
+  - ref: source.BPHS
+    chapter: 11
+    verse: 15-20
+    claim: "Sūryaḥ karakaḥ śarīrasya — Surya is the karaka of the body"
+    confidence: high
+
+notes: >
+  The karaka system is used alongside the bhava and bhava
+  lord analysis. If the bhava lord is weak but the natural
+  karaka is strong, the life domain can still function well.
+  The Chara Karaka system (8 fold) is from Jaimini; the
+  natural karaka system is from Parashari.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

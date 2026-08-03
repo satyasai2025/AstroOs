@@ -1,0 +1,56 @@
+id: nakshatra.uttarashadha
+name: Uttarashadha
+aliases: [Uttara Ashadha, उत्तराषाढ़ा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Uttara Ashadha
+devanagari: उत्तराषाढ़ा
+meaning: "The Later Invincible; the Universal Star of Victory"
+ruler: { ref: graha.surya, system: vimshottari }
+deity:
+  name: Vishvadevas
+  description: "The Ten Universal Gods; collectively representing all divine powers and universal principles"
+  attributes: [universality, completeness, tenfold divine power, cosmic order]
+shakti:
+  name: Apah-Shti
+  meaning: "The power to grant lasting victory"
+  power: "To grant universal and lasting victory"
+star: { name: "Pi Sagittarii" }
+starting_degree: 26.67
+ending_degree: 40.0
+rashi_span: [{ ref: rashi.dhanus }, { ref: rashi.makaram }]
+padas:
+  - { pada: 1, degrees: "26°40'-30° Dhanus", rashi: rashi.dhanus, navamsha_rashi: rashi.mesham }
+  - { pada: 2, degrees: "0°-3°20' Makara", rashi: rashi.makaram, navamsha_rashi: rashi.vrishabham }
+  - { pada: 3, degrees: "3°20'-6°40' Makara", rashi: rashi.makaram, navamsha_rashi: rashi.mithunam }
+  - { pada: 4, degrees: "6°40'-10° Makara", rashi: rashi.makaram, navamsha_rashi: rashi.karkam }
+nature:
+  temperament: "Victorious and enduring; possesses universal strength and unwavering determination"
+  guna: rajasic
+  gana: manushya
+  yoni: mongoose
+  nadis: madhya
+karakatvas:
+  - { concept: "Victory and achievement" }
+  - { concept: "Endurance and perseverance" }
+  - { concept: "Universal principles and dharma" }
+  - { concept: "Leadership and authority" }
+  - { concept: "Completion and fulfillment" }
+compatible_nakshatras:
+  - { ref: nakshatra.purvashadha }
+  - { ref: nakshatra.shravana }
+  - { ref: nakshatra.ashvini }
+incompatible_nakshatras:
+  - { ref: nakshatra.bharani }
+  - { ref: nakshatra.krittika }
+  - { ref: nakshatra.rohini }
+sources:
+  - { ref: source.BPHS, claim: "Uttara Ashadha is ruled by Surya; deity is Vishvadevas; Gana is Manushya; Yoni is Mongoose; Nadi is Madhya", confidence: high }
+  - { ref: source.BPHS, claim: "Uttara Ashadha spans from 26°40' Dhanus to 10° Makara", confidence: high }
+notes: "Uttara Ashadha is the nakshatra of universal victory. The Vishvadevas as deity represent the totality of divine powers. This nakshatra confers an unconquerable and enduring quality, associated with ultimate success."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

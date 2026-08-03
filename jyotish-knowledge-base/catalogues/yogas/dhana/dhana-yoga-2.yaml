@@ -1,0 +1,41 @@
+id: yoga.dhana.dhana-yoga-2
+name: Dhana Yoga
+aliases: ["Wealth Yoga"]
+category: yoga
+type: dhana
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Lord of the 2nd house is placed in the 11th house, OR Lord of the 11th house is placed in the 2nd house"
+      entity: yoga.dhana.dhana-yoga-2
+      role: subject
+      notes: "Either direction of the exchange creates the yoga. When both conditions are true (mutual exchange/parivartana between 2nd and 11th lords), it is exceptionally powerful. The yoga is weakened if either lord is debilitated or in a dusthana."
+
+effects:
+  positive:
+    - "Financial prosperity and steady income"
+    - "Good savings habit and wealth accumulation"
+    - "Earnings exceed expenditures"
+    - "Success in business and trade"
+    - "Family wealth and support"
+  negative:
+    - "When debilitated, can indicate financial recklessness despite earning"
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 15
+
+notes: "The most fundamental and widely recognized dhana yoga. The 2nd house represents wealth, family, and speech; the 11th house represents income, gains, and fulfillment of desires. When the lords of these two wealth-related houses exchange places, there is a natural and strong flow of financial energy. This yoga manifests in the dasha (period) of either the 2nd or 11th lord."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,56 @@
+id: nakshatra.chitra
+name: Chitra
+aliases: [Spica, चित्रा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Chitra
+devanagari: चित्रा
+meaning: "The Brilliant One; the Pearl or Gem"
+ruler: { ref: graha.mangala, system: vimshottari }
+deity:
+  name: Tvashtar
+  description: "The Divine Architect and Celestial Craftsman who fashions all beautiful forms in the cosmos"
+  attributes: [architect, craftsman, creator of forms, divine artisan]
+shakti:
+  name: Chitrayoni
+  meaning: "The power to shine and create splendor"
+  power: "To shine and illuminate; to bring brilliance and beauty"
+star: { name: Spica }
+starting_degree: 23.33
+ending_degree: 26.67
+rashi_span: [{ ref: rashi.kanyam }, { ref: rashi.tulanam }]
+padas:
+  - { pada: 1, degrees: "23°20'-26°40' Kanya", rashi: rashi.kanyam, navamsha_rashi: rashi.dhanus }
+  - { pada: 2, degrees: "26°40'-30° Kanya / 0°-3°20' Tula", rashi: rashi.tulanam, navamsha_rashi: rashi.makaram }
+  - { pada: 3, degrees: "3°20'-6°40' Tula", rashi: rashi.tulanam, navamsha_rashi: rashi.kumbham }
+  - { pada: 4, degrees: "6°40'-10° Tula", rashi: rashi.tulanam, navamsha_rashi: rashi.meenam }
+nature:
+  temperament: "Brilliant and artistic; possesses sharp intelligence and a desire for beauty"
+  guna: rajasic
+  gana: rakshasa
+  yoni: tiger
+  nadis: antya
+karakatvas:
+  - { concept: "Art and beauty" }
+  - { concept: "Architecture and craftsmanship" }
+  - { concept: "Creativity and innovation" }
+  - { concept: "Gemstones and precious objects" }
+  - { concept: "Visual arts and decoration" }
+compatible_nakshatras:
+  - { ref: nakshatra.swati }
+  - { ref: nakshatra.hasta }
+  - { ref: nakshatra.ashvini }
+incompatible_nakshatras:
+  - { ref: nakshatra.punarvasu }
+  - { ref: nakshatra.pushya }
+  - { ref: nakshatra.ashlesha }
+sources:
+  - { ref: source.BPHS, claim: "Chitra is ruled by Mangala; deity is Tvashtar; Gana is Rakshasa; Yoni is Tiger; Nadi is Antya", confidence: high }
+  - { ref: source.BPHS, claim: "Chitra spans from 23°20' Kanya to 6°40' Tula", confidence: high }
+notes: "Chitra is the nakshatra of cosmic design and brilliance. Tvashtar as deity emphasizes the creative and architectural qualities of this star. The Spica star is one of the brightest in the zodiac."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

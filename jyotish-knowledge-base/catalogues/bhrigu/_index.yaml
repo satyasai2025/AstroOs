@@ -1,0 +1,51 @@
+id: bhrigu.index
+name: Bhrigu Nandi Nadi Catalogue Index
+aliases: ["BNN Index", "Nadi Astrology Index", "Bhrigu Nadi Records"]
+category: bhrigu
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: bhrigu
+statement: >
+  Complete index of all Bhrigu Nandi Nadi system catalogue records in the
+  Jyotish Knowledge Base.
+
+records:
+  - id: bhrigu.core.principles
+    file: bhrigu-nadi-principles.yaml
+    topic: "Core Principles"
+    description: "Nakshatra-based prediction framework, Nadi yogas, karmic nakshatra imprints"
+
+  - id: bhrigu.core.combinations
+    file: bhrigu-nadi-combinations.yaml
+    topic: "Planetary Combinations"
+    description: "Unique Nadi-specific yogas not found in Parashari, deterministic life patterns"
+
+  - id: bhrigu.core.timing
+    file: bhrigu-nadi-timing.yaml
+    topic: "Timing System"
+    description: "Nakshatra-based transit timing, Nadi-specific dasha principles"
+
+sources:
+  - ref: source.bhrigu-nandi-nadi
+    claim: "Bhrigu Nandi Nadi foundational principles from Nadi astrology tradition"
+    confidence: high
+
+notes: >
+  Bhrigu Nandi Nadi (BNN) is a predictive system attributed to the sage Bhrigu
+  and transmitted through the Nadi leaf manuscripts. Its three pillars are:
+  (1) Nakshatra-based principles where predictions are derived from planetary
+  nakshatra positions rather than sign positions, (2) Unique planetary combinations
+  (Nadi yogas) that produce deterministic life-pattern predictions, and
+  (3) Nakshatra-based timing that identifies when events will manifest through
+  transit analysis rather than standard Dasha systems. BNN operates independently
+  of mainstream Parashari Jyotish and can be used as a standalone prediction
+  system or as a cross-verification tool.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

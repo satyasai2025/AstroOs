@@ -1,0 +1,99 @@
+# catalogues/nakshatras/krittika.yaml
+
+id: nakshatra.krittika
+name: Krittika
+aliases:
+  - Krittika
+  - कृत्तिका
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Kṛttikā
+devanagari: कृत्तिका
+meaning: "The cutters; the razors"
+
+ruler:
+  ref: graha.surya
+  system: vimshottari
+
+deity:
+  name: Agni
+  description: The god of fire, who consumes and transforms through the power of purification
+  attributes:
+    - fire
+    - purification
+    - transformation
+    - energy
+
+shakti:
+  name: Dahana
+  meaning: "to burn"
+  power: "the power of burning or cutting through"
+
+star:
+  name: Alcyone
+  alt_name: Pleiades
+
+starting_degree: 26.667
+ending_degree: 40.000
+rashi_span:
+  - ref: rashi.mesham
+  - ref: rashi.vrishabham
+
+padas:
+  - pada: 1
+    degrees: "26°40' - 30°00'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.vrishchikam
+  - pada: 2
+    degrees: "0°00' - 3°20'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.dhanus
+  - pada: 3
+    degrees: "3°20' - 6°40'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.makaram
+  - pada: 4
+    degrees: "6°40' - 10°00'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.kumbham
+
+nature:
+  temperament: Sharp, cutting
+  guna: rajasic-tamasic
+  gana: rakshasa
+  yoni: ewe
+  nadi: adi
+
+karakatvas:
+  - concept: Cutting through
+  - concept: Sharp intellect
+  - concept: Purification through fire
+
+compatible_nakshatras:
+  - ref: nakshatra.rohini
+  - ref: nakshatra.mrigashira
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "General description of Krittika nakshatra and its attributes"
+    confidence: high
+
+notes: >
+  Krittika is the third nakshatra, ruled by Surya and presided over
+  by Agni, the god of fire. Its shakti is the power of burning
+  (dahana), enabling sharp discrimination and the ability to cut
+  through illusion. As a rakshasa-gana nakshatra with sharp
+  temperament, it bestows courage, piercing intellect, and the
+  capacity for radical transformation. The first pada is in Mesha,
+  the remaining three in Vrishabha.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
