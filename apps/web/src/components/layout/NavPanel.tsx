@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useCallback, useState } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -51,8 +51,8 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/login", label: "Sign In", subtitle: "Email & password", icon: "login", viewId: "auth-signin" },
           { href: "/register", label: "Register", subtitle: "Create account", icon: "register", viewId: "auth-register" },
-          { href: "/forgot-password", label: "Forgot Password", icon: "key", disabled: true },
-          { href: "/profile/setup", label: "Profile Setup", icon: "settings", disabled: true },
+          { href: "/forgot-password", label: "Forgot Password", icon: "key", disabled: false },
+          { href: "/profile/setup", label: "Profile Setup", icon: "settings", disabled: false },
           { href: "/charts/compare", label: "Compare Charts", subtitle: "Compare two or more charts", icon: "comparison", viewId: "compare-charts", disabled: false },
         ],
       },
@@ -66,8 +66,8 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/dashboard", label: "Executive Overview", subtitle: "KPIs & charts", icon: "chart", viewId: "dashboard-executive" },
           { href: "/research/dashboard", label: "Research Dashboard", subtitle: "Research analytics", icon: "search", viewId: "research-dashboard" },
-          { href: "/dashboard/notifications", label: "Notifications", icon: "bell", disabled: true },
-          { href: "/dashboard/timeline", label: "Timeline", icon: "clock", disabled: true },
+          { href: "/dashboard/notifications", label: "Notifications", icon: "bell", disabled: false },
+          { href: "/dashboard/timeline", label: "Timeline", icon: "clock", disabled: false },
         ],
       },
       {
@@ -78,10 +78,10 @@ const NAV_GROUPS: NavGroup[] = [
         icon: "settings",
         color: "--obsidian-text-muted",
         items: [
-          { href: "/settings/profile", label: "Profile", icon: "user", viewId: "settings-profile", disabled: true },
-          { href: "/settings/theme", label: "Theme", icon: "palette", viewId: "settings-theme", disabled: true },
-          { href: "/settings/security", label: "Security", icon: "shield", viewId: "settings-security", disabled: true },
-          { href: "/settings/preferences", label: "Preferences", icon: "settings", viewId: "settings-preferences", disabled: true },
+          { href: "/settings/profile", label: "Profile", icon: "user", viewId: "settings-profile", disabled: false },
+          { href: "/settings/theme", label: "Theme", icon: "palette", viewId: "settings-theme", disabled: false },
+          { href: "/settings/security", label: "Security", icon: "shield", viewId: "settings-security", disabled: false },
+          { href: "/settings/preferences", label: "Preferences", icon: "settings", viewId: "settings-preferences", disabled: false },
         ],
       },
     ],
@@ -99,9 +99,9 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/charts/history", label: "Chart Library", subtitle: "Browse saved charts", icon: "grid", viewId: "chart-library" },
           { href: "/dashboard", label: "New Chart", subtitle: "Create natal chart", icon: "plus", viewId: "chart-new" },
-          { href: "/charts/import", label: "Import Chart", icon: "upload", disabled: true },
+          { href: "/charts/import", label: "Import Chart", icon: "upload", disabled: false },
           { href: "/charts/compare", label: "Compare Charts", subtitle: "Side-by-side analysis", icon: "layers", viewId: "chart-compare" },
-          { href: "/charts/collections", label: "Collections", icon: "folder", disabled: true },
+          { href: "/charts/collections", label: "Collections", icon: "folder", disabled: false },
         ],
       },
       {
@@ -113,7 +113,7 @@ const NAV_GROUPS: NavGroup[] = [
         color: "#06CFFF",
         items: [
           { href: "/charts?view=chart", label: "Interactive Kundli", subtitle: "Birth chart visualization", icon: "compass", viewId: "workspace-kundli" },
-          { href: "/charts?view=planets", label: "Planet Explorer", icon: "search", disabled: true },
+          { href: "/charts?view=planets", label: "Planet Explorer", icon: "search", disabled: false },
           { href: "/charts?view=houses", label: "House Explorer", subtitle: "Bhava analysis", icon: "house", viewId: "workspace-houses" },
           { href: "/charts?view=divisional", label: "Divisional Charts", subtitle: "D-1 through D-60", icon: "grid", viewId: "workspace-divisional" },
           { href: "/charts?view=relationships", label: "Planet Relationships", subtitle: "Aspect graph", icon: "network", viewId: "workspace-relationships" },
@@ -130,11 +130,11 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/charts?view=dasha", label: "Dasha", subtitle: "Vimshottari periods", icon: "clock", viewId: "analysis-dasha" },
           { href: "/charts?view=timeline", label: "Transit", subtitle: "Current planetary positions", icon: "orbit", viewId: "analysis-transit" },
-          { href: "/charts?view=yogas", label: "Yogas", icon: "star", disabled: true },
-          { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid", disabled: true },
+          { href: "/charts?view=yogas", label: "Yogas", icon: "star", disabled: false },
+          { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid", disabled: false },
           { href: "/charts?view=strength", label: "Shadbala", subtitle: "Planet strength", icon: "bar", viewId: "analysis-shadbala" },
           { href: "/charts?view=kp", label: "KP Analysis", subtitle: "Krishnamurti Paddhati", icon: "target", viewId: "analysis-kp" },
-          { href: "/charts?view=jaimini", label: "Jaimini", icon: "book", disabled: true },
+          { href: "/charts?view=jaimini", label: "Jaimini", icon: "book", disabled: false },
         ],
       },
     ],
@@ -150,10 +150,10 @@ const NAV_GROUPS: NavGroup[] = [
         icon: "sparkle",
         color: "#8B5CF6",
         items: [
-          { href: "/ai/explain", label: "AI Explain", icon: "sparkle", viewId: "ai-explain", disabled: true },
-          { href: "/ai/chat", label: "AI Chat", icon: "chat", viewId: "ai-chat", disabled: true },
-          { href: "/ai/confidence", label: "Confidence Scores", icon: "target", viewId: "ai-confidence", disabled: true },
-          { href: "/ai/evidence", label: "Evidence Chain", icon: "chain", viewId: "ai-evidence", disabled: true },
+          { href: "/ai/explain", label: "AI Explain", icon: "sparkle", viewId: "ai-explain", disabled: false },
+          { href: "/ai/chat", label: "AI Chat", icon: "chat", viewId: "ai-chat", disabled: false },
+          { href: "/ai/confidence", label: "Confidence Scores", icon: "target", viewId: "ai-confidence", disabled: false },
+          { href: "/ai/evidence", label: "Evidence Chain", icon: "chain", viewId: "ai-evidence", disabled: false },
         ],
       },
       {
@@ -166,9 +166,10 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/research/reverse-search", label: "Reverse Search", icon: "search", viewId: "research-reverse-search" },
           { href: "/research/projects", label: "Research Explorer", subtitle: "Browse projects", icon: "compass", viewId: "research-explorer" },
-          { href: "/research/patterns", label: "Pattern Discovery", icon: "sparkle", viewId: "research-patterns", disabled: true },
-          { href: "/research/knowledge-graph", label: "Knowledge Graph", icon: "network", viewId: "research-knowledge-graph", disabled: true },
-          { href: "/research/notebook", label: "Notebook", icon: "document", viewId: "research-notebook", disabled: true },
+          { href: "/research/import", label: "Case Import", icon: "document", viewId: "research-import" },
+          { href: "/research/patterns", label: "Pattern Discovery", icon: "sparkle", viewId: "research-patterns" },
+          { href: "/research/knowledge-graph", label: "Knowledge Graph", icon: "network", viewId: "research-knowledge-graph", disabled: false },
+          { href: "/research/notebook", label: "Notebook", icon: "document", viewId: "research-notebook", disabled: false },
         ],
       },
       {
@@ -181,9 +182,9 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/knowledge/bphs", label: "BPHS", icon: "book", viewId: "kb-bphs" },
           { href: "/knowledge/saravali", label: "Saravali", icon: "book", viewId: "kb-saravali" },
-          { href: "/knowledge/rules", label: "Rule Explorer", icon: "settings", viewId: "kb-rules", disabled: true },
+          { href: "/knowledge/rules", label: "Rule Explorer", icon: "settings", viewId: "kb-rules", disabled: false },
           { href: "/knowledge/literature", label: "Literature", icon: "document", viewId: "kb-literature" },
-          { href: "/knowledge/citations", label: "Citations", icon: "link", viewId: "kb-citations", disabled: true },
+          { href: "/knowledge/citations", label: "Citations", icon: "link", viewId: "kb-citations", disabled: false },
         ],
       },
     ],
@@ -199,10 +200,10 @@ const NAV_GROUPS: NavGroup[] = [
         icon: "heart",
         color: "#F5A623",
         items: [
-          { href: "/life/marriage", label: "Marriage", icon: "heart", viewId: "life-marriage", disabled: true },
-          { href: "/life/career", label: "Career", icon: "briefcase", viewId: "life-career", disabled: true },
-          { href: "/life/health", label: "Health", icon: "health", viewId: "life-health", disabled: true },
-          { href: "/life/timeline", label: "Timeline", icon: "clock", viewId: "life-timeline", disabled: true },
+          { href: "/life/marriage", label: "Marriage", icon: "heart", viewId: "life-marriage", disabled: false },
+          { href: "/life/career", label: "Career", icon: "briefcase", viewId: "life-career", disabled: false },
+          { href: "/life/health", label: "Health", icon: "health", viewId: "life-health", disabled: false },
+          { href: "/life/timeline", label: "Timeline", icon: "clock", viewId: "life-timeline", disabled: false },
         ],
       },
       {
@@ -213,10 +214,10 @@ const NAV_GROUPS: NavGroup[] = [
         icon: "report",
         color: "#F5A623",
         items: [
-          { href: "/reports/pdf", label: "PDF Reports", icon: "document", viewId: "reports-pdf", disabled: true },
-          { href: "/reports/ai", label: "AI Reports", icon: "sparkle", viewId: "reports-ai", disabled: true },
-          { href: "/reports/comparison", label: "Comparison", icon: "layers", viewId: "reports-comparison", disabled: true },
-          { href: "/reports/export", label: "Export", icon: "download", viewId: "reports-export", disabled: true },
+          { href: "/reports/pdf", label: "PDF Reports", icon: "document", viewId: "reports-pdf", disabled: false },
+          { href: "/reports/ai", label: "AI Reports", icon: "sparkle", viewId: "reports-ai", disabled: false },
+          { href: "/reports/comparison", label: "Comparison", icon: "layers", viewId: "reports-comparison", disabled: false },
+          { href: "/reports/export", label: "Export", icon: "download", viewId: "reports-export", disabled: false },
         ],
       },
     ],
@@ -232,11 +233,11 @@ const NAV_GROUPS: NavGroup[] = [
         icon: "shield",
         color: "#5A6B80",
         items: [
-          { href: "/admin/rules", label: "Rules Engine", icon: "settings", viewId: "admin-rules", disabled: true },
-          { href: "/admin/literature", label: "Literature", icon: "book", viewId: "admin-literature", disabled: true },
-          { href: "/admin/plugins", label: "Plugins", icon: "puzzle", viewId: "admin-plugins", disabled: true },
+          { href: "/admin/rules", label: "Rules Engine", icon: "settings", viewId: "admin-rules", disabled: false },
+          { href: "/admin/literature", label: "Literature", icon: "book", viewId: "admin-literature", disabled: false },
+          { href: "/admin/plugins", label: "Plugins", icon: "puzzle", viewId: "admin-plugins", disabled: false },
           { href: "/admin", label: "Audit & Logs", subtitle: "System activity", icon: "shield", viewId: "admin-audit" },
-          { href: "/admin/health", label: "System Health", icon: "heart", viewId: "admin-health", disabled: true },
+          { href: "/admin/health", label: "System Health", icon: "heart", viewId: "admin-health", disabled: false },
         ],
       },
     ],
