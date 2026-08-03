@@ -11,10 +11,202 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
 HouseSystemCode = Literal["W", "P", "K", "E"]
+
+
+# ── Ashtakoota Compatibility ───────────────────────────────────────────────────
+
+class KootaScoreResponse(BaseModel):
+    """Response payload for a single Koota score."""
+    name: str
+    max_score: float
+    obtained_score: float
+    status: str  # Excellent, Good, Average, Poor
+    description: str
+
+
+class DoshaResultResponse(BaseModel):
+    """Response payload for a Dosha check result."""
+    name: str
+    has_dosha: bool
+    severity: str  # None, Partial, Severe
+    description: str
+
+
+class AshtakootaCompatibilityRequest(BaseModel):
+    """Request payload for Ashtakoota compatibility analysis."""
+    # Person A data
+    birth_datetime_utc_a: datetime = Field(
+        description="UTC birth datetime for Person A (ISO-8601, must include timezone offset)."
+    )
+    latitude_a: float = Field(ge=-90.0, le=90.0)
+    longitude_a: float = Field(ge=-180.0, le=180.0)
+    subject_name_a: str = Field(default="Person A", max_length=100)
+
+    # Person B data
+    birth_datetime_utc_b: datetime = Field(
+        description="UTC birth datetime for Person B (ISO-8601, must include timezone offset)."
+    )
+    latitude_b: float = Field(ge=-90.0, le=90.0)
+    longitude_b: float = Field(ge=-180.0, le=180.0)
+    subject_name_b: str = Field(default="Person B", max_length=100)
+
+    # Chart settings
+    ayanamsa: AyanamsaCode = "lahiri"
+    house_system: HouseSystemCode = "W"
+
+
+class AshtakootaCompatibilityResponse(BaseModel):
+    """Response payload for Ashtakoota compatibility analysis."""
+    total_score: float
+    max_total_score: float = 36.0
+    compatibility_percentage: float
+    verdict: str  # Excellent Match, Good Match, Average Match, Low Compatibility
+    kootas: list[KootaScoreResponse]
+    doshas: list[DoshaResultResponse]
+    radar_values: dict[str, float]
+    strengths: list[str]
+    challenges: list[str]
+    recommendations: list[str]
+    # Subject names for display
+    subject_name_a: str
+    subject_name_b: str
+
+
+# ── Best Bet 58-Point Compatibility ────────────────────────────────────────────
+
+class BestBetSubFactorResponse(BaseModel):
+    """Single sub-factor in Best Bet scoring."""
+    name: str
+    score: float
+    max: float
+    description: str
+
+
+class BestBetCompatibilityRequest(BaseModel):
+    """Request payload for Best Bet 58-point compatibility analysis."""
+    # Person A data
+    birth_datetime_utc_a: datetime = Field(
+        description="UTC birth datetime for Person A (ISO-8601, must include timezone offset)."
+    )
+    latitude_a: float = Field(ge=-90.0, le=90.0)
+    longitude_a: float = Field(ge=-180.0, le=180.0)
+    subject_name_a: str = Field(default="Person A", max_length=100)
+
+    # Person B data
+    birth_datetime_utc_b: datetime = Field(
+        description="UTC birth datetime for Person B (ISO-8601, must include timezone offset)."
+    )
+    latitude_b: float = Field(ge=-90.0, le=90.0)
+    longitude_b: float = Field(ge=-180.0, le=180.0)
+    subject_name_b: str = Field(default="Person B", max_length=100)
+
+    # Chart settings
+    ayanamsa: AyanamsaCode = "lahiri"
+    house_system: HouseSystemCode = "W"
+
+
+class BestBetCompatibilityResponse(BaseModel):
+    """Response payload for Best Bet 58-point compatibility analysis."""
+    subject_name_a: str
+    subject_name_b: str
+    total_score: float
+    max_score: float = 58.0
+    percentage: float
+    verdict: str  # Excellent Match, Good Match, Average Match, Poor Match
+    status: str  # Excellent, Good, Average, Poor
+
+    # Group scores
+    practical_score: float
+    practical_max: float = 36.0
+    karmic_score: float
+    karmic_max: float = 12.0
+    future_score: float
+    future_max: float = 10.0
+
+    # Detailed breakdown
+    spiritual_score: float
+    spiritual_max: float = 12.0
+    psychological_score: float
+    psychological_max: float = 12.0
+    physical_score: float
+    physical_max: float = 12.0
+    mars_dosha_score: float
+    mars_dosha_max: float = 6.0
+    karmic_pattern_score: float
+    karmic_pattern_max: float = 6.0
+    dasha_score: float
+    dasha_max: float = 5.0
+    mutual_planets_score: float
+    mutual_planets_max: float = 5.0
+
+    # Sub-factors
+    sub_factors: list[BestBetSubFactorResponse]
+    strengths: list[str]
+    challenges: list[str]
+    recommendations: list[str]
+
+
+# ── Marriage Timing Transit Scanner (Jupiter / Saturn) ─────────────────────────
+
+MarriageTimingStatus = Literal["probable", "delayed", "not_indicated"]
+
+
+class MarriageTimingRequest(BaseModel):
+    """Request payload for the Jupiter/Saturn marriage-window scan."""
+    birth_datetime_utc: datetime = Field(
+        description="UTC birth datetime (ISO-8601, must include timezone offset)."
+    )
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    subject_name: str = Field(default="", max_length=100)
+
+    # Scanned as ages rather than calendar years so the window travels with
+    # the subject's birth date. Capped at 120 to bound the response size.
+    scan_start_age: int = Field(default=20, ge=0, le=120)
+    scan_end_age: int = Field(default=45, ge=0, le=120)
+
+    # Chart settings
+    ayanamsa: AyanamsaCode = "lahiri"
+    house_system: HouseSystemCode = "W"
+
+    @model_validator(mode="after")
+    def _check_age_range(self) -> "MarriageTimingRequest":
+        if self.scan_end_age < self.scan_start_age:
+            raise ValueError("scan_end_age must not be earlier than scan_start_age")
+        return self
+
+
+class TransitScanYearResponse(BaseModel):
+    """One scanned year of the Jupiter/Saturn marriage-window scan."""
+    year: int
+    age_at_year: float
+    julian_day: float
+    jupiter_sidereal: float
+    jupiter_rashi: str
+    saturn_sidereal: float
+    saturn_rashi: str
+    status: MarriageTimingStatus
+    aspect_details: list[str]
+    saturn_obstruction_details: list[str]
+
+
+class MarriageTimingResponse(BaseModel):
+    """Response payload for the Jupiter/Saturn marriage-window scan."""
+    subject_name: str
+    birth_datetime_utc: datetime
+    scan_start_age: int
+    scan_end_age: int
+    natal_venus_rashi: str
+    natal_venus_longitude: float
+    natal_seventh_cusp_rashi: str
+    total_years_scanned: int
+    probable_windows: int
+    delayed_windows: int
+    scan_results: list[TransitScanYearResponse]
 
 
 # ── Chart Comparison ──────────────────────────────────────────────────────────
