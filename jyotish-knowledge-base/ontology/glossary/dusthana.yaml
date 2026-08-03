@@ -1,0 +1,68 @@
+# ontology/glossary/dusthana.yaml
+
+id: term.dusthana
+name: Duḥsthāna
+aliases:
+  - Dusthana
+  - Evil House
+  - Dushta Sthana
+  - दुःस्थान
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    duḥsthāna — from duḥ (bad, difficult) + sthāna (place,
+    house). Literally "a difficult or evil place." The three
+    houses considered challenging in the chart: the 6th
+    (roga/shatru), 8th (randhra/ayu), and 12th (vyaya/moksha).
+  english: >
+    The three "evil" or "difficult" houses in the horoscopic
+    chart: the 6th house (disease, enemies, debts), the 8th
+    house (longevity, transformation, obstacles), and the
+    12th house (losses, expenses, spiritual liberation). These
+    houses are considered inherently challenging but not
+    wholly negative — they also confer strength and spiritual
+    growth.
+  technical: >
+    Dusthanas are counted from the lagna. Their lords are
+    considered malefic in effect (dusthana lords). However, a
+    graha owning a dusthana may function as a functional
+    benefic if it also owns a good house (e.g., owning both
+    6th and 11th). The 6th, 8th, and 12th lords are generally
+    not considered favorable for the houses they occupy.
+
+usage:
+  primary: "Identification of challenging life areas requiring effort and spiritual growth"
+  secondary: "Assessment of dusthana lord placement for predicting difficulties in specific domains"
+
+related_concepts:
+  - ref: term.trik
+    relationship: "Dusthana is synonymous with trik — both refer to houses 6, 8, and 12"
+  - ref: term.bhava
+    relationship: "Dusthanas are a subset of bhavas, distinct from kendra and trikona"
+  - ref: term.kendra
+    relationship: "A graha that is both a kendra lord and a dusthana lord can produce mixed results (kendra-dusthana yoga)"
+
+sources:
+  - ref: source.BPHS
+    chapter: 11
+    verse: 45-50
+    claim: "Ṣaṣṭhāṣṭamadvādaśa duḥsthānāni — the 6th, 8th, and 12th are difficult houses"
+    confidence: high
+
+notes: >
+  While called "evil houses," dusthanas also confer resilience
+  and spiritual depth. Well-placed or strong lords of
+  dusthanas can produce significant achievements in the areas
+  they govern. The 12th house (vyaya) is also the house of
+  moksha (spiritual liberation).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

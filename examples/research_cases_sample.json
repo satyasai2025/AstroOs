@@ -1,0 +1,48 @@
+{
+  "generate_ids": true,
+  "cases": [
+    {
+      "id": "RC-1986-003",
+      "person": {
+        "name": "Sample Case A",
+        "gender": "Female",
+        "dob": "1986-06-15",
+        "tob": "10:30",
+        "place": "Delhi",
+        "latitude": 28.6139,
+        "longitude": 77.209,
+        "timezone": "Asia/Kolkata",
+        "source": "Interview",
+        "birth_time_confidence": "high"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "divisional_charts": ["D1", "D9", "D10", "D60"],
+      "life_events": [
+        { "id": "EV-1", "type": "Marriage", "event_date": "2012-02-14", "severity": "Major", "verified": true },
+        { "id": "EV-2", "type": "Promotion", "event_date": "2018-05-01", "severity": "Moderate" },
+        { "id": "EV-3", "type": "Child Birth", "event_date": "2015-08-10", "severity": "Major", "verified": true }
+      ]
+    },
+    {
+      "id": "RC-1978-004",
+      "person": {
+        "name": "Sample Case B",
+        "gender": "Male",
+        "dob": "1978-11-02",
+        "tob": "06:15",
+        "place": "Mumbai",
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "timezone": "Asia/Kolkata",
+        "source": "Certificate"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        { "id": "EV-1", "type": "Business", "event_date": "2005-03-20" },
+        { "id": "EV-2", "type": "Foreign Travel", "event_date": "2010-09-12" }
+      ]
+    }
+  ]
+}

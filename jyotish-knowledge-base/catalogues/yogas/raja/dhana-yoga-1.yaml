@@ -1,0 +1,40 @@
+id: yoga.raja.dhana-yoga-1
+name: Dhanadhikari Yoga
+aliases: ["Wealth-Capable Yoga", "Raja-Dhana Yoga"]
+category: yoga
+type: raja
+subcategory: dhana
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Lords of the 2nd, 9th, and 11th houses are placed in Kendra (1st, 4th, 7th, or 10th) or Trikona (1st, 5th, or 9th) houses"
+      entity: yoga.raja.dhana-yoga-1
+      role: subject
+      notes: "All three lords must be in Kendra or Trikona. If two are in Kendra/Trikona and one is debilitated, the yoga is weakened but not fully cancelled. The yoga is strongest when the lords are also mutual friends."
+
+effects:
+  positive:
+    - "Immense wealth and prosperity"
+    - "Multiple sources of income"
+    - "Financial security throughout life"
+    - "Luck with finances and investments"
+    - "Generational wealth accumulation"
+  negative: []
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 3
+
+notes: "This is one of the primary wealth yogas in Jyotish. The 2nd house governs accumulated wealth, the 9th house governs fortune and luck (dhana-sthana of the 5th), and the 11th house governs gains and income. When the lords of these three houses are strongly placed, the native is blessed with exceptional financial capacity. Some authorities classify this as a raja yoga because the 9th lord in Kendra itself forms a raja yoga (Dharma-Karma Adhipati Yoga)."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

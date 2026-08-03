@@ -1,0 +1,68 @@
+# ontology/glossary/marana-karaka-sthana.yaml
+
+id: term.marana-karaka-sthana
+name: Maraṇa Kāraka Sthāna
+aliases:
+  - Marana Karaka Sthana
+  - MKS
+  - Death-inflicting House
+  - मरण कारक स्थान
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    maraṇa kāraka sthāna — from maraṇa (death) + kāraka
+    (doer, indicator) + sthāna (place). Literally "the
+    house that causes death." The 2nd and 7th houses from
+    the 8th house — i.e., houses 9 and 2 from the lagna,
+    considered from specific reference points.
+  english: >
+    A technical concept referring to houses that can cause
+    harm or "death" to the significations of a graha.
+    Specifically, the MKS for any house is determined by
+    counting 2 and 7 from that house. A graha placed in its
+    MKS (2nd or 7th from the house it owns or occupies) is
+    considered weakened or afflicted.
+  technical: >
+    For any bhava, its MKS positions are the 2nd and 7th
+    from that bhava. A graha that owns a house and also sits
+    in the 2nd or 7th from that same house is in MKS.
+    Conversely, the MKS of the 8th house are the 9th and 2nd
+    houses from the lagna. This concept is used to evaluate
+    potential affliction in the areas governed by that graha.
+
+usage:
+  primary: "Identification of afflicted houses and planets for focused remedial analysis"
+  secondary: "Assessment of potential challenges in life domains governed by grahas in MKS"
+
+related_concepts:
+  - ref: term.dusthana
+    relationship: "MKS analysis often involves dusthana houses, especially the 8th (longevity)"
+  - ref: term.bhava
+    relationship: "Each bhava has specific MKS positions determined by counting 2 and 7 from it"
+  - ref: term.graha
+    relationship: "A graha placed in its own MKS is weakened for its significations"
+
+sources:
+  - ref: source.BPHS
+    chapter: 25
+    verse: 1-5
+    claim: "Dvitīya-saptamaṃ maraṇa-kāraka-sthānaṃ — the 2nd and 7th are the death-causing houses"
+    confidence: high
+
+notes: >
+  The MKS concept is particularly important in evaluating
+  the 8th house and its lord for longevity analysis. It is
+  also applied to other houses: the position of a bhava lord
+  in the 2nd or 7th from that bhava is considered weakening
+  for those life areas.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

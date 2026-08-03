@@ -1,0 +1,67 @@
+# ontology/glossary/uchcha.yaml
+
+id: term.uchcha
+name: Ucca
+aliases:
+  - Uchcha
+  - Exaltation
+  - Exalted
+  - उच्च
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    ucca — from uc (high, elevated, lofty). Literally "high,
+    exalted." The sign in which a graha expresses its highest
+    and purest energy, opposite its nīca (debilitation) sign.
+  english: >
+    The state of a planet's maximum strength and dignity. Each
+    graha has a specific sign where it is exalted (uchcha):
+    Surya in Mesha, Chandra in Vrishabha, Mangala in Makara,
+    Budha in Kanya, Brihaspati in Karka, Shukra in Meena,
+    Shani in Tula, Rahu in Kanya (Mithuna in some texts),
+    Ketu in Meena (Dhanus in some texts).
+  technical: >
+    Uchcha is the highest rank in the eightfold dignity
+    hierarchy. A graha in its uchcha sign achieves its
+    maximum potential and produces excellent results for
+    its significations and the houses it rules. The degree
+    of exaltation (uchcha bhanga) is the point of maximum
+    exaltation; the graha's strength diminishes as it moves
+    away from this degree.
+
+usage:
+  primary: "Assessment of a graha's maximum positive potential and capacity for good results"
+  secondary: "Identification of chart strength through exalted planets and their placements"
+
+related_concepts:
+  - ref: term.necha
+    relationship: "Uchcha is opposite to neecha — each graha's uchcha sign is directly opposite its neecha sign"
+  - ref: term.moolatrikona
+    relationship: "Uchcha is higher in dignity than moolatrikona, but the planet's expression is less natural"
+  - ref: term.graha
+    relationship: "Each graha has a specific uchcha sign and degree that defines its point of highest dignity"
+
+sources:
+  - ref: source.BPHS
+    chapter: 3
+    verse: 5-12
+    claim: "Uccāni kathayāmi — I declare the exaltations"
+    confidence: high
+
+notes: >
+  Exaltation represents a graha's capacity to express its
+  highest potential. Unlike moolatrikona (natural comfort)
+  or own sign (familiarity), exaltation is like a guest in
+  a position of honor — capable of great results but not
+  as naturally sustained.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

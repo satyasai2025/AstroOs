@@ -1,0 +1,43 @@
+id: yoga.dosha.mangal-dosha
+name: Mangal Dosha
+aliases: ["Mars Dosha", "Kuja Dosha", "Chevvai Dosham"]
+category: yoga
+type: dosha
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Mars is placed in the 1st, 2nd, 4th, 7th, 8th, or 12th house from the Lagna (Birth Ascendant)"
+      entity: yoga.dosha.mangal-dosha
+      role: subject
+      notes: "Some authorities also check from the Moon chart (Chandra Lagna). The dosha is stronger when checked from the Lagna. Mars in the 7th and 8th houses from Lagna produces the strongest Mangal Dosha. The dosha is cancelled or weakened when Mars is in own sign (Aries, Scorpio) or exaltation (Capricorn), or when Jupiter aspects Mars."
+
+effects:
+  positive:
+    - "Courage, determination, and fighting spirit"
+    - "Engineering, medical, or military aptitude"
+    - "Strong willpower and leadership"
+  negative:
+    - "Obstacles and delays in marriage"
+    - "Marital discord and arguments"
+    - "Health issues for the spouse in severe cases"
+    - "Late marriage or multiple relationships"
+    - "Fire-related accidents or injuries"
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 36
+    verse: null
+
+notes: "One of the most widely discussed doshas in Vedic astrology. Mangal Dosha is checked from both Lagna and Moon. A person with Mangal Dosha is called a 'Manglik'. Traditionally, a Manglik should marry another Manglik to neutralize the dosha. After age 28, the dosha's intensity is said to reduce. Multiple cancellation conditions exist including Mars in own sign, Jupiter aspect on Mars, and certain varga chart conditions. BPHS chapter 36 provides the most comprehensive treatment of this dosha."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

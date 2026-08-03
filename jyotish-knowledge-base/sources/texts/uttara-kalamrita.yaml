@@ -1,0 +1,68 @@
+id: source.uttara-kalamrita
+name: Uttara Kalamrita
+aliases:
+  - Uttara Kālāmṛta
+  - Nectar of the Ultimate
+  - Kalyanavarma's Uttara Kalamrita
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Kalyanavarma
+date:
+  approximate: "1300 CE"
+  confidence: low
+language:
+  original: Sanskrit
+tradition: Classical
+system: Parashari Jyotish
+
+edition:
+  primary:
+    editor: B.V. Raman
+    publisher: IBH Prakashana
+    year: 1985
+    language: Sanskrit, English
+    notes: "Original Sanskrit text with English translation by B.V. Raman. Based on the text with Chandrika commentary."
+
+chapter_structure:
+  total_chapters: 12
+  key_chapters:
+    - chapter: 1
+      topic: "Determination of birth time and lagna"
+      verses: 18
+      relevance: "Methods for verifying and rectifying birth time; lagna determination"
+    - chapter: 3
+      topic: "Graha effects in signs and houses"
+      verses: 22
+      relevance: "Systematic interpretation of each graha's effects based on sign and house placement"
+    - chapter: 5
+      topic: "Yogas and combinations"
+      verses: 20
+      relevance: "Raja Yogas, Dhana Yogas, and other significant planetary combinations"
+    - chapter: 7
+      topic: "Dasha phala interpretation"
+      verses: 16
+      relevance: "Timing of events through Vimshottari and other Dasha systems"
+    - chapter: 10
+      topic: "Ayurdaya (Longevity) determination"
+      verses: 14
+      relevance: "Methods for assessing lifespan through graha positions and strengths"
+
+related_texts:
+  - ref: source.phaladeepika
+    relationship: "Both represent the mature classical tradition; Uttara Kalamrita is considered complementary to Phaladeepika"
+  - ref: source.saravali
+    relationship: "Shares authorship attribution with Saravali (same name Kalyanavarma, though possibly different individuals); both follow Parashari framework"
+
+significance: "Uttara Kalamrita is a concise yet comprehensive classical Parashari text that focuses on practical predictive methodology. Its 12 chapters cover the essential topics of horoscopy with particular emphasis on birth time rectification, graha effects in houses, and Dasha interpretation. The text is especially valued by practitioners for its clear, systematic approach to synthesizing multiple chart factors in prediction."
+
+notes: "Whether the Kalyanavarma who authored Uttara Kalamrita is the same as the Kalyanavarma of Saravali is a matter of scholarly debate. Linguistic and stylistic differences suggest they may be different individuals separated by several centuries. Uttara Kalamrita is sometimes grouped with Purva Kalamrita (a lost or lesser-known text) as parts of a larger Kalamrita tradition. The Chandrika commentary is important for understanding the text's interpretative tradition."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

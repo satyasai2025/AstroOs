@@ -1,0 +1,331 @@
+# Jaimini Rashi Drishti Complete Table
+# All rashi-to-rashi aspects under the Jaimini system.
+# Source: Jaimini Sutras Chapter 2
+
+id: jaimini.rashi-drishti.complete
+name: Jaimini Rashi Drishti Purna
+aliases: ["Jaimini Aspect Complete Table", "Rashi Drishti Full Reference", "Jaimini Sign Aspects"]
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: jaimini
+type: rashi-drishti
+
+statement: >
+  In the Jaimini system, rashis (signs) aspect each other based on
+  their nature rather than graha placement. Movable (chara) signs
+  aspect all fixed (sthira) signs except the immediately adjacent
+  fixed sign. Fixed signs aspect all movable signs. Dual
+  (dvisvabhava) signs aspect all other dual signs. Each rashi
+  aspects exactly three other rashis, producing a uniform
+  three-aspect-per-rashi pattern.
+
+conditions:
+  - entity: rashi.chara
+    role: subject
+    notes: >
+      Movable rashis: Mesha (1), Karka (4), Tula (7), Makara (10).
+      Each aspects all fixed rashis except the one immediately
+      adjacent in the zodiacal sequence (zodiacally following).
+  - entity: rashi.sthira
+    role: subject
+    notes: >
+      Fixed rashis: Vrishabha (2), Simha (5), Vrischika (8),
+      Kumbha (11). Each aspects all movable rashis.
+  - entity: rashi.dvisvabhava
+    role: subject
+    notes: >
+      Dual rashis: Mithuna (3), Kanya (6), Dhanu (9), Meena (12).
+      Each aspects all other dual rashis (three targets each).
+
+effects:
+  - description: >
+      Rashi drishti creates structural associations between rashis
+      independent of graha placement. These aspects are always
+      active and form the background influence layer of the chart.
+    intensity: moderate
+  - description: >
+      When a graha occupies a rashi, it inherits that rashi's
+      aspect relationships, extending the graha's influence to
+      grahas in the aspected rashis.
+    intensity: moderate
+  - description: >
+      Rashi drishti interacts with graha drishti (Parashari aspects)
+      to create layered influence patterns in the chart.
+    intensity: mild
+
+aspect_table:
+  mesha:
+    number: 1
+    nature: chara
+    aspects:
+      - target: simha
+        number: 5
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: vrishchika
+        number: 8
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: kumbha
+        number: 11
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+
+  vrishabha:
+    number: 2
+    nature: sthira
+    aspects:
+      - target: mesha
+        number: 1
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: karka
+        number: 4
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: tula
+        number: 7
+        nature: chara
+        rule: "Fixed aspects movable"
+
+  mithuna:
+    number: 3
+    nature: dvisvabhava
+    aspects:
+      - target: kanya
+        number: 6
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: dhanus
+        number: 9
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: meena
+        number: 12
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+
+  karka:
+    number: 4
+    nature: chara
+    aspects:
+      - target: vrishchika
+        number: 8
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: kumbha
+        number: 11
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: vrishabha
+        number: 2
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+
+  simha:
+    number: 5
+    nature: sthira
+    aspects:
+      - target: karka
+        number: 4
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: tula
+        number: 7
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: makara
+        number: 10
+        nature: chara
+        rule: "Fixed aspects movable"
+
+  kanya:
+    number: 6
+    nature: dvisvabhava
+    aspects:
+      - target: dhanus
+        number: 9
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: meena
+        number: 12
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: mithuna
+        number: 3
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+
+  tula:
+    number: 7
+    nature: chara
+    aspects:
+      - target: kumbha
+        number: 11
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: vrishabha
+        number: 2
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: simha
+        number: 5
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+
+  vrishchika:
+    number: 8
+    nature: sthira
+    aspects:
+      - target: makara
+        number: 10
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: mesha
+        number: 1
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: karka
+        number: 4
+        nature: chara
+        rule: "Fixed aspects movable"
+
+  dhanus:
+    number: 9
+    nature: dvisvabhava
+    aspects:
+      - target: meena
+        number: 12
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: mithuna
+        number: 3
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: kanya
+        number: 6
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+
+  makara:
+    number: 10
+    nature: chara
+    aspects:
+      - target: vrishabha
+        number: 2
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: simha
+        number: 5
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+      - target: vrishchika
+        number: 8
+        nature: sthira
+        rule: "Movable aspects fixed (non-adjacent)"
+
+  kumbha:
+    number: 11
+    nature: sthira
+    aspects:
+      - target: mesha
+        number: 1
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: karka
+        number: 4
+        nature: chara
+        rule: "Fixed aspects movable"
+      - target: tula
+        number: 7
+        nature: chara
+        rule: "Fixed aspects movable"
+
+  meena:
+    number: 12
+    nature: dvisvabhava
+    aspects:
+      - target: mithuna
+        number: 3
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: kanya
+        number: 6
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+      - target: dhanus
+        number: 9
+        nature: dvisvabhava
+        rule: "Dual aspects dual"
+
+adjacent_exceptions: |
+  The following adjacent pairs are NOT in aspect relationship:
+
+  Movable -> Fixed (adjacent, excluded):
+    - Mesha (1) does NOT aspect Vrishabha (2)
+    - Karka (4) does NOT aspect Simha (5)
+    - Tula (7) does NOT aspect Vrischika (8)
+    - Makara (10) does NOT aspect Kumbha (11)
+
+  Fixed -> Movable (preceding, excluded):
+    - Vrishabha (2) does NOT aspect Mesha (1)
+    - Simha (5) does NOT aspect Karka (4)
+    - Vrischika (8) does NOT aspect Tula (7)
+    - Kumbha (11) does NOT aspect Makara (10)
+
+  Dual -> Dual: No adjacent exceptions.
+    All dual signs aspect all other dual signs without exclusion.
+
+total_aspect_count:
+  movable_to_fixed: 12  # 4 movable x 3 targets each
+  fixed_to_movable: 12  # 4 fixed x 3 targets each
+  dual_to_dual: 12      # 4 dual x 3 targets each
+  total: 36             # Total directed aspect relationships
+  unique_pairs: 18      # Unique rashi pairs (each pair counted once)
+
+cross_references:
+  - ref: aspect.rashi-drishti.rules
+    relationship: "General rashi drishti rules entry (Parashari-adjacent); this file is the Jaimini-specific complete reference"
+  - ref: aspect.rashi-drishti.table
+    relationship: "Earlier table entry; this file provides the full Jaimini-system reference with expanded detail"
+  - ref: jaimini.chara-dasha.rules
+    relationship: "Rashi drishti from the dasha rashi modifies event outcomes during Chara Dasha periods"
+  - ref: jaimini.yogas.collection
+    relationship: "Many Jaimini yogas depend on rashi drishti relationships between key rashis"
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras Chapter 2 establish the complete rashi drishti
+      framework: movable aspects fixed (non-adjacent), fixed aspects
+      movable, dual aspects dual. This is the definitive aspect
+      system within Jaimini astrology.
+    confidence: high
+
+notes: |
+  Rashi drishti is a Jaimini-system concept and must not be
+  confused with Parashari graha drishti. The two systems are
+  independent and additive.
+
+  Practical Application:
+  When analyzing a chart, rashi drishti tells you which signs
+  "communicate" with each other structurally. A graha in a rashi
+  inherits that rashi's aspects. For example, if Mangala (Mars)
+  is in Mesha, Mangala aspects grahas in Simha, Vrischika, and
+  Kumbha through rashi drishti — in addition to its own Parashari
+  aspects (4th, 7th, 8th from its position).
+
+  This table is the complete reference for all rashi-to-rashi
+  aspect relationships in the Jaimini system. Each rashi aspects
+  exactly three other rashis, creating a uniform three-aspect
+  pattern across all twelve signs.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with complete aspect table for all 12 rashis"
+    author: "Chief Jyotish Knowledge Architect"

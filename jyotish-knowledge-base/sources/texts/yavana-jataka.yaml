@@ -1,0 +1,49 @@
+id: source.yavana-jataka
+name: Yavana Jataka
+aliases:
+  - यवन जातक
+  - Sphujidhvaja Yavana Jataka
+category: source
+status: active
+confidence: medium
+version: 1.0
+last_verified: 2026-07-15
+
+author: Sphujidhvaja
+date:
+  approximate: "270 CE"
+  confidence: low
+
+language:
+  original: Sanskrit (translated from Greek)
+
+tradition: Historical / Greek-influenced
+
+edition:
+  primary:
+    editor: "David Pingree"
+    publisher: "Harvard University Press"
+    year: 1978
+    language: English (translation)
+    notes: "Critical edition with scholarly commentary."
+
+related_texts:
+  - ref: source.brihat-jataka
+    relationship: "Both contain Greek-influenced Jyotish concepts."
+
+significance: >
+  The Yavana Jataka is the earliest surviving Sanskrit text on
+  Hellenistic astrology. It represents the transmission of Greek
+  astrological concepts into India and the synthesis that produced
+  classical Jyotish.
+
+notes: >
+  Historical source. Important for understanding the development
+  of Jyotish rather than for standard Parashari practice. David
+  Pingree's critical edition is the standard reference.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

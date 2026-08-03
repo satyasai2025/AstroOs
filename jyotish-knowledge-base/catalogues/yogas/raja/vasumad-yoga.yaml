@@ -1,0 +1,40 @@
+id: yoga.raja.vasumad
+name: Vasumad Yoga
+aliases: ["Wealth-Lord Yoga"]
+category: yoga
+type: raja
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Lord of the 2nd house and Lord of the 11th house are in Kendra (mutual angular position, i.e., 1st, 4th, 7th, or 10th from each other)"
+      entity: yoga.raja.vasumad
+      role: subject
+      notes: "The lords must be in Kendra from each other, not necessarily from the Lagna. When both are also in their own signs or exaltation, the yoga is exceptionally powerful."
+
+effects:
+  positive:
+    - "Steady wealth accumulation throughout life"
+    - "Financial stability and security"
+    - "Good family wealth and inheritance"
+    - "Success in financial matters and banking"
+    - "Prosperity through trade and commerce"
+  negative: []
+  intensity: moderate
+
+sources:
+  - ref: source.saravali
+    chapter: null
+    verse: null
+
+notes: "From Saravali by Kalyana Varma. The 2nd house represents accumulated wealth and family; the 11th house represents gains and fulfillment of desires. When their lords are in angular (Kendra) relationship, there is a strong flow between earning and accumulation. This is considered a reliable wealth yoga that manifests steadily over time rather than as sudden windfalls."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

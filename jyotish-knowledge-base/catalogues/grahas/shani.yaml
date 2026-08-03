@@ -1,0 +1,160 @@
+# catalogues/grahas/shani.yaml
+
+id: graha.shani
+name: Shani
+aliases:
+  - Saturn
+  - Shanaishchara
+  - Manda
+  - Sauri
+  - Yama
+  - Kona
+category: graha
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Śanaiścara
+devanagari: "शनि"
+meaning: "The slow-moving one; the one who moves at a deliberate pace"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: 378.09
+  sidereal_period_days: 10759.22
+  retrograde:
+    occurs: true
+    typical_duration_days: 140
+    typical_frequency: "Annually for approximately 5 months"
+  notes: "Retrograde for approximately 140 days each year; the slowest-moving of the visible grahas (~29.5 years per zodiac cycle)"
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: male
+  nature: natural malefic
+  caste: shudra
+  element: air
+  direction: west
+  color: black
+  gem: blue sapphire
+  metal: iron
+  grain: sesame
+  body_parts:
+    - nerves
+    - legs
+    - bones
+    - teeth
+  animal: crow
+  deity: yama
+  quality: tamasic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: tula
+    degrees: 20
+  debilitation:
+    sign: mesha
+    degrees: 20
+  moolatrikona:
+    sign: kumbha
+    range: "0-20"
+  own_signs:
+    - makara
+    - kumbha
+  friendly_signs:
+    - vrishabha
+    - tula
+    - mithuna
+    - kanya
+  neutral_signs:
+    - dhanus
+    - meena
+  inimical_signs:
+    - simha
+    - karka
+    - mesha
+    - vrishchika
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - pushya
+    - anuradha
+    - uttarabhadrapada
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.shukra
+    - graha.budha
+  enemies:
+    - graha.surya
+    - graha.chandra
+    - graha.mangala
+  neutrals:
+    - graha.guru
+    - graha.rahu
+    - graha.ketu
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 19
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Longevity (Ayus)"
+    - "Service (Seva)"
+    - "Obstacles (Vighna)"
+  traditional:
+    - "Death and endings"
+    - "Discipline"
+    - "Hard work"
+  modern:
+    - "Karma and justice"
+    - "Responsibility"
+    - "Structure and boundaries"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Shani"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Shani"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Shani is the son of Surya and Chhaya and serves as the celestial
+  judge, dispensing karmic justice based on one's actions. Despite
+  being a natural malefic, Shani's influence is not inherently
+  negative - it disciplines, teaches patience, and rewards sustained
+  effort. Shani transits one sign every 2.5 years and its Sade Sati
+  (7.5-year transit over the natal Moon) is one of the most
+  significant transit periods in Jyotish. Its moolatrikona in Kumbha
+  reflects its role as the lord of service and humanitarianism.
+
+# === HISTORY ===
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

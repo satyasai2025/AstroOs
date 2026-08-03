@@ -1,0 +1,42 @@
+id: yoga.dhana.kubera-yoga
+name: Kubera Yoga
+aliases: ["Treasury God Yoga"]
+category: yoga
+type: dhana
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Lord of the 11th house is placed in the 2nd house with benefic aspect (Jupiter, Venus, or well-placed Mercury aspecting)"
+      entity: yoga.dhana.kubera-yoga
+      role: subject
+      notes: "The 11th lord must be in the 2nd house. Benefic aspect strengthens the yoga. If the 11th lord is also in own sign or exaltation in the 2nd house, results are amplified. Malefic aspects reduce but do not negate the yoga."
+
+effects:
+  positive:
+    - "Sudden and unexpected wealth gains"
+    - "Windfall profits and windfall income"
+    - "Success in speculative ventures and investments"
+    - "Treasury-like accumulation of wealth"
+    - "Generosity and philanthropic tendency with wealth"
+  negative:
+    - "Without benefic aspect, wealth may come but with complications"
+    - "Sudden gains can lead to overconfidence"
+  intensity: moderate
+
+sources:
+  - ref: source.phaladeepika
+    chapter: null
+    verse: null
+
+notes: "Named after Kubera, the Hindu god of wealth and treasurer of the gods. From Phaladeepika by Mantreshwara. The 11th lord (gains) sitting in the 2nd house (wealth) creates a direct channel for income to convert into accumulated wealth. The benefic aspect ensures the wealth comes through righteous and fortunate means. This yoga can indicate sudden wealth through unexpected sources."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

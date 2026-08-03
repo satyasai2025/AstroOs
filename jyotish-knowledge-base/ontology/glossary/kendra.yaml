@@ -1,0 +1,65 @@
+# ontology/glossary/kendra.yaml
+
+id: term.kendra
+name: Kendra
+aliases:
+  - Kendra
+  - Quadrant
+  - Angular House
+  - केन्द्र
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    kendra — from kendra (center, axis). The four angular
+    houses of the chart: the 1st (lagna/tanu), 4th (sukha),
+    7th (yuvati/jaya), and 10th (karma/mesha).
+  english: >
+    The four quadrant houses (1, 4, 7, 10) that form the
+    backbone of the chart. Kendras are also called
+    Vishnusthanas (Vishnu's places) because they are
+    inherently strong and supportive. Planets in kendras
+    become very influential.
+  technical: >
+    Kendra houses are one of the three house groupings
+    (kendra, trikona, dusthana). Kendras are considered the
+    most powerful placement for a graha; a graha in kendra
+    gains strength regardless of sign dignity. Kendra lords
+    mutually aspect each other (1-7, 4-10 axes). The strength
+    of kendras is critical in chart evaluation.
+
+usage:
+  primary: "Assessment of structural strength of the chart — kendra placement empowers grahas"
+  secondary: "Evaluation of kendra lord relationships for overall chart harmony"
+
+related_concepts:
+  - ref: term.trikona
+    relationship: "Kendra and trikona together form kendra-trikona (kona) relationships — a graha owning both is very strong"
+  - ref: term.bhava
+    relationship: "Kendras are bhavas 1, 4, 7, and 10, each governing distinct life domains"
+  - ref: term.dusthana
+    relationship: "Kendras and dusthanas are opposite in nature — kendras strengthen, dusthanas challenge"
+
+sources:
+  - ref: source.BPHS
+    chapter: 11
+    verse: 30-34
+    claim: "Kendrāṇi bala-dāni — quadrants give strength"
+    confidence: high
+
+notes: >
+  Kendras are considered the pillars of the chart. A graha
+  placed in a kendra, even if debilitated, produces good
+  results in its dasha due to positional strength (sthana
+  bala). The kendra lords' mutual relationships determine
+  much of the overall chart quality.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

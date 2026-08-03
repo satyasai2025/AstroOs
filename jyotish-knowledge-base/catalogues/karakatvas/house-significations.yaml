@@ -1,0 +1,415 @@
+# Karakatva Catalogue: House-to-Life-Event Signification Map
+# Source: BPHS Chapter 33 and Chapters 16-27
+# Links houses to major life events with primary and secondary house references
+
+id: karaka.house-significations
+name: Bhava-Jeevana-Ghatana Samuha
+aliases: [House-to-Life-Event Map, Bhava Event Significations]
+category: karaka
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+source_primary: source.BPHS
+
+karaka_type: bhava
+
+life_events:
+  - event: self-identity
+    event_sanskrit: Aatman
+    primary_houses: [bhava.1]
+    secondary_houses: [bhava.7]
+    karaka: graha.surya
+    description: "Sense of self, personality, physical constitution, birth circumstances"
+    bhava_notes: "1st bhava is the seat of self; 7th is its mirror through partnerships"
+    confidence: high
+
+  - event: family-of-origin
+    event_sanskrit: Kutumba
+    primary_houses: [bhava.2]
+    secondary_houses: [bhava.4]
+    karaka: graha.guru
+    description: "Family background, early upbringing, inherited wealth and values"
+    bhava_notes: "2nd bhava is accumulated family wealth; 4th is domestic environment"
+    confidence: high
+
+  - event: siblings
+    event_sanskrit: Bhratru
+    primary_houses: [bhava.3]
+    secondary_houses: [bhava.11]
+    karaka: graha.mangala
+    description: "Brothers, sisters, sibling relationships, collaborative bonds"
+    bhava_notes: "3rd bhava is younger siblings and courage; 11th is elder siblings and gains"
+    confidence: high
+
+  - event: mother-and-home
+    event_sanskrit: Maatru-Sukha
+    primary_houses: [bhava.4]
+    secondary_houses: [bhava.12]
+    karaka: graha.chandra
+    description: "Mother, home environment, domestic happiness, property, vehicles"
+    bhava_notes: "4th bhava is mother and home; 12th indicates final home (ashram)"
+    confidence: high
+
+  - event: children
+    event_sanskrit: Putra
+    primary_houses: [bhava.5]
+    secondary_houses: [bhava.11]
+    karaka: graha.guru
+    description: "Progeny, children's health and well-being, creative output"
+    bhava_notes: "5th bhava is children; 11th is fulfillment of desire for children"
+    confidence: high
+
+  - event: education
+    event_sanskrit: Vidya
+    primary_houses: [bhava.4, bhava.5]
+    secondary_houses: [bhava.9]
+    karaka: graha.guru
+    description: "Academic education, learning, intellectual development"
+    bhava_notes: "4th is basic education; 5th is intelligence; 9th is higher learning"
+    confidence: high
+
+  - event: health-and-disease
+    event_sanskrit: Arogya-Roga
+    primary_houses: [bhava.1, bhava.6]
+    secondary_houses: [bhava.8, bhava.12]
+    karaka: graha.shani
+    description: "General health, specific diseases, medical treatment, recovery"
+    bhava_notes: "1st is general health; 6th is disease; 8th is chronic illness; 12th is hospitalization"
+    confidence: high
+
+  - event: marriage
+    event_sanskrit: Vivaha
+    primary_houses: [bhava.7]
+    secondary_houses: [bhava.2, bhava.12]
+    karaka: graha.shukra
+    description: "Marriage, spouse selection, marital harmony, wedding ceremony"
+    bhava_notes: "7th is marriage; 2nd is family after marriage; 12th is bed pleasures"
+    confidence: high
+
+  - event: partnership
+    event_sanskrit: Sambandha
+    primary_houses: [bhava.7]
+    secondary_houses: [bhava.3]
+    karaka: graha.shukra
+    description: "Business partnerships, legal contracts, joint ventures"
+    bhava_notes: "7th is partnerships; 3rd is contractual agreements"
+    confidence: high
+
+  - event: sex-and-intimacy
+    event_sanskrit: Maithuna
+    primary_houses: [bhava.7, bhava.12]
+    secondary_houses: [bhava.8]
+    karaka: graha.shukra
+    description: "Sexual relations, physical intimacy, reproductive capacity"
+    bhava_notes: "7th is partnerships; 12th is bed pleasures; 8th is hidden sexuality"
+    confidence: high
+
+  - event: career
+    event_sanskrit: Karma
+    primary_houses: [bhava.10]
+    secondary_houses: [bhava.6, bhava.2]
+    karaka: graha.surya
+    description: "Profession, career advancement, public reputation, authority"
+    bhava_notes: "10th is career; 6th is service within career; 2nd is income from career"
+    confidence: high
+
+  - event: income-and-gains
+    event_sanskrit: Aaya-Labha
+    primary_houses: [bhava.11]
+    secondary_houses: [bhava.2, bhava.6]
+    karaka: graha.guru
+    description: "Regular income, financial gains, fulfillment of desires"
+    bhava_notes: "11th is gains; 2nd is wealth; 6th is income through service"
+    confidence: high
+
+  - event: wealth-accumulation
+    event_sanskrit: Dhana
+    primary_houses: [bhava.2]
+    secondary_houses: [bhava.6, bhava.10, bhava.11]
+    karaka: graha.guru
+    description: "Accumulated wealth, savings, financial security, bank balance"
+    bhava_notes: "2nd is wealth; 6th is wealth through service; 10th through career; 11th through gains"
+    confidence: high
+
+  - event: property-and-vehicles
+    event_sanskrit: Vastu-Vaahana
+    primary_houses: [bhava.4]
+    secondary_houses: [bhava.2, bhava.11]
+    karaka: graha.mangala
+    description: "Immovable property, real estate, vehicles, material comforts"
+    bhava_notes: "4th is property and vehicles; 2nd is wealth for acquisition; 11th is gains"
+    confidence: high
+
+  - event: travel
+    event_sanskrit: Yatra
+    primary_houses: [bhava.3, bhava.9, bhava.12]
+    secondary_houses: [bhava.7]
+    karaka: graha.rahu
+    description: "Short journeys (3rd), long journeys (9th), foreign travel (12th)"
+    bhava_notes: "3rd is short travel; 9th is long/pilgrimage; 12th is foreign lands; 7th is travel through partnerships"
+    confidence: high
+
+  - event: foreign-settlement
+    event_sanskrit: Videsh-Vaasa
+    primary_houses: [bhava.12]
+    secondary_houses: [bhava.7, bhava.9]
+    karaka: graha.rahu
+    description: "Residence abroad, foreign connections, settlement in foreign lands"
+    bhava_notes: "12th is foreign lands; 7th is partnerships abroad; 9th is long-distance travel"
+    confidence: high
+
+  - event: father-and-fortune
+    event_sanskrit: Pitru-Bhagya
+    primary_houses: [bhava.9]
+    secondary_houses: [bhava.5, bhava.10]
+    karaka: graha.surya
+    description: "Father, fortune, dharma, higher knowledge, long-distance travel"
+    bhava_notes: "9th is father and fortune; 5th is past merit; 10th is father's career"
+    confidence: high
+
+  - event: obstacles-and-litigation
+    event_sanskrit: Vighna-Vyavahara
+    primary_houses: [bhava.6]
+    secondary_houses: [bhava.8, bhava.12]
+    karaka: graha.shani
+    description: "Enemies, legal disputes, health problems, debt, service"
+    bhava_notes: "6th is obstacles and enemies; 8th is hidden enemies; 12th is losses through disputes"
+    confidence: high
+
+  - event: longevity
+    event_sanskrit: Ayur
+    primary_houses: [bhava.8]
+    secondary_houses: [bhava.1, bhava.3]
+    karaka: graha.shani
+    description: "Life span, manner of death, transformative experiences"
+    bhava_notes: "8th is longevity; 1st is overall vitality; 3rd is courage to face death"
+    confidence: high
+
+  - event: death-and-transformation
+    event_sanskrit: Mrityu-Parinama
+    primary_houses: [bhava.8]
+    secondary_houses: [bhava.12]
+    karaka: graha.shani
+    description: "Physical death, spiritual transformation, karmic resolution"
+    bhava_notes: "8th is death and transformation; 12th is final departure and liberation"
+    confidence: high
+
+  - event: liberation
+    event_sanskrit: Moksha
+    primary_houses: [bhava.12]
+    secondary_houses: [bhava.9, bhava.5]
+    karaka: graha.ketu
+    description: "Spiritual liberation, enlightenment, release from cycle of rebirth"
+    bhava_notes: "12th is moksha; 9th is dharma; 5th is spiritual merit"
+    confidence: high
+
+  - event: spirituality
+    event_sanskrit: Adhyatma
+    primary_houses: [bhava.9, bhava.12]
+    secondary_houses: [bhava.5, bhava.8]
+    karaka: graha.guru
+    description: "Spiritual practice, religious observance, divine connection"
+    bhava_notes: "9th is dharma; 12th is liberation; 5th is mantra; 8th is occult"
+    confidence: high
+
+  - event: occult-and-mysticism
+    event_sanskrit: Tantra-Mantra
+    primary_houses: [bhava.8]
+    secondary_houses: [bhava.12, bhava.5]
+    karaka: graha.ketu
+    description: "Occult sciences, tantric practice, mystical experiences, hidden knowledge"
+    bhava_notes: "8th is hidden knowledge; 12th is spiritual liberation; 5th is mantra"
+    confidence: high
+
+  - event: art-and-creativity
+    event_sanskrit: Kala-Srishti
+    primary_houses: [bhava.5]
+    secondary_houses: [bhava.3, bhava.4]
+    karaka: graha.shukra
+    description: "Creative expression, artistic talent, romance, speculation"
+    bhava_notes: "5th is creativity; 3rd is communication arts; 4th is artistic comfort"
+    confidence: high
+
+  - event: social-status
+    event_sanskrit: Yashas-Kirti
+    primary_houses: [bhava.10]
+    secondary_houses: [bhava.1, bhava.2]
+    karaka: graha.surya
+    description: "Social standing, public reputation, honor, recognition"
+    bhava_notes: "10th is public status; 1st is self-presentation; 2nd is family reputation"
+    confidence: high
+
+  - event: gambling-and-speculation
+    event_sanskrit: Vyaja-Jua
+    primary_houses: [bhava.5, bhava.8]
+    secondary_houses: [bhava.2, bhava.11]
+    karaka: graha.rahu
+    description: "Gambling, stock market, lottery, risky investments"
+    bhava_notes: "5th is speculation; 8th is sudden gains; 2nd is wealth; 11th is income"
+    confidence: high
+
+  - event: pets-and-animals
+    event_sanskrit: Pashu-Pakshi
+    primary_houses: [bhava.6]
+    secondary_houses: [bhava.12]
+    karaka: graha.ketu
+    description: "Domestic animals, pets, animal husbandry, veterinary matters"
+    bhava_notes: "6th is service to animals; 12th is animal shelters, animal liberation"
+    confidence: medium
+
+  - event: enemies-and-competition
+    event_sanskrit: Shatru
+    primary_houses: [bhava.6]
+    secondary_houses: [bhava.3, bhava.8]
+    karaka: graha.shani
+    description: "Active enemies, competitive rivals, hidden adversaries"
+    bhava_notes: "6th is open enemies; 3rd is rivals; 8th is hidden enemies"
+    confidence: high
+
+  - event: litigation-and-legal-matters
+    event_sanskrit: Vyavahara
+    primary_houses: [bhava.6]
+    secondary_houses: [bhava.7, bhava.8]
+    karaka: graha.shani
+    description: "Court cases, legal disputes, divorce, contractual conflicts"
+    bhava_notes: "6th is disputes; 7th is marriage/partnership disputes; 8th is hidden legal matters"
+    confidence: high
+
+  - event: debt-and-financial-obligations
+    event_sanskrit: Rina
+    primary_houses: [bhava.6]
+    secondary_houses: [bhava.2, bhava.11]
+    karaka: graha.shani
+    description: "Loans, mortgages, financial obligations, karmic debts"
+    bhava_notes: "6th is debt; 2nd is wealth; 11th is repayment through gains"
+    confidence: high
+
+  - event: losses-and-expenditure
+    event_sanskrit: Vyaya-Hani
+    primary_houses: [bhava.12]
+    secondary_houses: [bhava.6]
+    karaka: graha.ketu
+    description: "Financial losses, wasteful expenditure, charitable giving"
+    bhava_notes: "12th is expenditure; 6th is losses through enemies/disease"
+    confidence: high
+
+  - event: hospitalization
+    event_sanskrit: Bhishagya
+    primary_houses: [bhava.12]
+    secondary_houses: [bhava.6, bhava.8]
+    karaka: graha.shani
+    description: "Hospitalization, long-term medical care, confinement"
+    bhava_notes: "12th is hospitalization; 6th is disease; 8th is chronic conditions"
+    confidence: high
+
+  - event: imprisonment
+    event_sanskrit: Bandhana
+    primary_houses: [bhava.12]
+    secondary_houses: [bhava.6, bhava.8]
+    karaka: graha.shani
+    description: "Confinement, imprisonment, restrictions, detention"
+    bhava_notes: "12th is confinement; 6th is legal issues; 8th is hidden punishments"
+    confidence: medium
+
+  - event: research-and-investigation
+    event_sanskrit: Anusandhana
+    primary_houses: [bhava.8]
+    secondary_houses: [bhava.5, bhava.12]
+    karaka: graha.ketu
+    description: "Research activities, deep investigation, discovery"
+    bhava_notes: "8th is hidden knowledge; 5th is intelligence; 12th is solitary research"
+    confidence: high
+
+  - event: religious-rituals
+    event_sanskrit: Anushtana
+    primary_houses: [bhava.9]
+    secondary_houses: [bhava.5, bhava.12]
+    karaka: graha.guru
+    description: "Religious ceremonies, yajna, puja, sacred observances"
+    bhava_notes: "9th is dharma and rituals; 5th is mantras; 12th is secluded worship"
+    confidence: high
+
+  - event: inheritance
+    event_sanskrit: Daayam
+    primary_houses: [bhava.8, bhava.2]
+    secondary_houses: [bhava.11]
+    karaka: graha.shani
+    description: "Inherited property, ancestral wealth, legacies, wills"
+    bhava_notes: "8th is others' wealth; 2nd is family wealth; 11th is gains"
+    confidence: high
+
+  - event: insurance
+    event_sanskrit: Bima
+    primary_houses: [bhava.8]
+    secondary_houses: [bhava.6, bhava.12]
+    karaka: graha.shani
+    description: "Insurance claims, protection policies, indemnity"
+    bhava_notes: "8th is others' money; 6th is service/protection; 12th is losses covered"
+    confidence: high
+
+bhava_event_matrix:
+  - bhava: bhava.1
+    events: [self-identity, health-and-disease]
+    key_karaka: graha.surya
+  - bhava: bhava.2
+    events: [family-of-origin, wealth-accumulation, income-and-gains]
+    key_karaka: graha.guru
+  - bhava: bhava.3
+    events: [siblings, travel]
+    key_karaka: graha.mangala
+  - bhava: bhava.4
+    events: [mother-and-home, property-and-vehicles, education]
+    key_karaka: graha.chandra
+  - bhava: bhava.5
+    events: [children, education, art-and-creativity, gambling-and-speculation]
+    key_karaka: graha.guru
+  - bhava: bhava.6
+    events: [health-and-disease, obstacles-and-litigation, enemies-and-competition, pets-and-animals, debt-and-financial-obligations]
+    key_karaka: graha.shani
+  - bhava: bhava.7
+    events: [marriage, partnership, sex-and-intimacy]
+    key_karaka: graha.shukra
+  - bhava: bhava.8
+    events: [longevity, death-and-transformation, inheritance, research-and-investigation, occult-and-mysticism, gambling-and-speculation]
+    key_karaka: graha.shani
+  - bhava: bhava.9
+    events: [father-and-fortune, spirituality, religious-rituals]
+    key_karaka: graha.guru
+  - bhava: bhava.10
+    events: [career, social-status]
+    key_karaka: graha.surya
+  - bhava: bhava.11
+    events: [income-and-gains]
+    key_karaka: graha.guru
+  - bhava: bhava.12
+    events: [liberation, foreign-settlement, losses-and-expenditure, hospitalization, imprisonment]
+    key_karaka: graha.ketu
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapters 16-27 (Bhava descriptions) and Chapter 33 (Karaka)"
+    confidence: high
+
+notes: |
+  This catalogue maps life events to their governing houses and natural karakas.
+  It serves as a cross-reference tool for chart interpretation.
+
+  Key principles:
+  1. Each life event has primary (strongest) and secondary (supporting) houses
+  2. The natural karaka graha provides additional signification
+  3. Multiple houses contribute to any single life event
+  4. House placement of karaka grahas modifies the event outcome
+  5. Transit and dasha periods activate specific life events
+
+  Usage in chart reading:
+  1. Identify the life event in question
+  2. Check primary and secondary houses for supporting/afflicting grahas
+  3. Examine the natural karaka graha's placement, conjunctions, and aspects
+  4. Consider dasha-bhukti periods for timing
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with house-to-life-event mapping from BPHS"
+    author: "Chief Jyotish Knowledge Architect"

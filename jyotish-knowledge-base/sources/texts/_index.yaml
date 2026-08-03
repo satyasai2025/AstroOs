@@ -1,0 +1,85 @@
+# Jyotish KB — Source Texts Index
+# 26 sources total
+
+sources:
+  - id: source.BPHS
+    file: BPHS.yaml
+    status: active
+  - id: source.brihat-jataka
+    file: brihat-jataka.yaml
+    status: active
+  - id: source.saravali
+    file: saravali.yaml
+    status: active
+  - id: source.phaladeepika
+    file: phaladeepika.yaml
+    status: active
+  - id: source.uttara-kalamrita
+    file: uttara-kalamrita.yaml
+    status: active
+  - id: source.jaimini-sutras
+    file: jaimini-sutras.yaml
+    status: active
+  - id: source.bhrigu-nandi-nadi
+    file: bhrigu-nandi-nadi.yaml
+    status: active
+  - id: source.lal-kitab
+    file: lal-kitab.yaml
+    status: active
+  - id: source.kp-system
+    file: kp-system.yaml
+    status: active
+  - id: source.tajika-nihanti
+    file: tajika-nihanti.yaml
+    status: active
+  - id: source.vishnu-dharmottara
+    file: vishnu-dharmottara.yaml
+    status: active
+  - id: source.matansa
+    file: matansa.yaml
+    status: active
+  - id: source.yavana-jataka
+    file: yavana-jataka.yaml
+    status: active
+  - id: source.BPHS-raman
+    file: BPHS-raman.yaml
+    status: active
+  - id: source.BPHS-sanjay-rath
+    file: BPHS-sanjay-rath.yaml
+    status: active
+  - id: source.brihat-jataka-raman
+    file: brihat-jataka-raman.yaml
+    status: active
+  - id: source.saravali-raman
+    file: saravali-raman.yaml
+    status: active
+  - id: source.phaladeepika-raman
+    file: phaladeepika-raman.yaml
+    status: active
+  - id: source.uttara-kalamrita-raman
+    file: uttara-kalamrita-raman.yaml
+    status: active
+  - id: source.jaimini-sutras-sharma
+    file: jaimini-sutras-sharma.yaml
+    status: active
+  - id: source.lal-kitab-urmila
+    file: lal-kitab-urmila.yaml
+    status: active
+  - id: source.kp-reader
+    file: kp-reader.yaml
+    status: active
+  - id: source.tajika-raman
+    file: tajika-raman.yaml
+    status: active
+  - id: source.somanatha-commentary
+    file: somanatha-commentary.yaml
+    status: active
+  - id: source.arabian-hora
+    file: arabian-hora.yaml
+    status: active
+  - id: source.jaimini-upadesha-sutras
+    file: jaimini-upadesha-sutras.yaml
+    status: active
+  - id: source.traditional
+    file: traditional.yaml
+    status: active

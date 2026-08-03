@@ -1,0 +1,99 @@
+# catalogues/nakshatras/ashvini.yaml
+
+id: nakshatra.ashvini
+name: Ashvini
+aliases:
+  - Ashwini
+  - अश्विनी
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Ashvinī
+devanagari: अश्विनी
+meaning: "The horsewomen; the winners"
+
+ruler:
+  ref: graha.ketu
+  system: vimshottari
+
+deity:
+  name: Ashwini Kumaras
+  description: The divine twin physicians of the gods, swift riders who bring healing and rejuvenation
+  attributes:
+    - healing
+    - speed
+    - medicine
+    - rejuvenation
+
+shakti:
+  name: Shakti
+  meaning: "to reach quickly"
+  power: "the power to heal and bestow speed and swift recovery"
+
+star:
+  name: Sheratan
+  alt_name: Mesarthim
+
+starting_degree: 0.000
+ending_degree: 13.333
+rashi_span:
+  - ref: rashi.mesham
+
+padas:
+  - pada: 1
+    degrees: "0°00' - 3°20'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.mesham
+  - pada: 2
+    degrees: "3°20' - 6°40'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.vrishabham
+  - pada: 3
+    degrees: "6°40' - 10°00'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.mithunam
+  - pada: 4
+    degrees: "10°00' - 13°20'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.karkam
+
+nature:
+  temperament: Quick, healing
+  guna: sattvic
+  gana: deva
+  yoni: horse
+  nadi: adi
+
+karakatvas:
+  - concept: Healing and medicine
+  - concept: Speed and swiftness
+  - concept: New beginnings
+  - concept: Pioneering spirit
+
+compatible_nakshatras:
+  - ref: nakshatra.ashvini
+  - ref: nakshatra.mrigashira
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Ashvini is the first nakshatra, ruled by Ketu, presided over by the Ashwini Kumaras"
+    confidence: high
+
+notes: >
+  Ashvini is the first nakshatra, spanning the opening 13°20' of Mesha.
+  Ruled by Ketu in the Vimshottari system, it is presided over by the
+  Ashwini Kumaras, the twin divine physicians known for their speed and
+  healing abilities. All four padas fall within Mesha with navamsha
+  progression through Mesha-Vrishabha-Mithuna-Karka. As a deva-gana,
+  sattvic nakshatra with a quick temperament, it bestows pioneering
+  energy, healing gifts, and the capacity for swift action.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

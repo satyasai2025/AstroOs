@@ -1,0 +1,63 @@
+# ontology/glossary/ayanamsa.yaml
+
+id: term.ayanamsa
+name: Ayanāṃśa
+aliases:
+  - Ayanamsa
+  - Precessional Offset
+  - अयनांश
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    ayanāṃśa — from ayana (precession, solstice) + aṃśa
+    (portion, degree). The angular difference between the
+    tropical (sayana) and sidereal (nirayana) zodiacs.
+  english: >
+    The precessional offset between the tropical zodiac
+    (based on the vernal equinox) and the sidereal zodiac
+    (fixed to the stars). Jyotisha uses the sidereal system,
+    so the ayanamsa value is subtracted from tropical
+    planetary positions to obtain sidereal positions.
+  technical: >
+    The ayanamsa increases by approximately 50.3 arcseconds
+    per year due to axial precession. Multiple ayanamsa
+    values exist (Lahiri, Raman, KP, etc.); Lahiri is the
+    official standard in India. The choice of ayanamsa
+    affects all graha positions and thus the entire chart.
+
+usage:
+  primary: "Conversion of tropical planetary positions to sidereal for chart computation"
+  secondary: "Determination of the current sidereal epoch for nakshatra calculation"
+
+related_concepts:
+  - ref: term.rashi
+    relationship: "Rashi positions depend on the ayanamsa used — choice of ayanamsa shifts all sign placements"
+  - ref: term.nakshatra
+    relationship: "Nakshatra boundaries also shift with ayanamsa, affecting pada calculations"
+  - ref: term.gochara
+    relationship: "Transit positions are computed sidereally using the chosen ayanamsa"
+
+sources:
+  - ref: source.BPHS
+    chapter: 1
+    verse: 7-8
+    claim: "The zodiac is defined from Ashvini onward — implying a fixed sidereal frame"
+    confidence: high
+
+notes: >
+  BPHS does not explicitly define an ayanamsa value; it
+  assumes a sidereal zodiac. The ayanamsa controversy
+  (Lahiri vs. Raman vs. Yukteshwar vs. True Chitra) is a
+  modern debate. Lahiri is the government-standard ayanamsa
+  used by the Indian Panchangam.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

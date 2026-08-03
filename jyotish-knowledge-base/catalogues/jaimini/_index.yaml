@@ -1,0 +1,252 @@
+id: jaimini._index
+name: "Jaimini System Index"
+category: jaimini
+status: active
+confidence: high
+version: 1.3
+last_verified: 2026-07-16
+
+description: |
+  Index of all Jaimini-system records catalogued in the Jyotish
+  Knowledge Base. The Jaimini system is a distinct tradition of
+  Jyotish astrology, attributed to the sage Jaimini, that operates
+  on principles different from the Parashari system. Key
+  distinguishing features include:
+  - Chara Karaka system (dynamic significators based on degrees)
+  - Rashi-based dasha systems (Chara Dasha)
+  - Rashi drishti (sign-level aspects rather than graha aspects)
+  - Karakamsha chart (soul-purpose analysis)
+  - Argala (intervention/obstruction mechanics)
+
+records:
+  - id: jaimini.karakamsha.chart
+    name: Karakamsha Chart
+    type: divisional-chart
+    file: karakamsha.yaml
+    description: >
+      The chart where the Atmakaraka's D-9 position becomes the
+      Lagna. Reveals soul purpose and karmic direction.
+    source: "Jaimini Sutras Ch.1"
+
+  - id: jaimini.chara-dasha.rules
+    name: Chara Dasha Viddhi
+    type: dasha-rules
+    file: chara-dasha-rules.yaml
+    description: >
+      Detailed rules for the Chara Dasha system: variable-length
+      rashi periods (movable 2yr, fixed 5yr, dual 7yr) starting
+      from the Atmakaraka.
+    source: "Jaimini Sutras Ch.2"
+
+  - id: jaimini.rashi-drishti.complete
+    name: Jaimini Rashi Drishti Purna
+    type: aspect-table
+    file: jaimini-aspects.yaml
+    description: >
+      Complete rashi-to-rashi aspect table. Movable aspects fixed
+      (non-adjacent), fixed aspects movable, dual aspects dual.
+    source: "Jaimini Sutras Ch.2"
+
+  - id: jaimini.chara-karakas.system
+    name: Chara Karaka Paddhati
+    type: karaka-system
+    file: jaimini-karakas.yaml
+    description: >
+      The Chara Karaka system: 8 dynamic significators (AK through
+      DK) determined by planetary degree positions.
+    source: "Jaimini Sutras Ch.1"
+
+  - id: jaimini.yogas.collection
+    name: Jaimini Yoga Samuha
+    type: yoga-collection
+    file: jaimini-yogas.yaml
+    description: >
+      Jaimini-specific yogas: Rajayoga from karaka conjunctions,
+      karakamsha lagna yogas, argala-based yogas.
+    source: "Jaimini Sutras"
+
+  - id: jaimini.chara-karaka-system
+    name: Chara Karaka System
+    type: karaka-system-overview
+    file: chara-karaka-system.yaml
+    description: >
+      Complete overview of the Chara Karaka system: 8 significators
+      (AK through DK) assigned by planetary degree ranking, with
+      rules and significance details.
+    source: "Jaimini Sutras Ch.1"
+
+  - id: jaimini.atmakaraka-role
+    name: Atmakaraka Role in Jaimini
+    type: karaka-role-analysis
+    file: atmakaraka-role.yaml
+    description: >
+      Detailed analysis of the Atmakaraka (AK): house placement
+      effects, dignity effects, and key principles governing its
+      role as the soul significator.
+    source: "Jaimini Sutras Ch.1"
+
+  - id: jaimini.chara-karaka-effects
+    name: Chara Karaka Effects by Graha
+    type: karaka-effects-table
+    file: chara-karaka-effects.yaml
+    description: >
+      Effects when each of the 9 grahas occupies a chara karaka
+      role (AK through DK). Covers natural quality interactions
+      with karaka significations.
+    source: "Jaimini Sutras Ch.1"
+
+  - id: jaimini.chara-dasha-system
+    name: Chara Dasha System
+    type: dasha-system-overview
+    file: chara-dasha-system.yaml
+    description: >
+      Overview of the Chara Dasha system: rashi-based dasha
+      periods assigned based on position from the Atmakaraka's
+      sign, with counting direction determined by sign parity.
+    source: "Jaimini Sutras Ch.2"
+
+  - id: jaimini.chara-dasha-calculator
+    name: Chara Dasha Calculation Method
+    type: dasha-calculation-guide
+    file: chara-dasha-calculator.yaml
+    description: >
+      Step-by-step calculation method for Chara Dasha periods,
+      including direction rules, counting mechanics, and worked
+      example with AK in Mesha.
+    source: "Jaimini Sutras Ch.2"
+
+  - id: jaimini.chara-dasha-effects
+    name: Chara Dasha Period Effects
+    type: dasha-effects-table
+    file: chara-dasha-effects.yaml
+    description: >
+      General effects of Chara Dasha periods for all 12 rashis
+      as dasha lords, covering positive outcomes, negative
+      tendencies, and karaka energy themes.
+    source: "Jaimini Sutras Ch.2"
+
+  - id: jaimini.rashi-drishti
+    name: Rashi Drishti (Sign Aspects)
+    type: aspect-table
+    file: rashi-drishti.yaml
+    description: >
+      Rashi Drishti system: 5 aspects per sign (7th, 2nd, 12th,
+      4th, 8th) with aspect strength hierarchy (strongest to weakest).
+    source: "Jaimini Sutras Ch.2"
+
+  - id: jaimini.arudha-padas
+    name: Arudha Pada System
+    type: arudha-system
+    file: arudha-padas.yaml
+    description: >
+      Reflected house positions (A1-A12) showing how the world
+      perceives each life area. Includes calculation method and
+      special rules for same-house fallback.
+    source: "Jaimini Sutras"
+
+cross_references_to_other_systems:
+  parashari_companions:
+    - ref: dasha.chara
+      relationship: >
+        General Chara Dasha entry in the dasha catalogue. The
+        jaimini.chara-dasha.rules entry provides detailed
+        Jaimini-specific rules with expanded mechanics.
+    - ref: aspect.rashi-drishti.rules
+      relationship: >
+        General rashi drishti rules entry. The
+        jaimini.rashi-drishti.complete provides the full
+        Jaimini-system complete reference.
+    - ref: aspect.rashi-drishti.table
+      relationship: >
+        Earlier rashi drishti table. The
+        jaimini.rashi-drishti.complete provides the expanded
+        Jaimini-specific version.
+    - ref: karaka.graha.karakatvas
+      relationship: >
+        Naisargika (natural) karakas from BPHS. Distinct from
+        the Chara Karaka system. Both are used together for
+        comprehensive analysis.
+
+  related_entries:
+    - ref: yogas.raja.*
+      relationship: >
+        Parashari Rajayoga entries. Jaimini Rajayogas (from
+        jaimini.yogas.collection) operate on different principles.
+    - ref: bhava.*
+      relationship: >
+        Bhava (house) entries provide the framework for interpreting
+        graha placements within the Jaimini system.
+    - ref: graha.*
+      relationship: >
+        Graha entries provide the base characteristics of planets
+        that are then assigned chara karaka roles in Jaimini.
+
+system_overview: |
+  The Jaimini system, as documented in these five core records,
+  operates on the following principles:
+
+  1. KARAKA (Significator): The chara karaka system assigns life-area
+     significations dynamically based on planetary degrees. AK
+     (Atmakaraka) is the primary karaka.
+
+  2. KARAKAMSHA (Soul Chart): The AK's D-9 position becomes the
+     Lagna of a special chart for soul-level analysis.
+
+  3. DASHA (Timing): Chara Dasha uses rashi-based periods with
+     variable durations based on sign nature, starting from the AK.
+
+  4. DRISHTI (Aspect): Rashi drishti creates sign-to-sign aspect
+     relationships independent of graha placement.
+
+  5. YOGA (Combination): Jaimini yogas arise from karaka
+     conjunctions, Karakamsha configurations, and argala mechanics.
+
+  These five pillars work together: the karaka system identifies
+  which grahas signify which life areas; the Karakamsha chart
+  provides soul-level context; Chara Dasha times events; rashi
+  drishti creates structural relationships; and Jaimini yogas
+  indicate specific outcomes.
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras — the foundational text of the Jaimini system,
+      attributed to the sage Jaimini. Chapters 1 and 2 provide the
+      core principles documented in these catalogue entries.
+    confidence: high
+
+notes: |
+  This index covers the core pillars of the Jaimini system
+  as documented in the Jaimini Sutras. The catalogue now includes
+  13 records spanning karaka system, dasha system, aspects (rashi
+  drishti), yogas, arudha padas, and soul-chart analysis. Additional
+  Jaimini concepts (such as Karakamsha bhava analysis, Argala
+  detailed mechanics, Upapada Lagna, and specific conditional rules)
+  may be added in future catalogue entries.
+
+  The Jaimini system is meant to be used alongside, not instead of,
+  the Parashari system. Both traditions complement each other and
+  a comprehensive Jyotish analysis typically incorporates both
+  frameworks.
+
+  IMPORTANT: These records are Jaimini-system specific. They do
+  NOT mix with Parashari principles. Each record cites Jaimini
+  Sutras as its primary source.
+
+history:
+  - version: 1.3
+    date: 2026-07-16
+    change: "Added Rashi Drishti and Arudha Pada deep-dive entries"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.2
+    date: 2026-07-16
+    change: "Added Chara Dasha deep-dive entries: system overview, calculation method, and period effects"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.1
+    date: 2026-07-16
+    change: "Added Chara Karaka deep-dive entries: system overview, Atmakaraka role, and per-graha effects"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue index — 5 core Jaimini system records indexed"
+    author: "Chief Jyotish Knowledge Architect"

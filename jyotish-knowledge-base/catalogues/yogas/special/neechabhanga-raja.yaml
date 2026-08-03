@@ -1,0 +1,43 @@
+id: yoga.special.neechabhanga-raja
+name: Neechabhanga Raja Yoga
+aliases: ["Cancellation of Debilitation Yoga"]
+category: yoga
+type: special
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "A debilitated planet's debilitation is cancelled through one or more of multiple classical conditions, thereby producing a raja yoga"
+      entity: yoga.special.neechabhanga-raja
+      role: subject
+      notes: "The primary cancellation conditions are: (1) Lord of the debilitation sign is in Kendra from Lagna or Moon; (2) Lord of the debilitation sign is in Kendra from the debilitated planet; (3) The planet debilitated in Navamsha is in exaltation in Rashi chart; (4) The debilitated planet is exalted in the Vargottama or divisional chart; (5) The debilitated planet is aspected by or conjoined with the lord of its exaltation sign; (6) The debilitated planet is aspected by or conjoined with a planet that is in Kendra from the Lagna lord. Multiple conditions strengthen the cancellation."
+
+effects:
+  positive:
+    - "Transformation from weakness to strength"
+    - "Unusual path to success and achievement"
+    - "Rise after initial setbacks"
+    - "Powerful results equivalent to a raja yoga"
+    - "Success through overcoming adversity"
+    - "Greater appreciation of achievement due to early struggles"
+  negative:
+    - "Initial period of struggle and difficulty before results manifest"
+    - "If cancellation is partial, mixed results"
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 2
+    verse: null
+
+notes: "One of the most nuanced concepts in Jyotish. The principle is that a debilitated planet is not always negative - when its debilitation is cancelled (Neechabhanga), the planet can actually produce results superior to an undignified planet. BPHS chapter 2 discusses debilitation and its cancellation extensively. The cancellation must be checked carefully across multiple conditions. When multiple cancellation conditions are met, the resulting yoga is more powerful. This yoga demonstrates the Jyotish principle that weakness and strength are relative, not absolute."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

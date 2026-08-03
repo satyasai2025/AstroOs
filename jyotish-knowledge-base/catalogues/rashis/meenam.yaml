@@ -1,0 +1,87 @@
+# catalogues/rashis/meenam.yaml
+
+id: rashi.meenam
+name: Meenam
+aliases:
+  - Pisces
+  - Meena
+  - मीन
+category: rashi
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Mīna
+devanagari: मीन
+meaning: "The fish; the fishes"
+element: water
+quality: dual
+gender: female
+
+ruler:
+  ref: graha.guru
+  notes: Traditional Parashari rulership of Meena
+
+tattva_lord:
+  element: water
+  lord: graha.shukra
+  notes: Shukra is the lord of the water element (Jala Tattva)
+
+degree_span:
+  start: 330
+  end: 360
+
+body_part: Feet
+direction: North
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.purvabhadrapada
+    padas: [4]
+    degrees: "330°00' - 333°20'"
+  - nakshatra: nakshatra.uttarabhadrapada
+    padas: [1, 2, 3, 4]
+    degrees: "333°20' - 346°40'"
+  - nakshatra: nakshatra.revati
+    padas: [1, 2, 3, 4]
+    degrees: "346°40' - 360°00'"
+
+properties:
+  temperament: Compassionate, spiritual, intuitive
+  motivation: moksha
+  symbol: Fish
+
+karakatvas:
+  - concept: Compassion and empathy
+  - concept: Spirituality and transcendence
+  - concept: Imagination and creativity
+
+compatible_with:
+  - ref: rashi.karkam
+  - ref: rashi.vrishchikam
+incompatible_with:
+  - ref: rashi.kanyam
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Meena as a Dvisvabhava (dual), Sama (level), and Jala (water) sign ruled by Guru"
+    confidence: high
+
+notes: >
+  Meena is the twelfth and final sign of the zodiac, governing
+  spirituality, dissolution, and transcendental wisdom. As a dual
+  water sign, it embodies compassion, deep intuition, and a connection
+  to the collective unconscious. Natives born under Meena are said to
+  be empathetic, artistic, and spiritually inclined. The sign corresponds
+  to the feet (Pada) in the Kalapurusha correspondence of the zodiac
+  to the human body, completing the macrocosmic mapping.
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

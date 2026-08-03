@@ -1,0 +1,56 @@
+id: nakshatra.dhanishta
+name: Dhanishta
+aliases: [Dhanishta, धनिष्ठा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Dhanishta
+devanagari: धनिष्ठा
+meaning: "The Wealthiest; the Star of Symphony"
+ruler: { ref: graha.mangala, system: vimshottari }
+deity:
+  name: Vasus
+  description: "The Eight Elemental Gods of Light and Abundance; celestial beings of prosperity and elemental forces"
+  attributes: [abundance, elemental power, music, prosperity, celestial wealth]
+shakti:
+  name: Khyapayitri
+  meaning: "The power to give fame and abundance"
+  power: "To give abundance, fame, and symphonic harmony"
+star: { name: "Gamma Delphini" }
+starting_degree: 23.33
+ending_degree: 36.67
+rashi_span: [{ ref: rashi.makaram }, { ref: rashi.kumbham }]
+padas:
+  - { pada: 1, degrees: "23°20'-26°40' Makara", rashi: rashi.makaram, navamsha_rashi: rashi.dhanus }
+  - { pada: 2, degrees: "26°40'-30° Makara", rashi: rashi.makaram, navamsha_rashi: rashi.makaram }
+  - { pada: 3, degrees: "0°-3°20' Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.kumbham }
+  - { pada: 4, degrees: "3°20'-6°40' Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.meenam }
+nature:
+  temperament: "Musical and abundant; possesses the ability to create symphonic harmony and attract prosperity"
+  guna: rajasic
+  gana: deva
+  yoni: lion
+  nadis: adi
+karakatvas:
+  - { concept: "Music and rhythm" }
+  - { concept: "Abundance and wealth" }
+  - { concept: "Fame and recognition" }
+  - { concept: "Activity and dynamism" }
+  - { concept: "Symphonic harmony" }
+compatible_nakshatras:
+  - { ref: nakshatra.shravana }
+  - { ref: nakshatra.shatabhisha }
+  - { ref: nakshatra.rohini }
+incompatible_nakshatras:
+  - { ref: nakshatra.ashvini }
+  - { ref: nakshatra.bharani }
+  - { ref: nakshatra.krittika }
+sources:
+  - { ref: source.BPHS, claim: "Dhanishta is ruled by Mangala; deity is Vasus; Gana is Deva; Yoni is Lion; Nadi is Adi", confidence: high }
+  - { ref: source.BPHS, claim: "Dhanishta spans from 23°20' Makara to 6°40' Kumbha", confidence: high }
+notes: "Dhanishta is the nakshatra of abundance and music. The Vasus as deities represent the eight elemental powers of prosperity. This nakshatra is associated with drums, symphonic music, and the ability to attract wealth and fame."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

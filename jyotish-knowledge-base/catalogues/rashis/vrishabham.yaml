@@ -1,0 +1,82 @@
+# catalogues/rashis/vrishabham.yaml
+
+id: rashi.vrishabham
+name: Vrishabham
+aliases:
+  - Taurus
+  - वृषभ
+category: rashi
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Vṛṣabha
+devanagari: वृषभ
+meaning: "The bull"
+element: earth
+quality: fixed
+gender: female
+
+ruler:
+  ref: graha.shukra
+  notes: Traditional Parashari rulership of Vrishabha
+
+tattva_lord:
+  element: earth
+  lord: graha.budha
+  notes: Budha is the lord of the earth element (Prithvi Tattva)
+
+degree_span:
+  start: 30
+  end: 60
+
+body_part: Face
+direction: South
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.krittika
+    padas: [2, 3, 4]
+    degrees: "30°00' - 40°00'"
+  - nakshatra: nakshatra.rohini
+    padas: [1, 2, 3, 4]
+    degrees: "40°00' - 53°20'"
+  - nakshatra: nakshatra.mrigashira
+    padas: [1, 2]
+    degrees: "53°20' - 60°00'"
+
+properties:
+  temperament: Patient, stable, determined
+  motivation: artha
+  symbol: Bull
+
+karakatvas:
+  - concept: Material stability and possessions
+  - concept: Determination and endurance
+  - concept: Sensual pleasure and comfort
+
+compatible_with:
+  - ref: rashi.kanyam
+  - ref: rashi.makaram
+incompatible_with:
+  - ref: rashi.vrishchikam
+  - ref: rashi.meenam
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Vrishabha as a Sthira (fixed), Madhya (medium), and Mriga (animal) sign ruled by Shukra"
+    confidence: high
+
+notes: >
+  Vrishabha is the second sign of the zodiac, ruling material stability
+  and earthly pleasures. As a fixed earth sign, it embodies patience,
+  persistence, and a deep connection to the physical world. Natives born
+  under Vrishabha are said to be reliable, sensual, and deeply attached
+  to comfort and security. The sign corresponds to the face (Mukha) in
+  the Kalapurusha correspondence of the zodiac to the human body.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

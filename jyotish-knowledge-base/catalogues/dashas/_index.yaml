@@ -1,0 +1,103 @@
+id: dasha._index
+name: "Dasha Systems Index"
+category: dasha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+description: |
+  Index of all dasha (planetary period) systems catalogued in the
+  Jyotish Knowledge Base. Dasha systems are used for timing events
+  in a native's life by dividing time into periods ruled by different
+  grahas or rashis.
+
+systems:
+  - id: dasha.vimshottari
+    name: Vimshottari Dasha
+    type: nakshatra-dasha
+    total_years: 120
+    primary: true
+    source: "BPHS Ch.9"
+    notes: "Most widely used dasha system. Applicable to all births."
+
+  - id: dasha.ashtottari
+    name: Ashtottari Dasha
+    type: nakshatra-dasha
+    total_years: 108
+    primary: false
+    source: "BPHS Ch.9"
+    notes: "Conditional — used when birth occurs during Krishna Paksha."
+
+  - id: dasha.shodashottari
+    name: Shodashottari Dasha
+    type: nakshatra-dasha
+    total_years: 116
+    primary: false
+    source: "BPHS Ch.9"
+    notes: "Conditional — used during Shukla Paksha with specific nakshatra conditions."
+
+  - id: dasha.chara
+    name: Chara Dasha
+    type: rashi-dasha
+    total_years: variable
+    primary: false
+    source: "Jaimini Sutras Ch.2"
+    notes: "Jaimini system. Rashi-based with variable durations based on sign nature."
+
+  - id: dasha.narayana
+    name: Narayana Dasha
+    type: rashi-dasha
+    total_years: 12
+    primary: false
+    source: "BPHS Ch.9"
+    notes: "Rashi-based with 1-year duration per rashi. Starting point from 12th lord."
+
+classification:
+  by_type:
+    nakshatra-dasha:
+      - dasha.vimshottari
+      - dasha.ashtottari
+      - dasha.shodashottari
+    rashi-dasha:
+      - dasha.chara
+      - dasha.narayana
+
+  by_usage:
+    primary:
+      - dasha.vimshottari
+    conditional:
+      - dasha.ashtottari
+      - dasha.shodashottari
+    jaimini:
+      - dasha.chara
+    supplementary:
+      - dasha.narayana
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 9 — Primary source for Vimshottari, Ashtottari, Shodashottari, and Narayana Dasha systems."
+    confidence: high
+  - ref: source.jaimini-sutras
+    claim: "Jaimini Sutras, Chapter 2 — Primary source for Chara Dasha system."
+    confidence: high
+
+notes: |
+  This index contains the foundational dasha systems only. Additional
+  specialized dasha systems (such as Yogini Dasha, Kalachakra Dasha,
+  and others) may be added in future catalogue entries.
+
+  The Vimshottari system is the primary and most widely used dasha
+  system in Parashari Jyotish. Other systems serve as supplementary
+  or conditional alternatives for specific birth conditions or
+  analytical purposes.
+
+  All dasha calculations require accurate birth time. The quality
+  of dasha predictions depends on the accuracy of the birth chart
+  and the practitioner's understanding of graha interactions.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry — 5 foundational dasha systems indexed"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,56 @@
+id: nakshatra.purvabhadrapada
+name: Purvabhadrapada
+aliases: [Purva Bhadrapada, पूर्वभाद्रपदा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Purva Bhadrapada
+devanagari: पूर्वभाद्रपदा
+meaning: "The Earlier One of the Blessed Feet; the Scorching Pair"
+ruler: { ref: graha.guru, system: vimshottari }
+deity:
+  name: Aja Ekapada
+  description: "The One-Footed Goat; a fierce aspect of Rudra representing the intense transformative fire"
+  attributes: [fire, transformation, intensity, one-footed ascetic, fierce power]
+shakti:
+  name: Yajamana Udyamana
+  meaning: "The power to burn and transform"
+  power: "To burn and transform; to elevate through intense fire"
+star: { name: "Alpha Pegasi" }
+starting_degree: 20.0
+ending_degree: 33.33
+rashi_span: [{ ref: rashi.kumbham }, { ref: rashi.meenam }]
+padas:
+  - { pada: 1, degrees: "20°-23°20' Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.simham }
+  - { pada: 2, degrees: "23°20'-26°40' Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.kanyam }
+  - { pada: 3, degrees: "26°40'-30° Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.tulanam }
+  - { pada: 4, degrees: "0°-3°20' Meena", rashi: rashi.meenam, navamsha_rashi: rashi.vrishchikam }
+nature:
+  temperament: "Intense and fiery; possesses transformative power and spiritual fire"
+  guna: rajasic
+  gana: manushya
+  yoni: lion
+  nadis: antya
+karakatvas:
+  - { concept: "Fire and transformation" }
+  - { concept: "Spiritual intensity" }
+  - { concept: "Penance and asceticism" }
+  - { concept: "Destruction of impurities" }
+  - { concept: "Mystical experience" }
+compatible_nakshatras:
+  - { ref: nakshatra.shatabhisha }
+  - { ref: nakshatra.uttarabhadrapada }
+  - { ref: nakshatra.rohini }
+incompatible_nakshatras:
+  - { ref: nakshatra.ashvini }
+  - { ref: nakshatra.bharani }
+  - { ref: nakshatra.krittika }
+sources:
+  - { ref: source.BPHS, claim: "Purva Bhadrapada is ruled by Guru; deity is Aja Ekapada; Gana is Manushya; Yoni is Lion; Nadi is Antya", confidence: high }
+  - { ref: source.BPHS, claim: "Purva Bhadrapada spans from 20° Kumbha to 3°20' Meena", confidence: high }
+notes: "Purva Bhadrapada is the nakshatra of intense fire and transformation. Aja Ekapada as deity represents the fierce one-footed aspect of Rudra. This nakshatra is associated with spiritual intensity, penance, and the purifying fire of transformation."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

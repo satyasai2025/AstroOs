@@ -1,0 +1,100 @@
+# catalogues/nakshatras/pushya.yaml
+
+id: nakshatra.pushya
+name: Pushya
+aliases:
+  - Pooya
+  - पुष्य
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Puṣya
+devanagari: पुष्य
+meaning: "The nourisher; the flower"
+
+ruler:
+  ref: graha.shani
+  system: vimshottari
+
+deity:
+  name: Brihaspati
+  description: The guru of the gods, the divine teacher of wisdom, dharma, and spiritual nourishment
+  attributes:
+    - wisdom
+    - dharma
+    - teaching
+    - nourishment
+
+shakti:
+  name: Pushya
+  meaning: "to nourish"
+  power: "the power to nourish, to sustain and nurture all beings"
+
+star:
+  name: Asellus Australis
+  alt_name: Delta Cancri
+
+starting_degree: 80.000
+ending_degree: 93.333
+rashi_span:
+  - ref: rashi.karkam
+
+padas:
+  - pada: 1
+    degrees: "3°20' - 6°40'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.kanyam
+  - pada: 2
+    degrees: "6°40' - 10°00'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.tulanam
+  - pada: 3
+    degrees: "10°00' - 13°20'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.vrishchikam
+  - pada: 4
+    degrees: "13°20' - 16°40'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.dhanus
+
+nature:
+  temperament: Nourishing, protective
+  guna: sattvic
+  gana: deva
+  yoni: sheep
+  nadi: antya
+
+karakatvas:
+  - concept: Nourishment and sustenance
+  - concept: Spiritual nourishment
+  - concept: Dharma and righteousness
+  - concept: Devotion and generosity
+
+compatible_nakshatras:
+  - ref: nakshatra.pushya
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Pushya is the eighth nakshatra, ruled by Shani, presided over by Brihaspati"
+    confidence: high
+
+notes: >
+  Pushya is the eighth nakshatra, entirely within Karka (3°20' to
+  16°40'). Ruled by Shani in the Vimshottari system, it is presided
+  over by Brihaspati, the divine guru. Its shakti is the power to
+  nourish. All four padas reside in Karka with navamsha progression
+  through Kanya-Tula-Vrishchika-Dhanus. Considered one of the most
+  auspicious nakshatras, as a deva-gana, sattvic nakshatra with a
+  nourishing temperament, it bestows spiritual wisdom, protective
+  nurturing, and the capacity to sustain others on the dharmic path.
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed navamsha_rashi reference that used a non-canonical ID (rashi.tulam) instead of the canonical rashi.tulanam", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

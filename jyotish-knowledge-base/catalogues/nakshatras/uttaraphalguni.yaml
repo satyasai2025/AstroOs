@@ -1,0 +1,101 @@
+# catalogues/nakshatras/uttaraphalguni.yaml
+
+id: nakshatra.uttaraphalguni
+name: Uttara Phalguni
+aliases:
+  - Uthram
+  - उत्तर फाल्गुनी
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Uttara Phālgunī
+devanagari: उत्तर फाल्गुनी
+meaning: "The latter reddish one; the bed of restoration"
+
+ruler:
+  ref: graha.surya
+  system: vimshottari
+
+deity:
+  name: Aryaman
+  description: The god of patronage, kindness, and the bonds of hospitality and friendship
+  attributes:
+    - patronage
+    - friendship
+    - hospitality
+    - social bonds
+
+shakti:
+  name: Prasuyamana
+  meaning: "to patronize"
+  power: "the power of patronage, to bring people together through generous support"
+
+star:
+  name: Denebola
+  alt_name: Beta Leonis
+
+starting_degree: 133.333
+ending_degree: 150.000
+rashi_span:
+  - ref: rashi.simham
+  - ref: rashi.kanyam
+
+padas:
+  - pada: 1
+    degrees: "26°40' - 30°00'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.mesham
+  - pada: 2
+    degrees: "0°00' - 3°20'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.vrishabham
+  - pada: 3
+    degrees: "3°20' - 6°40'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.mithunam
+  - pada: 4
+    degrees: "6°40' - 10°00'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.karkam
+
+nature:
+  temperament: Generous, protective
+  guna: tamasic
+  gana: manushya
+  yoni: cow
+  nadi: adi
+
+karakatvas:
+  - concept: Patronage and generosity
+  - concept: Friendship and social bonds
+  - concept: Marriage and contracts
+  - concept: Financial security
+
+compatible_nakshatras:
+  - ref: nakshatra.uttaraphalguni
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Uttara Phalguni is the twelfth nakshatra, ruled by Surya, presided over by Aryaman"
+    confidence: high
+
+notes: >
+  Uttara Phalguni is the twelfth nakshatra, spanning from late Simha
+  into early Kanya (26°40' Simha to 10° Kanya). Ruled by Surya in
+  the Vimshottari system, it is presided over by Aryaman, the god of
+  patronage and social bonds. Its shakti is the power of patronage.
+  The first pada falls in Simha with Mesha navamsha; padas two through
+  four are in Kanya with Vrishabha-Mithuna-Karka navamsha. As a
+  manushya-gana, tamasic nakshatra with a generous and protective
+  temperament, it bestows the capacity for loyal patronage, stable
+  friendships, and protective generosity.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

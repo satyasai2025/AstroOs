@@ -1,0 +1,39 @@
+id: source.somanatha-commentary
+name: BPHS Somanatha Commentary
+aliases:
+  - Somanatha's BPHS Commentary
+  - Brihat Parashara Hora Shastra with Somanatha Commentary
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Parashara (original); Somanatha (commentator)
+date:
+  approximate: "~500-800 CE (original); ~1600 CE (commentary)"
+  confidence: medium
+language:
+  original: sa
+  translations:
+    - language: hi
+tradition: vedic
+
+edition:
+  editor: Somanatha
+  year: 1600
+  language: sa
+  notes: "Traditional Sanskrit commentary on BPHS, later published with Hindi translation."
+
+relationship_to_primary:
+  primary_text: source.BPHS
+  type: commentary
+  notes: "Classical Sanskrit commentary on the Brihat Parashara Hora Shastra by Somanatha."
+
+notes: "Somanatha's commentary is one of the few classical Sanskrit commentaries on BPHS. It is highly valued for its traditional interpretive approach and elucidation of Parashara's original verses. Later editions include Hindi translation alongside the original Sanskrit."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,87 @@
+# catalogues/rashis/makaram.yaml
+
+id: rashi.makaram
+name: Makaram
+aliases:
+  - Capricorn
+  - Makara
+  - मकर
+category: rashi
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Makara
+devanagari: मकर
+meaning: "The sea-monster; the crocodile"
+element: earth
+quality: cardinal
+gender: female
+
+ruler:
+  ref: graha.shani
+  notes: Traditional Parashari rulership of Makara
+
+tattva_lord:
+  element: earth
+  lord: graha.budha
+  notes: Budha is the lord of the earth element (Prithvi Tattva)
+
+degree_span:
+  start: 270
+  end: 300
+
+body_part: Knees
+direction: South
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.uttarashadha
+    padas: [2, 3, 4]
+    degrees: "270°00' - 280°00'"
+  - nakshatra: nakshatra.shravana
+    padas: [1, 2, 3, 4]
+    degrees: "280°00' - 293°20'"
+  - nakshatra: nakshatra.dhanishta
+    padas: [1, 2]
+    degrees: "293°20' - 300°00'"
+
+properties:
+  temperament: Disciplined, ambitious, pragmatic
+  motivation: artha
+  symbol: Crocodile
+
+karakatvas:
+  - concept: Discipline and ambition
+  - concept: Structure and organisation
+  - concept: Long-term achievement
+
+compatible_with:
+  - ref: rashi.vrishabham
+  - ref: rashi.kanyam
+incompatible_with:
+  - ref: rashi.karkam
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Makara as a Chara (movable), Pristhodara (creeping), and Mriga (animal) sign ruled by Shani"
+    confidence: high
+
+notes: >
+  Makara is the tenth sign of the zodiac, governing career, discipline,
+  and worldly achievement. As a cardinal earth sign, it embodies
+  ambition, pragmatism, and a methodical climb toward success. Natives
+  born under Makara are said to be disciplined, responsible, and
+  driven by a strong sense of duty. The sign corresponds to the knees
+  (Janu) in the Kalapurusha correspondence of the zodiac to the human
+  body. Makara exalts Mangala and is ruled by Shani.
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

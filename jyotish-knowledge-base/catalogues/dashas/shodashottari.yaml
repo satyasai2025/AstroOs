@@ -1,0 +1,76 @@
+id: dasha.shodashottari
+name: Shodashottari Dasha
+aliases: ["116-Year Dasha"]
+category: dasha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+type: nakshatra-dasha
+total_years: 116
+
+sequence:
+  - graha: graha.shukra
+    years: 20
+  - graha: graha.budha
+    years: 17
+  - graha: graha.guru
+    years: 16
+  - graha: graha.chandra
+    years: 12
+  - graha: graha.shani
+    years: 19
+  - graha: graha.mangala
+    years: 7
+  - graha: graha.surya
+    years: 6
+  - graha: graha.rahu
+    years: 18
+  - graha: graha.ketu
+    years: 1
+
+total_verification: |
+  20 + 17 + 16 + 12 + 19 + 7 + 6 + 18 + 1 = 116 years. Verified.
+
+calculation_method: |
+  Applicable when the birth occurs during Shukla Paksha (bright fortnight
+  of the Moon) AND specific nakshatra conditions are met.
+
+  The starting point is the nakshatra occupied by the Moon at birth.
+  The first dasha period begins from the lord of the Moon's nakshatra
+  and proceeds in the fixed sequence above.
+
+  The balance is calculated proportionally to the remaining padas of
+  the Moon's nakshatra, following the same Vimshottari-style methodology.
+
+antardasha: true
+pratyantardasha: false
+sub_period_calculation: |
+  Antardasha within each mahadasha follows the proportional method:
+
+    antardasha_years = (mahadasha_years * graha_years) / 116
+
+  The antardasha sequence starts from the mahadasha lord and proceeds
+  in the fixed Shodashottari order.
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 9 — Shodashottari Dasha is a 116-year cycle dasha system applicable under specific Shukla Paksha and nakshatra conditions."
+    confidence: high
+
+notes: |
+  Shodashottari Dasha is a conditional dasha system used when birth
+  occurs during Shukla Paksha (bright fortnight) with specific nakshatra
+  conditions. The total cycle is 116 years. This system is rarely used
+  in modern practice and is considered one of the supplementary dasha
+  systems described in classical texts.
+
+  The sequence is fixed and distinct from both Vimshottari and Ashtottari.
+  The starting graha depends on the lord of the Moon's nakshatra at birth.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,67 @@
+# ontology/glossary/upapada.yaml
+
+id: term.upapada
+name: Upapada
+aliases:
+  - Upapada
+  - Upapada Lagna
+  - UL
+  - उपपद
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    upapada — from upa (secondary, sub-) + pada (foot,
+    footprint). The arudha pada of the 12th bhava. The
+    "sub-footprint" or secondary pada that represents the
+    spouse and married life.
+  english: >
+    The arudha of the 12th house (A12), representing the
+    spouse, married life, and domestic partnership. The
+    upapada is calculated using the same arudha rules as
+    other padas but specifically from the 12th house and
+    its lord.
+  technical: >
+    Upapada is calculated as follows: take the lord of the
+    12th house, count the houses from the 12th to the lord's
+    position, then count the same number from the lord. The
+    resulting sign is the upapada lagna (UL). The upapada is
+    used extensively in Jaimini astrology for marriage
+    analysis, along with its associated signs: the upapada
+    pada (UL's own arudha), and the anupapada.
+
+usage:
+  primary: "Analysis of spouse, marriage, and domestic partnership in Jaimini astrology"
+  secondary: "Assessment of marital harmony and spouse's nature through UL placement"
+
+related_concepts:
+  - ref: term.arudha
+    relationship: "Upapada is a specific case of arudha — the arudha of the 12th house"
+  - ref: term.lagna
+    relationship: "Upapada lagna (UL) is distinct from the birth lagna and is used for marriage analysis"
+  - ref: term.bhava
+    relationship: "The 12th house (vyaya/moksha) is the base from which upapada is calculated"
+
+sources:
+  - ref: source.BPHS
+    chapter: 31
+    verse: 10-15
+    claim: "Dvādaśasya padaṃ proktaṃ — the pada of the 12th is declared"
+    confidence: high
+
+notes: >
+  The upapada is one of the most important padas in jyotisha.
+  In Jaimini astrology, the upapada lagna and its lord are
+  primary indicators for marriage and relationships. The
+  upapada is distinct from the arudha lagna (AL), which
+  represents the native's worldly image.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

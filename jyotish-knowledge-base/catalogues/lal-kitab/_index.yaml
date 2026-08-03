@@ -1,0 +1,48 @@
+id: lal-kitab.index
+name: Lal Kitab Catalogue Index
+aliases: ["Lal Kitab Records Index", "Red Book Index"]
+category: lal-kitab
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: lal-kitab
+statement: >
+  Complete index of all Lal Kitab system catalogue records in the
+  Jyotish Knowledge Base.
+
+records:
+  - id: lal-kitab.core.house-rules
+    file: lal-kitab-house-rules.yaml
+    topic: "House Significations"
+    description: "Lal Kitab fixed house significations, body-part associations, directional aspects"
+
+  - id: lal-kitab.core.remedies
+    file: lal-kitab-remedies.yaml
+    topic: "Remedies (Upayas)"
+    description: "Practical remedies for planetary afflictions — donations, gems, specific actions"
+
+  - id: lal-kitab.core.planetary-effects
+    file: lal-kitab-planetary-effects.yaml
+    topic: "Planetary Effects in Houses"
+    description: "Sitting-aspecting framework, non-fixed benefic/malefic classification, house-dynamic effects"
+
+sources:
+  - ref: source.lal-kitab
+    claim: "Lal Kitab foundational texts by Pandit Roop Chand Joshi"
+    confidence: high
+
+notes: >
+  Lal Kitab was authored by Pandit Roop Chand Joshi and first published in
+  1939 (Urdu) and 1941 (Hindi/Punjabi). Its three pillars are: (1) Fixed
+  house significations that differ from classical Jyotish, (2) A unique
+  sitting-aspecting planetary effect framework, and (3) Practical, accessible
+  remedies for everyday life. Lal Kitab is distinctive for its emphasis on
+  actionable solutions and its rejection of elaborate ritual requirements.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

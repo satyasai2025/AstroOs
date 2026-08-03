@@ -1,0 +1,137 @@
+id: aspect.summary.table
+name: Aspect Summary Table
+aliases:
+  - Master Aspect Reference
+  - Graha Aspect Table
+  - Drishti Summary
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: graha-drishti
+
+statement: >
+  Master reference listing all graha drishti (planetary aspects) for each
+  of the nine grahas. Each graha casts a 7th aspect universally. Three
+  grahas have additional special aspects: Guru (5th, 9th), Shani (3rd,
+  10th), and Mangala (4th, 8th). Rahu and Ketu follow the same special
+  aspect pattern as Guru (5th, 7th, 9th).
+
+conditions:
+  - entity: graha.any
+    role: subject
+    notes: >
+      Every graha casts at least the 7th aspect. The full set of aspects
+      for each graha is enumerated below.
+
+effects:
+  - description: >
+      Surya (Sun) — 7th aspect only. No special aspects.
+    intensity: moderate
+    notes: >
+      Surya aspects only the 7th house from his position. His aspect
+      carries the qualities of authority, vitality, and self-expression.
+
+  - description: >
+      Chandra (Moon) — 7th aspect only. No special aspects.
+    intensity: moderate
+    notes: >
+      Chandra aspects only the 7th house from her position. Her aspect
+      carries the qualities of emotion, receptivity, and nurturing.
+
+  - description: >
+      Mangala (Mars) — 4th, 7th, and 8th aspects. Two special aspects.
+    intensity: strong
+    notes: >
+      Mangala's special 4th aspect and special 8th aspect are additional
+      to the universal 7th aspect. His aspects carry the qualities of
+      energy, aggression, and assertion.
+
+  - description: >
+      Budha (Mercury) — 7th aspect only. No special aspects.
+    intensity: moderate
+    notes: >
+      Budha aspects only the 7th house from his position. His aspect
+      carries the qualities of intellect, communication, and analysis.
+
+  - description: >
+      Guru (Jupiter) — 5th, 7th, and 9th aspects. Two special aspects.
+    intensity: strong
+    notes: >
+      Guru's special 5th aspect and special 9th aspect are additional
+      to the universal 7th aspect. His aspects carry the qualities of
+      wisdom, expansion, and beneficence.
+
+  - description: >
+      Shukra (Venus) — 7th aspect only. No special aspects.
+    intensity: moderate
+    notes: >
+      Shukra aspects only the 7th house from her position. Her aspect
+      carries the qualities of beauty, luxury, harmony, and desire.
+
+  - description: >
+      Shani (Saturn) — 3rd, 7th, and 10th aspects. Two special aspects.
+    intensity: strong
+    notes: >
+      Shani's special 3rd aspect and special 10th aspect are additional
+      to the universal 7th aspect. His aspects carry the qualities of
+      discipline, restriction, and karmic consequence.
+
+  - description: >
+      Rahu (North Node) — 5th, 7th, and 9th aspects. Follows Guru pattern.
+    intensity: strong
+    notes: >
+      Rahu's special 5th and 9th aspects mirror Guru's pattern. Rahu
+      amplifies the desires and obsessions of the houses he aspects.
+      His aspects carry intensity and obsessive drive.
+
+  - description: >
+      Ketu (South Node) — 5th, 7th, and 9th aspects. Follows Guru pattern.
+    intensity: strong
+    notes: >
+      Ketu's special 5th and 9th aspects mirror Guru's pattern. Ketu
+      brings detachment, spirituality, and past-life karma to the
+      houses he aspects.
+
+exceptions:
+  - condition: >
+      The aspect pattern of Rahu and Ketu (5th, 7th, 9th) is identical
+      to Guru's special aspects but produces very different effects.
+    reason: >
+      Rahu is a malefic shadow graha while Guru is a natural benefic.
+      The same structural aspects produce opposite qualitative effects.
+
+  - condition: >
+      Surya, Chandra, Budha, and Shukra have no special aspects — their
+      influence is limited to the 7th aspect alone.
+    reason: >
+      BPHS Ch.2 reserves special aspects for Mangala, Guru, and Shani
+      only. The remaining grahas rely solely on the universal 7th aspect.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Complete enumeration
+      of all graha aspects — Surya and Chandra aspect 7th only;
+      Mangala aspects 4th, 7th, 8th; Budha aspects 7th only;
+      Guru aspects 5th, 7th, 9th; Shukra aspects 7th only;
+      Shani aspects 3rd, 7th, 10th. Rahu and Ketu are assigned
+      the same aspects as Guru by later commentators.
+    confidence: high
+
+notes: >
+  This table serves as the single master reference for all graha drishti
+  in the catalogue. For detailed analysis of each individual aspect, refer
+  to the specific records: graha-standard-aspects (7th), guru-special-aspects
+  (5th, 9th), shani-special-aspects (3rd, 10th), mangala-special-aspects
+  (4th, 8th), and rahu-ketu-aspects (5th, 7th, 9th). Argala rules modify
+  these primary aspects — see argala-rules. Aspect strength is governed by
+  the aspect strength hierarchy — see aspect-strength.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

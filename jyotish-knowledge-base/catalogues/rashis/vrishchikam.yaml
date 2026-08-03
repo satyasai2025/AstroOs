@@ -1,0 +1,83 @@
+# catalogues/rashis/vrishchikam.yaml
+
+id: rashi.vrishchikam
+name: Vrishchikam
+aliases:
+  - Scorpio
+  - Vrishchika
+  - वृश्चिक
+category: rashi
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Vṛścika
+devanagari: वृश्चिक
+meaning: "The scorpion"
+element: water
+quality: fixed
+gender: female
+
+ruler:
+  ref: graha.mangala
+  notes: Traditional Parashari rulership of Vrishchika
+
+tattva_lord:
+  element: water
+  lord: graha.shukra
+  notes: Shukra is the lord of the water element (Jala Tattva)
+
+degree_span:
+  start: 210
+  end: 240
+
+body_part: Reproductive organs
+direction: North
+
+nakshatra_mapping:
+  - nakshatra: nakshatra.vishakha
+    padas: [4]
+    degrees: "210°00' - 213°20'"
+  - nakshatra: nakshatra.anuradha
+    padas: [1, 2, 3, 4]
+    degrees: "213°20' - 226°40'"
+  - nakshatra: nakshatra.jyeshtha
+    padas: [1, 2, 3, 4]
+    degrees: "226°40' - 240°00'"
+
+properties:
+  temperament: Intense, secretive, transformative
+  motivation: moksha
+  symbol: Scorpion
+
+karakatvas:
+  - concept: Transformation and regeneration
+  - concept: Intensity and depth
+  - concept: Occult and hidden knowledge
+
+compatible_with:
+  - ref: rashi.karkam
+  - ref: rashi.meenam
+incompatible_with:
+  - ref: rashi.vrishabham
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes Vrishchika as a Sthira (fixed), Pristhodara (creeping), and Kitta (insect) sign ruled by Mangala"
+    confidence: high
+
+notes: >
+  Vrishchika is the eighth sign of the zodiac, governing depth,
+  transformation, and occult mysteries. As a fixed water sign, it
+  embodies intense emotional depth, secrecy, and a powerful
+  regenerative capacity. Natives born under Vrishchika are said to be
+  passionate, resourceful, and deeply perceptive. The sign corresponds
+  to the reproductive organs (Guhya) in the Kalapurusha correspondence
+  of the zodiac to the human body.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,102 @@
+# catalogues/bhavas/bhava-6.yaml
+
+id: bhava.6
+name: Ari Bhava
+aliases:
+  - 6th House
+  - Enemies House
+  - अरि भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Ari
+number: 6
+meaning: "Enemies; obstacles; disease"
+
+natural_karaka:
+  ref: graha.shani
+  notes: "Shani and Mangala are both natural karakas for enemies, disease, and obstacles"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana. A Dusthana — considered a difficult house"
+
+karakatvas:
+  classical:
+    - concept: Enemies (Ari)
+      source: source.BPHS
+    - concept: Debts and loans (Rina)
+      source: source.BPHS
+    - concept: Disease and health issues (Roga)
+      source: source.BPHS
+    - concept: Service and employment
+      source: source.BPHS
+    - concept: Litigation and disputes
+      source: source.BPHS
+  traditional:
+    - concept: Enemies
+    - concept: Debts
+    - concept: Disease
+    - concept: Service
+    - concept: Litigation
+
+conditions:
+  strong_when:
+    - Malefics placed here (Dusthana beneficial for malefics)
+    - Lord strong and well-placed
+    - Shani or Mangala strong
+  weak_when:
+    - Benefics placed in the 6th house
+    - Lord in enemy sign or debilitated
+    - Weak lord
+  afflicted_when:
+    - Benefics causing dhana sankata (obstruction of wealth)
+    - Afflicted lord in Dusthana
+
+effects:
+  positive:
+    - Victory over enemies and competitors
+    - Ability to repay debts and overcome disease
+    - Success in service and employment
+    - Skill in litigation and dispute resolution
+  negative:
+    - Chronic health issues and diseases
+    - Accumulation of debts
+    - Litigation and legal troubles
+    - Enemies and obstacles
+
+related_bhavas:
+  - bhava: 5
+    relationship: overcoming
+    notes: "The 5th from the 6th (bhava.10) shows how intelligence overcomes obstacles"
+  - bhava: 8
+    relationship: obstacles
+    notes: "The 8th from the 6th (bhava.1) shows transformation through adversity"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Enemies, debts, disease, service, and litigation are significations of the 6th house"
+    confidence: high
+
+notes: >
+  The 6th house (Ari Bhava) is a Dusthana (difficult house) and an
+  upachaya (growth) house. Matters of the 6th house improve over
+  time. Malefics are considered less harmful in the 6th house, and
+  a strong 6th house can give victory over enemies and success in
+  service. Benefics placed here can create dhana sankata —
+  obstruction of wealth. The 6th house also governs daily work,
+  health regimens, and maternal uncles.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

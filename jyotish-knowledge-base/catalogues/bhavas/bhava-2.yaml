@@ -1,0 +1,101 @@
+# catalogues/bhavas/bhava-2.yaml
+
+id: bhava.2
+name: Dhana Bhava
+aliases:
+  - 2nd House
+  - Wealth House
+  - धन भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Dhana
+number: 2
+meaning: "Wealth; possessions; family; sustenance"
+
+natural_karaka:
+  ref: graha.guru
+  notes: "Guru is the natural karaka for wealth and prosperity"
+
+marakasthana:
+  is_maraka: true
+  universal: true
+  notes: "The 2nd house is a universal marakasthana (house of killing) along with the 7th"
+
+karakatvas:
+  classical:
+    - concept: Wealth and possessions (Dhana)
+      source: source.BPHS
+    - concept: Family and speech (Vak)
+      source: source.BPHS
+    - concept: Food and sustenance
+      source: source.BPHS
+    - concept: Right eye
+      source: source.BPHS
+  traditional:
+    - concept: Wealth
+    - concept: Family
+    - concept: Speech
+    - concept: Food
+    - concept: Right eye
+
+conditions:
+  strong_when:
+    - Lord placed in Kendra or Trikona
+    - Strong benefic aspect on the house
+    - Well-placed natural karaka (Guru)
+  weak_when:
+    - Lord placed in Dusthana (6, 8, 12)
+    - Afflicted by malefics
+    - Weak or combust lord
+  afflicted_when:
+    - Malefics occupying the 2nd house
+    - Lord in enemy sign or debilitated
+    - Afflicted by papa kartari
+
+effects:
+  positive:
+    - Wealth accumulation and financial prosperity
+    - Harmonious family relationships
+    - Eloquent and truthful speech
+    - Good eyesight and healthy appearance
+  negative:
+    - Financial losses and debts
+    - Family discord and disputes
+    - Speech defects or harsh speech
+    - Eye-related health issues
+
+related_bhavas:
+  - bhava: 1
+    relationship: support
+    notes: "The 2nd house from Lagna shows the material support for the self"
+  - bhava: 11
+    relationship: gains
+    notes: "The 11th from the 2nd (bhava.12) shows gains from wealth; 2nd from 11th (bhava.12) shows expenses"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: "Upapada Lagna is calculated from the 2nd house — the significator of marriage and family"
+
+sources:
+  - ref: source.BPHS
+    claim: "Dhana, family, speech, and right eye are significations of the 2nd house"
+    confidence: high
+
+notes: >
+  The 2nd house (Dhana Bhava) is primarily concerned with wealth,
+  family, and speech. As a marakasthana, it has the capacity to
+  indicate death, particularly when activated by its lord or a
+  maraka graha in dasha. Guru as natural karaka reinforces the
+  association with prosperity. The Upapada Lagna (UL) calculation
+  uses the 2nd house lord, linking this bhava to marriage and
+  family lineage.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

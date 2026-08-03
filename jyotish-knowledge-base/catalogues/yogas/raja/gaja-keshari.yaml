@@ -1,0 +1,40 @@
+id: yoga.raja.gaja-keshari
+name: Gaja Kesari Yoga
+aliases: ["Elephant-Lion Yoga"]
+category: yoga
+type: raja
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Jupiter is placed in a Kendra (1st, 4th, 7th, or 10th house) from the Moon"
+      entity: yoga.raja.gaja-keshari
+      role: subject
+      notes: "Jupiter must not be retrograde for the strongest results; combust Jupiter weakens but does not negate the yoga"
+
+effects:
+  positive:
+    - "Wealth and prosperity throughout life"
+    - "Strong reputation and social standing"
+    - "High intelligence and wisdom"
+    - "Command over elephants in the literal ancient context; authority and leadership in modern"
+    - "Recognition in one's field of work"
+  negative: []
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 2
+
+notes: "The name literally means 'Elephant-Lion' suggesting a person with the strength of an elephant and the regality of a lion. One of the most celebrated raja yogas. The yoga is strengthened when Jupiter is not debilitated or combust."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

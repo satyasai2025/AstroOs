@@ -1,0 +1,39 @@
+# catalogues/jaimini/_index.yaml
+id: index.jaimini
+domain: jaimini
+count: 10
+status: active
+version: 1.0
+last_verified: 2026-07-16
+
+records:
+  - id: jaimini.system-overview
+    name: Jaimini System Overview
+    status: active
+  - id: jaimini.chara-karaka-system
+    name: Chara Karaka System
+    status: active
+  - id: jaimini.atmakaraka-role
+    name: Atmakaraka's Role
+    status: active
+  - id: jaimini.chara-karaka-effects
+    name: Chara Karaka Effects
+    status: active
+  - id: jaimini.chara-dasha-system
+    name: Chara Dasha System
+    status: active
+  - id: jaimini.chara-dasha-calculator
+    name: Chara Dasha Calculator
+    status: active
+  - id: jaimini.chara-dasha-effects
+    name: Chara Dasha Effects
+    status: active
+  - id: jaimini.rashi-drishti
+    name: Rashi Drishti
+    status: active
+  - id: jaimini.karakamsha
+    name: Karakamsha Chart
+    status: active
+  - id: jaimini.arudha-padas
+    name: Arudha Padas
+    status: active

@@ -1,0 +1,40 @@
+id: source.lal-kitab-urmila
+name: Lal Kitab (Urmila Bhatia Translation)
+aliases:
+  - Lal Kitab Urmila Bhatia Edition
+  - Lal Kitab English Translation
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Roop Chand Joshi (original); Urmila Bhatia (translator)
+date:
+  approximate: "~1952 CE (original); 2010 (translation)"
+  confidence: high
+language:
+  original: hi
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: Urmila Bhatia
+  publisher: Sagar Publications
+  year: 2010
+  language: en
+  notes: "English translation of the Hindi Lal Kitab by Roop Chand Joshi."
+
+relationship_to_primary:
+  primary_text: source.lal-kitab
+  type: translation
+  notes: "First complete English translation of the Lal Kitab, making the work accessible to non-Hindi readers."
+
+notes: "Urmila Bhatia's English translation of the Lal Kitab (Red Book) is a landmark work that opened this influential but cryptic text to the global astrological community. The Lal Kitab system incorporates unique principles not found in classical Parashari astrology."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

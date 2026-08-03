@@ -1,0 +1,67 @@
+# ontology/glossary/necha.yaml
+
+id: term.necha
+name: Nīca
+aliases:
+  - Neecha
+  - Debilitation
+  - Debilitated
+  - नीच
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    nīca — from nīc (low, inferior, downward). Literally
+    "low, fallen, debilitated." The sign in which a graha is
+    at its weakest dignity, opposite its uchcha (exaltation)
+    sign.
+  english: >
+    The state of a planet's maximum weakness in dignity. Each
+    graha has a specific sign where it is debilitated (neecha):
+    Surya in Tula, Chandra in Vrishchika, Mangala in Karka,
+    Budha in Meena, Brihaspati in Makara, Shukra in Kanya,
+    Shani in Mesha, Rahu in Vrishabha, Ketu in Vrishchika.
+  technical: >
+    Neecha is the lowest rank in the eightfold dignity
+    hierarchy (bala). A graha in neecha loses much of its
+    positive capacity and may produce negative results for
+    its significations and the houses it rules. However,
+    neecha is modified by: neecha bhanga (cancellation of
+    debilitation) if certain conditions are met, and by
+    placement in kendra or trikona.
+
+usage:
+  primary: "Assessment of a graha's weakness and tendency to produce challenging results"
+  secondary: "Identification of neecha bhanga (cancellation) conditions for modified dignity"
+
+related_concepts:
+  - ref: term.uchcha
+    relationship: "Neecha is the opposite of uchcha — each graha's neecha sign is 180 degrees from its uchcha sign"
+  - ref: term.moolatrikona
+    relationship: "Moolatrikona represents the graha's natural seat, neecha its weakest position"
+  - ref: term.graha
+    relationship: "Each graha has a specific neecha sign that defines its point of lowest dignity"
+
+sources:
+  - ref: source.BPHS
+    chapter: 3
+    verse: 13-20
+    claim: "Nīcaṃ nīcaphalaṃ dadāti — debilitation gives low results"
+    confidence: high
+
+notes: >
+  Neecha is not always negative. A debilitated graha in a
+  kendra or owned by a strong lord can still produce good
+  results (neecha bhanga). The concept of neecha is part of
+  the graded dignity system and should be evaluated in
+  context with other strengths.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

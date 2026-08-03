@@ -1,0 +1,96 @@
+# ============================================================================
+# ASTRO OS — Transit (Gochara) Rules — Foundational Catalogue
+# ============================================================================
+# Source: BPHS Chapter 42 — Gochara Phaladhyaya
+# Scope: Basic gochara rules for all 9 grahas transiting 12 houses from Lagna
+# Note:  These are foundational transit rules only. No predictive interpretations
+#         beyond BPHS are included. Timing uses standard orbital periods.
+# ============================================================================
+
+id: transit.gochara.basics
+name: "Gochara Transit Rules"
+aliases: ["Transit Rules", "Graha Gochara", "Planetary Transit Basics"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  Gochara (transit) analysis observes the current positions of grahas in the zodiac
+  relative to a native's natal chart. Each graha, while transiting a house (bhava)
+  from the Lagna or Moon, produces specific results described in BPHS Chapter 42.
+  The transit effects are evaluated house-by-house and modulated by dignity
+  (debilitation, exaltation), conjunction with natal grahas, and Ashtakavarga
+  strength.
+
+# ── Transit Speed Reference ──────────────────────────────────────────────────
+# Surya (Sun):     1 rashi per month (30 days)
+# Chandra (Moon):  1 rashi per 2.5 days
+# Mangala (Mars):  1 rashi per 45 days (approx)
+# Budha (Mercury): 1 rashi per 25 days (approx, retrograde varies)
+# Guru (Jupiter):  1 rashi per 1 year (12 months approx)
+# Shukra (Venus):  1 rashi per 25 days (approx)
+# Shani (Saturn):  1 rashi per 2.5 years (30 months approx)
+# Rahu:            1 rashi per 18 months (retrograde motion)
+# Ketu:            1 rashi per 18 months (retrograde motion)
+
+conditions:
+  - entity: entity.graha.surya
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.chandra
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.mangala
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.budha
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.guru
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.shukra
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.shani
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.rahu
+    role: subject
+    position: "varies (transit position)"
+  - entity: entity.graha.ketu
+    role: subject
+    position: "varies (transit position)"
+
+effects:
+  - description: "Each graha in each of the 12 houses from Lagna produces distinct effects as detailed in BPHS Ch.42"
+    intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "The transit of planets through the various houses from the Lagna or the
+      Moon produces results that are described in this chapter. The effects vary
+      depending on the nature of the transiting planet and the house it occupies."
+    confidence: high
+  - ref: source.BPHS.chapter42
+    claim: >
+      "Chapter 42 (Gochara Phaladhyaya) provides the foundational framework for
+      interpreting planetary transits in Vedic astrology."
+    confidence: high
+
+notes: >
+  Transit rules are evaluated from both Lagna and Moon Lagna. The Moon-based
+  transit is considered more immediately felt day-to-day, while Lagna-based
+  transit has longer-term significance. Ashtakavarga points modulate the
+  strength of transit effects. Gochara is one of three timing techniques
+  (alongside Dasha and Antardasha) in BPHS.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry — foundational gochara rules per BPHS Ch.42"
+    author: "Chief Jyotish Knowledge Architect"

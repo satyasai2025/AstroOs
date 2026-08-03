@@ -1,0 +1,66 @@
+# ontology/glossary/dasha.yaml
+
+id: term.dasha
+name: Daśā
+aliases:
+  - Dasha
+  - Planetary Period
+  - दशा
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    daśā — from daṃś (to bite, to state). Literally "state,
+    condition, or period." In jyotisha, a systematic cycle of
+    planetary time periods that indicate which graha's
+    energy is predominant during a given span of life.
+  english: >
+    A predictive system based on planetary time periods.
+    The most widely used is the Vimshottari Dasha (120-year
+    cycle), where each of the nine grahas rules a specific
+    number of years in a fixed sequence. The mahadasha
+    (major period) is further divided into bhukti (sub-periods)
+    and pratyantardasha (sub-sub-periods).
+  technical: >
+    The Vimshottari dasha sequence is: Ketu (7), Venus (20),
+    Sun (6), Moon (10), Mars (7), Rahu (18), Jupiter (16),
+    Saturn (19), Mercury (17). The starting mahadasha is
+    determined by the nakshatra of the Moon at birth and the
+    remainder of its longitude. Dasha systems also include
+    Ashtottari, Yogini, and Kalachakra.
+
+usage:
+  primary: "Timing of events and prediction of life phases"
+  secondary: "Determination of which graha's results are active at any given time"
+
+related_concepts:
+  - ref: term.graha
+    relationship: "Each dasha is ruled by a specific graha whose energy predominates during that period"
+  - ref: term.gochara
+    relationship: "Gochara (transits) are interpreted in conjunction with active dashas for event timing"
+  - ref: term.nakshatra
+    relationship: "The starting dasha at birth is determined by the Moon's nakshatra"
+
+sources:
+  - ref: source.BPHS
+    chapter: 42
+    verse: 1-10
+    claim: "Viṃśottarī daśā proktā — Vimshottari dasha is declared"
+    confidence: high
+
+notes: >
+  The Vimshottari system is the most prevalent dasha system
+  in Parashari astrology. BPHS describes over 30 dasha systems
+  but declares Vimshottari as the primary for the current
+  epoch (Kali Yuga). The total cycle is 120 years, reflecting
+  the maximum human lifespan.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

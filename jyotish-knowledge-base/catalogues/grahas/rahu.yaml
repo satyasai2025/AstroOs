@@ -1,0 +1,165 @@
+# catalogues/grahas/rahu.yaml
+
+id: graha.rahu
+name: Rahu
+aliases:
+  - North Lunar Node
+  - Dragon's Head
+  - Tama
+  - Mahan
+  - Sikhi
+category: graha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Rāhu
+devanagari: "राहु"
+meaning: "The seizer; the concealed one; the head of the demon"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: null
+  sidereal_period_days: 6793.00
+  retrograde:
+    occurs: true
+    typical_duration_days: null
+    typical_frequency: "Always retrograde"
+  notes: >
+    Rahu is not a physical body but a mathematical point — the
+    lunar node where the Moon's orbit crosses the ecliptic
+    from south to north. It moves retrograde at approximately
+    19.4 degrees per year, completing one zodiac cycle in
+    about 18.6 years.
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: neuter
+  nature: natural malefic
+  caste: chandala
+  element: air
+  direction: southwest
+  color: black
+  gem: hessonite
+  metal: lead
+  grain: urad_dal
+  body_parts:
+    - neck
+    - throat
+    - skin
+  animal: jackal
+  deity: durga
+  quality: tamasic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: null
+    degrees: null
+    notes: "Rahu has no exaltation as a shadow graha; some traditions associate it with Mithuna or Vrishabha"
+  debilitation:
+    sign: null
+    degrees: null
+    notes: "Rahu has no debilitation as a shadow graha"
+  moolatrikona:
+    sign: null
+    notes: "Rahu has no moolatrikona as a shadow graha"
+  own_signs: []
+  own_signs_notes: "Rahu has no own signs; acts as co-lord of Kanya in some systems alongside Budha"
+  friendly_signs:
+    - makara
+    - kumbha
+    - vrishabha
+    - tula
+  neutral_signs:
+    - mithuna
+    - kanya
+    - dhanus
+    - meena
+  inimical_signs:
+    - simha
+    - karka
+    - mesha
+    - vrishchika
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - ardra
+    - swati
+    - shatabhisha
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.shani
+    - graha.shukra
+    - graha.budha
+  enemies:
+    - graha.surya
+    - graha.chandra
+  neutrals:
+    - graha.mangala
+    - graha.guru
+    - graha.ketu
+  notes: "Relationships vary by text; Rahu behaves similarly to Shani in many respects"
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 18
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Sudden events (Atarka)"
+    - "Foreign lands"
+    - "Obstacles (Vighna)"
+  traditional:
+    - "Material ambition"
+    - "Rebellion"
+    - "Addiction"
+  modern:
+    - "Innovation and technology"
+    - "Mass movements"
+    - "Unconventional paths"
+  confidence: medium
+  notes: "Rahu is a shadow graha; its karakatvas vary more by tradition than those of the visible grahas"
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, nature, and attributes of Rahu"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Attributes and significations of Rahu as the lunar node"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Rahu is the severed head of the demon Svarbhanu, who became
+  immortal after drinking the nectar of the gods. As a shadow
+  graha (chhaya graha), Rahu has no physical body but exerts
+  a powerful karmic influence. It amplifies whatever sign and
+  house it occupies, often manifesting through obsession,
+  sudden transformation, and worldly ambition. Rahu rules the
+  materialistic, unconventional, and technologically innovative
+  dimensions of life. Its dasha of 18 years often coincides with
+  periods of intense karmic reckoning and material pursuit.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

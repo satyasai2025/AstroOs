@@ -1,0 +1,80 @@
+id: dasha.chara
+name: Chara Dasha
+aliases: ["Jaimini Dasha", "Chara Karaka Dasha"]
+category: dasha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+type: rashi-dasha
+total_years: variable
+
+sequence:
+  - note: "Sequence is variable — starts from the rashi of Atmakaraka"
+  - note: "Follows the rashi order from the Atmakaraka's position"
+  - note: "Each rashi gets a variable duration based on its nature"
+
+rashi_durations:
+  movable: 2    # years — Chara (movable) rashis: Mesha, Kataka, Tula, Makara
+  fixed: 3      # years — Sthira (fixed) rashis: Vrishabha, Simha, Vrischika, Kumbha
+  dual: 1       # year  — Dvisvabhava (dual) rashis: Mithuna, Kanya, Dhanu, Meena
+
+calculation_method: |
+  Chara Dasha is a rashi-based (sign-based) dasha system from the
+  Jaimini system of Jyotish. Unlike nakshatra-based dashas, each
+  period corresponds to a rashi (zodiac sign), not a graha.
+
+  Starting Point:
+    The starting rashi is determined by the Atmakaraka (soul indicator).
+    Atmakaraka is the graha with the highest degrees in the birth chart
+    (excluding Rahu). The dasha sequence begins from the rashi occupied
+    by the Atmakaraka.
+
+  Duration:
+    Each rashi has a variable duration:
+      - Chara (movable) rashis: 2 years
+      - Sthira (fixed) rashis: 3 years
+      - Dvisvabhava (dual) rashis: 1 year
+
+  Sequence:
+    The sequence follows the rashi order starting from the Atmakaraka's
+    rashi, moving forward through all 12 rashis. The direction (forward
+    or backward) depends on the Atmakaraka's rashi being odd or even
+    counted from the Lagna.
+
+antardasha: true
+pratyantardasha: false
+sub_period_calculation: |
+  Antardasha within each rashi period is determined by the sub-lord
+  of that rashi during its dasha period. The antardasha lords are
+  identified based on the position of planets within the dasha rashi.
+
+  The divisional chart (especially D-9 Navamsha) is used to determine
+  the antardasha sequence within each rashi period.
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: "Jaimini Sutras, Chapter 2 — Chara Dasha is a rashi-based dasha system where the Atmakaraka determines the starting point, and rashi durations vary based on whether the sign is movable (2 years), fixed (3 years), or dual (1 year)."
+    confidence: high
+
+notes: |
+  Chara Dasha is the primary dasha system in the Jaimini tradition,
+  which is distinct from the Parashari tradition. Key differences:
+    - Rashi-based (not nakshatra-based)
+    - Variable durations per rashi (not fixed graha periods)
+    - Atmakaraka-based starting point (not Moon's nakshatra)
+    - Total cycle varies based on the specific sequence of rashis
+
+  The total years will vary depending on which rashis appear in the
+  sequence and their durations. For a complete cycle through all 12
+  rashis, the total would be: 4 movable (8) + 4 fixed (12) + 4 dual (4) = 24 years.
+
+  Chara Dasha is widely used in Jaimini astrology for timing events
+  related to career, relationships, and spiritual development.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
