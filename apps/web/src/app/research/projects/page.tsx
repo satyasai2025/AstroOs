@@ -29,7 +29,7 @@ export default function ResearchProjectsPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await researchProjectsApi.list(user.id, statusFilter || undefined);
+      const data = await researchProjectsApi.list(statusFilter || undefined);
       setProjects(data.projects);
 
       // Load snapshots for each project
@@ -66,7 +66,6 @@ export default function ResearchProjectsPage() {
     if (!user || !newTitle.trim()) return;
     try {
       await researchProjectsApi.create({
-        user_id: user.id,
         title: newTitle.trim(),
         description: newDescription.trim() || null,
       });

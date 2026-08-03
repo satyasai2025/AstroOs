@@ -365,7 +365,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
 
   const { data: activeProjects } = useQuery({
     queryKey: ["research", "projects", user?.id, "active"],
-    queryFn: () => researchProjectsApi.list(user!.id, "active"),
+    queryFn: () => researchProjectsApi.list("active"),
     enabled: !!user?.id,
   });
 
