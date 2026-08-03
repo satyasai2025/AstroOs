@@ -946,9 +946,9 @@ export function PlanetRelationshipGraph({
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+      <div className="flex flex-col gap-5 md:flex-row md:items-start">
         {/* Left column: chart summary + relationship-type filter */}
-        <div className="w-full space-y-4 lg:w-60 lg:shrink-0">
+        <div className="w-full space-y-4 md:w-52 md:shrink-0">
           {infoPanel}
           {filterPanel}
         </div>
@@ -958,7 +958,7 @@ export function PlanetRelationshipGraph({
 
         {/* Right column: ranked top relationships + (when available) the
             full detail panel for whichever planet is selected. */}
-        <div className="w-full space-y-4 lg:w-80 lg:shrink-0">
+        <div className="w-full space-y-4 md:w-64 md:shrink-0">
           {topPairsPanel}
           {result && (
             <PlanetDetailPanel
