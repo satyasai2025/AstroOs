@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { AppShell } from "@/components/layout/AppShell";
-import { TransitWheel } from "@/components/charts/transit/TransitWheel";
 import { TransitAlerts } from "@/components/charts/transit/TransitAlerts";
-import { useWorkflowStore } from "@/lib/store";
-import { PLANET_SYMBOLS } from "@/lib/astro";
+import { TransitWheel } from "@/components/charts/transit/TransitWheel";
+import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, DonutChart, KpiCard, Table, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
+import { PLANET_SYMBOLS } from "@/lib/astro";
+import { useWorkflowStore } from "@/lib/store";
 import { useLiveTransit, useTransitPatterns } from "@/lib/transitPatterns";
 import type { TransitPatternsRequest, TransitPlanetResponse, TransitRequest } from "@/lib/types";
+import { useMemo, useState } from "react";
 
 /**
  * /charts/transit — Transit Analysis console, rebuilt to match the
@@ -265,6 +265,32 @@ export default function TransitAnalysisPage() {
     ? new Date(transitDateTime).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
     : "Now";
 
+  const handleExport = () => {
+    alert("Export functionality would generate a PDF or image of the transit chart");
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Transit Chart - ${request?.subject_name || "Chart"}`,
+          text: `Transit analysis for ${request?.subject_name || "chart"}`,
+          url: url,
+        });
+      } catch (err) {
+        // User cancelled or share failed
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link copied to clipboard!");
+    }
+  };
+
   return (
     <AppShell>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -282,9 +308,20 @@ export default function TransitAnalysisPage() {
             )}
           </p>
         </div>
-        <Button href="/charts" variant="ghost" size="sm" aria-label="Back to chart view">
-          Back to Charts
-        </Button>
+        <div className="flex gap-2">
+          <Button href="/charts" variant="ghost" size="sm" aria-label="Back to charts">
+            ← Back
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleExport} aria-label="Export chart">
+            Export
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handlePrint} aria-label="Print chart">
+            Print
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleShare} aria-label="Share chart">
+            Share
+          </Button>
+        </div>
       </div>
 
       {/* Controls row: transit date stepper + Moon/Ascendant reference point */}
