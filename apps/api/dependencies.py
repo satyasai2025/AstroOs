@@ -85,6 +85,7 @@ _engine = create_async_engine(
     max_overflow=_settings.DB_MAX_OVERFLOW,
     pool_timeout=_settings.DB_POOL_TIMEOUT,
     pool_recycle=_settings.DB_POOL_RECYCLE,
+    pool_pre_ping=True,
     connect_args=_connect_args,
 )
 

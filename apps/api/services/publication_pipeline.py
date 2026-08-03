@@ -78,22 +78,30 @@ class PublicationBundle:
 
 
 def _sanitize_latex(text: str) -> str:
-    """Escape special LaTeX characters."""
-    replacements = {
-        "\\": r"\textbackslash{}",
+    """Escape special LaTeX characters.
+
+    `\\` is replaced with a sentinel first, escaped braces are handled, then
+    the sentinel is restored to `\textbackslash{}` LAST — so the backslash
+    command's own braces are never escaped (`\textbackslash\{\}` is invalid
+    LaTeX). Ordering `{`/`}` before `\\` alone does not work either: the
+    backslash pass would then escape the backslashes just added in `\{`.
+    """
+    _BACKSLASH_SENTINEL = "\x00"
+    escaped = {
+        "{": r"\{",
+        "}": r"\}",
         "&": r"\&",
         "%": r"\%",
         "$": r"\$",
         "#": r"\#",
         "_": r"\_",
-        "{": r"\{",
-        "}": r"\}",
         "~": r"\textasciitilde{}",
         "^": r"\textasciicircum{}",
     }
-    for char, escaped in replacements.items():
-        text = text.replace(char, escaped)
-    return text
+    text = text.replace("\\", _BACKSLASH_SENTINEL)
+    for char, replacement in escaped.items():
+        text = text.replace(char, replacement)
+    return text.replace(_BACKSLASH_SENTINEL, r"\textbackslash{}")
 
 
 def _snapshot_to_chart_insert(
