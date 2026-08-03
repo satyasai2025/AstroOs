@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
@@ -27,6 +28,7 @@ import JaiminiPanel from "@/components/charts/JaiminiPanel";
 import PlanetExplorerPanel from "@/components/charts/PlanetExplorerPanel";
 import DivisionalChartsPanel from "@/components/charts/DivisionalChartsPanel";
 import { useWorkflowStore } from "@/lib/store";
+import { tokenStore } from "@/lib/api";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 
@@ -71,6 +73,7 @@ export default function ChartsPage() {
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [view, setView] = useState<ViewMode>("chart");
 
   useEffect(() => {
@@ -83,6 +86,7 @@ export default function ChartsPage() {
   const [selectedVarga, setSelectedVarga] = useState<string>("D1");
   const [activePlanet, setActivePlanet] = useState<string | null>(null);
   const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
 
   const handlePlanetHover = (planet: string | null) => {
     if (pinnedPlanet) return;
@@ -98,6 +102,25 @@ export default function ChartsPage() {
       setActivePlanet(planet);
     }
   };
+
+  // When no chart is loaded in the workflow store, redirect to the most
+  // recent saved chart so the user can freely use sidebar navigation
+  // without being blocked by "No Chart Data Available".
+  useEffect(() => {
+    if (result || redirecting) return;
+    let cancelled = false;
+    setRedirecting(true);
+    fetch("/api/v1/horoscope/my-charts?limit=1&offset=0", {
+      headers: { Authorization: `Bearer ${tokenStore.getAccess()}` },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.charts?.length) return;
+        router.replace(`/charts/${data.charts[0].id}`);
+      })
+      .catch(() => { /* ignore; user will see the empty state */ });
+    return () => { cancelled = true; };
+  }, [result, redirecting, router]);
 
   if (!result) {
     return (
