@@ -64,6 +64,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/charts?view=relationships", label: "Planet Relationship Graph", icon: "network" },
       { href: "/charts?view=relationships-v2", label: "Planet Relationship Graph V2", icon: "network" },
       { href: "/charts?view=houses", label: "House Dependency", icon: "network" },
+      { href: "/charts/house-dependency-2", label: "House Dependency 2", icon: "network" },
       { href: "/charts?view=dasha", label: "Dasha Analysis", icon: "clock" },
       { href: "/charts/transit", label: "Transit Analysis", icon: "orbit" },
       { href: "/charts?view=yogas", label: "Yogas & Combinations", icon: "star", disabled: false },
