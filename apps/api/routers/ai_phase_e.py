@@ -23,17 +23,26 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from apps.api.dependencies import get_ephemeris_wrapper, get_knowledge_engine, get_knowledge_graph_engine
 from apps.api.schemas.ai_phase_e import (
+    AshtakootaCompatibilityRequest,
+    AshtakootaCompatibilityResponse,
     AvailableDomainResponse,
     AvailableDomainsResponse,
+    BestBetCompatibilityRequest,
+    BestBetCompatibilityResponse,
+    BestBetSubFactorResponse,
     ChartComparisonRequest,
     ChartComparisonResponse,
     ComparisonDimensionResponse,
+    DoshaResultResponse,
     EnhancedQuestionRequest,
     GeneratedHypothesisResponse,
     HypothesisGenerateRequest,
     HypothesisListResponse,
     HypothesisTemplateResponse,
     HypothesisTemplatesResponse,
+    KootaScoreResponse,
+    MarriageTimingRequest,
+    MarriageTimingResponse,
     RecommendationRequest,
     RecommendationResponse,
     ResearchAnswerResponse,
@@ -41,6 +50,7 @@ from apps.api.schemas.ai_phase_e import (
     ResearchInsightRequest,
     ResearchInsightResponse,
     ResearchQueryRequest,
+    TransitScanYearResponse,
     VerificationReportRequest,
     VerificationReportResponse,
 )
@@ -57,11 +67,66 @@ from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.transit_engine import TransitEngine
 from apps.api.services.shadbala_engine import ShadbalaEngine
 from apps.api.services.knowledge_graph_engine import KnowledgeGraphEngine
+from apps.api.services.ashtakoota_engine import (
+    NAKSHATRAS as ASHTAKOOTA_NAKSHATRAS,
+    RASHIS as ASHTAKOOTA_RASHIS,
+    AshtakootaEngine,
+)
+from apps.api.services.marriage_timing_engine import (
+    SIGNS as MARRIAGE_TIMING_SIGNS,
+    MarriageTimingEngine,
+    TransitPositions,
+)
+from apps.api.services.best_bet_engine import BestBetEngine
 from apps.api.domain.ai_phase_e import ResearchQuery
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ai", tags=["AI (Phase E)"])
+
+
+# ── Ashtakoota token normalisation ────────────────────────────────────────────
+#
+# The ephemeris/domain layer emits rashi and nakshatra names as lowercase,
+# underscore-separated tokens ("taurus", "purva_phalguni"), while
+# AshtakootaEngine's lookup tables (RASHIS, NAKSHATRAS, RASHI_LORDS, YONI_MAP,
+# GANA_MAP, NADI_MAP) are all keyed by Title-Case, space-separated English
+# names ("Taurus", "Purva Phalguni"). Feeding the raw tokens straight in made
+# every table lookup miss and fall through to its `else 0` default, so BOTH
+# charts always resolved to Aries/Ashwini — which scored a constant 28/36
+# (77.8%) for every couple, regardless of their actual birth data.
+#
+# Title-casing covers all 12 rashis and 25 of the 27 nakshatras; the remaining
+# two differ in spelling, not just case, so they need explicit aliases.
+_NAKSHATRA_SPELLING_ALIASES = {
+    "Mula": "Moola",
+    "Dhanishtha": "Dhanishta",
+}
+
+
+def _to_engine_name(token: str) -> str:
+    """
+    Convert a domain rashi/nakshatra token to the Title-Case English vocabulary
+    the standalone engines use (AshtakootaEngine's tables, MarriageTimingEngine's
+    SIGNS list).
+    """
+    name = token.replace("_", " ").title()
+    return _NAKSHATRA_SPELLING_ALIASES.get(name, name)
+
+
+def _require_known(name: str, known: list[str], kind: str, purpose: str) -> str:
+    """
+    Guard against silent mis-scoring. AshtakootaEngine defaults unknown names
+    to index 0 rather than raising, which is exactly how the casing mismatch
+    above went unnoticed — so an unmappable token is surfaced as an error
+    instead of being quietly scored as Aries/Ashwini.
+    """
+    if name not in known:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unrecognised {kind} '{name}' — cannot compute {purpose}.",
+        )
+    return name
 
 
 async def _build_chart(body, wrapper: EphemerisWrapper):
@@ -164,6 +229,404 @@ async def compare_charts(
         compatibility_notes=result.compatibility_notes,
         relationship_potential=result.relationship_potential,
         timing_synergies=result.timing_synergies,
+    )
+
+
+# ── Ashtakoota Compatibility ────────────────────────────────────────────────────
+
+@router.post("/compatibility", response_model=AshtakootaCompatibilityResponse)
+async def analyze_compatibility(
+    body: AshtakootaCompatibilityRequest,
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> AshtakootaCompatibilityResponse:
+    """
+    Perform Ashtakoota (36-point) compatibility analysis between two birth charts.
+
+    Calculates all 8 Kootas: Varna, Vashya, Tara, Yoni, Graha Maitri, Gana, Bhakoot, Nadi.
+    Also checks for Manglik, Nadi, Bhakoot, Rajju, and Vedha Doshas.
+
+    Returns a comprehensive compatibility report with scores, strengths, challenges,
+    and recommendations.
+    """
+    # Build Chart A
+    chart_a = await _build_chart(
+        _BirthDataProxy(
+            birth_datetime_utc=body.birth_datetime_utc_a,
+            latitude=body.latitude_a,
+            longitude=body.longitude_a,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        ),
+        wrapper,
+    )
+
+    # Build Chart B
+    chart_b = await _build_chart(
+        _BirthDataProxy(
+            birth_datetime_utc=body.birth_datetime_utc_b,
+            latitude=body.latitude_b,
+            longitude=body.longitude_b,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        ),
+        wrapper,
+    )
+
+    # Extract required data from charts
+    # Rashi (Moon sign) - find Moon position
+    moon_a = next((p for p in chart_a.planets if p.planet == "moon"), None)
+    moon_b = next((p for p in chart_b.planets if p.planet == "moon"), None)
+
+    if not moon_a or not moon_b:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Moon position not found in one or both charts.",
+        )
+
+    # Translate domain tokens into the engine's Title-Case English vocabulary.
+    _purpose = "Ashtakoota compatibility"
+    rashi_a = _require_known(_to_engine_name(moon_a.rashi), ASHTAKOOTA_RASHIS, "rashi", _purpose)
+    rashi_b = _require_known(_to_engine_name(moon_b.rashi), ASHTAKOOTA_RASHIS, "rashi", _purpose)
+    nakshatra_a = _require_known(_to_engine_name(moon_a.nakshatra), ASHTAKOOTA_NAKSHATRAS, "nakshatra", _purpose)
+    nakshatra_b = _require_known(_to_engine_name(moon_b.nakshatra), ASHTAKOOTA_NAKSHATRAS, "nakshatra", _purpose)
+
+    # Mars house positions for Manglik check
+    mars_a = next((p for p in chart_a.planets if p.planet == "mars"), None)
+    mars_b = next((p for p in chart_b.planets if p.planet == "mars"), None)
+    mars_house_a = mars_a.house_number if mars_a else 0
+    mars_house_b = mars_b.house_number if mars_b else 0
+
+    # Run Ashtakoota analysis
+    result = AshtakootaEngine.analyze(
+        rashi_a=rashi_a,
+        nakshatra_a=nakshatra_a,
+        mars_house_a=mars_house_a,
+        rashi_b=rashi_b,
+        nakshatra_b=nakshatra_b,
+        mars_house_b=mars_house_b,
+    )
+
+    # Convert to response schema
+    return AshtakootaCompatibilityResponse(
+        total_score=result.total_score,
+        max_total_score=result.max_total_score,
+        compatibility_percentage=result.compatibility_percentage,
+        verdict=result.verdict,
+        kootas=[
+            KootaScoreResponse(
+                name=k.name,
+                max_score=k.max_score,
+                obtained_score=k.obtained_score,
+                status=k.status,
+                description=k.description,
+            ) for k in result.kootas
+        ],
+        doshas=[
+            DoshaResultResponse(
+                name=d.name,
+                has_dosha=d.has_dosha,
+                severity=d.severity,
+                description=d.description,
+            ) for d in result.doshas
+        ],
+        radar_values=result.radar_values,
+        strengths=result.strengths,
+        challenges=result.challenges,
+        recommendations=result.recommendations,
+        subject_name_a=body.subject_name_a,
+        subject_name_b=body.subject_name_b,
+    )
+
+
+# ── Marriage Timing Transit Scanner (Jupiter / Saturn) ────────────────────────
+
+@router.post("/best-bet-compatibility", response_model=BestBetCompatibilityResponse)
+async def best_bet_compatibility(
+    body: BestBetCompatibilityRequest,
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> BestBetCompatibilityResponse:
+    """
+    Perform Best Bet 58-point compatibility analysis between two birth charts.
+
+    This is a more comprehensive compatibility system than Ashtakoota, including:
+    - Practical Compatibility (36 pts): Spiritual, Psychological, Physical
+    - Karmic Compatibility (12 pts): Mars Dosha, Karmic Patterns
+    - Future Compatibility (10 pts): Dasha overlap, Mutual planetary positions
+
+    Requires chart data computation for accurate scoring.
+    """
+    _purpose = "Best Bet compatibility"
+
+    # Compute charts for both persons
+    try:
+        chart_a = await asyncio.to_thread(
+            HoroscopeEngine(wrapper).generate_d1,
+            birth_datetime_utc=body.birth_datetime_utc_a,
+            latitude=body.latitude_a,
+            longitude=body.longitude_a,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+        chart_b = await asyncio.to_thread(
+            HoroscopeEngine(wrapper).generate_d1,
+            birth_datetime_utc=body.birth_datetime_utc_b,
+            latitude=body.latitude_b,
+            longitude=body.longitude_b,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    except Exception as exc:
+        logger.exception("Error computing charts for Best Bet compatibility: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to compute charts for Best Bet compatibility.",
+        )
+
+    # Extract planet positions
+    def get_planet_positions(chart):
+        positions = {}
+        for p in chart.planets:
+            positions[p.planet.lower()] = p
+        return positions
+
+    planets_a = get_planet_positions(chart_a)
+    planets_b = get_planet_positions(chart_b)
+
+    # Get nakshatra and rashi
+    moon_a = planets_a.get("moon")
+    moon_b = planets_b.get("moon")
+
+    nakshatra_a = moon_a.nakshatra if moon_a else "Unknown"
+    nakshatra_b = moon_b.nakshatra if moon_b else "Unknown"
+    rashi_a = moon_a.rashi if moon_a else "Unknown"
+    rashi_b = moon_b.rashi if moon_b else "Unknown"
+
+    # Get house positions for Mars Dosha
+    mars_a = planets_a.get("mars")
+    mars_b = planets_b.get("mars")
+
+    mars_house_a = mars_a.house_number if mars_a else 1
+    moon_house_a = moon_a.house_number if moon_a else 1
+    venus_a = planets_a.get("venus")
+    venus_house_a = venus_a.house_number if venus_a else 1
+
+    mars_house_b = mars_b.house_number if mars_b else 1
+    moon_house_b = moon_b.house_number if moon_b else 1
+    venus_b = planets_b.get("venus")
+    venus_house_b = venus_b.house_number if venus_b else 1
+
+    # Get dignity values for karmic pattern
+    def dignity_value(planet):
+        if planet.dignity:
+            if "exalted" in planet.dignity.lower():
+                return 10.0
+            elif "own" in planet.dignity.lower():
+                return 8.0
+            elif "friendly" in planet.dignity.lower():
+                return 6.0
+            elif "neutral" in planet.dignity.lower():
+                return 4.0
+            elif "debilitated" in planet.dignity.lower():
+                return 2.0
+        return 5.0
+
+    sun_a = planets_a.get("sun")
+    sun_b = planets_b.get("sun")
+    saturn_a = planets_a.get("saturn")
+    saturn_b = planets_b.get("saturn")
+
+    # Lagna dignity
+    lagna_a = 5.0
+    lagna_b = 5.0
+
+    # Dasha overlap (simplified - would need actual dasha engine integration)
+    dasha_overlap = 0.5
+
+    # Mutual planet interactions (simplified)
+    sun_interaction = "neutral"
+    moon_interaction = "neutral"
+    mars_interaction = "neutral"
+    venus_interaction = "neutral"
+    jupiter_interaction = "neutral"
+
+    # Calculate Best Bet score
+    result = BestBetEngine.calculate(
+        subject_name_a=body.subject_name_a,
+        subject_name_b=body.subject_name_b,
+        nakshatra_a=nakshatra_a,
+        nakshatra_b=nakshatra_b,
+        rashi_a=rashi_a,
+        rashi_b=rashi_b,
+        mars_house_a=mars_house_a,
+        moon_house_a=moon_house_a,
+        venus_house_a=venus_house_a,
+        mars_house_b=mars_house_b,
+        moon_house_b=moon_house_b,
+        venus_house_b=venus_house_b,
+        sun_dignity_a=dignity_value(sun_a) if sun_a else 5.0,
+        moon_dignity_a=dignity_value(moon_a) if moon_a else 5.0,
+        venus_dignity_a=dignity_value(venus_a) if venus_a else 5.0,
+        saturn_dignity_a=dignity_value(saturn_a) if saturn_a else 5.0,
+        lagna_dignity_a=lagna_a,
+        sun_dignity_b=dignity_value(sun_b) if sun_b else 5.0,
+        moon_dignity_b=dignity_value(moon_b) if moon_b else 5.0,
+        venus_dignity_b=dignity_value(venus_b) if venus_b else 5.0,
+        saturn_dignity_b=dignity_value(saturn_b) if saturn_b else 5.0,
+        lagna_dignity_b=lagna_b,
+        dasha_overlap_pct=dasha_overlap,
+        sun_interaction=sun_interaction,
+        moon_interaction=moon_interaction,
+        mars_interaction=mars_interaction,
+        venus_interaction=venus_interaction,
+        jupiter_interaction=jupiter_interaction,
+    )
+
+    return BestBetCompatibilityResponse(
+        subject_name_a=result.subject_name_a,
+        subject_name_b=result.subject_name_b,
+        total_score=result.total_score,
+        max_score=result.max_score,
+        percentage=result.percentage,
+        verdict=result.verdict,
+        status=result.status,
+        practical_score=result.practical_score,
+        practical_max=result.practical_max,
+        karmic_score=result.karmic_score,
+        karmic_max=result.karmic_max,
+        future_score=result.future_score,
+        future_max=result.future_max,
+        spiritual_score=result.spiritual_score,
+        spiritual_max=result.spiritual_max,
+        psychological_score=result.psychological_score,
+        psychological_max=result.psychological_max,
+        physical_score=result.physical_score,
+        physical_max=result.physical_max,
+        mars_dosha_score=result.mars_dosha_score,
+        mars_dosha_max=result.mars_dosha_max,
+        karmic_pattern_score=result.karmic_pattern_score,
+        karmic_pattern_max=result.karmic_pattern_max,
+        dasha_score=result.dasha_score,
+        dasha_max=result.dasha_max,
+        mutual_planets_score=result.mutual_planets_score,
+        mutual_planets_max=result.mutual_planets_max,
+        sub_factors=[BestBetSubFactorResponse(**f) for f in result.sub_factors],
+        strengths=result.strengths,
+        challenges=result.challenges,
+        recommendations=result.recommendations,
+    )
+
+
+@router.post("/marriage-timing", response_model=MarriageTimingResponse)
+async def marriage_timing(
+    body: MarriageTimingRequest,
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> MarriageTimingResponse:
+    """
+    Scan a birth chart for marriage-timing windows across an age range.
+
+    For each year, checks whether transiting Jupiter activates natal Venus
+    (1st / 5th / 7th / 9th from it) and whether Saturn obstructs — aspecting
+    natal Venus, the 7th cusp, or transiting Jupiter. Each year comes back
+    classified as probable, delayed, or not_indicated, with the aspects that
+    produced the verdict.
+    """
+    chart = await _build_chart(body, wrapper)
+
+    venus = next((p for p in chart.planets if p.planet == "venus"), None)
+    if not venus:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Venus position not found in chart.",
+        )
+
+    cusp_7 = next((h for h in chart.houses if h.house_number == 7), None)
+    if not cusp_7:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="7th house cusp not found in chart.",
+        )
+
+    # Same token→Title-Case translation as the Ashtakoota endpoint above:
+    # MarriageTimingEngine compares rashis by index into its SIGNS list, so an
+    # untranslated "taurus" would raise rather than silently mis-score.
+    _purpose = "marriage timing"
+    natal_venus_rashi = _require_known(
+        _to_engine_name(venus.rashi), MARRIAGE_TIMING_SIGNS, "rashi", _purpose
+    )
+    cusp_7_rashi = _require_known(
+        _to_engine_name(cusp_7.rashi), MARRIAGE_TIMING_SIGNS, "rashi", _purpose
+    )
+
+    def _transit_positions(epoch: datetime) -> TransitPositions:
+        """
+        Jupiter/Saturn at one scan epoch, via the same wrapper (and the same
+        request ayanamsa) that built the natal chart. `calculate` is the
+        wrapper's locked entry point — pyswisseph's sidereal mode is
+        process-global, so the scan must not reach past it.
+        """
+        eph = wrapper.calculate(
+            epoch, body.latitude, body.longitude,
+            ayanamsa=body.ayanamsa, house_system=body.house_system,
+        )
+        positions = {p.planet: p for p in eph.planet_positions}
+        jupiter = positions["jupiter"]
+        saturn = positions["saturn"]
+        return TransitPositions(
+            julian_day=eph.julian_day,
+            jupiter_tropical=(jupiter.sidereal_longitude + eph.ayanamsa_value) % 360.0,
+            jupiter_sidereal=jupiter.sidereal_longitude,
+            saturn_tropical=(saturn.sidereal_longitude + eph.ayanamsa_value) % 360.0,
+            saturn_sidereal=saturn.sidereal_longitude,
+        )
+
+    try:
+        result = await asyncio.to_thread(
+            MarriageTimingEngine.scan,
+            birth_dt=body.birth_datetime_utc,
+            natal_venus_sidereal=venus.sidereal_longitude,
+            natal_venus_rashi=natal_venus_rashi,
+            cusp_7_rashi=cusp_7_rashi,
+            transit_positions=_transit_positions,
+            scan_start_age=body.scan_start_age,
+            scan_end_age=body.scan_end_age,
+            subject_name=body.subject_name,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    except Exception as exc:
+        logger.exception("Error scanning marriage timing windows: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to scan marriage timing windows.",
+        )
+
+    return MarriageTimingResponse(
+        subject_name=result.subject_name,
+        birth_datetime_utc=result.birth_datetime_utc,
+        scan_start_age=result.scan_start_age,
+        scan_end_age=result.scan_end_age,
+        natal_venus_rashi=result.natal_venus_rashi,
+        natal_venus_longitude=result.natal_venus_longitude,
+        natal_seventh_cusp_rashi=result.natal_seventh_cusp_rashi,
+        total_years_scanned=result.total_years_scanned,
+        probable_windows=result.probable_windows,
+        delayed_windows=result.delayed_windows,
+        scan_results=[
+            TransitScanYearResponse(
+                year=r.year,
+                age_at_year=r.age_at_year,
+                julian_day=r.julian_day,
+                jupiter_sidereal=r.jupiter_sidereal,
+                jupiter_rashi=r.jupiter_rashi,
+                saturn_sidereal=r.saturn_sidereal,
+                saturn_rashi=r.saturn_rashi,
+                status=r.status,
+                aspect_details=list(r.aspect_details),
+                saturn_obstruction_details=list(r.saturn_obstruction_details),
+            ) for r in result.scan_results
+        ],
     )
 
 
