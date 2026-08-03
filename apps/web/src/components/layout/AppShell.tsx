@@ -1,14 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useCurrentUser, useLogout } from "@/lib/auth";
-import { tokenStore } from "@/lib/api";
-import { useWorkflowStore } from "@/lib/store";
-import { useTheme } from "./ThemeProvider";
 import { ResearchModeToggle } from "@/components/research/ResearchModeToggle";
+import { tokenStore } from "@/lib/api";
+import { useCurrentUser, useLogout } from "@/lib/auth";
+import { useWorkflowStore } from "@/lib/store";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useTheme } from "./ThemeProvider";
 
 interface NavItem {
   href: string;
@@ -66,11 +65,11 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/charts?view=houses", label: "House Dependency", icon: "network" },
       { href: "/charts?view=dasha", label: "Dasha Analysis", icon: "clock" },
       { href: "/charts/transit", label: "Transit Analysis", icon: "orbit" },
-      { href: "#", label: "Yogas & Combinations", icon: "star", disabled: true },
-      { href: "#", label: "Ashtakavarga", icon: "grid", disabled: true },
+      { href: "/charts?view=yogas", label: "Yogas & Combinations", icon: "star", disabled: false },
+      { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid", disabled: false },
       { href: "/charts?view=strength", label: "Shadbala", icon: "bar" },
       { href: "/charts?view=kp", label: "KP Analysis", icon: "target" },
-      { href: "#", label: "Jaimini Analysis", icon: "book", disabled: true },
+      { href: "/charts?view=jaimini", label: "Jaimini Analysis", icon: "book", disabled: false },
     ],
   },
   {
@@ -85,8 +84,9 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/research/events", label: "Event Verification", icon: "document" },
       { href: "/research/rules", label: "Rule Validation", icon: "shield" },
       { href: "/research/notebook", label: "Research Notebook", icon: "document" },
-      { href: "#", label: "Pattern Discovery", icon: "sparkle", disabled: true },
-      { href: "#", label: "Case Studies", icon: "document", disabled: true },
+      { href: "/research/import", label: "Case Import", icon: "document" },
+      { href: "/research/patterns", label: "Pattern Discovery", icon: "sparkle", disabled: false },
+      { href: "/research/cases", label: "Case Studies", icon: "document", disabled: false },
       { href: "/research/projects", label: "Snapshot Manager", icon: "camera" },
     ],
   },
@@ -94,18 +94,18 @@ const NAV_SECTIONS: NavSection[] = [
     title: "AI & Insights",
     color: "--section-ai",
     items: [
-      { href: "#", label: "AI Explain", icon: "sparkle", disabled: true },
-      { href: "#", label: "AI Predictions", icon: "sparkle", disabled: true },
-      { href: "#", label: "AI Research Assistant", icon: "sparkle", disabled: true },
+      { href: "/ai/explain", label: "AI Explain", icon: "sparkle", disabled: false },
+      { href: "/ai/predictions", label: "AI Predictions", icon: "sparkle", disabled: false },
+      { href: "/ai/chat", label: "AI Research Assistant", icon: "sparkle", disabled: false },
     ],
   },
   {
     title: "System",
     color: "--section-system",
     items: [
-      { href: "#", label: "Settings", icon: "gear", disabled: true },
+      { href: "/settings/profile", label: "Settings", icon: "gear", disabled: false },
       { href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true },
-      { href: "#", label: "Documentation", icon: "document", disabled: true },
+      { href: "/docs", label: "Documentation", icon: "document", disabled: false },
     ],
   },
 ];

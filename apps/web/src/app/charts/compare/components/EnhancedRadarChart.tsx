@@ -100,8 +100,8 @@ export default function EnhancedRadarChart({ axes, series, size = 300 }: Enhance
       </svg>
 
       <div className="mt-2 flex flex-wrap justify-center gap-4 text-xs">
-        {series.map((s) => (
-          <div key={s.name} className="flex items-center gap-1.5">
+        {series.map((s, i) => (
+          <div key={s.name + i} className="flex items-center gap-1.5">
             <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.color }} />
             <span style={{ color: "var(--text-secondary)" }}>{s.name}</span>
           </div>

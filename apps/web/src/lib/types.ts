@@ -769,3 +769,429 @@ export interface HypothesisListResponse {
   hypotheses: GeneratedHypothesisResponse[];
   total: number;
 }
+
+// ── Research Case Import (Module 27) ──────────────────────────────────────────
+
+export type ResearchEventType =
+  | "Marriage" | "Divorce" | "Promotion" | "Job Change" | "Accident"
+  | "Surgery" | "Hospitalization" | "Child Birth" | "Death of Parent"
+  | "Death of Spouse" | "Foreign Travel" | "Education" | "Property"
+  | "Vehicle" | "Finance" | "Business" | "Political" | "Spiritual"
+  | "Awards" | "Litigation" | "Health" | "Other";
+
+export interface ResearchPerson {
+  name?: string | null;
+  gender: "Male" | "Female" | "Other";
+  dob: string; // YYYY-MM-DD
+  tob?: string | null; // HH:MM (24h)
+  place: string;
+  latitude: number;
+  longitude: number;
+  timezone: string; // IANA, e.g. Asia/Kolkata
+  source: string; // Interview, Certificate, Self-report, ...
+  birth_time_confidence?: "high" | "medium" | "low";
+  country?: string | null; // optional — enables the dashboard's Country filter
+}
+
+export interface ResearchEventSnapshot {
+  snapshot_date: string;
+  snapshot_version?: string;
+  current_dasha?: {
+    mahadasha: string;
+    antardasha: string;
+    pratyantar?: string | null;
+  } | null;
+  transits?: Record<string, boolean> | null;
+  shadbala?: Record<string, number> | null;
+  active_yogas?: string[];
+  varga_activations?: Record<string, string>;
+  nakshatra_activations?: string[];
+  house_lord_statuses?: Record<string, string>;
+}
+
+export interface ResearchLifeEvent {
+  id?: string | null;
+  type: ResearchEventType;
+  event_date: string; // YYYY-MM-DD
+  event_time?: string | null; // HH:MM
+  event_place?: string | null;
+  severity?: "Major" | "Moderate" | "Minor";
+  category?: string;
+  verified?: boolean;
+  confidence?: "high" | "medium" | "low";
+  source?: string;
+  description?: string | null;
+  tags?: string[];
+  event_window_days?: number;
+  notes?: string | null;
+  snapshots?: ResearchEventSnapshot[];
+  attachments?: ResearchAttachment[];
+}
+
+export interface ResearchAttachment {
+  type?: string;
+  filename?: string;
+  url?: string | null;
+  content_type?: string | null;
+}
+
+export interface ResearchCasePayload {
+  id?: string | null;
+  person: ResearchPerson;
+  ayanamsa?: string;
+  house_system?: string;
+  divisional_charts?: string[];
+  rectified?: boolean;
+  rectification_notes?: string | null;
+  life_events: ResearchLifeEvent[];
+  research_notes?: string | null;
+  attachments?: ResearchAttachment[];
+  source_batch?: string | null;
+}
+
+export interface ResearchCaseBatchImport {
+  cases: ResearchCasePayload[];
+  generate_ids?: boolean;
+}
+
+// ── Research Case responses ──────────────────────────────────────────────────
+
+export interface ResearchCaseImportResult {
+  research_case_id: string;
+  person_name: string | null;
+  dob: string;
+  total_events: number;
+  total_snapshots_created: number;
+  duplicate: boolean;
+  errors: string[];
+}
+
+export interface ResearchCaseImportResponse {
+  total_cases: number;
+  succeeded: number;
+  failed: number;
+  results: ResearchCaseImportResult[];
+}
+
+export interface ValidationIssue {
+  field: string;
+  message: string;
+  severity: string; // error | warning | info
+}
+
+export interface ResearchCaseValidation {
+  valid: boolean;
+  research_case_id: string | null;
+  person_dob: string | null;
+  issues: ValidationIssue[];
+  duplicate_case: boolean;
+  duplicate_events: string[];
+}
+
+export interface ResearchCaseBatchValidation {
+  validations: ResearchCaseValidation[];
+  total_valid: number;
+  total_invalid: number;
+}
+
+export interface ResearchCaseSummary {
+  research_case_id: string;
+  person_name: string | null;
+  dob: string;
+  gender?: string | null;
+  total_events: number;
+  validation_status: string;
+  duplicate_of_id?: string | null;
+  created_at?: string | null;
+}
+
+export interface ResearchCaseListResponse {
+  total: number;
+  cases: ResearchCaseSummary[];
+}
+
+export interface LifeEventSnapshot {
+  mahadasha: string | null;
+  antardasha: string | null;
+  pratyantar: string | null;
+  active_yogas: string[];
+  transit_features: Record<string, boolean>;
+  house_lord_statuses: Record<string, string>;
+  nakshatra_activations: string[];
+  snapshot_version: string;
+}
+
+export interface LifeEventDetail {
+  id: string;
+  event_type: string;
+  event_date: string;
+  event_time?: string | null;
+  event_place?: string | null;
+  category: string;
+  severity: string;
+  description: string | null;
+  notes: string | null;
+  tags: string[];
+  snapshot: LifeEventSnapshot | null;
+}
+
+export interface ResearchCaseDetail {
+  research_case_id: string;
+  person_name: string | null;
+  dob: string;
+  gender?: string | null;
+  life_events: LifeEventDetail[];
+}
+
+// ── Feature extraction (Module 27, Phase 3) ───────────────────────────────────
+
+export interface ExtractedFeature {
+  feature_name: string;
+  feature_value: string | number | boolean;
+  feature_category: string; // yoga | dasha | transit | shadbala | house | nakshatra | varga
+  event_type: string;
+  research_case_id: string;
+  event_date: string;
+  confidence: number;
+}
+
+export interface FeatureExtractionResponse {
+  total_features: number;
+  features_by_category: Record<string, number>;
+  features: ExtractedFeature[];
+}
+
+// ── Pattern discovery (Module 27, Phase 3) ────────────────────────────────────
+
+export interface PatternDimension {
+  dimension: string;
+  value: string;
+  frequency: number;
+  count: number;
+  expected_by_chance: number;
+  significance: number;
+}
+
+export interface DiscoveredPattern {
+  event_type: string;
+  pattern_id: string;
+  dimensions: PatternDimension[];
+  sample_size: number;
+  confidence_score: number;
+  description: string;
+}
+
+export interface PatternDiscoveryRequest {
+  event_type?: string | null;
+  top_combos?: number;
+  date_from?: string | null; // YYYY-MM-DD
+  date_to?: string | null; // YYYY-MM-DD
+}
+
+export interface PatternDiscoveryResponse {
+  event_type: string;
+  total_cases: number;
+  total_events: number;
+  patterns: DiscoveredPattern[];
+  execution_time_ms: number;
+}
+
+/** A personal "what-if" pattern search with custom thresholds — never
+ * persisted to the shared dashboard, same formulas + dataset. */
+export interface PatternExploreRequest {
+  event_type?: string | null;
+  min_significance?: number; // 0.5-0.999, shared default 0.90
+  min_frequency?: number; // 0.01-1.0, shared default 0.10
+  wilson_z?: number; // 0-3, shared default 1.0
+  top_combos?: number;
+  date_from?: string | null;
+  date_to?: string | null;
+}
+
+/** A plain-language question about the shared discovered patterns —
+ * e.g. "what correlates with Marriage?". Read-only, grounded: the answer
+ * can only quote patterns that were actually fetched from the database. */
+export interface PatternQuestionRequest {
+  question: string;
+}
+
+export interface PatternQuestionResponse {
+  question: string;
+  matched_event_type: string | null;
+  answer: string;
+  patterns: PatternListItem[];
+  execution_time_ms: number;
+}
+
+export interface PatternHypothesisRequest {
+  event_type: string;
+  conditions: Record<string, string>;
+  min_confidence?: number;
+}
+
+export interface PatternHypothesisResponse {
+  event_type: string;
+  hypothesis: Record<string, string>;
+  matching_cases: number;
+  total_cases: number;
+  proportion: number;
+  confidence_score: number;
+  supporting_events: Array<{
+    research_case_id: string;
+    event_type: string;
+    event_date: string;
+    matched_features: Array<{ dimension: string; value: string }>;
+  }>;
+}
+
+// ── Pattern discovery dashboard (Module 27, Phase 3c) ─────────────────────────
+// Reads over the persisted discovered_patterns / pattern_discovery_runs
+// tables — none of these trigger recomputation on the backend.
+
+export interface PatternSummary {
+  total_cases: number;
+  total_events: number;
+  total_snapshots: number;
+  patterns_found: number;
+  high_confidence_patterns: number;
+  knowledge_records: number;
+}
+
+export interface PatternListItem {
+  pattern_id: string;
+  event_type: string;
+  description: string;
+  sample_size: number;
+  confidence_score: number;
+  lift_score: number;
+  has_explanation: boolean;
+  dimension_count: number;
+  categories: string[];
+  discovered_at?: string | null;
+}
+
+export interface PatternListResponse {
+  total: number;
+  patterns: PatternListItem[];
+}
+
+export interface PatternListFilters {
+  event_type?: string;
+  min_confidence?: number;
+  min_support?: number;
+  gender?: string;
+  country?: string;
+  dataset?: string;
+  chart?: string;
+  category?: string;
+  min_dimensions?: number;
+  dimension?: string;
+  value?: string;
+  sort?: string;
+  limit?: number;
+}
+
+/** Strictly read-only — fetching this never triggers an AI explanation call. */
+export interface PatternDetail {
+  pattern_id: string;
+  event_type: string;
+  description: string;
+  dimensions: PatternDimension[];
+  sample_size: number;
+  confidence_score: number;
+  lift_score: number;
+  supporting_case_ids: string[];
+  contradicting_case_ids: string[];
+  algorithm_version: string;
+  feature_version: string;
+  snapshot_versions: string[];
+  explanation: string | null;
+  explanation_generated_at?: string | null;
+  classical_references: string[];
+  discovered_at?: string | null;
+}
+
+/** Returned only by POST .../explain — the sole path that calls the LLM. */
+export interface PatternExplainResponse {
+  pattern_id: string;
+  explanation: string;
+  explanation_generated_at: string;
+}
+
+export interface PatternExplainAllResponse {
+  total_patterns: number;
+  succeeded: number;
+  failed: number;
+  errors: string[];
+}
+
+export interface TopFactor {
+  value: string;
+  count: number;
+}
+
+export interface TopFactorsResponse {
+  category: string;
+  factors: TopFactor[];
+}
+
+export interface ConfidenceBucket {
+  bucket: string; // "0-20" | "20-40" | "40-60" | "60-80" | "80-100"
+  count: number;
+}
+
+export interface ConfidenceDistributionResponse {
+  buckets: ConfidenceBucket[];
+}
+
+export interface PatternGraphNode {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  size: number;
+  category: string;
+}
+
+export interface PatternGraphEdge {
+  from: string;
+  to: string;
+}
+
+export interface PatternGraphResponse {
+  nodes: PatternGraphNode[];
+  edges: PatternGraphEdge[];
+}
+
+export interface PatternTrendPoint {
+  run_at: string;
+  confidence_score: number;
+}
+
+/** Populates once >=2 discovery runs have touched this pattern_id; a
+ * single point otherwise — render a flat/short trend, not an error. */
+export interface PatternTrendResponse {
+  pattern_id: string;
+  points: PatternTrendPoint[];
+}
+
+// ── Advanced Research tools (Module 27, Phase 3c) ─────────────────────────────
+
+export interface DatasetValidationReport {
+  total_cases: number;
+  cases_without_snapshots: string[];
+  life_events_without_snapshots: number;
+  stale_snapshot_case_ids: string[];
+  duplicate_case_ids: string[];
+}
+
+export interface SnapshotRebuildResult {
+  cases_processed: number;
+  snapshots_created: number;
+  snapshot_version: string;
+  errors: string[];
+}
+
+export interface EvidenceRecalculationResult {
+  patterns_refreshed: number;
+}
