@@ -307,7 +307,8 @@ export function HouseDependencyNetwork({
     }>();
 
     for (let h = 1; h <= 12; h++) {
-      const house = byNum.get(h)!;
+      const house = byNum.get(h);
+      if (!house) continue;
       const rashi = house.rashi;
       const lord = rashiLordFromApiName(rashi);
       const lordPos = inHouse.get(lord || "") || [];
