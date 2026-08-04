@@ -159,6 +159,8 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   const [manualLatitude, setManualLatitude] = useState("");
   const [manualLongitude, setManualLongitude] = useState("");
 
+  const [gender, setGender] = useState<string | null>(null);
+
   const [ayanamsa, setAyanamsa] = useState<AyanamsaCode>("lahiri");
   const [houseSystem, setHouseSystem] = useState<HouseSystemCode>("W");
   const [dashaSystem, setDashaSystem] = useState<DashaSystemCode>("vimshottari");
@@ -186,6 +188,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       setStep(1);
       setChartType("birth_chart");
       setSubjectName("");
+      setGender(null);
       setBirthDate("");
       setBirthTime("");
       setPlaceSearchText("");
@@ -263,6 +266,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       dasha_system: dashaSystem,
       include_vargas: includeVargas,
       subject_name: subjectName.trim() || "Unnamed",
+      gender: gender,
       place_name: manualOverride ? null : resolvedPlace?.display_name ?? null,
     });
   }
@@ -392,6 +396,24 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                   />
                 </div>
 
+                <div>
+                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Gender</label>
+                  <div className="flex gap-4 text-xs text-slate-300">
+                    {["Male", "Female", "Other"].map((g) => (
+                      <label key={g} className="flex items-center gap-1.5 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="gender"
+                          checked={gender === g}
+                          onChange={() => setGender(g)}
+                          className="text-purple-500 focus:ring-purple-400"
+                        />
+                        {g}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Birth Date</label>
@@ -504,6 +526,9 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
                 <div className="rounded-lg border p-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
                   <p style={{ color: "var(--text-primary)" }}>{subjectName.trim() || "Unnamed"}</p>
+                  {gender && (
+                    <p className="mt-1" style={{ color: "var(--text-secondary)" }}>{gender}</p>
+                  )}
                   <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
                     {birthDate} · {birthTime}
                   </p>

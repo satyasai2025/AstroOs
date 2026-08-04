@@ -85,6 +85,7 @@ export interface WorkflowAnalysisRequest {
   transit_datetime_utc?: string | null;
   include_vargas: boolean;
   subject_name: string;
+  gender?: string | null;
   place_name?: string | null;
   generated_by?: string | null;
   research_project_id?: string | null;
