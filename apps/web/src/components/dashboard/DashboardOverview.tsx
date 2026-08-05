@@ -56,6 +56,7 @@ import {
 import { getCurrentDashaChain, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisResponse, YogaResultResponse, BirthChartSummary } from "@/lib/types";
 import { Button, Card, KpiCard } from "@/components/ui";
+import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
 
 interface DashboardOverviewProps {
   /** Full result for whichever chart is currently loaded in the workflow
@@ -473,6 +474,18 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           href="/research/hypotheses"
         />
       </div>
+
+      {/* Chart KPI Scorecards (Strength, Mental Stability, Career, Marriage,
+          Health Risk, Wealth, Dasha, Transit) — only for a chart actually
+          loaded this session; no placeholder/demo chart is substituted. */}
+      {activeResult && (
+        <div className="mb-6">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
+            Chart KPI Scorecards
+          </h3>
+          <KpiScorecards result={activeResult} />
+        </div>
+      )}
 
       {/* Current Dasha & Transit + Active Yogas — only for a chart actually
           loaded this session; no placeholder/demo chart is substituted. */}
