@@ -205,14 +205,16 @@ function StatCard({
   caveat,
   icon,
   accent,
+  href,
 }: {
   label: string;
   value: string;
   caveat: string;
   icon: "charts" | "research" | "hypotheses" | "confirmation";
   accent: "cyan" | "violet" | "success" | "gold";
+  href?: string;
 }) {
-  return <KpiCard label={label} value={value} caveat={caveat} icon={<StatIcon kind={icon} />} accent={accent} />;
+  return <KpiCard label={label} value={value} caveat={caveat} icon={<StatIcon kind={icon} />} accent={accent} href={href} />;
 }
 
 function ActiveYogaRow({ yoga }: { yoga: YogaResultResponse }) {
@@ -444,6 +446,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           caveat="Charts saved to your account."
           icon="charts"
           accent="cyan"
+          href="/charts/history"
         />
         <StatCard
           label="Active Research"
@@ -451,6 +454,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           caveat="Research projects with status = active."
           icon="research"
           accent="violet"
+          href="/research/projects"
         />
         <StatCard
           label="Hypotheses Logged"
@@ -458,6 +462,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           caveat="AI-generated hypotheses flagged for review, total."
           icon="hypotheses"
           accent="success"
+          href="/research/hypotheses"
         />
         <StatCard
           label="Confirmation Rate"
@@ -465,6 +470,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           caveat="Confirmed ÷ (confirmed + rejected) among reviewed hypotheses."
           icon="confirmation"
           accent="gold"
+          href="/research/hypotheses"
         />
       </div>
 
