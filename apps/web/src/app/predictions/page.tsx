@@ -6,11 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { PredictionStepList } from "@/components/charts/predictions/PredictionStepList";
 import { PredictionStepDetail } from "@/components/charts/predictions/PredictionStepDetail";
-import { PredictionScorePanel } from "@/components/charts/predictions/PredictionScorePanel";
-import { PredictionScoreBreakdown } from "@/components/charts/predictions/PredictionScoreBreakdown";
 import { PredictionDashaTimeline } from "@/components/charts/predictions/PredictionDashaTimeline";
 import { PredictionDataSources } from "@/components/charts/predictions/PredictionDataSources";
 import { PredictionRelatedRules } from "@/components/charts/predictions/PredictionRelatedRules";
+import { PredictionFactorsPanel } from "@/components/charts/predictions/PredictionFactorsPanel";
+import { PredictionChainGraph } from "@/components/charts/predictions/PredictionChainGraph";
+import { FormulaInspectorPanel } from "@/components/charts/predictions/FormulaInspectorPanel";
 import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
@@ -19,6 +20,15 @@ import { useShadbalaAll } from "@/lib/shadbala";
 import { buildPredictionGraph } from "@/lib/predictions/chainEngine";
 import { AREA_LABELS, type LifeArea } from "@/lib/predictions/types";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
+import {
+  ConfidenceHeatmap,
+  CategoryStrengthRadar,
+  YogaImpactHeatmap,
+  SourceDensityHeatmap,
+  OverallConfidenceRadar,
+  QuickInsights,
+  type AreaGraphEntry,
+} from "@/components/charts/predictions/PredictionInsights";
 
 const AREA_KEYS = Object.keys(AREA_LABELS) as LifeArea[];
 
@@ -26,12 +36,13 @@ function isLifeArea(v: string | null): v is LifeArea {
   return !!v && (AREA_KEYS as string[]).includes(v);
 }
 
-type TabId = "overview" | "formula" | "timeline" | "yogas" | "sources" | "ai";
+type TabId = "overview" | "formula" | "timeline" | "yogas" | "sources" | "ai" | "insights";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "overview", label: "Overview" },
   { id: "formula", label: "Formula Inspector" },
   { id: "timeline", label: "Timeline" },
+  { id: "insights", label: "Heatmap / Radar" },
   { id: "yogas", label: "Yogas" },
   { id: "sources", label: "Sources" },
   { id: "ai", label: "AI Explain" },
@@ -106,6 +117,15 @@ export default function PredictionsPage() {
 
   const selectedNode = graph?.nodes.find((n) => n.id === selectedNodeId) ?? null;
 
+  const allAreaGraphs: AreaGraphEntry[] = useMemo(() => {
+    if (!result) return [];
+    return AREA_KEYS.map((a) => ({
+      area: a,
+      label: AREA_LABELS[a],
+      graph: buildPredictionGraph(a, result, { avastha: avasthaQuery.data, shadbalaAll: shadbalaAllQuery.data }),
+    }));
+  }, [result, avasthaQuery.data, shadbalaAllQuery.data]);
+
   if (!result) {
     return (
       <AppShell sectionColor="--section-analysis">
@@ -141,15 +161,24 @@ export default function PredictionsPage() {
   return (
     <AppShell sectionColor="--section-analysis">
       <div className="flex flex-col gap-5">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
+          <span>Predictions</span>
+          <span>›</span>
+          <span style={{ color: "var(--text-secondary)" }}>{graph?.finalLabel ?? "Prediction Explorer"}</span>
+        </div>
+
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-baseline gap-3">
             <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
-              Prediction Explorer
+              {graph?.finalLabel ?? "Prediction Explorer"}
             </h1>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Explainability Center — inspect every calculation behind each prediction.
-            </p>
+            {graph && (
+              <span className="text-2xl font-bold" style={{ color: "var(--accent)" }}>
+                {graph.finalScore} <span className="text-sm font-normal" style={{ color: "var(--text-muted)" }}>/ 100</span>
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <select
@@ -174,6 +203,30 @@ export default function PredictionsPage() {
           </div>
         </div>
 
+        {graph && (
+          <div className="flex flex-wrap items-center gap-6">
+            <span className="flex items-center gap-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+              Confidence
+              <span
+                className="rounded-full px-2.5 py-1 text-xs font-semibold"
+                style={{
+                  color: graph.confidence.level === "High" ? "#34d399" : graph.confidence.level === "Medium" ? "#fbbf24" : "#f87171",
+                  border: `1px solid ${graph.confidence.level === "High" ? "#34d399" : graph.confidence.level === "Medium" ? "#fbbf24" : "#f87171"}`,
+                }}
+              >
+                {graph.confidence.level}
+              </span>
+            </span>
+            <span className="flex min-w-[180px] items-center gap-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+              Data Completeness
+              <span className="h-1.5 w-24 overflow-hidden rounded-full" style={{ backgroundColor: "var(--border-primary)" }}>
+                <span className="block h-full rounded-full" style={{ width: `${graph.confidence.dataCompletePercent}%`, backgroundColor: "var(--accent)" }} />
+              </span>
+              <span style={{ color: "var(--text-primary)" }}>{graph.confidence.dataCompletePercent}%</span>
+            </span>
+          </div>
+        )}
+
         {/* Tabs */}
         <div className="flex gap-1 border-b" style={{ borderColor: "var(--border-primary)" }}>
           {TABS.map((tab) => (
@@ -195,66 +248,45 @@ export default function PredictionsPage() {
         {graph && (
           <div>
             {activeTab === "overview" && (
-              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr_300px]">
-                <PredictionStepList nodes={graph.nodes} selectedId={selectedNodeId} onSelect={setSelectedNodeId} />
-
-                <PredictionStepDetail node={selectedNode} />
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr_340px]">
+                <PredictionFactorsPanel
+                  nodes={graph.nodes}
+                  selectedId={selectedNodeId}
+                  onSelect={setSelectedNodeId}
+                  baseline={graph.baseline}
+                  finalScore={graph.finalScore}
+                />
 
                 <div className="flex flex-col gap-5">
-                  <PredictionScorePanel finalLabel={graph.finalLabel} finalScore={graph.finalScore} confidence={graph.confidence} />
-                  <PredictionScoreBreakdown categories={graph.categories} baseline={graph.baseline} finalScore={graph.finalScore} />
-                  <PredictionDashaTimeline entries={graph.dashaTimeline} />
-                  <PredictionDataSources sources={graph.dataSources} />
+                  <PredictionChainGraph graph={graph} selectedId={selectedNodeId} onSelect={setSelectedNodeId} />
+                  <div className="glass-card p-5">
+                    <h3 className="mb-2 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                      Summary
+                    </h3>
+                    <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                      {[...graph.nodes]
+                        .filter((n) => !n.unavailable && n.detail.length > 0)
+                        .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+                        .slice(0, 3)
+                        .map((n) => n.detail[0])
+                        .join(" ") || "No computation detail available for this chart yet."}
+                    </p>
+                  </div>
                 </div>
+
+                <FormulaInspectorPanel
+                  nodes={graph.nodes}
+                  selectedId={selectedNodeId}
+                  onSelect={setSelectedNodeId}
+                  onViewSources={() => setActiveTab("sources")}
+                />
               </div>
             )}
 
             {activeTab === "formula" && (
-              <div className="glass-card p-6">
-                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
-                  Formula Inspector
-                </h3>
-                <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
-                  Select a factor from the Overview tab to inspect its formula, inputs, weights, and raw backend data.
-                </p>
-                {selectedNode ? (
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
-                        {selectedNode.label}
-                      </h4>
-                      <p className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>
-                        Formula Version: {selectedNode.formulaVersion}
-                      </p>
-                      <div className="space-y-2">
-                        <div>
-                          <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>Inputs: </span>
-                          <pre className="text-xs mt-1 p-2 rounded" style={{ backgroundColor: "var(--bg-card)", color: "var(--text-primary)" }}>
-                            {JSON.stringify(selectedNode.inputs, null, 2)}
-                          </pre>
-                        </div>
-                        <div>
-                          <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>Raw Data: </span>
-                          <pre className="text-xs mt-1 p-2 rounded" style={{ backgroundColor: "var(--bg-card)", color: "var(--text-primary)" }}>
-                            {JSON.stringify(selectedNode.raw, null, 2)}
-                          </pre>
-                        </div>
-                        <div>
-                          <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>Computation Details: </span>
-                          <ul className="mt-1 space-y-1">
-                            {selectedNode.detail.map((d, i) => (
-                              <li key={i} className="text-xs" style={{ color: "var(--text-primary)" }}>{d}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    No factor selected. Go to Overview and click a factor to inspect it.
-                  </p>
-                )}
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
+                <PredictionStepList nodes={graph.nodes} selectedId={selectedNodeId} onSelect={setSelectedNodeId} />
+                <PredictionStepDetail node={selectedNode} />
               </div>
             )}
 
@@ -264,6 +296,21 @@ export default function PredictionsPage() {
                   Dasha Timeline
                 </h3>
                 <PredictionDashaTimeline entries={graph.dashaTimeline} />
+              </div>
+            )}
+
+            {activeTab === "insights" && (
+              <div className="flex flex-col gap-5">
+                <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+                  <ConfidenceHeatmap areaGraphs={allAreaGraphs} />
+                  <CategoryStrengthRadar graph={graph} />
+                  <YogaImpactHeatmap areaGraphs={allAreaGraphs} />
+                </div>
+                <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+                  <SourceDensityHeatmap areaGraphs={allAreaGraphs} />
+                  <OverallConfidenceRadar areaGraphs={allAreaGraphs} />
+                  <QuickInsights areaGraphs={allAreaGraphs} />
+                </div>
               </div>
             )}
 
