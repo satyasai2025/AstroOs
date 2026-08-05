@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import Link from "next/link";
+import type { CSSProperties, ReactNode } from "react";
 
 type KpiAccent = "cyan" | "gold" | "violet" | "success";
 
@@ -21,29 +22,42 @@ interface KpiCardProps {
    * source needs a one-line explanation (real backend field vs synthesized
    * heuristic, etc). */
   caveat?: ReactNode;
+  /** When set, the whole card becomes a link to this route (e.g. a "Total
+   * Charts" KPI linking to /charts/history) — cards without it stay plain,
+   * non-interactive summary tiles (e.g. research/dashboard's placeholder
+   * KPIs, which have nowhere real to link to yet). */
+  href?: string;
 }
 
-export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "cyan", icon, caveat }: KpiCardProps) {
+export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "cyan", icon, caveat, href }: KpiCardProps) {
   const a = ACCENTS[accent] || ACCENTS.cyan;
   const up = deltaDirection === "up";
   // Long text values (e.g. "No reviews yet") wrap ugly at the default
   // display size — mirrors the kit mockup's own length-based downshift.
   const valueFontSize = typeof value === "string" && value.length > 4 ? "var(--text-xl)" : "var(--text-3xl)";
-  return (
+
+  const cardStyle: CSSProperties = {
+    background: "linear-gradient(180deg, var(--bg-surface-800), var(--bg-surface-700))",
+    border: "1px solid var(--border-default)",
+    borderRadius: "var(--radius-lg)",
+    padding: "var(--space-2_5)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "var(--space-1_5)",
+    boxShadow: "var(--shadow-md)",
+    position: "relative",
+    overflow: "hidden",
+    minWidth: 180,
+  };
+
+  const content = (
     <div
-      style={{
-        background: "linear-gradient(180deg, var(--bg-surface-800), var(--bg-surface-700))",
-        border: "1px solid var(--border-default)",
-        borderRadius: "var(--radius-lg)",
-        padding: "var(--space-2_5)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--space-1_5)",
-        boxShadow: "var(--shadow-md)",
-        position: "relative",
-        overflow: "hidden",
-        minWidth: 180,
-      }}
+      style={
+        href
+          ? { ...cardStyle, cursor: "pointer", transition: "border-color var(--duration-fast, 150ms), transform var(--duration-fast, 150ms)" }
+          : cardStyle
+      }
+      className={href ? "group hover:-translate-y-0.5 hover:border-white/30" : undefined}
     >
       <div
         style={{
@@ -96,4 +110,14 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
       )}
     </div>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block no-underline">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 }
