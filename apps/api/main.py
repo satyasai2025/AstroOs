@@ -46,6 +46,7 @@ from apps.api.routers import knowledge as knowledge_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import report as report_router
 from apps.api.routers import research as research_router
+from apps.api.routers import search as search_router
 from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import avastha as avastha_router
 from apps.api.routers import shadbala as shadbala_router

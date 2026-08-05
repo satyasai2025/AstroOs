@@ -224,6 +224,35 @@ class BirthChartRepository:
         )
         return (await self._session.execute(stmt)).scalar_one()
 
+    async def search_for_user(
+        self,
+        user_id: uuid.UUID,
+        query_text: str,
+        *,
+        limit: int = 20,
+    ) -> list[BirthChartModel]:
+        """
+        Search a user's saved charts by subject name, place name, lagna rashi,
+        moon nakshatra, or notes. Case-insensitive substring match.
+        """
+        term = f"%{query_text.strip().lower()}%"
+        stmt = (
+            select(BirthChartModel)
+            .where(BirthChartModel.user_id == user_id)
+            .where(BirthChartModel.deleted_at.is_(None))
+            .where(
+                func.lower(BirthChartModel.subject_name).like(term)
+                | func.lower(BirthChartModel.place_name).like(term)
+                | func.lower(BirthChartModel.lagna_rashi).like(term)
+                | func.lower(BirthChartModel.moon_nakshatra).like(term)
+                | func.lower(BirthChartModel.notes).like(term)
+            )
+            .order_by(BirthChartModel.created_at.desc())
+            .limit(limit)
+        )
+        result = await self._session.execute(stmt)
+        return list(result.scalars().all())
+
     async def soft_delete(self, chart_id: uuid.UUID, user_id: uuid.UUID) -> bool:
         """
         Soft-delete a saved chart: sets deleted_at rather than removing the

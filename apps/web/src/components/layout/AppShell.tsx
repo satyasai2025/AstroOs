@@ -1,5 +1,6 @@
 "use client";
 
+import { SearchBar } from "@/components/layout/SearchBar";
 import { ResearchModeToggle } from "@/components/research/ResearchModeToggle";
 import { tokenStore } from "@/lib/api";
 import { useCurrentUser, useLogout } from "@/lib/auth";
@@ -458,7 +459,7 @@ export function AppShell({
             </Link>
           </div>
 
-          <div className="hidden lg:block" />
+          <SearchBar />
 
           <div className="flex items-center gap-3">
             <span className="hidden text-sm sm:inline" style={{ color: "var(--text-secondary)" }}>

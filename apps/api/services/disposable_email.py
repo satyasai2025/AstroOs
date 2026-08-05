@@ -11,7 +11,9 @@ yet; add to it directly rather than waiting on a package release.
 
 from disposable_email_domains import blocklist
 
-EXTRA_BLOCKED_DOMAINS: frozenset[str] = frozenset()
+EXTRA_BLOCKED_DOMAINS: frozenset[str] = frozenset({
+    "aghism.com",
+})
 
 
 def is_disposable_email(email: str) -> bool:
