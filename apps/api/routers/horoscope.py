@@ -333,3 +333,28 @@ async def delete_chart(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No saved chart with that id, or it isn't yours.",
         )
+
+
+@router.post(
+    "/charts/{chart_id}/set-default",
+    summary="Mark a saved chart as the user's default",
+    description=(
+        "Sets one of the authenticated user's saved charts as their "
+        "default, unsetting whichever chart previously held that flag. "
+        "A user's first saved chart is marked default automatically; this "
+        "endpoint is for switching it to a different chart later."
+    ),
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def set_default_chart(
+    chart_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_from_bearer),
+    session: AsyncSession = Depends(get_db_session),
+) -> None:
+    repo = BirthChartRepository(session)
+    ok = await repo.set_default(chart_id, current_user.id.value)
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No saved chart with that id, or it isn't yours.",
+        )

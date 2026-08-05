@@ -98,6 +98,13 @@ class BirthChartRepository:
                 await self._session.flush()
             return existing.id
 
+        # A user's very first saved chart becomes their default automatically
+        # — checked before insert so it only ever fires once per user, and
+        # only on this dedup-miss branch (a request that reuses an existing
+        # row via the dedup match above never re-evaluates "is this the
+        # first chart").
+        is_first_chart = user_id is not None and await self.count_for_user(user_id) == 0
+
         model = BirthChartModel(
             id=uuid.uuid4(),
             user_id=user_id,
@@ -109,10 +116,47 @@ class BirthChartRepository:
             ayanamsa=ayanamsa,
             house_system=house_system,
             place_name=place_name,
+            is_default=is_first_chart,
         )
         self._session.add(model)
         await self._session.flush()
         return model.id
+
+    async def set_default(self, chart_id: uuid.UUID, user_id: uuid.UUID) -> bool:
+        """
+        Mark one of user_id's charts as their default, unsetting whichever
+        chart (if any) held that flag before. Both updates happen in one
+        flush so the partial unique index (migration 0016) never sees two
+        True rows for the same user at once.
+
+        Returns False (not an exception) for "doesn't exist", "already
+        deleted", or "belongs to someone else" — same convention as
+        soft_delete — so the router can uniformly 404 without leaking
+        which case it was.
+        """
+        target_stmt = (
+            select(BirthChartModel)
+            .where(BirthChartModel.id == chart_id)
+            .where(BirthChartModel.user_id == user_id)
+            .where(BirthChartModel.deleted_at.is_(None))
+        )
+        target = (await self._session.execute(target_stmt)).scalar_one_or_none()
+        if target is None:
+            return False
+
+        if not target.is_default:
+            previous_default_stmt = (
+                select(BirthChartModel)
+                .where(BirthChartModel.user_id == user_id)
+                .where(BirthChartModel.is_default.is_(True))
+                .where(BirthChartModel.deleted_at.is_(None))
+            )
+            previous_default = (await self._session.execute(previous_default_stmt)).scalar_one_or_none()
+            if previous_default is not None:
+                previous_default.is_default = False
+            target.is_default = True
+            await self._session.flush()
+        return True
 
     async def update_d1_summary(
         self,

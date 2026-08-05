@@ -37,3 +37,19 @@ export function useDeleteChart() {
     },
   });
 }
+
+/**
+ * Marks a saved chart as the user's default (POST
+ * /api/v1/horoscope/charts/{id}/set-default), unsetting whichever chart
+ * previously held that flag, then refetches the saved-charts list so the
+ * "Default" badge moves without a manual page reload.
+ */
+export function useSetDefaultChart() {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (chartId: string) => api.post<void>(`/api/v1/horoscope/charts/${chartId}/set-default`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: chartKeys.mine });
+    },
+  });
+}

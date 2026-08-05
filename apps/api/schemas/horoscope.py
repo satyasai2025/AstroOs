@@ -184,6 +184,7 @@ class BirthChartSummarySchema(BaseModel):
     lagna_rashi: Optional[str] = None
     moon_nakshatra: Optional[str] = None
     created_at: datetime
+    is_default: bool = False
 
     model_config = {"from_attributes": True}
 

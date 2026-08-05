@@ -250,6 +250,7 @@ export interface BirthChartSummary {
   lagna_rashi: string | null;
   moon_nakshatra: string | null;
   created_at: string;
+  is_default: boolean;
 }
 
 export interface BirthChartListResponse {
