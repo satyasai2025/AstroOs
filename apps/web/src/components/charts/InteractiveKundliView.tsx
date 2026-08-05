@@ -13,7 +13,14 @@ import type {
   PlanetPositionSchema,
   AspectSchema,
   HouseCuspSchema,
+  AllVargaChartsResponse,
+  ShadbalaTotalResponse,
+  WorkflowAnalysisRequest,
 } from "@/lib/types";
+import { naturalRelationship } from "@/lib/planetRelations";
+import { useShadbalaAll } from "@/lib/shadbala";
+import { useKarakatvaSearch, type Karakatva } from "@/lib/karakatva";
+import { useAvastha } from "@/lib/avastha";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -23,6 +30,15 @@ interface InteractiveKundliViewProps {
   chart: D1ChartResponse;
   /** Optional: pre-selected planet to pin on mount */
   initialPlanet?: string;
+  /** Divisional charts, when the caller's analysis computed them
+   * (request.include_vargas) — powers the Divisional Charts card. */
+  vargas?: AllVargaChartsResponse | null;
+  /** Per-planet Shadbala totals from the same /workflow/analyze
+   * response — powers the Strength card's Shadbala row. */
+  shadbala?: ShadbalaTotalResponse[] | null;
+  /** Original birth request, needed to compute Digbala and Avastha
+   * (both are compute-only endpoints, not part of the saved chart). */
+  request?: WorkflowAnalysisRequest | null;
 }
 
 type TabId = "chart" | "planets" | "houses" | "aspects";
@@ -354,6 +370,9 @@ function PlanetBadge({
 export default function InteractiveKundliView({
   chart,
   initialPlanet,
+  vargas = null,
+  shadbala = null,
+  request = null,
 }: InteractiveKundliViewProps) {
   const [activeTab, setActiveTab] = useState<TabId>("chart");
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
@@ -365,6 +384,19 @@ export default function InteractiveKundliView({
 
   const activePlanet = pinnedPlanet ?? hoveredPlanet;
   const activeHouse = selectedHouse ?? hoveredHouse;
+
+  // ── Extra per-planet data for the redesigned detail panel ──
+  // Digbala isn't in the /workflow/analyze response (only the combined
+  // Shadbala total is) — useShadbalaAll hits its own compute-only
+  // endpoint, same pattern as the standalone AvasthaPanel/
+  // IshtaKashtaBalaPanel elsewhere on this page. TanStack Query dedupes
+  // by query key, so this doesn't double-fetch if those panels are also
+  // mounted with the same `request`.
+  const { data: shadbalaAll } = useShadbalaAll(request);
+  const { data: avasthaData } = useAvastha(request);
+  const karakatvaGraha =
+    activePlanet && activePlanet !== "Ascendant" ? activePlanet.toLowerCase() : "";
+  const { data: karakatvaData } = useKarakatvaSearch({ graha: karakatvaGraha });
 
   // ── Ascendant info ──
   const asc = chart.ascendant;
@@ -689,8 +721,13 @@ export default function InteractiveKundliView({
       </div>
 
       {/* ── Right: Detail Panel ── */}
+      {/* Wider than lg:w-80 when showing the planet card grid — the
+          other tabs (houses/aspects/overview) are simple text lists and
+          stay at the narrower width. */}
       <div
-        className="w-full border-t lg:w-80 lg:border-t-0 lg:border-l"
+        className={`w-full border-t lg:border-t-0 lg:border-l ${
+          activeTab === "planets" || activePlanet ? "lg:w-[440px]" : "lg:w-80"
+        }`}
         style={{ borderColor: "var(--obsidian-border)" }}
       >
         {activeTab === "planets" || activePlanet ? (
@@ -698,6 +735,11 @@ export default function InteractiveKundliView({
             planet={activePlanet}
             detail={planetDetail}
             chart={chart}
+            vargas={vargas}
+            shadbala={shadbala}
+            digbala={shadbalaAll?.phase1.dig_bala ?? null}
+            avasthas={avasthaData?.avasthas ?? null}
+            karakatvas={karakatvaData?.karakatvas ?? null}
           />
         ) : activeTab === "houses" || activeHouse ? (
           <HouseExplorerPanel
@@ -726,6 +768,11 @@ function PlanetExplorerPanel({
   planet,
   detail,
   chart,
+  vargas,
+  shadbala,
+  digbala,
+  avasthas,
+  karakatvas,
 }: {
   planet: string | null;
   detail: {
@@ -735,6 +782,17 @@ function PlanetExplorerPanel({
     conjunctions: PlanetPositionSchema[];
   } | null;
   chart: D1ChartResponse;
+  vargas?: AllVargaChartsResponse | null;
+  shadbala?: ShadbalaTotalResponse[] | null;
+  digbala?: { planet: string; value_shashtiamsas: number; trace: string[] }[] | null;
+  avasthas?: {
+    planet: string;
+    baladi_avastha: string;
+    baladi_trace: string[];
+    deeptadi_avastha: string;
+    deeptadi_trace: string[];
+  }[] | null;
+  karakatvas?: Karakatva[] | null;
 }) {
   if (!planet || !detail) {
     return (
@@ -749,11 +807,29 @@ function PlanetExplorerPanel({
 
   const { position: pos, strength, aspects, conjunctions } = detail;
   const color = PLANET_COLORS[planet] || "#B0BEC5";
+  const isExceptionalDignity =
+    strength?.dignity === "exalted" ||
+    strength?.dignity === "debilitated" ||
+    strength?.dignity === "own_sign" ||
+    strength?.dignity === "moolatrikona";
+
+  const relationship = naturalRelationship(planet);
+  const shadbalaRow = shadbala?.find((s) => s.planet === planet);
+  const digbalaRow = digbala?.find((d) => d.planet === planet);
+  const avasthaRow = avasthas?.find((a) => a.planet === planet);
+  const vargaCodes: string[] = ["D9", "D10", "D60"];
+  const vargaRows = vargaCodes
+    .map((code) => {
+      const chartForVarga = vargas?.charts[code];
+      const row = chartForVarga?.planet_positions.find((p) => p.planet === planet);
+      return row ? { code, sign: row.varga_rashi, house: row.varga_house_number } : null;
+    })
+    .filter((r): r is { code: string; sign: string; house: number } => r !== null);
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-4" style={{ maxHeight: "100%" }}>
       {/* Planet header */}
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex items-start gap-3">
         <div
           className="flex h-10 w-10 items-center justify-center rounded-lg text-lg font-bold"
           style={{
@@ -766,7 +842,7 @@ function PlanetExplorerPanel({
         </div>
         <div>
           <h3
-            className="text-sm font-bold"
+            className="text-sm font-bold capitalize"
             style={{ color: "var(--obsidian-text-primary)" }}
           >
             {planet}
@@ -775,20 +851,33 @@ function PlanetExplorerPanel({
             className="text-xs"
             style={{ color: "var(--obsidian-text-muted)" }}
           >
-            {pos.rashi} · House {pos.house_number}
+            {pos.rashi} · House {pos.house_number} · {pos.nakshatra} (Pada {pos.pada})
           </span>
         </div>
-        {pos.is_retrograde && (
-          <span
-            className="ml-auto rounded-full px-2 py-0.5 text-xs font-medium"
-            style={{
-              backgroundColor: "rgba(245, 158, 11, 0.15)",
-              color: "#F59E0B",
-            }}
-          >
-            ℞ Retro
-          </span>
-        )}
+        <div className="ml-auto flex flex-col items-end gap-1">
+          {isExceptionalDignity && strength?.dignity && (
+            <span
+              className="rounded-full px-2 py-0.5 text-xs font-medium"
+              style={{
+                backgroundColor: `${DIGNITY_COLORS[strength.dignity]}20`,
+                color: DIGNITY_COLORS[strength.dignity],
+              }}
+            >
+              {DIGNITY_LABELS[strength.dignity]?.split(" (")[0].toUpperCase()}
+            </span>
+          )}
+          {pos.is_retrograde && (
+            <span
+              className="rounded-full px-2 py-0.5 text-xs font-medium"
+              style={{
+                backgroundColor: "rgba(245, 158, 11, 0.15)",
+                color: "#F59E0B",
+              }}
+            >
+              ℞ Retro
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Position details */}
@@ -849,6 +938,129 @@ function PlanetExplorerPanel({
           />
         </>
       )}
+
+      {/* New Phase 1 cards: Relationships / Strength / Karakatva / Divisional / Avastha */}
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <DetailCard
+          title="Relationships"
+          tooltip="Naisargika Maitri — natural (permanent) friend/neutral/enemy relationship between planets, independent of this chart."
+        >
+          {relationship ? (
+            <>
+              <RelationRow label="Friends" color="#22C55E" planets={relationship.friends} />
+              <RelationRow label="Neutral" color="#F59E0B" planets={relationship.neutral} />
+              <RelationRow label="Enemies" color="#EF4444" planets={relationship.enemies} />
+            </>
+          ) : (
+            <EmptyNote>Not defined for {planet} in classical texts.</EmptyNote>
+          )}
+        </DetailCard>
+
+        <DetailCard
+          title="Strength"
+          tooltip="Shadbala: overall planetary strength from classical Shadbala algorithms. Digbala: directional strength based on orientation relative to the angles (Kendras)."
+        >
+          {shadbalaRow ? (
+            <InfoRow label="Shadbala" value={`${shadbalaRow.total_rupas.toFixed(2)} Rupas`} />
+          ) : (
+            <EmptyNote>Shadbala not computed for this analysis.</EmptyNote>
+          )}
+          {digbalaRow ? (
+            <InfoRow
+              label="Digbala"
+              value={`${digbalaRow.value_shashtiamsas.toFixed(2)} Shashtiamsas`}
+            />
+          ) : (
+            <EmptyNote>Digbala needs birth data to compute.</EmptyNote>
+          )}
+        </DetailCard>
+
+        <DetailCard
+          title="Significations (Karakatva)"
+          tooltip="Natural significations and domains this planet governs, from the curated Karakatva catalogue."
+        >
+          {karakatvas && karakatvas.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {karakatvas.slice(0, 6).map((k) => (
+                <Pill key={k.id}>{k.subject}</Pill>
+              ))}
+            </div>
+          ) : (
+            <EmptyNote>No catalogued significations found for {planet}.</EmptyNote>
+          )}
+          <a
+            href="/karakatva"
+            className="mt-2 inline-block text-xs font-medium"
+            style={{ color: "var(--obsidian-accent-primary)" }}
+          >
+            View all on Karakatva page →
+          </a>
+        </DetailCard>
+
+        <DetailCard
+          title="Divisional Charts"
+          tooltip="This planet's sign and house placement in the D9 (Navamsa), D10 (Dasamsha), and D60 (Shashtiamsha) divisional charts."
+        >
+          {vargaRows.length > 0 ? (
+            <table className="w-full text-xs">
+              <thead>
+                <tr style={{ color: "var(--obsidian-text-muted)" }}>
+                  <th className="pb-1 text-left font-medium">Chart</th>
+                  <th className="pb-1 text-left font-medium">Sign</th>
+                  <th className="pb-1 text-right font-medium">House</th>
+                </tr>
+              </thead>
+              <tbody>
+                {vargaRows.map((r) => (
+                  <tr key={r.code}>
+                    <td className="py-0.5" style={{ color: "var(--obsidian-text-primary)" }}>
+                      {r.code}
+                    </td>
+                    <td className="py-0.5 capitalize" style={{ color: "var(--obsidian-text-primary)" }}>
+                      {r.sign}
+                    </td>
+                    <td className="py-0.5 text-right" style={{ color: "var(--obsidian-text-primary)" }}>
+                      H{r.house}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <EmptyNote>Divisional charts weren't computed for this analysis.</EmptyNote>
+          )}
+        </DetailCard>
+      </div>
+
+      <div className="mt-3">
+        <DetailCard
+          title="Avastha (State)"
+          tooltip="Planetary state and physical condition according to classical Jyotish rules — Baladi (age-state) and Deeptadi (dignity-state)."
+        >
+          {avasthaRow ? (
+            <>
+              <AvasthaRow label="Baladi" value={avasthaRow.baladi_avastha} trace={avasthaRow.baladi_trace} />
+              <AvasthaRow
+                label="Deeptadi"
+                value={avasthaRow.deeptadi_avastha}
+                trace={avasthaRow.deeptadi_trace}
+              />
+            </>
+          ) : (
+            <EmptyNote>Avastha needs birth data to compute.</EmptyNote>
+          )}
+        </DetailCard>
+      </div>
+
+      <p
+        className="mt-4 text-xs"
+        style={{ color: "var(--obsidian-text-muted)" }}
+      >
+        Values shown are computed from classical Jyotish algorithms using the
+        current analysis. Metrics are displayed in their original units;
+        normalized scores are not shown unless defined by the underlying
+        calculation.
+      </p>
 
       {/* Conjunctions */}
       {conjunctions.length > 0 && (
@@ -1174,6 +1386,131 @@ function InfoRow({
       <span
         className="text-right font-medium"
         style={{ color: valueColor || "var(--obsidian-text-primary)" }}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}
+
+/** One card in the planet panel's grid. `tooltip` renders as a native
+ * title attribute on a small ⓘ mark next to the heading — no extra JS
+ * tooltip library, just enough to keep engine-reasoning detail out of
+ * the card's primary typography. */
+function DetailCard({
+  title,
+  tooltip,
+  children,
+}: {
+  title: string;
+  tooltip?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="rounded-lg p-3"
+      style={{
+        backgroundColor: "var(--obsidian-surface)",
+        border: "1px solid var(--obsidian-border)",
+      }}
+    >
+      <div className="mb-2 flex items-center gap-1">
+        <h4
+          className="text-xs font-semibold uppercase tracking-wide"
+          style={{ color: "var(--obsidian-accent-primary)" }}
+        >
+          {title}
+        </h4>
+        {tooltip && (
+          <span
+            title={tooltip}
+            className="cursor-help text-xs"
+            style={{ color: "var(--obsidian-text-muted)" }}
+            aria-label={tooltip}
+          >
+            ⓘ
+          </span>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function EmptyNote({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-xs" style={{ color: "var(--obsidian-text-muted)" }}>
+      {children}
+    </p>
+  );
+}
+
+function Pill({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      className="rounded-full px-2 py-0.5 text-xs capitalize"
+      style={{
+        backgroundColor: "var(--obsidian-accent-primary-soft)",
+        color: "var(--obsidian-accent-primary)",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function RelationRow({
+  label,
+  color,
+  planets,
+}: {
+  label: string;
+  color: string;
+  planets: string[];
+}) {
+  return (
+    <div className="mb-1.5 flex items-start gap-2 text-xs">
+      <span className="w-14 shrink-0" style={{ color: "var(--obsidian-text-muted)" }}>
+        {label}
+      </span>
+      {planets.length > 0 ? (
+        <div className="flex flex-wrap gap-1">
+          {planets.map((p) => (
+            <span
+              key={p}
+              className="rounded-full px-2 py-0.5 capitalize"
+              style={{ backgroundColor: `${color}20`, color }}
+            >
+              {p}
+            </span>
+          ))}
+        </div>
+      ) : (
+        <span style={{ color: "var(--obsidian-text-muted)" }}>—</span>
+      )}
+    </div>
+  );
+}
+
+/** One Avastha row (Baladi or Deeptadi) — the trace is shown via the
+ * native title attribute, not inline, per "trace preservation without
+ * polluting primary card typography". */
+function AvasthaRow({
+  label,
+  value,
+  trace,
+}: {
+  label: string;
+  value: string;
+  trace: string[];
+}) {
+  return (
+    <div className="flex items-center justify-between py-1 text-sm">
+      <span style={{ color: "var(--obsidian-text-muted)" }}>{label}</span>
+      <span
+        title={trace.join(" · ")}
+        className="cursor-help font-medium"
+        style={{ color: "var(--obsidian-text-primary)" }}
       >
         {value}
       </span>
