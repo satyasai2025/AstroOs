@@ -123,6 +123,19 @@ class Settings(BaseSettings):
     BATCH_OUTPUT_DIR: str = "data/batch_output"
     """Local directory where batch job result archives (zips) are written."""
 
+    # ── Email / SMTP (password reset) ───────────────────────────────────────
+    SMTP_HOST: str | None = None
+    """Left unset (safe local-development default), password-reset emails
+    are logged instead of sent — see apps/api/services/email_service.py."""
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str | None = None
+    SMTP_PASSWORD: str | None = None
+    SMTP_FROM_EMAIL: str = "noreply@astroos.local"
+    SMTP_USE_TLS: bool = True
+    FRONTEND_URL: str = "http://localhost:3000"
+    """Origin used to build links (e.g. the password-reset link) sent in emails."""
+    PASSWORD_RESET_TOKEN_TTL_MINUTES: int = 30
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

@@ -12,6 +12,22 @@ from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from apps.api.schemas.ephemeris import EphemerisStatusSchema
+from apps.api.services.disposable_email import is_disposable_email
+
+
+# ── Shared validators ────────────────────────────────────────────────────────
+
+
+def _validate_password_strength(v: str) -> str:
+    has_upper = any(c.isupper() for c in v)
+    has_lower = any(c.islower() for c in v)
+    has_digit = any(c.isdigit() for c in v)
+    if not (has_upper and has_lower and has_digit):
+        raise ValueError(
+            "Password must contain at least one uppercase letter, "
+            "one lowercase letter, and one digit."
+        )
+    return v
 
 
 # ── Request Schemas ───────────────────────────────────────────────────────────
@@ -33,6 +49,16 @@ class RegisterRequest(BaseModel):
         description="Password, 8–128 characters.",
     )
 
+    @field_validator("email")
+    @classmethod
+    def reject_disposable_email(cls, v: str) -> str:
+        if is_disposable_email(v):
+            raise ValueError(
+                "Disposable/temporary email addresses are not allowed. "
+                "Please use a permanent email address."
+            )
+        return v
+
     @field_validator("display_name")
     @classmethod
     def strip_display_name(cls, v: str) -> str:
@@ -41,15 +67,7 @@ class RegisterRequest(BaseModel):
     @field_validator("password")
     @classmethod
     def password_strength(cls, v: str) -> str:
-        has_upper = any(c.isupper() for c in v)
-        has_lower = any(c.islower() for c in v)
-        has_digit = any(c.isdigit() for c in v)
-        if not (has_upper and has_lower and has_digit):
-            raise ValueError(
-                "Password must contain at least one uppercase letter, "
-                "one lowercase letter, and one digit."
-            )
-        return v
+        return _validate_password_strength(v)
 
 
 class LoginRequest(BaseModel):
@@ -61,6 +79,27 @@ class LoginRequest(BaseModel):
 class RefreshTokenRequest(BaseModel):
     """Request payload for refresh token operations."""
     refresh_token: str = Field(..., description="Opaque refresh token string.")
+
+
+class ForgotPasswordRequest(BaseModel):
+    """Request payload for initiating a password reset."""
+    email: EmailStr = Field(..., description="Email address of the account.")
+
+
+class ResetPasswordRequest(BaseModel):
+    """Request payload for completing a password reset."""
+    token: str = Field(..., description="Opaque password-reset token from the email link.")
+    new_password: str = Field(
+        ...,
+        min_length=8,
+        max_length=128,
+        description="New password, 8–128 characters.",
+    )
+
+    @field_validator("new_password")
+    @classmethod
+    def password_strength(cls, v: str) -> str:
+        return _validate_password_strength(v)
 
 
 # ── Response Schemas ──────────────────────────────────────────────────────────

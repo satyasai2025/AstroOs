@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import {
   overallStrengthScore,
   currentDasha,
@@ -24,6 +25,10 @@ interface PercentCardDef {
   label: string;
   value: number;
   caveat: string;
+  /** Links into the Prediction Chain Explorer for this KPI, pre-selected
+   * to the matching life area — only set on Career/Marriage/Wealth, which
+   * have a real chain. Strength Score/Mental Stability have no chain. */
+  href?: string;
 }
 
 interface TextCardDef {
@@ -38,6 +43,7 @@ interface RiskCardDef {
   label: string;
   value: HealthRiskLabel;
   caveat: string;
+  href?: string;
 }
 
 type CardDef = PercentCardDef | TextCardDef | RiskCardDef;
@@ -57,13 +63,10 @@ function percentColor(value: number): string {
   return "#f87171";
 }
 
-function PercentCard({ label, value, caveat }: PercentCardDef) {
+function PercentCard({ label, value, caveat, href }: PercentCardDef) {
   const color = percentColor(value);
-  return (
-    <div
-      className="glass-card flex flex-col justify-between p-4"
-      style={{ borderColor: "var(--border-primary)" }}
-    >
+  const content = (
+    <>
       <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
         {label}
       </span>
@@ -79,6 +82,18 @@ function PercentCard({ label, value, caveat }: PercentCardDef) {
       <p className="mt-2 text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
         {caveat}
       </p>
+    </>
+  );
+  if (href) {
+    return (
+      <Link href={href} className="glass-card flex flex-col justify-between p-4 transition" style={{ borderColor: "var(--border-primary)" }}>
+        {content}
+      </Link>
+    );
+  }
+  return (
+    <div className="glass-card flex flex-col justify-between p-4" style={{ borderColor: "var(--border-primary)" }}>
+      {content}
     </div>
   );
 }
@@ -102,13 +117,10 @@ function TextCard({ label, value, caveat }: TextCardDef) {
   );
 }
 
-function RiskCard({ label, value, caveat }: RiskCardDef) {
+function RiskCard({ label, value, caveat, href }: RiskCardDef) {
   const color = RISK_COLORS[value];
-  return (
-    <div
-      className="glass-card flex flex-col justify-between p-4"
-      style={{ borderColor: "var(--border-primary)" }}
-    >
+  const content = (
+    <>
       <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
         {label}
       </span>
@@ -121,6 +133,18 @@ function RiskCard({ label, value, caveat }: RiskCardDef) {
       <p className="mt-2 text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
         {caveat}
       </p>
+    </>
+  );
+  if (href) {
+    return (
+      <Link href={href} className="glass-card flex flex-col justify-between p-4 transition" style={{ borderColor: "var(--border-primary)" }}>
+        {content}
+      </Link>
+    );
+  }
+  return (
+    <div className="glass-card flex flex-col justify-between p-4" style={{ borderColor: "var(--border-primary)" }}>
+      {content}
     </div>
   );
 }
@@ -160,24 +184,28 @@ export function KpiScorecards({ result }: KpiScorecardsProps) {
         label: "Career Index",
         value: careerIndex(result),
         caveat: "10th-lord + Saturn/Sun strength, dignity, Raja Yoga, career yogas. Default weights, tunable.",
+        href: "/predictions?kpi=career",
       },
       {
         kind: "percent",
         label: "Marriage Index",
         value: marriageIndex(result),
         caveat: "7th-lord + Venus/Jupiter strength, Manglik Dosha, 7th-house occupancy. Default weights, tunable.",
+        href: "/predictions?kpi=marriage",
       },
       {
         kind: "risk",
         label: "Health Risk",
         value: healthRisk(result),
         caveat: "6th/1st/8th-lord weakness (weighted). Label, not a fabricated precise percentage.",
+        href: "/predictions?kpi=health",
       },
       {
         kind: "percent",
         label: "Wealth Potential",
         value: wealthPotential(result),
         caveat: "2nd/11th-lord + Jupiter/Venus strength, Dhana Yoga bonus. Default weights, tunable.",
+        href: "/predictions?kpi=wealth",
       },
       {
         kind: "text",

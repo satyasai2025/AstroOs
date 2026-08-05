@@ -17,12 +17,15 @@ from apps.api.dependencies import (
     get_current_user_from_bearer,
 )
 from apps.api.domain.user import User
+from apps.api.middleware.rate_limit import limiter
 from apps.api.schemas.auth import (
     AuthResponse,
+    ForgotPasswordRequest,
     LoginRequest,
     MessageResponse,
     RefreshTokenRequest,
     RegisterRequest,
+    ResetPasswordRequest,
     TokenPairResponse,
     UserResponse,
 )
@@ -155,6 +158,41 @@ async def logout(
     if token:
         await auth_service.logout(token)
     return MessageResponse(message="Logged out successfully.")
+
+
+@router.post(
+    "/forgot-password",
+    response_model=MessageResponse,
+    summary="Request a password-reset email.",
+)
+@limiter.limit("3/hour")
+async def forgot_password(
+    request: Request,
+    body: ForgotPasswordRequest,
+    auth_service: AuthService = Depends(get_auth_service),
+) -> MessageResponse:
+    await auth_service.request_password_reset(body.email)
+    # Always the same response, whether or not the account exists —
+    # prevents using this endpoint to enumerate registered emails.
+    return MessageResponse(
+        message="If an account exists for that email, a reset link has been sent."
+    )
+
+
+@router.post(
+    "/reset-password",
+    response_model=MessageResponse,
+    summary="Complete a password reset with a token from the email link.",
+)
+async def reset_password(
+    body: ResetPasswordRequest,
+    auth_service: AuthService = Depends(get_auth_service),
+) -> MessageResponse:
+    try:
+        await auth_service.reset_password(body.token, body.new_password)
+    except AuthError as exc:
+        raise _handle_auth_error(exc) from exc
+    return MessageResponse(message="Password has been reset. Please sign in.")
 
 
 @router.get(

@@ -268,9 +268,15 @@ async def list_available_templates() -> list[str]:
 @router.post("/chart/pdf", summary="Generate chart report as PDF")
 async def generate_chart_pdf(
     body: ChartReportRequest,
+    template_name: str = "horoscope.html",
     wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
 ) -> Response:
-    """Generate a chart report as PDF using WeasyPrint."""
+    """Generate a chart report as PDF using WeasyPrint.
+
+    Optional query param ``template_name`` selects the Jinja2 template
+    (horoscope.html, career.html, marriage.html, health.html,
+    wealth.html, spiritual.html, transit.html).
+    """
     from apps.api.services.report_template_engine import ReportTemplateEngine
     horoscope_engine = HoroscopeEngine(wrapper)
     chart = await asyncio.to_thread(
@@ -298,11 +304,58 @@ async def generate_chart_pdf(
         subject_name=report.subject_name or "",
         sections=_sections_response(report.sections),
     )
-    pdf_bytes = ReportTemplateEngine.render_pdf(resp.model_dump())
+    pdf_bytes = ReportTemplateEngine.render_pdf(resp.model_dump(), template_name=template_name)
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{body.title or "report"}.pdf"'},
+    )
+
+
+@router.post("/chart/html", summary="Generate chart report as HTML")
+async def generate_chart_html(
+    body: ChartReportRequest,
+    template_name: str = "horoscope.html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    """Generate a chart report as standalone HTML.
+
+    Optional query param ``template_name`` selects the Jinja2 template
+    (horoscope.html, career.html, marriage.html, health.html,
+    wealth.html, spiritual.html, transit.html).
+    """
+    from apps.api.services.report_template_engine import ReportTemplateEngine
+    horoscope_engine = HoroscopeEngine(wrapper)
+    chart = await asyncio.to_thread(
+        horoscope_engine.generate_d1,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+    )
+    report = ReportEngine.build_chart_report(
+        chart,
+        timeline=_build_timeline(body.timeline),
+        verification=_build_verification(body.verification),
+        stats=_build_statistics(body.statistics),
+        title=body.title,
+        subject_name=body.subject_name,
+        generated_by=body.generated_by,
+    )
+    # Convert domain dataclass → Pydantic model before calling .model_dump()
+    # (AMP-009 fix: ChartReport is a plain @dataclass, not a BaseModel)
+    resp = ChartReportResponse(
+        metadata=_metadata_response(report.metadata),
+        title=report.title,
+        subject_name=report.subject_name or "",
+        sections=_sections_response(report.sections),
+    )
+    html_content = ReportTemplateEngine.render_html(resp.model_dump(), template_name=template_name)
+    return Response(
+        content=html_content,
+        media_type="text/html",
+        headers={"Content-Disposition": f'inline; filename="{body.title or "report"}.html"'},
     )
 
 

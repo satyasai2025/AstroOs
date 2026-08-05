@@ -9,7 +9,15 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, tokenStore } from "./api";
-import type { AuthResponse, LoginPayload, RegisterPayload, User } from "./types";
+import type {
+  AuthResponse,
+  ForgotPasswordPayload,
+  LoginPayload,
+  MessageResponse,
+  RegisterPayload,
+  ResetPasswordPayload,
+  User,
+} from "./types";
 
 // ── Query keys ────────────────────────────────────────────────────────────────
 
@@ -53,6 +61,22 @@ export function useLogin() {
       tokenStore.set(data.tokens.access_token, data.tokens.refresh_token);
       queryClient.setQueryData(authKeys.me, data.user);
     },
+  });
+}
+
+// ── Forgot / reset password ─────────────────────────────────────────────────────
+
+export function useForgotPassword() {
+  return useMutation<MessageResponse, Error, ForgotPasswordPayload>({
+    mutationFn: (payload) =>
+      api.post<MessageResponse>("/api/v1/auth/forgot-password", payload),
+  });
+}
+
+export function useResetPassword() {
+  return useMutation<MessageResponse, Error, ResetPasswordPayload>({
+    mutationFn: (payload) =>
+      api.post<MessageResponse>("/api/v1/auth/reset-password", payload),
   });
 }
 

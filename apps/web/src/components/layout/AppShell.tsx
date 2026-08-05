@@ -72,6 +72,7 @@ const NAV_SECTIONS: NavSection[] = [
       { href: "/charts?view=strength", label: "Shadbala", icon: "bar" },
       { href: "/charts?view=kp", label: "KP Analysis", icon: "target" },
       { href: "/charts?view=jaimini", label: "Jaimini Analysis", icon: "book", disabled: false },
+      { href: "/predictions", label: "Prediction Chain Explorer", icon: "sparkle" },
     ],
   },
   {

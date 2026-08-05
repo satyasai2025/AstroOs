@@ -4,6 +4,15 @@ All notable changes to AstroOS are documented here at the release-summary level.
 
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — 2026-07-23 — Bug Fixes & Security
+
+### Fixed
+
+- **AMP-009:** `ReportTemplateEngine._TEMPLATES_DIR` path corrected from `apps/api/templates/reports/` (one directory above project root) to project-root `templates/reports/`. All 8 Jinja2 templates now resolve correctly.
+- **AMP-010:** Added new `GET /reports/chart/html` endpoint for standalone HTML report generation, with `text/html` MIME type and `template_name` query parameter for selecting horoscope/career/marriage/health/wealth/spiritual/transit templates.
+- **Security:** `dataset_import` router ungated — added `require_researcher` RBAC dependency in `apps/api/main.py` to close the security gap flagged in Phase A objective 4.
+- **Documentation:** Removed stale "not yet built" claims in `docs/architecture.md` for Rule Engine, Research Engine, Saptavargaja Bala, Drekkana Bala, and divisional chart dignity computation.
+
 ## [2.3.0] — 2026-07-20 — "Lakshmi" (Phase III — Local-First Mobile & Plugins)
 
 Phase III of the v2.3.0 release cycle, codenamed "Lakshmi". Mobile apps,
@@ -44,15 +53,6 @@ marketplace replaced with local plugin directory.
   commands. Local-first privacy tools. No consent management (single-user).
   See `docs/research-data-privacy.md`.
 
-### Fixed
-
-- **AMP-009:** PDF/CSV report endpoints no longer crash with
-  `AttributeError: 'ChartReport' object has no attribute 'model_dump'`.
-  Domain dataclass now converted to Pydantic model before rendering.
-- **AMP-010:** `ReportTemplateEngine._TEMPLATES_DIR` corrected from invalid
-  path (above repo root) to `apps/api/templates/reports/`. 7 template files
-  created (base.html + horoscope, marriage, career, health, wealth, spiritual,
-  transit).
 
 ## [2.2.0] — 2026-07-20 — "Arundhati" (Phase II)
 

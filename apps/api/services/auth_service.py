@@ -23,7 +23,9 @@ from apps.api.domain.user import User, UserId
 from apps.api.repositories.user_repository import UserRepository
 from apps.api.security import jwt as jwt_module
 from apps.api.security.password import hash_password, verify_password
+from apps.api.security.tokens import generate_reset_token, hash_reset_token
 from apps.api.services.dtos import AuthResultDTO, AuthTokensDTO, UserDTO
+from apps.api.services.email_service import send_password_reset_email
 
 _settings = get_settings()
 
@@ -248,6 +250,46 @@ class AuthService:
         if jti and self._redis:
             ttl = _settings.REDIS_TOKEN_DENYLIST_TTL
             await self._redis.setex(f"denylist:{jti}", ttl, "1")
+
+    # ── Password reset ───────────────────────────────────────────────────────
+
+    async def request_password_reset(self, email: str) -> None:
+        """
+        Generate and email a reset link if *email* belongs to an account.
+
+        Always returns normally regardless of whether the account exists —
+        the router responds with the same generic message either way, so
+        this can't be used to enumerate registered emails.
+        """
+        user = await self._user_repo.get_by_email(email)
+        if not user:
+            return
+
+        token = generate_reset_token()
+        expires_at = datetime.now(timezone.utc) + timedelta(
+            minutes=_settings.PASSWORD_RESET_TOKEN_TTL_MINUTES
+        )
+        await self._user_repo.create_reset_token(
+            user_id=user.id,
+            token_hash=hash_reset_token(token),
+            expires_at=expires_at,
+        )
+
+        reset_link = f"{_settings.FRONTEND_URL}/reset-password?token={token}"
+        await send_password_reset_email(user.email, reset_link)
+
+    async def reset_password(self, token: str, new_password: str) -> None:
+        user_id_value = await self._user_repo.consume_reset_token(
+            hash_reset_token(token)
+        )
+        if user_id_value is None:
+            raise AuthError("Invalid or expired reset link.", status_code=400)
+
+        user_id = UserId(user_id_value)
+        await self._user_repo.update_password(user_id, hash_password(new_password))
+        # Force re-login everywhere — a leaked refresh token from before the
+        # reset must not still work afterward.
+        await self._user_repo.revoke_all_sessions(user_id)
 
     # ── Current User ──────────────────────────────────────────────────────────
 

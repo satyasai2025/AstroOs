@@ -19,7 +19,12 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 # ── Import all models so Alembic sees them ───────────────────────────────────
 from apps.api.models.base import AstroBase  # noqa: E402
-from apps.api.models.user import AuditLogModel, UserModel, UserSessionModel  # noqa: E402
+from apps.api.models.user import (  # noqa: E402
+    AuditLogModel,
+    PasswordResetTokenModel,
+    UserModel,
+    UserSessionModel,
+)
 from apps.api.models.dataset import DatasetModel  # noqa: E402
 from apps.api.models.digital_twin import DigitalTwinModel, TwinModificationModel  # noqa: E402
 from apps.api.models.research_case import (  # noqa: E402

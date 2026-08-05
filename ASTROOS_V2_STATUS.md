@@ -80,7 +80,7 @@ Per `CLAUDE_START_HERE.md` and the Phase III local-first audit (`PHASE_III_LOCAL
 ## Known caveats carried into v2
 
 - **A live PostgreSQL database was found running in this environment** — discovered and used for genuine end-to-end verification.
-- **`dataset_import` router remains ungated** — pre-existing v1 code, outside the RBAC pass's scope.
+- **`dataset_import` router RBAC** — ✅ Fixed (2026-07-23): Added `require_researcher` guard to close the security gap flagged in Phase A objective 4.
 - **Geocoding uses the public Nominatim instance** — fine for development, needs self-hosted/paid provider for production.
 
 ## Milestone M1 progress
@@ -114,7 +114,7 @@ All 12 Phase II tasks completed under the local-first mandate. The remaining 7 t
 | 17 | Release: v2.2.0 Tag, Changelog, Notes | ✅ Complete (2026-07-20) — `RELEASE_NOTES_v2.2.0.md` + `CHANGELOG_V2.md` |
 | 19 | Benchmark: AI Accuracy Gold Standard | ✅ Complete (2026-07-20) — 9 BM specification files (CALC + HOUSE + VARGA) |
 
-**⚠ Known issue carried from Phase F (not caused by Phase II):** PDF and HTML report rendering (`ReportTemplateEngine.render_pdf`/`render_html`, and the `/report/chart/pdf`, `/report/chart/csv` router endpoints) do not work — AMP-009 (router bug) and AMP-010 (missing `templates/reports/` directory, no template files exist in the repo). CSV export works correctly. Both AMPs are Proposed, not yet approved/applied, per governance rules for frozen modules.
+**✅ Fixed (2026-07-23):** PDF and HTML report rendering (`ReportTemplateEngine.render_pdf`/`render_html`) — AMP-009 and AMP-010 both fixed: template path corrected from `apps/api/templates/reports/` to project-root `templates/reports/`, new `template_name` query parameter added for template selection, new `/chart/html` endpoint added for standalone HTML reports. All 8 templates (horoscope, career, marriage, health, wealth, spiritual, transit, base) present and functional.
 
 ---
 
