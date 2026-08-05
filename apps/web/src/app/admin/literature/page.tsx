@@ -1,12 +1,9 @@
 "use client";
-import { AppShell } from "@/components/layout/AppShell";
 export default function Page() {
   return (
-    <AppShell>
-      <div className="flex h-96 flex-col items-center justify-center gap-4 text-center">
-        <h1 className="text-2xl font-bold">Literature</h1>
-        <p style={{ color: "var(--text-secondary)" }}>Coming soon</p>
-      </div>
-    </AppShell>
+    <div className="flex h-96 flex-col items-center justify-center gap-4 text-center">
+      <h1 className="text-2xl font-bold">Literature</h1>
+      <p className="text-gray-400">Coming soon</p>
+    </div>
   );
 }
