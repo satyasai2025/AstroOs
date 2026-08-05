@@ -534,3 +534,135 @@ export function healthRisk(result: WorkflowAnalysisResponse): HealthRiskLabel {
   if (avg >= HEALTH_RISK_MEDIUM_THRESHOLD) return "Medium";
   return "High";
 }
+
+// ── Education Index (synthesized default heuristic) ─────────────────────────
+
+/**
+ * DEFAULT WEIGHT: 5th-lord strength 50%, Jupiter 30%, Mercury 20%. The
+ * 5th house (Vidya Bhava) is the classical house of education/intelligence;
+ * Jupiter is the significator of higher learning/wisdom, Mercury is the
+ * significator of intellect/communication/schooling. Documented default,
+ * retune EDUCATION_* constants freely.
+ */
+const EDUCATION_LORD_WEIGHT = 0.5;
+const EDUCATION_JUPITER_WEIGHT = 0.3;
+const EDUCATION_MERCURY_WEIGHT = 0.2;
+
+/**
+ * educationIndex — 0-100. Built from the 5th house lord's strength_score
+ * plus Jupiter and Mercury's strength_score. DEFAULT WEIGHTING.
+ */
+export function educationIndex(result: WorkflowAnalysisResponse): number {
+  const fifthLord = getHouseLordStrength(5, result.chart.houses, result.chart.planet_strengths);
+  const lordPercent = strengthScorePercent(fifthLord.strength) ?? 0;
+  const jupiterPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Jupiter")) ?? 0;
+  const mercuryPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Mercury")) ?? 0;
+
+  let score =
+    lordPercent * EDUCATION_LORD_WEIGHT +
+    jupiterPercent * EDUCATION_JUPITER_WEIGHT +
+    mercuryPercent * EDUCATION_MERCURY_WEIGHT;
+
+  return clamp0to100(score);
+}
+
+// ── Children Index (synthesized default heuristic) ──────────────────────────
+
+/**
+ * DEFAULT WEIGHT: 5th-lord strength 50%, Jupiter 30%, Venus 20%. The
+ * 5th house (Putra Bhava) is the classical house of children/progeny;
+ * Jupiter is the significator of children (putra karaka), Venus is the
+ * significator of progeny/comfort. Documented default, retune CHILDREN_*
+ * constants freely.
+ */
+const CHILDREN_LORD_WEIGHT = 0.5;
+const CHILDREN_JUPITER_WEIGHT = 0.3;
+const CHILDREN_VENUS_WEIGHT = 0.2;
+
+/**
+ * childrenIndex — 0-100. Built from the 5th house lord's strength_score
+ * plus Jupiter and Venus's strength_score. DEFAULT WEIGHTING.
+ */
+export function childrenIndex(result: WorkflowAnalysisResponse): number {
+  const fifthLord = getHouseLordStrength(5, result.chart.houses, result.chart.planet_strengths);
+  const lordPercent = strengthScorePercent(fifthLord.strength) ?? 0;
+  const jupiterPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Jupiter")) ?? 0;
+  const venusPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Venus")) ?? 0;
+
+  let score =
+    lordPercent * CHILDREN_LORD_WEIGHT +
+    jupiterPercent * CHILDREN_JUPITER_WEIGHT +
+    venusPercent * CHILDREN_VENUS_WEIGHT;
+
+  return clamp0to100(score);
+}
+
+// ── Foreign Settlement Index (synthesized default heuristic) ─────────────────
+
+/**
+ * DEFAULT WEIGHT: 12th-lord strength 50%, Rahu 30%, Saturn 20%. The
+ * 12th house (Vyaya Bhava) is the classical house of foreign lands/expenses;
+ * Rahu is the significator of foreign/unconventional, Saturn is the
+ * significator of distant/long journeys. Documented default, retune
+ * FOREIGN_* constants freely.
+ */
+const FOREIGN_LORD_WEIGHT = 0.5;
+const FOREIGN_RAHU_WEIGHT = 0.3;
+const FOREIGN_SATURN_WEIGHT = 0.2;
+
+/**
+ * foreignIndex — 0-100. Built from the 12th house lord's strength_score
+ * plus Rahu and Saturn's strength_score. DEFAULT WEIGHTING.
+ */
+export function foreignIndex(result: WorkflowAnalysisResponse): number {
+  const twelfthLord = getHouseLordStrength(12, result.chart.houses, result.chart.planet_strengths);
+  const lordPercent = strengthScorePercent(twelfthLord.strength) ?? 0;
+  const rahuPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Rahu")) ?? 0;
+  const saturnPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Saturn")) ?? 0;
+
+  let score =
+    lordPercent * FOREIGN_LORD_WEIGHT +
+    rahuPercent * FOREIGN_RAHU_WEIGHT +
+    saturnPercent * FOREIGN_SATURN_WEIGHT;
+
+  return clamp0to100(score);
+}
+
+// ── Spirituality Index (synthesized default heuristic) ──────────────────────
+
+/**
+ * DEFAULT WEIGHT: 9th-lord strength 50%, Jupiter 30%, Ketu 20%. The
+ * 9th house (Dharma Bhava) is the classical house of spirituality/dharma;
+ * Jupiter is the significator of wisdom/guru, Ketu is the significator
+ * of spirituality/moksha. Documented default, retune SPIRITUALITY_*
+ * constants freely.
+ */
+const SPIRITUALITY_LORD_WEIGHT = 0.5;
+const SPIRITUALITY_JUPITER_WEIGHT = 0.3;
+const SPIRITUALITY_KETU_WEIGHT = 0.2;
+
+/**
+ * spiritualityIndex — 0-100. Built from the 9th house lord's strength_score
+ * plus Jupiter and Ketu's strength_score. DEFAULT WEIGHTING.
+ */
+export function spiritualityIndex(result: WorkflowAnalysisResponse): number {
+  const ninthLord = getHouseLordStrength(9, result.chart.houses, result.chart.planet_strengths);
+  const lordPercent = strengthScorePercent(ninthLord.strength) ?? 0;
+  const jupiterPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Jupiter")) ?? 0;
+  const ketuPercent =
+    strengthScorePercent(findPlanetStrength(result.chart.planet_strengths, "Ketu")) ?? 0;
+
+  let score =
+    lordPercent * SPIRITUALITY_LORD_WEIGHT +
+    jupiterPercent * SPIRITUALITY_JUPITER_WEIGHT +
+    ketuPercent * SPIRITUALITY_KETU_WEIGHT;
+
+  return clamp0to100(score);
+}

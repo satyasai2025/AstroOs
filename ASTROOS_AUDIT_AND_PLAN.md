@@ -481,10 +481,18 @@ Key engines:
 | Task | Files | Description |
 |------|-------|-------------|
 | 1.1 Add computation graph | New: `components/charts/predictions/ComputationGraph.tsx` | D3 force-directed graph: House Lord → [Factors] → Delta → Final Score |
-| 1.2 Add 4 life areas | `lib/predictions/scoring.ts`, `lib/predictions/types.ts` | Education (5th), Children (5th), Foreign (12th), Spirituality (9th) |
+| 1.2 Add 4 life areas | `lib/predictions/scoring.ts`, `lib/predictions/types.ts`, `lib/kpiScoring.ts` | Education (5th), Children (5th), Foreign (12th), Spirituality (9th) |
 | 1.3 Dashboard deep links | `components/dashboard/KpiScorecards.tsx` | Make KPI cards clickable → `/predictions?chartId=X&kpi=Y` |
 | 1.4 Enhanced provenance | `components/charts/predictions/FormulaInspector.tsx` | Show full API field → factor → score chain |
 | 1.5 AI explanation | `components/workflow/panels/ExplanationPanel.tsx` | Feed PredictionGraph to NLG |
+
+**Phase 1 Status: Partially Implemented (2026-08-05)**
+- Types updated with 4 new life areas
+- Scoring updated with KARAKAS_BY_AREA for new areas
+- kpiScoring.ts added educationIndex, childrenIndex, foreignIndex, spiritualityIndex
+- Dashboard KPI cards now link to new life areas
+- Predictions page redesigned as multi-tab interface (per user spec): Overview | Formula Inspector | Timeline | Yogas | Sources | AI Explain
+- Single-page tab design prevents clutter as features grow
 
 ### Phase 2: Dashboard Redesign
 **Effort:** Medium | **Dependencies:** Phase 1 (deep links)

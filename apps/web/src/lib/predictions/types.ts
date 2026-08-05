@@ -18,7 +18,7 @@ import type { WorkflowAnalysisResponse } from "@/lib/types";
 import type { AvasthaListResponse } from "@/lib/avastha";
 import type { AllShadbalaResponse } from "@/lib/shadbala";
 
-export type LifeArea = "career" | "marriage" | "wealth" | "health";
+export type LifeArea = "career" | "marriage" | "wealth" | "health" | "education" | "children" | "foreign" | "spirituality";
 
 /** Everything a factor's compute()/isAvailable() can read from — the real
  * per-chart data for the life area currently being explored. */
@@ -35,6 +35,14 @@ export interface ChainContext {
    * that depend on these must check availability, never assume presence. */
   avastha?: AvasthaListResponse;
   shadbalaAll?: AllShadbalaResponse;
+}
+
+export interface SubFactor {
+  name: string;
+  weight: number;
+  present: boolean;
+  contribution: number;
+  description?: string;
 }
 
 export interface PredictionFactor {
@@ -54,6 +62,10 @@ export interface PredictionFactor {
     /** Human-readable computation-detail lines shown in the step detail
      * panel, e.g. "Saturn is in its own sign — Score: +6". */
     detail: string[];
+    /** Structured breakdown of each sub-factor's contribution. */
+    subFactors: SubFactor[];
+    /** Maximum possible score if all sub-factors were present. */
+    maxPossible: number;
   };
 }
 
@@ -68,6 +80,10 @@ export interface PredictionNode {
   raw: Record<string, unknown>;
   source: string[];
   detail: string[];
+  /** Structured breakdown of each sub-factor's contribution. */
+  subFactors: SubFactor[];
+  /** Maximum possible score if all sub-factors were present. */
+  maxPossible: number;
   /** The house/lord this node is about — a simple grouping/breadcrumb
    * reference, not a generic multi-parent graph edge (nothing in this UI
    * needs to traverse arbitrary DAG edges yet). */
@@ -109,6 +125,15 @@ export interface DashaTimelineEntry {
   isCurrent: boolean;
 }
 
+/** A real classical-text citation behind a matched, is_present yoga —
+ * sourced from YogaResultResponse.source_text/rule_version (already
+ * computed by the backend's rule engine), never a fabricated reference. */
+export interface RelatedRuleEntry {
+  yogaName: string;
+  sourceText: string;
+  ruleVersion: string;
+}
+
 export interface PredictionGraph {
   area: LifeArea;
   areaLabel: string;
@@ -122,4 +147,27 @@ export interface PredictionGraph {
   confidence: ConfidenceInfo;
   dataSources: DataSourceEntry[];
   dashaTimeline: DashaTimelineEntry[];
+  relatedRules: RelatedRuleEntry[];
 }
+
+export const PRIMARY_HOUSE_BY_AREA: Record<LifeArea, number> = {
+  career: 10,
+  marriage: 7,
+  wealth: 2,
+  health: 6,
+  education: 5,
+  children: 5,
+  foreign: 12,
+  spirituality: 9,
+};
+
+export const AREA_LABELS: Record<LifeArea, string> = {
+  career: "Career",
+  marriage: "Marriage",
+  wealth: "Wealth",
+  health: "Health",
+  education: "Education",
+  children: "Children",
+  foreign: "Foreign Settlement",
+  spirituality: "Spirituality",
+};
