@@ -59,3 +59,5 @@ class UnifiedSearchResponse(BaseModel):
     results: list[SearchResult]
     total: int
     query: str
+    ai_enhanced: bool = False
+    expanded_terms: list[str] = []

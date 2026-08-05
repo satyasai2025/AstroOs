@@ -37,6 +37,8 @@ export interface UnifiedSearchResponse {
   results: SearchResult[];
   total: number;
   query: string;
+  ai_enhanced: boolean;
+  expanded_terms: string[];
 }
 
 export const searchKeys = {
