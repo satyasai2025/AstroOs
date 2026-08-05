@@ -310,6 +310,7 @@ async def analyze_compatibility(
         rashi_b=rashi_b,
         nakshatra_b=nakshatra_b,
         mars_house_b=mars_house_b,
+        relationship_type=body.relationship_type,
     )
 
     # Convert to response schema
@@ -487,6 +488,7 @@ async def best_bet_compatibility(
         mars_interaction=mars_interaction,
         venus_interaction=venus_interaction,
         jupiter_interaction=jupiter_interaction,
+        relationship_type=body.relationship_type,
     )
 
     return BestBetCompatibilityResponse(
