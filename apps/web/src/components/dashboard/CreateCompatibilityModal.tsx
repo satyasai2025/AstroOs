@@ -416,21 +416,25 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                     <label className="block text-[11px] text-slate-400 mb-1">Place of Birth</label>
                     <BirthPlaceSearch value={personA.placeSearchText} onChange={(text) => setPersonA({ ...personA, placeSearchText: text, resolvedPlace: null, sourceUtc: null })} onSelect={(place) => setPersonA({ ...personA, resolvedPlace: place, placeSearchText: place.display_name, sourceUtc: null })} />
                   </div>
-                  <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Gender</label>
-                    <div className="flex gap-4 text-xs text-slate-300">
-                      {(["Male", "Female", "Other"] as const).map((g) => (
-                        <label key={g} className="flex items-center gap-1.5 cursor-pointer">
-                          <input type="radio" name="genderA" checked={personA.gender === g} onChange={() => setPersonA({ ...personA, gender: g })} className="text-purple-500 focus:ring-purple-400" />
-                          {g}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                  <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
-                    <input type="checkbox" checked={personA.saveToMyCharts} onChange={(e) => setPersonA({ ...personA, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-purple-500" />
-                    Save Person A to My Charts
-                  </label>
+                  {!foundChartA && (
+                    <>
+                      <div>
+                        <label className="block text-[11px] text-slate-400 mb-1">Gender</label>
+                        <div className="flex gap-4 text-xs text-slate-300">
+                          {(["Male", "Female", "Other"] as const).map((g) => (
+                            <label key={g} className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="radio" name="genderA" checked={personA.gender === g} onChange={() => setPersonA({ ...personA, gender: g })} className="text-purple-500 focus:ring-purple-400" />
+                              {g}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
+                        <input type="checkbox" checked={personA.saveToMyCharts} onChange={(e) => setPersonA({ ...personA, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-purple-500" />
+                        Save Person A to My Charts
+                      </label>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -494,22 +498,26 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                     <BirthPlaceSearch value={personB.placeSearchText} onChange={(text) => setPersonB({ ...personB, placeSearchText: text, resolvedPlace: null, sourceUtc: null })} onSelect={(place) => setPersonB({ ...personB, resolvedPlace: place, placeSearchText: place.display_name, sourceUtc: null })} />
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Gender</label>
-                    <div className="flex gap-4 text-xs text-slate-300">
-                      {(["Male", "Female", "Other"] as const).map((g) => (
-                        <label key={g} className="flex items-center gap-1.5 cursor-pointer">
-                          <input type="radio" name="genderB" checked={personB.gender === g} onChange={() => setPersonB({ ...personB, gender: g })} className="text-blue-500 focus:ring-blue-400" />
-                          {g}
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+                  {!foundChartB && (
+                    <>
+                      <div>
+                        <label className="block text-[11px] text-slate-400 mb-1">Gender</label>
+                        <div className="flex gap-4 text-xs text-slate-300">
+                          {(["Male", "Female", "Other"] as const).map((g) => (
+                            <label key={g} className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="radio" name="genderB" checked={personB.gender === g} onChange={() => setPersonB({ ...personB, gender: g })} className="text-blue-500 focus:ring-blue-400" />
+                              {g}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
 
-                  <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
-                    <input type="checkbox" checked={personB.saveToMyCharts} onChange={(e) => setPersonB({ ...personB, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-blue-500" />
-                    Save Person B to My Charts
-                  </label>
+                      <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
+                        <input type="checkbox" checked={personB.saveToMyCharts} onChange={(e) => setPersonB({ ...personB, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-blue-500" />
+                        Save Person B to My Charts
+                      </label>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
