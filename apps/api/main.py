@@ -348,9 +348,14 @@ def create_app() -> FastAPI:
         admin_router.router, prefix="/api/v1", dependencies=[Depends(require_admin_token)]
     )
 
-    # Pre-existing v1 router, outside this RBAC pass's scope — see
-    # ASTROOS_V2_STATUS.md's Phase A objective 4 notes.
-    app.include_router(dataset_import_router.router)
+    # Dataset import — gated with require_researcher (was previously
+    # ungated, flagged in ASTROOS_V2_STATUS.md's Phase A objective 4 notes).
+    # Import/validate are research-level operations; status/report/schema/
+    # template reads are also researcher-gated since they expose dataset
+    # metadata and structure.
+    app.include_router(
+        dataset_import_router.router, dependencies=_researcher
+    )
     app.include_router(datasets_router.router)
 
     # ── Collaboration (RTCollab WebSocket) ────────────────────────────────────

@@ -217,7 +217,7 @@ erDiagram
 **Notes on the diagram:**
 - All tables carry `deleted_at TIMESTAMPTZ NULL` (soft delete) and DB-trigger-managed `updated_at`; omitted above per-table for readability.
 - `DASHAS.parent_dasha_id` is self-referencing to model the 5-level Mahadasha → Antardasha → Pratyantar → Sookshma → Prana tree without a separate table per level.
-- `RULES`, `KARAKATVAS`, `BOOKS`, `VERSES`, `RESEARCH_PROJECTS`, `RESEARCH_SNAPSHOTS` tables still exist in migration `0002` ahead of the service/router code that will populate them (Rule Engine, Research Engine — not yet built as of this writing). `BIRTH_CHARTS`, `PLANET_POSITIONS`, `HOUSES`, `DIVISIONAL_CHARTS`, `DIVISIONAL_PLANET_POSITIONS`, and `DASHAS` are no longer in this state — see Persistence Flow below.
+- `RULES`, `KARAKATVAS`, `BOOKS`, `VERSES`, `RESEARCH_PROJECTS`, `RESEARCH_SNAPSHOTS` tables still exist in migration `0002` ahead of the service/router code that will populate them (Rule Engine and Research Engine are now built — see `apps/api/services/rule_engine.py` and `apps/api/services/research_engine.py`). `BIRTH_CHARTS`, `PLANET_POSITIONS`, `HOUSES`, `DIVISIONAL_CHARTS`, `DIVISIONAL_PLANET_POSITIONS`, and `DASHAS` are no longer in this state — see Persistence Flow below.
 
 ## Persistence Flow
 
@@ -769,10 +769,10 @@ passing overall.
 ### Still not implemented
 
 Sthana Bala, Kala Bala, Chesta Bala — per the Design Audit, these need
-Module 9 Phase 0's data (now available) plus, for Sthana Bala's
-Saptavargaja sub-component specifically, dignity computation extended
-to divisional charts (not yet done — `DivisionalEngine`/`VargaPosition`
-still carry no dignity field).
+Module 9 Phase 0's data (now available). Sthana Bala's Saptavargaja
+sub-component's prerequisite — dignity computation extended to divisional
+charts — is now done (`GrahaEngine.compute_dignity()` works across all
+15 supported vargas).
 
 ## Module 9 Phase 2 — Shadbala (Chesta Bala, Paksha Bala)
 
@@ -858,8 +858,9 @@ already holds `EXALTATION_DEGREES`/`OWN_SIGNS`/etc.
   prerequisite** flagged in the original Shadbala design audit — now
   unblocked and verified working across all 15 supported vargas (test:
   `test_compute_dignity_consistent_across_multiple_vargas`).
-  Saptavargaja Bala itself (converting per-varga dignity into a summed
-  score across the 7 required vargas) is not yet built on top of this.
+  Saptavargaja Bala itself is now built — see
+  `apps/api/services/shadbala/saptavargaja_bala.py`
+  (`SaptavargajaBalaCalculator`).
 
 ### Uchcha Bala + Kendradi Bala (2 of Sthana Bala's 5 sub-components)
 
@@ -872,10 +873,11 @@ already holds `EXALTATION_DEGREES`/`OWN_SIGNS`/etc.
   classification directly — no new house logic.
 
 **Still not implemented within Sthana Bala:** Ojayugmarasyamsa Bala
-(genuine coefficient uncertainty — deferred, not approximated),
-Drekkana Bala (not yet attempted), and Saptavargaja Bala itself (the
-prerequisite is done; the summing logic across 7 vargas is not).
-`ShadbalaEngine.not_yet_implemented_components()` names all three.
+(genuine coefficient uncertainty — deferred, not approximated).
+Drekkana Bala and Saptavargaja Bala are now built — see
+`apps/api/services/shadbala/drekkana_bala.py` and
+`apps/api/services/shadbala/saptavargaja_bala.py`.
+`ShadbalaEngine.not_yet_implemented_components()` names the remaining gap.
 
 ### Test suite
 

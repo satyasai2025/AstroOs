@@ -586,7 +586,7 @@ export function HouseDependencyNetwork({
         const toInfo = info(to);
         if (!toInfo.lord) return;
         edges.push({
-          id: `maraka-${from}->${to}`,
+          id: `maraka-${from}->${to}-house`,
           from,
           to,
           kind: "maraka",

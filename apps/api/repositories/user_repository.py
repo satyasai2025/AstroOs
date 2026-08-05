@@ -19,7 +19,7 @@ from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.domain.user import User, UserId, UserRole, UserStatus
-from apps.api.models.user import UserModel, UserSessionModel
+from apps.api.models.user import PasswordResetTokenModel, UserModel, UserSessionModel
 
 
 def _model_to_domain(model: UserModel) -> User:
@@ -165,6 +165,57 @@ class UserRepository:
             .values(revoked_at=now)
         )
         await self._session.execute(stmt)
+
+    # ── Password reset ────────────────────────────────────────────────────────
+
+    async def update_password(self, user_id: UserId, hashed_password: str) -> None:
+        stmt = (
+            update(UserModel)
+            .where(UserModel.id == user_id.value)
+            .values(hashed_password=hashed_password)
+        )
+        await self._session.execute(stmt)
+
+    async def create_reset_token(
+        self,
+        user_id: UserId,
+        token_hash: str,
+        expires_at: datetime,
+    ) -> PasswordResetTokenModel:
+        model = PasswordResetTokenModel(
+            user_id=user_id.value,
+            token_hash=token_hash,
+            expires_at=expires_at,
+        )
+        self._session.add(model)
+        await self._session.flush()
+        await self._session.refresh(model)
+        return model
+
+    async def consume_reset_token(self, token_hash: str) -> Optional[uuid.UUID]:
+        """
+        Atomically mark a reset token as used and return the user_id it
+        belonged to, or None if it doesn't exist / is expired / was already
+        used.
+
+        Same single-use guard as revoke_session_by_jti: a conditional
+        UPDATE (WHERE used_at IS NULL) + RETURNING so only one concurrent
+        caller can succeed — prevents the same reset link being replayed.
+        Returning user_id from the same atomic statement (rather than a
+        separate lookup) avoids a check-then-act race between validating
+        the token and consuming it.
+        """
+        now = datetime.now(timezone.utc)
+        stmt = (
+            update(PasswordResetTokenModel)
+            .where(PasswordResetTokenModel.token_hash == token_hash)
+            .where(PasswordResetTokenModel.used_at.is_(None))
+            .where(PasswordResetTokenModel.expires_at > now)
+            .values(used_at=now)
+            .returning(PasswordResetTokenModel.user_id)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none()
 
     # ── Admin listing/moderation ──────────────────────────────────────────
     # Moved here from AdminEngine (Phase 10 R3 cleanup, 2026-07-23) — that

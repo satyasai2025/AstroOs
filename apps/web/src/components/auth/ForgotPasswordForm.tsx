@@ -1,25 +1,22 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useLogin } from "@/lib/auth";
+import { useForgotPassword } from "@/lib/auth";
 import { ApiError } from "@/lib/api";
 
-export function LoginForm() {
-  const router = useRouter();
-  const login = useLogin();
+export function ForgotPasswordForm() {
+  const forgotPassword = useForgotPassword();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [fieldError, setFieldError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFieldError(null);
 
     try {
-      await login.mutateAsync({ email: email.trim().toLowerCase(), password });
-      router.push("/dashboard");
+      await forgotPassword.mutateAsync({ email: email.trim().toLowerCase() });
+      setSent(true);
     } catch (err) {
       if (err instanceof ApiError) {
         setFieldError(err.detail);
@@ -28,6 +25,15 @@ export function LoginForm() {
       }
     }
   };
+
+  if (sent) {
+    return (
+      <p className="text-sm text-slate-300 animate-fade-in">
+        If an account exists for <span className="text-slate-100">{email}</span>,
+        a password reset link has been sent. Check your inbox.
+      </p>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -44,32 +50,7 @@ export function LoginForm() {
           onChange={(e) => setEmail(e.target.value)}
           className="field-input"
           placeholder="you@example.com"
-          disabled={login.isPending}
-        />
-      </div>
-
-      <div>
-        <div className="flex items-center justify-between">
-          <label htmlFor="password" className="field-label">
-            Password
-          </label>
-          <Link
-            href="/forgot-password"
-            className="text-xs text-amber-400 hover:text-amber-300 transition"
-          >
-            Forgot password?
-          </Link>
-        </div>
-        <input
-          id="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="field-input"
-          placeholder="••••••••"
-          disabled={login.isPending}
+          disabled={forgotPassword.isPending}
         />
       </div>
 
@@ -79,16 +60,16 @@ export function LoginForm() {
 
       <button
         type="submit"
-        disabled={login.isPending}
+        disabled={forgotPassword.isPending}
         className="btn-primary w-full mt-2"
       >
-        {login.isPending ? (
+        {forgotPassword.isPending ? (
           <>
             <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-cosmos-800 border-t-transparent" />
-            Signing in…
+            Sending…
           </>
         ) : (
-          "Sign In"
+          "Send Reset Link"
         )}
       </button>
     </form>

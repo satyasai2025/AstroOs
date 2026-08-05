@@ -128,6 +128,40 @@ class UserSessionModel(AstroBase):
         return self.revoked_at is not None
 
 
+class PasswordResetTokenModel(AstroBase):
+    __tablename__ = "password_reset_tokens"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    token_hash: Mapped[str] = mapped_column(
+        String(64),
+        unique=True,
+        nullable=False,
+        index=True,
+        doc="SHA-256 hex digest of the reset token — never the raw token.",
+    )
+
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
+
+    used_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=None,
+    )
+
+    @property
+    def is_used(self) -> bool:
+        return self.used_at is not None
+
+
 class AuditLogModel(AstroBase):
     __tablename__ = "audit_log"
 
