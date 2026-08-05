@@ -257,6 +257,9 @@ def create_app() -> FastAPI:
     # annotating every individual endpoint function.
     _authenticated = [Depends(require_authenticated)]
     app.include_router(
+        search_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         horoscope_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
