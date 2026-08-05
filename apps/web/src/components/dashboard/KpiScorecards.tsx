@@ -11,6 +11,10 @@ import {
   wealthPotential,
   mentalStability,
   healthRisk,
+  educationIndex,
+  childrenIndex,
+  foreignIndex,
+  spiritualityIndex,
   type HealthRiskLabel,
 } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisResponse } from "@/lib/types";
@@ -206,6 +210,34 @@ export function KpiScorecards({ result }: KpiScorecardsProps) {
         value: wealthPotential(result),
         caveat: "2nd/11th-lord + Jupiter/Venus strength, Dhana Yoga bonus. Default weights, tunable.",
         href: "/predictions?kpi=wealth",
+      },
+      {
+        kind: "percent",
+        label: "Education",
+        value: educationIndex(result),
+        caveat: "5th-lord + Jupiter/Mercury strength. Default weights, tunable.",
+        href: "/predictions?kpi=education",
+      },
+      {
+        kind: "percent",
+        label: "Children",
+        value: childrenIndex(result),
+        caveat: "5th-lord + Jupiter/Venus strength. Default weights, tunable.",
+        href: "/predictions?kpi=children",
+      },
+      {
+        kind: "percent",
+        label: "Foreign Settlement",
+        value: foreignIndex(result),
+        caveat: "12th-lord + Rahu/Saturn strength. Default weights, tunable.",
+        href: "/predictions?kpi=foreign",
+      },
+      {
+        kind: "percent",
+        label: "Spirituality",
+        value: spiritualityIndex(result),
+        caveat: "9th-lord + Jupiter/Ketu strength. Default weights, tunable.",
+        href: "/predictions?kpi=spirituality",
       },
       {
         kind: "text",

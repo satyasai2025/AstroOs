@@ -10,14 +10,14 @@ import { PredictionScorePanel } from "@/components/charts/predictions/Prediction
 import { PredictionScoreBreakdown } from "@/components/charts/predictions/PredictionScoreBreakdown";
 import { PredictionDashaTimeline } from "@/components/charts/predictions/PredictionDashaTimeline";
 import { PredictionDataSources } from "@/components/charts/predictions/PredictionDataSources";
+import { PredictionRelatedRules } from "@/components/charts/predictions/PredictionRelatedRules";
 import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useAvastha } from "@/lib/avastha";
 import { useShadbalaAll } from "@/lib/shadbala";
 import { buildPredictionGraph } from "@/lib/predictions/chainEngine";
-import { AREA_LABELS } from "@/lib/predictions/scoring";
-import type { LifeArea } from "@/lib/predictions/types";
+import { AREA_LABELS, type LifeArea } from "@/lib/predictions/types";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
 
 const AREA_KEYS = Object.keys(AREA_LABELS) as LifeArea[];
@@ -25,6 +25,17 @@ const AREA_KEYS = Object.keys(AREA_LABELS) as LifeArea[];
 function isLifeArea(v: string | null): v is LifeArea {
   return !!v && (AREA_KEYS as string[]).includes(v);
 }
+
+type TabId = "overview" | "formula" | "timeline" | "yogas" | "sources" | "ai";
+
+const TABS: { id: TabId; label: string }[] = [
+  { id: "overview", label: "Overview" },
+  { id: "formula", label: "Formula Inspector" },
+  { id: "timeline", label: "Timeline" },
+  { id: "yogas", label: "Yogas" },
+  { id: "sources", label: "Sources" },
+  { id: "ai", label: "AI Explain" },
+];
 
 export default function PredictionsPage() {
   const searchParams = useSearchParams();
@@ -41,6 +52,8 @@ export default function PredictionsPage() {
   useEffect(() => {
     if (isLifeArea(requestedKpi)) setArea(requestedKpi);
   }, [requestedKpi]);
+
+  const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   const hasMatchingResult = requestedChartId ? storeResult?.chart_id === requestedChartId && !!storeRequest : !!storeResult && !!storeRequest;
 
@@ -128,22 +141,17 @@ export default function PredictionsPage() {
   return (
     <AppShell sectionColor="--section-analysis">
       <div className="flex flex-col gap-5">
+        {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
-              Prediction Chain Explorer
+              Prediction Explorer
             </h1>
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              The real computation chain behind each prediction — every number traces back to a real chart field.
+              Explainability Center — inspect every calculation behind each prediction.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span
-              className="rounded-full px-3 py-1.5 text-xs font-medium"
-              style={{ border: "1px solid var(--border-primary)", color: "var(--text-secondary)" }}
-            >
-              Chart: Rashi (D1)
-            </span>
             <select
               value={area}
               onChange={(e) => {
@@ -155,29 +163,181 @@ export default function PredictionsPage() {
               }}
               className="field-input"
               style={{ width: "auto" }}
-              aria-label="Select KPI"
+              aria-label="Select Life Area"
             >
               {AREA_KEYS.map((key) => (
                 <option key={key} value={key}>
-                  {AREA_LABELS[key]} Strength
+                  {AREA_LABELS[key]}
                 </option>
               ))}
             </select>
           </div>
         </div>
 
+        {/* Tabs */}
+        <div className="flex gap-1 border-b" style={{ borderColor: "var(--border-primary)" }}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className="px-4 py-2 text-sm font-medium transition"
+              style={{
+                color: activeTab === tab.id ? "var(--accent)" : "var(--text-secondary)",
+                borderBottom: activeTab === tab.id ? "2px solid var(--accent)" : "2px solid transparent",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
         {graph && (
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr_300px]">
-            <PredictionStepList nodes={graph.nodes} selectedId={selectedNodeId} onSelect={setSelectedNodeId} />
+          <div>
+            {activeTab === "overview" && (
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr_300px]">
+                <PredictionStepList nodes={graph.nodes} selectedId={selectedNodeId} onSelect={setSelectedNodeId} />
 
-            <PredictionStepDetail node={selectedNode} />
+                <PredictionStepDetail node={selectedNode} />
 
-            <div className="flex flex-col gap-5">
-              <PredictionScorePanel finalLabel={graph.finalLabel} finalScore={graph.finalScore} confidence={graph.confidence} />
-              <PredictionScoreBreakdown categories={graph.categories} baseline={graph.baseline} finalScore={graph.finalScore} />
-              <PredictionDashaTimeline entries={graph.dashaTimeline} />
-              <PredictionDataSources sources={graph.dataSources} />
-            </div>
+                <div className="flex flex-col gap-5">
+                  <PredictionScorePanel finalLabel={graph.finalLabel} finalScore={graph.finalScore} confidence={graph.confidence} />
+                  <PredictionScoreBreakdown categories={graph.categories} baseline={graph.baseline} finalScore={graph.finalScore} />
+                  <PredictionDashaTimeline entries={graph.dashaTimeline} />
+                  <PredictionDataSources sources={graph.dataSources} />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "formula" && (
+              <div className="glass-card p-6">
+                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+                  Formula Inspector
+                </h3>
+                <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+                  Select a factor from the Overview tab to inspect its formula, inputs, weights, and raw backend data.
+                </p>
+                {selectedNode ? (
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+                        {selectedNode.label}
+                      </h4>
+                      <p className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>
+                        Formula Version: {selectedNode.formulaVersion}
+                      </p>
+                      <div className="space-y-2">
+                        <div>
+                          <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>Inputs: </span>
+                          <pre className="text-xs mt-1 p-2 rounded" style={{ backgroundColor: "var(--bg-card)", color: "var(--text-primary)" }}>
+                            {JSON.stringify(selectedNode.inputs, null, 2)}
+                          </pre>
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>Raw Data: </span>
+                          <pre className="text-xs mt-1 p-2 rounded" style={{ backgroundColor: "var(--bg-card)", color: "var(--text-primary)" }}>
+                            {JSON.stringify(selectedNode.raw, null, 2)}
+                          </pre>
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>Computation Details: </span>
+                          <ul className="mt-1 space-y-1">
+                            {selectedNode.detail.map((d, i) => (
+                              <li key={i} className="text-xs" style={{ color: "var(--text-primary)" }}>{d}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                    No factor selected. Go to Overview and click a factor to inspect it.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {activeTab === "timeline" && (
+              <div className="glass-card p-6">
+                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+                  Dasha Timeline
+                </h3>
+                <PredictionDashaTimeline entries={graph.dashaTimeline} />
+              </div>
+            )}
+
+            {activeTab === "yogas" && (
+              <div className="glass-card p-6">
+                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+                  Related Yogas
+                </h3>
+                <div className="space-y-3">
+                  {graph.nodes
+                    .filter((n) => n.category === "Yogas")
+                    .map((node) => (
+                      <div key={node.id} className="p-3 rounded" style={{ border: "1px solid var(--border-primary)" }}>
+                        <h4 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{node.label}</h4>
+                        <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                          Delta: {node.delta >= 0 ? "+" : ""}{node.delta}
+                        </p>
+                        <ul className="mt-2 space-y-1">
+                          {node.detail.map((d, i) => (
+                            <li key={i} className="text-xs" style={{ color: "var(--text-muted)" }}>{d}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  {graph.nodes.filter((n) => n.category === "Yogas").length === 0 && (
+                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>No yogas directly related to this life area.</p>
+                  )}
+                </div>
+                <div className="mt-4">
+                  <PredictionRelatedRules rules={graph.relatedRules} />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "sources" && (
+              <div className="glass-card p-6">
+                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+                  Data Sources
+                </h3>
+                <PredictionDataSources sources={graph.dataSources} />
+              </div>
+            )}
+
+            {activeTab === "ai" && (
+              <div className="glass-card p-6">
+                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+                  AI Explanation
+                </h3>
+                <div className="space-y-4">
+                  <div className="p-4 rounded" style={{ backgroundColor: "var(--bg-card)" }}>
+                    <h4 className="text-sm font-semibold mb-2" style={{ color: "var(--accent)" }}>
+                      Why is {AREA_LABELS[graph.area]} {graph.finalScore}/100?
+                    </h4>
+                    <p className="text-sm mb-3" style={{ color: "var(--text-secondary)" }}>
+                      {graph.finalLabel}
+                    </p>
+                    <div className="space-y-2">
+                      {graph.nodes
+                        .filter((n) => !n.unavailable)
+                        .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+                        .slice(0, 5)
+                        .map((node, i) => (
+                          <div key={i} className="text-xs" style={{ color: "var(--text-primary)" }}>
+                            • {node.detail[0] || node.label}
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                    This is a rule-based explanation. Full AI-powered conversational explanation coming in Phase 7.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

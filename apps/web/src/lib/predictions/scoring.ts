@@ -41,6 +41,10 @@ const KARAKAS_BY_AREA: Record<LifeArea, string[]> = {
   marriage: ["Venus", "Jupiter"],
   wealth: ["Jupiter", "Venus"],
   health: [],
+  education: ["Jupiter", "Mercury"],
+  children: ["Jupiter", "Venus"],
+  foreign: ["Rahu", "Saturn"],
+  spirituality: ["Jupiter", "Ketu"],
 };
 
 // ── 1. House Strength ────────────────────────────────────────────────────────
@@ -72,13 +76,20 @@ const houseStrengthFactor: PredictionFactor = {
     const w = HOUSE_STRENGTH_WEIGHTS;
     let delta = 0;
     const detail: string[] = [];
-    if (ps.is_exalted) { delta += w.exalted; detail.push(`${lord} is exalted — Score: +${w.exalted}`); }
-    if (ps.is_in_own_sign) { delta += w.ownSign; detail.push(`${lord} is in its own sign — Score: +${w.ownSign}`); }
-    if (ps.is_debilitated) { delta += w.debilitated; detail.push(`${lord} is debilitated — Score: ${w.debilitated}`); }
-    if (ps.is_in_kendra) { delta += w.kendra; detail.push(`${lord} occupies a kendra (angular house) — Score: +${w.kendra}`); }
-    if (ps.is_in_trikona) { delta += w.trikona; detail.push(`${lord} occupies a trikona (trine house) — Score: +${w.trikona}`); }
-    if (ps.is_in_dusthana) { delta += w.dusthana; detail.push(`${lord} occupies a dusthana (6th/8th/12th) — Score: ${w.dusthana}`); }
+    const subFactors = [
+      { name: "Exalted", weight: w.exalted, present: ps.is_exalted, contribution: ps.is_exalted ? w.exalted : 0, description: "Planet in its exaltation sign" },
+      { name: "Own Sign", weight: w.ownSign, present: ps.is_in_own_sign, contribution: ps.is_in_own_sign ? w.ownSign : 0, description: "Planet in its own sign" },
+      { name: "Debilitated", weight: w.debilitated, present: ps.is_debilitated, contribution: ps.is_debilitated ? w.debilitated : 0, description: "Planet in debilitation" },
+      { name: "Kendra", weight: w.kendra, present: ps.is_in_kendra, contribution: ps.is_in_kendra ? w.kendra : 0, description: "Angular house (1,4,7,10)" },
+      { name: "Trikona", weight: w.trikona, present: ps.is_in_trikona, contribution: ps.is_in_trikona ? w.trikona : 0, description: "Trine house (1,5,9)" },
+      { name: "Dusthana", weight: w.dusthana, present: ps.is_in_dusthana, contribution: ps.is_in_dusthana ? w.dusthana : 0, description: "Difficult house (6,8,12)" },
+    ];
+    for (const sf of subFactors) {
+      delta += sf.contribution;
+      if (sf.present) detail.push(`${lord} ${sf.name.toLowerCase()} — Score: ${sf.contribution >= 0 ? "+" : ""}${sf.contribution}`);
+    }
     if (detail.length === 0) detail.push(`${lord} has no special dignity or angular/trinal placement for this chart`);
+    const maxPossible = subFactors.reduce((sum, sf) => sum + Math.abs(sf.weight), 0);
     return {
       delta,
       inputs: { planet: lord, dignity: ps.dignity, house_number: ps.house_number },
@@ -92,6 +103,8 @@ const houseStrengthFactor: PredictionFactor = {
         `chart.planet_strengths[${lord}].is_in_dusthana`,
       ],
       detail,
+      subFactors,
+      maxPossible,
     };
   },
 };
@@ -405,24 +418,3 @@ export const PREDICTION_FACTORS: PredictionFactor[] = [
   avasthaFactor,
   karakaStrengthFactor,
 ];
-
-/** Primary house number per life area — the classical single most-central
- * house for that area, matching the house pairs already used by
- * kpiScoring.ts (careerIndex uses 10th, marriageIndex uses 7th, etc).
- * Wealth uses the 2nd (Dhana Bhava) rather than kpiScoring's 2nd+11th
- * blend, and health uses the 6th (Roga Bhava) — single-house roots keep
- * ChainContext simple; the 11th/1st nuance kpiScoring applies is instead
- * captured here via each area's karakas where classically appropriate. */
-export const PRIMARY_HOUSE_BY_AREA: Record<LifeArea, number> = {
-  career: 10,
-  marriage: 7,
-  wealth: 2,
-  health: 6,
-};
-
-export const AREA_LABELS: Record<LifeArea, string> = {
-  career: "Career",
-  marriage: "Marriage",
-  wealth: "Wealth",
-  health: "Health",
-};

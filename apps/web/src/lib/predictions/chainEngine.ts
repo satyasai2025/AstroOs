@@ -15,20 +15,23 @@
 
 import { rashiLordFromApiName } from "@/lib/astro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
-import { AREA_LABELS, PREDICTION_FACTORS, PRIMARY_HOUSE_BY_AREA } from "./scoring";
-import type {
-  CategoryTotal,
-  ChainContext,
-  ConfidenceInfo,
-  DashaTimelineEntry,
-  DataSourceEntry,
-  LifeArea,
-  PredictionGraph,
-  PredictionNode,
+import { PREDICTION_FACTORS } from "./scoring";
+import {
+  AREA_LABELS,
+  PRIMARY_HOUSE_BY_AREA,
+  type CategoryTotal,
+  type ChainContext,
+  type ConfidenceInfo,
+  type DashaTimelineEntry,
+  type DataSourceEntry,
+  type LifeArea,
+  type PredictionGraph,
+  type PredictionNode,
+  type RelatedRuleEntry,
 } from "./types";
 import type { AvasthaListResponse } from "@/lib/avastha";
 import type { AllShadbalaResponse } from "@/lib/shadbala";
-import type { WorkflowAnalysisResponse } from "@/lib/types";
+import type { WorkflowAnalysisResponse, YogaResultResponse } from "@/lib/types";
 
 const BASELINE_SCORE = 50;
 const CONFIDENCE_HIGH_THRESHOLD = 90;
@@ -75,6 +78,17 @@ function categoriesFromNodes(nodes: PredictionNode[]): CategoryTotal[] {
 
 function dataSourcesFromNodes(nodes: PredictionNode[]): DataSourceEntry[] {
   return nodes.map((n) => ({ id: n.id, label: n.label, available: !n.unavailable, reason: n.unavailableReason }));
+}
+
+/** Real classical citations behind this graph's matched yogas — pulled
+ * straight off the "yogas" node's raw.matched (itself sourced from
+ * YogaResultResponse.source_text/rule_version, the backend's real rule
+ * engine output). Never a fabricated scripture reference: if a chart has
+ * no matched yogas, this list is simply empty. */
+function relatedRulesFromNodes(nodes: PredictionNode[]): RelatedRuleEntry[] {
+  const yogasNode = nodes.find((n) => n.id === "yogas");
+  const matched = (yogasNode?.raw.matched as YogaResultResponse[] | undefined) ?? [];
+  return matched.map((y) => ({ yogaName: y.name, sourceText: y.source_text, ruleVersion: y.rule_version }));
 }
 
 function buildDashaTimeline(result: WorkflowAnalysisResponse): DashaTimelineEntry[] {
@@ -158,5 +172,6 @@ export function buildPredictionGraph(area: LifeArea, result: WorkflowAnalysisRes
     confidence: confidenceFromNodes(nodes),
     dataSources: dataSourcesFromNodes(nodes),
     dashaTimeline: buildDashaTimeline(result),
+    relatedRules: relatedRulesFromNodes(nodes),
   };
 }
