@@ -13,6 +13,7 @@ import {
   type TransitScanYear,
 } from "@/lib/research";
 import { AppShell } from "@/components/layout/AppShell";
+import { useWorkflowStore } from "@/lib/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -104,6 +105,13 @@ const TABS: { key: TabKey; label: string }[] = [
 export default function CompatibilityReportPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
+
+  const checkAnotherCompatibility = () => {
+    openCreateModal("compatibility");
+    router.push("/dashboard");
+  };
+
   const [report, setReport] = useState<CompatibilityResponse | null>(null);
   const [bestBetReport, setBestBetReport] = useState<BestBetCompatibilityResponse | null>(null);
   const [timingData, setTimingData] = useState<MarriageTimingResponse | null>(null);
@@ -391,15 +399,26 @@ export default function CompatibilityReportPage() {
         {/* Top Navigation Bar */}
         <div className="sticky top-0 z-40 border-b border-white/10 bg-black/40 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-white/5 hover:text-white"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            Back to Dashboard
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-white/5 hover:text-white"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              Back to Dashboard
+            </button>
+            <button
+              onClick={checkAnotherCompatibility}
+              className="flex items-center gap-2 rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs font-bold text-purple-300 transition hover:bg-purple-500/20"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
+              </svg>
+              Check Another Compatibility
+            </button>
+          </div>
             <div className="flex items-center gap-2">
             <button
               onClick={() => handleExport("html")}

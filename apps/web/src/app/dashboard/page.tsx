@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
-import { CreateChartModal } from "@/components/dashboard/CreateChartModal";
+import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const setResult = useWorkflowStore((s) => s.setResult);
   const clearResult = useWorkflowStore((s) => s.clear);
   const createModalOpen = useWorkflowStore((s) => s.createModalOpen);
+  const createModalInitialType = useWorkflowStore((s) => s.createModalInitialType);
   const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const closeCreateModal = useWorkflowStore((s) => s.closeCreateModal);
   const storeResult = useWorkflowStore((s) => s.result);
@@ -64,6 +65,7 @@ export default function DashboardPage() {
         }}
         isPending={analyze.isPending}
         errorMessage={errorMessage}
+        initialChartType={createModalInitialType as ChartTypeId | null}
       />
     </AppShell>
   );

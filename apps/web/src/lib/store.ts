@@ -35,7 +35,17 @@ interface WorkflowState {
    * it too.
    */
   createModalOpen: boolean;
-  openCreateModal: () => void;
+  /**
+   * Which chart type the modal should jump straight into when opened,
+   * skipping the "choose a type" step — e.g. the compatibility report
+   * page's "Check Another Compatibility" button sets this to
+   * "compatibility" before navigating back to /dashboard, so the modal
+   * is already on the compatibility form rather than the type picker.
+   * Matches CreateChartModal's ChartTypeId values; null means "let the
+   * user choose" (the plain "New Chart" flow).
+   */
+  createModalInitialType: string | null;
+  openCreateModal: (initialType?: string) => void;
   closeCreateModal: () => void;
   /**
    * The saved chart selected for a transit analysis. Lives here (not in
@@ -53,8 +63,9 @@ export const useWorkflowStore = create<WorkflowState>((set) => ({
   setResult: (result, request) => set({ result, request }),
   clear: () => set({ result: null, request: null, transitChart: null }),
   createModalOpen: false,
-  openCreateModal: () => set({ createModalOpen: true }),
-  closeCreateModal: () => set({ createModalOpen: false }),
+  createModalInitialType: null,
+  openCreateModal: (initialType) => set({ createModalOpen: true, createModalInitialType: initialType ?? null }),
+  closeCreateModal: () => set({ createModalOpen: false, createModalInitialType: null }),
   transitChart: null,
   setTransitChart: (chart) => set({ transitChart: chart }),
 }));
