@@ -9,10 +9,29 @@ export interface HouseDependencyNetworkProps {
   houses: HouseCuspSchema[];
   planetStrengths: PlanetStrengthSchema[];
   planets: PlanetPositionSchema[];
+  // Optional external filter control
+  activeKinds?: Set<EdgeKind>;
+  onFilterChange?: (kinds: Set<EdgeKind>) => void;
+  // Optional external selection control
+  selectedHouse?: number | null;
+  onHouseSelect?: (house: number | null) => void;
 }
 
 // ── EDGE TYPES ──────────────────────────────────────────────────────────────
-type EdgeKind = "lordship" | "aspect" | "parivartana" | "argala" | "trinal" | "angular" | "dusthana" | "functional";
+type EdgeKind = "lordship" | "aspect" | "parivartana" | "argala" | "trinal" | "angular" | "dusthana" | "functional" | "maraka";
+
+// Shared fallback for missing houses (when input data lacks a house_number)
+// Prevents "Cannot read properties of undefined" crashes downstream.
+const EMPTY_HOUSE_INFO = {
+  houseNumber: 0,
+  rashi: null,
+  lord: null,
+  lordPlacementHouse: null,
+  lordStrength: null as PlanetStrengthSchema | null,
+  occupants: [] as PlanetPositionSchema[],
+  weak: false,
+  weakReasons: [] as string[],
+} as const;
 
 interface HouseEdge {
   id: string;
@@ -35,6 +54,7 @@ const EDGE_KIND_LABEL: Record<EdgeKind, string> = {
   angular: "Angular",
   dusthana: "Dusthana",
   functional: "Functional",
+  maraka: "Maraka",
 };
 
 const EDGE_COLORS: Record<EdgeKind, string> = {
@@ -46,6 +66,7 @@ const EDGE_COLORS: Record<EdgeKind, string> = {
   angular: "#3B82F6",         // blue
   dusthana: "#EF4444",        // red
   functional: "#EC4899",      // pink
+  maraka: "#F97316",          // orange
 };
 
 // ── NODE THEME ──────────────────────────────────────────────────────────────
@@ -252,12 +273,28 @@ export function HouseDependencyNetwork({
   houses,
   planetStrengths,
   planets,
+  activeKinds: externalActiveKinds,
+  onFilterChange,
+  selectedHouse: externalSelectedHouse,
+  onHouseSelect,
 }: HouseDependencyNetworkProps) {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [internalSelected, setInternalSelected] = useState<number | null>(null);
   const [hoveredEdge, setHoveredEdge] = useState<HouseEdge | null>(null);
-  const [activeKinds, setActiveKinds] = useState<Set<EdgeKind>>(new Set([
-    "lordship", "aspect", "parivartana", "argala", "trinal", "angular", "dusthana", "functional"
-  ]));
+
+  // Default all kinds including maraka
+  const ALL_KINDS: EdgeKind[] = [
+    "lordship", "aspect", "parivartana", "argala", "trinal", "angular", "dusthana", "functional", "maraka"
+  ];
+
+  // Use external filter state if provided, otherwise internal
+  const [internalActiveKinds, setInternalActiveKinds] = useState<Set<EdgeKind>>(new Set(ALL_KINDS));
+  const activeKinds = externalActiveKinds ?? internalActiveKinds;
+  const setActiveKinds = onFilterChange ?? setInternalActiveKinds;
+
+  // Use external selection if provided, otherwise internal
+  const selected = externalSelectedHouse ?? internalSelected;
+  const setSelected = onHouseSelect ?? setInternalSelected;
+
   const [zoom, setZoom] = useState(1);
 
   // ── Responsive container width ───────────────────────────────────────────
@@ -344,7 +381,11 @@ export function HouseDependencyNetwork({
   const allEdges = useMemo<HouseEdge[]>(() => {
     const edges: HouseEdge[] = [];
 
-    const info = (h: number) => houseInfoByNumber.get(h)!;
+    // `get(h)` may be undefined when the house data is missing a given
+    // house_number (the builder loop above `continue`s past absent houses).
+    // Return a benign default so every `if (!x.lord) continue` guard below
+    // handles missing houses gracefully instead of throwing.
+    const info = (h: number) => houseInfoByNumber.get(h) ?? EMPTY_HOUSE_INFO;
     const score = (ps: PlanetStrengthSchema | null) => ps?.strength_score ?? 5;
 
     // 1. Lordship placement edges (original "placement")
@@ -517,6 +558,47 @@ export function HouseDependencyNetwork({
       }
     }
 
+    // 8. Maraka relationships: 2nd and 7th houses are maraka (death-inflicting)
+    // Their lords and planets placed there create maraka influences
+    const marakaHouses = [2, 7];
+    marakaHouses.forEach((from) => {
+      const fromInfo = info(from);
+      if (!fromInfo.lord) return;
+      // Maraka lord aspects other houses
+      const aspects = aspectedHousesFromPlacement(fromInfo.lord, from);
+      aspects.forEach((target) => {
+        const targetInfo = info(target);
+        edges.push({
+          id: `maraka-${from}->${target}`,
+          from,
+          to: target,
+          kind: "maraka",
+          lord: fromInfo.lord,
+          label: `Maraka ${ordinal(from)} lord (${fromInfo.lord}) aspects ${ordinal(target)}`,
+          weak: fromInfo.weak || targetInfo.weak,
+          strengthScore: score(fromInfo.lordStrength),
+          description: `${fromInfo.lord} as maraka lord of ${ordinal(from)} house influences ${ordinal(target)} — can trigger transformative events.`,
+        });
+      });
+      // Maraka house to maraka house connection
+      marakaHouses.forEach((to) => {
+        if (from === to) return;
+        const toInfo = info(to);
+        if (!toInfo.lord) return;
+        edges.push({
+          id: `maraka-${from}->${to}`,
+          from,
+          to,
+          kind: "maraka",
+          lord: fromInfo.lord,
+          label: `Maraka link: ${ordinal(from)} ↔ ${ordinal(to)}`,
+          weak: fromInfo.weak || toInfo.weak,
+          strengthScore: score(fromInfo.lordStrength),
+          description: `Connection between the two maraka houses (${ordinal(from)} and ${ordinal(to)}) — intensifies maraka effects.`,
+        });
+      });
+    });
+
     return edges;
   }, [houseInfoByNumber]);
 
@@ -576,6 +658,22 @@ export function HouseDependencyNetwork({
         </div>
 
         <div className="flex flex-wrap gap-1.5">
+          {/* All Relationships toggle */}
+          <button
+            type="button"
+            onClick={() => {
+              const allKinds = Object.keys(EDGE_KIND_LABEL) as EdgeKind[];
+              const allActive = allKinds.every((k) => activeKinds.has(k));
+              setActiveKinds(allActive ? new Set() : new Set(allKinds));
+            }}
+            className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-all ${
+              activeKinds.size === Object.keys(EDGE_KIND_LABEL).length
+                ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+                : "bg-transparent border-var(--border-primary) text-gray-400 hover:border-gray-500"
+            }`}
+          >
+            All Relationships
+          </button>
           {(Object.keys(EDGE_KIND_LABEL) as EdgeKind[]).map((kind) => {
             const active = activeKinds.has(kind);
             const count = allEdges.filter((e) => e.kind === kind).length;
@@ -696,7 +794,7 @@ export function HouseDependencyNetwork({
             {nodeIds.map((h) => {
               const pos = positions.get(h);
               if (!pos) return null;
-              const info = houseInfoByNumber.get(h)!;
+              const info = houseInfoByNumber.get(h) ?? EMPTY_HOUSE_INFO;
               const isSelected = selected === h;
               const connected = isSelected || isConnected(h);
               const dimmed = selected && !connected;
