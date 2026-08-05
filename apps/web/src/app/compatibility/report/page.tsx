@@ -112,6 +112,8 @@ export default function CompatibilityReportPage() {
     router.push("/dashboard");
   };
 
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
+
   const [report, setReport] = useState<CompatibilityResponse | null>(null);
   const [bestBetReport, setBestBetReport] = useState<BestBetCompatibilityResponse | null>(null);
   const [timingData, setTimingData] = useState<MarriageTimingResponse | null>(null);
@@ -349,12 +351,41 @@ export default function CompatibilityReportPage() {
   };
 
   const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      alert("Report link copied to clipboard!");
-    } catch {
-      alert("Failed to copy link");
+    const url = window.location.href;
+    let copied = false;
+
+    // Clipboard API first — it's blocked in some embedded/iframed contexts
+    // (permissions-policy, no secure-context delegation), which used to
+    // fail this silently since the fallback alert() can also be suppressed
+    // in those same contexts. Fall back to the legacy execCommand path,
+    // then surface success/failure inline rather than via alert().
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+        copied = true;
+      } catch {
+        copied = false;
+      }
     }
+
+    if (!copied) {
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = url;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        copied = document.execCommand("copy");
+        document.body.removeChild(textarea);
+      } catch {
+        copied = false;
+      }
+    }
+
+    setShareStatus(copied ? "copied" : "failed");
+    setTimeout(() => setShareStatus("idle"), 2500);
   };
 
   if (loading) {
@@ -435,9 +466,15 @@ export default function CompatibilityReportPage() {
             </button>
             <button
               onClick={handleShare}
-              className="rounded-lg border border-white/10 px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:bg-white/5"
+              className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition ${
+                shareStatus === "copied"
+                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                  : shareStatus === "failed"
+                    ? "border-red-500/40 bg-red-500/10 text-red-300"
+                    : "border-white/10 text-slate-300 hover:bg-white/5"
+              }`}
             >
-              🔗 Share
+              {shareStatus === "copied" ? "✓ Link Copied" : shareStatus === "failed" ? "✗ Copy Failed" : "🔗 Share"}
             </button>
           </div>
         </div>
@@ -1171,9 +1208,15 @@ export default function CompatibilityReportPage() {
                 </button>
                 <button
                   onClick={handleShare}
-                  className="w-full rounded-lg border border-white/10 px-3 py-2 text-xs font-bold text-slate-300 transition hover:bg-white/5"
+                  className={`w-full rounded-lg border px-3 py-2 text-xs font-bold transition ${
+                    shareStatus === "copied"
+                      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                      : shareStatus === "failed"
+                        ? "border-red-500/40 bg-red-500/10 text-red-300"
+                        : "border-white/10 text-slate-300 hover:bg-white/5"
+                  }`}
                 >
-                  🔗 Share Link
+                  {shareStatus === "copied" ? "✓ Link Copied" : shareStatus === "failed" ? "✗ Copy Failed" : "🔗 Share Link"}
                 </button>
                 <button
                   onClick={() => router.push("/dashboard")}
