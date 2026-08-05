@@ -237,7 +237,7 @@ export default function ChartsPage() {
             <Link href="/dashboard" className="btn-ghost text-xs px-3 py-1.5">New Chart</Link>
             <Link href="/charts/history" className="btn-ghost text-xs px-3 py-1.5 ml-auto">View All</Link>
           </div>
-          <div className="glass-card h-[600px] overflow-hidden p-0"><InteractiveKundliView chart={chart} /></div>
+          <div className="glass-card h-[600px] overflow-hidden p-0"><InteractiveKundliView chart={chart} vargas={vargas} shadbala={result.shadbala} request={request} /></div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <button type="button" onClick={() => setView("dasha")} className="glass-card p-4 text-left transition hover:opacity-90">
               <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Dasha Timeline</h4>
