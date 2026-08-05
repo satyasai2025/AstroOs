@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge, Button, Card, Table, type TableColumn } from "@/components/ui";
+import { AppShell } from "@/components/layout/AppShell";
 import { researchCasesApi } from "@/lib/researchCases";
 import type {
   ResearchCaseBatchImport,
@@ -58,6 +59,7 @@ export default function ResearchImportPage() {
   const [loading, setLoading] = useState(false);
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [step, setStep] = useState<"upload" | "validate" | "result">("upload");
 
   const loadCases = useCallback(async () => {
     try {
@@ -95,6 +97,7 @@ export default function ResearchImportPage() {
           throw new Error("Invalid payload: expected an object with a `cases` array.");
         }
         setPayload(parsed);
+        setStep("validate");
         void runValidation(parsed);
       } catch (err) {
         setPayload(null);
@@ -112,6 +115,7 @@ export default function ResearchImportPage() {
     try {
       const result = await researchCasesApi.importCases(payload);
       setImportResult(result);
+      setStep("result");
       await loadCases();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Import failed.");
@@ -164,169 +168,165 @@ export default function ResearchImportPage() {
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)", padding: "var(--space-4)" }}>
-      <div>
-        <h1 style={{ fontSize: "var(--text-2xl)", fontWeight: "var(--weight-bold)", color: "var(--text-primary)" }}>
-          Research Case Import
-        </h1>
-        <p style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)", maxWidth: 720 }}>
-          Drop a JSON batch of research cases. Each case is validated (birth data, duplicates, date
-          consistency), then astrological snapshots are computed per event and persisted to the
-          database.
+    <AppShell sectionColor="--section-research">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold">Import Research Cases</h1>
+        <p className="mt-2 text-sm text-gray-400">
+          Upload a JSON batch file containing research cases. Each case is validated (birth data,
+          duplicates, date consistency), then astrological snapshots are computed per event.
         </p>
       </div>
 
-      {/* ── File drop zone ─────────────────────────────────────────────────── */}
-      <Card padding="var(--space-4)">
-        <div
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const file = e.dataTransfer.files?.[0];
-            if (file) void handleFile(file);
-          }}
-          onClick={() => fileInputRef.current?.click()}
-          role="button"
-          tabIndex={0}
-          style={{
-            border: "2px dashed var(--border-default)",
-            borderRadius: "var(--radius-lg)",
-            padding: "var(--space-6)",
-            textAlign: "center",
-            cursor: "pointer",
-            transition: "border-color var(--duration-fast)",
-          }}
-          onMouseOver={(e) => ((e.currentTarget as HTMLElement).style.borderColor = "var(--cyan-400)")}
-          onMouseOut={(e) => ((e.currentTarget as HTMLElement).style.borderColor = "var(--border-default)")}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/json,.json"
-            style={{ display: "none" }}
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) void handleFile(file);
-            }}
-          />
-          <p style={{ color: "var(--text-primary)", fontWeight: "var(--weight-semibold)", margin: 0 }}>
-            {fileName ? `Loaded: ${fileName}` : "Drag & drop a JSON file here, or click to browse"}
-          </p>
-          <p style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)", margin: "var(--space-2) 0 0" }}>
-            {payload ? `${payload.cases.length} case(s) parsed` : "Expects a {\"cases\": [...]} batch payload"}
-          </p>
-        </div>
-
-        <div style={{ display: "flex", gap: "var(--space-2)", marginTop: "var(--space-3)" }}>
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => void handleFile(new File([JSON.stringify(SAMPLE_PAYLOAD, null, 2)], "sample.json", { type: "application/json" }))}
-          >
-            Load sample
-          </Button>
-          <Button
-            variant="primary"
-            size="md"
-            disabled={!payload || importing}
-            onClick={handleImport}
-          >
-            {importing ? "Importing…" : `Import ${payload?.cases.length ?? 0} case(s)`}
-          </Button>
-        </div>
-      </Card>
-
       {error && (
-        <Card glow="gold">
-          <p style={{ color: "var(--text-primary)", margin: 0 }}>{error}</p>
+        <Card glow="gold" className="mb-6">
+          <p className="text-red-400 m-0">{error}</p>
         </Card>
       )}
 
-      {/* ── Validation preview ─────────────────────────────────────────────── */}
-      {validation && (
-        <Card padding="var(--space-4)">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
-            <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", margin: 0 }}>
-              Validation Preview
-            </h2>
-            <div style={{ display: "flex", gap: "var(--space-2)" }}>
+      {/* ── STEP 1: Upload ──────────────────────────────────────────────────── */}
+      {step === "upload" && (
+        <Card padding="0" className="mb-6">
+          <div className="p-8">
+            <div
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                const file = e.dataTransfer.files?.[0];
+                if (file) void handleFile(file);
+              }}
+              onClick={() => fileInputRef.current?.click()}
+              role="button"
+              tabIndex={0}
+              className="border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer transition-all hover:border-cyan-400 hover:bg-cyan-400/5"
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleFile(file);
+                }}
+              />
+              <div className="text-gray-300">
+                <p className="text-lg font-semibold mb-1">Drop JSON file here</p>
+                <p className="text-sm text-gray-500">or click to browse</p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center gap-3">
+              <Button
+                variant="secondary"
+                onClick={() => void handleFile(new File([JSON.stringify(SAMPLE_PAYLOAD, null, 2)], "sample.json", { type: "application/json" }))}
+              >
+                Load Sample
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* ── STEP 2: Validation ──────────────────────────────────────────────── */}
+      {step === "validate" && validation && (
+        <Card padding="0" className="mb-6">
+          <div className="border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold m-0">Validation Results</h2>
+            <div className="flex gap-2">
               <Badge tone="success">{validation.total_valid} valid</Badge>
               <Badge tone="danger">{validation.total_invalid} invalid</Badge>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
+          <div className="p-6 max-h-96 overflow-y-auto space-y-2">
             {validation.validations.map((v, i) => (
               <div
                 key={i}
-                style={{
-                  border: `1px solid ${v.valid ? "var(--border-default)" : "rgba(248,113,113,0.4)"}`,
-                  borderRadius: "var(--radius-md)",
-                  padding: "var(--space-3)",
-                  background: "var(--bg-surface-800)",
-                }}
+                className={`border rounded-md p-3 ${
+                  v.valid
+                    ? "border-gray-700 bg-transparent"
+                    : "border-red-900/40 bg-red-900/10"
+                }`}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", flexWrap: "wrap" }}>
-                  <strong style={{ color: "var(--text-primary)", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)" }}>
+                <div className="flex items-center gap-2 flex-wrap mb-2">
+                  <code className="text-xs text-gray-400">
                     {v.research_case_id ?? `Case ${i + 1}`}
-                  </strong>
+                  </code>
                   {v.valid ? <Badge tone="success">valid</Badge> : <Badge tone="danger">invalid</Badge>}
-                  {v.duplicate_case && <Badge tone="gold">duplicate case</Badge>}
-                  {v.duplicate_events.length > 0 && <Badge tone="gold">duplicate events</Badge>}
-                  <span style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)" }}>
-                    DOB {v.person_dob ?? "—"}
-                  </span>
+                  {v.duplicate_case && <Badge tone="gold">duplicate</Badge>}
                 </div>
                 {v.issues.length > 0 && (
-                  <ul style={{ margin: "var(--space-2) 0 0", paddingLeft: "var(--space-4)", color: "var(--text-secondary)", fontSize: "var(--text-sm)" }}>
-                    {v.issues.map((issue, j) => (
+                  <ul className="text-xs text-gray-400 space-y-1 pl-3 m-0">
+                    {v.issues.slice(0, 2).map((issue, j) => (
                       <li key={j}>
-                        <span
-                          style={{
-                            color: issue.severity === "error" ? "var(--red-300)" : issue.severity === "warning" ? "var(--gold-300)" : "var(--text-tertiary)",
-                          }}
-                        >
-                          [{issue.severity}] {issue.field}: {issue.message}
+                        <span className={issue.severity === "error" ? "text-red-400" : "text-yellow-400"}>
+                          {issue.field}: {issue.message}
                         </span>
                       </li>
                     ))}
+                    {v.issues.length > 2 && (
+                      <li className="text-gray-500">+ {v.issues.length - 2} more</li>
+                    )}
                   </ul>
                 )}
               </div>
             ))}
           </div>
+
+          <div className="border-t border-gray-700 px-6 py-4 flex gap-3 justify-end">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setStep("upload");
+                setPayload(null);
+                setValidation(null);
+              }}
+            >
+              Back
+            </Button>
+            <Button
+              variant="primary"
+              disabled={validation.total_invalid > 0 || importing}
+              onClick={handleImport}
+            >
+              {importing ? "Importing…" : `Import ${payload?.cases.length ?? 0} Case${payload?.cases.length !== 1 ? "s" : ""}`}
+            </Button>
+          </div>
         </Card>
       )}
 
-      {/* ── Import result ──────────────────────────────────────────────────── */}
-      {importResult && (
-        <Card padding="var(--space-4)">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-3)" }}>
-            <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", margin: 0 }}>
-              Import Results
-            </h2>
-            <div style={{ display: "flex", gap: "var(--space-2)" }}>
-              <Badge tone="success">{importResult.succeeded} succeeded</Badge>
-              <Badge tone="danger">{importResult.failed} failed</Badge>
+      {/* ── STEP 3: Results ────────────────────────────────────────────────── */}
+      {step === "result" && importResult && (
+        <Card padding="0" className="mb-6">
+          <div className="border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold m-0">Import Complete</h2>
+            <div className="flex gap-2">
+              <Badge tone="success">{importResult.succeeded} imported</Badge>
+              {importResult.failed > 0 && (
+                <Badge tone="danger">{importResult.failed} failed</Badge>
+              )}
             </div>
           </div>
-          <Table columns={resultColumns} rows={importResult.results} />
+
+          <div className="p-6">
+            <Table columns={resultColumns} rows={importResult.results} />
+          </div>
+
+          <div className="border-t border-gray-700 px-6 py-4 flex gap-3 justify-center">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setStep("upload");
+                setPayload(null);
+                setValidation(null);
+                setImportResult(null);
+              }}
+            >
+              Import More
+            </Button>
+          </div>
         </Card>
       )}
-
-      {/* ── Previously imported cases ──────────────────────────────────────── */}
-      <Card padding="var(--space-4)">
-        <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", marginBottom: "var(--space-3)" }}>
-          Imported Cases ({cases.length})
-        </h2>
-        {cases.length === 0 ? (
-          <p style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)", margin: 0 }}>
-            No research cases imported yet.
-          </p>
-        ) : (
-          <Table columns={listColumns} rows={cases} />
-        )}
-      </Card>
-    </div>
+    </AppShell>
   );
 }

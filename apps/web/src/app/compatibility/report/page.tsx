@@ -10,6 +10,7 @@ import {
   type MarriageTimingResponse,
   type TransitScanYear,
 } from "@/lib/research";
+import { AppShell } from "@/components/layout/AppShell";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -325,9 +326,10 @@ export default function CompatibilityReportPage() {
   const radarN = radarAxes.length;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0b0f19" }}>
-      {/* Top Navigation Bar */}
-      <div className="sticky top-0 z-40 border-b border-white/10 bg-black/40 backdrop-blur-md">
+    <AppShell sectionColor="--section-analysis">
+      <div className="min-h-screen" style={{ backgroundColor: "#0b0f19" }}>
+        {/* Top Navigation Bar */}
+        <div className="sticky top-0 z-40 border-b border-white/10 bg-black/40 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
           <button
             onClick={() => router.push("/dashboard")}
@@ -970,5 +972,6 @@ export default function CompatibilityReportPage() {
         </div>
       </div>
     </div>
+    </AppShell>
   );
 }

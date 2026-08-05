@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Badge, Card } from "@/components/ui";
+import { AppShell } from "@/components/layout/AppShell";
 import { researchCasesApi } from "@/lib/researchCases";
 import type { ResearchCaseSummary } from "@/lib/types";
 
@@ -20,36 +21,59 @@ export default function ResearchCasesListPage() {
   }, []);
 
   return (
-    <div style={{ padding: "var(--space-4)", maxWidth: 900, margin: "0 auto" }}>
-      <h1 style={{ fontSize: "var(--text-xl)", fontWeight: "var(--weight-bold)", color: "var(--text-primary)" }}>
-        Research Cases
-      </h1>
-      <p style={{ fontSize: "var(--text-sm)", color: "var(--text-tertiary)", marginTop: -8, marginBottom: "var(--space-3)" }}>
-        Click a case to view its life-event timeline.
-      </p>
-
-      {loading && <div style={{ color: "var(--text-tertiary)" }}>Loading…</div>}
-      {error && <div style={{ color: "var(--danger-400)" }}>{error}</div>}
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {cases.map((c) => (
-          <Link key={c.research_case_id} href={`/research/cases/${encodeURIComponent(c.research_case_id)}`} style={{ textDecoration: "none" }}>
-            <Card style={{ cursor: "pointer" }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <div>
-                  <div style={{ color: "var(--text-primary)", fontWeight: "var(--weight-semibold)" }}>
-                    {c.person_name || c.research_case_id}
-                  </div>
-                  <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)" }}>
-                    {c.research_case_id} · Born {c.dob} · {c.total_events} {c.total_events === 1 ? "event" : "events"}
-                  </div>
-                </div>
-                <Badge tone={c.validation_status === "passed" ? "success" : "neutral"}>{c.validation_status}</Badge>
-              </div>
-            </Card>
-          </Link>
-        ))}
+    <AppShell sectionColor="--section-research">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold">Research Cases</h1>
+        <p className="mt-2 text-sm text-gray-400">
+          Browse imported research cases. Click any case to view its life-event timeline and details.
+        </p>
       </div>
-    </div>
+
+      {error && (
+        <Card glow="gold" className="mb-6">
+          <p className="text-red-400 m-0">{error}</p>
+        </Card>
+      )}
+
+      {loading ? (
+        <Card padding="0" className="p-8">
+          <p className="text-gray-400 text-center m-0">Loading cases…</p>
+        </Card>
+      ) : cases.length === 0 ? (
+        <Card padding="0" className="p-8">
+          <p className="text-gray-400 text-center m-0">No cases imported yet. Try importing some sample cases.</p>
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {cases.map((c) => (
+            <Link
+              key={c.research_case_id}
+              href={`/research/cases/${encodeURIComponent(c.research_case_id)}`}
+              className="block no-underline"
+            >
+              <Card padding="0" className="p-4 hover:border-cyan-400/50 cursor-pointer transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="font-semibold text-gray-100">
+                      {c.person_name || c.research_case_id}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      <code>{c.research_case_id}</code> · Born {c.dob} · {c.total_events}{" "}
+                      {c.total_events === 1 ? "event" : "events"}
+                    </div>
+                  </div>
+                  <Badge
+                    tone={c.validation_status === "passed" ? "success" : "neutral"}
+                    className="ml-4"
+                  >
+                    {c.validation_status}
+                  </Badge>
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
+    </AppShell>
   );
 }
