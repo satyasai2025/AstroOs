@@ -140,12 +140,19 @@ const planetStrengthFactor: PredictionFactor = {
       `${lord}'s total Shadbala is ${sb.total_rupas.toFixed(2)} rupas (baseline ${SHADBALA_NEUTRAL_RUPAS.toFixed(1)}) — Score: ${shadbalaDelta >= 0 ? "+" : ""}${shadbalaDelta.toFixed(1)}`,
     ];
     if (ps) detail.push(`Combust: ${ps.is_combust ? "yes" : "no"} — Score: ${combustDelta >= 0 ? "+" : ""}${combustDelta}`);
+    const subFactors = [
+      { name: "Shadbala Rupas", weight: SHADBALA_MAX_POINTS, present: true, contribution: shadbalaDelta, description: `Strength in rupas (${sb.total_rupas.toFixed(2)})` },
+      { name: "Combustion", weight: Math.abs(COMBUST_PENALTY), present: ps?.is_combust ?? false, contribution: combustDelta, description: "Planet near Sun" },
+    ];
+    const maxPossible = SHADBALA_MAX_POINTS + Math.abs(COMBUST_PENALTY);
     return {
       delta: Math.round((shadbalaDelta + combustDelta) * 10) / 10,
       inputs: { planet: lord, total_rupas: sb.total_rupas, is_combust: ps?.is_combust ?? null },
       raw: { ...sb, is_combust: ps?.is_combust ?? null },
       source: [`chart.shadbala[${lord}].total_rupas`, `chart.planet_strengths[${lord}].is_combust`],
       detail,
+      subFactors,
+      maxPossible,
     };
   },
 };
@@ -170,15 +177,22 @@ const digbalaFactor: PredictionFactor = {
     const comp = ctx.shadbalaAll!.phase1.dig_bala.find((c) => c.planet === lord)!;
     const midpoint = DIGBALA_MAX_SHASHTIAMSAS / 2;
     const delta = clamp(((comp.value_shashtiamsas - midpoint) / midpoint) * DIGBALA_MAX_POINTS, -DIGBALA_MAX_POINTS, DIGBALA_MAX_POINTS);
+    const detail = [
+      `${lord}'s Digbala is ${comp.value_shashtiamsas.toFixed(1)} shashtiamsas out of ${DIGBALA_MAX_SHASHTIAMSAS} (full directional strength) — Score: ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`,
+      ...comp.trace,
+    ];
+    const subFactors = [
+      { name: "Digbala Value", weight: DIGBALA_MAX_POINTS, present: true, contribution: delta, description: `Directional strength (${comp.value_shashtiamsas.toFixed(1)} shashtiamsas)` },
+    ];
+    const maxPossible = DIGBALA_MAX_POINTS;
     return {
       delta: Math.round(delta * 10) / 10,
       inputs: { planet: lord, value_shashtiamsas: comp.value_shashtiamsas },
       raw: { ...comp },
       source: [`shadbala/all.phase1.dig_bala[${lord}].value_shashtiamsas`],
-      detail: [
-        `${lord}'s Digbala is ${comp.value_shashtiamsas.toFixed(1)} shashtiamsas out of ${DIGBALA_MAX_SHASHTIAMSAS} (full directional strength) — Score: ${delta >= 0 ? "+" : ""}${delta.toFixed(1)}`,
-        ...comp.trace,
-      ],
+      detail,
+      subFactors,
+      maxPossible,
     };
   },
 };
@@ -221,7 +235,22 @@ const aspectsFactor: PredictionFactor = {
       source.push(`chart.aspects[${a.from_planet}→${a.to_planet}]`);
     }
     if (incoming.length === 0) detail.push(`No aspects onto ${lord} found in this chart`);
-    return { delta, inputs: { planet: lord, aspect_count: incoming.length }, raw: { aspects: incoming }, source, detail };
+    const aspectSubFactors = incoming.map((a) => {
+      const isBenefic = NATURAL_BENEFICS.includes(a.from_planet);
+      const isMalefic = NATURAL_MALEFICS.includes(a.from_planet);
+      const sign = isBenefic ? 1 : isMalefic ? -1 : 0;
+      const magnitude = a.orb_degrees <= ASPECT_TIGHT_ORB ? ASPECT_WEIGHTS.tight : a.orb_degrees <= ASPECT_MODERATE_ORB ? ASPECT_WEIGHTS.moderate : ASPECT_WEIGHTS.wide;
+      const points = sign * magnitude;
+      return {
+        name: `${a.from_planet} Aspect`,
+        weight: magnitude,
+        present: true,
+        contribution: points,
+        description: `${isBenefic ? "Benefic" : isMalefic ? "Malefic" : "Neutral"} aspect, orb ${a.orb_degrees.toFixed(1)}°`,
+      };
+    });
+    const maxPossible = incoming.length > 0 ? Math.max(...incoming.map((a) => (a.orb_degrees <= ASPECT_TIGHT_ORB ? ASPECT_WEIGHTS.tight : a.orb_degrees <= ASPECT_MODERATE_ORB ? ASPECT_WEIGHTS.moderate : ASPECT_WEIGHTS.wide))) : 0;
+    return { delta, inputs: { planet: lord, aspect_count: incoming.length }, raw: { aspects: incoming }, source, detail, subFactors: aspectSubFactors, maxPossible };
   },
 };
 
@@ -251,12 +280,22 @@ const yogasFactor: PredictionFactor = {
       matched.length > 0
         ? matched.map((y, i) => `${y.name} (${y.category}) is present${i < YOGA_MAX_MATCHES ? ` — Score: +${YOGA_BONUS_PER_MATCH}` : " — beyond the counted cap, no additional score"}`)
         : [`No present yoga references house ${ctx.houseNumber} or ${lord ?? "the house lord"}`];
+    const yogaSubFactors = counted.map((y) => ({
+      name: y.name,
+      weight: YOGA_BONUS_PER_MATCH,
+      present: true,
+      contribution: YOGA_BONUS_PER_MATCH,
+      description: `${y.category} — Present`,
+    }));
+    const maxPossible = YOGA_MAX_MATCHES * YOGA_BONUS_PER_MATCH;
     return {
       delta,
       inputs: { house_number: ctx.houseNumber, planet: lord, matched_count: matched.length },
       raw: { matched },
       source: matched.map((y) => `yogas.results[${y.yoga_id}]`),
       detail,
+      subFactors: yogaSubFactors,
+      maxPossible,
     };
   },
 };
@@ -284,15 +323,23 @@ const dashaInfluenceFactor: PredictionFactor = {
     const mahaMatch = !!lord && mahaLord === lord;
     const antarMatch = !!lord && antarLord === lord;
     const delta = (mahaMatch ? MAHADASHA_MATCH_BONUS : 0) + (antarMatch ? ANTARDASHA_MATCH_BONUS : 0);
+    const detail = [
+      `Current Mahadasha: ${mahaLord ?? "none active"}${mahaMatch ? ` — activates ${lord} — Score: +${MAHADASHA_MATCH_BONUS}` : ""}`,
+      `Current Antardasha: ${antarLord ?? "none active"}${antarMatch ? ` — activates ${lord} — Score: +${ANTARDASHA_MATCH_BONUS}` : ""}`,
+    ];
+    const subFactors = [
+      { name: "Mahadasha Match", weight: MAHADASHA_MATCH_BONUS, present: mahaMatch, contribution: mahaMatch ? MAHADASHA_MATCH_BONUS : 0, description: `Current MD: ${mahaLord ?? "none"}` },
+      { name: "Antardasha Match", weight: ANTARDASHA_MATCH_BONUS, present: antarMatch, contribution: antarMatch ? ANTARDASHA_MATCH_BONUS : 0, description: `Current AD: ${antarLord ?? "none"}` },
+    ];
+    const maxPossible = MAHADASHA_MATCH_BONUS + ANTARDASHA_MATCH_BONUS;
     return {
       delta,
       inputs: { mahadasha_lord: mahaLord, antardasha_lord: antarLord, house_lord: lord },
       raw: { chain },
       source: ["dasha.mahadashas"],
-      detail: [
-        `Current Mahadasha: ${mahaLord ?? "none active"}${mahaMatch ? ` — activates ${lord} — Score: +${MAHADASHA_MATCH_BONUS}` : ""}`,
-        `Current Antardasha: ${antarLord ?? "none active"}${antarMatch ? ` — activates ${lord} — Score: +${ANTARDASHA_MATCH_BONUS}` : ""}`,
-      ],
+      detail,
+      subFactors,
+      maxPossible,
     };
   },
 };
@@ -323,12 +370,20 @@ const transitInfluenceFactor: PredictionFactor = {
     ];
     if (t.is_sade_sati) detail.push(`Sade Sati active — Score: ${SADE_SATI_PENALTY}`);
     if (t.is_ashtama_shani) detail.push(`Ashtama Shani active — Score: ${ASHTAMA_SHANI_PENALTY}`);
+    const subFactors = [
+      { name: "Favorable House", weight: TRANSIT_FAVORABLE_BONUS, present: t.is_favorable_house === true, contribution: favDelta, description: `Transiting ${t.transit_rashi}` },
+      { name: "Sade Sati", weight: Math.abs(SADE_SATI_PENALTY), present: t.is_sade_sati, contribution: sadeDelta, description: "Saturn's 7.5 year cycle" },
+      { name: "Ashtama Shani", weight: Math.abs(ASHTAMA_SHANI_PENALTY), present: t.is_ashtama_shani, contribution: ashtamaDelta, description: "Saturn in 8th house from Moon" },
+    ];
+    const maxPossible = TRANSIT_FAVORABLE_BONUS + Math.abs(SADE_SATI_PENALTY) + Math.abs(ASHTAMA_SHANI_PENALTY);
     return {
       delta: favDelta + sadeDelta + ashtamaDelta,
       inputs: { planet: lord, is_favorable_house: t.is_favorable_house, is_sade_sati: t.is_sade_sati, is_ashtama_shani: t.is_ashtama_shani },
       raw: { ...t },
       source: [`transits.planets[${lord}].is_favorable_house`, `transits.planets[${lord}].is_sade_sati`, `transits.planets[${lord}].is_ashtama_shani`],
       detail,
+      subFactors,
+      maxPossible,
     };
   },
 };
@@ -361,15 +416,22 @@ const avasthaFactor: PredictionFactor = {
     const lord = ctx.lord!;
     const a = ctx.avastha!.avasthas.find((x) => x.planet === lord)!;
     const delta = DEEPTADI_POINTS[a.deeptadi_avastha] ?? 0;
+    const detail = [
+      `${lord} is in ${a.deeptadi_avastha} (dignity-state) — Score: ${delta >= 0 ? "+" : ""}${delta}`,
+      `${lord} is in ${a.baladi_avastha} (age-state) — informational only, not scored`,
+    ];
+    const subFactors = [
+      { name: a.deeptadi_avastha, weight: Math.abs(DEEPTADI_POINTS[a.deeptadi_avastha] ?? 0), present: true, contribution: delta, description: "Deeptadi (dignity-based) state" },
+    ];
+    const maxPossible = 3;
     return {
       delta,
       inputs: { planet: lord, deeptadi_avastha: a.deeptadi_avastha, baladi_avastha: a.baladi_avastha },
       raw: { ...a },
       source: [`avastha/all[${lord}].deeptadi_avastha`],
-      detail: [
-        `${lord} is in ${a.deeptadi_avastha} (dignity-state) — Score: ${delta >= 0 ? "+" : ""}${delta}`,
-        `${lord} is in ${a.baladi_avastha} (age-state) — informational only, not scored`,
-      ],
+      detail,
+      subFactors,
+      maxPossible,
     };
   },
 };
@@ -403,7 +465,14 @@ const karakaStrengthFactor: PredictionFactor = {
       source.push(`chart.planet_strengths[${k}].strength_score`);
       raw[k] = ps;
     }
-    return { delta: Math.round(delta * 10) / 10, inputs: { karakas }, raw, source, detail };
+    const karakaSubFactors = karakas.map((k) => {
+      const ps = findPlanetStrength(ctx, k);
+      if (!ps) return { name: `${k} (karaka)`, weight: KARAKA_MAX_POINTS, present: false, contribution: 0, description: "No strength data" };
+      const points = clamp((ps.strength_score - KARAKA_NEUTRAL_SCORE) * 1, -KARAKA_MAX_POINTS, KARAKA_MAX_POINTS);
+      return { name: `${k} (karaka)`, weight: KARAKA_MAX_POINTS, present: true, contribution: points, description: `Strength ${ps.strength_score.toFixed(1)}/10` };
+    });
+    const maxPossible = karakas.length * KARAKA_MAX_POINTS;
+    return { delta: Math.round(delta * 10) / 10, inputs: { karakas }, raw, source, detail, subFactors: karakaSubFactors, maxPossible };
   },
 };
 
