@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUnifiedSearch, type SearchResult } from "@/lib/search";
+import { useUnifiedSearch } from "@/lib/search";
 
 export function SearchBar() {
   const [query, setQuery] = useState("");
@@ -45,7 +45,7 @@ export function SearchBar() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           placeholder="Search charts, knowledge, projects..."
-          className="field-input w-full pl-9 py-1.5 text-sm"
+          className="field-input w-full pl-9 py-1.5 pr-9 text-sm"
           style={{ backgroundColor: "var(--bg-primary)", borderColor: "var(--border-primary)" }}
         />
         {isLoading && query.length >= 2 && (
@@ -53,13 +53,31 @@ export function SearchBar() {
             <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-t-transparent" style={{ borderColor: "var(--accent)" }} />
           </div>
         )}
+        {!isLoading && data?.ai_enhanced && (
+          <div
+            className="absolute inset-y-0 right-0 flex items-center pr-2.5"
+            title={`AI expanded query to: ${data.expanded_terms.join(", ")}`}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ color: "var(--section-ai)" }}>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {isOpen && (
-        <div 
+        <div
           className="absolute left-0 right-0 top-full mt-1 max-h-96 overflow-y-auto rounded-lg border shadow-lg z-50"
           style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}
         >
+          {data?.ai_enhanced && data.expanded_terms.length > 0 && (
+            <div
+              className="px-4 pt-2 text-[10px] uppercase tracking-wide"
+              style={{ color: "var(--section-ai)" }}
+            >
+              ✦ AI expanded: {data.expanded_terms.join(", ")}
+            </div>
+          )}
           {results.length > 0 ? (
             <div className="flex flex-col py-2 text-sm">
               {results.map((result) => (
@@ -71,7 +89,7 @@ export function SearchBar() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-[13px]" style={{ color: "var(--text-primary)" }}>{result.title}</span>
-                    <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full" 
+                    <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded-full"
                           style={{ border: "1px solid var(--border-primary)", color: "var(--text-secondary)" }}>
                       {result.type}
                     </span>
