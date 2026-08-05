@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import type { PredictionNode } from "@/lib/predictions/types";
 import { FormulaInspector } from "./FormulaInspector";
 
@@ -13,12 +12,10 @@ const NEGATIVE = "#f87171";
 
 /**
  * PredictionStepDetail — render-only. Shows the selected node's
- * computation-detail lines and raw data, with a toggle to open
- * FormulaInspector for the full formula/arithmetic breakdown.
+ * computation-detail lines, raw data, and always includes the FormulaInspector
+ * for the full formula/arithmetic breakdown.
  */
 export function PredictionStepDetail({ node }: PredictionStepDetailProps) {
-  const [showFormula, setShowFormula] = useState(false);
-
   if (!node) {
     return (
       <div className="glass-card flex h-full items-center justify-center p-8 text-sm" style={{ color: "var(--text-muted)" }}>
@@ -84,16 +81,9 @@ export function PredictionStepDetail({ node }: PredictionStepDetailProps) {
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setShowFormula((v) => !v)}
-        className="self-start rounded-lg px-3 py-1.5 text-xs font-medium transition"
-        style={{ border: "1px solid var(--border-primary)", color: "var(--accent)" }}
-      >
-        {showFormula ? "Hide formula" : "View formula"}
-      </button>
-
-      {showFormula && <FormulaInspector node={node} />}
+      <div className="pt-2" style={{ borderTop: "1px solid var(--border-primary)" }}>
+        <FormulaInspector node={node} />
+      </div>
     </div>
   );
 }
