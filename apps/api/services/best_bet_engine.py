@@ -25,6 +25,25 @@ from typing import List, Optional
 
 logger = logging.getLogger(__name__)
 
+# Which of the 3 groups count toward total_score/max_score/percentage per
+# relationship type — the same "don't silently run the marriage formula
+# under a different label" fix applied to AshtakootaEngine (see that
+# module's RELATIONSHIP_KOOTA_APPLICABILITY docstring for the full
+# rationale). Practical Compatibility (spiritual/psychological/physical
+# harmony) is relevant to every relationship type, so it's always
+# included. Karmic (Mars Dosha, karmic pattern) is specifically about
+# marital harm and is dropped everywhere else. Future (Dasha overlap,
+# mutual planetary interactions) says something about a business
+# partnership's or a parent-child relationship's long-run trajectory, so
+# it's kept there; dropped for friendship, which this method doesn't
+# treat as a long-horizon commitment.
+RELATIONSHIP_GROUP_APPLICABILITY: dict[str, set] = {
+    "marriage": {"practical", "karmic", "future"},
+    "business": {"practical", "future"},
+    "friendship": {"practical"},
+    "parent_child": {"practical", "future"},
+}
+
 
 class CompatibilityStatus(Enum):
     EXCELLENT = "Excellent"
@@ -366,6 +385,7 @@ class BestBetEngine:
         mars_interaction: str = "neutral",
         venus_interaction: str = "neutral",
         jupiter_interaction: str = "neutral",
+        relationship_type: str = "marriage",
     ) -> BestBetResponse:
         """
         Calculate Best Bet 58-point compatibility score.
@@ -437,25 +457,37 @@ class BestBetEngine:
         )
         future_score = min(dasha_score + mutual_planets_score, 10.0)
 
-        # Total
-        total_score = practical_score + karmic_score + future_score
-        percentage = (total_score / cls.MAX_TOTAL) * 100
+        # Total — only groups relevant to this relationship type count
+        # toward total_score/max_score/percentage; see
+        # RELATIONSHIP_GROUP_APPLICABILITY's docstring for why.
+        relationship_type = relationship_type if relationship_type in RELATIONSHIP_GROUP_APPLICABILITY else "marriage"
+        applicable_groups = RELATIONSHIP_GROUP_APPLICABILITY[relationship_type]
+        group_scores = {"practical": practical_score, "karmic": karmic_score, "future": future_score}
+        group_maxes = {"practical": cls.MAX_PRACTICAL, "karmic": cls.MAX_KARMIC, "future": cls.MAX_FUTURE}
+        total_score = sum(group_scores[g] for g in applicable_groups)
+        max_score = sum(group_maxes[g] for g in applicable_groups)
+        percentage = (total_score / max_score) * 100 if max_score else 0.0
 
         # Verdict
+        relationship_label = {
+            "marriage": "Marriage", "business": "Business Partnership",
+            "friendship": "Friendship", "parent_child": "Parent-Child Relationship",
+        }[relationship_type]
         if percentage >= 70:
-            verdict = "Excellent Match"
+            verdict = f"Excellent Match for {relationship_label}"
             status = CompatibilityStatus.EXCELLENT.value
         elif percentage >= 60:
-            verdict = "Good Match"
+            verdict = f"Good Match for {relationship_label}"
             status = CompatibilityStatus.GOOD.value
         elif percentage >= 50:
-            verdict = "Average Match"
+            verdict = f"Average Match for {relationship_label}"
             status = CompatibilityStatus.AVERAGE.value
         else:
-            verdict = "Poor Match"
+            verdict = f"Poor Match for {relationship_label}"
             status = CompatibilityStatus.POOR.value
 
-        # Build sub-factors
+        # Build sub-factors — Practical's always included; Karmic's/Future's
+        # only listed when their group applies to this relationship type.
         sub_factors = [
             {"name": "Rajju", "score": rajju_score, "max": 2.0, "description": rajju_desc},
             {"name": "Nadi", "score": nadi_score, "max": 8.0, "description": nadi_desc},
@@ -466,11 +498,17 @@ class BestBetEngine:
             {"name": "Mahendra", "score": mahendra_score, "max": 2.0, "description": "Mahendra factor"},
             {"name": "Yoni", "score": yoni_score, "max": 4.0, "description": "Physical compatibility"},
             {"name": "Vedha", "score": vedha_score, "max": 2.0, "description": "Obstruction check"},
-            {"name": "Mars Dosha", "score": mars_dosha_score, "max": 6.0, "description": "Mars affliction analysis"},
-            {"name": "Karmic Pattern", "score": karmic_pattern_score, "max": 6.0, "description": "Karmic alignment"},
-            {"name": "Dasha Compatibility", "score": dasha_score, "max": 5.0, "description": "Dasha period overlap"},
-            {"name": "Mutual Planets", "score": mutual_planets_score, "max": 5.0, "description": "Planetary interactions"},
         ]
+        if "karmic" in applicable_groups:
+            sub_factors += [
+                {"name": "Mars Dosha", "score": mars_dosha_score, "max": 6.0, "description": "Mars affliction analysis"},
+                {"name": "Karmic Pattern", "score": karmic_pattern_score, "max": 6.0, "description": "Karmic alignment"},
+            ]
+        if "future" in applicable_groups:
+            sub_factors += [
+                {"name": "Dasha Compatibility", "score": dasha_score, "max": 5.0, "description": "Dasha period overlap"},
+                {"name": "Mutual Planets", "score": mutual_planets_score, "max": 5.0, "description": "Planetary interactions"},
+            ]
 
         # Strengths and challenges
         strengths = []
@@ -482,11 +520,11 @@ class BestBetEngine:
             strengths.append("Strong psychological compatibility")
         if physical_score >= 10:
             strengths.append("Good physical and material harmony")
-        if mars_dosha_score >= 5:
+        if "karmic" in applicable_groups and mars_dosha_score >= 5:
             strengths.append("Low or balanced Mars Dosha")
-        if karmic_pattern_score >= 5:
+        if "karmic" in applicable_groups and karmic_pattern_score >= 5:
             strengths.append("Aligned karmic patterns")
-        if dasha_score >= 4:
+        if "future" in applicable_groups and dasha_score >= 4:
             strengths.append("Favorable dasha overlap")
 
         if spiritual_score < 6:
@@ -495,11 +533,11 @@ class BestBetEngine:
             challenges.append("Psychological compatibility may need work")
         if physical_score < 6:
             challenges.append("Physical/material harmony concerns")
-        if mars_dosha_score < 3:
+        if "karmic" in applicable_groups and mars_dosha_score < 3:
             challenges.append("Mars Dosha mismatch")
-        if karmic_pattern_score < 3:
+        if "karmic" in applicable_groups and karmic_pattern_score < 3:
             challenges.append("Different karmic patterns")
-        if dasha_score < 2:
+        if "future" in applicable_groups and dasha_score < 2:
             challenges.append("Limited dasha overlap")
 
         recommendations = [
@@ -513,7 +551,7 @@ class BestBetEngine:
             subject_name_a=subject_name_a,
             subject_name_b=subject_name_b,
             total_score=total_score,
-            max_score=cls.MAX_TOTAL,
+            max_score=max_score,
             percentage=round(percentage, 1),
             verdict=verdict,
             status=status,

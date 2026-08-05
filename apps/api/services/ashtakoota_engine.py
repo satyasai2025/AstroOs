@@ -14,6 +14,17 @@ Kootas (Total 36 Points):
   6. Gana (6 pts)        — Temperament (Deva, Manushya, Rakshasa)
   7. Bhakoot (7 pts)     — Health, wealth & family welfare (Rashi positioning)
   8. Nadi (8 pts)        — Genetic health, offspring & life force
+
+Relationship-type scoring (AstroOS adaptation, not classical)
+---------------------------------------------------------------
+Ashtakoota is a marriage-matching formula in every classical source — there
+is no defined "business" or "friendship" variant. Rather than silently
+running the marriage formula under a different label (which produced the
+same score for every relationship type — the exact bug this section fixes),
+`analyze()` includes only the kootas/doshas that are actually relevant to
+the selected context, and recomputes the total/max/percentage from that
+subset. See RELATIONSHIP_KOOTA_APPLICABILITY / RELATIONSHIP_DOSHA_APPLICABILITY
+below for exactly which factors apply to which relationship type, and why.
 """
 
 from __future__ import annotations
@@ -132,6 +143,46 @@ class AshtakootaAnalysisResult:
     strengths: List[str] = field(default_factory=list)
     challenges: List[str] = field(default_factory=list)
     recommendations: List[str] = field(default_factory=list)
+
+
+# Which of the 8 kootas count toward the total/percentage for each
+# relationship type. Marriage keeps the full classical 36; the others drop
+# kootas that specifically measure marital/procreative fit:
+#   - Yoni (physical/sexual instinct) and Nadi (genetic/offspring health)
+#     are marriage- and childbearing-specific — dropped for every
+#     non-marital context.
+#   - Varna and Tara (spiritual hierarchy, destiny alignment) still say
+#     something about a business partnership's long-run fit, so kept there;
+#     dropped for friendship/parent-child where that framing doesn't apply.
+#   - Gana (temperament) and Graha Maitri (mental affinity) are the most
+#     context-independent factors — kept for every relationship type.
+#   - Bhakoot (family/financial welfare) is kept for business (shared
+#     financial trajectory) and parent-child (household welfare), dropped
+#     for friendship.
+RELATIONSHIP_KOOTA_APPLICABILITY: Dict[str, set] = {
+    "marriage": {"Varna", "Vashya", "Tara", "Yoni", "Graha Maitri", "Gana", "Bhakoot", "Nadi"},
+    "business": {"Varna", "Vashya", "Tara", "Graha Maitri", "Gana", "Bhakoot"},
+    "friendship": {"Vashya", "Graha Maitri", "Gana"},
+    "parent_child": {"Tara", "Graha Maitri", "Gana", "Bhakoot"},
+}
+
+# Which dosha checks apply per relationship type. Manglik (Mars afflicting
+# marital houses) and Nadi Dosha (genetic/offspring risk) are meaningless
+# outside marriage; Bhakoot Dosha (financial/growth conflict) still says
+# something useful about a business or parent-child household.
+RELATIONSHIP_DOSHA_APPLICABILITY: Dict[str, set] = {
+    "marriage": {"Manglik (Kuja Dosha)", "Nadi Dosha", "Bhakoot Dosha", "Rajju Dosha", "Vedha"},
+    "business": {"Bhakoot Dosha"},
+    "friendship": set(),
+    "parent_child": {"Bhakoot Dosha"},
+}
+
+RELATIONSHIP_LABELS: Dict[str, str] = {
+    "marriage": "Marriage",
+    "business": "Business Partnership",
+    "friendship": "Friendship",
+    "parent_child": "Parent-Child Relationship",
+}
 
 
 class AshtakootaEngine:
@@ -324,8 +375,13 @@ class AshtakootaEngine:
         mars_house_a: int,
         rashi_b: str,
         nakshatra_b: str,
-        mars_house_b: int
+        mars_house_b: int,
+        relationship_type: str = "marriage",
     ) -> AshtakootaAnalysisResult:
+        relationship_type = relationship_type if relationship_type in RELATIONSHIP_KOOTA_APPLICABILITY else "marriage"
+        applicable_kootas = RELATIONSHIP_KOOTA_APPLICABILITY[relationship_type]
+        applicable_doshas = RELATIONSHIP_DOSHA_APPLICABILITY[relationship_type]
+
         n_idx_a = NAKSHATRAS.index(nakshatra_a) if nakshatra_a in NAKSHATRAS else 0
         n_idx_b = NAKSHATRAS.index(nakshatra_b) if nakshatra_b in NAKSHATRAS else 0
 
@@ -338,25 +394,33 @@ class AshtakootaEngine:
         bhakoot = cls.calculate_bhakoot(rashi_a, rashi_b)
         nadi = cls.calculate_nadi(n_idx_a, n_idx_b)
 
-        kootas = [varna, vashya, tara, yoni, graha, gana, bhakoot, nadi]
+        # Every koota is still computed above (dosha checks below need
+        # nadi/bhakoot regardless of relationship type) but only the
+        # kootas relevant to this relationship type count toward the
+        # total/percentage and appear in the response — see
+        # RELATIONSHIP_KOOTA_APPLICABILITY's docstring for why.
+        all_kootas = [varna, vashya, tara, yoni, graha, gana, bhakoot, nadi]
+        kootas = [k for k in all_kootas if k.name in applicable_kootas]
         total_score = sum(k.obtained_score for k in kootas)
-        pct = (total_score / 36.0) * 100.0
+        max_total_score = sum(k.max_score for k in kootas)
+        pct = (total_score / max_total_score) * 100.0 if max_total_score else 0.0
 
+        relationship_label = RELATIONSHIP_LABELS[relationship_type]
         if pct >= 80:
-            verdict = "Excellent Match"
+            verdict = f"Excellent Match for {relationship_label}"
         elif pct >= 65:
-            verdict = "Good Match"
+            verdict = f"Good Match for {relationship_label}"
         elif pct >= 50:
-            verdict = "Average Match"
+            verdict = f"Average Match for {relationship_label}"
         else:
-            verdict = "Low Compatibility"
+            verdict = f"Low Compatibility for {relationship_label}"
 
         # Dosha Checks
         manglik_a = mars_house_a in (1, 4, 7, 8, 12)
         manglik_b = mars_house_b in (1, 4, 7, 8, 12)
         has_manglik_dosha = manglik_a != manglik_b  # Cancelled if both are Manglik
 
-        doshas = [
+        all_doshas = [
             DoshaResult(
                 name="Manglik (Kuja Dosha)",
                 has_dosha=has_manglik_dosha,
@@ -388,42 +452,36 @@ class AshtakootaEngine:
                 description="Mutual star obstruction check."
             )
         ]
+        doshas = [d for d in all_doshas if d.name in applicable_doshas]
 
-        radar_values = {
-            "Varna": (varna.obtained_score / varna.max_score) * 100,
-            "Vashya": (vashya.obtained_score / vashya.max_score) * 100,
-            "Tara": (tara.obtained_score / tara.max_score) * 100,
-            "Yoni": (yoni.obtained_score / yoni.max_score) * 100,
-            "Graha Maitri": (graha.obtained_score / graha.max_score) * 100,
-            "Gana": (gana.obtained_score / gana.max_score) * 100,
-            "Bhakoot": (bhakoot.obtained_score / bhakoot.max_score) * 100,
-            "Nadi": (nadi.obtained_score / nadi.max_score) * 100,
-        }
+        radar_values = {k.name: (k.obtained_score / k.max_score) * 100 for k in kootas}
 
         strengths = []
-        if nadi.obtained_score == 8:
+        if "Nadi" in applicable_kootas and nadi.obtained_score == 8:
             strengths.append("Excellent emotional and physiological harmony (No Nadi Dosha)")
-        if graha.obtained_score >= 4:
+        if "Graha Maitri" in applicable_kootas and graha.obtained_score >= 4:
             strengths.append("Strong mental empathy & shared intellectual growth")
-        if yoni.obtained_score >= 3:
+        if "Yoni" in applicable_kootas and yoni.obtained_score >= 3:
             strengths.append("Deep physical attraction and family welfare alignment")
 
         challenges = []
-        if nadi.obtained_score == 0:
+        if "Nadi" in applicable_kootas and nadi.obtained_score == 0:
             challenges.append("Nadi Dosha requires attention to well-being and health")
-        if bhakoot.obtained_score == 0:
+        if "Bhakoot" in applicable_kootas and bhakoot.obtained_score == 0:
             challenges.append("Financial decisions and career moves need mutual discussion")
-        if has_manglik_dosha:
+        if "Manglik (Kuja Dosha)" in applicable_doshas and has_manglik_dosha:
             challenges.append("Communication under stress can be emotional at times")
 
         recommendations = [
-            "Very favorable alignment for significant joint commitments",
-            "Strengthen open communication regarding career and trust",
-            "Perform traditional mitigations for partial Mars influence if preferred"
+            f"{'Very favorable' if pct >= 65 else 'Mixed'} alignment for {relationship_label.lower()} commitments",
+            "Strengthen open communication regarding shared goals and trust",
         ]
+        if "Manglik (Kuja Dosha)" in applicable_doshas:
+            recommendations.append("Perform traditional mitigations for partial Mars influence if preferred")
 
         return AshtakootaAnalysisResult(
             total_score=total_score,
+            max_total_score=max_total_score,
             compatibility_percentage=round(pct, 1),
             verdict=verdict,
             kootas=kootas,

@@ -15,6 +15,7 @@ from pydantic import BaseModel, Field, model_validator
 
 AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
 HouseSystemCode = Literal["W", "P", "K", "E"]
+RelationshipTypeCode = Literal["marriage", "business", "friendship", "parent_child"]
 
 
 # ── Ashtakoota Compatibility ───────────────────────────────────────────────────
@@ -53,6 +54,8 @@ class AshtakootaCompatibilityRequest(BaseModel):
     latitude_b: float = Field(ge=-90.0, le=90.0)
     longitude_b: float = Field(ge=-180.0, le=180.0)
     subject_name_b: str = Field(default="Person B", max_length=100)
+
+    relationship_type: RelationshipTypeCode = "marriage"
 
     # Chart settings
     ayanamsa: AyanamsaCode = "lahiri"
@@ -103,6 +106,8 @@ class BestBetCompatibilityRequest(BaseModel):
     latitude_b: float = Field(ge=-90.0, le=90.0)
     longitude_b: float = Field(ge=-180.0, le=180.0)
     subject_name_b: str = Field(default="Person B", max_length=100)
+
+    relationship_type: RelationshipTypeCode = "marriage"
 
     # Chart settings
     ayanamsa: AyanamsaCode = "lahiri"
