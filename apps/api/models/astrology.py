@@ -207,6 +207,11 @@ class BirthChartModel(AstroBase):
     lagna_rashi: Mapped[Optional[str]] = mapped_column(_rashi_col(), nullable=True)
     lagna_degree: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 6), nullable=True)
     moon_nakshatra: Mapped[Optional[str]] = mapped_column(_nakshatra_col(), nullable=True)
+    # A user's first saved chart is auto-marked default (see
+    # BirthChartRepository.get_or_create); they can later switch it via
+    # set_default(). At most one True row per user_id is enforced by
+    # migration 0016's partial unique index, not just by application code.
+    is_default: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default="false")
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     planet_positions: Mapped[List["PlanetPositionModel"]] = relationship(

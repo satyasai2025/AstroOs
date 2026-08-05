@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
-import { useDeleteChart, useMyCharts } from "@/lib/charts";
+import { useDeleteChart, useMyCharts, useSetDefaultChart } from "@/lib/charts";
 import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
 import { RecomputeChartModal } from "@/components/charts/RecomputeChartModal";
@@ -31,8 +31,11 @@ export default function ChartHistoryPage() {
   const [recomputeChart, setRecomputeChart] = useState<BirthChartSummary | null>(null);
   const clearWorkflowResult = useWorkflowStore((s) => s.clear);
   const deleteChart = useDeleteChart();
+  const setDefaultChart = useSetDefaultChart();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [defaultError, setDefaultError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortMode>("recent");
 
@@ -77,6 +80,19 @@ export default function ChartHistoryPage() {
     });
   };
 
+  const handleSetDefault = (chart: BirthChartSummary) => {
+    setDefaultError(null);
+    setSettingDefaultId(chart.id);
+    setDefaultChart.mutate(chart.id, {
+      onError: (err) => {
+        setDefaultError(
+          err instanceof ApiError ? err.detail : "Could not set this chart as default. Please retry.",
+        );
+      },
+      onSettled: () => setSettingDefaultId(null),
+    });
+  };
+
   const columns: TableColumn<BirthChartSummary>[] = [
     {
       key: "subject_name",
@@ -105,6 +121,7 @@ export default function ChartHistoryPage() {
             <Link href={`/charts/${c.id}`} style={{ fontWeight: "var(--weight-medium)" }} className="hover:underline">
               {c.subject_name}
             </Link>
+            {c.is_default && <Badge tone="success">Default</Badge>}
           </div>
         );
       },
@@ -121,6 +138,17 @@ export default function ChartHistoryPage() {
       align: "right",
       render: (c) => (
         <div className="flex items-center justify-end gap-2">
+          {!c.is_default && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleSetDefault(c)}
+              disabled={settingDefaultId === c.id}
+              title="Use this chart as your default"
+            >
+              {settingDefaultId === c.id ? "Setting…" : "Set as Default"}
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -172,6 +200,14 @@ export default function ChartHistoryPage() {
         <Card style={{ marginBottom: "1rem", padding: "0.75rem 1rem" }}>
           <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
             {deleteError}
+          </p>
+        </Card>
+      )}
+
+      {defaultError && (
+        <Card style={{ marginBottom: "1rem", padding: "0.75rem 1rem" }}>
+          <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
+            {defaultError}
           </p>
         </Card>
       )}
