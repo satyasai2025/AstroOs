@@ -15,12 +15,14 @@ interface BadgeProps {
   children?: ReactNode;
   tone?: BadgeTone;
   dot?: boolean;
+  className?: string;
 }
 
-export function Badge({ children, tone = "neutral", dot }: BadgeProps) {
+export function Badge({ children, tone = "neutral", dot, className }: BadgeProps) {
   const t = TONE[tone] || TONE.neutral;
   return (
     <span
+      className={className}
       style={{
         display: "inline-flex",
         alignItems: "center",
