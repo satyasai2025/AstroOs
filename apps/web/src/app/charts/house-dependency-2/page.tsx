@@ -2,13 +2,50 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
+import { HouseDependencyNetwork, type EdgeKind } from "@/components/charts/HouseDependencyNetwork";
 import { Card } from "@/components/ui";
-import type { WorkflowAnalysisResponse } from "@/lib/types";
+import type { WorkflowAnalysisResponse, HouseCuspSchema, PlanetPositionSchema, PlanetStrengthSchema } from "@/lib/types";
 
 export default function HouseDependency2Page() {
   // In a real app, this would come from the workflow store or a selected chart
   const [selectedHouse, setSelectedHouse] = useState<number | null>(10); // Default to 10th house
+
+  // Filter state shared with component
+  const [activeKinds, setActiveKinds] = useState<Set<EdgeKind>>(new Set([
+    "lordship", "aspect", "parivartana", "argala", "trinal", "angular", "dusthana", "functional", "maraka"
+  ]));
+
+  // Mock chart data for demonstration - in real app this comes from workflow store
+  const mockHouses: HouseCuspSchema[] = Array.from({ length: 12 }, (_, i) => ({
+    house_number: i + 1,
+    rashi: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"][i],
+    degree: 0,
+    sign_lord: "",
+  }));
+
+  const mockPlanets: PlanetPositionSchema[] = [
+    { planet: "Sun", house_number: 10, rashi: "Capricorn", degree: 18.4, dignity: "neutral", retrograde: false, nakshatra: "Shravana", pada: 1 },
+    { planet: "Moon", house_number: 4, rashi: "Cancer", degree: 12.3, dignity: "own", retrograde: false, nakshatra: "Pushya", pada: 2 },
+    { planet: "Mars", house_number: 7, rashi: "Libra", degree: 5.7, dignity: "neutral", retrograde: false, nakshatra: "Chitra", pada: 3 },
+    { planet: "Mercury", house_number: 10, rashi: "Capricorn", degree: 22.1, dignity: "neutral", retrograde: false, nakshatra: "Dhanishta", pada: 1 },
+    { planet: "Jupiter", house_number: 9, rashi: "Sagittarius", degree: 15.6, dignity: "own", retrograde: false, nakshatra: "Purva Ashadha", pada: 2 },
+    { planet: "Venus", house_number: 9, rashi: "Sagittarius", degree: 8.2, dignity: "neutral", retrograde: false, nakshatra: "Mula", pada: 4 },
+    { planet: "Saturn", house_number: 10, rashi: "Capricorn", degree: 3.9, dignity: "own", retrograde: false, nakshatra: "Uttara Ashadha", pada: 1 },
+    { planet: "Rahu", house_number: 2, rashi: "Taurus", degree: 11.5, dignity: "exalted", retrograde: true, nakshatra: "Rohini", pada: 2 },
+    { planet: "Ketu", house_number: 8, rashi: "Scorpio", degree: 11.5, dignity: "debilitated", retrograde: true, nakshatra: "Jyeshtha", pada: 4 },
+  ];
+
+  const mockPlanetStrengths: PlanetStrengthSchema[] = [
+    { planet: "Sun", strength_score: 6.2, dignity: "neutral", shadbala: {} },
+    { planet: "Moon", strength_score: 8.5, dignity: "own", shadbala: {} },
+    { planet: "Mars", strength_score: 5.8, dignity: "neutral", shadbala: {} },
+    { planet: "Mercury", strength_score: 6.5, dignity: "neutral", shadbala: {} },
+    { planet: "Jupiter", strength_score: 9.1, dignity: "own", shadbala: {} },
+    { planet: "Venus", strength_score: 7.3, dignity: "neutral", shadbala: {} },
+    { planet: "Saturn", strength_score: 8.8, dignity: "own", shadbala: {} },
+    { planet: "Rahu", strength_score: 7.9, dignity: "exalted", shadbala: {} },
+    { planet: "Ketu", strength_score: 4.2, dignity: "debilitated", shadbala: {} },
+  ];
 
   return (
     <AppShell sectionColor="--section-analysis">
@@ -51,29 +88,49 @@ export default function HouseDependency2Page() {
         {/* Filter chips */}
         <div className="flex flex-wrap items-center gap-2">
           {[
-            "All Relationships",
-            "Lordship",
-            "Aspects",
-            "Parivartana",
-            "Argala",
-            "Trinal (1-5-9)",
-            "Angular (1-4-7-10)",
-            "Dusthana (6-8-12)",
-            "Maraka",
-          ].map((filter) => (
-            <button
-              key={filter}
-              type="button"
-              className="px-3 py-1.5 text-xs font-medium rounded-lg border transition-all"
-              style={{
-                backgroundColor: filter === "All Relationships" ? "rgba(6, 207, 255, 0.15)" : "transparent",
-                borderColor: filter === "All Relationships" ? "var(--accent)" : "var(--border-primary)",
-                color: filter === "All Relationships" ? "var(--accent)" : "var(--text-secondary)",
-              }}
-            >
-              {filter}
-            </button>
-          ))}
+            { key: "all", label: "All Relationships" },
+            { key: "lordship", label: "Lordship" },
+            { key: "aspect", label: "Aspects" },
+            { key: "parivartana", label: "Parivartana" },
+            { key: "argala", label: "Argala" },
+            { key: "trinal", label: "Trinal (1-5-9)" },
+            { key: "angular", label: "Angular (1-4-7-10)" },
+            { key: "dusthana", label: "Dusthana (6-8-12)" },
+            { key: "maraka", label: "Maraka" },
+          ].map((filter) => {
+            const isAll = filter.key === "all";
+            const isActive = isAll
+              ? activeKinds.size === 9 // all 9 kinds
+              : activeKinds.has(filter.key as EdgeKind);
+            return (
+              <button
+                key={filter.key}
+                type="button"
+                onClick={() => {
+                  if (isAll) {
+                    setActiveKinds(isActive ? new Set() : new Set([
+                      "lordship", "aspect", "parivartana", "argala", "trinal", "angular", "dusthana", "functional", "maraka"
+                    ]));
+                  } else {
+                    setActiveKinds((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(filter.key as EdgeKind)) next.delete(filter.key as EdgeKind);
+                      else next.add(filter.key as EdgeKind);
+                      return next;
+                    });
+                  }
+                }}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg border transition-all"
+                style={{
+                  backgroundColor: isActive ? "rgba(6, 207, 255, 0.15)" : "transparent",
+                  borderColor: isActive ? "var(--accent)" : "var(--border-primary)",
+                  color: isActive ? "var(--accent)" : "var(--text-secondary)",
+                }}
+              >
+                {filter.label}
+              </button>
+            );
+          })}
           <button
             type="button"
             className="px-3 py-1.5 text-xs font-medium rounded-lg border flex items-center gap-1.5"
@@ -91,9 +148,11 @@ export default function HouseDependency2Page() {
           {/* Left: Network Graph */}
           <div className="space-y-4">
             <HouseDependencyNetwork
-              houses={[]}
-              planetStrengths={[]}
-              planets={[]}
+              houses={mockHouses}
+              planetStrengths={mockPlanetStrengths}
+              planets={mockPlanets}
+              activeKinds={activeKinds}
+              onFilterChange={setActiveKinds}
             />
 
             {/* Bottom: Dasha & Transit Timeline */}

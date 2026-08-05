@@ -48,7 +48,11 @@ class Settings(BaseSettings):
     BCRYPT_ROUNDS: int = 12
 
     # ── CORS ──────────────────────────────────────────────────────────────────
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
+    ALLOWED_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:3002",
+    ]
     ALLOWED_HOSTS: List[str] = ["*"]
 
     # ── Swiss Ephemeris ───────────────────────────────────────────────────────

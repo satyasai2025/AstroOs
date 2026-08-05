@@ -26,6 +26,7 @@ const HOUSE_SYSTEM_OPTIONS: SelectOption[] = [
 
 export default function ReportsPdfPage() {
   // ── Form fields ──────────────────────────────────────────────────────────
+  const [selectedChartId, setSelectedChartId] = useState<string>("");
   const [subjectName, setSubjectName] = useState("");
   const [title, setTitle] = useState("AstroOS Chart Report");
   const [birthDate, setBirthDate] = useState("");
@@ -34,6 +35,10 @@ export default function ReportsPdfPage() {
   const [longitude, setLongitude] = useState("");
   const [ayanamsa, setAyanamsa] = useState<AyanamsaCode>("lahiri");
   const [houseSystem, setHouseSystem] = useState<HouseSystemCode>("W");
+
+  // ── Saved charts state ──────────────────────────────────────────────────
+  const [savedCharts, setSavedCharts] = useState<any[]>([]);
+  const [loadingCharts, setLoadingCharts] = useState(true);
 
   // ── API state ────────────────────────────────────────────────────────────
   const [templates, setTemplates] = useState<string[]>([]);
@@ -58,6 +63,51 @@ export default function ReportsPdfPage() {
   useEffect(() => {
     void loadTemplates();
   }, [loadTemplates]);
+
+  // Load saved charts on mount
+  const loadSavedCharts = useCallback(async () => {
+    try {
+      setLoadingCharts(true);
+      const data = await api.get<{ charts: any[]; total: number }>("/api/v1/horoscope/my-charts?limit=50&offset=0");
+      setSavedCharts(data.charts || []);
+      // Auto-select first chart if available
+      if (data.charts && data.charts.length > 0) {
+        const firstChart = data.charts[0];
+        setSelectedChartId(firstChart.id);
+        populateFromChart(firstChart);
+      }
+    } catch (err) {
+      // User might not be logged in - that's okay
+      setSavedCharts([]);
+    } finally {
+      setLoadingCharts(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadSavedCharts();
+  }, [loadSavedCharts]);
+
+  // Populate form fields from a saved chart
+  const populateFromChart = (chart: any) => {
+    setSubjectName(chart.subject_name || "");
+    const birthDt = new Date(chart.birth_datetime_utc);
+    setBirthDate(birthDt.toISOString().split("T")[0]);
+    setBirthTime(birthDt.toISOString().split("T")[1].slice(0, 5));
+    setLatitude(chart.birth_latitude?.toString() || "");
+    setLongitude(chart.birth_longitude?.toString() || "");
+    setAyanamsa((chart.ayanamsa as AyanamsaCode) || "lahiri");
+    setHouseSystem((chart.house_system as HouseSystemCode) || "W");
+  };
+
+  // Handle saved chart selection
+  const handleChartSelect = useCallback((chartId: string) => {
+    setSelectedChartId(chartId);
+    const chart = savedCharts.find((c) => c.id === chartId);
+    if (chart) {
+      populateFromChart(chart);
+    }
+  }, [savedCharts]);
 
   // Submit: build the ChartReportRequest and POST to /api/v1/report/chart/pdf.
   // The endpoint returns binary PDF (application/pdf), so we use a raw fetch
@@ -151,6 +201,28 @@ export default function ReportsPdfPage() {
           <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", marginTop: 0 }}>
             Birth Data
           </h2>
+          <div style={{ marginBottom: "var(--space-4)" }}>
+            <label style={{ display: "block", fontSize: "var(--text-sm)", fontWeight: "var(--weight-medium)", marginBottom: "var(--space-2)", color: "var(--text-secondary)" }}>
+              Load from Saved Chart
+            </label>
+            {loadingCharts ? (
+              <span style={{ fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>Loading saved charts…</span>
+            ) : savedCharts.length > 0 ? (
+              <Select
+                value={selectedChartId}
+                onChange={handleChartSelect}
+                options={savedCharts.map((c) => ({
+                  value: c.id,
+                  label: `${c.subject_name} · ${new Date(c.birth_datetime_utc).toLocaleDateString()} · ${c.place_name || "Unknown place"}`,
+                }))}
+                placeholder="Select a saved chart…"
+              />
+            ) : (
+              <span style={{ fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>
+                No saved charts found. Enter birth details manually below or save a chart first from the Dashboard.
+              </span>
+            )}
+          </div>
           <div
             style={{
               display: "grid",
