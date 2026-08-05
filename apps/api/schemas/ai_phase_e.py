@@ -209,6 +209,59 @@ class MarriageTimingResponse(BaseModel):
     scan_results: list[TransitScanYearResponse]
 
 
+# ── Sadhu Padhdhati Marriage Timing (alternate method) ────────────────────────
+
+class SadhuPadhdhatiRequest(BaseModel):
+    """Request payload for the Sadhu Padhdhati (Sudarshana Chakra Prism)
+    marriage-timing method — a second, selectable alternative to the
+    Jupiter/Saturn transit scan above. See sadhu_padhdhati_engine.py for
+    the method's derivation and its automation caveats."""
+    birth_datetime_utc: datetime = Field(
+        description="UTC birth datetime (ISO-8601, must include timezone offset)."
+    )
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    subject_name: str = Field(default="", max_length=100)
+    gender: Literal["male", "female"]
+    ayanamsa: AyanamsaCode = "lahiri"
+    house_system: HouseSystemCode = "W"
+
+
+class SadhuPadhdhatiLevelResponse(BaseModel):
+    """One Physical- or Astral-level relational pass within a chart."""
+    label: str
+    yes_count: int
+    max_count: int
+    badhaka: bool
+
+
+class SadhuPadhdhatiChartResponse(BaseModel):
+    """One chart's (D1 or D9) delay computation breakdown."""
+    chart_label: str
+    base: int
+    step: int
+    escalation_factor: int
+    male_female_factor: int
+    reducing_factor: int
+    delay: float
+    levels: list[SadhuPadhdhatiLevelResponse]
+
+
+class SadhuPadhdhatiResponse(BaseModel):
+    """Response payload for the Sadhu Padhdhati marriage-timing method."""
+    subject_name: str
+    birth_year: int
+    gender: str
+    d1: SadhuPadhdhatiChartResponse
+    d9: SadhuPadhdhatiChartResponse
+    net_delay: int
+    predicted_year: int
+    window_start: int
+    window_end: int
+    alphabet_class: Optional[str]
+    destiny_factor: Optional[int]
+
+
 # ── Chart Comparison ──────────────────────────────────────────────────────────
 
 class ComparisonDimensionResponse(BaseModel):

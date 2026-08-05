@@ -401,6 +401,55 @@ export const marriageTimingApi = {
     api.post<MarriageTimingResponse>("/api/v1/ai/marriage-timing", data),
 };
 
+// ── Sadhu Padhdhati Marriage Timing (alternate method) ──────────────────────
+
+export interface SadhuPadhdhatiRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  subject_name?: string;
+  gender: "male" | "female";
+  ayanamsa?: string;
+  house_system?: string;
+}
+
+export interface SadhuPadhdhatiLevel {
+  label: string;
+  yes_count: number;
+  max_count: number;
+  badhaka: boolean;
+}
+
+export interface SadhuPadhdhatiChart {
+  chart_label: string;
+  base: number;
+  step: number;
+  escalation_factor: number;
+  male_female_factor: number;
+  reducing_factor: number;
+  delay: number;
+  levels: SadhuPadhdhatiLevel[];
+}
+
+export interface SadhuPadhdhatiResponse {
+  subject_name: string;
+  birth_year: number;
+  gender: string;
+  d1: SadhuPadhdhatiChart;
+  d9: SadhuPadhdhatiChart;
+  net_delay: number;
+  predicted_year: number;
+  window_start: number;
+  window_end: number;
+  alphabet_class: string | null;
+  destiny_factor: number | null;
+}
+
+export const sadhuPadhdhatiApi = {
+  analyze: (data: SadhuPadhdhatiRequest) =>
+    api.post<SadhuPadhdhatiResponse>("/api/v1/ai/sadhu-padhdhati-timing", data),
+};
+
 // ── Best Bet 58-Point Compatibility API ─────────────────────────────────────
 
 export interface BestBetSubFactor {

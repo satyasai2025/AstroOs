@@ -50,6 +50,10 @@ from apps.api.schemas.ai_phase_e import (
     ResearchInsightRequest,
     ResearchInsightResponse,
     ResearchQueryRequest,
+    SadhuPadhdhatiChartResponse,
+    SadhuPadhdhatiLevelResponse,
+    SadhuPadhdhatiRequest,
+    SadhuPadhdhatiResponse,
     TransitScanYearResponse,
     VerificationReportRequest,
     VerificationReportResponse,
@@ -78,6 +82,8 @@ from apps.api.services.marriage_timing_engine import (
     TransitPositions,
 )
 from apps.api.services.best_bet_engine import BestBetEngine
+from apps.api.services.divisional_engine import compute_varga_sign
+from apps.api.services.sadhu_padhdhati_engine import RASHIS as SADHU_RASHIS, ChartPositions, SadhuPadhdhatiEngine
 from apps.api.domain.ai_phase_e import ResearchQuery
 
 logger = logging.getLogger(__name__)
@@ -627,6 +633,108 @@ async def marriage_timing(
                 saturn_obstruction_details=list(r.saturn_obstruction_details),
             ) for r in result.scan_results
         ],
+    )
+
+
+@router.post("/sadhu-padhdhati-timing", response_model=SadhuPadhdhatiResponse)
+async def sadhu_padhdhati_timing(
+    body: SadhuPadhdhatiRequest,
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> SadhuPadhdhatiResponse:
+    """
+    Predict a marriage year using the Sadhu Padhdhati (Sudarshana Chakra
+    Prism) method — a second, selectable alternative to the Jupiter/Saturn
+    transit scan (POST /marriage-timing above). Both take one person's
+    birth data; the frontend calls whichever method(s) the user selects
+    for each partner and displays them side by side for comparison.
+
+    See sadhu_padhdhati_engine.py's module docstring for the method's
+    derivation and, importantly, which parts are a faithful port of the
+    source workbook's formulas versus an automated approximation of what
+    was originally a manually-judged column (Reducing Factor).
+    """
+    chart = await _build_chart(body, wrapper)
+
+    d1_planet_sign: dict[str, int] = {}
+    d1_planet_longitude: dict[str, float] = {}
+    for p in chart.planets:
+        name = p.planet.lower()
+        if name not in ("rahu", "ketu") and name not in {
+            "sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn",
+        }:
+            continue
+        d1_planet_longitude[name] = p.sidereal_longitude
+        d1_planet_sign[name] = int((p.sidereal_longitude % 360.0) // 30.0)
+
+    d1_lagna_longitude = chart.ascendant.sidereal_longitude
+    d1_lagna_sign = int((d1_lagna_longitude % 360.0) // 30.0)
+
+    d1 = ChartPositions(
+        lagna_sign_index=d1_lagna_sign,
+        planet_sign_index=d1_planet_sign,
+        planet_natal_longitude=d1_planet_longitude,
+    )
+
+    d9_planet_sign: dict[str, int] = {}
+    for name, longitude in d1_planet_longitude.items():
+        rashi, _degree = compute_varga_sign("D9", longitude)
+        d9_planet_sign[name] = SADHU_RASHIS.index(rashi)
+    d9_lagna_rashi, _d9_lagna_degree = compute_varga_sign("D9", d1_lagna_longitude)
+    d9_lagna_sign = SADHU_RASHIS.index(d9_lagna_rashi)
+
+    d9 = ChartPositions(
+        lagna_sign_index=d9_lagna_sign,
+        planet_sign_index=d9_planet_sign,
+        planet_natal_longitude=d1_planet_longitude,  # always D1 longitudes — see engine docstring
+    )
+
+    try:
+        result = await asyncio.to_thread(
+            SadhuPadhdhatiEngine.analyze,
+            subject_name=body.subject_name,
+            birth_date=body.birth_datetime_utc.date(),
+            gender=body.gender,
+            d1=d1,
+            d9=d9,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    except Exception as exc:
+        logger.exception("Error computing Sadhu Padhdhati marriage timing: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to compute Sadhu Padhdhati marriage timing.",
+        )
+
+    def _chart_response(c) -> SadhuPadhdhatiChartResponse:
+        return SadhuPadhdhatiChartResponse(
+            chart_label=c.chart_label,
+            base=c.base,
+            step=c.step,
+            escalation_factor=c.escalation_factor,
+            male_female_factor=c.male_female_factor,
+            reducing_factor=c.reducing_factor,
+            delay=c.delay,
+            levels=[
+                SadhuPadhdhatiLevelResponse(
+                    label=lvl.label, yes_count=lvl.yes_count,
+                    max_count=lvl.max_count, badhaka=lvl.badhaka,
+                ) for lvl in c.levels
+            ],
+        )
+
+    return SadhuPadhdhatiResponse(
+        subject_name=result.subject_name,
+        birth_year=result.birth_year,
+        gender=result.gender,
+        d1=_chart_response(result.d1),
+        d9=_chart_response(result.d9),
+        net_delay=result.net_delay,
+        predicted_year=result.predicted_year,
+        window_start=result.window_start,
+        window_end=result.window_end,
+        alphabet_class=result.alphabet_class,
+        destiny_factor=result.destiny_factor,
     )
 
 
