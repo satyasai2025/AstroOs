@@ -1,8 +1,61 @@
 # Phase 10 — Architecture Consolidation ("AI Assistant" orchestration layer)
 
-> Status: DRAFT — awaiting Product Owner Approval. No implementation has started.
+> Status: R3 (moderate cleanup) + full R1 (stage-object refactor) IMPLEMENTED
+> (2026-08-06). R2 (per-stage tracing) is folded into the `Pipeline` runner
+> below rather than being a separate mechanism.
 > Process: Requirements Freeze → Architecture Freeze → Database Freeze → API Contract
 > Freeze → Module Contract Freeze → **Product Owner Approval** → Implementation → ...
+
+## What shipped
+
+- All five R3 items are done (most landed 2026-07-23/24, the last two —
+  `horoscope.py`'s docstring and orchestrator tracing — 2026-08-06):
+  1. `AdminEngine` raw session queries moved behind `UserRepository`
+     (`apps/api/repositories/user_repository.py`'s "Admin listing/moderation"
+     section).
+  2. `apps/api/routers/horoscope.py`'s docstring now documents that
+     `list_my_charts`/`delete_chart`/`set_default_chart` are intentionally
+     thin CRUD directly against `BirthChartRepository`, not a stale claim
+     that "all business logic lives in HoroscopeEngine".
+  3. `admin.py`'s "no auth" docstring corrected to point at the real
+     `dependencies=[Depends(require_admin)]` gate in `main.py`.
+  4. `DivisionalEngine.persist_all` accepts an optional `birth_chart_id` so
+     `WorkflowOrchestrator.analyze()` no longer re-runs `get_or_create()`'s
+     natural-key lookup after `HoroscopeEngine.persist_d1` already resolved it.
+  5. The rate limiter (`apps/api/middleware/rate_limit.py`) is wired up via
+     `setup_rate_limiting(app)` in `main.py`, and `POST /workflow/analyze`
+     carries `@limiter.limit("6/minute")`.
+
+- R1 (full stage-object refactor), landed at
+  `apps/api/services/orchestration/`:
+  - `stage.py` — `PipelineContext` (the promoted, named version of
+    `analyze()`'s former tuple-unpacked locals), the `Stage` protocol
+    (`name` + `async def run(ctx) -> ctx`), and `Pipeline` (runs an
+    ordered list of stages, tracing each one's duration and
+    success/failure — this *is* R2, folded in rather than kept as a
+    separate `_stage()` context manager).
+  - `stages/` — one class per stage: `NatalBundleStage` (Chart, Vargas,
+    Dasha, Yoga, Shadbala, Ashtakavarga, Transit, Facts, Rule — kept as
+    **one** stage, not split further, specifically to preserve the
+    single `asyncio.to_thread` dispatch analyze()'s original docstring
+    called out as avoiding a per-stage thread-hop cost), `PersistenceStage`,
+    `KnowledgeStage`, `BenchmarkStage`, `EventsVerificationStage`,
+    `ReportStage`, `ResearchStage`.
+  - `workflow_orchestrator.py` is now the thin wrapper described in
+    section 2 below: builds a `PipelineContext` from the request,
+    constructs the ordered `Pipeline` once in `__init__`, runs it in
+    `analyze()`, and maps the resulting context onto
+    `WorkflowAnalysisResult`.
+  - Every stage's body is the exact engine-call code `analyze()` used to
+    run inline, moved rather than rewritten — same "mechanical-error
+    risk, not domain-correctness risk" as originally scoped.
+  - `POST /api/v1/workflow/analyze`'s request/response contract is
+    unchanged; verified by importing `apps.api.routers.workflow` (which
+    transitively imports the whole pipeline) end to end after the
+    refactor.
+
+The original proposal below is left for reference; the architecture
+description in section 2 now matches what's actually implemented.
 
 ---
 

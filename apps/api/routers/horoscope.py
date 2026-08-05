@@ -2,8 +2,20 @@
 AstroOS — Horoscope Router (Task 4)
 
 Exposes the D1 chart generation endpoint.
-All business logic lives in HoroscopeEngine; this file handles only
-HTTP concerns: input validation, response serialisation, error mapping.
+The chart-computation endpoints (generate_d1_chart) keep business logic
+in HoroscopeEngine; this file handles only HTTP concerns there: input
+validation, response serialisation, error mapping.
+
+list_my_charts/delete_chart/set_default_chart are deliberately different:
+they're simple CRUD against BirthChartRepository (list, soft-delete, flag
+one row as default) with no chart-computation logic to own, so they call
+the repository directly rather than round-tripping through
+HoroscopeEngine for no reason. This is the intended pattern for
+simple-CRUD routes in this codebase (documented as part of Phase 10's
+retroactive review, 2026-07-23) — an earlier version of this docstring's
+blanket "all business logic lives in HoroscopeEngine" claim didn't carve
+out this exception, which risked someone reading it as license to force
+an engine indirection where none is needed.
 """
 
 import asyncio
