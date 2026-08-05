@@ -7,11 +7,13 @@ interface CardProps {
   glow?: Glow;
   padding?: string;
   style?: CSSProperties;
+  className?: string;
 }
 
-export function Card({ children, glow, padding = "var(--space-3)", style }: CardProps) {
+export function Card({ children, glow, padding = "var(--space-3)", style, className }: CardProps) {
   return (
     <div
+      className={className}
       style={{
         background: "linear-gradient(180deg, var(--bg-surface-800), var(--bg-surface-700))",
         border: "1px solid var(--border-default)",
