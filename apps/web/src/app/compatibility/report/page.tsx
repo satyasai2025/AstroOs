@@ -5,9 +5,11 @@ import {
   compatibilityApi,
   exportApi,
   marriageTimingApi,
+  sadhuPadhdhatiApi,
   type BestBetCompatibilityResponse,
   type CompatibilityResponse,
   type MarriageTimingResponse,
+  type SadhuPadhdhatiResponse,
   type TransitScanYear,
 } from "@/lib/research";
 import { AppShell } from "@/components/layout/AppShell";
@@ -109,6 +111,16 @@ export default function CompatibilityReportPage() {
   const [error, setError] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
+
+  // Sadhu Padhdhati — 2nd, selectable marriage-timing method (compared
+  // against the Jupiter/Saturn transit scan above via timingMethod).
+  const [timingMethod, setTimingMethod] = useState<"transit" | "sadhu">("transit");
+  const [sadhuGenderA, setSadhuGenderA] = useState<"male" | "female">("male");
+  const [sadhuGenderB, setSadhuGenderB] = useState<"male" | "female">("female");
+  const [sadhuA, setSadhuA] = useState<SadhuPadhdhatiResponse | null>(null);
+  const [sadhuB, setSadhuB] = useState<SadhuPadhdhatiResponse | null>(null);
+  const [sadhuLoading, setSadhuLoading] = useState(false);
+  const [sadhuError, setSadhuError] = useState<string | null>(null);
 
   const relationshipType = (searchParams.get("relationship_type") as RelationshipType) || "marriage";
   const nameA = searchParams.get("subject_name_a") || "Person A";
@@ -221,6 +233,54 @@ export default function CompatibilityReportPage() {
   const activeTimingWindows: TransitScanYear[] = timingData
     ? timingData.scan_results.filter((r) => r.status !== "not_indicated")
     : [];
+
+  const runSadhuPadhdhati = async () => {
+    if (relationshipType !== "marriage" || sadhuLoading) return;
+    const birthDatetimeA = searchParams.get("birth_datetime_utc_a");
+    const latitudeA = searchParams.get("latitude_a");
+    const longitudeA = searchParams.get("longitude_a");
+    const birthDatetimeB = searchParams.get("birth_datetime_utc_b");
+    const latitudeB = searchParams.get("latitude_b");
+    const longitudeB = searchParams.get("longitude_b");
+    const ayanamsa = searchParams.get("ayanamsa") || "lahiri";
+    const houseSystem = searchParams.get("house_system") || "W";
+
+    if (!birthDatetimeA || !latitudeA || !longitudeA || !birthDatetimeB || !latitudeB || !longitudeB) {
+      setSadhuError("Missing required birth data parameters");
+      return;
+    }
+
+    setSadhuLoading(true);
+    setSadhuError(null);
+    try {
+      const [resultA, resultB] = await Promise.all([
+        sadhuPadhdhatiApi.analyze({
+          birth_datetime_utc: birthDatetimeA,
+          latitude: parseFloat(latitudeA),
+          longitude: parseFloat(longitudeA),
+          subject_name: nameA,
+          gender: sadhuGenderA,
+          ayanamsa,
+          house_system: houseSystem,
+        }),
+        sadhuPadhdhatiApi.analyze({
+          birth_datetime_utc: birthDatetimeB,
+          latitude: parseFloat(latitudeB),
+          longitude: parseFloat(longitudeB),
+          subject_name: nameB,
+          gender: sadhuGenderB,
+          ayanamsa,
+          house_system: houseSystem,
+        }),
+      ]);
+      setSadhuA(resultA);
+      setSadhuB(resultB);
+    } catch (err) {
+      setSadhuError(err instanceof Error ? err.message : "Sadhu Padhdhati analysis failed");
+    } finally {
+      setSadhuLoading(false);
+    }
+  };
 
   const handleExport = async (format: "json" | "markdown" | "html") => {
     if (!report || exporting) return;
@@ -636,6 +696,27 @@ export default function CompatibilityReportPage() {
             {/* Timeline Tab — Jupiter/Saturn Marriage Timing */}
             {activeTab === "timeline" && (
               <div className="space-y-6">
+                {/* Timing method selector — compare Jupiter/Saturn transit vs Sadhu Padhdhati */}
+                <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 p-1.5">
+                  <button
+                    onClick={() => setTimingMethod("transit")}
+                    className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold transition ${
+                      timingMethod === "transit" ? "bg-cyan-500/20 text-cyan-300" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    🪐 Jupiter / Saturn Transit
+                  </button>
+                  <button
+                    onClick={() => setTimingMethod("sadhu")}
+                    className={`flex-1 rounded-lg px-3 py-2 text-xs font-bold transition ${
+                      timingMethod === "sadhu" ? "bg-cyan-500/20 text-cyan-300" : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    🕉 Sadhu Padhdhati
+                  </button>
+                </div>
+
+                {timingMethod === "transit" && (
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
                   <div className="mb-4 flex items-center gap-2">
                     <span className="text-lg">🪐</span>
@@ -751,6 +832,121 @@ export default function CompatibilityReportPage() {
                     </div>
                   )}
                 </div>
+                )}
+
+                {timingMethod === "sadhu" && (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="mb-4 flex items-center gap-2">
+                    <span className="text-lg">🕉</span>
+                    <div>
+                      <h2 className="text-sm font-bold text-white">Sadhu Padhdhati (Sudarshana Chakra Prism)</h2>
+                      <p className="text-[11px] text-slate-400">
+                        Alternate marriage-timing method for both {nameA} and {nameB} — compare its predicted year against the Jupiter/Saturn scan above.
+                      </p>
+                    </div>
+                  </div>
+
+                  {relationshipType !== "marriage" ? (
+                    <div className="rounded-lg border border-amber-500/30 bg-amber-950/20 px-3 py-2 text-[11px] text-amber-300">
+                      ℹ Sadhu Padhdhati is only available for Marriage relationship type.
+                    </div>
+                  ) : (
+                    <>
+                      {/* Gender inputs — required by the method's age-base table, not tracked elsewhere in this flow */}
+                      <div className="mb-4 grid grid-cols-2 gap-3">
+                        <div className="rounded-lg border border-white/10 bg-black/30 p-3">
+                          <label className="mb-1 block text-[10px] text-slate-400">{nameA}&apos;s Gender</label>
+                          <select
+                            value={sadhuGenderA}
+                            onChange={(e) => setSadhuGenderA(e.target.value as "male" | "female")}
+                            className="w-full rounded bg-black/40 px-2 py-1.5 text-xs text-white outline-none"
+                          >
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                        </div>
+                        <div className="rounded-lg border border-white/10 bg-black/30 p-3">
+                          <label className="mb-1 block text-[10px] text-slate-400">{nameB}&apos;s Gender</label>
+                          <select
+                            value={sadhuGenderB}
+                            onChange={(e) => setSadhuGenderB(e.target.value as "male" | "female")}
+                            className="w-full rounded bg-black/40 px-2 py-1.5 text-xs text-white outline-none"
+                          >
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={runSadhuPadhdhati}
+                        disabled={sadhuLoading}
+                        className="mb-4 w-full rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 text-xs font-bold text-cyan-300 transition hover:bg-cyan-500/20 disabled:opacity-50"
+                      >
+                        {sadhuLoading ? "Computing…" : "Run Sadhu Padhdhati Analysis"}
+                      </button>
+
+                      {sadhuError && (
+                        <div className="mb-4 rounded-lg border border-red-500/30 bg-red-950/20 px-3 py-2 text-[11px] text-red-300">
+                          {sadhuError}
+                        </div>
+                      )}
+
+                      {sadhuA && sadhuB && (
+                        <div className="grid grid-cols-2 gap-4">
+                          {[
+                            { label: nameA, result: sadhuA },
+                            { label: nameB, result: sadhuB },
+                          ].map(({ label, result }) => (
+                            <div key={label} className="rounded-xl border border-white/10 bg-black/30 p-4">
+                              <p className="mb-2 text-xs font-bold text-white">{label}</p>
+                              <div className="mb-3 text-center">
+                                <p className="text-3xl font-black text-cyan-400">{result.predicted_year}</p>
+                                <p className="text-[10px] text-slate-400">
+                                  Predicted window {result.window_start}–{result.window_end}
+                                </p>
+                              </div>
+                              <div className="space-y-1 text-[10px] text-slate-400">
+                                <div className="flex justify-between">
+                                  <span>Net Delay (years from birth)</span>
+                                  <span className="text-slate-300">{result.net_delay}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>D1 chart delay</span>
+                                  <span className="text-slate-300">
+                                    {result.d1.delay.toFixed(1)} (EF {result.d1.escalation_factor}, RF {result.d1.reducing_factor})
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>D9 chart delay</span>
+                                  <span className="text-slate-300">
+                                    {result.d9.delay.toFixed(1)} (EF {result.d9.escalation_factor}, RF {result.d9.reducing_factor})
+                                  </span>
+                                </div>
+                                {result.alphabet_class && (
+                                  <div className="flex justify-between">
+                                    <span>Alphabet Class / Destiny Factor</span>
+                                    <span className="text-slate-300">
+                                      {result.alphabet_class} / {result.destiny_factor}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <p className="mt-4 text-[10px] text-slate-500">
+                        Escalation Factor (EF) is computed from classical aspect/conjunction/parivartana
+                        rules; Reducing Factor (RF) is an automated approximation of a column the source
+                        method leaves to manual astrologer judgment. Treat the predicted year as an
+                        estimate to compare against the Jupiter/Saturn scan, not a certainty.
+                      </p>
+                    </>
+                  )}
+                </div>
+                )}
               </div>
             )}
 
