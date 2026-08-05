@@ -93,21 +93,11 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    title: "AI & Insights",
-    color: "--section-ai",
-    items: [
-      { href: "/ai/explain", label: "AI Explain", icon: "sparkle", disabled: false },
-      { href: "/ai/predictions", label: "AI Predictions", icon: "sparkle", disabled: false },
-      { href: "/ai/chat", label: "AI Research Assistant", icon: "sparkle", disabled: false },
-    ],
-  },
-  {
     title: "System",
     color: "--section-system",
     items: [
       { href: "/settings/profile", label: "Settings", icon: "gear", disabled: false },
       { href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true },
-      { href: "/docs", label: "Documentation", icon: "document", disabled: false },
     ],
   },
 ];
