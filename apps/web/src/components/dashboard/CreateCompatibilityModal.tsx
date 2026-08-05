@@ -429,7 +429,7 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                   </div>
                   <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
                     <input type="checkbox" checked={personA.saveToMyCharts} onChange={(e) => setPersonA({ ...personA, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-purple-500" />
-                    ☑ Save Person A to My Charts
+                    Save Person A to My Charts
                   </label>
                 </div>
               </div>
@@ -508,7 +508,7 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
 
                   <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
                     <input type="checkbox" checked={personB.saveToMyCharts} onChange={(e) => setPersonB({ ...personB, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-blue-500" />
-                    ☑ Save Person B to My Charts
+                    Save Person B to My Charts
                   </label>
                 </div>
               </div>

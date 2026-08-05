@@ -20,7 +20,7 @@ import type {
 } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 
-type ChartTypeId =
+export type ChartTypeId =
   | "birth_chart"
   | "compatibility"
   | "transit_chart"
@@ -143,9 +143,13 @@ interface Props {
   onSubmit: (request: WorkflowAnalysisRequest) => void;
   isPending: boolean;
   errorMessage: string | null;
+  /** Skip the "choose a type" step and jump straight into this chart
+   * type's form — e.g. "compatibility" when reopened from the
+   * Compatibility Report page's "Check Another Compatibility" button. */
+  initialChartType?: ChartTypeId | null;
 }
 
-export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMessage }: Props) {
+export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMessage, initialChartType }: Props) {
   const [step, setStep] = useState(1);
   const [chartType, setChartType] = useState<ChartTypeId>("birth_chart");
 
@@ -185,8 +189,13 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   // previous session's data doesn't linger the next time it's opened.
   useEffect(() => {
     if (open) {
-      setStep(1);
-      setChartType("birth_chart");
+      if (initialChartType) {
+        setChartType(initialChartType);
+        setStep(2);
+      } else {
+        setStep(1);
+        setChartType("birth_chart");
+      }
       setSubjectName("");
       setGender(null);
       setBirthDate("");
@@ -198,7 +207,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       setManualLongitude("");
       setValidationError(null);
     }
-  }, [open]);
+  }, [open, initialChartType]);
 
   const manualLatNum = manualLatitude === "" ? null : Number(manualLatitude);
   const manualLonNum = manualLongitude === "" ? null : Number(manualLongitude);
