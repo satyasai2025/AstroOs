@@ -134,6 +134,8 @@ export function buildPredictionGraph(area: LifeArea, result: WorkflowAnalysisRes
         raw: {},
         source: [],
         detail: [],
+        subFactors: [],
+        maxPossible: 0,
         parentId: lord ?? `house-${houseNumber}`,
         unavailable: true,
         unavailableReason: unavailableReason(factor.id, ctx),
@@ -151,6 +153,8 @@ export function buildPredictionGraph(area: LifeArea, result: WorkflowAnalysisRes
       raw: computed.raw,
       source: computed.source,
       detail: computed.detail,
+      subFactors: computed.subFactors,
+      maxPossible: computed.maxPossible,
       parentId: lord ?? `house-${houseNumber}`,
       unavailable: false,
     };
