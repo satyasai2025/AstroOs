@@ -51,3 +51,5 @@ packages.zip
 # Temporary documentation
 \## Docs & architecture.txt
 New folder/
+.venv/
+apps/web/.env.local
