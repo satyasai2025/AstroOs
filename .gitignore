@@ -53,3 +53,30 @@ packages.zip
 New folder/
 .venv/
 apps/web/.env.local
+
+# Non-runtime clutter (docs/planning/notes) removed from tracking
+docs
+architecture
+.agents
+benchmarks
+observability
+examples
+datasets
+ASTROOS_AUDIT_AND_PLAN.md
+ASTROOS_PHASE_IV_V2_4_ROADMAP.md
+ASTROOS_V2_STATUS.md
+ASTROOS_VISION_V3_ROADMAP.md
+CHANGELOG.md
+CHANGES_COMPLETE.md
+CLAUDE_START_HERE.md
+CORE_FEATURES_PROFESSIONAL_DESIGN.md
+DOCUMENTATION_REALITY_AUDIT.md
+IMPORT_PAGE_REDESIGN.md
+PHASE_10_PLAN.md
+TEST_PLAN_CompareCharts.md
+tasks_phase2_data.json
+tasks_phase3_data.json
+summarize_task.md
+login page.txt
+how to start program.txt
+astroos my vision.txt
