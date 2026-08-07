@@ -407,7 +407,7 @@ export default function ChartsPage() {
 
       {view === "yogas" && (
         <div id="panel-yogas" role="tabpanel" aria-label="Yogas and combinations panel" className="h-[calc(100vh-200px)]">
-          <YogaIntelligenceDashboard result={result} />
+          <YogaIntelligenceDashboard result={result} request={request} />
         </div>
       )}
 
