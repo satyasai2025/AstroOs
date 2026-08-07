@@ -1,6 +1,16 @@
 /**
  * AstroOS — Strength Analysis Center normalization
  *
+ * NOTE (repo hygiene): this file and StrengthAnalysisCenter.tsx have
+ * vanished from the working tree more than once — this repo is shared
+ * by multiple concurrent chat sessions with no worktree isolation, and
+ * a revert/reset in one session wipes untracked files in all of them.
+ * Both files ARE committed (see commit abb157d and its message). If
+ * they're missing again: `git checkout abb157d -- <path>` restores the
+ * exact committed version — do NOT rebuild from scratch, and re-wire
+ * `?view=strength` in apps/web/src/app/charts/page.tsx to import
+ * StrengthAnalysisCenter (see that commit's diff for the exact hunk).
+ *
  * Single source of truth for turning the chart's real per-planet data
  * (Shadbala totals + dignity/placement composite from D1ChartResponse)
  * into ONE normalized 0-100 score per planet. Every panel in
