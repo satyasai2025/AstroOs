@@ -37,6 +37,7 @@ from apps.api.models.pattern import (  # noqa: E402
     DiscoveredPatternModel,
     PatternDiscoveryRunModel,
 )
+from apps.api.models.ai_settings import AISettingsModel  # noqa: E402
 
 # ── Alembic Config ────────────────────────────────────────────────────────────
 config = context.config

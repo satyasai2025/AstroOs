@@ -54,6 +54,52 @@ export interface MessageResponse {
   message: string;
 }
 
+export interface UpdateProfilePayload {
+  display_name?: string;
+  email?: string;
+}
+
+export interface ChangePasswordPayload {
+  current_password: string;
+  new_password: string;
+}
+
+// ── AI Settings (per-user BYOK) ─────────────────────────────────────────────
+
+export type AIProvider = "astroos_ai" | "openai" | "anthropic" | "gemini" | "openrouter" | "ollama";
+
+export interface AISettings {
+  provider: AIProvider;
+  has_api_key: boolean;
+  api_key_last4: string | null;
+  model: string | null;
+  base_url: string | null;
+  temperature: number;
+  max_tokens: number;
+}
+
+export interface UpdateAISettingsPayload {
+  provider: AIProvider;
+  /** Omit to leave the stored key untouched; pass "" to remove it. */
+  api_key?: string;
+  model?: string | null;
+  base_url?: string | null;
+  temperature: number;
+  max_tokens: number;
+}
+
+export interface TestAISettingsPayload {
+  provider: AIProvider;
+  api_key?: string;
+  model?: string | null;
+  base_url?: string | null;
+}
+
+export interface TestConnectionResponse {
+  success: boolean;
+  message: string;
+}
+
 // ── API Error ─────────────────────────────────────────────────────────────────
 
 export interface ApiErrorBody {
@@ -467,7 +513,9 @@ export interface ReturnPeriodResponse {
 }
 
 export interface TransitAspectResponse {
-  /** 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile'. */
+  /** Vedic graha drishti — 'opposition' | 'trine' | 'square' | 'special_graha'.
+   * Same rule table as the natal chart's own aspects (house-based, not a
+   * Western/Ptolemaic angle) — see apps/api/services/aspect_engine.py. */
   aspect_type: string;
   transiting_planet: string;
   natal_planet: string;

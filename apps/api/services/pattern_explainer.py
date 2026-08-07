@@ -3,16 +3,19 @@ AstroOS — Pattern AI Explanation Service (Module 27, Phase 3c)
 
 Unlike apps/api/services/ai_engine.py (deliberately template-based, no
 external LLM — see that module's docstring), this service makes a real
-OpenAI Chat Completions call to generate a plain-language explanation of a
+chat-completion call to generate a plain-language explanation of a
 discovered pattern. This was an explicit user choice: pattern explanations
 read better as genuinely generative text than as another template.
 
 Uses the process-wide httpx.AsyncClient (see apps.api.main's lifespan /
 apps.api.dependencies.get_geocoding_service for the same sharing pattern)
-rather than opening a new connection per call. Requires OPENAI_API_KEY to be
-set (apps.api.config.Settings) — if it isn't, or the call fails, this raises
-rather than silently falling back to a template, per explicit user
-direction ("real LLM call", not a disguised deterministic generator).
+rather than opening a new connection per call. The actual provider/model/
+key come from apps.api.services.ai_provider.resolve_provider — a per-user
+BYOK setting (apps.api.services.ai_settings_service) if the caller has
+one configured, else the server-wide Settings.OPENAI_* config. If neither
+is configured, or the call fails, this raises rather than silently
+falling back to a template, per explicit user direction ("real LLM call",
+not a disguised deterministic generator).
 
 Only ever invoked from POST /research/cases/patterns/{pattern_id}/explain
 (single) or the bulk regenerate-all endpoint — never from a GET, so viewing
@@ -24,9 +27,7 @@ from __future__ import annotations
 import httpx
 
 from apps.api.domain.research_case import DiscoveredPattern
-
-_DEFAULT_BASE_URL = "https://api.openai.com/v1"
-_REQUEST_TIMEOUT_SECONDS = 30.0
+from apps.api.services.ai_provider import AIProviderError, ResolvedAIProvider, call_chat_completion
 
 _SYSTEM_PROMPT = (
     "You are an assistant explaining statistical findings from a Vedic "
@@ -47,25 +48,11 @@ class PatternExplanationError(RuntimeError):
 class PatternExplainer:
     """Generates a natural-language explanation for one DiscoveredPattern."""
 
-    def __init__(
-        self,
-        http_client: httpx.AsyncClient,
-        api_key: str | None,
-        model: str,
-        base_url: str = _DEFAULT_BASE_URL,
-    ) -> None:
+    def __init__(self, http_client: httpx.AsyncClient, resolved: ResolvedAIProvider) -> None:
         self._client = http_client
-        self._api_key = api_key
-        self._model = model
-        self._base_url = base_url.rstrip("/")
+        self._resolved = resolved
 
     async def explain(self, pattern: DiscoveredPattern) -> str:
-        if not self._api_key:
-            raise PatternExplanationError(
-                "OPENAI_API_KEY is not configured — set it in .env to enable "
-                "AI-generated pattern explanations."
-            )
-
         dims = "; ".join(
             f"{d.dimension}={d.value} ({round(d.frequency * 100, 1)}% of cases vs "
             f"{round(d.expected_by_chance * 100, 1)}% base rate, significance "
@@ -81,30 +68,6 @@ class PatternExplainer:
         )
 
         try:
-            response = await self._client.post(
-                f"{self._base_url}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self._api_key}",
-                    "Content-Type": "application/json",
-                },
-                json={
-                    "model": self._model,
-                    "messages": [
-                        {"role": "system", "content": _SYSTEM_PROMPT},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "temperature": 0.3,
-                },
-                timeout=_REQUEST_TIMEOUT_SECONDS,
-            )
-            response.raise_for_status()
-        except httpx.HTTPError as exc:
-            raise PatternExplanationError(f"OpenAI request failed: {exc}") from exc
-
-        body = response.json()
-        try:
-            return body["choices"][0]["message"]["content"].strip()
-        except (KeyError, IndexError, TypeError) as exc:
-            raise PatternExplanationError(
-                f"Unexpected OpenAI response shape: {body!r}"
-            ) from exc
+            return await call_chat_completion(self._client, self._resolved, _SYSTEM_PROMPT, user_prompt)
+        except AIProviderError as exc:
+            raise PatternExplanationError(str(exc)) from exc

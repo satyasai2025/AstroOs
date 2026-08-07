@@ -102,6 +102,61 @@ class ResetPasswordRequest(BaseModel):
         return _validate_password_strength(v)
 
 
+class UpdateProfileRequest(BaseModel):
+    """Request payload for updating a user's own profile (PATCH /auth/me)."""
+    display_name: Optional[str] = Field(
+        default=None,
+        min_length=2,
+        max_length=100,
+        description="New public display name.",
+    )
+    email: Optional[EmailStr] = Field(
+        default=None,
+        description="New account email address.",
+    )
+
+    @field_validator("display_name")
+    @classmethod
+    def strip_display_name(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        return v.strip()
+
+    @field_validator("email")
+    @classmethod
+    def reject_disposable_email(cls, v: Optional[EmailStr]) -> Optional[EmailStr]:
+        if v is None:
+            return v
+        if is_disposable_email(v):
+            raise ValueError(
+                "Disposable/temporary email addresses are not allowed. "
+                "Please use a permanent email address."
+            )
+        return v
+
+    @model_validator(mode="after")
+    def at_least_one_field(self) -> "UpdateProfileRequest":
+        if self.display_name is None and self.email is None:
+            raise ValueError("Provide at least one of display_name or email.")
+        return self
+
+
+class ChangePasswordRequest(BaseModel):
+    """Request payload for changing the authenticated user's password."""
+    current_password: str = Field(..., min_length=1, max_length=128)
+    new_password: str = Field(
+        ...,
+        min_length=8,
+        max_length=128,
+        description="New password, 8–128 characters.",
+    )
+
+    @field_validator("new_password")
+    @classmethod
+    def password_strength(cls, v: str) -> str:
+        return _validate_password_strength(v)
+
+
 # ── Response Schemas ──────────────────────────────────────────────────────────
 
 

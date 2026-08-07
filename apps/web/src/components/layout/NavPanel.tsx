@@ -52,7 +52,7 @@ const NAV_GROUPS: NavGroup[] = [
           { href: "/login", label: "Sign In", subtitle: "Email & password", icon: "login", viewId: "auth-signin" },
           { href: "/register", label: "Register", subtitle: "Create account", icon: "register", viewId: "auth-register" },
           { href: "/forgot-password", label: "Forgot Password", icon: "key", disabled: false },
-          { href: "/profile/setup", label: "Profile Setup", icon: "settings", disabled: false },
+          { href: "/settings/profile", label: "Profile Setup", icon: "settings", disabled: false },
           { href: "/charts/compare", label: "Compare Charts", subtitle: "Compare two or more charts", icon: "comparison", viewId: "compare-charts", disabled: false },
         ],
       },
@@ -66,8 +66,8 @@ const NAV_GROUPS: NavGroup[] = [
         items: [
           { href: "/dashboard", label: "Executive Overview", subtitle: "KPIs & charts", icon: "chart", viewId: "dashboard-executive" },
           { href: "/research/dashboard", label: "Research Dashboard", subtitle: "Research analytics", icon: "search", viewId: "research-dashboard" },
-          { href: "/dashboard/notifications", label: "Notifications", icon: "bell", disabled: false },
-          { href: "/dashboard/timeline", label: "Timeline", icon: "clock", disabled: false },
+          { href: "/dashboard/notifications", label: "Notifications", icon: "bell", disabled: true },
+          { href: "/dashboard/timeline", label: "Timeline", icon: "clock", disabled: true },
         ],
       },
       {

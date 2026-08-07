@@ -2,19 +2,24 @@
 
 import { TransitAlerts } from "@/components/charts/transit/TransitAlerts";
 import { TransitWheel } from "@/components/charts/transit/TransitWheel";
+import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, DonutChart, KpiCard, Table, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
 import { PLANET_SYMBOLS } from "@/lib/astro";
+import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import { useWorkflowStore } from "@/lib/store";
+import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useLiveTransit, useTransitPatterns } from "@/lib/transitPatterns";
-import type { TransitPatternsRequest, TransitPlanetResponse, TransitRequest } from "@/lib/types";
-import { useMemo, useState } from "react";
+import type { TransitPatternsRequest, TransitPlanetResponse, TransitRequest, WorkflowAnalysisRequest } from "@/lib/types";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 /**
  * /charts/transit — Transit Analysis console, rebuilt to match the
  * "AstroOS Transit Analysis v2" reference design pixel-for-pixel in
  * structure (controls row, 6 KPI cards, chart/positions/impact row,
- * house-activation/returns/alerts row, aspects-table/settings row).
+ * house-activation/returns/alerts row, Vedha analysis, aspects-table/
+ * settings row).
  *
  * Every value traces to a real backend field EXCEPT where explicitly
  * marked "heuristic" (documented inline, same convention as
@@ -51,14 +56,66 @@ function formatDegree(deg: number): string {
   return `${whole}° ${minutes}'`;
 }
 
+/** Real aspect_type values are 'opposition' | 'trine' | 'square' |
+ * 'special_graha' (see TransitAspectResponse) — the last one reads oddly
+ * inline ("Jupiter special_graha to natal Rahu"), so it gets a human label.
+ * Used as `{transiting} {label} to natal {natal}` — must NOT include "to". */
+function aspectTypeLabel(aspectType: string): string {
+  return aspectType === "special_graha" ? "special aspect" : aspectType;
+}
+
 export default function TransitAnalysisPage() {
+  const searchParams = useSearchParams();
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
+  const transitChart = useWorkflowStore((s) => s.transitChart);
+  const setResult = useWorkflowStore((s) => s.setResult);
+  const analyze = useAnalyzeWorkflow();
+  const [autoLoadStarted, setAutoLoadStarted] = useState(false);
+
   const [houseReference, setHouseReference] = useState<"moon" | "ascendant">("moon");
   /** Local <input type="datetime-local"> value. Empty = "now" (the
    * backend default when transit_datetime_utc is omitted) — lets this
-   * page look at past or future transits, not just the live moment. */
-  const [transitDateTime, setTransitDateTime] = useState("");
+   * page look at past or future transits, not just the live moment.
+   * Seeded from ?date=&time= query params if the Create Transit modal
+   * handed off a specific moment (CreateTransitModal.tsx's
+   * handleViewReport). */
+  const [transitDateTime, setTransitDateTime] = useState(() => {
+    const date = searchParams.get("date");
+    const time = searchParams.get("time");
+    return date && time ? `${date}T${time}` : "";
+  });
+
+  // No active chart in the store, but the Create Transit modal set
+  // `transitChart` (a saved chart, not yet a full analysis) — load the
+  // full analysis for it once, same pattern as
+  // apps/web/src/app/charts/[chartId]/page.tsx's auto-recompute effect.
+  // Only worth doing when `result` doesn't already match, so re-visiting
+  // with the same chart already loaded doesn't refire.
+  const hasMatchingResult = result?.chart_id === transitChart?.id;
+  useEffect(() => {
+    if (!transitChart || hasMatchingResult || autoLoadStarted) return;
+    setAutoLoadStarted(true);
+    const analyzeRequest: WorkflowAnalysisRequest = {
+      birth_datetime_utc: transitChart.birth_datetime_utc,
+      latitude: transitChart.birth_latitude,
+      longitude: transitChart.birth_longitude,
+      ayanamsa: transitChart.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+      house_system: transitChart.house_system as WorkflowAnalysisRequest["house_system"],
+      dasha_system: "vimshottari",
+      include_vargas: true,
+      subject_name: transitChart.subject_name,
+      place_name: transitChart.place_name,
+      persist: false,
+      chart_id: transitChart.id,
+    };
+    analyze.mutate(analyzeRequest, {
+      onSuccess: (data) => setResult(data, analyzeRequest),
+    });
+    // Only fire once per transitChart id — analyze/setResult are stable
+    // references from useMutation/zustand, safe to omit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transitChart, hasMatchingResult, autoLoadStarted]);
 
   const transitDatetimeUtc = transitDateTime ? new Date(transitDateTime).toISOString() : undefined;
 
@@ -149,13 +206,22 @@ export default function TransitAnalysisPage() {
   }, [activeTransits]);
 
   // Real "top influencing transits" from the aspects the backend actually
-  // detected (TransitPatternsResponse.aspects), not fabricated headlines.
-  // The +/-% is a heuristic (harmonious aspects benefic, tense challenging,
-  // scaled by how tight the orb is — tighter orb = classically stronger),
-  // not a computed classical strength value.
+  // detected (TransitPatternsResponse.aspects — real Vedic graha drishti,
+  // see aspect_engine.py), not fabricated headlines. The +/-% is a
+  // heuristic (harmonious aspects benefic, tense challenging, scaled by
+  // how tight the orb is — tighter orb = classically stronger), not a
+  // computed classical strength value.
+  //
+  // Nature classification for the 4 real aspect_type values: trine (5th/
+  // 9th) is the classical harmonious aspect; opposition (7th) and square
+  // (4th/10th) are classically tense. "special_graha" covers Mars's 4th/8th
+  // and Saturn's 3rd/10th (both classically malefic special aspects) as
+  // well as Jupiter's 5th/9th (classically benefic) — since the backend
+  // doesn't distinguish which planet cast a special_graha aspect in this
+  // label alone, it's treated as neutral here rather than guessing.
   const topAspects = useMemo(() => {
     const aspects = patternsQuery.data?.aspects ?? [];
-    const HARMONIOUS = new Set(["trine", "sextile"]);
+    const HARMONIOUS = new Set(["trine"]);
     const TENSE = new Set(["square", "opposition"]);
     const MAX_ORB = 8;
     return [...aspects]
@@ -237,6 +303,31 @@ export default function TransitAnalysisPage() {
   ];
 
   if (!result) {
+    // A chart was handed off from Create Transit (transitChart) and its
+    // full analysis is still loading — show a loading state, not the
+    // "no chart" empty state, which would otherwise flash briefly on every
+    // hand-off before the analysis finishes.
+    if (transitChart && !hasMatchingResult) {
+      return (
+        <AppShell>
+          <div className="flex flex-col items-center justify-center gap-3 py-20" role="status">
+            <span
+              className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
+              style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }}
+            />
+            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              Loading {transitChart.subject_name}&rsquo;s chart…
+            </p>
+            {analyze.isError && (
+              <p className="text-sm" style={{ color: "var(--status-danger)" }}>
+                Could not load this chart. Please try again from Dashboard.
+              </p>
+            )}
+          </div>
+        </AppShell>
+      );
+    }
+
     return (
       <AppShell>
         <div className="flex flex-col items-center justify-center gap-4 py-20" role="status">
@@ -260,6 +351,7 @@ export default function TransitAnalysisPage() {
 
   const { dasha } = result;
   const transits = activeTransits!;
+  const dashaChain = getCurrentDashaChain(dasha.mahadashas);
 
   const dateLabel = transitDateTime
     ? new Date(transitDateTime).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
@@ -285,9 +377,18 @@ export default function TransitAnalysisPage() {
       } catch (err) {
         // User cancelled or share failed
       }
-    } else {
+      return;
+    }
+    // navigator.clipboard.writeText() throws NotAllowedError if the
+    // document doesn't currently have focus (a real, expected condition —
+    // e.g. devtools/another window focused) — not just a network/API
+    // failure, so it needs its own catch rather than being left to throw
+    // uncaught into Next.js's error overlay.
+    try {
       await navigator.clipboard.writeText(url);
       alert("Link copied to clipboard!");
+    } catch (err) {
+      alert(`Could not copy automatically. Copy this link:\n${url}`);
     }
   };
 
@@ -454,7 +555,7 @@ export default function TransitAnalysisPage() {
             topAspects.map((a, i) => (
               <div key={i} className="flex justify-between py-1.5 text-xs">
                 <span style={{ color: "var(--text-secondary)" }}>
-                  {a.transiting_planet} {a.aspect_type} to natal {a.natal_planet}
+                  {a.transiting_planet} {aspectTypeLabel(a.aspect_type)} to natal {a.natal_planet}
                 </span>
                 <span style={{ color: a.pct >= 0 ? "var(--success-400)" : "var(--danger-400)", fontWeight: 600 }}>
                   {a.pct >= 0 ? "+" : ""}
@@ -518,6 +619,16 @@ export default function TransitAnalysisPage() {
         <TransitAlerts transits={transits} patterns={patternsQuery.data} />
       </div>
 
+      {/* Vedha Analysis — Active/Dasha-Transit/Nakshatra (Sarvatobhadra
+          Chakra)/All Rules, built from the same real transit fields the
+          Transit Positions table's flat "Vedha: Yes/No" column already
+          uses, just broken out with real reasoning instead of a badge. */}
+      <div className="mb-6">
+        <Card>
+          <VedhaAnalysisPanel transits={transits} dashaChain={dashaChain} />
+        </Card>
+      </div>
+
       {/* Detailed Transit Analysis / Settings */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
         <Card padding="0">
@@ -535,14 +646,29 @@ export default function TransitAnalysisPage() {
               <Table
                 columns={[
                   { key: "transiting_planet", label: "Transit" },
-                  { key: "aspect_type", label: "Aspect Type", render: (a) => <span style={{ textTransform: "capitalize" }}>{a.aspect_type}</span> },
+                  {
+                    key: "aspect_type",
+                    label: "Aspect Type",
+                    render: (a) => (
+                      <span style={{ textTransform: "capitalize" }}>
+                        {a.aspect_type === "special_graha" ? "Special Aspect" : a.aspect_type}
+                      </span>
+                    ),
+                  },
                   { key: "natal_planet", label: "To Natal" },
                   { key: "orb", label: "Orb", align: "right", mono: true, render: (a) => `${a.orb.toFixed(1)}°` },
                   {
                     key: "nature",
                     label: "Nature",
                     render: (a) => {
-                      const harmonious = a.aspect_type === "trine" || a.aspect_type === "sextile";
+                      // Vedic graha drishti (see aspect_engine.py): trine is
+                      // the classical harmonious aspect; opposition/square
+                      // are classically tense. "special_graha" covers Mars/
+                      // Saturn's malefic special aspects AND Jupiter's
+                      // benefic ones under one label — shown Neutral rather
+                      // than guessing which planet cast it from this field
+                      // alone.
+                      const harmonious = a.aspect_type === "trine";
                       const tense = a.aspect_type === "square" || a.aspect_type === "opposition";
                       const tone = harmonious ? "success" : tense ? "danger" : "neutral";
                       const label = harmonious ? "Benefic" : tense ? "Challenging" : "Neutral";

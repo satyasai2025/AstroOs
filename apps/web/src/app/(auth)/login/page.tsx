@@ -11,12 +11,15 @@ export default function LoginPage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block mb-4">
-            <span className="text-3xl font-bold text-white">
-              Astro<span className="text-amber-400">OS</span>
+            <span className="text-3xl font-bold" style={{ color: "var(--obsidian-text-primary)" }}>
+              Astro
+              <span style={{ color: "var(--obsidian-accent-secondary)" }}>OS</span>
             </span>
           </Link>
-          <h1 className="text-xl font-semibold text-slate-100">Welcome back</h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <h1 className="text-2xl font-bold" style={{ color: "var(--obsidian-text-primary)" }}>
+            Welcome back
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--obsidian-text-muted)" }}>
             Sign in to your research account
           </p>
         </div>
@@ -26,10 +29,14 @@ export default function LoginPage() {
           <LoginForm />
         </div>
 
-        <p className="mt-4 text-center text-sm text-slate-500">
-          No account?{" "}
-          <Link href="/register" className="text-amber-400 hover:text-amber-300 transition">
-            Create one
+        <p className="mt-4 text-center text-sm" style={{ color: "var(--obsidian-text-muted)" }}>
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="font-medium transition"
+            style={{ color: "var(--obsidian-accent-primary)" }}
+          >
+            Sign up
           </Link>
         </p>
       </div>

@@ -20,6 +20,7 @@ from apps.api.domain.user import User
 from apps.api.middleware.rate_limit import limiter
 from apps.api.schemas.auth import (
     AuthResponse,
+    ChangePasswordRequest,
     ForgotPasswordRequest,
     LoginRequest,
     MessageResponse,
@@ -27,9 +28,15 @@ from apps.api.schemas.auth import (
     RegisterRequest,
     ResetPasswordRequest,
     TokenPairResponse,
+    UpdateProfileRequest,
     UserResponse,
 )
-from apps.api.services.auth_service import AuthError, AuthService, RegistrationError
+from apps.api.services.auth_service import (
+    AuthError,
+    AuthService,
+    RegistrationError,
+    _user_dto,
+)
 from apps.api.services.dtos import AuthResultDTO, AuthTokensDTO, UserDTO
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -211,4 +218,48 @@ async def me(
         status=current_user.status.value,
         created_at=current_user.created_at,
         last_login_at=current_user.last_login_at,
+    )
+
+
+@router.patch(
+    "/me",
+    response_model=UserResponse,
+    summary="Update the authenticated user's own profile.",
+)
+async def update_me(
+    body: UpdateProfileRequest,
+    current_user: User = Depends(get_current_user_from_bearer),
+    auth_service: AuthService = Depends(get_auth_service),
+) -> UserResponse:
+    try:
+        updated = await auth_service.update_profile(
+            current_user,
+            display_name=body.display_name,
+            email=str(body.email) if body.email else None,
+        )
+    except AuthError as exc:
+        raise _handle_auth_error(exc) from exc
+    return _dto_to_user_response(_user_dto(updated))
+
+
+@router.post(
+    "/me/change-password",
+    response_model=MessageResponse,
+    summary="Change the authenticated user's password.",
+)
+async def change_password(
+    body: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user_from_bearer),
+    auth_service: AuthService = Depends(get_auth_service),
+) -> MessageResponse:
+    try:
+        await auth_service.change_password(
+            current_user,
+            current_password=body.current_password,
+            new_password=body.new_password,
+        )
+    except AuthError as exc:
+        raise _handle_auth_error(exc) from exc
+    return MessageResponse(
+        message="Password updated. Please sign in again with your new password."
     )
