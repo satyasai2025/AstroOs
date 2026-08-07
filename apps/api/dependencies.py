@@ -20,10 +20,12 @@ from fastapi import Request as _Request
 
 from apps.api.config import Settings, get_settings
 from apps.api.domain.user import User, UserRole
+from apps.api.repositories.ai_settings_repository import AISettingsRepository
 from apps.api.repositories.dataset_repository import DatasetRepository
 from apps.api.repositories.event_repository import EventRepository
 from apps.api.repositories.knowledge_repository import KnowledgeRepository
 from apps.api.repositories.user_repository import UserRepository
+from apps.api.services.ai_settings_service import AISettingsService
 from apps.api.services.auth_service import AuthError, AuthService
 from apps.api.services.dataset_service import DatasetService
 from apps.api.services.ephemeris_service import EphemerisService
@@ -184,6 +186,18 @@ async def get_auth_service(
     redis: aioredis.Redis | None = Depends(get_redis),
 ) -> AuthService:
     return AuthService(user_repo=user_repo, redis_client=redis)
+
+
+async def get_ai_settings_repo(
+    session: AsyncSession = Depends(get_db_session),
+) -> AISettingsRepository:
+    return AISettingsRepository(session)
+
+
+async def get_ai_settings_service(
+    repo: AISettingsRepository = Depends(get_ai_settings_repo),
+) -> AISettingsService:
+    return AISettingsService(repo, _settings)
 
 
 # ── Knowledge Graph singleton (Phase D) ────────────────────────────────────

@@ -28,6 +28,7 @@ from apps.api.routers import admin as admin_router
 from apps.api.routers import admin_auth as admin_auth_router
 from apps.api.routers import ai as ai_router
 from apps.api.routers import ai_phase_e as ai_phase_e_router
+from apps.api.routers import ai_settings as ai_settings_router
 from apps.api.routers import ashtakavarga as ashtakavarga_router
 from apps.api.routers import auth
 from apps.api.routers import batch as batch_router
@@ -304,6 +305,9 @@ def create_app() -> FastAPI:
     app.include_router(ai_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(
         ai_phase_e_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        ai_settings_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         workflow_router.router, prefix="/api/v1", dependencies=_authenticated

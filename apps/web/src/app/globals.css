@@ -211,6 +211,29 @@
   --section-ai-hover: #7c3aed;
   --section-system: #6b7280;
   --section-system-hover: #4b5563;
+
+  /* Raw design-system tokens (src/styles/design-system/colors.css) are
+   * defined ONCE in :root with dark values and many components (e.g.
+   * KpiCard) read them directly instead of going through the semantic
+   * aliases above — without light-mode overrides here those components
+   * stay pinned to dark navy surfaces/borders/text even after toggling
+   * to light. Values mirror the semantic light values already chosen
+   * above for the same surface (e.g. --bg-surface-800 pairs with
+   * --bg-card, --text-tertiary pairs with --text-muted). */
+  --bg-navy-950: #f8fafc;
+  --bg-navy-900: #f1f5f9;
+  --bg-charcoal-900: #ffffff;
+  --bg-surface-800: #ffffff;
+  --bg-surface-700: #f1f5f9;
+  --bg-surface-600: #e2e8f0;
+  --surface-glass: rgba(255, 255, 255, 0.65);
+  --surface-glass-strong: rgba(15, 23, 42, 0.04);
+  --surface-glass-border: rgba(15, 23, 42, 0.08);
+  --border-subtle: #e2e8f0;
+  --border-default: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-disabled: #cbd5e1;
 }
 
 /* ── Base Typography ── */

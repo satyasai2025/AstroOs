@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Optional
 
-from sqlalchemy import func, select
+from sqlalchemy import String, cast, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.models.astrology import BirthChartModel
@@ -234,6 +234,10 @@ class BirthChartRepository:
         """
         Search a user's saved charts by subject name, place name, lagna rashi,
         moon nakshatra, or notes. Case-insensitive substring match.
+
+        lagna_rashi and moon_nakshatra are Postgres ENUM columns (rashi /
+        nakshatra_name) — func.lower() has no overload for enum types, so
+        they're cast to text first.
         """
         term = f"%{query_text.strip().lower()}%"
         stmt = (
@@ -243,8 +247,8 @@ class BirthChartRepository:
             .where(
                 func.lower(BirthChartModel.subject_name).like(term)
                 | func.lower(BirthChartModel.place_name).like(term)
-                | func.lower(BirthChartModel.lagna_rashi).like(term)
-                | func.lower(BirthChartModel.moon_nakshatra).like(term)
+                | func.lower(cast(BirthChartModel.lagna_rashi, String)).like(term)
+                | func.lower(cast(BirthChartModel.moon_nakshatra, String)).like(term)
                 | func.lower(BirthChartModel.notes).like(term)
             )
             .order_by(BirthChartModel.created_at.desc())

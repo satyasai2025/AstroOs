@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountMenu } from "@/components/layout/AccountMenu";
 import { SearchBar } from "@/components/layout/SearchBar";
 import { ResearchModeToggle } from "@/components/research/ResearchModeToggle";
 import { tokenStore } from "@/lib/api";
@@ -88,16 +89,13 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: "System",
     color: "--section-system",
-    items: [
-      { href: "/settings/profile", label: "Settings", icon: "gear", disabled: false },
-      { href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true },
-    ],
+    items: [{ href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true }],
   },
 ];
 
 const _FLAT_LINKS = NAV_SECTIONS.flatMap((s) => s.items).filter((i) => !i.disabled);
 
-function NavIcon({ name }: { name: string }) {
+export function NavIcon({ name }: { name: string }) {
   const common = {
     width: 16,
     height: 16,
@@ -229,6 +227,59 @@ function NavIcon({ name }: { name: string }) {
       return (
         <svg {...common}>
           <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
+        </svg>
+      );
+    case "user":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21v-1a6 6 0 0 1 12 0v1" />
+        </svg>
+      );
+    case "star":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4" />
+        </svg>
+      );
+    case "cpu":
+      return (
+        <svg {...common}>
+          <path d="M12 8V4H8" />
+          <rect width="16" height="12" x="4" y="8" rx="2" />
+          <path d="M2 14h2M20 14h2M15 13v2M9 13v2" />
+        </svg>
+      );
+    case "palette":
+      return (
+        <svg {...common}>
+          <circle cx="13.5" cy="6.5" r="2.5" />
+          <circle cx="17.5" cy="10.5" r="2.5" />
+          <circle cx="8.5" cy="7.5" r="2.5" />
+          <circle cx="6.5" cy="12.5" r="2.5" />
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2Z" />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg {...common}>
+          <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
+        </svg>
+      );
+    case "database":
+      return (
+        <svg {...common}>
+          <ellipse cx="12" cy="5" rx="9" ry="3" />
+          <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+          <path d="M3 12a9 3 0 0 0 18 0" />
+        </svg>
+      );
+    case "info":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4M12 8h.01" />
         </svg>
       );
     case "document":
@@ -491,20 +542,6 @@ export function AppShell({
               </button>
             )}
 
-            <span className="hidden text-sm sm:inline" style={{ color: "var(--text-secondary)" }}>
-              {user.display_name}{" "}
-              <span
-                className="rounded-full px-2 py-0.5 text-xs uppercase tracking-wide"
-                style={{
-                  border: "1px solid var(--border-primary)",
-                  backgroundColor: "var(--bg-card)",
-                  color: "var(--accent)",
-                }}
-              >
-                {user.role}
-              </span>
-            </span>
-
             <ResearchModeToggle compact />
 
             <button
@@ -554,6 +591,8 @@ export function AppShell({
                 </svg>
               )}
             </button>
+
+            <AccountMenu user={user} />
           </div>
         </header>
 

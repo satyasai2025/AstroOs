@@ -293,6 +293,59 @@ class AuthService:
 
     # ── Current User ──────────────────────────────────────────────────────────
 
+    async def update_profile(
+        self,
+        user: User,
+        display_name: Optional[str] = None,
+        email: Optional[str] = None,
+    ) -> User:
+        """
+        Update the authenticated user's own profile fields.
+
+        Raises AuthError(409) if the requested email is already taken by a
+        different account.
+        """
+        if email is not None and email.strip().lower() != user.email:
+            existing = await self._user_repo.get_by_email(email)
+            if existing is not None and existing.id != user.id:
+                raise AuthError(
+                    f"An account with email '{email}' already exists.",
+                    status_code=409,
+                )
+
+        updated = await self._user_repo.update_profile(
+            user.id,
+            display_name=display_name,
+            email=email,
+        )
+        if updated is None:
+            raise AuthError("User not found.", status_code=404)
+        return updated
+
+    async def change_password(
+        self,
+        user: User,
+        current_password: str,
+        new_password: str,
+    ) -> None:
+        """
+        Verify the current password and set a new one.
+
+        On success, revokes all existing sessions so the user must sign in
+        again with the new password.
+        """
+        try:
+            password_ok = verify_password(current_password, user.hashed_password)
+        except Exception:
+            # passlib can raise on malformed hashes (e.g. legacy algorithms).
+            password_ok = False
+
+        if not password_ok:
+            raise AuthError("Current password is incorrect.", status_code=400)
+
+        await self._user_repo.update_password(user.id, hash_password(new_password))
+        await self._user_repo.revoke_all_sessions(user.id)
+
     async def get_current_user(self, access_token: str) -> User:
         try:
             payload = jwt_module.decode_access_token(access_token)

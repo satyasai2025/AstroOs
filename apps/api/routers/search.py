@@ -34,6 +34,8 @@ from apps.api.schemas.search import (
     SearchResultProject,
 )
 from apps.api.domain.knowledge import KnowledgeSearchQuery, KnowledgeSearchResult
+from apps.api.repositories.ai_settings_repository import AISettingsRepository
+from apps.api.services.ai_provider import resolve_provider
 from apps.api.services.ai_search_assistant import AISearchAssistant, AISearchError
 
 logger = logging.getLogger(__name__)
@@ -174,9 +176,11 @@ async def unified_search(
     """
     Unified search across charts, knowledge base, and research projects.
 
-    When OPENAI_API_KEY is configured, the query is first expanded by the
-    LLM into related astrological terms before keyword matching. On any
-    LLM failure the endpoint degrades to plain single-term keyword search.
+    The query is first expanded by an LLM into related astrological terms
+    before keyword matching, using the caller's own AI provider settings
+    if configured (apps.api.services.ai_settings_service), else the
+    server-wide config. On any LLM failure the endpoint degrades to plain
+    single-term keyword search.
     """
     try:
         from apps.api.config import get_settings
@@ -186,12 +190,8 @@ async def unified_search(
 
         # ── AI query expansion (optional) ──────────────────────────────────
         http_client = http_request.app.state.http_client
-        ai_assistant = AISearchAssistant(
-            http_client=http_client,
-            api_key=settings.OPENAI_API_KEY,
-            model=settings.OPENAI_MODEL,
-            base_url=settings.OPENAI_BASE_URL,
-        )
+        resolved = await resolve_provider(current_user.id, AISettingsRepository(session), settings)
+        ai_assistant = AISearchAssistant(http_client=http_client, resolved=resolved)
 
         ai_enhanced = False
         expanded_terms = [request.query.strip().lower()]
@@ -226,4 +226,5 @@ async def unified_search(
             expanded_terms=expanded_terms if ai_enhanced else [],
         )
     except Exception as e:
+        logger.exception("Unified search failed for query=%r", request.query)
         raise HTTPException(status_code=500, detail="Search failed") from e

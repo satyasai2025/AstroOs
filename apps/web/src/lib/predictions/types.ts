@@ -115,6 +115,12 @@ export interface DataSourceEntry {
   label: string;
   available: boolean;
   reason?: string;
+  status: "Available" | "Unavailable";
+  sourceLocation?: string;
+  fieldsConsumed?: string[];
+  usedBy?: string[];
+  lastUpdated?: string;
+  impactIfUnavailable?: string;
 }
 
 export interface DashaTimelineEntry {

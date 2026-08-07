@@ -27,10 +27,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.config import get_settings
-from apps.api.dependencies import get_db_session, require_researcher
+from apps.api.dependencies import get_current_user_from_bearer, get_db_session, require_researcher
 from apps.api.domain.research import SnapshotCondition, SnapshotQuery
 from apps.api.domain.research_case import CaseImportResult, DiscoveredPattern
-from apps.api.domain.user import User
+from apps.api.domain.user import User, UserId
+from apps.api.repositories.ai_settings_repository import AISettingsRepository
+from apps.api.services.ai_provider import resolve_provider
 from apps.api.models.pattern import DiscoveredPatternModel, PatternDiscoveryRunModel
 from apps.api.models.research_case import EventSnapshotModel, LifeEventModel, ResearchCaseModel
 from apps.api.repositories.research_repository import ResearchRepository
@@ -694,14 +696,11 @@ async def explore_patterns(
     )
 
 
-def _pattern_query_assistant(request: Request) -> PatternQueryAssistant:
-    settings = get_settings()
-    return PatternQueryAssistant(
-        http_client=request.app.state.http_client,
-        api_key=settings.OPENAI_API_KEY,
-        model=settings.OPENAI_MODEL,
-        base_url=settings.OPENAI_BASE_URL,
-    )
+async def _pattern_query_assistant(
+    request: Request, user_id: UserId, session: AsyncSession
+) -> PatternQueryAssistant:
+    resolved = await resolve_provider(user_id, AISettingsRepository(session), get_settings())
+    return PatternQueryAssistant(http_client=request.app.state.http_client, resolved=resolved)
 
 
 def _pattern_row_to_list_item(r) -> PatternListItemSchema:
@@ -729,6 +728,7 @@ async def ask_about_patterns(
     body: PatternQuestionRequestSchema,
     request: Request,
     session: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user_from_bearer),
 ) -> PatternQuestionResponseSchema:
     """Answer a question like "what correlates with Marriage?" grounded
     in the real, already-persisted discovered_patterns table.
@@ -740,7 +740,7 @@ async def ask_about_patterns(
     pattern or statistic that wasn't actually fetched.
     """
     start = time.perf_counter()
-    assistant = _pattern_query_assistant(request)
+    assistant = await _pattern_query_assistant(request, current_user.id, session)
     valid_event_types = [e.value for e in EventType]
 
     try:
@@ -980,14 +980,9 @@ def _dimension_schema_from_json(d: dict) -> PatternDimensionSchema:
     )
 
 
-def _pattern_explainer(request: Request) -> PatternExplainer:
-    settings = get_settings()
-    return PatternExplainer(
-        http_client=request.app.state.http_client,
-        api_key=settings.OPENAI_API_KEY,
-        model=settings.OPENAI_MODEL,
-        base_url=settings.OPENAI_BASE_URL,
-    )
+async def _pattern_explainer(request: Request, user_id: UserId, session: AsyncSession) -> PatternExplainer:
+    resolved = await resolve_provider(user_id, AISettingsRepository(session), get_settings())
+    return PatternExplainer(http_client=request.app.state.http_client, resolved=resolved)
 
 
 async def _matching_case_ids(
@@ -1308,7 +1303,9 @@ async def get_pattern_detail(
     )
 
 
-async def _explain_one(request: Request, row: DiscoveredPatternModel) -> str:
+async def _explain_one(
+    request: Request, row: DiscoveredPatternModel, user_id: UserId, session: AsyncSession
+) -> str:
     """Shared by the single and bulk explain endpoints. Raises
     PatternExplanationError (mapped to HTTP 503 by callers) on failure."""
     pattern = DiscoveredPattern(
@@ -1319,7 +1316,8 @@ async def _explain_one(request: Request, row: DiscoveredPatternModel) -> str:
         confidence_score=row.confidence_score,
         description=row.description,
     )
-    explanation = await _pattern_explainer(request).explain(pattern)
+    explainer = await _pattern_explainer(request, user_id, session)
+    explanation = await explainer.explain(pattern)
     row.explanation = explanation
     row.explanation_generated_at = datetime.now(timezone.utc)
     return explanation
@@ -1335,8 +1333,9 @@ async def explain_pattern(
     pattern_id: str,
     request: Request,
     session: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user_from_bearer),
 ) -> PatternExplainResponseSchema:
-    """The only endpoint that ever calls the OpenAI API for a pattern
+    """The only endpoint that ever calls an LLM for a pattern
     explanation — GET /cases/patterns/{pattern_id} never does."""
     row = (
         await session.execute(
@@ -1347,7 +1346,7 @@ async def explain_pattern(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pattern not found.")
 
     try:
-        explanation = await _explain_one(request, row)
+        explanation = await _explain_one(request, row, current_user.id, session)
     except PatternExplanationError as exc:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
 
@@ -1367,13 +1366,14 @@ async def explain_pattern(
 async def regenerate_all_explanations(
     request: Request,
     session: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user_from_bearer),
 ) -> PatternExplainAllResponseSchema:
     rows = (await session.execute(select(DiscoveredPatternModel))).scalars().all()
     succeeded = 0
     errors: list[str] = []
     for row in rows:
         try:
-            await _explain_one(request, row)
+            await _explain_one(request, row, current_user.id, session)
             succeeded += 1
         except PatternExplanationError as exc:
             errors.append(f"{row.pattern_id}: {exc}")
