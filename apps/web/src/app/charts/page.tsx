@@ -8,20 +8,17 @@ import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
 import { PlanetRelationshipGraph } from "@/components/charts/PlanetRelationshipGraph";
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
-import { PlanetStrengthHeatmap } from "@/components/charts/PlanetStrengthHeatmap";
-import { PlanetStrengthRadar } from "@/components/charts/PlanetStrengthRadar";
+import { StrengthAnalysisCenter } from "@/components/charts/StrengthAnalysisCenter";
 import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
 import { TransitTimeline } from "@/components/charts/TransitTimeline";
 import { LifeEventTimeline } from "@/components/charts/LifeEventTimeline";
 import { PredictionChainExplorer } from "@/components/charts/PredictionChainExplorer";
 import { KPSignificatorExplorer } from "@/components/charts/KPSignificatorExplorer";
-import { IshtaKashtaBalaPanel } from "@/components/charts/IshtaKashtaBalaPanel";
-import { AvasthaPanel } from "@/components/charts/AvasthaPanel";
 import { NakshatraPadaSelector } from "@/components/charts/NakshatraPadaSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
 import InteractiveKundliView from "@/components/charts/InteractiveKundliView";
-import YogasPanel from "@/components/charts/YogasPanel";
+import { YogaIntelligenceDashboard } from "@/components/charts/YogaIntelligenceDashboard";
 import AshtakavargaPanel from "@/components/charts/AshtakavargaPanel";
 import JaiminiPanel from "@/components/charts/JaiminiPanel";
 import PlanetExplorerPanel from "@/components/charts/PlanetExplorerPanel";
@@ -358,11 +355,16 @@ export default function ChartsPage() {
       )}
 
       {view === "strength" && (
-        <div id="panel-strength" role="tabpanel" aria-label="Planet strength visualization panel" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <PlanetStrengthHeatmap shadbala={result.shadbala} />
-          <PlanetStrengthRadar strengths={chart.planet_strengths} shadbala={result.shadbala} />
-          <IshtaKashtaBalaPanel request={request} />
-          <AvasthaPanel request={request} />
+        <div id="panel-strength" role="tabpanel" aria-label="Strength Analysis Center">
+          <StrengthAnalysisCenter
+            strengths={chart.planet_strengths}
+            shadbala={result.shadbala}
+            request={request}
+            activePlanet={activePlanet}
+            pinnedPlanet={pinnedPlanet}
+            onPlanetHover={handlePlanetHover}
+            onPlanetClick={handlePlanetClick}
+          />
         </div>
       )}
 
@@ -404,7 +406,9 @@ export default function ChartsPage() {
       )}
 
       {view === "yogas" && (
-        <div id="panel-yogas" role="tabpanel" aria-label="Yogas and combinations panel"><YogasPanel result={result} /></div>
+        <div id="panel-yogas" role="tabpanel" aria-label="Yogas and combinations panel" className="h-[calc(100vh-200px)]">
+          <YogaIntelligenceDashboard result={result} />
+        </div>
       )}
 
       {view === "ashtakavarga" && (
