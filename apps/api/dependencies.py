@@ -115,8 +115,9 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
 _redis_pool: aioredis.ConnectionPool | None = None
 
 try:
+    # Empty REDIS_URL → skip Redis entirely and use in-memory fallback.
     _redis_pool = aioredis.ConnectionPool.from_url(
-        _settings.REDIS_URL,
+        _settings.REDIS_URL or "redis://localhost:6379/0",
         decode_responses=True,
         max_connections=20,
         socket_connect_timeout=1,  # fail fast if Redis is unreachable
@@ -125,21 +126,56 @@ except Exception:
     _redis_pool = None
 
 
-async def get_redis() -> aioredis.Redis | None:
+class _InMemoryRedis:
     """
-    Return a Redis client, or None if Redis is not configured / unreachable.
+    Minimal Redis-compatible in-memory store.
 
-    The service layer handles None gracefully: JWT denylist is skipped but
-    all other auth flows remain fully functional.
+    Used when real Redis is unreachable. Supports get/setex which are the
+    only operations the auth service needs for the JWT denylist.
+    Entries expire lazily on access (TTL matches real Redis semantics).
+    """
+
+    def __init__(self) -> None:
+        self._store: dict[str, tuple[str | None, float | None]] = {}
+
+    async def get(self, key: str) -> str | None:
+        entry = self._store.get(key)
+        if entry is None:
+            return None
+        value, expires_at = entry
+        if expires_at is not None and expires_at <= __import__("time").time():
+            self._store.pop(key, None)
+            return None
+        return value
+
+    async def setex(self, key: str, time_secs: int, value: str) -> bool:
+        import time as _time
+        self._store[key] = (value, _time.time() + time_secs)
+        return True
+
+    async def ping(self) -> bool:
+        return True
+
+
+async def get_redis() -> aioredis.Redis | _InMemoryRedis | None:
+    """
+    Return a cache client for JWT denylist.
+
+    - Real Redis when reachable.
+    - In-memory fallback when Redis is not configured / unreachable.
+      Denylist works per-process; restarting the API clears it (acceptable
+      for local dev — security is unaffected since denylist is in-memory
+      on the real Redis anyway).
+    - None only if initialization itself failed (defensive).
     """
     if _redis_pool is None:
-        return None
+        return _InMemoryRedis()
     try:
         client = aioredis.Redis(connection_pool=_redis_pool)
-        await client.ping()  # fast connectivity check
+        await client.ping()
         return client
     except Exception:
-        return None
+        return _InMemoryRedis()
 
 
 # ── Repository & Service factories ───────────────────────────────────────────

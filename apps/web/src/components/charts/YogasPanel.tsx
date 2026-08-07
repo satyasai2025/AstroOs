@@ -14,8 +14,8 @@ export default function YogasPanel({ result }: Props) {
   const presentYogas = yogas.filter((y) => y.is_present);
   const absentYogas = yogas.filter((y) => !y.is_present);
 
-  const getStrengthColor = (strength: string) => {
-    switch (strength.toLowerCase()) {
+  const getStrengthColor = (strength: string | null) => {
+    switch ((strength ?? "").toLowerCase()) {
       case "full":
         return "var(--status-success)";
       case "partial":
