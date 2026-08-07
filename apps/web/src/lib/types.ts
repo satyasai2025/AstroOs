@@ -382,6 +382,19 @@ export interface DashaTreeResponse {
 
 // ── Yoga ──────────────────────────────────────────────────────────────────────
 
+/** Request body for evaluating yogas against a birth chart. Mirrors the
+ *  backend YogaEvaluationRequest (apps/api/schemas/yoga.py). */
+export interface YogaEvaluationRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  dasha_system?: string;
+  only_present?: boolean;
+  category?: string;
+}
+
 export interface YogaResultResponse {
   yoga_id: string;
   name: string;
@@ -395,12 +408,59 @@ export interface YogaResultResponse {
   satisfied: string[];
   missing: string[];
   trace: string[];
+  // Phase 2 (v2.1.0 "Vistara") — numerical strength and counter-examples
+  strength_score: number | null;
+  counter_examples: string[];
 }
 
 export interface YogaEvaluationResponse {
   results: YogaResultResponse[];
   total_evaluated: number;
   total_present: number;
+  strength_scored?: boolean;
+  with_timeline?: boolean;
+}
+
+// ── Yoga Timeline (Phase 2 activation / Dasha correlation) ──────────────────────
+
+export interface YogaActivationResponse {
+  yoga_id: string;
+  planet: string;
+  period_name: string;
+  period_level: number;
+  start_date: string;
+  end_date: string;
+  is_current: boolean;
+}
+
+export interface YogaTimelineResponse {
+  yoga_id: string;
+  yoga_name: string;
+  activations: YogaActivationResponse[];
+  current_activation: YogaActivationResponse | null;
+}
+
+export interface YogaTimelineEvaluationResponse {
+  timelines: YogaTimelineResponse[];
+  total_present: number;
+  total_activated: number;
+  dasha_system: string;
+}
+
+// ── Yoga Catalog (static definitions) ──────────────────────────────────────────
+
+export interface YogaDefinitionResponse {
+  yoga_id: string;
+  name: string;
+  category: string;
+  source_text: string;
+  rule_version: string;
+  requires: string[];
+}
+
+export interface YogaCatalogResponse {
+  yogas: YogaDefinitionResponse[];
+  total: number;
 }
 
 // ── Ashtakavarga ──────────────────────────────────────────────────────────────
