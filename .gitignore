@@ -54,6 +54,12 @@ New folder/
 .venv/
 apps/web/.env.local
 
+# Junk / session artifacts
+*.docx
+*.bak
+SBC.txt
+data/batch_output/
+
 # Non-runtime clutter (docs/planning/notes) removed from tracking
 docs
 architecture
