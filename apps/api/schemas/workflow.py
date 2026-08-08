@@ -94,6 +94,20 @@ class WorkflowAnalysisRequest(BaseModel):
             "instead)."
         ),
     )
+    force_new: bool = Field(
+        default=False,
+        description=(
+            "When persist=true, get_or_create() normally reuses an "
+            "existing birth_charts row that exactly matches this user's "
+            "(birth_datetime_utc, latitude, longitude, ayanamsa, "
+            "house_system) — two different people can legitimately share "
+            "an exact birth moment and location (e.g. a coincidence, or "
+            "twins at different precision). Set true to always insert a "
+            "new row instead of reusing a match. Callers should check "
+            "POST /workflow/check-existing first and let the user decide "
+            "before setting this."
+        ),
+    )
 
     @field_validator("birth_datetime_utc")
     @classmethod
@@ -107,6 +121,35 @@ class WorkflowAnalysisRequest(BaseModel):
         if not self.persist and self.chart_id is None:
             raise ValueError("chart_id is required when persist=false.")
         return self
+
+
+# ── Duplicate check (confirm before persist) ─────────────────────────────────
+
+
+class WorkflowDuplicateCheckRequest(BaseModel):
+    """Same natural key BirthChartRepository.get_or_create() dedups on —
+    check before submitting persist=true so the caller can ask the user
+    to confirm rather than silently merging into someone else's chart."""
+
+    birth_datetime_utc: datetime
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    ayanamsa: AyanamsaCode = "lahiri"
+    house_system: HouseSystemCode = "W"
+
+    @field_validator("birth_datetime_utc")
+    @classmethod
+    def must_be_timezone_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError("birth_datetime_utc must be timezone-aware.")
+        return v
+
+
+class WorkflowDuplicateCheckResponse(BaseModel):
+    exists: bool
+    chart_id: Optional[uuid.UUID] = None
+    subject_name: Optional[str] = None
+    saved_at: Optional[datetime] = None
 
 
 # ── Bulk Import (CSV/JSON upload of birth data) ──────────────────────────────
@@ -125,6 +168,10 @@ class BulkImportRow(BaseModel):
     place_name: Optional[str] = None
     ayanamsa: AyanamsaCode = "lahiri"
     house_system: HouseSystemCode = "W"
+    force_new: bool = Field(
+        default=False,
+        description="See WorkflowAnalysisRequest.force_new — applies per row.",
+    )
 
     @field_validator("birth_datetime_utc")
     @classmethod
@@ -144,6 +191,15 @@ class BulkImportRowResult(BaseModel):
     success: bool
     chart_id: Optional[uuid.UUID] = None
     error: Optional[str] = None
+    matched_existing: bool = Field(
+        default=False,
+        description=(
+            "True when this row's birth data exactly matched an already-"
+            "saved chart and force_new was not set, so the existing row "
+            "was reused rather than a new one created. Review these — a "
+            "match doesn't necessarily mean this is the same person."
+        ),
+    )
 
 
 class BulkImportResponse(BaseModel):

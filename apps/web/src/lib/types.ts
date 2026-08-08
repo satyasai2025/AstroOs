@@ -152,6 +152,8 @@ export interface WorkflowAnalysisRequest {
   persist?: boolean;
   /** The existing saved chart this recompute belongs to. Required when persist is false. */
   chart_id?: string | null;
+  /** Skip the birth-data dedup match and always save a new chart — set after the user confirms past a duplicate-check prompt. */
+  force_new?: boolean;
 }
 
 // ── Chart (D1) ──────────────────────────────────────────────────────────────
@@ -704,6 +706,23 @@ export interface WorkflowAnalysisResponse {
   research_snapshot_id: string | null;
 }
 
+// ── Duplicate check (confirm before persist) ──────────────────────────────────
+
+export interface WorkflowDuplicateCheckRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa?: AyanamsaCode;
+  house_system?: HouseSystemCode;
+}
+
+export interface WorkflowDuplicateCheckResponse {
+  exists: boolean;
+  chart_id: string | null;
+  subject_name: string | null;
+  saved_at: string | null;
+}
+
 // ── Bulk Import (CSV/JSON upload of birth data) ──────────────────────────────
 
 export interface BulkImportRow {
@@ -714,6 +733,7 @@ export interface BulkImportRow {
   place_name?: string | null;
   ayanamsa?: AyanamsaCode;
   house_system?: HouseSystemCode;
+  force_new?: boolean;
 }
 
 export interface BulkImportRowResult {
@@ -722,6 +742,7 @@ export interface BulkImportRowResult {
   success: boolean;
   chart_id: string | null;
   error: string | null;
+  matched_existing: boolean;
 }
 
 export interface BulkImportResponse {
