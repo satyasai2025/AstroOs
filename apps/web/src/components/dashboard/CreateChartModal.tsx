@@ -1,8 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
 import { CreateCompatibilityModal } from "./CreateCompatibilityModal";
 import { CreateTransitModal } from "./CreateTransitModal";
+import { parseJhdFile, type JhdParseResult } from "@/lib/jhd-import";
+import { useCheckExistingChart } from "@/lib/workflow";
 
 import {
   AYANAMSA_OPTIONS,
@@ -17,6 +20,7 @@ import type {
   HouseSystemCode,
   PlaceResultResponse,
   WorkflowAnalysisRequest,
+  WorkflowDuplicateCheckResponse,
 } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 
@@ -150,8 +154,16 @@ interface Props {
 }
 
 export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMessage, initialChartType }: Props) {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [chartType, setChartType] = useState<ChartTypeId>("birth_chart");
+
+  // ── Duplicate-birth-data confirmation ────────────────────────────────────
+  // Two different people can legitimately share an exact birth moment and
+  // location — so a match doesn't auto-merge; it prompts before persisting.
+  const checkExisting = useCheckExistingChart();
+  const [duplicateMatch, setDuplicateMatch] = useState<WorkflowDuplicateCheckResponse | null>(null);
+  const [pendingRequest, setPendingRequest] = useState<WorkflowAnalysisRequest | null>(null);
 
   const [subjectName, setSubjectName] = useState("");
   const [birthDate, setBirthDate] = useState("");
@@ -170,6 +182,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   const [dashaSystem, setDashaSystem] = useState<DashaSystemCode>("vimshottari");
   const [includeVargas, setIncludeVargas] = useState(true);
   const [validationError, setValidationError] = useState<string | null>(null);
+
+  // ── Import Chart (from .jhd file) ──────────────────────────────────────────
+  const [importFileName, setImportFileName] = useState<string | null>(null);
+  const [importResult, setImportResult] = useState<JhdParseResult | null>(null);
 
   // ── Alignment Matrix Resolution ──────────────────────────────────────────────
   // Evaluate cascading astrological configuration rules on every state change.
@@ -206,6 +222,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       setManualLatitude("");
       setManualLongitude("");
       setValidationError(null);
+      setImportFileName(null);
+      setImportResult(null);
+      setDuplicateMatch(null);
+      setPendingRequest(null);
     }
   }, [open, initialChartType]);
 
@@ -242,6 +262,13 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
   function handleContinue() {
     setValidationError(null);
+    if (step === 2 && chartType === "import_chart") {
+      if (!importResult?.request) {
+        setValidationError("Import a .jhd file to continue.");
+        return;
+      }
+      return setStep(3);
+    }
     if (step === 2) {
       if (!birthDate || !birthTime) {
         setValidationError("Birth date and time are both required.");
@@ -259,14 +286,48 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
     setStep((s) => Math.min(3, s + 1));
   }
 
+  function submitAfterDuplicateCheck(req: WorkflowAnalysisRequest) {
+    checkExisting.mutate(
+      {
+        birth_datetime_utc: req.birth_datetime_utc,
+        latitude: req.latitude,
+        longitude: req.longitude,
+        ayanamsa: req.ayanamsa,
+        house_system: req.house_system,
+      },
+      {
+        onSuccess: (result) => {
+          if (result.exists) {
+            setPendingRequest(req);
+            setDuplicateMatch(result);
+          } else {
+            onSubmit(req);
+          }
+        },
+        // Duplicate-check failing shouldn't block chart creation — fall
+        // through and let the normal create flow run (and surface its own
+        // error if the underlying problem is real, e.g. auth expired).
+        onError: () => onSubmit(req),
+      },
+    );
+  }
+
   function handleCreate() {
     setValidationError(null);
+    if (chartType === "import_chart") {
+      if (!importResult?.request) {
+        setValidationError("Import a .jhd file before creating the chart.");
+        return;
+      }
+      submitAfterDuplicateCheck(importResult.request);
+      return;
+    }
     if (!tzQuery.data || effectiveLatitude === null || effectiveLongitude === null) {
       setValidationError("Timezone could not be resolved for this location yet.");
       return;
     }
     const birthDatetimeUtc = localToUtcIso(birthDate, birthTime, tzQuery.data.utc_offset_minutes);
-    onSubmit({
+    submitAfterDuplicateCheck({
       birth_datetime_utc: birthDatetimeUtc,
       latitude: effectiveLatitude,
       longitude: effectiveLongitude,
@@ -278,6 +339,27 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       gender: gender,
       place_name: manualOverride ? null : resolvedPlace?.display_name ?? null,
     });
+  }
+
+  function handleViewExisting() {
+    if (!duplicateMatch?.chart_id) return;
+    onClose();
+    router.push(`/charts/${duplicateMatch.chart_id}`);
+  }
+
+  function handleSaveAsNewAnyway() {
+    if (!pendingRequest) return;
+    onSubmit({ ...pendingRequest, force_new: true });
+    setDuplicateMatch(null);
+    setPendingRequest(null);
+  }
+
+  async function handleImportFile(file: File) {
+    setImportFileName(file.name);
+    setImportResult(null);
+    setValidationError(null);
+    const buf = new Uint8Array(await file.arrayBuffer());
+    setImportResult(parseJhdFile(file.name.toLowerCase(), buf));
   }
 
   const shownError = validationError ?? errorMessage;
@@ -386,7 +468,46 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
               </div>
             )}
 
-            {step === 2 && (
+            {step === 2 && chartType === "import_chart" && (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Import From File</h3>
+                  <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                    Load a Jagannatha Hora (.jhd) chart export. The chart is recomputed by this app's engine.
+                  </p>
+                </div>
+
+                <label className="mb-2 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
+                  Choose a .jhd file
+                </label>
+                <input
+                  type="file"
+                  accept=".jhd,.jhora"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) void handleImportFile(file);
+                  }}
+                  className="obsidian-input text-sm"
+                />
+
+                {importResult?.preview && (
+                  <div className="rounded-lg border p-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
+                    <p className="font-medium" style={{ color: "var(--text-primary)" }}>{importResult.preview.subject_name}</p>
+                    <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
+                      {importResult.preview.place_name ?? `${importResult.preview.latitude.toFixed(4)}, ${importResult.preview.longitude.toFixed(4)}`}
+                    </p>
+                    {importResult.preview.birth_local && (
+                      <p className="mt-1" style={{ color: "var(--text-muted)" }}>Birth (local): {importResult.preview.birth_local}</p>
+                    )}
+                    <p className="mt-1" style={{ color: "var(--text-muted)" }}>
+                      {importResult.preview.ayanamsa} ayanamsa · {importResult.preview.house_system} houses
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {step === 2 && chartType !== "import_chart" && (
               <div className="space-y-4">
                 <div>
                   <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Birth Details</h3>
@@ -533,26 +654,49 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                   <p className="text-xs" style={{ color: "var(--text-secondary)" }}>Confirm the calculation settings, then create the chart</p>
                 </div>
 
-                <div className="rounded-lg border p-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-                  <p style={{ color: "var(--text-primary)" }}>{subjectName.trim() || "Unnamed"}</p>
-                  {gender && (
-                    <p className="mt-1" style={{ color: "var(--text-secondary)" }}>{gender}</p>
-                  )}
-                  <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
-                    {birthDate} · {birthTime}
-                  </p>
-                  <p className="mt-1" style={{ color: "var(--text-muted)" }}>
-                    {manualOverride ? "Manual coordinates" : resolvedPlace?.display_name ?? ""}
-                    {" — "}
-                    {effectiveLatitude?.toFixed(4)}°{effectiveLatitude! >= 0 ? "N" : "S"},{" "}
-                    {effectiveLongitude?.toFixed(4)}°{effectiveLongitude! >= 0 ? "E" : "W"}
-                  </p>
-                  {tzQuery.data && (
-                    <p className="mt-1" style={{ color: "var(--obsidian-accent-success, #10B981)" }}>
-                      {tzQuery.data.iana_name} · {formatOffset(tzQuery.data.utc_offset_minutes)}
+                {chartType === "import_chart" ? (
+                  <div className="rounded-lg border p-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
+                    <p style={{ color: "var(--text-primary)" }}>{importResult?.preview?.subject_name ?? importFileName ?? "Imported chart"}</p>
+                    <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
+                      {importResult?.preview?.place_name ?? "Imported location"}
                     </p>
-                  )}
-                </div>
+                    {importResult?.preview?.birth_local && (
+                      <p className="mt-1" style={{ color: "var(--text-muted)" }}>Birth (local): {importResult.preview.birth_local}</p>
+                    )}
+                    {importResult?.request && (
+                      <p className="mt-1" style={{ color: "var(--obsidian-accent-success, #10B981)" }}>
+                        Birth (UTC): {importResult.request.birth_datetime_utc}
+                      </p>
+                    )}
+                    {importResult?.request && importResult?.preview && (
+                      <p className="mt-1" style={{ color: "var(--text-muted)" }}>
+                        {importResult.preview.latitude.toFixed(4)}°{importResult.preview.latitude >= 0 ? "N" : "S"},{" "}
+                        {importResult.preview.longitude.toFixed(4)}°{importResult.preview.longitude >= 0 ? "E" : "W"}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border p-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
+                    <p style={{ color: "var(--text-primary)" }}>{subjectName.trim() || "Unnamed"}</p>
+                    {gender && (
+                      <p className="mt-1" style={{ color: "var(--text-secondary)" }}>{gender}</p>
+                    )}
+                    <p className="mt-1" style={{ color: "var(--text-secondary)" }}>
+                      {birthDate} · {birthTime}
+                    </p>
+                    <p className="mt-1" style={{ color: "var(--text-muted)" }}>
+                      {manualOverride ? "Manual coordinates" : resolvedPlace?.display_name ?? ""}
+                      {" — "}
+                      {effectiveLatitude?.toFixed(4)}°{effectiveLatitude! >= 0 ? "N" : "S"},{" "}
+                      {effectiveLongitude?.toFixed(4)}°{effectiveLongitude! >= 0 ? "E" : "W"}
+                    </p>
+                    {tzQuery.data && (
+                      <p className="mt-1" style={{ color: "var(--obsidian-accent-success, #10B981)" }}>
+                        {tzQuery.data.iana_name} · {formatOffset(tzQuery.data.utc_offset_minutes)}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-3 gap-4">
                   <div>
@@ -639,6 +783,51 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
               </div>
             )}
 
+            {duplicateMatch?.exists && (
+              <div
+                className="mt-4 rounded-lg border p-4"
+                style={{ borderColor: "#f59e0b", backgroundColor: "rgba(245,158,11,0.08)" }}
+              >
+                <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
+                  A saved chart already matches this exact birth date, time, and location
+                </p>
+                <p className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+                  Saved as &ldquo;{duplicateMatch.subject_name}&rdquo;
+                  {duplicateMatch.saved_at && ` on ${new Date(duplicateMatch.saved_at).toLocaleDateString()}`}.
+                  This could be the same chart, or a different person born at the same moment —
+                  choose how to proceed.
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleViewExisting}
+                    className="obsidian-btn-secondary text-xs"
+                  >
+                    View Existing Chart
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveAsNewAnyway}
+                    disabled={isPending}
+                    className="obsidian-btn-primary text-xs"
+                  >
+                    Save as New Chart Anyway
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDuplicateMatch(null);
+                      setPendingRequest(null);
+                    }}
+                    className="text-xs"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
             {shownError && (
               <p className="mt-4 text-xs" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>{shownError}</p>
             )}
@@ -667,7 +856,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
               <button
                 type="button"
                 onClick={handleContinue}
-                disabled={step === 2 && !canContinueFromDetails}
+                disabled={
+                  step === 2 &&
+                  (chartType === "import_chart" ? !importResult?.request : !canContinueFromDetails)
+                }
                 className="obsidian-btn-primary text-sm"
               >
                 Continue →
@@ -676,7 +868,12 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
               <button
                 type="button"
                 onClick={handleCreate}
-                disabled={!canSubmit}
+                disabled={
+                  isPending ||
+                  checkExisting.isPending ||
+                  !!duplicateMatch?.exists ||
+                  (chartType === "import_chart" ? !importResult?.request : !canSubmit)
+                }
                 className="obsidian-btn-primary text-sm"
               >
                 {isPending ? (
@@ -684,6 +881,8 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                     Creating…
                   </>
+                ) : checkExisting.isPending ? (
+                  "Checking…"
                 ) : (
                   "Create Chart"
                 )}

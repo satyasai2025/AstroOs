@@ -160,6 +160,7 @@ class HoroscopeEngine:
         user_id: Optional[uuid.UUID] = None,
         subject_name: str = "Unnamed",
         place_name: Optional[str] = None,
+        force_new: bool = False,
     ) -> uuid.UUID:
         """
         Persist an already-computed D1Chart (from generate_d1()) to
@@ -189,6 +190,7 @@ class HoroscopeEngine:
             user_id=user_id,
             subject_name=subject_name,
             place_name=place_name,
+            force_new=force_new,
         )
 
         await self._birth_chart_repo.update_d1_summary(
