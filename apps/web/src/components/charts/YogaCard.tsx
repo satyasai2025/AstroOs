@@ -19,7 +19,7 @@ export function YogaCard({ yoga, definition, onClick, isSelected }: YogaCardProp
 
   const displayName = yoga.name || 'Unknown Yoga';
   const isPresent = yoga.is_present;
-  const strengthScore = yoga.strength_score ?? (yoga.strength === 'full' ? 90 : yoga.strength === 'partial' ? 50 : 30);
+  const strengthScore = yoga.strength_score ?? null;
 
   return (
     <div

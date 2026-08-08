@@ -1,12 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import {
-  YogaResultResponse,
-  YogaDefinitionResponse,
-  YogaActivationResponse,
-  WorkflowAnalysisRequest,
-} from '@/lib/types';
+import { useQuery } from '@tanstack/react-query';
+import { YogaResultResponse, YogaDefinitionResponse, YogaActivationResponse, WorkflowAnalysisRequest } from '@/lib/types';
 import {
   useYogaCatalog,
   useYogaStrengthEvaluation,
@@ -26,7 +22,6 @@ interface YogaIntelligenceDashboardProps {
   request?: WorkflowAnalysisRequest | null;
 }
 
-/** Derive the YogaEngine birth-data body from the workflow request. */
 function toYogaEvaluationRequest(
   request: WorkflowAnalysisRequest | null | undefined,
 ): {
@@ -46,8 +41,6 @@ function toYogaEvaluationRequest(
   };
 }
 
-/** Benefic/malefic is not a field on the API — derive it from the knowledge
- *  base tags (BPHS tags each yoga benefic / malefic / dosha). */
 function natureOf(name: string): 'benefic' | 'malefic' | null {
   const entry = getYogaKnowledgeByName(name);
   const tags = entry?.tags ?? [];
@@ -66,17 +59,15 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
   const [maleficOnly, setMaleficOnly] = useState(false);
   const [minStrength, setMinStrength] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<string>('strength_desc');
+  const [showHelp, setShowHelp] = useState(false);
 
   const { data: catalogData, isLoading: catalogLoading } = useYogaCatalog();
   const catalog = catalogData?.yogas ?? [];
 
-  // Strength + timeline enrichment — real backend data via the dedicated
-  // /yoga/evaluate/with-strength and /yoga/evaluate/timeline endpoints.
   const evalBody = toYogaEvaluationRequest(request);
   const { data: strengthData } = useYogaStrengthEvaluation(evalBody ?? null, { presentOnly: false });
   const { data: timelineData } = useYogaTimelineEvaluation(evalBody ?? null);
 
-  // Lookup maps.
   const definitionsById = useMemo(() => {
     const m = new Map<string, YogaDefinitionResponse>();
     catalog.forEach((d) => m.set(d.yoga_id, d));
@@ -101,7 +92,6 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
 
   const rawYogas = result?.yogas?.results ?? [];
 
-  // Enrich each workflow result with strength (0-100) + definition lookup.
   const enrichedYogas: YogaResultResponse[] = useMemo(() => {
     return rawYogas.map((y) => {
       const s = strengthByYogaId.get(y.yoga_id);
@@ -111,7 +101,6 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
 
   const hasYogaData = enrichedYogas.length > 0;
 
-  // Category counts.
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { all: enrichedYogas.length };
     enrichedYogas.forEach((yoga) => {
@@ -121,14 +110,12 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
     return counts;
   }, [enrichedYogas, catalog]);
 
-  // Available categories.
   const categories = useMemo(() => {
     const set = new Set<string>();
     catalog.forEach((d) => d.category && set.add(d.category));
     return Array.from(set).sort();
   }, [catalog]);
 
-  // Filter & sort.
   const filteredYogas = useMemo(() => {
     let filtered = [...enrichedYogas];
 
@@ -197,9 +184,73 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
 
   const activeTimeline = selectedYoga ? timelineByYogaId.get(selectedYoga.yoga_id) ?? null : null;
 
+  const handleExport = () => {
+    if (filteredYogas.length === 0) {
+      alert('No yogas to export');
+      return;
+    }
+
+    const headers = ['Name', 'Category', 'Status', 'Strength', 'Planets', 'Houses'];
+    const rows = filteredYogas.map((yoga) => {
+      const category = definitionsById.get(yoga.yoga_id)?.category || 'Unknown';
+      return [
+        yoga.name,
+        category,
+        yoga.is_present ? 'Active' : 'Dormant',
+        yoga.strength_score ?? 'N/A',
+        yoga.involved_planets.join('; '),
+        yoga.involved_houses.join('; ')
+      ];
+    });
+
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `yogas-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDuplicate = async () => {
+    if (!selectedYoga) {
+      alert('Please select a yoga first to copy its details');
+      return;
+    }
+    const category = definitionsById.get(selectedYoga.yoga_id)?.category || 'Unknown';
+    const text = `Yoga: ${selectedYoga.name}
+Category: ${category}
+Status: ${selectedYoga.is_present ? 'Active' : 'Dormant'}
+Strength: ${selectedYoga.strength_score ?? 'N/A'}%
+Planets: ${selectedYoga.involved_planets.join(', ')}
+Houses: ${selectedYoga.involved_houses.join(', ')}`;
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      alert('Yoga details copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      alert('Failed to copy. Please try again.');
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
-      {/* Filter toolbar */}
       <div className="border-b border-gray-800 bg-gray-900/50 p-4">
         <YogaFilterToolbar
           searchQuery={searchQuery}
@@ -222,12 +273,13 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
           categoryCounts={categoryCounts}
           onClearFilters={clearFilters}
           hasActiveFilters={hasActiveFilters}
+          onExport={handleExport}
+          onDuplicate={handleDuplicate}
+          onHelp={() => setShowHelp(true)}
         />
       </div>
 
-      {/* Two-panel layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left list */}
         <div className="w-96 border-r border-gray-800 overflow-y-auto bg-gray-900/30">
           {catalogLoading && enrichedYogas.length === 0 ? (
             <div className="flex items-center justify-center h-64">
@@ -266,7 +318,6 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
           )}
         </div>
 
-        {/* Right detail */}
         <div className="flex-1 overflow-hidden bg-gray-950">
           {selectedYoga ? (
             <YogaDetailPanel
@@ -289,6 +340,49 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
           )}
         </div>
       </div>
+
+      {showHelp && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-100">Yoga Intelligence Dashboard Help</h3>
+              <button onClick={() => setShowHelp(false)} className="text-gray-400 hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4 text-sm text-gray-300">
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-1">About Yogas</h4>
+                <p>Yogas are planetary combinations in Vedic astrology that indicate specific life patterns, strengths, and challenges. This dashboard analyzes your birth chart to identify all present yogas.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-1">Strength Scores</h4>
+                <p>Each yoga is assigned a strength score (0-100) based on planetary dignity, house support, aspect strength, and other classical factors. Higher scores indicate stronger, more reliable yogas.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-1">Categories</h4>
+                <p>Yogas are categorized by their primary effect: Raja Yoga (power/authority), Dhana Yoga (wealth), Arishta Yoga (challenges), Chandra Yoga (emotional patterns), and more.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-1">Using Filters</h4>
+                <p>Use the category tabs to filter by yoga type. Toggle Active Only to see only currently activated yogas. Use the Filters dropdown for benefic/malefic and strength thresholds.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-purple-400 mb-1">Detail View</h4>
+                <p>Click any yoga card to view detailed analysis including formation rules, planet positions, strength breakdown, Dasha activation timeline, and classical references.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowHelp(false)}
+              className="mt-6 w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
