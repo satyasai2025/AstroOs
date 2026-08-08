@@ -1175,16 +1175,32 @@ function _defaultEntry(name: string, yoga_id: string): YogaKnowledgeEntry {
   };
 }
 
+/**
+ * Resolve a yoga name to its knowledge base entry, falling back to the base
+ * name when the result name carries a disambiguating suffix that the KB
+ * doesn't key on individually — e.g. backend "Papakartari Yoga (Lagna)" /
+ * "Papakartari Yoga (Moon)" both fall back to KB key "Papakartari Yoga".
+ * Suffixes the KB *does* key on individually (e.g. "Neecha Bhanga Raja Yoga
+ * (Sun)") still match directly on the first lookup and never reach the
+ * fallback.
+ */
+function _lookupByName(name: string): YogaKnowledgeEntry | undefined {
+  if (_KNOWLEDGE[name]) return _KNOWLEDGE[name];
+  const baseName = name.replace(/\s*\([^)]*\)\s*$/, '').trim();
+  if (baseName !== name && _KNOWLEDGE[baseName]) return _KNOWLEDGE[baseName];
+  return undefined;
+}
+
 /** Look up enriched knowledge for a yoga by its name. */
 export function getYogaKnowledge(
   result: YogaResultResponse,
 ): YogaKnowledgeEntry {
-  return _KNOWLEDGE[result.name] ?? _defaultEntry(result.name, result.yoga_id);
+  return _lookupByName(result.name) ?? _defaultEntry(result.name, result.yoga_id);
 }
 
 /** Look up by name directly (for "related yogas" cross-references). */
 export function getYogaKnowledgeByName(name: string): YogaKnowledgeEntry | undefined {
-  return _KNOWLEDGE[name];
+  return _lookupByName(name);
 }
 
 /** All yoga names that exist in the knowledge base. */

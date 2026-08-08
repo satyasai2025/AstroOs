@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 interface YogaFilterToolbarProps {
   searchQuery: string;
@@ -23,6 +23,9 @@ interface YogaFilterToolbarProps {
   categoryCounts: Record<string, number>;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
+  onExport?: () => void;
+  onDuplicate?: () => void;
+  onHelp?: () => void;
 }
 
 export function YogaFilterToolbar({
@@ -46,7 +49,12 @@ export function YogaFilterToolbar({
   categoryCounts,
   onClearFilters,
   hasActiveFilters,
+  onExport,
+  onDuplicate,
+  onHelp,
 }: YogaFilterToolbarProps) {
+  const [showFilters, setShowFilters] = useState(false);
+
   return (
     <div className="flex flex-col gap-4">
       {/* Top Row - Search and Actions */}
@@ -75,9 +83,12 @@ export function YogaFilterToolbar({
           )}
         </div>
 
-        {/* Filters Button */}
+        {/* Filters Button with Dropdown */}
         <div className="relative">
-          <button className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-sm text-gray-300 hover:bg-gray-800 transition">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-sm text-gray-300 hover:bg-gray-800 transition"
+          >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
@@ -86,6 +97,83 @@ export function YogaFilterToolbar({
               <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
             )}
           </button>
+
+          {/* Filters Dropdown */}
+          {showFilters && (
+            <div className="absolute top-full mt-2 right-0 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-4 z-50">
+              <div className="space-y-4">
+                {/* Active Only */}
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-gray-300">Active Only</label>
+                  <button
+                    onClick={() => onActiveOnlyChange(!activeOnly)}
+                    className={`w-12 h-6 rounded-full transition ${
+                      activeOnly ? 'bg-purple-600' : 'bg-gray-700'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
+                      activeOnly ? 'translate-x-7' : 'translate-x-1'
+                    }`}></div>
+                  </button>
+                </div>
+
+                {/* Benefic Only */}
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-gray-300">Benefic Only</label>
+                  <button
+                    onClick={() => onBeneficOnlyChange(!beneficOnly)}
+                    className={`w-12 h-6 rounded-full transition ${
+                      beneficOnly ? 'bg-purple-600' : 'bg-gray-700'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
+                      beneficOnly ? 'translate-x-7' : 'translate-x-1'
+                    }`}></div>
+                  </button>
+                </div>
+
+                {/* Malefic Only */}
+                <div className="flex items-center justify-between">
+                  <label className="text-sm text-gray-300">Malefic Only</label>
+                  <button
+                    onClick={() => onMaleficOnlyChange(!maleficOnly)}
+                    className={`w-12 h-6 rounded-full transition ${
+                      maleficOnly ? 'bg-purple-600' : 'bg-gray-700'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
+                      maleficOnly ? 'translate-x-7' : 'translate-x-1'
+                    }`}></div>
+                  </button>
+                </div>
+
+                {/* Minimum Strength */}
+                <div>
+                  <label className="text-sm text-gray-300 block mb-2">Minimum Strength</label>
+                  <select
+                    value={minStrength ?? ''}
+                    onChange={(e) => onMinStrengthChange(e.target.value ? parseInt(e.target.value) : null)}
+                    className="w-full px-3 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-sm text-gray-300 focus:outline-none focus:border-purple-500/50"
+                  >
+                    <option value="">Any</option>
+                    <option value="80">80%+ (Strong)</option>
+                    <option value="50">50%+ (Moderate)</option>
+                    <option value="30">30%+ (Developing)</option>
+                  </select>
+                </div>
+
+                {/* Clear All */}
+                {hasActiveFilters && (
+                  <button
+                    onClick={onClearFilters}
+                    className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm transition"
+                  >
+                    Clear All Filters
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sort By */}
@@ -105,22 +193,34 @@ export function YogaFilterToolbar({
 
         {/* Action Icons */}
         <div className="flex items-center gap-2 ml-auto">
-          <button className="p-2 text-gray-400 hover:text-gray-300 transition" title="Export">
+          <button
+            onClick={onExport}
+            className="p-2 text-gray-400 hover:text-gray-300 transition"
+            title="Export yogas"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
           </button>
-          <button className="p-2 text-gray-400 hover:text-gray-300 transition" title="Duplicate">
+          <button
+            onClick={onDuplicate}
+            className="p-2 text-gray-400 hover:text-gray-300 transition"
+            title="Duplicate view"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
-          <button className="p-2 text-gray-400 hover:text-gray-300 transition" title="Help">
+          <button
+            onClick={onHelp}
+            className="p-2 text-gray-400 hover:text-gray-300 transition"
+            title="Help"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 ml-2 cursor-pointer"></div>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 ml-2"></div>
         </div>
       </div>
 

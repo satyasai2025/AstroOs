@@ -9,7 +9,6 @@ import { YogaActivationTimelineMini } from './YogaActivationTimelineMini';
 interface YogaDetailPanelProps {
   yoga: YogaResultResponse | null;
   definition: YogaDefinitionResponse | null;
-  /** Optional Dasha activation timeline for the selected yoga. */
   activations?: YogaActivationResponse[];
   currentActivation?: YogaActivationResponse | null;
   dashaSystem?: string;
@@ -41,15 +40,14 @@ export function YogaDetailPanel({
     );
   }
 
-  const formationRules = yoga.satisfied;
-  const missingRules = yoga.missing;
-  const involvedPlanets = yoga.involved_planets ?? [];
-  const involvedHouses = yoga.involved_houses ?? [];
-  const strengthScore = yoga.strength_score;
-  const positiveResults = knowledge?.effects.positive ?? [];
-  const negativeFactors = knowledge?.effects.negative ?? [];
-  const classicalReferences = knowledge?.classicalReferences ?? [];
-  const relatedYogas = knowledge?.relatedYogas ?? [];
+  const satisfiedConditions = yoga.satisfied || [];
+  const missingConditions = yoga.missing || [];
+  const involvedPlanets = yoga.involved_planets || [];
+  const involvedHouses = yoga.involved_houses || [];
+  const trace = yoga.trace || [];
+  const counterExamples = yoga.counter_examples || [];
+  const classicalReferences: { source: string; chapter: string | number | null; verse: string | number | null; excerpt: string }[] = [];
+  const relatedYogas: string[] = [];
 
   const tabs: { key: TabType; label: string }[] = [
     { key: 'overview', label: 'Overview' },
@@ -72,17 +70,21 @@ export function YogaDetailPanel({
             <div>
               <h2 className="text-2xl font-bold text-gray-100">{yoga.name}</h2>
               <div className="flex items-center gap-2 mt-1">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-900/30 text-purple-400">
-                  {yoga.category || 'Yoga'}
+                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                  definition?.category === 'Raja Yoga' ? 'bg-purple-900/30 text-purple-400' :
+                  definition?.category === 'Dhana Yoga' ? 'bg-green-900/30 text-green-400' :
+                  'bg-gray-800 text-gray-400'
+                }`}>
+                  {definition?.category || 'Yoga'}
                 </span>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                   yoga.is_present ? 'bg-green-900/30 text-green-400' : 'bg-gray-800 text-gray-500'
                 }`}>
                   {yoga.is_present ? 'Active' : 'Dormant'}
                 </span>
-                {strengthScore !== null && strengthScore !== undefined && (
+                {yoga.strength_score !== undefined && (
                   <span className="text-xs text-gray-500">
-                    Strength: {strengthScore}%
+                    Strength: {yoga.strength_score}%
                   </span>
                 )}
               </div>
@@ -114,239 +116,304 @@ export function YogaDetailPanel({
           <div className="space-y-6">
             <div>
               <p className="text-gray-300 leading-relaxed">
-                {knowledge?.description ||
-                  `A classical ${yoga.category || 'yoga'} combination in this chart. See formation rules below.`}
+                {knowledge?.description ? (
+                  knowledge.description
+                ) : (
+                  <span className="text-gray-500 italic">
+                    A classical planetary combination detected in your chart. Detailed interpretation requires the yoga definition database.
+                  </span>
+                )}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              {/* Formation Rules */}
+            <div className="grid grid-cols-3 gap-6">
+              {/* Formation Conditions — real satisfied/missing from the rule engine */}
               <div className="bg-gray-800/30 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-gray-300 mb-3">
-                  Formation Rules ({formationRules.length}/{formationRules.length + missingRules.length})
+                  Formation Conditions {(satisfiedConditions.length + missingConditions.length) > 0 ? `(${satisfiedConditions.length}/${satisfiedConditions.length + missingConditions.length})` : ''}
                 </h3>
-                <div className="space-y-2">
-                  {formationRules.map((rule, idx) => (
-                    <div key={idx} className="flex items-start gap-2 p-2 rounded bg-green-900/20">
-                      <svg className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <p className="text-xs text-gray-300">{rule}</p>
-                    </div>
-                  ))}
-                  {missingRules.map((rule, idx) => (
-                    <div key={`m-${idx}`} className="flex items-start gap-2 p-2 rounded bg-gray-800/50">
-                      <svg className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                      <p className="text-xs text-gray-500">{rule}</p>
-                    </div>
-                  ))}
-                  {formationRules.length === 0 && missingRules.length === 0 && (
-                    <p className="text-xs text-gray-500">No rule conditions recorded.</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Planet Positions */}
-              <div className="bg-gray-800/30 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-gray-300 mb-3">Contributing Planets</h3>
-                {involvedPlanets.length > 0 ? (
+                {satisfiedConditions.length > 0 || missingConditions.length > 0 ? (
                   <div className="space-y-2">
-                    {involvedPlanets.slice(0, 6).map((planet, idx) => (
-                      <div key={idx} className="flex items-center gap-2 p-2 bg-gray-900/50 rounded">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xs">
-                          {planet[0]}
-                        </div>
-                        <p className="text-xs font-medium text-gray-200">{planet}</p>
+                    {satisfiedConditions.slice(0, 5).map((cond, idx) => (
+                      <div key={`s-${idx}`} className="flex items-start gap-2 p-2 rounded bg-green-900/20">
+                        <svg className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <p className="text-xs text-gray-300">{cond}</p>
+                      </div>
+                    ))}
+                    {missingConditions.slice(0, 5).map((cond, idx) => (
+                      <div key={`m-${idx}`} className="flex items-start gap-2 p-2 rounded bg-gray-800/50">
+                        <svg className="w-4 h-4 text-gray-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 00-1.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                        <p className="text-xs text-gray-500">{cond}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500">No planet data recorded.</p>
-                )}
-                {involvedHouses.length > 0 && (
-                  <p className="text-xs text-gray-500 mt-3">
-                    Houses: {involvedHouses.join(', ')}
-                  </p>
+                  <p className="text-xs text-gray-500 italic">No condition trace returned by the rule engine for this yoga</p>
                 )}
               </div>
 
-              {/* Strength Summary */}
+              {/* Involved Planets & Houses — real fields from the yoga result */}
               <div className="bg-gray-800/30 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-gray-300 mb-3">Strength</h3>
-                {strengthScore !== null && strengthScore !== undefined ? (
-                  <div className="flex items-center justify-center py-2">
-                    <StrengthProgressBar score={strengthScore} size="lg" />
+                <h3 className="text-sm font-semibold text-gray-300 mb-3">Involved Planets &amp; Houses</h3>
+                {involvedPlanets.length > 0 || involvedHouses.length > 0 ? (
+                  <div className="space-y-3">
+                    {involvedPlanets.length > 0 && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Planets</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {involvedPlanets.map((planet, idx) => (
+                            <span key={idx} className="text-xs px-2 py-0.5 rounded-full bg-blue-900/30 text-blue-300">
+                              {planet}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {involvedHouses.length > 0 && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Houses</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {involvedHouses.map((house, idx) => (
+                            <span key={idx} className="text-xs px-2 py-0.5 rounded-full bg-purple-900/30 text-purple-300">
+                              {house}{getOrdinalSuffix(house)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500">
-                    No numerical strength computed for this yoga in the base workflow result.
+                  <p className="text-xs text-gray-500 italic">No involved planets or houses returned for this yoga</p>
+                )}
+              </div>
+
+              {/* Strength — categorical (full/partial/cancelled) is always available;
+                  numeric 0-100 score requires the with-strength evaluation to succeed. */}
+              <div className="bg-gray-800/30 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-gray-300 mb-3">Strength</h3>
+                {yoga.strength && (
+                  <span className={`inline-block text-xs px-2 py-0.5 rounded-full mb-3 ${
+                    yoga.strength === 'full' ? 'bg-green-900/30 text-green-400' :
+                    yoga.strength === 'partial' ? 'bg-yellow-900/30 text-yellow-400' :
+                    'bg-red-900/30 text-red-400'
+                  }`}>
+                    {yoga.strength}
+                  </span>
+                )}
+                {yoga.strength_score != null ? (
+                  <div className="mt-2 flex items-center justify-center">
+                    <div className="relative w-20 h-20">
+                      <svg className="w-20 h-20 transform -rotate-90">
+                        <circle cx="40" cy="40" r="35" stroke="currentColor" strokeWidth="6" fill="none" className="text-gray-700" />
+                        <circle
+                          cx="40"
+                          cy="40"
+                          r="35"
+                          stroke="currentColor"
+                          strokeWidth="6"
+                          fill="none"
+                          strokeDasharray={`${2 * Math.PI * 35}`}
+                          strokeDashoffset={`${2 * Math.PI * 35 * (1 - (yoga.strength_score ?? 0) / 100)}`}
+                          className={(yoga.strength_score ?? 0) >= 80 ? 'text-green-500' : (yoga.strength_score ?? 0) >= 50 ? 'text-yellow-500' : 'text-red-500'}
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-lg font-bold text-gray-200">{yoga.strength_score}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-500 italic">
+                    Numerical 0-100 score requires the with-strength evaluation, which is currently unavailable.
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Positive and Weakening */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {trace.length > 0 && (
               <div className="bg-gray-800/30 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-green-400 mb-3 flex items-center gap-2">
-                  Positive Indications
-                </h3>
-                <div className="space-y-2">
-                  {positiveResults.length > 0 ? (
-                    positiveResults.map((result, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs">
-                        <svg className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-300">{result}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-xs text-gray-500">No specific positive results recorded.</p>
-                  )}
+                <h3 className="text-sm font-semibold text-gray-300 mb-3">Evaluation Trace</h3>
+                <div className="space-y-1">
+                  {trace.map((step, idx) => (
+                    <p key={idx} className="text-xs text-gray-500 font-mono">{step}</p>
+                  ))}
                 </div>
               </div>
+            )}
 
-              <div className="bg-gray-800/30 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
-                  Weakening Factors
-                </h3>
-                <div className="space-y-2">
-                  {negativeFactors.length > 0 ? (
-                    negativeFactors.map((factor, idx) => (
-                      <div key={idx} className="flex items-start gap-2 text-xs">
-                        <svg className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-300">{factor}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-xs text-gray-500">No weakening factors recorded for this yoga.</p>
-                  )}
-                  {yoga.counter_examples?.length > 0 && (
-                    <div className="pt-2 border-t border-gray-800">
-                      <p className="text-xs text-gray-400 mb-1 font-medium">Counter-examples (when it may not manifest)</p>
-                      {yoga.counter_examples.map((c, idx) => (
-                        <p key={idx} className="text-xs text-gray-500 flex items-start gap-1">
-                          <span className="text-gray-600">•</span> {c}
-                        </p>
-                      ))}
-                    </div>
-                  )}
+            {counterExamples.length > 0 && (
+              <div className="bg-red-900/10 border border-red-900/30 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-red-400 mb-3">Counter-Examples (Weaken/Cancel)</h3>
+                <div className="space-y-1">
+                  {counterExamples.map((ex, idx) => (
+                    <p key={idx} className="text-xs text-gray-400">{ex}</p>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
         {activeTab === 'strength' && (
-          <div className="space-y-6">
-            <div className="bg-gray-800/30 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-gray-300 mb-4">Overall Strength</h3>
-              {strengthScore !== null && strengthScore !== undefined ? (
-                <div className="flex flex-col items-center justify-center">
-                  <StrengthProgressBar score={strengthScore} size="lg" />
-                  <p className="text-xs text-gray-500 mt-3">
-                    0-100 numerical strength computed by the YogaEngine&apos;s with-strength endpoint.
-                  </p>
+          <div className="space-y-4 max-w-md">
+            {yoga.strength && (
+              <div>
+                <p className="text-xs text-gray-400 mb-1">Categorical strength (always available)</p>
+                <span className={`inline-block text-sm px-3 py-1 rounded-full ${
+                  yoga.strength === 'full' ? 'bg-green-900/30 text-green-400' :
+                  yoga.strength === 'partial' ? 'bg-yellow-900/30 text-yellow-400' :
+                  'bg-red-900/30 text-red-400'
+                }`}>
+                  {yoga.strength}
+                </span>
+              </div>
+            )}
+            {yoga.strength_score != null ? (
+              <div>
+                <p className="text-xs text-gray-400 mb-1">Numerical score</p>
+                <StrengthProgressBar score={yoga.strength_score} size="md" />
+              </div>
+            ) : (
+              <p className="text-xs text-gray-500 italic">
+                Numerical 0-100 score requires the with-strength evaluation, which is currently unavailable.
+              </p>
+            )}
+            {counterExamples.length > 0 && (
+              <div>
+                <p className="text-xs text-gray-400 mb-2">Counter-examples weakening this yoga</p>
+                <div className="space-y-1">
+                  {counterExamples.map((ex, idx) => (
+                    <p key={idx} className="text-xs text-gray-500">{ex}</p>
+                  ))}
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500 text-center">
-                  No numerical strength available — the base workflow evaluates yogas without strength
-                  scoring. Run the with-strength evaluation to see a 0-100 figure.
-                </p>
-              )}
-            </div>
+              </div>
+            )}
+            {!yoga.strength && yoga.strength_score == null && counterExamples.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400">No strength data available for this yoga</p>
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === 'activation' && (
-          <div className="space-y-6">
-            <div className="bg-gray-800/30 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-gray-300 mb-4">Dasha Activation Timeline</h3>
-              {activations.length > 0 ? (
-                <YogaActivationTimelineMini
-                  activations={activations}
-                  currentActivation={currentActivation}
-                  dashaSystem={dashaSystem}
-                />
-              ) : (
-                <p className="text-sm text-gray-500 text-center py-8">
-                  No activation timeline data available for this yoga.
+          <div>
+            {activations.length > 0 ? (
+              <YogaActivationTimelineMini
+                activations={activations}
+                currentActivation={currentActivation ?? null}
+                dashaSystem={dashaSystem}
+              />
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400">No activation timeline data available</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Run the timeline evaluation to see Dasha activation periods for this yoga
                 </p>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === 'references' && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {classicalReferences.length > 0 ? (
-              classicalReferences.map((ref, idx) => (
-                <div key={idx} className="bg-gray-800/30 border border-gray-700/30 rounded-lg p-4">
-                  <p className="text-sm text-gray-300 italic mb-2">"{ref.excerpt}"</p>
-                  {ref.source && (
-                    <p className="text-xs text-gray-500">
-                      — {ref.source}
-                      {ref.chapter && `, Chapter ${ref.chapter}`}
-                      {ref.verse && `, Verse ${ref.verse}`}
-                    </p>
+              classicalReferences.map((ref: any, idx: number) => (
+                <div key={idx} className="bg-gray-800/30 rounded-lg p-4">
+                  <p className="text-xs font-semibold text-gray-300">
+                    {ref.source}
+                    {ref.chapter != null ? ` — Ch. ${ref.chapter}` : ''}
+                    {ref.verse != null ? `, v. ${ref.verse}` : ''}
+                  </p>
+                  {ref.excerpt && (
+                    <p className="text-xs text-gray-400 mt-2 italic">{ref.excerpt}</p>
+                  )}
+                </div>
+              ))
+            ) : knowledge?.classicalReferences && knowledge.classicalReferences.some((r) => r.excerpt) ? (
+              knowledge.classicalReferences.filter((r) => r.excerpt).map((ref, idx) => (
+                <div key={idx} className="bg-gray-800/30 rounded-lg p-4">
+                  <p className="text-xs font-semibold text-gray-300">
+                    {ref.source}
+                    {ref.chapter != null ? ` — Ch. ${ref.chapter}` : ''}
+                    {ref.verse != null ? `, v. ${ref.verse}` : ''}
+                  </p>
+                  {ref.excerpt && (
+                    <p className="text-xs text-gray-400 mt-2 italic">{ref.excerpt}</p>
                   )}
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500 text-center py-8">No classical references available.</p>
+              <p className="text-xs text-gray-500 italic">No classical references available</p>
             )}
           </div>
         )}
 
         {activeTab === 'related' && (
-          <div className="space-y-4">
-            {relatedYogas.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
-                {relatedYogas.slice(0, 6).map((relatedYoga, idx) => (
-                  <div key={idx} className="bg-gray-800/30 border border-gray-700/30 rounded-lg p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                      <span className="text-lg">🕉️</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-200">{relatedYoga}</p>
-                      <p className="text-xs text-gray-500">Related classical yoga</p>
-                    </div>
+          <div className="space-y-2">
+            {(relatedYogas.length > 0 ? relatedYogas : knowledge?.relatedYogas ?? []).length > 0 ? (
+              (relatedYogas.length > 0 ? relatedYogas : knowledge?.relatedYogas ?? []).map(
+                (name: string, idx: number) => (
+                  <div key={idx} className="bg-gray-800/30 rounded-lg p-3 text-sm text-gray-300">
+                    {name}
                   </div>
-                ))}
-              </div>
+                ),
+              )
             ) : (
-              <p className="text-sm text-gray-500 text-center py-8">No related yogas found.</p>
+              <p className="text-xs text-gray-500 italic">No related yogas found</p>
             )}
           </div>
         )}
 
         {activeTab === 'ai' && (
-          <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border border-purple-800/30 rounded-lg p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
-              <h3 className="text-sm font-semibold text-purple-300">AI Insight</h3>
-            </div>
-            <p className="text-sm text-gray-300 leading-relaxed mb-4">
-              {yoga.name} is {yoga.is_present ? 'active' : 'dormant'} in this chart
-              {strengthScore !== null && strengthScore !== undefined
-                ? `, with a numerical strength of ${strengthScore}% (${strengthScore >= 80 ? 'strong' : strengthScore >= 50 ? 'moderate' : 'developing'}).`
-                : '.'}{' '}
-              {knowledge?.description ? `${knowledge.description.substring(0, 150)}...` : ''}
-            </p>
-            <p className="text-xs text-gray-400">
-              Reference: {yoga.source_text || definition?.source_text || 'BPHS'} · Rule version{' '}
-              {yoga.rule_version || definition?.rule_version || '—'}
-            </p>
+          <div className="space-y-4">
+            {knowledge?.effects && (knowledge.effects.positive.length > 0 || knowledge.effects.negative.length > 0) ? (
+              <>
+                {knowledge.effects.positive.length > 0 && (
+                  <div className="bg-green-900/10 border border-green-900/30 rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-green-400 mb-2">Positive Effects</h3>
+                    <ul className="space-y-1 list-disc list-inside">
+                      {knowledge.effects.positive.map((e, idx) => (
+                        <li key={idx} className="text-xs text-gray-300">{e}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {knowledge.effects.negative.length > 0 && (
+                  <div className="bg-red-900/10 border border-red-900/30 rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-red-400 mb-2">Negative Effects</h3>
+                    <ul className="space-y-1 list-disc list-inside">
+                      {knowledge.effects.negative.map((e, idx) => (
+                        <li key={idx} className="text-xs text-gray-300">{e}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <p className="text-xs text-gray-500">
+                  Intensity: <span className="text-gray-300 capitalize">{knowledge.effects.intensity}</span>
+                </p>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400">No AI explanation available</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  This yoga is not yet in the knowledge base — explanation is limited to formation rules
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
     </div>
   );
+}
+
+function getOrdinalSuffix(n: number): string {
+  const s = ['th', 'st', 'nd', 'rd'];
+  const v = n % 100;
+  return s[(v - 20) % 10] || s[v] || s[0];
 }
