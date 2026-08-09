@@ -28,6 +28,7 @@ import {
   type PredictionGraph,
   type PredictionNode,
   type RelatedRuleEntry,
+  type PredictionFactor,
 } from "./types";
 import type { AvasthaListResponse } from "@/lib/avastha";
 import type { AllShadbalaResponse } from "@/lib/shadbala";
@@ -76,8 +77,66 @@ function categoriesFromNodes(nodes: PredictionNode[]): CategoryTotal[] {
   return Array.from(byCategory.values());
 }
 
-function dataSourcesFromNodes(nodes: PredictionNode[]): DataSourceEntry[] {
-  return nodes.map((n) => ({ id: n.id, label: n.label, available: !n.unavailable, reason: n.unavailableReason }));
+function dataSourcesFromNodes(nodes: PredictionNode[], allFactors: PredictionFactor[]): DataSourceEntry[] {
+  const dataSourcesMap = new Map<string, Omit<DataSourceEntry, "usedBy"> & { usedBy: Set<string> }>();
+
+  for (const node of nodes) {
+    const id = node.id;
+    let entry = dataSourcesMap.get(id);
+
+    if (!entry) {
+      let sourceLocation: string | undefined;
+      if (node.source.length > 0) {
+        sourceLocation = node.source.join(", ");
+      } else if (id === "natal_chart") {
+        sourceLocation = "Backend Charting Engine";
+      } else if (id === "avastha") {
+        sourceLocation = "/api/v1/avastha";
+      } else if (id === "shadbala") {
+        sourceLocation = "/api/v1/shadbala/all";
+      } else if (id === "transit") {
+        sourceLocation = "Live Transit Engine";
+      }
+
+      entry = {
+        id: node.id,
+        label: node.label,
+        available: !node.unavailable,
+        reason: node.unavailableReason,
+        status: node.unavailable ? "Unavailable" : "Available",
+        sourceLocation,
+        fieldsConsumed: Array.from(new Set([...Object.keys(node.inputs), ...Object.keys(node.raw)])),
+        usedBy: new Set<string>(),
+        lastUpdated: id === "transit" ? "Live" : "N/A", // Placeholder, could be improved
+        impactIfUnavailable: node.unavailableReason ? `Confidence reduced: ${node.unavailableReason}` : undefined, // Placeholder
+      };
+      dataSourcesMap.set(id, entry);
+    }
+    
+    // Add this node's label to the 'usedBy' set of each of its sources (if available)
+    if (node.source.length > 0) {
+      for (const sourceId of node.source) {
+        let sourceEntry = dataSourcesMap.get(sourceId);
+        if (!sourceEntry) {
+          // Create a minimal entry if it doesn't exist yet
+          sourceEntry = {
+            id: sourceId,
+            label: allFactors.find(f => f.id === sourceId)?.label ?? sourceId,
+            available: true, // Assume available if it's a source for an available node
+            status: "Available",
+            usedBy: new Set<string>(),
+          };
+          dataSourcesMap.set(sourceId, sourceEntry);
+        }
+        sourceEntry.usedBy.add(node.label);
+      }
+    }
+  }
+
+  return Array.from(dataSourcesMap.values()).map((ds) => ({
+    ...ds,
+    usedBy: Array.from(ds.usedBy),
+  }));
 }
 
 /** Real classical citations behind this graph's matched yogas — pulled
@@ -174,7 +233,7 @@ export function buildPredictionGraph(area: LifeArea, result: WorkflowAnalysisRes
     nodes,
     categories: categoriesFromNodes(nodes),
     confidence: confidenceFromNodes(nodes),
-    dataSources: dataSourcesFromNodes(nodes),
+    dataSources: dataSourcesFromNodes(nodes, applicableFactors),
     dashaTimeline: buildDashaTimeline(result),
     relatedRules: relatedRulesFromNodes(nodes),
   };

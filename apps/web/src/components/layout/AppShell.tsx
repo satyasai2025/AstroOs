@@ -1,5 +1,6 @@
 "use client";
 
+import { AccountMenu } from "@/components/layout/AccountMenu";
 import { SearchBar } from "@/components/layout/SearchBar";
 import { ResearchModeToggle } from "@/components/research/ResearchModeToggle";
 import { tokenStore } from "@/lib/api";
@@ -14,37 +15,16 @@ interface NavItem {
   href: string;
   label: string;
   icon: string;
-  /** True for mockup-inspired items that don't have a real page/view yet
-   * — shown greyed out with a "Soon" tag rather than linking nowhere or
-   * being silently omitted. Keeps the section layout intact and honest
-   * about what's actually built. */
   disabled?: boolean;
   adminOnly?: boolean;
 }
 
 interface NavSection {
   title: string;
-  /** CSS custom-property name (see globals.css --section-*) — the mockup's
-   * top legend color-codes each of these areas (Dashboard=blue, Chart
-   * Workspace=orange, Research=purple, AI & Insights=pink, Admin=neutral),
-   * so each sidebar section gets its own accent instead of one global
-   * color everywhere. */
   color: string;
   items: NavItem[];
 }
 
-/**
- * Sidebar nav map (2026-07-24 redesign, rainbow-per-section palette added
- * 2026-07-24). Every enabled item points at a real, working route — the
- * 9-tab /charts page doesn't have separate routes per view, so Analysis
- * items deep-link via ?view=, which apps/charts/page.tsx now reads on
- * mount (see useSearchParams effect there). Items with no real backing
- * page/view (Yogas & Combinations, Ashtakavarga, Jaimini
- * Analysis, the AI & Insights pages, Knowledge Base, Pattern Discovery,
- * Case Studies, Settings, Documentation) are marked disabled rather than
- * fabricated — this app's standing rule is not to build UI that implies a
- * feature exists when it doesn't.
- */
 const NAV_SECTIONS: NavSection[] = [
   {
     title: "Charts",
@@ -77,6 +57,18 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    title: "Knowledge Graph",
+    color: "--section-research",
+    items: [
+      { href: "/knowledge-graph", label: "Visualizations", icon: "network" },
+      { href: "/knowledge-graph/explorer", label: "Graph Explorer", icon: "search" },
+      { href: "/knowledge-graph/entities", label: "Entity Browser", icon: "book", disabled: true },
+      { href: "/knowledge-graph/rules", label: "Rule Explorer", icon: "shield", disabled: true },
+      { href: "/knowledge-graph/saved", label: "Saved Graphs", icon: "camera", disabled: true },
+      { href: "/knowledge-graph/compare", label: "Graph Compare", icon: "layers", disabled: true },
+    ],
+  },
+  {
     title: "Research",
     color: "--section-research",
     items: [
@@ -97,16 +89,13 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: "System",
     color: "--section-system",
-    items: [
-      { href: "/settings/profile", label: "Settings", icon: "gear", disabled: false },
-      { href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true },
-    ],
+    items: [{ href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true }],
   },
 ];
 
 const _FLAT_LINKS = NAV_SECTIONS.flatMap((s) => s.items).filter((i) => !i.disabled);
 
-function NavIcon({ name }: { name: string }) {
+export function NavIcon({ name }: { name: string }) {
   const common = {
     width: 16,
     height: 16,
@@ -240,6 +229,59 @@ function NavIcon({ name }: { name: string }) {
           <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
         </svg>
       );
+    case "user":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21v-1a6 6 0 0 1 12 0v1" />
+        </svg>
+      );
+    case "star":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4" />
+        </svg>
+      );
+    case "cpu":
+      return (
+        <svg {...common}>
+          <path d="M12 8V4H8" />
+          <rect width="16" height="12" x="4" y="8" rx="2" />
+          <path d="M2 14h2M20 14h2M15 13v2M9 13v2" />
+        </svg>
+      );
+    case "palette":
+      return (
+        <svg {...common}>
+          <circle cx="13.5" cy="6.5" r="2.5" />
+          <circle cx="17.5" cy="10.5" r="2.5" />
+          <circle cx="8.5" cy="7.5" r="2.5" />
+          <circle cx="6.5" cy="12.5" r="2.5" />
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2Z" />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg {...common}>
+          <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
+        </svg>
+      );
+    case "database":
+      return (
+        <svg {...common}>
+          <ellipse cx="12" cy="5" rx="9" ry="3" />
+          <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+          <path d="M3 12a9 3 0 0 0 18 0" />
+        </svg>
+      );
+    case "info":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4M12 8h.01" />
+        </svg>
+      );
     case "document":
       return (
         <svg {...common}>
@@ -256,25 +298,6 @@ function NavIcon({ name }: { name: string }) {
   }
 }
 
-/**
- * Wraps every authenticated page: redirects to /login if there's no
- * valid session, otherwise renders the sidebar nav + top bar + page
- * content.
- *
- * Client-side only guard (no middleware.ts in this app) — matches the
- * rest of the auth flow, which is entirely token-in-localStorage +
- * TanStack Query, not cookie/session based.
- *
- * `sectionColor` (optional) — a --section-* CSS variable name from
- * globals.css (e.g. "--section-analysis"). When passed, it overrides
- * --accent/--accent-hover for everything inside <main>. Because nearly
- * every chart/panel component already reads its accent color via
- * `var(--accent)` instead of a hardcoded hex, this one override cascades
- * through the whole page's component tree via normal CSS custom-property
- * inheritance — no per-component edits needed to recolor a whole section
- * (Charts=blue default, Analysis=orange, Research=purple, AI &
- * Insights=pink, System=neutral, matching the sidebar's section dots).
- */
 export function AppShell({
   children,
   sectionColor,
@@ -290,6 +313,15 @@ export function AppShell({
   const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const { theme, toggle } = useTheme();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      const stored = localStorage.getItem("sidebar:collapsed");
+      return stored === "true";
+    } catch {
+      return false;
+    }
+  });
 
   const hasToken = typeof window !== "undefined" && !!tokenStore.getAccess();
 
@@ -316,7 +348,7 @@ export function AppShell({
   }
 
   if (isError || !user) {
-    return null; // redirect effect above is already firing
+    return null;
   }
 
   const isActive = (href: string) => {
@@ -325,30 +357,65 @@ export function AppShell({
     return pathname === base || (base !== "/dashboard" && base !== "/charts" && pathname.startsWith(base));
   };
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed((v) => {
+      const next = !v;
+      try {
+        localStorage.setItem("sidebar:collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  };
+
   return (
     <div className="flex min-h-dvh" style={{ backgroundColor: "var(--bg-primary)" }}>
       {/* ── Sidebar (desktop) ── */}
       <aside
-        className="sticky top-0 hidden h-dvh w-64 flex-shrink-0 flex-col overflow-y-auto border-r px-3 py-5 lg:flex"
+        className={`sticky top-0 hidden h-dvh flex-shrink-0 flex-col overflow-y-auto border-r px-3 py-5 lg:flex transition-all duration-200 ${
+          sidebarCollapsed ? "w-16" : "w-64"
+        }`}
         style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
         aria-label="Main navigation"
+        aria-expanded={!sidebarCollapsed}
       >
-        <Link href="/dashboard" className="mb-6 flex items-center gap-2 px-2" aria-label="AstroOS home">
-          <span
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold"
-            style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+        <div className={`mb-6 flex items-center gap-2 px-2 ${sidebarCollapsed ? "flex-col" : ""}`}>
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2"
+            aria-label="AstroOS home"
+            title={sidebarCollapsed ? "AstroOS" : undefined}
           >
-            ॐ
-          </span>
-          <span className="leading-tight">
-            <span className="block text-sm font-bold tracking-wide" style={{ color: "var(--text-primary)" }}>
-              ASTRO<span style={{ color: "var(--accent)" }}>OS</span>
+            <span
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold"
+              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+            >
+              ॐ
             </span>
-            <span className="block text-[10px]" style={{ color: "var(--text-muted)" }}>
-              Vedic Research Platform
-            </span>
-          </span>
-        </Link>
+            {!sidebarCollapsed && (
+              <span className="leading-tight">
+                <span className="block text-sm font-bold tracking-wide" style={{ color: "var(--text-primary)" }}>
+                  ASTRO<span style={{ color: "var(--accent)" }}>OS</span>
+                </span>
+                <span className="block text-[10px]" style={{ color: "var(--text-muted)" }}>
+                  Vedic Research Platform
+                </span>
+              </span>
+            )}
+          </Link>
+
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            className="theme-toggle ml-auto hidden h-8 w-8 flex-shrink-0 items-center justify-center rounded transition-colors lg:flex"
+            style={{ color: "var(--text-secondary)" }}
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {sidebarCollapsed ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
+            </svg>
+          </button>
+        </div>
 
         <nav className="flex flex-1 flex-col gap-5">
           {NAV_SECTIONS.map((section) => {
@@ -370,18 +437,20 @@ export function AppShell({
                         key={item.label}
                         className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-xs"
                         style={{ color: "var(--text-muted)", opacity: 0.55, cursor: "default" }}
-                        title="Not built yet"
+                        title={sidebarCollapsed ? item.label : "Not built yet"}
                       >
                         <span className="flex items-center gap-2">
                           <NavIcon name={item.icon} />
-                          {item.label}
+                          {!sidebarCollapsed && item.label}
                         </span>
-                        <span
-                          className="rounded-full px-1.5 py-0.5 text-[9px] uppercase tracking-wide"
-                          style={{ border: "1px solid var(--border-primary)" }}
-                        >
-                          Soon
-                        </span>
+                        {!sidebarCollapsed && (
+                          <span
+                            className="rounded-full px-1.5 py-0.5 text-[9px] uppercase tracking-wide"
+                            style={{ border: "1px solid var(--border-primary)" }}
+                          >
+                            Soon
+                          </span>
+                        )}
                       </span>
                     ) : (
                       <Link
@@ -401,20 +470,16 @@ export function AppShell({
                         onClick={
                           item.href === "/dashboard" && item.label === "New Chart"
                             ? () => {
-                                // Same-route Link clicks don't re-run anything in
-                                // Next.js, so without this a user already on
-                                // /dashboard sees literally no response from
-                                // clicking this — open the Create Chart modal
-                                // ourselves instead of relying on navigation.
                                 clearWorkflowResult();
                                 openCreateModal();
                               }
                             : undefined
                         }
                         aria-current={isActive(item.href) ? "page" : undefined}
+                        title={sidebarCollapsed ? item.label : undefined}
                       >
                         <NavIcon name={item.icon} />
-                        {item.label}
+                        {!sidebarCollapsed && item.label}
                       </Link>
                     ),
                   )}
@@ -462,19 +527,20 @@ export function AppShell({
           <SearchBar />
 
           <div className="flex items-center gap-3">
-            <span className="hidden text-sm sm:inline" style={{ color: "var(--text-secondary)" }}>
-              {user.display_name}{" "}
-              <span
-                className="rounded-full px-2 py-0.5 text-xs uppercase tracking-wide"
-                style={{
-                  border: "1px solid var(--border-primary)",
-                  backgroundColor: "var(--bg-card)",
-                  color: "var(--accent)",
-                }}
+            {sidebarCollapsed && (
+              <button
+                type="button"
+                onClick={toggleSidebar}
+                className="theme-toggle hidden h-8 w-8 items-center justify-center rounded transition-colors lg:flex"
+                style={{ color: "var(--text-secondary)" }}
+                aria-label="Expand sidebar"
+                title="Expand sidebar"
               >
-                {user.role}
-              </span>
-            </span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+            )}
 
             <ResearchModeToggle compact />
 
@@ -525,6 +591,8 @@ export function AppShell({
                 </svg>
               )}
             </button>
+
+            <AccountMenu user={user} />
           </div>
         </header>
 

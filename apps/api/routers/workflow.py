@@ -64,6 +64,8 @@ from apps.api.schemas.workflow import (
     VerificationSummaryResponse,
     WorkflowAnalysisRequest,
     WorkflowAnalysisResponse,
+    WorkflowDuplicateCheckRequest,
+    WorkflowDuplicateCheckResponse,
 )
 from apps.api.schemas.yoga import YogaEvaluationResponse
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
@@ -258,6 +260,47 @@ async def analyze_workflow(
 
 
 @router.post(
+    "/check-existing",
+    response_model=WorkflowDuplicateCheckResponse,
+    summary="Check whether a saved chart already matches this exact birth data",
+    description=(
+        "Looks up whether this user already has a saved chart matching "
+        "(birth_datetime_utc, latitude, longitude, ayanamsa, house_system) "
+        "exactly — the same natural key POST /workflow/analyze dedups on "
+        "when persist=true. Two different people can share an exact birth "
+        "moment and location (e.g. a coincidence, or precision-matched "
+        "coordinates), so a match here does not mean 'this is the same "
+        "person' — it's a prompt for the caller to ask the user whether to "
+        "open the existing chart or save a new one anyway with force_new=true."
+    ),
+)
+@limiter.limit("30/minute")
+async def check_existing_chart(
+    request: Request,
+    body: WorkflowDuplicateCheckRequest,
+    current_user: User = Depends(get_current_user_from_bearer),
+    session: AsyncSession = Depends(get_db_session),
+) -> WorkflowDuplicateCheckResponse:
+    repo = BirthChartRepository(session)
+    existing = await repo.find_existing(
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+        user_id=current_user.id.value,
+    )
+    if existing is None:
+        return WorkflowDuplicateCheckResponse(exists=False)
+    return WorkflowDuplicateCheckResponse(
+        exists=True,
+        chart_id=existing.id,
+        subject_name=existing.subject_name,
+        saved_at=existing.created_at,
+    )
+
+
+@router.post(
     "/bulk-import",
     response_model=BulkImportResponse,
     summary="Bulk-import saved charts from birth-data rows (e.g. a CSV/JSON upload)",
@@ -276,11 +319,25 @@ async def bulk_import(
     body: BulkImportRequest,
     current_user: User = Depends(get_current_user_from_bearer),
     orchestrator: WorkflowOrchestrator = Depends(_get_orchestrator),
+    session: AsyncSession = Depends(get_db_session),
 ) -> BulkImportResponse:
     results: list[BulkImportRowResult] = []
+    chart_repo = BirthChartRepository(session)
 
     for i, row in enumerate(body.rows):
         try:
+            matched_existing = False
+            if not row.force_new:
+                existing = await chart_repo.find_existing(
+                    birth_datetime_utc=row.birth_datetime_utc,
+                    latitude=row.latitude,
+                    longitude=row.longitude,
+                    ayanamsa=row.ayanamsa,
+                    house_system=row.house_system,
+                    user_id=current_user.id.value,
+                )
+                matched_existing = existing is not None
+
             analyze_request = WorkflowAnalysisRequest(
                 birth_datetime_utc=row.birth_datetime_utc,
                 latitude=row.latitude,
@@ -292,6 +349,7 @@ async def bulk_import(
                 subject_name=row.subject_name,
                 place_name=row.place_name,
                 persist=True,
+                force_new=row.force_new,
             )
             result = await orchestrator.analyze(analyze_request, user_id=current_user.id.value)
             results.append(
@@ -300,6 +358,7 @@ async def bulk_import(
                     subject_name=row.subject_name,
                     success=True,
                     chart_id=result.chart_id,
+                    matched_existing=matched_existing,
                 )
             )
         except ValueError as exc:

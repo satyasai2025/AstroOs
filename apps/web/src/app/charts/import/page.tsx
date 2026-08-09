@@ -2,10 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
-import { useBulkImportCharts } from "@/lib/workflow";
+import { useAnalyzeWorkflow, useBulkImportCharts, useCheckExistingChart } from "@/lib/workflow";
 import { ApiError } from "@/lib/api";
-import type { AyanamsaCode, BulkImportRow, HouseSystemCode } from "@/lib/types";
+import { parseJhdFile, type JhdParsePreview } from "@/lib/jhd-import";
+import type {
+  AyanamsaCode,
+  BulkImportRow,
+  HouseSystemCode,
+  WorkflowAnalysisRequest,
+  WorkflowDuplicateCheckResponse,
+} from "@/lib/types";
 
 const VALID_AYANAMSAS: AyanamsaCode[] = ["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"];
 const VALID_HOUSE_SYSTEMS: HouseSystemCode[] = ["W", "P", "K", "E"];
@@ -153,10 +161,25 @@ function parseFile(name: string, text: string): ParsedRow[] {
 }
 
 export default function ImportChartPage() {
+  const router = useRouter();
   const [fileName, setFileName] = useState<string | null>(null);
   const [parsedRows, setParsedRows] = useState<ParsedRow[]>([]);
   const [parseError, setParseError] = useState<string | null>(null);
   const bulkImport = useBulkImportCharts();
+  // When checked, every row is saved as a new chart even if it exactly
+  // matches an already-saved one — off by default (reuse matches, same as
+  // before this existed), since two different people sharing an exact
+  // birth moment/location is the exception, not the norm, for a bulk file.
+  const [forceNewBulk, setForceNewBulk] = useState(false);
+
+  // .jhd (Jagannatha Hora) is a single-chart file, not a bulk row table —
+  // parsed client-side, then created through the same single-chart pipeline
+  // as the dashboard's "New Chart" flow instead of /workflow/bulk-import.
+  const [jhdPreview, setJhdPreview] = useState<JhdParsePreview | null>(null);
+  const [jhdRequest, setJhdRequest] = useState<WorkflowAnalysisRequest | null>(null);
+  const analyzeJhd = useAnalyzeWorkflow();
+  const checkExisting = useCheckExistingChart();
+  const [jhdDuplicate, setJhdDuplicate] = useState<WorkflowDuplicateCheckResponse | null>(null);
 
   const validRows = parsedRows.filter((r) => r.row).map((r) => r.row!);
   const invalidCount = parsedRows.length - validRows.length;
@@ -165,7 +188,25 @@ export default function ImportChartPage() {
     setFileName(file.name);
     setParseError(null);
     setParsedRows([]);
+    setJhdPreview(null);
+    setJhdRequest(null);
+    setJhdDuplicate(null);
     bulkImport.reset();
+    analyzeJhd.reset();
+    checkExisting.reset();
+
+    if (file.name.toLowerCase().endsWith(".jhd")) {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const result = parseJhdFile(file.name, bytes);
+      if (result.error || !result.request || !result.preview) {
+        setParseError(result.error ?? "Could not parse this .jhd file.");
+        return;
+      }
+      setJhdPreview(result.preview);
+      setJhdRequest(result.request);
+      return;
+    }
+
     try {
       const text = await file.text();
       const rows = parseFile(file.name.toLowerCase(), text);
@@ -181,7 +222,44 @@ export default function ImportChartPage() {
   };
 
   const handleImport = () => {
-    bulkImport.mutate(validRows);
+    bulkImport.mutate(validRows.map((r) => ({ ...r, force_new: forceNewBulk })));
+  };
+
+  const handleCreateFromJhd = () => {
+    if (!jhdRequest) return;
+    setJhdDuplicate(null);
+    checkExisting.mutate(
+      {
+        birth_datetime_utc: jhdRequest.birth_datetime_utc,
+        latitude: jhdRequest.latitude,
+        longitude: jhdRequest.longitude,
+        ayanamsa: jhdRequest.ayanamsa,
+        house_system: jhdRequest.house_system,
+      },
+      {
+        onSuccess: (result) => {
+          if (result.exists) {
+            setJhdDuplicate(result);
+          } else {
+            analyzeJhd.mutate(jhdRequest, {
+              onSuccess: (data) => router.push(`/charts/${data.chart_id}`),
+            });
+          }
+        },
+        onError: () =>
+          analyzeJhd.mutate(jhdRequest, {
+            onSuccess: (data) => router.push(`/charts/${data.chart_id}`),
+          }),
+      },
+    );
+  };
+
+  const handleSaveJhdAsNewAnyway = () => {
+    if (!jhdRequest) return;
+    analyzeJhd.mutate(
+      { ...jhdRequest, force_new: true },
+      { onSuccess: (data) => router.push(`/charts/${data.chart_id}`) },
+    );
   };
 
   const downloadTemplate = () => {
@@ -218,11 +296,11 @@ export default function ImportChartPage() {
 
       <div className="obsidian-card p-5">
         <label className="mb-2 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
-          Choose a .csv or .json file
+          Choose a .csv, .json, or .jhd file
         </label>
         <input
           type="file"
-          accept=".csv,.json"
+          accept=".csv,.json,.jhd"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) void handleFile(file);
@@ -231,6 +309,7 @@ export default function ImportChartPage() {
         />
         <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
           Required columns: subject_name, birth_datetime_utc (ISO, UTC), latitude, longitude. Optional: place_name, ayanamsa, house_system.
+          {" "}Also accepts a single Jagannatha Hora (.jhd) birth file — creates one chart directly, no bulk row table.
         </p>
 
         {parseError && (
@@ -284,14 +363,106 @@ export default function ImportChartPage() {
               </table>
             </div>
 
+            <label className="mt-3 flex items-center gap-2 text-xs" style={{ color: "var(--text-secondary)" }}>
+              <input
+                type="checkbox"
+                checked={forceNewBulk}
+                onChange={(e) => setForceNewBulk(e.target.checked)}
+                className="h-4 w-4 rounded"
+              />
+              Always save as a new chart, even if a row&apos;s birth data matches an existing saved chart
+              (two different people can share an exact birth moment and place).
+            </label>
+
             <button
               type="button"
               onClick={handleImport}
               disabled={validRows.length === 0 || bulkImport.isPending}
-              className="obsidian-btn-primary mt-4 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+              title="Bulk imports are limited to 5 uploads per hour, up to 100 rows each."
+              className="obsidian-btn-primary mt-3 text-sm disabled:cursor-not-allowed disabled:opacity-40"
             >
               {bulkImport.isPending ? "Importing…" : `Import ${validRows.length} Chart${validRows.length === 1 ? "" : "s"}`}
             </button>
+            <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
+              Limited to 5 bulk imports per hour, up to 100 rows each.
+            </p>
+          </div>
+        )}
+
+        {jhdPreview && (
+          <div className="mt-4">
+            <p className="mb-2 text-sm" style={{ color: "var(--text-primary)" }}>
+              {fileName}: <span style={{ color: "#4ade80" }}>parsed</span>
+            </p>
+            <div className="rounded-lg border p-4 text-sm" style={{ borderColor: "var(--border-primary)" }}>
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
+                <dt style={{ color: "var(--text-muted)" }}>Subject</dt>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.subject_name}</dd>
+                <dt style={{ color: "var(--text-muted)" }}>Birth (local, as stored in file)</dt>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.birth_local}</dd>
+                <dt style={{ color: "var(--text-muted)" }}>Latitude</dt>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.latitude.toFixed(4)}</dd>
+                <dt style={{ color: "var(--text-muted)" }}>Longitude</dt>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.longitude.toFixed(4)}</dd>
+                <dt style={{ color: "var(--text-muted)" }}>Ayanamsa / House system</dt>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.ayanamsa} / {jhdPreview.house_system}</dd>
+              </dl>
+            </div>
+
+            {jhdDuplicate?.exists ? (
+              <div
+                className="mt-4 rounded-lg border p-4"
+                style={{ borderColor: "#f59e0b", backgroundColor: "rgba(245,158,11,0.08)" }}
+              >
+                <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
+                  A saved chart already matches this exact birth date, time, and location
+                </p>
+                <p className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+                  Saved as &ldquo;{jhdDuplicate.subject_name}&rdquo;
+                  {jhdDuplicate.saved_at && ` on ${new Date(jhdDuplicate.saved_at).toLocaleDateString()}`}.
+                  This could be the same chart, or a different person born at the same moment.
+                </p>
+                <div className="mt-3 flex gap-2">
+                  {jhdDuplicate.chart_id && (
+                    <Link href={`/charts/${jhdDuplicate.chart_id}`} className="obsidian-btn-secondary text-xs">
+                      View Existing Chart
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleSaveJhdAsNewAnyway}
+                    disabled={analyzeJhd.isPending}
+                    className="obsidian-btn-primary text-xs"
+                  >
+                    {analyzeJhd.isPending ? "Creating…" : "Save as New Chart Anyway"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setJhdDuplicate(null)}
+                    className="text-xs"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleCreateFromJhd}
+                disabled={analyzeJhd.isPending || checkExisting.isPending}
+                title="Runs the full analysis pipeline once, same as New Chart — not subject to the bulk-import rate limit."
+                className="obsidian-btn-primary mt-4 text-sm disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {analyzeJhd.isPending ? "Creating…" : checkExisting.isPending ? "Checking…" : "Create Chart"}
+              </button>
+            )}
+
+            {analyzeJhd.isError && (
+              <p className="mt-2 text-sm" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
+                {analyzeJhd.error instanceof ApiError ? analyzeJhd.error.detail : "Could not create this chart."}
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -322,7 +493,13 @@ export default function ImportChartPage() {
               <li key={r.row_index} className="flex items-center justify-between border-b py-1" style={{ borderColor: "var(--border-primary)" }}>
                 <span style={{ color: "var(--text-primary)" }}>{r.subject_name}</span>
                 {r.success ? (
-                  <span style={{ color: "#4ade80" }}>Created</span>
+                  r.matched_existing ? (
+                    <span title="Birth data matched an already-saved chart, so that chart was reused instead of creating a new one." style={{ color: "#f59e0b" }}>
+                      Matched existing chart
+                    </span>
+                  ) : (
+                    <span style={{ color: "#4ade80" }}>Created</span>
+                  )
                 ) : (
                   <span style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>{r.error}</span>
                 )}

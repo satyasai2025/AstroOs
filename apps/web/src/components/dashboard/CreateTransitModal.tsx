@@ -1,18 +1,11 @@
 "use client";
 
-import { Badge, Button, Card, KpiCard } from "@/components/ui";
+import { Badge, Button, Card } from "@/components/ui";
 import { useMyCharts } from "@/lib/charts";
 import { useWorkflowStore } from "@/lib/store";
-import { useLiveTransit } from "@/lib/transitPatterns";
-import type {
-  AyanamsaCode,
-  BirthChartSummary,
-  HouseSystemCode,
-  TransitRequest,
-  TransitResponse,
-} from "@/lib/types";
+import type { AyanamsaCode, BirthChartSummary, HouseSystemCode } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   open: boolean;
@@ -43,84 +36,60 @@ export function CreateTransitModal({ open, onClose }: Props) {
   const [transitDate, setTransitDate] = useState(todayIsoDate);
   const [transitTime, setTransitTime] = useState("10:30");
   const [datePreset, setDatePreset] = useState<"today" | "tomorrow" | "custom">("today");
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [transitData, setTransitData] = useState<TransitResponse | null>(null);
   const [selectedChart, setSelectedChart] = useState<BirthChartSummary | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Each step starts scrolled to the top — otherwise a step 1 chart list
+  // scrolled down carries that scroll offset into the next step, pushing
+  // its content below the fold with nothing to indicate more exists above.
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [step]);
 
   const myCharts = useMyCharts();
   const charts: BirthChartSummary[] = myCharts.data?.charts ?? [];
   const isLoadingCharts = myCharts.isLoading;
   const fetchError = myCharts.isError ? "Failed to load your charts. Please try again." : null;
 
-  const transitDatetimeUtc = useMemo(() => {
-    if (!transitDate || !transitTime) return undefined;
-    return new Date(`${transitDate}T${transitTime}`).toISOString();
-  }, [transitDate, transitTime]);
-
-  // Prefer the user-selected chart; fall back to the workflow store's active chart.
-  const transitRequest: TransitRequest | null = useMemo(() => {
-    if (!transitDatetimeUtc) return null;
-
-    if (selectedChart) {
-      return {
-        birth_datetime_utc: selectedChart.birth_datetime_utc,
-        latitude: selectedChart.birth_latitude,
-        longitude: selectedChart.birth_longitude,
-        ayanamsa: selectedChart.ayanamsa as AyanamsaCode,
-        house_system: selectedChart.house_system as HouseSystemCode,
-        transit_datetime_utc: transitDatetimeUtc,
-      };
-    }
-
-    if (!request) return null;
-    return {
-      birth_datetime_utc: request.birth_datetime_utc,
-      latitude: request.latitude,
-      longitude: request.longitude,
-      ayanamsa: request.ayanamsa,
-      house_system: request.house_system,
-      transit_datetime_utc: transitDatetimeUtc,
-    };
-  }, [transitDatetimeUtc, selectedChart, request]);
-
-  const liveTransit = useLiveTransit(transitRequest);
-  const transits = liveTransit.data;
-
-  useEffect(() => {
-    if (transitRequest && transits) {
-      setIsAnalyzing(false);
-      setTransitData(transits);
-      // Auto-advance to Review & Confirm once the analysis completes.
-      setStep(3);
-    }
-  }, [transits, transitRequest]);
-
-  function handleAnalyze() {
-    if (!transitRequest || !transitDate) return;
-    setIsAnalyzing(true);
-    setTransitData(null);
-    liveTransit.refetch();
-    setStep(2);
-  }
-
+  // Actually running the transit analysis is /charts/transit's job, not
+  // this modal's — it just collects which chart + which moment, then hands
+  // both off. This avoids fetching (and re-fetching) transit data twice.
   function handleViewReport() {
-    const encoded = encodeURIComponent(`${transitDate}T${transitTime}`);
-    router.push(`/transit/${encoded}`);
+    if (selectedChart) {
+      setTransitChart(selectedChart);
+    }
+    const params = new URLSearchParams({ date: transitDate, time: transitTime });
+    router.push(`/charts/transit?${params.toString()}`);
     // Defer the close so the navigation isn't swallowed by the modal unmount.
     setTimeout(() => onClose(), 0);
   }
 
+  // Function to remove duplicate controls (cleaner navigation)
+  const getStepActionControls = () => {
+    if (step === 1) {
+      // Step 1: Only footer "Continue →" button, no inline analyze button
+      return null;
+    } else if (step === 2) {
+      // Step 2: Only footer "Continue →" button, no inline analyze button
+      return null;
+    } else if (step === 3) {
+      // Step 3: Single "View Transit Analysis →" action button, no duplicate back button
+      return null;
+    }
+    return null;
+  };
+
   function handleSelectChart(chart: BirthChartSummary) {
     setSelectedChart(chart);
-    setTransitChart(chart);
-    setTransitData(null);
+    setSearchQuery("");
+    setShowSearchResults(false);
     setStep(2);
   }
 
   function handleSelectActiveChart() {
     setSelectedChart(null);
-    setTransitChart(null);
-    setTransitData(null);
     setStep(2);
   }
 
@@ -136,7 +105,6 @@ export function CreateTransitModal({ open, onClose }: Props) {
   function applyPreset(preset: "today" | "tomorrow") {
     setDatePreset(preset);
     setTransitDate(preset === "today" ? todayIsoDate() : tomorrowIsoDate());
-    setTransitData(null);
   }
 
   if (!open) return null;
@@ -238,7 +206,7 @@ export function CreateTransitModal({ open, onClose }: Props) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div ref={contentRef} className="flex-1 overflow-y-auto p-5">
           {step === 1 && (
             <div className="mx-auto max-w-2xl">
               <div className="mb-6">
@@ -290,6 +258,65 @@ export function CreateTransitModal({ open, onClose }: Props) {
                   </button>
                 </div>
               )}
+
+              <div className="relative mb-4">
+                <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-muted)" }}>
+                  Search Saved Charts
+                </label>
+                <input
+                  type="text"
+                  placeholder="Search by name or place..."
+                  value={searchQuery}
+                  onFocus={() => setShowSearchResults(true)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSearchResults(true);
+                  }}
+                  className="obsidian-input w-full"
+                />
+                {showSearchResults && searchQuery.trim() !== "" && (
+                  <div
+                    className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border p-1 shadow-2xl"
+                    style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}
+                  >
+                    {isLoadingCharts ? (
+                      <p className="px-2 py-1.5 text-[11px]" style={{ color: "var(--text-muted)" }}>Loading your saved charts…</p>
+                    ) : fetchError ? (
+                      <p className="px-2 py-1.5 text-[11px]" style={{ color: "var(--status-danger)" }}>{fetchError}</p>
+                    ) : (
+                      (() => {
+                        const q = searchQuery.trim().toLowerCase();
+                        const matches = charts.filter(
+                          (c) =>
+                            c.subject_name.toLowerCase().includes(q) ||
+                            (c.place_name ?? "").toLowerCase().includes(q),
+                        );
+                        if (matches.length === 0) {
+                          return (
+                            <p className="px-2 py-1.5 text-[11px]" style={{ color: "var(--text-muted)" }}>
+                              No saved chart matches &ldquo;{searchQuery.trim()}&rdquo;.
+                            </p>
+                          );
+                        }
+                        return matches.map((c) => (
+                          <div
+                            key={c.id}
+                            onClick={() => handleSelectChart(c)}
+                            className="cursor-pointer rounded-md p-2 text-xs transition hover:opacity-80"
+                            style={{ backgroundColor: "transparent" }}
+                          >
+                            <p className="font-semibold" style={{ color: "var(--text-primary)" }}>{c.subject_name}</p>
+                            <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                              {c.birth_datetime_utc.split("T")[0]}
+                              {c.place_name ? ` · ${c.place_name}` : ""}
+                            </p>
+                          </div>
+                        ));
+                      })()
+                    )}
+                  </div>
+                )}
+              </div>
 
               <p className="mb-2 text-xs font-medium" style={{ color: "var(--text-muted)" }}>
                 {request ? "SAVED CHARTS" : "YOUR CHARTS"}
@@ -416,7 +443,6 @@ export function CreateTransitModal({ open, onClose }: Props) {
                     onChange={(e) => {
                       setTransitDate(e.target.value);
                       setDatePreset("custom");
-                      setTransitData(null);
                     }}
                     className="obsidian-input w-full [color-scheme:dark]"
                   />
@@ -428,10 +454,7 @@ export function CreateTransitModal({ open, onClose }: Props) {
                   <input
                     type="time"
                     value={transitTime}
-                    onChange={(e) => {
-                      setTransitTime(e.target.value);
-                      setTransitData(null);
-                    }}
+                    onChange={(e) => setTransitTime(e.target.value)}
                     className="obsidian-input w-full [color-scheme:dark]"
                   />
                 </div>
@@ -468,51 +491,10 @@ export function CreateTransitModal({ open, onClose }: Props) {
                   </p>
                 </div>
               </div>
-
-              <Button
-                fullWidth
-                size="lg"
-                onClick={handleAnalyze}
-                disabled={!transitDate || isAnalyzing}
-              >
-                {isAnalyzing ? (
-                  <>
-                    <span className="inline-block mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-                    Analyzing...
-                  </>
-                ) : (
-                  "Analyze Transit"
-                )}
-              </Button>
-
-              {isAnalyzing && (
-                <div className="mt-6 flex items-center justify-center py-8">
-                  <div className="text-center">
-                    <div className="mb-3 inline-block h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }} />
-                    <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                      Analyzing transits for {transitDate}...
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {transitData && !isAnalyzing && (
-                <Card style={{ marginTop: "1.5rem" }}>
-                  <h3 className="mb-4 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-                    Transit Overview
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    <KpiCard label="Active Transits" value={String(transitData.planets?.length || 0)} accent="cyan" />
-                    <KpiCard label="Benefic" value={String(transitData.planets?.filter((p) => p.is_favorable_house === true).length || 0)} accent="success" />
-                    <KpiCard label="Challenging" value={String(transitData.planets?.filter((p) => p.is_favorable_house === false).length || 0)} accent="gold" />
-                    <KpiCard label="Retrograde" value={String(transitData.planets?.filter((p) => p.is_retrograde).length || 0)} accent="violet" />
-                  </div>
-                </Card>
-              )}
             </div>
           )}
 
-          {step === 3 && transitData && (
+          {step === 3 && (
             <div className="mx-auto max-w-4xl">
               <div className="mb-6">
                 <h2 className="mb-2 text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
@@ -561,24 +543,15 @@ export function CreateTransitModal({ open, onClose }: Props) {
                     <span className="ml-2" style={{ color: "var(--text-primary)" }}>{transitTime}</span>
                   </div>
                   <div>
-                    <span style={{ color: "var(--text-muted)" }}>Active Planets:</span>
-                    <span className="ml-2" style={{ color: "var(--text-primary)" }}>{transitData.planets?.length || 0}</span>
-                  </div>
-                  <div>
                     <span style={{ color: "var(--text-muted)" }}>House System:</span>
                     <span className="ml-2" style={{ color: "var(--text-primary)" }}>{activeHouseSystem}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-between">
-                <Button variant="secondary" onClick={() => setStep(2)}>
-                  ← Back
-                </Button>
-                <Button onClick={handleViewReport}>
-                  View Transit Analysis →
-                </Button>
-              </div>
+              <Button fullWidth size="lg" onClick={handleViewReport}>
+                View Transit Analysis →
+              </Button>
             </div>
           )}
         </div>
@@ -594,11 +567,21 @@ export function CreateTransitModal({ open, onClose }: Props) {
             >
               {step === 1 ? "Cancel" : "Back"}
             </button>
-            {step < 3 && (
+            {step === 1 && (
               <button
                 type="button"
-                onClick={() => step === 1 ? setStep(2) : setStep(3)}
-                disabled={step === 1 && charts.length === 0 && !request}
+                onClick={() => setStep(2)}
+                disabled={charts.length === 0 && !request}
+                className="obsidian-btn-primary text-sm"
+              >
+                Continue →
+              </button>
+            )}
+            {step === 2 && (
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                disabled={!transitDate}
                 className="obsidian-btn-primary text-sm"
               >
                 Continue →

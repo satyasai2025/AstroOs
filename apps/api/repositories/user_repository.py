@@ -176,6 +176,39 @@ class UserRepository:
         )
         await self._session.execute(stmt)
 
+    async def update_profile(
+        self,
+        user_id: UserId,
+        display_name: Optional[str] = None,
+        email: Optional[str] = None,
+    ) -> Optional[User]:
+        """
+        Update a user's own display_name and/or email.
+
+        Only non-None fields are changed. Returns the updated User, or None
+        if no matching (non-deleted) user exists.
+        """
+        values: dict = {}
+        if display_name is not None:
+            values["display_name"] = display_name.strip()
+        if email is not None:
+            values["email"] = email.lower().strip()
+
+        if not values:
+            return await self.get_by_id(user_id)
+
+        stmt = (
+            update(UserModel)
+            .where(UserModel.id == user_id.value)
+            .where(UserModel.deleted_at.is_(None))
+            .values(**values)
+            .returning(UserModel.id)
+        )
+        result = await self._session.execute(stmt)
+        if result.scalar_one_or_none() is None:
+            return None
+        return await self.get_by_id(user_id)
+
     async def create_reset_token(
         self,
         user_id: UserId,

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
@@ -9,29 +8,28 @@ import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
 import { PlanetRelationshipGraph } from "@/components/charts/PlanetRelationshipGraph";
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
-import { PlanetStrengthHeatmap } from "@/components/charts/PlanetStrengthHeatmap";
-import { PlanetStrengthRadar } from "@/components/charts/PlanetStrengthRadar";
+import { StrengthAnalysisCenter } from "@/components/charts/StrengthAnalysisCenter";
 import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
 import { TransitTimeline } from "@/components/charts/TransitTimeline";
 import { LifeEventTimeline } from "@/components/charts/LifeEventTimeline";
 import { PredictionChainExplorer } from "@/components/charts/PredictionChainExplorer";
 import { KPSignificatorExplorer } from "@/components/charts/KPSignificatorExplorer";
-import { IshtaKashtaBalaPanel } from "@/components/charts/IshtaKashtaBalaPanel";
-import { AvasthaPanel } from "@/components/charts/AvasthaPanel";
 import { NakshatraPadaSelector } from "@/components/charts/NakshatraPadaSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
 import InteractiveKundliView from "@/components/charts/InteractiveKundliView";
-import YogasPanel from "@/components/charts/YogasPanel";
+import { YogaIntelligenceDashboard } from "@/components/charts/YogaIntelligenceDashboard";
 import AshtakavargaPanel from "@/components/charts/AshtakavargaPanel";
 import JaiminiPanel from "@/components/charts/JaiminiPanel";
 import PlanetExplorerPanel from "@/components/charts/PlanetExplorerPanel";
 import DivisionalChartsPanel from "@/components/charts/DivisionalChartsPanel";
 import { useWorkflowStore } from "@/lib/store";
-import { tokenStore } from "@/lib/api";
+import { useMyCharts } from "@/lib/charts";
+import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
 import { formatPosition } from "@/lib/formatAstro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
+import type { WorkflowAnalysisRequest } from "@/lib/types";
 
 type ViewMode =
   | "kundli"
@@ -74,7 +72,6 @@ export default function ChartsPage() {
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [view, setView] = useState<ViewMode>("chart");
 
   useEffect(() => {
@@ -87,7 +84,7 @@ export default function ChartsPage() {
   const [selectedVarga, setSelectedVarga] = useState<string>("D1");
   const [activePlanet, setActivePlanet] = useState<string | null>(null);
   const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(null);
-  const [redirecting, setRedirecting] = useState(false);
+  const setResult = useWorkflowStore((s) => s.setResult);
 
   const handlePlanetHover = (planet: string | null) => {
     if (pinnedPlanet) return;
@@ -104,30 +101,49 @@ export default function ChartsPage() {
     }
   };
 
-  // When no chart is loaded in the workflow store, redirect to the most
-  // recent saved chart so the user can freely use sidebar navigation
-  // without being blocked by "No Chart Data Available".
+  // When no chart is loaded in the workflow store (fresh reload, or a
+  // direct link like /charts?view=houses), load the user's default saved
+  // chart in place — same pattern as /predictions — so the requested
+  // `?view=` is preserved instead of being dropped by a redirect to the
+  // separate /charts/[chartId] detail page.
+  const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
+  const analyze = useAnalyzeWorkflow();
+  const [autoRecomputeStarted, setAutoRecomputeStarted] = useState(false);
+
+  const targetSummary = chartsData
+    ? (chartsData.charts.find((c) => c.is_default) ?? chartsData.charts[0] ?? null)
+    : null;
+
   useEffect(() => {
-    if (result || redirecting) return;
-    let cancelled = false;
-    setRedirecting(true);
-    fetch("/api/v1/horoscope/my-charts?limit=1&offset=0", {
-      headers: { Authorization: `Bearer ${tokenStore.getAccess()}` },
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (cancelled || !data?.charts?.length) return;
-        router.replace(`/charts/${data.charts[0].id}`);
-      })
-      .catch(() => { /* ignore; user will see the empty state */ });
-    return () => { cancelled = true; };
-  }, [result, redirecting, router]);
+    if (result || autoRecomputeStarted || !targetSummary) return;
+    setAutoRecomputeStarted(true);
+    const req: WorkflowAnalysisRequest = {
+      birth_datetime_utc: targetSummary.birth_datetime_utc,
+      latitude: targetSummary.birth_latitude,
+      longitude: targetSummary.birth_longitude,
+      ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+      house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
+      dasha_system: "vimshottari",
+      include_vargas: true,
+      subject_name: targetSummary.subject_name,
+      place_name: targetSummary.place_name,
+      persist: false,
+      chart_id: targetSummary.id,
+    };
+    analyze.mutate(req, { onSuccess: (data) => setResult(data, req) });
+    // Fire once per targetSummary — analyze/setResult are stable references.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, autoRecomputeStarted, targetSummary]);
 
   if (!result) {
     return (
       <AppShell sectionColor="--section-analysis">
         <div className="flex flex-col items-center justify-center gap-4 py-20" role="status">
           <div className="glass-card flex flex-col items-center gap-4 p-8 text-center">
+            {chartsLoading || analyze.isPending ? (
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Loading chart data…</p>
+            ) : (
+              <>
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" style={{ color: "var(--text-muted)" }}>
               <circle cx="12" cy="12" r="10" />
               <path d="M12 6v6l4 2" />
@@ -135,6 +151,8 @@ export default function ChartsPage() {
             <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>No Chart Data Available</h2>
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Run an analysis on the Dashboard first to populate chart data.</p>
             <Link href="/dashboard" className="btn-primary">Go to Dashboard</Link>
+              </>
+            )}
           </div>
         </div>
       </AppShell>
@@ -338,11 +356,16 @@ export default function ChartsPage() {
       )}
 
       {view === "strength" && (
-        <div id="panel-strength" role="tabpanel" aria-label="Planet strength visualization panel" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <PlanetStrengthHeatmap shadbala={result.shadbala} />
-          <PlanetStrengthRadar strengths={chart.planet_strengths} shadbala={result.shadbala} />
-          <IshtaKashtaBalaPanel request={request} />
-          <AvasthaPanel request={request} />
+        <div id="panel-strength" role="tabpanel" aria-label="Strength Analysis Center">
+          <StrengthAnalysisCenter
+            strengths={chart.planet_strengths}
+            shadbala={result.shadbala}
+            request={request}
+            activePlanet={activePlanet}
+            pinnedPlanet={pinnedPlanet}
+            onPlanetHover={handlePlanetHover}
+            onPlanetClick={handlePlanetClick}
+          />
         </div>
       )}
 
@@ -384,7 +407,9 @@ export default function ChartsPage() {
       )}
 
       {view === "yogas" && (
-        <div id="panel-yogas" role="tabpanel" aria-label="Yogas and combinations panel"><YogasPanel result={result} /></div>
+        <div id="panel-yogas" role="tabpanel" aria-label="Yogas and combinations panel" className="h-[calc(100vh-200px)]">
+          <YogaIntelligenceDashboard result={result} request={request} />
+        </div>
       )}
 
       {view === "ashtakavarga" && (

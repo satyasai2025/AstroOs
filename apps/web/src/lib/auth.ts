@@ -17,6 +17,8 @@ import type {
   RegisterPayload,
   ResetPasswordPayload,
   User,
+  UpdateProfilePayload,
+  ChangePasswordPayload,
 } from "./types";
 
 // ── Query keys ────────────────────────────────────────────────────────────────
@@ -88,6 +90,35 @@ export function useLogout() {
   return useMutation<void, Error, void>({
     mutationFn: () => api.post<void>("/api/v1/auth/logout", {}),
     onSettled: () => {
+      tokenStore.clear();
+      queryClient.clear();
+    },
+  });
+}
+
+// ── Profile update ────────────────────────────────────────────────────────────
+
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+
+  return useMutation<User, Error, UpdateProfilePayload>({
+    mutationFn: (payload) =>
+      api.patch<User>("/api/v1/auth/me", payload),
+    onSuccess: (data) => {
+      queryClient.setQueryData(authKeys.me, data);
+    },
+  });
+}
+
+// ── Password change ───────────────────────────────────────────────────────────
+
+export function useChangePassword() {
+  const queryClient = useQueryClient();
+
+  return useMutation<MessageResponse, Error, ChangePasswordPayload>({
+    mutationFn: (payload) =>
+      api.post<MessageResponse>("/api/v1/auth/me/change-password", payload),
+    onSuccess: () => {
       tokenStore.clear();
       queryClient.clear();
     },

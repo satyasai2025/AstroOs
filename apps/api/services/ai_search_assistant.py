@@ -2,11 +2,14 @@
 AstroOS — AI Search Assistant
 
 Provides LLM-powered query expansion for Phase 9 Search. Follows the
-PatternQueryAssistant pattern (httpx + openai-compatible endpoint, same
-no-hallucination discipline): the LLM's only job is to expand a plain
-user query ("marriage") into related astrological search terms
-("marriage", "7th house", "venus", "kalatra bhava") that the router then
-matches against real local rows — it never invents a result itself.
+PatternQueryAssistant pattern (same no-hallucination discipline): the
+LLM's only job is to expand a plain user query ("marriage") into related
+astrological search terms ("marriage", "7th house", "venus", "kalatra
+bhava") that the router then matches against real local rows — it never
+invents a result itself. The actual provider/model/key come from
+apps.api.services.ai_provider.resolve_provider — a per-user BYOK setting
+if the caller has one configured, else the server-wide Settings.OPENAI_*
+config.
 
 Design:
 - expand_query() asks the LLM for a list of domain terms, validated
@@ -24,8 +27,7 @@ import json
 
 import httpx
 
-_DEFAULT_BASE_URL = "https://api.openai.com/v1"
-_REQUEST_TIMEOUT_SECONDS = 15.0
+from apps.api.services.ai_provider import AIProviderError, ResolvedAIProvider, call_chat_completion
 
 _EXPAND_SYSTEM_PROMPT = (
     "You are a Vedic Astrology search query expander. Given a user's search "
@@ -42,57 +44,22 @@ class AISearchError(RuntimeError):
 
 
 class AISearchAssistant:
-    def __init__(
-        self,
-        http_client: httpx.AsyncClient,
-        api_key: str | None,
-        model: str,
-        base_url: str = _DEFAULT_BASE_URL,
-    ) -> None:
+    def __init__(self, http_client: httpx.AsyncClient, resolved: ResolvedAIProvider) -> None:
         self._client = http_client
-        self._api_key = api_key
-        self._model = model
-        self._base_url = base_url.rstrip("/")
+        self._resolved = resolved
 
     @property
     def is_configured(self) -> bool:
         """True if the assistant has an API key and can be used."""
-        return bool(self._api_key)
+        return bool(self._resolved.api_key)
 
     async def _chat(self, system: str, user: str, *, json_mode: bool = False) -> str:
-        if not self._api_key:
-            raise AISearchError(
-                "OPENAI_API_KEY is not configured — set it in .env to enable AI search."
-            )
-        payload = {
-            "model": self._model,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            "temperature": 0.1,
-        }
-        if json_mode:
-            payload["response_format"] = {"type": "json_object"}
         try:
-            response = await self._client.post(
-                f"{self._base_url}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self._api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-                timeout=_REQUEST_TIMEOUT_SECONDS,
+            return await call_chat_completion(
+                self._client, self._resolved, system, user, json_mode=json_mode
             )
-            response.raise_for_status()
-        except httpx.HTTPError as exc:
-            raise AISearchError(f"OpenAI request failed: {exc}") from exc
-
-        body = response.json()
-        try:
-            return body["choices"][0]["message"]["content"].strip()
-        except (KeyError, IndexError, TypeError) as exc:
-            raise AISearchError(f"Unexpected OpenAI response shape: {body!r}") from exc
+        except AIProviderError as exc:
+            raise AISearchError(str(exc)) from exc
 
     async def expand_query(self, query: str) -> list[str]:
         """

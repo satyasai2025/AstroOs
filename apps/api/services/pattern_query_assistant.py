@@ -4,8 +4,11 @@ AstroOS — Natural-Language Pattern Query Assistant (Module 27, Phase 3d)
 Lets a researcher ask a question in plain English ("what correlates with
 Marriage?") and get back an answer grounded in the shared, already-
 persisted discovered_patterns table — never a hallucinated statistic.
-Same real-OpenAI-call, no-silent-template-fallback discipline as
-pattern_explainer.py.
+Same real-LLM-call, no-silent-template-fallback discipline as
+pattern_explainer.py. The actual provider/model/key come from
+apps.api.services.ai_provider.resolve_provider — a per-user BYOK setting
+if the caller has one configured, else the server-wide Settings.OPENAI_*
+config.
 
 Two stages, kept deliberately narrow so the LLM can never fabricate a
 finding:
@@ -30,8 +33,7 @@ import json
 
 import httpx
 
-_DEFAULT_BASE_URL = "https://api.openai.com/v1"
-_REQUEST_TIMEOUT_SECONDS = 30.0
+from apps.api.services.ai_provider import AIProviderError, ResolvedAIProvider, call_chat_completion
 
 _PARSE_SYSTEM_PROMPT_TEMPLATE = (
     "You extract which life-event type a researcher's question is about, "
@@ -61,53 +63,17 @@ class PatternQueryAssistant:
     """Answers plain-language questions grounded in already-fetched,
     real pattern data — see module docstring for the two-stage design."""
 
-    def __init__(
-        self,
-        http_client: httpx.AsyncClient,
-        api_key: str | None,
-        model: str,
-        base_url: str = _DEFAULT_BASE_URL,
-    ) -> None:
+    def __init__(self, http_client: httpx.AsyncClient, resolved: ResolvedAIProvider) -> None:
         self._client = http_client
-        self._api_key = api_key
-        self._model = model
-        self._base_url = base_url.rstrip("/")
+        self._resolved = resolved
 
     async def _chat(self, system: str, user: str, *, json_mode: bool = False) -> str:
-        if not self._api_key:
-            raise PatternQueryError(
-                "OPENAI_API_KEY is not configured — set it in .env to enable "
-                "natural-language pattern questions."
-            )
-        payload = {
-            "model": self._model,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            "temperature": 0.2,
-        }
-        if json_mode:
-            payload["response_format"] = {"type": "json_object"}
         try:
-            response = await self._client.post(
-                f"{self._base_url}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {self._api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-                timeout=_REQUEST_TIMEOUT_SECONDS,
+            return await call_chat_completion(
+                self._client, self._resolved, system, user, json_mode=json_mode
             )
-            response.raise_for_status()
-        except httpx.HTTPError as exc:
-            raise PatternQueryError(f"OpenAI request failed: {exc}") from exc
-
-        body = response.json()
-        try:
-            return body["choices"][0]["message"]["content"].strip()
-        except (KeyError, IndexError, TypeError) as exc:
-            raise PatternQueryError(f"Unexpected OpenAI response shape: {body!r}") from exc
+        except AIProviderError as exc:
+            raise PatternQueryError(str(exc)) from exc
 
     async def parse_event_type(self, question: str, valid_event_types: list[str]) -> str | None:
         """Extract a validated event_type from the question, or None if

@@ -48,7 +48,7 @@ const quickActions: QuickAction[] = [
   { label: "New Chart Analysis", href: "/charts?view=chart", icon: "plus", description: "Analyze a new birth chart" },
   { label: "Reverse Search", href: "/research/reverse-search", icon: "search", description: "Find charts by pattern" },
   { label: "Pattern Discovery", href: "/research/patterns", icon: "sparkle", description: "AI-powered pattern detection" },
-  { label: "Knowledge Graph", href: "/research/knowledge-graph", icon: "network", description: "Explore astrological relationships" },
+  { label: "Knowledge Graph", href: "/knowledge-graph", icon: "network", description: "Explore astrological relationships" },
   { label: "Compare Charts", href: "/charts/compare", icon: "layers", description: "Side-by-side analysis" },
   { label: "Export Report", href: "/reports/pdf", icon: "download", description: "Generate PDF report" },
 ];

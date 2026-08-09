@@ -261,58 +261,6 @@ async def evaluate_all_yogas(
     )
 
 
-@router.post(
-    "/evaluate/{yoga_id}",
-    response_model=YogaResultResponse,
-    summary="Evaluate a single yoga by its stable ID",
-    description=(
-        "Builds a D1 chart from the given birth data and evaluates one "
-        "registered yoga (by yoga_id, e.g. 'BPHS-PM-001') against it. "
-        "See GET /yoga/catalog for valid IDs."
-    ),
-)
-async def evaluate_one_yoga(
-    body: YogaEvaluationRequest,
-    yoga_id: str = Path(..., description="Stable yoga ID, e.g. 'BPHS-PM-001'."),
-    horoscope_engine: HoroscopeEngine = Depends(_get_horoscope_engine),
-    yoga_engine: YogaEngine = Depends(_get_yoga_engine),
-) -> YogaResultResponse:
-    if get_yoga(yoga_id) is None:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Unknown yoga_id '{yoga_id}'. See GET /yoga/catalog for valid IDs.",
-        )
-
-    try:
-        chart = await asyncio.to_thread(
-            horoscope_engine.generate_d1,
-            birth_datetime_utc=body.birth_datetime_utc,
-            latitude=body.latitude,
-            longitude=body.longitude,
-            ayanamsa=body.ayanamsa,
-            house_system=body.house_system,
-        )
-        result = await asyncio.to_thread(yoga_engine.evaluate_one, chart, yoga_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
-    except Exception as exc:
-        logger.exception("Error evaluating yoga %s: %s", yoga_id, exc)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to evaluate yoga {yoga_id}.",
-        )
-
-    if result is None:
-        # Evaluator ran but declined to produce a result for this chart
-        # (distinct from "yoga_id not found", already handled above).
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Yoga {yoga_id} evaluator returned no result.",
-        )
-
-    return _serialise_result(result)
-
-
 # ── Phase 2: Strength-scored evaluation ───────────────────────────────────────
 
 
@@ -511,3 +459,60 @@ async def evaluate_present_yogas(
         total_evaluated=total_present,
         total_present=total_present,
     )
+
+
+# ── Single-yoga evaluation (registered last: {yoga_id} is a catch-all path
+#    parameter that would otherwise shadow the literal /evaluate/* routes
+#    above it, since Starlette matches routes in registration order) ────────
+
+
+@router.post(
+    "/evaluate/{yoga_id}",
+    response_model=YogaResultResponse,
+    summary="Evaluate a single yoga by its stable ID",
+    description=(
+        "Builds a D1 chart from the given birth data and evaluates one "
+        "registered yoga (by yoga_id, e.g. 'BPHS-PM-001') against it. "
+        "See GET /yoga/catalog for valid IDs."
+    ),
+)
+async def evaluate_one_yoga(
+    body: YogaEvaluationRequest,
+    yoga_id: str = Path(..., description="Stable yoga ID, e.g. 'BPHS-PM-001'."),
+    horoscope_engine: HoroscopeEngine = Depends(_get_horoscope_engine),
+    yoga_engine: YogaEngine = Depends(_get_yoga_engine),
+) -> YogaResultResponse:
+    if get_yoga(yoga_id) is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unknown yoga_id '{yoga_id}'. See GET /yoga/catalog for valid IDs.",
+        )
+
+    try:
+        chart = await asyncio.to_thread(
+            horoscope_engine.generate_d1,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+        result = await asyncio.to_thread(yoga_engine.evaluate_one, chart, yoga_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    except Exception as exc:
+        logger.exception("Error evaluating yoga %s: %s", yoga_id, exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to evaluate yoga {yoga_id}.",
+        )
+
+    if result is None:
+        # Evaluator ran but declined to produce a result for this chart
+        # (distinct from "yoga_id not found", already handled above).
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Yoga {yoga_id} evaluator returned no result.",
+        )
+
+    return _serialise_result(result)
