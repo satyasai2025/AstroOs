@@ -56,6 +56,7 @@ from apps.api.schemas.horoscope import (
 )
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
+from apps.api.services.divisional_engine import compute_varga_sign
 
 logger = logging.getLogger(__name__)
 
@@ -86,23 +87,26 @@ def _get_horoscope_engine(
 def _chart_to_response(chart: D1Chart, chart_id: uuid.UUID | None = None) -> D1ChartResponse:
     """Convert a D1Chart domain object to the HTTP response schema."""
 
+    asc_nav_rashi, asc_nav_deg = compute_varga_sign("D9", chart.ascendant.sidereal_longitude)
     ascendant = AscendantSchema(
-        longitude=chart.ascendant.longitude,
-        sidereal_longitude=chart.ascendant.sidereal_longitude,
+        longitude=round(chart.ascendant.longitude, 8),
+        sidereal_longitude=round(chart.ascendant.sidereal_longitude, 8),
         rashi=chart.ascendant.rashi,
-        rashi_degree=round(chart.ascendant.rashi_degree, 6),
+        rashi_degree=round(chart.ascendant.rashi_degree, 8),
         nakshatra=chart.ascendant.nakshatra,
         pada=chart.ascendant.pada,
         nakshatra_lord=chart.ascendant.nakshatra_lord,
         sub_lord=chart.ascendant.sub_lord,
         sub_sub_lord=chart.ascendant.sub_sub_lord,
+        navamsa_rashi=asc_nav_rashi,
+        navamsa_rashi_degree=round(asc_nav_deg, 8),
     )
 
     houses = [
         HouseCuspSchema(
             house_number=h.house_number,
-            longitude=round(h.longitude, 6),
-            sidereal_longitude=round(h.sidereal_longitude, 6),
+            longitude=round(h.longitude, 8),
+            sidereal_longitude=round(h.sidereal_longitude, 8),
             rashi=h.rashi,
             nakshatra_lord=h.nakshatra_lord,
             sub_lord=h.sub_lord,
@@ -111,26 +115,30 @@ def _chart_to_response(chart: D1Chart, chart_id: uuid.UUID | None = None) -> D1C
         for h in chart.houses
     ]
 
-    planets = [
-        PlanetPositionSchema(
-            planet=p.planet,
-            sidereal_longitude=round(p.sidereal_longitude, 6),
-            rashi=p.rashi,
-            rashi_degree=round(p.rashi_degree, 6),
-            house_number=p.house_number,
-            nakshatra=p.nakshatra,
-            pada=p.pada,
-            is_retrograde=p.is_retrograde,
-            is_combust=p.is_combust,
-            combustion_orb=round(p.combustion_orb, 6) if p.combustion_orb is not None else None,
-            dignity=p.dignity.value if p.dignity else None,
-            nakshatra_lord=p.nakshatra_lord,
-            sub_lord=p.sub_lord,
-            sub_sub_lord=p.sub_sub_lord,
-            rashi_house_number=p.rashi_house_number,
+    planets = []
+    for p in chart.planets:
+        nav_rashi, nav_deg = compute_varga_sign("D9", p.sidereal_longitude)
+        planets.append(
+            PlanetPositionSchema(
+                planet=p.planet,
+                sidereal_longitude=round(p.sidereal_longitude, 8),
+                rashi=p.rashi,
+                rashi_degree=round(p.rashi_degree, 8),
+                house_number=p.house_number,
+                nakshatra=p.nakshatra,
+                pada=p.pada,
+                is_retrograde=p.is_retrograde,
+                is_combust=p.is_combust,
+                combustion_orb=round(p.combustion_orb, 8) if p.combustion_orb is not None else None,
+                dignity=p.dignity.value if p.dignity else None,
+                nakshatra_lord=p.nakshatra_lord,
+                sub_lord=p.sub_lord,
+                sub_sub_lord=p.sub_sub_lord,
+                rashi_house_number=p.rashi_house_number,
+                navamsa_rashi=nav_rashi,
+                navamsa_rashi_degree=round(nav_deg, 8),
+            )
         )
-        for p in chart.planets
-    ]
 
     aspects = [
         AspectSchema(
