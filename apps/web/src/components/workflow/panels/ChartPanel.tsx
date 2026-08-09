@@ -1,4 +1,5 @@
 import type { D1ChartResponse } from "@/lib/types";
+import { formatLongitude, formatPosition } from "@/lib/formatAstro";
 
 export function ChartPanel({ chart }: { chart: D1ChartResponse }) {
   return (
@@ -10,7 +11,7 @@ export function ChartPanel({ chart }: { chart: D1ChartResponse }) {
         <p className="text-2xl font-bold text-white">
           {chart.ascendant.rashi}{" "}
           <span className="text-base font-normal text-slate-400">
-            {chart.ascendant.rashi_degree.toFixed(2)}°
+            {formatPosition(chart.ascendant.rashi, chart.ascendant.rashi_degree)}
           </span>
         </p>
         <p className="mt-1 text-sm text-slate-400">
@@ -55,7 +56,7 @@ export function ChartPanel({ chart }: { chart: D1ChartResponse }) {
               <tr key={p.planet} className="border-b border-white/5 text-slate-200">
                 <td className="py-2 pr-4 font-medium capitalize">{p.planet}</td>
                 <td className="py-2 pr-4 capitalize">{p.rashi}</td>
-                <td className="py-2 pr-4">{p.rashi_degree.toFixed(2)}°</td>
+                <td className="py-2 pr-4 font-mono whitespace-nowrap">{formatLongitude(p.sidereal_longitude)}</td>
                 <td className="py-2 pr-4">{p.rashi_house_number}</td>
                 <td
                   className="py-2 pr-4"

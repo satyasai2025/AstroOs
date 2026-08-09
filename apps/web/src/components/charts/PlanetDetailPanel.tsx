@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { NATURAL_RELATIONSHIPS, KARAKATVA_BASIC, PLANET_SYMBOLS } from "@/lib/astro";
+import { formatPosition } from "@/lib/formatAstro";
 import { Tabs } from "@/components/ui";
 import type { WorkflowAnalysisResponse } from "@/lib/types";
 
@@ -165,9 +166,10 @@ export function PlanetDetailPanel({ planet, result, pinned, onUnpin }: PlanetDet
           <Row label="Rashi House (sign-counted)" value={position.rashi_house_number} />
           <Row label="Chalit House (cuspal)" value={position.house_number} />
           <Row label="Sign (Rashi)" value={position.rashi} />
-          <Row label="Degree" value={`${position.rashi_degree.toFixed(2)}°`} />
+          <Row label="Degree" value={formatPosition(position.rashi, position.rashi_degree)} />
           <Row label="Nakshatra" value={position.nakshatra} />
           <Row label="Pada" value={position.pada} />
+          <Row label="Navamsa (D9)" value={position.navamsa_rashi || "—"} />
           <Row label="Star Lord (KP)" value={position.nakshatra_lord || "—"} />
           <Row label="Sub Lord (KP)" value={position.sub_lord || "—"} />
           <Row label="Sub Sub Lord (KP)" value={position.sub_sub_lord || "—"} />

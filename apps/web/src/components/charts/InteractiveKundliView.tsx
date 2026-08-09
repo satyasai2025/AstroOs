@@ -18,6 +18,7 @@ import type {
   WorkflowAnalysisRequest,
 } from "@/lib/types";
 import { naturalRelationship } from "@/lib/planetRelations";
+import { formatLongitude, formatPosition } from "@/lib/formatAstro";
 import { useShadbalaAll } from "@/lib/shadbala";
 import { useKarakatvaSearch, type Karakatva } from "@/lib/karakatva";
 import { useAvastha } from "@/lib/avastha";
@@ -882,11 +883,11 @@ function PlanetExplorerPanel({
 
       {/* Position details */}
       <SectionLabel>Position</SectionLabel>
-      <InfoRow label="Longitude" value={`${pos.sidereal_longitude.toFixed(4)}°`} />
+      <InfoRow label="Longitude" value={formatLongitude(pos.sidereal_longitude)} />
       <InfoRow label="Sign (Rashi)" value={pos.rashi} />
       <InfoRow
         label="Degree in Sign"
-        value={`${pos.rashi_degree.toFixed(2)}° ${pos.rashi}`}
+        value={`${formatPosition(pos.rashi, pos.rashi_degree)}`}
       />
       <InfoRow label="House" value={`${pos.house_number}`} />
       <InfoRow label="Nakshatra" value={pos.nakshatra} />

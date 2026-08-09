@@ -48,6 +48,7 @@ const _ASTRO_CASING_KEYS = new Set([
   "natal_moon_rashi",
   "transit_rashi",
   "lagna_rashi",
+  "navamsa_rashi",
   "nakshatra",
   "moon_nakshatra",
   "trigger_nakshatra",

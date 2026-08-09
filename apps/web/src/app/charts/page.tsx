@@ -30,6 +30,7 @@ import DivisionalChartsPanel from "@/components/charts/DivisionalChartsPanel";
 import { useWorkflowStore } from "@/lib/store";
 import { tokenStore } from "@/lib/api";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
+import { formatPosition } from "@/lib/formatAstro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 
 type ViewMode =
@@ -274,7 +275,7 @@ export default function ChartsPage() {
                 {request && (<div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Name</dt><dd style={{ color: "var(--text-primary)" }}>{request.subject_name}</dd></div>)}
                 <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Ayanamsa</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ayanamsa_system}</dd></div>
                 <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>House System</dt><dd style={{ color: "var(--text-primary)" }}>{chart.house_system}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ascendant.rashi} {chart.ascendant.rashi_degree.toFixed(2)}°</dd></div>
+                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna</dt><dd style={{ color: "var(--text-primary)" }}>{formatPosition(chart.ascendant.rashi, chart.ascendant.rashi_degree)}</dd></div>
                 <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna Lord</dt><dd style={{ color: "var(--text-primary)" }}>{rashiLordFromApiName(chart.ascendant.rashi) ?? "—"}</dd></div>
               </dl>
             </div>

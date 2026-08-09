@@ -10,6 +10,7 @@ import {
   KARAKATVA_BASIC,
   CHART_COLORS,
 } from "@/lib/astro";
+import { formatPosition } from "@/lib/formatAstro";
 import type { D1ChartResponse } from "@/lib/types";
 
 function titleCase(s: string): string {
@@ -103,7 +104,7 @@ export function ChartDetailPanel({ chart, activePlanet, activeHouse }: Props) {
           <div>
             <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{name}</h2>
             <p className="text-xs capitalize" style={{ color: "var(--text-secondary)" }}>
-              {planet.rashi} {planet.rashi_degree.toFixed(2)}°{planet.is_retrograde ? " · Retrograde" : ""}
+              {formatPosition(planet.rashi, planet.rashi_degree)}{planet.is_retrograde ? " · Retrograde" : ""}
             </p>
           </div>
         </div>
@@ -201,8 +202,8 @@ export function ChartDetailPanel({ chart, activePlanet, activeHouse }: Props) {
                 <span className="capitalize" style={{ color: "var(--text-primary)" }}>
                   {PLANET_SYMBOLS[titleCase(p.planet)] ?? ""} {titleCase(p.planet)}
                 </span>
-                <span style={{ color: "var(--text-secondary)" }}>
-                  {p.rashi_degree.toFixed(2)}°{p.is_retrograde ? " (R)" : ""}
+                <span className="font-mono whitespace-nowrap" style={{ color: "var(--text-secondary)" }}>
+                  {formatPosition(p.rashi, p.rashi_degree)}{p.is_retrograde ? " (R)" : ""}
                 </span>
               </li>
             ))}
