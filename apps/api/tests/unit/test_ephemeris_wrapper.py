@@ -81,6 +81,20 @@ def test_datetime_to_jd_unix_epoch():
     assert abs(jd - 2440587.5) < 0.01
 
 
+def test_datetime_to_jd_returns_ut_not_et():
+    """
+    Regression: swe.utc_to_jd returns (ET, UT); datetime_to_jd must return
+    the UT (second) element, not the ET (first) element. Using ET shifts
+    every position by ΔT (~41.7s for 1971) — a small arc that still flips
+    a sign on a cusp chart. Pin the exact UT JD so a switch back to ET
+    (2441132.4783...) fails this test.
+    """
+    dt = datetime(1971, 6, 29, 23, 28, 0, tzinfo=timezone.utc)
+    jd = datetime_to_jd(dt)
+    assert abs(jd - 2441132.4777777778) < 1e-6
+    assert jd < 2441132.478, "JD must be Universal Time, not Ephemeris Time"
+
+
 # ── longitude_to_rashi ────────────────────────────────────────────────────────
 
 @pytest.mark.parametrize("lon,expected_rashi,expected_deg_approx", [
