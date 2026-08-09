@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Config } from '../config';
 import { cacheClear, cacheSize } from '../storage/offline';
+import { loadSettings, saveSettings } from '../storage/settings';
 
 export const SettingsScreen: React.FC = () => {
   const [baseUrl, setBaseUrl] = useState(Config.apiBaseUrl);
@@ -17,12 +18,15 @@ export const SettingsScreen: React.FC = () => {
 
   React.useEffect(() => {
     cacheSize().then(setCacheCount);
+    loadSettings().then(() => {
+      setBaseUrl(Config.apiBaseUrl);
+      setApiKey(Config.apiKey);
+      setPushEnabled(Config.pushEnabled);
+    });
   }, []);
 
-  const handleSave = () => {
-    Config.apiBaseUrl = baseUrl;
-    Config.apiKey = apiKey;
-    Config.pushEnabled = pushEnabled;
+  const handleSave = async () => {
+    await saveSettings(baseUrl, apiKey, pushEnabled);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
