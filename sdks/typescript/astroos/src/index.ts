@@ -26,6 +26,17 @@ export interface ApiResponse<T = unknown> {
   requestId: string;
 }
 
+export class ApiError extends Error {
+  constructor(
+    public status: number,
+    public statusText: string,
+    public body: string,
+  ) {
+    super(`AstroOS API ${status}: ${statusText}`);
+    this.name = "ApiError";
+  }
+}
+
 export interface ChartRequest {
   birthDatetimeUtc: string;
   latitude: number;
@@ -57,7 +68,7 @@ export class AstroOSClient {
 
   constructor(config: SdkConfig = {}) {
     this.config = {
-      baseUrl: config.baseUrl || "https://api.astroos.dev/v1",
+      baseUrl: config.baseUrl || "https://api.astroos.dev/api/v1",
       apiKey: config.apiKey || "",
       accessToken: config.accessToken || "",
       timeout: config.timeout || 30,
@@ -74,33 +85,83 @@ export class AstroOSClient {
     return h;
   }
 
+  private async request(
+    method: string,
+    path: string,
+    opts: { body?: unknown; params?: Record<string, string>; accept?: string } = {},
+  ): Promise<Response> {
+    const urlObj = path.startsWith("http")
+      ? new URL(path)
+      : new URL(`${this.config.baseUrl}/${path.replace(/^\//, "")}`);
+    Object.entries(opts.params ?? {}).forEach(([k, v]) => urlObj.searchParams.set(k, v));
+
+    const headers = this.headers();
+    if (opts.accept) headers.Accept = opts.accept;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.config.timeout * 1000);
+
+    try {
+      return await fetch(urlObj.toString(), {
+        method,
+        headers,
+        body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+        signal: controller.signal,
+      });
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        throw new ApiError(0, "timeout", `Request timed out after ${this.config.timeout}s`);
+      }
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  private async parseJson<T>(response: Response): Promise<ApiResponse<T>> {
+    const text = await response.text();
+    let body: unknown;
+    try {
+      body = text ? JSON.parse(text) : null;
+    } catch {
+      body = null;
+    }
+
+    if (!response.ok) {
+      const message =
+        (body && typeof body === "object" && "detail" in body
+          ? String((body as { detail: unknown }).detail)
+          : "") || response.statusText;
+      throw new ApiError(response.status, response.statusText, message);
+    }
+
+    const data = body as T;
+    if (data && typeof data === "object" && "success" in (data as object)) {
+      return data as unknown as ApiResponse<T>;
+    }
+    return { success: true, data, version: "", requestId: "" };
+  }
+
   private async get<T>(path: string, params: Record<string, string> = {}): Promise<ApiResponse<T>> {
-    const urlObj = new URL(`${this.config.baseUrl}/${path.replace(/^\//, "")}`);
-    Object.entries(params).forEach(([k, v]) => urlObj.searchParams.set(k, v));
-    const response = await fetch(urlObj.toString(), {
-      method: "GET",
-      headers: this.headers(),
-    });
-    return response.json();
+    const response = await this.request("GET", path, { params });
+    return this.parseJson<T>(response);
   }
 
   private async post<T>(path: string, body?: unknown): Promise<ApiResponse<T>> {
-    const url = `${this.config.baseUrl}/${path.replace(/^\//, "")}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: this.headers(),
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    return response.json();
+    const response = await this.request("POST", path, { body });
+    return this.parseJson<T>(response);
   }
 
-  private async download(path: string, body?: unknown): Promise<Blob> {
-    const url = `${this.config.baseUrl}/${path.replace(/^\//, "")}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { Accept: "application/octet-stream", ...this.headers() },
-      body: body ? JSON.stringify(body) : undefined,
-    });
+  private async delete<T>(path: string): Promise<ApiResponse<T>> {
+    const response = await this.request("DELETE", path);
+    return this.parseJson<T>(response);
+  }
+
+  private async download(path: string, body?: unknown, accept = "application/pdf"): Promise<Blob> {
+    const response = await this.request("POST", path, { body, accept });
+    if (!response.ok) {
+      throw new ApiError(response.status, response.statusText, await response.text());
+    }
     return response.blob();
   }
 
@@ -177,7 +238,7 @@ export class AstroOSClient {
         category: event.category,
       }),
 
-    delete: (eventId: string) => this.post(`/events/${eventId}/delete`),
+    delete: (eventId: string) => this.delete(`/events/${eventId}`),
   };
 
   // Report methods
@@ -202,14 +263,21 @@ export class AstroOSClient {
       return blob;
     },
 
-    generateCsv: (req: ChartReportRequest) =>
-      this.get("/report/chart/csv", {
-        birth_datetime_utc: req.birth_datetime_utc,
-        latitude: String(req.latitude),
-        longitude: String(req.longitude),
-        ayanamsa: req.ayanamsa,
-        house_system: req.house_system,
-      }),
+    generateCsv: async (req: ChartReportRequest): Promise<ApiResponse<string>> => {
+      const response = await this.request("POST", "/report/chart/csv", {
+        body: {
+          birth_datetime_utc: req.birth_datetime_utc,
+          latitude: req.latitude,
+          longitude: req.longitude,
+          ayanamsa: req.ayanamsa,
+          house_system: req.house_system,
+        },
+      });
+      if (!response.ok) {
+        throw new ApiError(response.status, response.statusText, await response.text());
+      }
+      return { success: true, data: await response.text(), version: "", requestId: "" };
+    },
 
     listTemplates: () => this.get<string[]>("/report/templates"),
   };
@@ -235,6 +303,9 @@ export class AstroOSClient {
 
   // Health check
   health = {
-    check: () => this.get<HealthResponse>("/../healthz"),
+    check: () => {
+      const root = new URL(this.config.baseUrl).origin;
+      return this.get<HealthResponse>(`${root}/api/healthz`);
+    },
   };
 }

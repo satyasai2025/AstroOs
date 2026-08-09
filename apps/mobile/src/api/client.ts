@@ -19,9 +19,13 @@ class ApiClient {
     this.baseUrl = baseUrl.replace(/\/+$/, '');
   }
 
+  private resolveBaseUrl(): string {
+    return (Config.apiBaseUrl || this.baseUrl).replace(/\/+$/, '');
+  }
+
   private async request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     const { method = 'GET', body, params } = opts;
-    const url = new URL(`${this.baseUrl}${path}`);
+    const url = new URL(`${this.resolveBaseUrl()}${path}`);
     if (params) {
       Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
     }
@@ -34,18 +38,26 @@ class ApiClient {
       headers['x-api-key'] = Config.apiKey;
     }
 
-    const response = await fetch(url.toString(), {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : undefined,
-    });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), Config.requestTimeoutMs);
 
-    if (!response.ok) {
-      const errorBody = await response.text().catch(() => '');
-      throw new ApiError(response.status, response.statusText, errorBody);
+    try {
+      const response = await fetch(url.toString(), {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text().catch(() => '');
+        throw new ApiError(response.status, response.statusText, errorBody);
+      }
+
+      return response.json() as Promise<T>;
+    } finally {
+      clearTimeout(timer);
     }
-
-    return response.json() as Promise<T>;
   }
 
   // -- Chart API --
