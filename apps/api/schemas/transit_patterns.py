@@ -160,16 +160,22 @@ class ReturnPeriodResponse(BaseModel):
 
 
 class TransitAspectResponse(BaseModel):
-    """An aspect between a transiting planet and a natal planet."""
+    """
+    A Vedic graha drishti (house-based aspect) cast by a transiting planet
+    onto a natal planet — same rule table as the natal chart's own aspects
+    (services/aspect_engine.py): every planet aspects the 7th house from
+    its position, with Mars/Jupiter/Saturn/Rahu/Ketu's classical special
+    aspects. Not a Western/Ptolemaic angle aspect.
+    """
 
     aspect_type: str = Field(
-        description="Aspect type: 'conjunction', 'opposition', 'trine', 'square', 'sextile'."
+        description="Aspect type: 'opposition', 'trine', 'square', or 'special_graha'."
     )
     transiting_planet: str = Field(description="Transiting graha.")
     natal_planet: str = Field(description="Natal graha.")
     orb: float = Field(
         ge=0.0, le=15.0,
-        description="Angular distance from the exact aspect angle (degrees).",
+        description="Orb within the aspected sign (degrees) — same convention as aspect_engine.py's natal aspect orb, not a Ptolemaic angle orb.",
     )
 
 

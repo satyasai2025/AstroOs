@@ -54,6 +54,52 @@ export interface MessageResponse {
   message: string;
 }
 
+export interface UpdateProfilePayload {
+  display_name?: string;
+  email?: string;
+}
+
+export interface ChangePasswordPayload {
+  current_password: string;
+  new_password: string;
+}
+
+// ── AI Settings (per-user BYOK) ─────────────────────────────────────────────
+
+export type AIProvider = "astroos_ai" | "openai" | "anthropic" | "gemini" | "openrouter" | "ollama";
+
+export interface AISettings {
+  provider: AIProvider;
+  has_api_key: boolean;
+  api_key_last4: string | null;
+  model: string | null;
+  base_url: string | null;
+  temperature: number;
+  max_tokens: number;
+}
+
+export interface UpdateAISettingsPayload {
+  provider: AIProvider;
+  /** Omit to leave the stored key untouched; pass "" to remove it. */
+  api_key?: string;
+  model?: string | null;
+  base_url?: string | null;
+  temperature: number;
+  max_tokens: number;
+}
+
+export interface TestAISettingsPayload {
+  provider: AIProvider;
+  api_key?: string;
+  model?: string | null;
+  base_url?: string | null;
+}
+
+export interface TestConnectionResponse {
+  success: boolean;
+  message: string;
+}
+
 // ── API Error ─────────────────────────────────────────────────────────────────
 
 export interface ApiErrorBody {
@@ -106,6 +152,8 @@ export interface WorkflowAnalysisRequest {
   persist?: boolean;
   /** The existing saved chart this recompute belongs to. Required when persist is false. */
   chart_id?: string | null;
+  /** Skip the birth-data dedup match and always save a new chart — set after the user confirms past a duplicate-check prompt. */
+  force_new?: boolean;
 }
 
 // ── Chart (D1) ──────────────────────────────────────────────────────────────
@@ -344,6 +392,19 @@ export interface DashaTreeResponse {
 
 // ── Yoga ──────────────────────────────────────────────────────────────────────
 
+/** Request body for evaluating yogas against a birth chart. Mirrors the
+ *  backend YogaEvaluationRequest (apps/api/schemas/yoga.py). */
+export interface YogaEvaluationRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  dasha_system?: string;
+  only_present?: boolean;
+  category?: string;
+}
+
 export interface YogaResultResponse {
   yoga_id: string;
   name: string;
@@ -357,12 +418,59 @@ export interface YogaResultResponse {
   satisfied: string[];
   missing: string[];
   trace: string[];
+  // Phase 2 (v2.1.0 "Vistara") — numerical strength and counter-examples
+  strength_score: number | null;
+  counter_examples: string[];
 }
 
 export interface YogaEvaluationResponse {
   results: YogaResultResponse[];
   total_evaluated: number;
   total_present: number;
+  strength_scored?: boolean;
+  with_timeline?: boolean;
+}
+
+// ── Yoga Timeline (Phase 2 activation / Dasha correlation) ──────────────────────
+
+export interface YogaActivationResponse {
+  yoga_id: string;
+  planet: string;
+  period_name: string;
+  period_level: number;
+  start_date: string;
+  end_date: string;
+  is_current: boolean;
+}
+
+export interface YogaTimelineResponse {
+  yoga_id: string;
+  yoga_name: string;
+  activations: YogaActivationResponse[];
+  current_activation: YogaActivationResponse | null;
+}
+
+export interface YogaTimelineEvaluationResponse {
+  timelines: YogaTimelineResponse[];
+  total_present: number;
+  total_activated: number;
+  dasha_system: string;
+}
+
+// ── Yoga Catalog (static definitions) ──────────────────────────────────────────
+
+export interface YogaDefinitionResponse {
+  yoga_id: string;
+  name: string;
+  category: string;
+  source_text: string;
+  rule_version: string;
+  requires: string[];
+}
+
+export interface YogaCatalogResponse {
+  yogas: YogaDefinitionResponse[];
+  total: number;
 }
 
 // ── Ashtakavarga ──────────────────────────────────────────────────────────────
@@ -475,7 +583,9 @@ export interface ReturnPeriodResponse {
 }
 
 export interface TransitAspectResponse {
-  /** 'conjunction' | 'opposition' | 'trine' | 'square' | 'sextile'. */
+  /** Vedic graha drishti — 'opposition' | 'trine' | 'square' | 'special_graha'.
+   * Same rule table as the natal chart's own aspects (house-based, not a
+   * Western/Ptolemaic angle) — see apps/api/services/aspect_engine.py. */
   aspect_type: string;
   transiting_planet: string;
   natal_planet: string;
@@ -604,6 +714,23 @@ export interface WorkflowAnalysisResponse {
   research_snapshot_id: string | null;
 }
 
+// ── Duplicate check (confirm before persist) ──────────────────────────────────
+
+export interface WorkflowDuplicateCheckRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa?: AyanamsaCode;
+  house_system?: HouseSystemCode;
+}
+
+export interface WorkflowDuplicateCheckResponse {
+  exists: boolean;
+  chart_id: string | null;
+  subject_name: string | null;
+  saved_at: string | null;
+}
+
 // ── Bulk Import (CSV/JSON upload of birth data) ──────────────────────────────
 
 export interface BulkImportRow {
@@ -614,6 +741,7 @@ export interface BulkImportRow {
   place_name?: string | null;
   ayanamsa?: AyanamsaCode;
   house_system?: HouseSystemCode;
+  force_new?: boolean;
 }
 
 export interface BulkImportRowResult {
@@ -622,6 +750,7 @@ export interface BulkImportRowResult {
   success: boolean;
   chart_id: string | null;
   error: string | null;
+  matched_existing: boolean;
 }
 
 export interface BulkImportResponse {

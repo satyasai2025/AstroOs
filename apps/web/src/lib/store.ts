@@ -49,9 +49,10 @@ interface WorkflowState {
   closeCreateModal: () => void;
   /**
    * The saved chart selected for a transit analysis. Lives here (not in
-   * CreateTransitModal's local state) so the /transit/[reportId] page can
-   * read it and build the correct transit request even when the workflow
-   * store's active chart (result/request) is null or a different chart.
+   * CreateTransitModal's local state) so /charts/transit can read it and
+   * auto-load that chart's full analysis (see its useEffect keyed on this
+   * field) even when the workflow store's active chart (result/request) is
+   * null or a different chart.
    */
   transitChart: BirthChartSummary | null;
   setTransitChart: (chart: BirthChartSummary | null) => void;

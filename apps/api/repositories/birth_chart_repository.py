@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Optional
 
-from sqlalchemy import func, select
+from sqlalchemy import String, cast, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.models.astrology import BirthChartModel
@@ -53,6 +53,37 @@ class BirthChartRepository:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
+    async def find_existing(
+        self,
+        *,
+        birth_datetime_utc: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str,
+        house_system: str,
+        user_id: Optional[uuid.UUID] = None,
+    ) -> Optional[BirthChartModel]:
+        """
+        Read-only lookup for the same natural key get_or_create() dedups
+        on: (user_id, birth_datetime_utc, latitude, longitude, ayanamsa,
+        house_system). Used to warn a caller *before* they save — two
+        different people can legitimately share an exact birth moment and
+        location, so a match here isn't necessarily "this chart already
+        exists", it's "confirm before we treat it as the same chart".
+        """
+        stmt = (
+            select(BirthChartModel)
+            .where(BirthChartModel.birth_datetime_utc == birth_datetime_utc)
+            .where(BirthChartModel.birth_latitude == Decimal(str(latitude)))
+            .where(BirthChartModel.birth_longitude == Decimal(str(longitude)))
+            .where(BirthChartModel.ayanamsa == ayanamsa)
+            .where(BirthChartModel.house_system == house_system)
+            .where(BirthChartModel.deleted_at.is_(None))
+        )
+        if user_id is not None:
+            stmt = stmt.where(BirthChartModel.user_id == user_id)
+        return (await self._session.execute(stmt)).scalar_one_or_none()
+
     async def get_or_create(
         self,
         *,
@@ -64,6 +95,7 @@ class BirthChartRepository:
         user_id: Optional[uuid.UUID] = None,
         subject_name: str = _DEFAULT_SUBJECT_NAME,
         place_name: Optional[str] = None,
+        force_new: bool = False,
     ) -> uuid.UUID:
         """
         Find an existing birth_charts row for this exact birth input, or
@@ -78,20 +110,25 @@ class BirthChartRepository:
         chart saved before this fix gets its place filled in the next
         time it's recomputed with the same birth data, without ever
         overwriting a place_name some other call already set.
-        """
-        stmt = (
-            select(BirthChartModel)
-            .where(BirthChartModel.birth_datetime_utc == birth_datetime_utc)
-            .where(BirthChartModel.birth_latitude == Decimal(str(latitude)))
-            .where(BirthChartModel.birth_longitude == Decimal(str(longitude)))
-            .where(BirthChartModel.ayanamsa == ayanamsa)
-            .where(BirthChartModel.house_system == house_system)
-            .where(BirthChartModel.deleted_at.is_(None))
-        )
-        if user_id is not None:
-            stmt = stmt.where(BirthChartModel.user_id == user_id)
 
-        existing = (await self._session.execute(stmt)).scalar_one_or_none()
+        force_new=True skips the dedup lookup entirely and always inserts
+        a new row — for when the caller has already confirmed with the
+        user (via find_existing()) that this is a deliberate second chart
+        sharing the same birth moment/location, e.g. two different people
+        born at the same place and time.
+        """
+        existing = (
+            None
+            if force_new
+            else await self.find_existing(
+                birth_datetime_utc=birth_datetime_utc,
+                latitude=latitude,
+                longitude=longitude,
+                ayanamsa=ayanamsa,
+                house_system=house_system,
+                user_id=user_id,
+            )
+        )
         if existing is not None:
             if place_name and not existing.place_name:
                 existing.place_name = place_name
@@ -234,6 +271,10 @@ class BirthChartRepository:
         """
         Search a user's saved charts by subject name, place name, lagna rashi,
         moon nakshatra, or notes. Case-insensitive substring match.
+
+        lagna_rashi and moon_nakshatra are Postgres ENUM columns (rashi /
+        nakshatra_name) — func.lower() has no overload for enum types, so
+        they're cast to text first.
         """
         term = f"%{query_text.strip().lower()}%"
         stmt = (
@@ -243,8 +284,8 @@ class BirthChartRepository:
             .where(
                 func.lower(BirthChartModel.subject_name).like(term)
                 | func.lower(BirthChartModel.place_name).like(term)
-                | func.lower(BirthChartModel.lagna_rashi).like(term)
-                | func.lower(BirthChartModel.moon_nakshatra).like(term)
+                | func.lower(cast(BirthChartModel.lagna_rashi, String)).like(term)
+                | func.lower(cast(BirthChartModel.moon_nakshatra, String)).like(term)
                 | func.lower(BirthChartModel.notes).like(term)
             )
             .order_by(BirthChartModel.created_at.desc())

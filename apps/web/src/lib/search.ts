@@ -12,7 +12,7 @@ export interface SearchResultChart {
 }
 
 export interface SearchResultKnowledge {
-  type: string;
+  type: "book" | "verse" | "rule" | "karakatva";
   id: string;
   title: string;
   snippet: string;

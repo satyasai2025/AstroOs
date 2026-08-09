@@ -4,9 +4,41 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/lib/auth";
 import { researchProjectsApi, snapshotsApi, researchExportApi, researchModeApi } from "@/lib/research";
-import type { ResearchProject, ResearchSnapshot, ResearchMode } from "@/lib/research";
+import type { ResearchProject, ResearchSnapshot, ResearchMode, QueryLogEntry } from "@/lib/research";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, Input } from "@/components/ui";
+
+/** Real backend action codes (apps/api/services/research_middleware.py
+ * _get_action()) translated to short human sentences — mirrors the same
+ * lookup in components/dashboard/DashboardOverview.tsx. Anything not in
+ * this map falls back to the raw action string with underscores replaced
+ * by spaces, so a newly-added backend action still renders legibly. */
+const ACTION_LABELS: Record<string, string> = {
+  workflow_analyze: "Ran a full chart analysis",
+  snapshot_compare: "Compared two snapshots",
+  snapshot_capture: "Captured a research snapshot",
+  project_create: "Created a research project",
+  research_query: "Ran a research query",
+  hypothesis_generate: "Generated AI hypotheses",
+  export: "Exported research data",
+  chart_compare: "Compared charts",
+  enhanced_qa: "Asked an enhanced Q&A question",
+  hypothesis_validate: "Reviewed a hypothesis",
+  research_mode_toggle: "Toggled Research Mode",
+  query_log_view: "Viewed activity logs",
+  research_action: "Research action",
+};
+
+function actionLabel(action: string): string {
+  return ACTION_LABELS[action] ?? action.replace(/_/g, " ");
+}
+
+/** response_summary is "{status} {path}" — pull just the status code out
+ * to render a small ok/error dot instead of the raw string. */
+function logStatusOk(log: QueryLogEntry): boolean {
+  const code = parseInt(log.response_summary.split(" ")[0] ?? "", 10);
+  return !Number.isNaN(code) && code < 400;
+}
 
 export default function ResearchProjectsPage() {
   const router = useRouter();
@@ -24,6 +56,25 @@ export default function ResearchProjectsPage() {
 
   // Research mode
   const [researchMode, setResearchMode] = useState<ResearchMode | null>(null);
+
+  // Query logs (fetched on demand when the disclosure below is opened)
+  const [queryLogs, setQueryLogs] = useState<QueryLogEntry[] | null>(null);
+  const [logsLoading, setLogsLoading] = useState(false);
+  const [logsError, setLogsError] = useState<string | null>(null);
+
+  async function loadQueryLogs() {
+    if (queryLogs !== null || logsLoading) return; // fetch once per page visit
+    setLogsLoading(true);
+    setLogsError(null);
+    try {
+      const data = await researchModeApi.listLogs({ limit: 20 });
+      setQueryLogs(data.logs);
+    } catch (err) {
+      setLogsError(err instanceof Error ? err.message : "Failed to load query logs.");
+    } finally {
+      setLogsLoading(false);
+    }
+  }
 
   const loadProjects = useCallback(async () => {
     if (!user) return;
@@ -112,15 +163,6 @@ export default function ResearchProjectsPage() {
     }
   }
 
-  async function handleToggleResearchMode() {
-    try {
-      const mode = await researchModeApi.set(!researchMode?.enabled);
-      setResearchMode(mode);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to toggle research mode.");
-    }
-  }
-
   return (
     <AppShell sectionColor="--section-research">
       {loading ? (
@@ -137,26 +179,13 @@ export default function ResearchProjectsPage() {
                 Create and manage research projects, capture snapshots, compare versions, and export data.
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              {/* Research Mode Toggle */}
-              <button
-                type="button"
-                onClick={handleToggleResearchMode}
-                className={`flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
-                  researchMode?.enabled
-                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                    : "border-gray-700 bg-transparent text-gray-400 hover:bg-white/5"
-                }`}
-                aria-label={`Research mode is ${researchMode?.enabled ? "on" : "off"}. Click to toggle.`}
-              >
-                <span className={`inline-block h-2 w-2 rounded-full ${researchMode?.enabled ? "bg-emerald-400" : "bg-gray-500"}`} />
-                Research Mode {researchMode?.enabled ? "ON" : "OFF"}
-              </button>
-
-              <Button size="sm" onClick={() => setShowForm(!showForm)}>
-                {showForm ? "Cancel" : "+ New Project"}
-              </Button>
-            </div>
+            {/* Research Mode has one global control — the compact toggle
+                in AppShell's header — rather than a second one here that
+                would drift out of sync with it (each held independent
+                fetched-on-mount state hitting the same backend flag). */}
+            <Button size="sm" onClick={() => setShowForm(!showForm)}>
+              {showForm ? "Cancel" : "+ New Project"}
+            </Button>
           </div>
 
           {error && (
@@ -294,21 +323,49 @@ export default function ResearchProjectsPage() {
             </div>
           )}
 
-          {/* Query logs section (when research mode is on) */}
+          {/* Query logs section (when research mode is on) — fetches and
+              renders the real log entries inline on open, rather than
+              linking to a page (this one) that doesn't have a log viewer. */}
           {researchMode?.enabled && researchMode.total_logged_queries > 0 && (
-            <details className="group mt-8">
+            <details className="group mt-8" onToggle={(e) => e.currentTarget.open && loadQueryLogs()}>
               <summary className="cursor-pointer text-sm font-medium text-gray-400">
                 Research Mode Active — {researchMode.total_logged_queries} query
                 {researchMode.total_logged_queries !== 1 ? "s" : ""} logged
               </summary>
-              <div className="mt-2">
-                <button
-                  type="button"
-                  onClick={() => router.push("/research/projects")}
-                  className="text-xs text-cyan-400 underline"
-                >
-                  View query logs
-                </button>
+              <div className="mt-3">
+                {logsLoading && (
+                  <p className="text-xs text-gray-500">Loading query logs…</p>
+                )}
+                {logsError && (
+                  <p className="text-xs text-red-400" role="alert">{logsError}</p>
+                )}
+                {queryLogs && queryLogs.length === 0 && (
+                  <p className="text-xs text-gray-500">No query logs recorded yet.</p>
+                )}
+                {queryLogs && queryLogs.length > 0 && (
+                  <ul className="space-y-1.5">
+                    {queryLogs.map((log) => {
+                      const ok = logStatusOk(log);
+                      return (
+                        <li key={log.id} className="flex items-center gap-2.5 text-xs">
+                          <span
+                            className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${ok ? "bg-emerald-400" : "bg-red-400"}`}
+                            aria-hidden="true"
+                          />
+                          <span className="text-gray-300">{actionLabel(log.action)}</span>
+                          <span className="text-gray-600">·</span>
+                          <span className="text-gray-500">{log.duration_ms}ms</span>
+                          {log.created_at && (
+                            <>
+                              <span className="text-gray-600">·</span>
+                              <span className="text-gray-500">{new Date(log.created_at).toLocaleString()}</span>
+                            </>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </div>
             </details>
           )}

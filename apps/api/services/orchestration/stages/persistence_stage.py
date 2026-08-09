@@ -33,6 +33,7 @@ class PersistenceStage:
                 subject_name=request.subject_name,
                 user_id=ctx.user_id,
                 place_name=request.place_name,
+                force_new=request.force_new,
             )
             if ctx.vargas is not None:
                 await self._divisional_engine.persist_all(

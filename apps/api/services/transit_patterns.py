@@ -6,8 +6,22 @@ Detects classical Vedic transit patterns at a given moment:
   * Sade Sati        — Saturn through 12th/1st/2nd from natal Moon (~7.5 yr)
   * Ashtama Shani    — Saturn in 8th from natal Moon
   * Planet returns   — Transiting planet within orb of its own natal position
-  * Transit aspects  — Conjunction / opposition / trine / square / sextile
-                        between transiting and natal planets (configurable orb)
+  * Transit aspects  — Graha drishti (Vedic house-based aspect) between a
+                        transiting planet and each natal planet, using the
+                        same rule table as services/aspect_engine.py's natal
+                        aspects: every planet aspects the 7th house from its
+                        position; Mars additionally aspects the 4th/8th,
+                        Jupiter the 5th/9th, Saturn the 3rd/10th, Rahu/Ketu
+                        the 5th/9th (by the same tradition aspect_engine.py
+                        already follows). Fixed 2026-08-06: this previously
+                        used Western/Ptolemaic angles (conjunction/sextile/
+                        square/trine/opposition at 0/60/90/120/180°), which
+                        aren't a Vedic concept and gave every planet the same
+                        aspect set regardless of which graha it was — unlike
+                        the natal aspects elsewhere in this app, which
+                        already used real graha drishti. This detector now
+                        reuses aspect_engine.py's own house-offset rule table
+                        so transit and natal aspects are the same system.
 
 All calculations are deterministic — no AI, no external API calls.
 Average daily-motion approximations (from classical constants) are used for
@@ -16,11 +30,11 @@ date estimates; the detection itself uses exact sidereal ephemeris positions.
 
 from __future__ import annotations
 
-import math
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
 
 from apps.api.domain.horoscope import D1Chart
+from apps.api.services.aspect_engine import SPECIAL_ASPECTS, UNIVERSAL_ASPECT, AspectEngine
 from apps.api.services.ephemeris_wrapper import (
     EphemerisWrapper,
     datetime_to_jd,
@@ -46,14 +60,6 @@ _AVG_DAILY_MOTION: dict[str, float] = {
     "saturn":  0.033,
     "rahu":    0.053,   # mean motion, treated as forward for magnitude
     "ketu":    0.053,
-}
-
-_ASPECT_ANGLES: dict[str, float] = {
-    "conjunction":   0.0,
-    "sextile":      60.0,
-    "square":       90.0,
-    "trine":       120.0,
-    "opposition":  180.0,
 }
 
 
@@ -382,40 +388,77 @@ class TransitPatternDetector:
         self, natal_chart: D1Chart, jd: float, orb: float = 6.0
     ) -> list[TransitAspectInfo]:
         """
-        Detect aspects between transiting planets and natal planets.
+        Detect Vedic graha drishti (house-based aspects) cast by each
+        transiting planet onto each natal planet.
 
-        Checks conjunction (0°), sextile (60°), square (90°), trine (120°),
-        and opposition (180°) with the configured *orb*.
+        Same rule table as aspect_engine.py's natal aspects: every planet
+        aspects the 7th house from its own position (UNIVERSAL_ASPECT);
+        Mars/Jupiter/Saturn/Rahu/Ketu additionally aspect the house offsets
+        in SPECIAL_ASPECTS. Here "its own position" is the transiting
+        planet's current rashi, and the aspected rashi is checked against
+        each natal planet's natal rashi — a cross-chart version of the same
+        whole-sign house-counting aspect_engine.py already uses within one
+        chart.
+
+        *orb* is applied to how close the transiting planet is to the exact
+        aspected-house cusp (0° = planet is exactly at its own rashi's
+        start once counted onto the target sign), the same "orb within the
+        aspected sign" convention aspect_engine.py uses, not a Ptolemaic
+        angle orb — there's no Western angle involved.
 
         Self-aspects (same planet transit ↔ natal) are excluded — they are
-        covered by detect_return_periods instead.
+        covered by detect_return_periods instead. Conjunction (offset 1,
+        same house) is not a house *aspect* in the classical sense and is
+        likewise left to detect_return_periods, matching aspect_engine.py's
+        own UNIVERSAL_ASPECT/SPECIAL_ASPECTS tables, which never include
+        offset 1 either.
         """
         aspects: list[TransitAspectInfo] = []
+        classify = AspectEngine().classify
 
         for tp in _ALL_PLANETS:
             t_lon = self._sidereal_lon(tp, jd)
+            t_rashi, t_rashi_deg = longitude_to_rashi(t_lon)
+            t_rashi_idx = _RASHI_LIST.index(t_rashi)
 
-            for np in _ALL_PLANETS:
-                if tp == np:
-                    continue
+            aspect_offsets = {UNIVERSAL_ASPECT} | SPECIAL_ASPECTS.get(tp, set())
 
-                n_lon = self._natal_lon(natal_chart, np)
-                if n_lon is None:
-                    continue
+            for offset in aspect_offsets:
+                aspected_idx = (t_rashi_idx + offset - 1) % 12
+                aspected_rashi = _RASHI_LIST[aspected_idx]
+                aspect_type = classify(offset)
 
-                dist = _angular_distance(t_lon, n_lon)
+                for np in _ALL_PLANETS:
+                    if tp == np:
+                        continue
 
-                for asp_type, target in _ASPECT_ANGLES.items():
-                    asp_orb = abs(dist - target)
-                    if asp_orb <= orb:
-                        aspects.append(TransitAspectInfo(
-                            aspect_type=asp_type,
-                            transiting_planet=tp,
-                            natal_planet=np,
-                            orb=round(asp_orb, 4),
-                            transit_longitude=t_lon,
-                            natal_longitude=n_lon,
-                        ))
+                    n_lon = self._natal_lon(natal_chart, np)
+                    if n_lon is None:
+                        continue
+
+                    n_rashi, n_rashi_deg = longitude_to_rashi(n_lon)
+                    if n_rashi != aspected_rashi:
+                        continue
+
+                    # Orb within the aspected sign — same convention as
+                    # aspect_engine.py's compute(): how far the transiting
+                    # planet's own in-sign degree is from the natal planet's
+                    # in-sign degree, using the shorter of the two possible
+                    # wrap-arounds within a 30° sign.
+                    asp_orb = abs(t_rashi_deg - n_rashi_deg)
+                    if asp_orb > 15:
+                        asp_orb = 30 - asp_orb
+                    if asp_orb > orb:
+                        continue
+
+                    aspects.append(TransitAspectInfo(
+                        aspect_type=aspect_type,
+                        transiting_planet=tp,
+                        natal_planet=np,
+                        orb=round(asp_orb, 4),
+                        transit_longitude=t_lon,
+                        natal_longitude=n_lon,
+                    ))
 
         return aspects
 
