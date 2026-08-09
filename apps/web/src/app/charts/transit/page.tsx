@@ -5,6 +5,7 @@ import { TransitWheel } from "@/components/charts/transit/TransitWheel";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, DonutChart, KpiCard, Table, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
 import { PLANET_SYMBOLS } from "@/lib/astro";
+import { formatPosition } from "@/lib/formatAstro";
 import { useWorkflowStore } from "@/lib/store";
 import { useLiveTransit, useTransitPatterns } from "@/lib/transitPatterns";
 import type { TransitPatternsRequest, TransitPlanetResponse, TransitRequest } from "@/lib/types";
@@ -44,12 +45,6 @@ const GATI_TONE: Record<string, "danger" | "gold" | "neutral" | "success"> = {
   chara: "success",
   atichara: "success",
 };
-
-function formatDegree(deg: number): string {
-  const whole = Math.floor(deg);
-  const minutes = Math.round((deg - whole) * 60);
-  return `${whole}° ${minutes}'`;
-}
 
 export default function TransitAnalysisPage() {
   const result = useWorkflowStore((s) => s.result);
@@ -213,7 +208,7 @@ export default function TransitAnalysisPage() {
       ),
     },
     { key: "transit_rashi", label: "Sign", render: (p) => <span style={{ textTransform: "capitalize" }}>{p.transit_rashi}</span> },
-    { key: "transit_rashi_degree", label: "Degree", mono: true, render: (p) => formatDegree(p.transit_rashi_degree) },
+    { key: "transit_rashi_degree", label: "Degree", mono: true, render: (p) => formatPosition(p.transit_rashi, p.transit_rashi_degree) },
     { key: "transit_nakshatra", label: "Nakshatra" },
     { key: "transit_pada", label: "Pada", align: "right", mono: true },
     {

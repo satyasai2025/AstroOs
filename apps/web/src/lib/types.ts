@@ -123,6 +123,10 @@ export interface AscendantSchema {
   sub_lord: string;
   /** Sub Sub Lord (KP) */
   sub_sub_lord: string;
+  /** Navamsa (D9) sign of the ascendant */
+  navamsa_rashi?: string;
+  /** Degrees within navamsa sign (0–30) */
+  navamsa_rashi_degree?: number;
 }
 
 export interface HouseCuspSchema {
@@ -159,6 +163,10 @@ export interface PlanetPositionSchema {
   sub_sub_lord: string;
   /** Rashi (sign-counting) house — signs from the lagna's sign; can differ from house_number */
   rashi_house_number: number;
+  /** Navamsa (D9) sign of the planet */
+  navamsa_rashi?: string;
+  /** Degrees within navamsa sign (0–30) */
+  navamsa_rashi_degree?: number;
 }
 
 export interface AspectSchema {
