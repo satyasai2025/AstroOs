@@ -224,7 +224,7 @@ export default function ChartsPage() {
           { key: "houses" as ViewMode, label: "House Network" },
           { key: "timeline" as ViewMode, label: "Timeline" },
           { key: "predictions" as ViewMode, label: "Prediction Chains" },
-          { key: "kp" as ViewMode, label: "KP Significators" },
+          { key: "kp" as ViewMode, label: "KP Analysis" },
           { key: "yogas" as ViewMode, label: "Yogas" },
           { key: "ashtakavarga" as ViewMode, label: "Ashtakavarga" },
           { key: "jaimini" as ViewMode, label: "Jaimini" },
