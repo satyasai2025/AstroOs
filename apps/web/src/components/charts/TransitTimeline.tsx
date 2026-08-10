@@ -56,7 +56,7 @@ function formatDateTime(dateStr: string): string {
  * no sub_periods left, or none of them contain "now" (e.g. the tree wasn't
  * expanded that deep by the backend).
  */
-function getCurrentPeriodChain(mahadashas: DashaPeriodResponse[]): DashaPeriodResponse[] {
+export function getCurrentPeriodChain(mahadashas: DashaPeriodResponse[]): DashaPeriodResponse[] {
   const now = Date.now();
   const chain: DashaPeriodResponse[] = [];
   let candidates = mahadashas;

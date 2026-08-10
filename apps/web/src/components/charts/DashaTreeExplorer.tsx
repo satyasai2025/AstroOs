@@ -1,17 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, TreeView, type TreeNode } from "@/components/ui";
-import { computeDasha, getDashaSystems } from "@/lib/dasha-api";
-import { DASHA_SYSTEM_OPTIONS } from "@/lib/chart-alignment";
-import type {
-  AyanamsaCode,
-  DashaPeriodResponse,
-  DashaSystemCode,
-  DashaSystemInfo,
-  DashaTreeResponse,
-  HouseSystemCode,
-} from "@/lib/types";
+import type { DashaPeriodResponse, DashaTreeResponse } from "@/lib/types";
 
 const LEVEL_NAMES = ["Mahadasha", "Antardasha", "Pratyantar", "Sookshma", "Prana"];
 
@@ -35,123 +26,33 @@ function findPeriod(periods: DashaPeriodResponse[], path: string): DashaPeriodRe
   return found;
 }
 
-export interface DashaBirthParams {
-  birth_datetime_utc: string;
-  latitude: number;
-  longitude: number;
-  ayanamsa: AyanamsaCode;
-  house_system: HouseSystemCode;
-}
-
-export function DashaPanel({
-  dasha,
-  birthParams,
-}: {
-  dasha: DashaTreeResponse;
-  /** When provided, enables the dasha-system switcher; otherwise the panel
-   *  renders read-only exactly as before. */
-  birthParams?: DashaBirthParams;
-}) {
+/**
+ * Hierarchical MD -> AD -> PD -> ... explorer for a dasha tree — the
+ * "Dasha Tree" panel from the architecture diagram. Extracted from
+ * DashaPanel.tsx (which is not mounted anywhere live) minus its own
+ * header/switcher, since the page that hosts this already shows the
+ * system + trigger info via DashaSystemSwitcher / DashaOverviewCard.
+ */
+export function DashaTreeExplorer({ dasha }: { dasha: DashaTreeResponse }) {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [activeDasha, setActiveDasha] = useState<DashaTreeResponse>(dasha);
-  const [systemOptions, setSystemOptions] = useState<DashaSystemInfo[]>(
-    DASHA_SYSTEM_OPTIONS.map((o) => ({ system: o.value, label: o.label, category: "nakshatra" })),
-  );
-  const [switching, setSwitching] = useState(false);
-  const [switchError, setSwitchError] = useState<string | null>(null);
-
-  // Reset to the freshly-supplied tree whenever the parent hands us a new one
-  // (e.g. a brand new analysis), rather than sticking with a stale switch.
-  useEffect(() => {
-    setActiveDasha(dasha);
-    setSelectedKey(null);
-    setSwitchError(null);
-  }, [dasha]);
-
-  useEffect(() => {
-    if (!birthParams) return;
-    let cancelled = false;
-    getDashaSystems()
-      .then((systems) => {
-        if (!cancelled && systems.length > 0) setSystemOptions(systems);
-      })
-      .catch(() => {
-        // Keep the static fallback list — switcher still works via /dasha/{system}.
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [birthParams]);
-
-  async function handleSystemChange(system: DashaSystemCode) {
-    if (!birthParams || system === activeDasha.system) return;
-    setSwitching(true);
-    setSwitchError(null);
-    try {
-      const next = await computeDasha(system, { ...birthParams, persist: false });
-      setActiveDasha(next);
-      setSelectedKey(null);
-    } catch (err) {
-      setSwitchError(err instanceof Error ? err.message : "Failed to switch dasha system.");
-    } finally {
-      setSwitching(false);
-    }
-  }
 
   const treeData = useMemo(
-    () => activeDasha.mahadashas.map((period, i) => periodToNode(period, `${i}`)),
-    [activeDasha.mahadashas],
+    () => dasha.mahadashas.map((period, i) => periodToNode(period, `${i}`)),
+    [dasha.mahadashas],
   );
 
-  const selected = selectedKey ? findPeriod(activeDasha.mahadashas, selectedKey) : null;
+  const selected = selectedKey ? findPeriod(dasha.mahadashas, selectedKey) : null;
 
   return (
     <div className="space-y-4">
-      <Card>
-        <div className="mb-1 flex items-center justify-between gap-3">
-          <h3 className="text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-            {activeDasha.system} Dasha
-          </h3>
-          {birthParams && (
-            <select
-              value={activeDasha.system}
-              disabled={switching}
-              onChange={(e) => handleSystemChange(e.target.value as DashaSystemCode)}
-              className="rounded-md border px-2 py-1 text-xs"
-              style={{
-                borderColor: "var(--border-primary)",
-                backgroundColor: "var(--bg-card)",
-                color: "var(--text-primary)",
-              }}
-              aria-label="Dasha system"
-            >
-              {systemOptions.map((opt) => (
-                <option key={opt.system} value={opt.system}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-        <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-          Trigger: {activeDasha.trigger_planet} · {activeDasha.trigger_nakshatra} nakshatra · Total cycle:{" "}
-          {activeDasha.total_cycle_years} years
-        </p>
-        {switchError && (
-          <p className="mt-1 text-xs" style={{ color: "var(--color-danger, #f87171)" }}>
-            {switchError}
-          </p>
-        )}
-      </Card>
-
       {/* Mahadasha bar strip — proportional width per period against the total cycle */}
       <Card>
         <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-tertiary)" }}>
           Mahadasha Timeline
         </h4>
         <div className="flex h-8 w-full overflow-hidden rounded-md">
-          {activeDasha.mahadashas.map((period, i) => {
-            const widthPct = (period.duration_days / (activeDasha.total_cycle_years * 365.25)) * 100;
+          {dasha.mahadashas.map((period, i) => {
+            const widthPct = (period.duration_days / (dasha.total_cycle_years * 365.25)) * 100;
             const active = selectedKey === `${i}`;
             return (
               <button

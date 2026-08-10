@@ -3,6 +3,7 @@ AstroOS — Dasha Router (Task 6)
 
 Endpoints
 ---------
+GET  /api/v1/dasha/systems       — list registered dasha systems (id/label/category)
 POST /api/v1/dasha/vimshottari   — 120-year Parashara cycle
 POST /api/v1/dasha/yogini        — 36-year Yogini cycle
 POST /api/v1/dasha/ashtottari    — 108-year Ashtottari cycle
@@ -10,16 +11,15 @@ POST /api/v1/dasha/kalachakra    — 100-year Kalachakra cycle
 POST /api/v1/dasha/chara         — Jaimini Chara (D1-based sign cycle)
 POST /api/v1/dasha/narayana      — Jaimini Narayana (D9-based sign cycle)
 
-All endpoints accept the same DashaRequest body and return DashaTreeResponse.
-No business logic lives here.
+All POST endpoints accept the same DashaRequest body and return DashaTreeResponse.
+Routes are generated from the dasha registry (apps/api/services/dasha_registry.py)
+rather than hardcoded here, and dispatch through DashaOrchestrator. No business
+logic (dasha math or persistence) lives in this file.
 """
 
 from __future__ import annotations
 
-import asyncio
-import functools
 import logging
-from typing import Callable
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
@@ -29,8 +29,15 @@ from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
 from apps.api.domain.dasha import DashaTree
 from apps.api.repositories.birth_chart_repository import BirthChartRepository
 from apps.api.repositories.dasha_repository import DashaRepository
-from apps.api.schemas.dasha import DashaRequest, DashaPeriodResponse, DashaTreeResponse
+from apps.api.schemas.dasha import (
+    DashaRequest,
+    DashaPeriodResponse,
+    DashaSystemInfo,
+    DashaTreeResponse,
+)
 from apps.api.services.dasha_engine import DashaEngine
+from apps.api.services.dasha_orchestrator import DashaOrchestrator
+from apps.api.services.dasha_registry import DashaEngineDescriptor, all_dasha_engines
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 logger = logging.getLogger(__name__)
@@ -57,6 +64,12 @@ def _get_dasha_engine(
         birth_chart_repo=BirthChartRepository(session),
         dasha_repo=DashaRepository(session),
     )
+
+
+def _get_dasha_orchestrator(
+    engine: DashaEngine = Depends(_get_dasha_engine),
+) -> DashaOrchestrator:
+    return DashaOrchestrator(engine)
 
 
 # ── Serialisation ──────────────────────────────────────────────────────────────
@@ -86,139 +99,92 @@ def _serialise_tree(tree: DashaTree) -> DashaTreeResponse:
     )
 
 
-def _make_endpoint(compute_fn_name: str, summary: str, description: str):
+def _make_endpoint(descriptor: DashaEngineDescriptor):
     """
-    Factory that builds an async FastAPI endpoint for one dasha system.
-    Avoids repeating the same try/except boilerplate 6 times.
+    Factory that builds an async FastAPI endpoint for one dasha system,
+    dispatching through DashaOrchestrator. Avoids repeating the same
+    try/except boilerplate once per registered system.
     """
+
     async def endpoint(
         body: DashaRequest,
-        engine: DashaEngine = Depends(_get_dasha_engine),
+        orchestrator: DashaOrchestrator = Depends(_get_dasha_orchestrator),
     ) -> DashaTreeResponse:
+        # Compute and persist are two distinct failure modes with distinct
+        # HTTP semantics, so they're split into two orchestrator calls
+        # (persist=False then a dedicated persist step) even though
+        # DashaOrchestrator.run can do both in one call.
         try:
-            compute_fn: Callable = getattr(engine, compute_fn_name)
-            # Blocking pyswisseph call — offload to a worker thread so it
-            # does not freeze the event loop. See horoscope.py's
-            # generate_d1_chart for the full rationale.
-            tree = await asyncio.to_thread(
-                functools.partial(
-                    compute_fn,
-                    birth_datetime_utc=body.birth_datetime_utc,
-                    latitude=body.latitude,
-                    longitude=body.longitude,
-                    ayanamsa=body.ayanamsa,
-                    house_system=body.house_system,
-                    max_depth=body.max_depth,
-                )
+            tree = await orchestrator.run(
+                descriptor.system,
+                birth_datetime_utc=body.birth_datetime_utc,
+                latitude=body.latitude,
+                longitude=body.longitude,
+                ayanamsa=body.ayanamsa,
+                house_system=body.house_system,
+                max_depth=body.max_depth,
+                persist=False,
             )
         except ValueError as exc:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
             )
         except Exception as exc:
-            logger.exception("Error computing %s: %s", compute_fn_name, exc)
+            logger.exception("Error computing %s: %s", descriptor.compute_method, exc)
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to compute dasha: {exc}",
             )
 
-        try:
-            await engine.persist_tree(
-                tree,
-                birth_datetime_utc=body.birth_datetime_utc,
-                latitude=body.latitude,
-                longitude=body.longitude,
-                ayanamsa=body.ayanamsa,
-                house_system=body.house_system,
-            )
-        except SQLAlchemyError as exc:
-            logger.exception("Failed to persist %s dasha tree: %s", compute_fn_name, exc)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=(
-                    "Dasha tree was computed successfully but could not be "
-                    "saved. Please retry."
-                ),
-            ) from exc
+        if body.persist:
+            try:
+                await orchestrator.persist(
+                    tree,
+                    birth_datetime_utc=body.birth_datetime_utc,
+                    latitude=body.latitude,
+                    longitude=body.longitude,
+                    ayanamsa=body.ayanamsa,
+                    house_system=body.house_system,
+                )
+            except SQLAlchemyError as exc:
+                logger.exception(
+                    "Failed to persist %s dasha tree: %s", descriptor.compute_method, exc
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=(
+                        "Dasha tree was computed successfully but could not be "
+                        "saved. Please retry."
+                    ),
+                ) from exc
 
         return _serialise_tree(tree)
 
-    endpoint.__name__ = compute_fn_name
-    endpoint.__doc__ = description
+    endpoint.__name__ = descriptor.compute_method
+    endpoint.__doc__ = descriptor.description
     return endpoint
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 
-router.add_api_route(
-    "/vimshottari",
-    _make_endpoint(
-        "compute_vimshottari",
-        "Vimshottari Dasha",
-        "120-year Parashara cycle based on Moon's nakshatra. Returns Mahadasha through Prana.",
-    ),
-    methods=["POST"],
-    response_model=DashaTreeResponse,
-    summary="Vimshottari Dasha",
+@router.get(
+    "/systems",
+    response_model=list[DashaSystemInfo],
+    summary="List registered dasha systems",
 )
+def list_dasha_systems() -> list[DashaSystemInfo]:
+    return [
+        DashaSystemInfo(system=d.system, label=d.label, category=d.category)
+        for d in all_dasha_engines()
+    ]
 
-router.add_api_route(
-    "/yogini",
-    _make_endpoint(
-        "compute_yogini",
-        "Yogini Dasha",
-        "36-year cycle. Eight Yogini lords cycle through Moon's nakshatra sequence.",
-    ),
-    methods=["POST"],
-    response_model=DashaTreeResponse,
-    summary="Yogini Dasha",
-)
 
-router.add_api_route(
-    "/ashtottari",
-    _make_endpoint(
-        "compute_ashtottari",
-        "Ashtottari Dasha",
-        "108-year cycle. Applied when Rahu occupies a Kendra or Trikona from Lagna.",
-    ),
-    methods=["POST"],
-    response_model=DashaTreeResponse,
-    summary="Ashtottari Dasha",
-)
-
-router.add_api_route(
-    "/kalachakra",
-    _make_endpoint(
-        "compute_kalachakra",
-        "Kalachakra Dasha",
-        "100-year sign-based cycle derived from Moon's Navamsha (D9) position.",
-    ),
-    methods=["POST"],
-    response_model=DashaTreeResponse,
-    summary="Kalachakra Dasha",
-)
-
-router.add_api_route(
-    "/chara",
-    _make_endpoint(
-        "compute_chara",
-        "Chara Dasha (Jaimini)",
-        "Sign-based Jaimini dasha. Duration computed from D1 sign-lord placements.",
-    ),
-    methods=["POST"],
-    response_model=DashaTreeResponse,
-    summary="Chara Dasha",
-)
-
-router.add_api_route(
-    "/narayana",
-    _make_endpoint(
-        "compute_narayana",
-        "Narayana Dasha (Jaimini)",
-        "Sign-based Jaimini dasha using Navamsha (D9) sign-lord placements.",
-    ),
-    methods=["POST"],
-    response_model=DashaTreeResponse,
-    summary="Narayana Dasha",
-)
+for _descriptor in all_dasha_engines():
+    router.add_api_route(
+        f"/{_descriptor.system}",
+        _make_endpoint(_descriptor),
+        methods=["POST"],
+        response_model=DashaTreeResponse,
+        summary=_descriptor.summary,
+    )

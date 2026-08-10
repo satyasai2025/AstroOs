@@ -57,6 +57,18 @@ class DashaRequest(BaseModel):
             ),
         ),
     ] = 3
+    persist: Annotated[
+        bool,
+        Field(
+            default=True,
+            description=(
+                "Whether to save this tree to the dashas table. Set false for "
+                "a transient/comparison compute (e.g. browsing a different "
+                "dasha system for an already-saved chart) to avoid creating "
+                "duplicate birth_charts rows for the same birth input."
+            ),
+        ),
+    ] = True
 
     @field_validator("birth_datetime_utc")
     @classmethod
@@ -102,3 +114,11 @@ class DashaTreeResponse(BaseModel):
 
 # Allow self-referential model
 DashaPeriodResponse.model_rebuild()
+
+
+class DashaSystemInfo(BaseModel):
+    """Metadata describing one registered dasha system, for UI switchers."""
+
+    system: DashaSystem
+    label: str
+    category: Literal["nakshatra", "sign"]

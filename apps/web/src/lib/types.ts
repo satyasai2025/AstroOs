@@ -382,6 +382,14 @@ export interface DashaTreeResponse {
   total_cycle_years: number;
 }
 
+/** Mirrors DashaSystemInfo (apps/api/schemas/dasha.py) — one entry per
+ *  registered dasha engine, used to drive the dasha-system switcher. */
+export interface DashaSystemInfo {
+  system: DashaSystemCode;
+  label: string;
+  category: "nakshatra" | "sign";
+}
+
 // ── Yoga ──────────────────────────────────────────────────────────────────────
 
 /** Request body for evaluating yogas against a birth chart. Mirrors the

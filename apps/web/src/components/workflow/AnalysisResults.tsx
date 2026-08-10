@@ -89,7 +89,7 @@ export function AnalysisResults({
 
       {tab === "Chart" && <ChartPanel chart={result.chart} />}
       {tab === "Vargas" && <VargaPanel vargas={result.vargas} />}
-      {tab === "Dasha" && <DashaPanel dasha={result.dasha} />}
+      {tab === "Dasha" && <DashaPanel dasha={result.dasha} birthParams={birthData} />}
       {tab === "Yogas" && <YogaPanel yogas={result.yogas} />}
       {tab === "Strength" && (
         <StrengthPanel shadbala={result.shadbala} ashtakavarga={result.ashtakavarga} />
