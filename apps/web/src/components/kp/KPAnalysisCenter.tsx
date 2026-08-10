@@ -18,12 +18,14 @@ import { KPEventExplorer } from "@/components/kp/KPEventExplorer";
 import { KPTimingEngine } from "@/components/kp/KPTimingEngine";
 import { KPSpecialFactors } from "@/components/kp/KPSpecialFactors";
 import { KPReasoningChain } from "@/components/kp/KPReasoningChain";
+import { KPSnapshot } from "@/components/kp/KPSnapshot";
 
 interface Props {
   result: WorkflowAnalysisResponse;
 }
 
 type KPSection =
+  | "snapshot"
   | "overview"
   | "cusps"
   | "planets"
@@ -35,6 +37,7 @@ type KPSection =
   | "evidence";
 
 const SECTIONS: { key: KPSection; label: string }[] = [
+  { key: "snapshot", label: "Snapshot" },
   { key: "overview", label: "Overview" },
   { key: "cusps", label: "Cusp Matrix" },
   { key: "planets", label: "Planet Portfolio" },
@@ -47,7 +50,7 @@ const SECTIONS: { key: KPSection; label: string }[] = [
 ];
 
 export function KPAnalysisCenter({ result }: Props) {
-  const [section, setSection] = useState<KPSection>("overview");
+  const [section, setSection] = useState<KPSection>("snapshot");
   const { chart, dasha } = result;
 
   return (
@@ -75,6 +78,7 @@ export function KPAnalysisCenter({ result }: Props) {
       </div>
 
       <div id={`kp-panel-${section}`} role="tabpanel" className="space-y-4">
+        {section === "snapshot" && <KPSnapshot chart={chart} dasha={dasha} />}
         {section === "overview" && <KPOverview />}
         {section === "cusps" && <KPCuspMatrix chart={chart} />}
         {section === "planets" && <KPPlanetPortfolio chart={chart} />}
