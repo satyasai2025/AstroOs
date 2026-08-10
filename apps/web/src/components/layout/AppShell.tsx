@@ -37,6 +37,20 @@ const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    title: "Nakshatra",
+    color: "--section-analysis",
+    items: [
+      { href: "/nakshatra", label: "Nakshatra Module", icon: "star" },
+      { href: "/nakshatra?tab=tara", label: "Tara Bala", icon: "target" },
+      { href: "/nakshatra?tab=dasha", label: "Lords & Dasha", icon: "clock" },
+      { href: "/nakshatra?tab=transit", label: "Transit / Gochara", icon: "orbit" },
+      { href: "/nakshatra?tab=muhurta", label: "Muhurta", icon: "sparkle" },
+      { href: "/nakshatra?tab=special", label: "Special Rules", icon: "shield" },
+      { href: "/nakshatra?tab=namakshara", label: "Namakshara", icon: "book" },
+      { href: "/nakshatra?tab=combined", label: "Combined Analysis", icon: "layers" },
+    ],
+  },
+  {
     title: "Analysis",
     color: "--section-analysis",
     items: [
