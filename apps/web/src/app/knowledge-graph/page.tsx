@@ -19,6 +19,8 @@ import { PredictionChainGraph } from "@/components/charts/predictions/Prediction
 import { PredictionRelatedRules } from "@/components/charts/predictions/PredictionRelatedRules";
 import { PredictionDataSources } from "@/components/charts/predictions/PredictionDataSources";
 import { buildPredictionGraph } from "@/lib/predictions/chainEngine";
+import { useAvastha } from "@/lib/avastha";
+import { useShadbalaAll } from "@/lib/shadbala";
 
 const AREA_KEYS = Object.keys(AREA_LABELS) as LifeArea[];
 
@@ -281,9 +283,15 @@ function VisualizationViewer({
   }, [card.id]);
 
   const isPredictionCard = card.id === "prediction-dependency" || card.id === "prediction-tree";
+  const request = useWorkflowStore((s) => s.request);
+  const avasthaQuery = useAvastha(request);
+  const shadbalaAllQuery = useShadbalaAll(request);
   const predictionGraph = useMemo(
-    () => (isPredictionCard ? buildPredictionGraph(area, result) : null),
-    [isPredictionCard, area, result],
+    () =>
+      isPredictionCard
+        ? buildPredictionGraph(area, result, { avastha: avasthaQuery.data, shadbalaAll: shadbalaAllQuery.data })
+        : null,
+    [isPredictionCard, area, result, avasthaQuery.data, shadbalaAllQuery.data],
   );
 
   useEffect(() => {
@@ -291,8 +299,6 @@ function VisualizationViewer({
   }, [predictionGraph]);
 
   const related = allCards.filter((c) => c.id !== card.id && c.categories.some((cat) => card.categories.includes(cat))).slice(0, 4);
-
-  const request = useWorkflowStore((s) => s.request);
 
   let tabContent: React.ReactNode = null;
   if (activeTab === "graph") {
@@ -402,12 +408,8 @@ function VisualizationViewer({
               <dd style={{ color: "var(--text-primary)" }}>{AREA_LABELS[area]}</dd>
             </div>
           </dl>
-          <div className="flex flex-wrap gap-1.5">
-            {card.legend.map((l) => (
-              <span key={l} className="rounded-full px-2 py-0.5 text-[10px]" style={{ border: "1px solid var(--border-primary)", color: "var(--text-muted)" }}>
-                {l}
-              </span>
-            ))}
+          <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+            Shows: {card.legend.join(", ")}
           </div>
         </div>
       </div>
