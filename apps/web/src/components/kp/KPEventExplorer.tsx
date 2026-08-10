@@ -3,7 +3,7 @@
 /**
  * KP Event Explorer — config-driven event promise: each event reads its
  * classical house group, the CSL verdict on its primary cusp, and its
- * ranked significators. Verdicts are honest labels (STRONG/PARTIAL/WEAK),
+ * ranked significators. Verdicts are honest labels (POSITIVE/PARTIAL/WEAK),
  * never a manufactured yes/no.
  */
 
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const VERDICT_COLORS: Record<string, { fg: string; bg: string }> = {
-  STRONG: { fg: "#34d399", bg: "rgba(52,211,153,0.15)" },
+  POSITIVE: { fg: "#34d399", bg: "rgba(52,211,153,0.15)" },
   PARTIAL: { fg: "#fbbf24", bg: "rgba(251,191,36,0.15)" },
   WEAK: { fg: "#f87171", bg: "rgba(248,113,113,0.15)" },
 };
