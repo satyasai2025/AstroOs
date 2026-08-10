@@ -10,12 +10,17 @@ import { PlanetRelationshipGraph } from "@/components/charts/PlanetRelationshipG
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
 import { StrengthAnalysisCenter } from "@/components/charts/StrengthAnalysisCenter";
 import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
-import { TransitTimeline } from "@/components/charts/TransitTimeline";
+import { TransitTimeline, getCurrentPeriodChain } from "@/components/charts/TransitTimeline";
 import { LifeEventTimeline } from "@/components/charts/LifeEventTimeline";
+import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
 import { PredictionChainExplorer } from "@/components/charts/PredictionChainExplorer";
 import { KPSignificatorExplorer } from "@/components/charts/KPSignificatorExplorer";
 import { NakshatraPadaSelector } from "@/components/charts/NakshatraPadaSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
+import { DashaSystemSwitcher } from "@/components/charts/DashaSystemSwitcher";
+import { DashaOverviewCard } from "@/components/charts/DashaOverviewCard";
+import { DashaTreeExplorer } from "@/components/charts/DashaTreeExplorer";
+import { DashaExportPanel } from "@/components/charts/DashaExportPanel";
 import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
 import InteractiveKundliView from "@/components/charts/InteractiveKundliView";
 import { YogaIntelligenceDashboard } from "@/components/charts/YogaIntelligenceDashboard";
@@ -67,11 +72,38 @@ const VALID_VIEWS: ViewMode[] = [
   "divisional"
 ];
 
+type DashaSubView = "dashboard" | "timeline" | "tree" | "analysis" | "events" | "reports";
+
+const DASHA_SUBVIEWS: { key: DashaSubView; label: string }[] = [
+  { key: "dashboard", label: "Dashboard" },
+  { key: "timeline", label: "Timeline" },
+  { key: "tree", label: "Tree" },
+  { key: "analysis", label: "Analysis" },
+  { key: "events", label: "Event Timing" },
+  { key: "reports", label: "Reports" },
+];
+
+const DASHA_SUBVIEW_HELP: Record<DashaSubView, string> = {
+  dashboard:
+    "Quick summary: which system is active, the trigger planet/sign, total cycle length, and the current period chain (Mahadasha → Antardasha → ...) as of today.",
+  timeline:
+    "Interactive D3 timeline of every period from Mahadasha down to the deepest computed level. Scroll/pinch to zoom, drag to pan, click a period for details. Orange hatching marks Dasha Sandhi (junction) windows.",
+  tree:
+    "Full period hierarchy as an expandable tree, plus a proportional Mahadasha bar strip. Click any period (in either view) to see its exact lord, level, start/end dates and duration.",
+  analysis:
+    "Dasha ↔ transit correlation: shows Vedha and Vipreet Vedha (obstruction/relief) between the currently-active dasha lords and today's transiting planets, plus Nakshatra Vedha via the Sarvatobhadra Chakra.",
+  events:
+    "A chronological log of real, recorded life events for this chart (career, relationship, travel, etc.) — the research ledger you compare against the Dashboard/Analysis tabs to check whether the dasha framework's classical significations lined up with what actually happened. Events are not auto-correlated to periods yet; add and review them via the Events API.",
+  reports:
+    "Exports the currently-displayed dasha tree as a CSV (one row per period, opens directly in Excel/Sheets) — a raw data snapshot, not a formatted narrative report.",
+};
+
 export default function ChartsPage() {
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
   const searchParams = useSearchParams();
   const [view, setView] = useState<ViewMode>("chart");
+  const [dashaSubView, setDashaSubView] = useState<DashaSubView>("timeline");
 
   useEffect(() => {
     const requested = searchParams.get("view");
@@ -351,7 +383,63 @@ export default function ChartsPage() {
       )}
 
       {view === "dasha" && (
-        <div id="panel-dasha" role="tabpanel" aria-label="Dasha timeline visualization panel"><DashaTimeline dasha={dasha} /></div>
+        <div id="panel-dasha" role="tabpanel" aria-label="Dasha analysis panel">
+          <DashaSystemSwitcher
+            current={dasha.system}
+            birthParams={
+              request
+                ? {
+                    birth_datetime_utc: request.birth_datetime_utc,
+                    latitude: request.latitude,
+                    longitude: request.longitude,
+                    ayanamsa: request.ayanamsa,
+                    house_system: request.house_system,
+                  }
+                : undefined
+            }
+            onChange={(nextDasha) => setResult({ ...result, dasha: nextDasha }, request!)}
+          />
+
+          <div
+            className="mb-3 flex flex-wrap gap-1 border-b pb-2"
+            style={{ borderColor: "var(--border-primary)" }}
+            role="tablist"
+            aria-label="Dasha sub-panel tabs"
+          >
+            {DASHA_SUBVIEWS.map((sv) => (
+              <button
+                key={sv.key}
+                type="button"
+                role="tab"
+                aria-selected={dashaSubView === sv.key}
+                onClick={() => setDashaSubView(sv.key)}
+                className="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+                style={{
+                  backgroundColor: dashaSubView === sv.key ? "var(--accent)" : "transparent",
+                  color: dashaSubView === sv.key ? "var(--accent-text)" : "var(--text-secondary)",
+                }}
+              >
+                {sv.label}
+              </button>
+            ))}
+          </div>
+
+          <p
+            className="mb-3 text-xs"
+            style={{ color: "var(--text-muted)" }}
+          >
+            {DASHA_SUBVIEW_HELP[dashaSubView]}
+          </p>
+
+          {dashaSubView === "dashboard" && <DashaOverviewCard dasha={dasha} />}
+          {dashaSubView === "timeline" && <DashaTimeline dasha={dasha} />}
+          {dashaSubView === "tree" && <DashaTreeExplorer dasha={dasha} />}
+          {dashaSubView === "analysis" && (
+            <VedhaAnalysisPanel transits={result.transits} dashaChain={getCurrentPeriodChain(dasha.mahadashas)} />
+          )}
+          {dashaSubView === "events" && <LifeEventTimeline chartId={result.chart_id} />}
+          {dashaSubView === "reports" && <DashaExportPanel dasha={dasha} />}
+        </div>
       )}
 
       {view === "strength" && (
