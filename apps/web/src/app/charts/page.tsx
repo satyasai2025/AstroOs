@@ -13,7 +13,7 @@ import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwo
 import { TransitTimeline } from "@/components/charts/TransitTimeline";
 import { LifeEventTimeline } from "@/components/charts/LifeEventTimeline";
 import { PredictionChainExplorer } from "@/components/charts/PredictionChainExplorer";
-import { KPSignificatorExplorer } from "@/components/charts/KPSignificatorExplorer";
+import { KPAnalysisCenter } from "@/components/kp/KPAnalysisCenter";
 import { NakshatraPadaSelector } from "@/components/charts/NakshatraPadaSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
@@ -401,8 +401,8 @@ export default function ChartsPage() {
       )}
 
       {view === "kp" && (
-        <div id="panel-kp" role="tabpanel" aria-label="KP significator explorer panel" className="flex justify-center">
-          <KPSignificatorExplorer result={result} />
+        <div id="panel-kp" role="tabpanel" aria-label="KP analysis panel" className="flex justify-center">
+          <KPAnalysisCenter result={result} />
         </div>
       )}
 
