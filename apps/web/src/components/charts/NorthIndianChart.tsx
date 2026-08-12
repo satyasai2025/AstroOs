@@ -9,6 +9,19 @@ import {
   PLANET_SYMBOLS,
   CHART_COLORS,
 } from "@/lib/astro";
+import {
+  A,
+  B,
+  C,
+  D,
+  M_AB,
+  M_BC,
+  M_CD,
+  M_DA,
+  HOUSE_UNIT_POLYGONS,
+  HOUSE_CENTROIDS,
+  HOUSE_NUMBER_UNIT_POS,
+} from "@/lib/chartGeometry";
 
 /**
  * Planet placement data — the minimum information needed to draw a chart.
@@ -66,97 +79,8 @@ interface NorthIndianChartProps {
   activeHouse?: number | null;
 }
 
-/**
- * The classical North Indian chart construction: an outer square, both
- * diagonals (corner to corner), and an inner diamond connecting the
- * midpoints of the four sides. That produces exactly 12 regions — a
- * rhombus at the midpoint of each side (houses 1/4/7/10, the Kendras)
- * and two triangles filling each corner (the remaining 8 houses) — not
- * 12 equal angular wedges. Coordinates below are worked out in a 0–100
- * unit square and verified by hand (every rhombus has 4 equal sides);
- * `unitToPoint` maps them into the actual SVG size at render time.
- *
- * House 1 is fixed at the top, proceeding counter-clockwise per the
- * standard North Indian convention (1 top → 4 left → 7 bottom → 10
- * right for the Kendras, with 2/3, 5/6, 8/9, 11/12 filling the
- * corners between them in that order).
- */
-const A: [number, number] = [0, 0]; // top-left
-const B: [number, number] = [100, 0]; // top-right
-const C: [number, number] = [100, 100]; // bottom-right
-const D: [number, number] = [0, 100]; // bottom-left
-const O: [number, number] = [50, 50]; // center
-const M_AB: [number, number] = [50, 0];
-const M_BC: [number, number] = [100, 50];
-const M_CD: [number, number] = [50, 100];
-const M_DA: [number, number] = [0, 50];
-const MID_AO: [number, number] = [25, 25];
-const MID_BO: [number, number] = [75, 25];
-const MID_CO: [number, number] = [75, 75];
-const MID_DO: [number, number] = [25, 75];
-
-const HOUSE_UNIT_POLYGONS: Record<number, [number, number][]> = {
-  1: [M_AB, MID_BO, O, MID_AO],
-  2: [A, MID_AO, M_AB],
-  3: [A, M_DA, MID_AO],
-  4: [M_DA, MID_AO, O, MID_DO],
-  5: [D, MID_DO, M_DA],
-  6: [D, M_CD, MID_DO],
-  7: [M_CD, MID_DO, O, MID_CO],
-  8: [C, MID_CO, M_CD],
-  9: [C, M_BC, MID_CO],
-  10: [M_BC, MID_CO, O, MID_BO],
-  11: [B, M_BC, MID_BO],
-  12: [B, MID_BO, M_AB],
-};
-
-function centroid(points: [number, number][]): [number, number] {
-  const n = points.length;
-  const sum = points.reduce((acc, [x, y]) => [acc[0] + x, acc[1] + y], [0, 0]);
-  return [sum[0] / n, sum[1] / n];
-}
-
-const HOUSE_CENTROIDS: Record<number, [number, number]> = Object.fromEntries(
-  Object.entries(HOUSE_UNIT_POLYGONS).map(([h, pts]) => [Number(h), centroid(pts)]),
-);
-
-/**
- * Where the small house-number digit sits: interpolated from the
- * centroid toward whichever of the house's own vertices sits farthest
- * from the chart's center — i.e. the outer corner/edge-midpoint that
- * house actually touches. Since both endpoints belong to the same
- * convex polygon, every point strictly between them is guaranteed to
- * be inside it, not sitting on one of the construction lines that
- * happen to pass through the vertices themselves — unlike an earlier
- * version of this table that hand-picked coordinates without checking
- * them against the real geometry, which put a couple of labels
- * directly on top of the diagonal (e.g. house 2's old position (12,12)
- * sits exactly on the y=x diagonal).
- */
-function farthestVertexFromCenter(points: [number, number][]): [number, number] {
-  return points.reduce((farthest, p) => {
-    const d = (p[0] - O[0]) ** 2 + (p[1] - O[1]) ** 2;
-    const df = (farthest[0] - O[0]) ** 2 + (farthest[1] - O[1]) ** 2;
-    return d > df ? p : farthest;
-  }, points[0]);
-}
-
-function interpolate(
-  from: [number, number],
-  to: [number, number],
-  t: number,
-): [number, number] {
-  return [from[0] + (to[0] - from[0]) * t, from[1] + (to[1] - from[1]) * t];
-}
-
-const HOUSE_NUMBER_UNIT_POS: Record<number, [number, number]> = Object.fromEntries(
-  Object.entries(HOUSE_UNIT_POLYGONS).map(([h, pts]) => {
-    const house = Number(h);
-    const outer = farthestVertexFromCenter(pts);
-    return [house, interpolate(HOUSE_CENTROIDS[house], outer, 0.55)];
-  }),
-);
-
+// House geometry (HOUSE_UNIT_POLYGONS etc.) lives in lib/chartGeometry.ts —
+// shared with MixedVargaTransitChart's concentric dual-ring rendering.
 export function NorthIndianChart({
   title,
   ascendant,
@@ -313,11 +237,20 @@ export function NorthIndianChart({
     // ── Compute each planet's rendered position up front — reused for both
     // the aspect lines (drawn first, underneath) and the planet glyphs
     // themselves (drawn after, on top). ─────────────────────────────────
+    // Dynamic line height: single planets are centered; dense stacks
+    // (3+ planets per house) space out more and scale the glyphs so
+    // labels and degrees never collide with the neighbouring row.
     const planetPositions: Record<string, [number, number]> = {};
+    const perHouseCounts: Record<number, number> = {};
+    for (const [houseStr, ps] of Object.entries(housePlanets)) {
+      perHouseCounts[Number(houseStr)] = ps.length;
+    }
     for (const [houseStr, ps] of Object.entries(housePlanets)) {
       const house = Number(houseStr);
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
-      const lineHeight = 15;
+      const count = ps.length;
+      // More planets per house → bigger spacing so nothing collides.
+      const lineHeight = count >= 5 ? 17 : count >= 3 ? 16 : 15;
       ps.forEach((planet, i) => {
         const offsetY = (i - (ps.length - 1) / 2) * lineHeight;
         planetPositions[planet.planet] = [px, py + offsetY];
@@ -352,6 +285,8 @@ export function NorthIndianChart({
       const house = Number(houseStr);
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
 
+      const houseCount = perHouseCounts[house] ?? ps.length;
+      const dense = houseCount >= 4;
       ps.forEach((planet, i) => {
         const abbrev = PLANET_ABBREV[planet.planet] ?? planet.planet.slice(0, 2);
         const symbol = PLANET_SYMBOLS[planet.planet] ?? "";
@@ -359,7 +294,7 @@ export function NorthIndianChart({
         const isActive = activePlanet === planet.planet;
 
         // Stack planets vertically within the house if there's more than one.
-        const lineHeight = 15;
+        const lineHeight = houseCount >= 5 ? 17 : houseCount >= 3 ? 16 : 15;
         const offsetY = (i - (ps.length - 1) / 2) * lineHeight;
 
         const g = svg.append("g")
@@ -368,6 +303,17 @@ export function NorthIndianChart({
           .on("mouseenter", () => onPlanetHover?.(planet.planet))
           .on("mouseleave", () => onPlanetHover?.(null))
           .on("click", () => onPlanetClick?.(planet.planet));
+
+        // SVG <title> tooltip so hover always shows full details, even in
+        // dense charts where the in-chart degree text is hidden.
+        g.append("title")
+          .text(
+            `${planet.planet}${planet.is_retrograde ? " (Retrograde)" : ""} — ${
+              planet.rashi
+            }${planet.rashi_degree !== undefined ? ` ${planet.rashi_degree.toFixed(2)}°` : ""}${
+              planet.house_number ? ` · House ${planet.house_number}` : ""
+            }`,
+          );
 
         if (isActive) {
           g.append("circle")
@@ -378,28 +324,33 @@ export function NorthIndianChart({
             .style("opacity", 0.18);
         }
 
+        // Symbol + abbreviation side by side with a small gap. In dense
+        // charts, shrink both so they stay on one legible line.
+        const labelFontSize = dense ? 8.5 : 10;
+        const symbolX = dense ? -12 : -14;
+        const abbrevX = dense ? 3 : 4;
         g.append("text")
-          .attr("x", -14)
+          .attr("x", symbolX)
           .attr("y", 0)
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "central")
-          .style("font-size", "9px")
+          .style("font-size", dense ? "8px" : "9px")
           .style("fill", isAsc ? ascColor : accentColor)
           .text(symbol);
 
         g.append("text")
-          .attr("x", 2)
+          .attr("x", abbrevX)
           .attr("y", 0)
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "central")
-          .style("font-size", "10px")
+          .style("font-size", `${labelFontSize}px`)
           .style("font-weight", isActive ? "900" : "bold")
           .style("fill", isAsc ? ascColor : accentColor)
           .text(abbrev);
 
         if (planet.is_retrograde) {
           g.append("text")
-            .attr("x", 20)
+            .attr("x", abbrevX + (dense ? 14 : 17))
             .attr("y", 0)
             .attr("text-anchor", "start")
             .attr("dominant-baseline", "central")
@@ -408,7 +359,10 @@ export function NorthIndianChart({
             .text("R");
         }
 
-        if (planet.rashi_degree !== undefined) {
+        // Degree text: only show when the house isn't too dense (3+ per
+        // house), otherwise it collides with the next planet's row. Full
+        // degree is always available via the SVG tooltip above.
+        if (planet.rashi_degree !== undefined && houseCount < 3) {
           g.append("text")
             .attr("x", 2)
             .attr("y", 11)
