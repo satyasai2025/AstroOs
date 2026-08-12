@@ -54,6 +54,7 @@ def _dto_to_user_response(dto: UserDTO) -> UserResponse:
         status=dto.status,
         created_at=dto.created_at,
         last_login_at=dto.last_login_at,
+        timezone=dto.timezone,
     )
 
 
@@ -218,6 +219,7 @@ async def me(
         status=current_user.status.value,
         created_at=current_user.created_at,
         last_login_at=current_user.last_login_at,
+        timezone=current_user.timezone,
     )
 
 
@@ -236,6 +238,7 @@ async def update_me(
             current_user,
             display_name=body.display_name,
             email=str(body.email) if body.email else None,
+            timezone=body.timezone,
         )
     except AuthError as exc:
         raise _handle_auth_error(exc) from exc

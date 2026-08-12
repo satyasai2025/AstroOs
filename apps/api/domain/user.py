@@ -56,6 +56,7 @@ class User:
     updated_at: datetime
     last_login_at: Optional[datetime] = None
     deleted_at: Optional[datetime] = None
+    timezone: str = "UTC"
 
     def __post_init__(self) -> None:
         self.email = self.email.lower().strip()

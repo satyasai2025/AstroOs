@@ -32,6 +32,7 @@ class UserDTO:
     status: str
     created_at: datetime
     last_login_at: Optional[datetime]
+    timezone: str
 
 
 @dataclass(frozen=True)
