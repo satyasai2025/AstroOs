@@ -1,21 +1,60 @@
 "use client";
 
 import { SettingsLayout } from "@/components/settings/SettingsLayout";
-import { useCurrentUser } from "@/lib/auth";
-import { useEffect, useState } from "react";
+import { useCurrentUser, useUpdateProfile } from "@/lib/auth";
+import { useEffect, useMemo, useState } from "react";
+
+/** Real IANA timezone list from the browser's own tzdata (all modern
+ * browsers/Node support this) — falls back to a short curated list only
+ * if the runtime somehow lacks Intl.supportedValuesOf (very old browsers). */
+function getTimezoneOptions(): string[] {
+  try {
+    return Intl.supportedValuesOf("timeZone");
+  } catch {
+    return [
+      "UTC",
+      "Asia/Kolkata",
+      "America/New_York",
+      "America/Los_Angeles",
+      "Europe/London",
+      "Europe/Berlin",
+      "Asia/Tokyo",
+      "Australia/Sydney",
+    ];
+  }
+}
 
 export default function ProfileSettingsPage() {
   const { data: user, isLoading } = useCurrentUser();
+  const updateProfile = useUpdateProfile();
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
-  const [timezone, setTimezone] = useState("Asia/Kolkata (GMT+05:30)");
+  const [timezone, setTimezone] = useState("UTC");
+  const [saveState, setSaveState] = useState<"idle" | "saved" | "error">("idle");
+
+  const timezoneOptions = useMemo(() => getTimezoneOptions(), []);
 
   useEffect(() => {
     if (user) {
       setDisplayName(user.display_name || "");
       setEmail(user.email || "");
+      setTimezone(user.timezone || "UTC");
     }
   }, [user]);
+
+  const handleSave = () => {
+    setSaveState("idle");
+    const payload: { display_name?: string; email?: string; timezone?: string } = {};
+    if (displayName !== user?.display_name) payload.display_name = displayName;
+    if (email !== user?.email) payload.email = email;
+    if (timezone !== user?.timezone) payload.timezone = timezone;
+    if (Object.keys(payload).length === 0) return;
+
+    updateProfile.mutate(payload, {
+      onSuccess: () => setSaveState("saved"),
+      onError: () => setSaveState("error"),
+    });
+  };
 
   const initials = (displayName || "?")
     .trim()
@@ -107,11 +146,16 @@ export default function ProfileSettingsPage() {
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ backgroundColor: "var(--bg-input)", color: "var(--text-primary)", border: "1px solid var(--border-primary)" }}
               >
-                <option>Asia/Kolkata (GMT+05:30)</option>
-                <option>US/Eastern (GMT-05:00)</option>
-                <option>US/Pacific (GMT-08:00)</option>
-                <option>Europe/London (GMT+00:00)</option>
+                {timezoneOptions.map((tz) => (
+                  <option key={tz} value={tz}>
+                    {tz}
+                  </option>
+                ))}
               </select>
+              <p className="mt-1.5 text-xs" style={{ color: "var(--text-muted)" }}>
+                Used to interpret date/time fields you enter without an explicit offset — e.g. Transit
+                Analysis&rsquo;s &ldquo;Jump to Date &amp; Time&rdquo; picker.
+              </p>
             </div>
           </div>
         </div>
@@ -179,9 +223,24 @@ export default function ProfileSettingsPage() {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-end">
-        <button className="rounded-lg px-4 py-2 text-sm font-semibold" style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}>
-          Save Changes
+      <div className="mt-8 flex items-center justify-end gap-3">
+        {saveState === "saved" && (
+          <span className="text-xs" style={{ color: "var(--status-success)" }}>
+            Saved.
+          </span>
+        )}
+        {saveState === "error" && (
+          <span className="text-xs" style={{ color: "var(--status-danger)" }}>
+            {updateProfile.error?.message || "Could not save changes."}
+          </span>
+        )}
+        <button
+          onClick={handleSave}
+          disabled={updateProfile.isPending}
+          className="rounded-lg px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+        >
+          {updateProfile.isPending ? "Saving…" : "Save Changes"}
         </button>
       </div>
     </SettingsLayout>

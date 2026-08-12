@@ -15,6 +15,7 @@ Fix log (post code-review):
 
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from jose import JWTError
 
@@ -96,6 +97,7 @@ def _user_dto(user: User) -> UserDTO:
         status=user.status.value,
         created_at=user.created_at,
         last_login_at=user.last_login_at,
+        timezone=user.timezone,
     )
 
 
@@ -298,12 +300,14 @@ class AuthService:
         user: User,
         display_name: Optional[str] = None,
         email: Optional[str] = None,
+        timezone: Optional[str] = None,
     ) -> User:
         """
         Update the authenticated user's own profile fields.
 
         Raises AuthError(409) if the requested email is already taken by a
-        different account.
+        different account, or AuthError(422) if timezone isn't a real IANA
+        zone name (e.g. a typo like "Asia/Kolkota").
         """
         if email is not None and email.strip().lower() != user.email:
             existing = await self._user_repo.get_by_email(email)
@@ -313,10 +317,20 @@ class AuthService:
                     status_code=409,
                 )
 
+        if timezone is not None:
+            try:
+                ZoneInfo(timezone)
+            except ZoneInfoNotFoundError:
+                raise AuthError(
+                    f"'{timezone}' is not a recognized timezone.",
+                    status_code=422,
+                )
+
         updated = await self._user_repo.update_profile(
             user.id,
             display_name=display_name,
             email=email,
+            timezone=timezone,
         )
         if updated is None:
             raise AuthError("User not found.", status_code=404)

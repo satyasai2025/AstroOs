@@ -70,6 +70,15 @@ class UserModel(AstroBase):
         default=None,
     )
 
+    timezone: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+        default="UTC",
+        server_default="UTC",
+        doc="IANA timezone name (e.g. 'Asia/Kolkata') used to interpret "
+        "date/time inputs the user enters without an explicit offset.",
+    )
+
     sessions: Mapped[List["UserSessionModel"]] = relationship(
         "UserSessionModel",
         back_populates="user",

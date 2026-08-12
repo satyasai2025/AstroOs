@@ -35,6 +35,7 @@ def _model_to_domain(model: UserModel) -> User:
         updated_at=model.updated_at,
         last_login_at=model.last_login_at,
         deleted_at=model.deleted_at,
+        timezone=model.timezone,
     )
 
 
@@ -181,9 +182,10 @@ class UserRepository:
         user_id: UserId,
         display_name: Optional[str] = None,
         email: Optional[str] = None,
+        timezone: Optional[str] = None,
     ) -> Optional[User]:
         """
-        Update a user's own display_name and/or email.
+        Update a user's own display_name, email, and/or timezone.
 
         Only non-None fields are changed. Returns the updated User, or None
         if no matching (non-deleted) user exists.
@@ -193,6 +195,8 @@ class UserRepository:
             values["display_name"] = display_name.strip()
         if email is not None:
             values["email"] = email.lower().strip()
+        if timezone is not None:
+            values["timezone"] = timezone
 
         if not values:
             return await self.get_by_id(user_id)

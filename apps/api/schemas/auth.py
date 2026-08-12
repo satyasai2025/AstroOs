@@ -114,6 +114,12 @@ class UpdateProfileRequest(BaseModel):
         default=None,
         description="New account email address.",
     )
+    timezone: Optional[str] = Field(
+        default=None,
+        min_length=1,
+        max_length=64,
+        description="IANA timezone name (e.g. 'Asia/Kolkata'). Validated against the tzdata database.",
+    )
 
     @field_validator("display_name")
     @classmethod
@@ -136,8 +142,8 @@ class UpdateProfileRequest(BaseModel):
 
     @model_validator(mode="after")
     def at_least_one_field(self) -> "UpdateProfileRequest":
-        if self.display_name is None and self.email is None:
-            raise ValueError("Provide at least one of display_name or email.")
+        if self.display_name is None and self.email is None and self.timezone is None:
+            raise ValueError("Provide at least one of display_name, email, or timezone.")
         return self
 
 
@@ -169,6 +175,7 @@ class UserResponse(BaseModel):
     status: str
     created_at: datetime
     last_login_at: Optional[datetime] = None
+    timezone: str = "UTC"
 
     model_config = {"from_attributes": True}
 

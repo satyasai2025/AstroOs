@@ -16,6 +16,7 @@ export interface User {
   status: "active" | "suspended" | "pending_verification";
   created_at: string;
   last_login_at: string | null;
+  timezone: string;
 }
 
 export interface TokenPair {
@@ -57,6 +58,7 @@ export interface MessageResponse {
 export interface UpdateProfilePayload {
   display_name?: string;
   email?: string;
+  timezone?: string;
 }
 
 export interface ChangePasswordPayload {
@@ -712,6 +714,139 @@ export interface WorkflowAnalysisResponse {
   benchmark: BenchmarkResponse;
   report: ChartReportResponse;
   research_snapshot_id: string | null;
+}
+
+// ── Event Analysis (event chart / muhurta consultation) ───────────────────────
+
+export type EventAnalysisScopeFlag =
+  | "muhurta"
+  | "natal_promise"
+  | "dasha_support"
+  | "transit_influence"
+  | "planetary_strength"
+  | "yogas_activated"
+  | "overall_score";
+
+export interface EventAnalysisRequest {
+  birth_chart_id: string;
+  event_name: string;
+  category?: string | null;
+  event_datetime_utc: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  place_name?: string | null;
+  timezone_iana?: string | null;
+  scope: EventAnalysisScopeFlag[];
+}
+
+/** Serialized event D1 (muhurta chart) — the report artifact shape. Maps
+ * 1:1 onto NorthIndianChart's placement input (planet/rashi/house_number/
+ * is_retrograde/rashi_degree). */
+export interface EventChartArtifact {
+  type: string;
+  ayanamsa_system: string;
+  house_system: string;
+  ascendant: {
+    rashi: string;
+    degree_in_rashi?: number | null;
+    nakshatra?: string | null;
+    pada?: number | null;
+  };
+  planets: EventPlanetPlacement[];
+  houses: { number: number; rashi: string }[];
+}
+
+export interface EventPlanetPlacement {
+  planet: string;
+  rashi: string;
+  house_number?: number | null;
+  degree_in_rashi?: number | null;
+  nakshatra?: string | null;
+  pada?: number | null;
+  retrograde?: boolean;
+  combust?: boolean;
+  dignity?: string | null;
+}
+
+export interface EventTransitArtifact {
+  type: string;
+  count: number;
+  transits: EventTransitRead[];
+}
+
+export interface EventTransitRead {
+  planet: string;
+  transit_rashi: string;
+  house_from_natal_moon: number | null;
+  transit_rashi_degree: number | null;
+  transit_nakshatra: string | null;
+  transit_pada: number | null;
+  retrograde: boolean;
+  gati: string | null;
+  is_sade_sati: boolean;
+  is_ashtama_shani: boolean;
+  is_favorable_house: boolean | null;
+  has_vedha: boolean;
+  has_vipreet_vedha: boolean;
+  has_nakshatra_vedha: boolean;
+}
+
+export interface EventDashaArtifact {
+  type: string;
+  count: number;
+  chain: EventDashaPeriod[];
+}
+
+export interface EventDashaPeriod {
+  lord: string;
+  level: number;
+  start_date: string;
+  end_date: string;
+  duration_days: number;
+}
+
+export interface EventAnalysisReportSection {
+  title: string;
+  section_type: string;
+  content: { section_type: string; data: unknown };
+}
+
+export interface EventAnalysisReport {
+  title: string;
+  subject_name: string;
+  sections: EventAnalysisReportSection[];
+}
+
+export interface EventAnalysisArtifacts {
+  event_chart_id?: EventChartArtifact | null;
+  transit_chart_id?: EventTransitArtifact | null;
+  dasha_snapshot_id?: EventDashaArtifact | null;
+  report_generated?: boolean;
+  sections?: number;
+}
+
+export interface EventAnalysisResponse {
+  id: string;
+  birth_chart_id: string;
+  person_id: string | null;
+  user_id: string | null;
+  event_name: string;
+  category: string | null;
+  event_datetime_utc: string;
+  latitude: number | null;
+  longitude: number | null;
+  place_name: string | null;
+  timezone_iana: string | null;
+  scope: string[];
+  status: string;
+  event_chart_id: string | null;
+  transit_chart_id: string | null;
+  dasha_snapshot_id: string | null;
+  overall_score: number | null;
+  analysis_report_json: EventAnalysisReport | null;
+  artifacts: EventAnalysisArtifacts | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 // ── Duplicate check (confirm before persist) ──────────────────────────────────
