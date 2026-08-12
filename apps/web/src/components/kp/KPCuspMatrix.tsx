@@ -2,27 +2,22 @@
 
 /**
  * KP Cusp Matrix — all 12 cusps with their Star/Sub/Sub-Sub Lords and
- * what the cusp's Sub Lord (CSL) signifies. Click a cusp to open its
- * detail (KPCuspDetail).
+ * what the cusp's Sub Lord (CSL) signifies, from the backend KP engine.
+ * Click a cusp to open its detail (KPCuspDetail).
  */
 
-import { useMemo, useState } from "react";
-import {
-  buildKPCusps,
-  HOUSE_SIGNIFICATIONS,
-  type KPCusp,
-} from "@/lib/kpAnalysis";
-import type { D1ChartResponse } from "@/lib/types";
+import { useState } from "react";
+import { HOUSE_SIGNIFICATIONS } from "@/lib/kpAnalysis";
+import type { KPCuspResponse } from "@/lib/types";
 import { formatLongitude } from "@/lib/formatAstro";
 import { KPCuspDetail } from "@/components/kp/KPCuspDetail";
 
 interface Props {
-  chart: D1ChartResponse;
+  cusps: KPCuspResponse[];
 }
 
-export function KPCuspMatrix({ chart }: Props) {
-  const cusps = useMemo(() => buildKPCusps(chart), [chart]);
-  const [selected, setSelected] = useState<KPCusp | null>(null);
+export function KPCuspMatrix({ cusps }: Props) {
+  const [selected, setSelected] = useState<KPCuspResponse | null>(null);
 
   return (
     <div className="space-y-4">
@@ -60,7 +55,7 @@ export function KPCuspMatrix({ chart }: Props) {
       </div>
 
       {selected && (
-        <KPCuspDetail cusp={selected} chart={chart} onClose={() => setSelected(null)} />
+        <KPCuspDetail cusp={selected} onClose={() => setSelected(null)} />
       )}
     </div>
   );

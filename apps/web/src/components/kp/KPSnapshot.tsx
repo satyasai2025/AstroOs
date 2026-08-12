@@ -2,27 +2,27 @@
 
 /**
  * KP Snapshot — the live computed summary shown by default when the KP
- * Analysis Center opens. Every figure here is computed from the chart's
- * real data (cusp sub-lords, planet star/sub/sub-sub lords, ruling
- * planets, event promises), so the page visibly demonstrates the engine
- * is working.
+ * Analysis Center opens. Every figure here comes pre-computed from the
+ * backend KP engine (cusp sub-lords, planet star/sub/sub-sub lords,
+ * ruling planets, event promises, fructification), so the page visibly
+ * demonstrates the engine is working.
  */
 
-import { useMemo } from "react";
-import {
-  buildKPCusps,
-  buildKPPlanetProfiles,
-  computeRulingPlanets,
-  computeEventPromise,
-  computeTimingWindows,
-} from "@/lib/kpAnalysis";
-import { KP_EVENT_HOUSE_GROUPS, type KPEventKey } from "@/lib/kpSignificators";
-import type { D1ChartResponse, DashaTreeResponse } from "@/lib/types";
+import type {
+  KPCuspResponse,
+  KPPlanetProfileResponse,
+  RulingPlanetResponse,
+  EventPromiseResponse,
+  EventTimingAnalysisResponse,
+} from "@/lib/types";
 import { PLANET_SYMBOLS } from "@/lib/astro";
 
 interface Props {
-  chart: D1ChartResponse;
-  dasha: DashaTreeResponse;
+  cusps: KPCuspResponse[];
+  profiles: KPPlanetProfileResponse[];
+  rulingPlanets: RulingPlanetResponse[];
+  eventPromises: EventPromiseResponse[];
+  timing: EventTimingAnalysisResponse[];
 }
 
 const PROMISE_COLORS: Record<string, { fg: string; bg: string }> = {
@@ -31,16 +31,7 @@ const PROMISE_COLORS: Record<string, { fg: string; bg: string }> = {
   WEAK: { fg: "#f87171", bg: "rgba(248,113,113,0.15)" },
 };
 
-export function KPSnapshot({ chart, dasha }: Props) {
-  const cusps = useMemo(() => buildKPCusps(chart), [chart]);
-  const profiles = useMemo(() => buildKPPlanetProfiles(chart), [chart]);
-  const rps = useMemo(() => computeRulingPlanets(chart), [chart]);
-  const promises = useMemo(
-    () => Object.keys(KP_EVENT_HOUSE_GROUPS).map((k) => computeEventPromise(chart, k as KPEventKey)),
-    [chart],
-  );
-  const windows = useMemo(() => computeTimingWindows(chart, dasha), [chart, dasha]);
-
+export function KPSnapshot({ cusps, profiles, rulingPlanets, eventPromises, timing }: Props) {
   return (
     <div className="space-y-4">
       <div className="glass-card p-5">
@@ -103,7 +94,7 @@ export function KPSnapshot({ chart, dasha }: Props) {
               Ruling Planets
             </p>
             <div className="flex flex-wrap gap-2">
-              {rps.map((rp) => (
+              {rulingPlanets.map((rp) => (
                 <span
                   key={rp.planet}
                   className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"
@@ -121,7 +112,7 @@ export function KPSnapshot({ chart, dasha }: Props) {
               Event Promise
             </p>
             <div className="space-y-2">
-              {promises.map((ev) => {
+              {eventPromises.map((ev) => {
                 const vc = PROMISE_COLORS[ev.promise];
                 return (
                   <div key={ev.eventKey} className="flex items-center justify-between rounded-lg border px-3 py-2" style={{ borderColor: "var(--border-primary)" }}>
@@ -139,19 +130,34 @@ export function KPSnapshot({ chart, dasha }: Props) {
 
       <div className="glass-card p-5">
         <p className="mb-2 text-[10px] uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
-          Timing Windows (strongest significator&apos;s active dasha)
+          Fructification (Dasha Link + Transit + RP)
         </p>
         <div className="flex flex-wrap gap-2">
-          {windows.map((w) => (
+          {timing.map((w) => (
             <span
               key={w.eventKey}
               className="rounded-full px-3 py-1 text-xs"
               style={{
-                backgroundColor: w.active_level ? "rgba(52,211,153,0.15)" : "rgba(148,163,184,0.15)",
-                color: w.active_level ? "#34d399" : "#94a3b8",
+                backgroundColor:
+                  w.fructification === "OPEN"
+                    ? "rgba(52,211,153,0.15)"
+                    : w.fructification === "PARTIAL"
+                      ? "rgba(251,191,36,0.15)"
+                      : "rgba(148,163,184,0.15)",
+                color:
+                  w.fructification === "OPEN"
+                    ? "#34d399"
+                    : w.fructification === "PARTIAL"
+                      ? "#fbbf24"
+                      : "#94a3b8",
               }}
             >
-              {w.label}: <span className="font-semibold">{w.significator}</span> · {w.active_level ?? "no active period"}
+              {w.label}: <span className="font-semibold">{w.fructification}</span>
+              {w.fructification === "OPEN" && w.dasha_link.significator_level
+                ? ` · ${w.dasha_link.significator_level.lord} ${w.dasha_link.significator_level.level}`
+                : w.fructification === "PARTIAL" && w.transit_triggers.length > 0
+                  ? ` · ${w.transit_triggers.length} trigger${w.transit_triggers.length === 1 ? "" : "s"}`
+                  : ""}
             </span>
           ))}
         </div>

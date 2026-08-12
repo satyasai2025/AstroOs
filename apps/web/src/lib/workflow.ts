@@ -8,11 +8,13 @@
 
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "./api";
 import type {
   BulkImportRow,
   BulkImportResponse,
+  KPAnalysisRequest,
+  KPAnalysisResponse,
   WorkflowAnalysisRequest,
   WorkflowAnalysisResponse,
   WorkflowDuplicateCheckRequest,
@@ -23,6 +25,20 @@ export function useAnalyzeWorkflow() {
   return useMutation<WorkflowAnalysisResponse, Error, WorkflowAnalysisRequest>({
     mutationFn: (payload) =>
       api.post<WorkflowAnalysisResponse>("/api/v1/workflow/analyze", payload),
+  });
+}
+
+/**
+ * KP Analysis Center data source — the backend KP Analysis + Evidence
+ * engine (POST /api/v1/kp/analyze). Stateless: the request carries the
+ * chart's own birth data, so the query is keyed on the serialized request
+ * and re-fetched only when the chart changes.
+ */
+export function useKPAnalysis(request: KPAnalysisRequest | null) {
+  return useQuery<KPAnalysisResponse>({
+    queryKey: ["kp", "analyze", request],
+    queryFn: () => api.post<KPAnalysisResponse>("/api/v1/kp/analyze", request),
+    enabled: !!request,
   });
 }
 

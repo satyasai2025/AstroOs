@@ -402,7 +402,7 @@ export default function ChartsPage() {
 
       {view === "kp" && (
         <div id="panel-kp" role="tabpanel" aria-label="KP analysis panel" className="flex justify-center">
-          <KPAnalysisCenter result={result} />
+          <KPAnalysisCenter request={request} result={result} />
         </div>
       )}
 
