@@ -19,3 +19,4 @@ export { Accordion, type AccordionItem } from "./Accordion";
 export { FilterBar, type FilterDef, type FilterOption } from "./FilterBar";
 export { KnowledgeGraph, type GraphNode, type GraphEdge } from "./KnowledgeGraph";
 export { LineChart, BarChart, RadarChart, DonutChart } from "./Charts";
+export { ResizablePanels } from "./ResizablePanels";

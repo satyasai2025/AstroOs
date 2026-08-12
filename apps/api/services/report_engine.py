@@ -14,6 +14,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Optional
 
+from apps.api.domain.event_analysis import EventAnalysisRecord
+from apps.api.domain.events import NatalSnapshot
 from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.knowledge import KnowledgeSearchResult
 from apps.api.domain.research import AstrologicalSnapshot
@@ -87,6 +89,25 @@ def _extract_planets(chart: D1Chart) -> ReportContent:
         section_type="planets",
         data={"planets": planets_data, "count": len(planets_data)},
     )
+
+
+def _extract_dimension_content(dim: dict[str, Any]) -> ReportContent:
+    """
+    One Event Analysis scope dimension (natal_promise, dasha_support,
+    transit_influence, planetary_strength, yogas_activated, muhurta) as
+    evidence-based ReportContent. `dim` is a pre-computed plain dict from
+    EventAnalysisEngine's dimension evaluators — this function only shapes
+    it into the report, per this module's "assembly only" contract.
+    """
+    sub_score = dim.get("sub_score")
+    return ReportContent(section_type=dim["key"], data={
+        "status": dim["status"],
+        "sub_score_pct": round(sub_score * 100, 1) if sub_score is not None else None,
+        "weight": dim["weight"],
+        "points_earned": dim["points_earned"],
+        "points_max": dim["points_max"],
+        "evidence": dim["evidence"],
+    })
 
 
 def _extract_timeline_summary(timeline: Timeline) -> ReportContent:
@@ -329,5 +350,84 @@ class ReportEngine:
             title=title,
             chart_ids=tuple(chart_ids),
             chart_labels=labels,
+            sections=tuple(sections),
+        )
+
+    @staticmethod
+    def build_event_report(
+        event_chart: D1Chart,
+        *,
+        natal_snapshot: NatalSnapshot,
+        dimension_results: list[dict[str, Any]],
+        event_record: EventAnalysisRecord,
+        score: Optional[float] = None,
+        generated_by: str | None = None,
+    ) -> ChartReport:
+        """
+        Event Analysis report (muhurta consultation): the cast event D1 plus
+        one evidence-based section per selected scope dimension
+        (natal_promise, dasha_support, transit_influence, planetary_strength,
+        yogas_activated, muhurta) and a score breakdown. Purely assembly —
+        `dimension_results` is a list of pre-computed plain dicts from
+        EventAnalysisEngine's dimension evaluators (one per scope flag the
+        analysis was run with); this method only shapes them into sections,
+        it does not compute or interpret anything.
+
+        `natal_snapshot` is accepted for symmetry/provenance (the event is
+        read against the natal frame) but is not emitted as its own section,
+        keeping the report focused on the event moment itself.
+        """
+        sections: list[ReportSection] = []
+        order = 0
+
+        sections.append(ReportSection(
+            "Event Chart", "chart_summary",
+            _extract_chart_summary(event_chart), order=order,
+        ))
+        order += 1
+
+        sections.append(ReportSection(
+            "Event Planetary Positions", "planets",
+            _extract_planets(event_chart), order=order,
+        ))
+        order += 1
+
+        for dim in dimension_results:
+            sections.append(ReportSection(
+                dim["label"], dim["key"],
+                _extract_dimension_content(dim), order=order,
+            ))
+            order += 1
+
+        if dimension_results and score is not None:
+            sections.append(ReportSection(
+                "Score Breakdown", "score_breakdown",
+                ReportContent(section_type="score_breakdown", data={
+                    "overall_score": score,
+                    "dimensions": [
+                        {
+                            "key": d["key"],
+                            "label": d["label"],
+                            "weight": d["weight"],
+                            "points_earned": d["points_earned"],
+                            "points_max": d["points_max"],
+                            "status": d["status"],
+                        }
+                        for d in dimension_results
+                    ],
+                }),
+                order=order,
+            ))
+
+        metadata = _build_metadata(
+            report_type="event",
+            chart_id=event_record.birth_chart_id,
+            generated_by=generated_by,
+        )
+
+        return ChartReport(
+            metadata=metadata,
+            title=f"Event Analysis — {event_record.event_name}",
+            subject_name=event_record.event_name,
             sections=tuple(sections),
         )

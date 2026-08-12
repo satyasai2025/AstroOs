@@ -399,7 +399,10 @@ export default function InteractiveKundliView({
   const { data: karakatvaData } = useKarakatvaSearch({ graha: karakatvaGraha });
 
   // ── Ascendant info ──
-  const asc = chart.ascendant;
+  if (!chart || !chart.ascendant) {
+  return <div className="p-6 text-center border rounded bg-muted/40">Loading kundli chart data or no chart selection active...</div>;
+}
+const asc = chart.ascendant;
   const ascRashiIdx = rashiIndexFromLongitude(asc.sidereal_longitude);
 
   // ── Position planets in their houses ──
@@ -1517,3 +1520,6 @@ function AvasthaRow({
     </div>
   );
 }
+
+
+

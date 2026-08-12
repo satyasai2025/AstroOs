@@ -23,6 +23,7 @@ from sqlalchemy import (
     Boolean, Date, DateTime, ForeignKey, Integer,
     Numeric, SmallInteger, String, Text, text,
 )
+from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM as PGENUM, TSVECTOR, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -417,6 +418,82 @@ class EventModel(AstroBase):
     chart: Mapped["BirthChartModel"] = relationship(
         "BirthChartModel", back_populates="events"
     )
+
+
+# ---------------------------------------------------------------------------
+# Event Analysis tables (Event Chart / muhurta consultation)
+# ---------------------------------------------------------------------------
+
+class EventAnalysisModel(AstroBase):
+    """
+    One persisted event analysis (muhurta consultation). The aggregate root
+    of the Event Analysis feature: references (ids) to the generated
+    event-chart / transit / dasha artifact snapshots rather than embedding
+    large chart JSON blobs; only the compact report JSON and the numeric
+    overall score live on this row. See domain/event_analysis.py.
+    """
+
+    __tablename__ = "event_analyses"
+
+    user_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True, index=True,
+    )
+    # No separate Person table — the saved natal chart IS the person;
+    # person_id mirrors birth_chart_id and reserves the field for a future
+    # Person entity (see domain/event_analysis.py).
+    person_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), nullable=True
+    )
+    birth_chart_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("birth_charts.id", ondelete="CASCADE"),
+        nullable=False, index=True,
+    )
+    event_name: Mapped[str] = mapped_column(String(300), nullable=False)
+    category: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    event_datetime_utc: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
+    event_latitude: Mapped[Optional[Decimal]] = mapped_column(Numeric(9, 6), nullable=True)
+    event_longitude: Mapped[Optional[Decimal]] = mapped_column(Numeric(9, 6), nullable=True)
+    place_name: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
+    timezone_iana: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    # User-selected analysis scope flags (subset of EVENT_ANALYSIS_SCOPE_FLAGS),
+    # stored as a JSON array of strings so any stored report is reproducible.
+    scope: Mapped[Optional[list]] = mapped_column(PG_JSONB, nullable=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    # References to generated snapshots in event_chart_snapshots.
+    event_chart_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), nullable=True
+    )
+    transit_chart_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), nullable=True
+    )
+    dasha_snapshot_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), nullable=True
+    )
+    analysis_report_json: Mapped[Optional[dict]] = mapped_column(PG_JSONB, nullable=True)
+    overall_score: Mapped[Optional[float]] = mapped_column(Numeric(5, 2), nullable=True)
+
+
+class EventChartSnapshotModel(AstroBase):
+    """
+    A generated artifact snapshot for an Event Analysis — the cast event
+    chart (muhurta D1), the event-moment transit read, or the active dasha
+    chain, referenced by id from event_analyses. Stores the serialized JSON
+    payload (see event_analysis_engine serializers).
+    """
+
+    __tablename__ = "event_chart_snapshots"
+
+    birth_chart_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True), nullable=True, index=True
+    )
+    snapshot_type: Mapped[str] = mapped_column(String(30), nullable=False)
+    label: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
+    payload_json: Mapped[Optional[dict]] = mapped_column(PG_JSONB, nullable=True)
 
 
 # ---------------------------------------------------------------------------

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
 import { CreateCompatibilityModal } from "./CreateCompatibilityModal";
 import { CreateTransitModal } from "./CreateTransitModal";
+import { CreateEventAnalysisModal } from "./CreateEventAnalysisModal";
 import { parseJhdFile, type JhdParseResult } from "@/lib/jhd-import";
 import { useCheckExistingChart } from "@/lib/workflow";
 
@@ -89,8 +90,8 @@ const CHART_TYPES: {
   },
   {
     id: "event_chart",
-    label: "Event Chart",
-    sublabel: "Event Analysis",
+    label: "Event Analysis",
+    sublabel: "Muhurta / Event Chart",
     enabled: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -258,6 +259,15 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   // When user selects "Transit Chart", render the dedicated transit modal
   if (chartType === "transit_chart") {
     return <CreateTransitModal open={open} onClose={onClose} />;
+  }
+
+  // ── Redirect to dedicated Event Analysis modal ────────────────────────────
+  // The Event Analysis tile must NEVER fall through to the generic
+  // birth-details flow — it opens its own modal (select saved chart → add
+  // event → choose scope → analyze). The generated event D1 is a computed
+  // artifact, never a new saved birth chart.
+  if (chartType === "event_chart" && step > 1) {
+    return <CreateEventAnalysisModal open={open} onClose={onClose} />;
   }
 
   function handleContinue() {

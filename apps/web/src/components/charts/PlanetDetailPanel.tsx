@@ -15,6 +15,8 @@ interface PlanetDetailPanelProps {
   pinned?: boolean;
   /** Clears the pin, e.g. from a close button. */
   onUnpin?: () => void;
+  /** Skips this panel's own glass-card wrapper, for embedding inside a shared card. */
+  bare?: boolean;
 }
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
@@ -54,13 +56,18 @@ function SectionLabel({ children }: { children: ReactNode }) {
  * them on the API response yet. Rather than fabricate numbers, this panel
  * only shows what's real today.
  */
-export function PlanetDetailPanel({ planet, result, pinned, onUnpin }: PlanetDetailPanelProps) {
+export function PlanetDetailPanel({ planet, result, pinned, onUnpin, bare }: PlanetDetailPanelProps) {
   const [tab, setTab] = useState<DetailTab>("overview");
+  const wrapperClass = bare ? "h-full overflow-y-auto p-4" : "glass-card h-full overflow-y-auto p-5";
 
   if (!planet) {
     return (
       <div
-        className="glass-card flex h-full min-h-[300px] items-center justify-center p-6 text-center text-sm"
+        className={
+          bare
+            ? "flex h-full min-h-[300px] items-center justify-center p-6 text-center text-sm"
+            : "glass-card flex h-full min-h-[300px] items-center justify-center p-6 text-center text-sm"
+        }
         style={{ color: "var(--text-muted)" }}
       >
         Hover a planet for a quick preview, or click it to pin this panel open —
@@ -102,14 +109,14 @@ export function PlanetDetailPanel({ planet, result, pinned, onUnpin }: PlanetDet
 
   if (!position) {
     return (
-      <div className="glass-card p-6 text-sm" style={{ color: "var(--text-muted)" }}>
+      <div className={bare ? "p-6 text-sm" : "glass-card p-6 text-sm"} style={{ color: "var(--text-muted)" }}>
         No data available for {planet} in this chart.
       </div>
     );
   }
 
   return (
-    <div className="glass-card h-full overflow-y-auto p-5">
+    <div className={wrapperClass}>
       <div className="mb-1 flex items-center gap-2">
         <span className="text-xl" style={{ color: "var(--accent)" }}>
           {PLANET_SYMBOLS[planet] ?? ""}
