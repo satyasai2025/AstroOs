@@ -3,8 +3,9 @@
 import { TransitAlerts } from "@/components/charts/transit/TransitAlerts";
 import { TransitWheel } from "@/components/charts/transit/TransitWheel";
 import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
-import { Badge, Button, Card, DonutChart, KpiCard, Table, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
-import { PLANET_SYMBOLS } from "@/lib/astro";
+import { AnimatedTransitIntegration } from "@/app/(main)/charts/AnimatedTransitIntegration";
+import { Badge, Button, Card, DonutChart, KpiCard, Table, Tabs, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
+import { PLANET_SYMBOLS, nakshatraFromLongitude } from "@/lib/astro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import { useWorkflowStore } from "@/lib/store";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
@@ -71,6 +72,7 @@ export default function TransitAnalysisPage() {
   const setResult = useWorkflowStore((s) => s.setResult);
   const analyze = useAnalyzeWorkflow();
   const [autoLoadStarted, setAutoLoadStarted] = useState(false);
+  const [activeTab, setActiveTab] = useState<"overview" | "sky_motion">("overview");
 
   const [houseReference, setHouseReference] = useState<"moon" | "ascendant">("moon");
   /** Local <input type="datetime-local"> value. Empty = "now" (the
@@ -420,6 +422,23 @@ export default function TransitAnalysisPage() {
         </div>
       </div>
 
+      <div className="mb-6">
+        <Tabs
+          tabs={[
+            { key: "overview", label: "Overview" },
+            { key: "sky_motion", label: "Sky Motion" },
+          ]}
+          active={activeTab}
+          onChange={(key) => setActiveTab(key as "overview" | "sky_motion")}
+        />
+      </div>
+
+      {activeTab === "sky_motion" && (
+        <AnimatedTransitIntegration chart={result.chart} request={request} />
+      )}
+
+      {activeTab === "overview" && (
+        <>
       {/* Controls row: transit date stepper + Moon/Ascendant reference point */}
       <div className="mb-6 flex flex-wrap items-end gap-4">
         <div>
@@ -702,6 +721,50 @@ export default function TransitAnalysisPage() {
           </Button>
         </Card>
       </div>
+
+      {/* House Cusps — real cusp longitude per house from the natal chart's
+          own house_system (Whole Sign, Placidus, etc., whatever this chart
+          was generated with) — not an assumed 30°/house. Nakshatra/pada are
+          derived client-side from the same sidereal_longitude the backend
+          returned, via the same nakshatraFromLongitude() other pages use. */}
+      <div className="mt-6">
+        <Card padding="0">
+          <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
+            <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
+              House Cusps
+            </span>
+            <span className="ml-2 text-xs" style={{ color: "var(--text-tertiary)" }}>
+              {request?.house_system ?? result.chart.house_system} system — real cusp degrees, not assumed 30°/house
+            </span>
+          </div>
+          <div style={{ padding: "10px 18px 18px" }}>
+            <Table
+              columns={[
+                { key: "house_number", label: "House", mono: true },
+                { key: "rashi", label: "Rashi", render: (h) => <span style={{ textTransform: "capitalize" }}>{h.rashi}</span> },
+                { key: "sidereal_longitude", label: "Cusp Degree", mono: true, render: (h) => formatDegree(h.sidereal_longitude % 30) },
+                {
+                  key: "nakshatra",
+                  label: "Nakshatra",
+                  render: (h) => {
+                    const { nakshatra, pada } = nakshatraFromLongitude(h.sidereal_longitude);
+                    return (
+                      <span style={{ textTransform: "capitalize" }}>
+                        {nakshatra.replace(/_/g, " ")} — Pada {pada}
+                      </span>
+                    );
+                  },
+                },
+                { key: "nakshatra_lord", label: "Star Lord", render: (h) => <span style={{ textTransform: "capitalize" }}>{h.nakshatra_lord}</span> },
+                { key: "sub_lord", label: "Sub Lord (KP)", render: (h) => <span style={{ textTransform: "capitalize" }}>{h.sub_lord}</span> },
+              ]}
+              rows={result.chart.houses}
+            />
+          </div>
+        </Card>
+      </div>
+        </>
+      )}
     </>
   );
 }
