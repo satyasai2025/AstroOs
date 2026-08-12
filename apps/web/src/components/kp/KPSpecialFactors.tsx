@@ -4,32 +4,29 @@
  * KP Special Factors — the "full KP portfolio" factors (Fortuna,
  * retrograde, combustion, Rahu/Ketu, dusthana/kendra occupancy, cuspal
  * interlinks) classified into CORE KP / EXTENDED KP / SUPPLEMENTARY so
- * the UI presents each with an honest authority level.
+ * the UI presents each with an honest authority level. All values arrive
+ * pre-computed from the backend KP engine.
  */
 
-import { useMemo } from "react";
-import { computeSpecialFactors, type SpecialFactor } from "@/lib/kpAnalysis";
-import type { D1ChartResponse } from "@/lib/types";
+import type { SpecialFactorResponse } from "@/lib/types";
 
 interface Props {
-  chart: D1ChartResponse;
+  factors: SpecialFactorResponse[];
 }
 
-const CATEGORY_TONES: Record<SpecialFactor["category"], { fg: string; bg: string }> = {
+const CATEGORY_TONES: Record<SpecialFactorResponse["category"], { fg: string; bg: string }> = {
   "CORE KP": { fg: "#34d399", bg: "rgba(52,211,153,0.15)" },
   "EXTENDED KP": { fg: "#60a5fa", bg: "rgba(96,165,250,0.15)" },
   "SUPPLEMENTARY": { fg: "#fbbf24", bg: "rgba(251,191,36,0.15)" },
 };
 
-const STATUS_COLORS: Record<SpecialFactor["status"], { fg: string; bg: string }> = {
+const STATUS_COLORS: Record<SpecialFactorResponse["status"], { fg: string; bg: string }> = {
   positive: { fg: "#34d399", bg: "rgba(52,211,153,0.15)" },
   neutral: { fg: "#94a3b8", bg: "rgba(148,163,184,0.15)" },
   caution: { fg: "#f87171", bg: "rgba(248,113,113,0.15)" },
 };
 
-export function KPSpecialFactors({ chart }: Props) {
-  const factors = useMemo(() => computeSpecialFactors(chart), [chart]);
-
+export function KPSpecialFactors({ factors }: Props) {
   return (
     <div className="space-y-4">
       <div className="mb-4 flex flex-wrap gap-4 text-xs" style={{ color: "var(--text-secondary)" }}>
@@ -59,7 +56,10 @@ export function KPSpecialFactors({ chart }: Props) {
               <p className="mb-2 text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{f.value}</p>
               <div className="flex items-start justify-between gap-2">
                 <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-muted)" }}>{f.evidence}</p>
-                <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase" style={{ backgroundColor: status.bg, color: status.fg }}>
+                <span
+                  className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
+                  style={{ backgroundColor: status.bg, color: status.fg }}
+                >
                   {f.status}
                 </span>
               </div>

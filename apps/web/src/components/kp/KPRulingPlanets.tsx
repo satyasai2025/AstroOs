@@ -3,18 +3,17 @@
 /**
  * KP Ruling Planets — the RP panel: Lagna/Moon sign + star + sub lords
  * plus the Day (Vara) lord, deduplicated, and the "fruitful
- * significators" intersection with any selected house group.
+ * significators" intersection with any selected house group. The RPs come
+ * pre-computed from the backend engine; the fruitful intersection is a
+ * pure data lookup over the backend's house-significator table.
  */
 
-import { useMemo, useState } from "react";
-import {
-  computeRulingPlanets,
-  computeFruitfulSignificators,
-} from "@/lib/kpAnalysis";
-import type { D1ChartResponse } from "@/lib/types";
+import { useState } from "react";
+import type { HouseSignificatorsResponse, RulingPlanetResponse } from "@/lib/types";
 
 interface Props {
-  chart: D1ChartResponse;
+  rulingPlanets: RulingPlanetResponse[];
+  houseSignificators: HouseSignificatorsResponse[];
 }
 
 const HOUSE_OPTIONS = [
@@ -24,10 +23,25 @@ const HOUSE_OPTIONS = [
   { label: "Disease (6, 8, 12)", houses: [6, 8, 12] },
 ];
 
-export function KPRulingPlanets({ chart }: Props) {
-  const rps = useMemo(() => computeRulingPlanets(chart), [chart]);
+export function KPRulingPlanets({ rulingPlanets, houseSignificators }: Props) {
   const [houses, setHouses] = useState<number[]>(HOUSE_OPTIONS[0].houses);
-  const fruitful = useMemo(() => computeFruitfulSignificators(chart, houses), [chart, houses]);
+
+  // Ruling Planets that also signify any of the selected houses — the
+  // classical RP-intersection rule, computed directly over the backend
+  // significator table (no chart recompute on the client).
+  const fruitful = rulingPlanets
+    .map((rp) => {
+      const housesSignified = houses
+        .filter((h) => {
+          const hs = houseSignificators.find((s) => s.houseNumber === h);
+          return hs?.significators.some((sig) => sig.planet === rp.planet) ?? false;
+        })
+        .sort((a, b) => a - b);
+      return housesSignified.length > 0
+        ? { planet: rp.planet, rpSource: rp.source, housesSignified }
+        : null;
+    })
+    .filter((f): f is { planet: string; rpSource: string; housesSignified: number[] } => f !== null);
 
   return (
     <div className="space-y-4">
@@ -40,7 +54,7 @@ export function KPRulingPlanets({ chart }: Props) {
           &ldquo;rule&rdquo; the moment. Deduplicated in the founder&apos;s ordering.
         </p>
         <div className="flex flex-wrap gap-2">
-          {rps.map((rp) => (
+          {rulingPlanets.map((rp) => (
             <span
               key={rp.planet}
               className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs"

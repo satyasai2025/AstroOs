@@ -4,10 +4,19 @@
  * KP Analysis Center — the main /charts?view=kp workspace. Sub-tabs map
  * to the mockup's KP Portfolio: Overview, Cusps, Planets, Significators,
  * Ruling Planets, Events, Timing, Special Factors, Evidence.
+ *
+ * Every panel now consumes the backend KP Analysis + Evidence engine
+ * (POST /api/v1/kp/analyze): the center builds the request from the
+ * chart's own birth data and renders the pre-computed slices.
  */
 
-import { useState } from "react";
-import type { WorkflowAnalysisResponse } from "@/lib/types";
+import { useMemo, useState } from "react";
+import type {
+  KPAnalysisRequest,
+  WorkflowAnalysisRequest,
+  WorkflowAnalysisResponse,
+} from "@/lib/types";
+import { useKPAnalysis } from "@/lib/workflow";
 import { KPHeader } from "@/components/kp/KPHeader";
 import { KPOverview } from "@/components/kp/KPOverview";
 import { KPCuspMatrix } from "@/components/kp/KPCuspMatrix";
@@ -21,6 +30,8 @@ import { KPReasoningChain } from "@/components/kp/KPReasoningChain";
 import { KPSnapshot } from "@/components/kp/KPSnapshot";
 
 interface Props {
+  /** The workflow-sourced birth data — the KP endpoint reuses its core fields. */
+  request: WorkflowAnalysisRequest | null;
   result: WorkflowAnalysisResponse;
 }
 
@@ -49,9 +60,25 @@ const SECTIONS: { key: KPSection; label: string }[] = [
   { key: "evidence", label: "Evidence / Reasoning" },
 ];
 
-export function KPAnalysisCenter({ result }: Props) {
+export function KPAnalysisCenter({ request, result }: Props) {
   const [section, setSection] = useState<KPSection>("snapshot");
-  const { chart, dasha } = result;
+
+  // The KP endpoint is stateless and mirrors the workflow request's core
+  // fields; we reuse them as-is and pin the transit moment to the one the
+  // workflow already computed, so the timing layer matches the chart page.
+  const kpRequest = useMemo<KPAnalysisRequest | null>(() => {
+    if (!request) return null;
+    return {
+      birth_datetime_utc: request.birth_datetime_utc,
+      latitude: request.latitude,
+      longitude: request.longitude,
+      ayanamsa: request.ayanamsa,
+      house_system: request.house_system,
+      transit_datetime_utc: result.transits?.transit_datetime_utc ?? null,
+    };
+  }, [request, result]);
+
+  const kp = useKPAnalysis(kpRequest);
 
   return (
     <div className="w-full space-y-5">
@@ -77,18 +104,39 @@ export function KPAnalysisCenter({ result }: Props) {
         ))}
       </div>
 
-      <div id={`kp-panel-${section}`} role="tabpanel" className="space-y-4">
-        {section === "snapshot" && <KPSnapshot chart={chart} dasha={dasha} />}
-        {section === "overview" && <KPOverview />}
-        {section === "cusps" && <KPCuspMatrix chart={chart} />}
-        {section === "planets" && <KPPlanetPortfolio chart={chart} />}
-        {section === "significators" && <KPSignificatorMatrix chart={chart} />}
-        {section === "ruling" && <KPRulingPlanets chart={chart} />}
-        {section === "events" && <KPEventExplorer chart={chart} />}
-        {section === "timing" && <KPTimingEngine chart={chart} dasha={dasha} />}
-        {section === "factors" && <KPSpecialFactors chart={chart} />}
-        {section === "evidence" && <KPReasoningChain chart={chart} dasha={dasha} />}
-      </div>
+      {kp.isPending ? (
+        <div className="glass-card p-6 text-center" role="status">
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Computing KP analysis…</p>
+        </div>
+      ) : kp.isError ? (
+        <div className="glass-card p-6 text-center" role="alert">
+          <p className="text-sm font-medium" style={{ color: "#f87171" }}>Could not load the KP analysis.</p>
+          <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>{kp.error?.message ?? "Please try again."}</p>
+        </div>
+      ) : kp.data ? (
+        <div id={`kp-panel-${section}`} role="tabpanel" className="space-y-4">
+          {section === "snapshot" && (
+            <KPSnapshot
+              cusps={kp.data.cusps}
+              profiles={kp.data.planet_profiles}
+              rulingPlanets={kp.data.ruling_planets}
+              eventPromises={kp.data.event_promises}
+              timing={kp.data.timing}
+            />
+          )}
+          {section === "overview" && <KPOverview />}
+          {section === "cusps" && <KPCuspMatrix cusps={kp.data.cusps} />}
+          {section === "planets" && <KPPlanetPortfolio profiles={kp.data.planet_profiles} />}
+          {section === "significators" && <KPSignificatorMatrix houses={kp.data.house_significators} />}
+          {section === "ruling" && (
+            <KPRulingPlanets rulingPlanets={kp.data.ruling_planets} houseSignificators={kp.data.house_significators} />
+          )}
+          {section === "events" && <KPEventExplorer eventPromises={kp.data.event_promises} />}
+          {section === "timing" && <KPTimingEngine timing={kp.data.timing} />}
+          {section === "factors" && <KPSpecialFactors factors={kp.data.special_factors} />}
+          {section === "evidence" && <KPReasoningChain evidence={kp.data.evidence} />}
+        </div>
+      ) : null}
     </div>
   );
 }

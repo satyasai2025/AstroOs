@@ -3,23 +3,21 @@
 /**
  * KP Planet Portfolio — a reusable KP profile for each of the 9 planets:
  * sign, house, sign/star/sub/sub-sub lords, owned houses, houses it
- * signifies, and which cusps it is the Sub Lord (CSL) of. Click a planet
- * to open KPPlanetDetail.
+ * signifies, and which cusps it is the Sub Lord (CSL) of. All from the
+ * backend KP engine. Click a planet to open KPPlanetDetail.
  */
 
-import { useMemo, useState } from "react";
-import { buildKPPlanetProfiles, type KPPlanetProfile } from "@/lib/kpAnalysis";
-import type { D1ChartResponse } from "@/lib/types";
+import { useState } from "react";
+import type { KPPlanetProfileResponse } from "@/lib/types";
 import { PLANET_SYMBOLS } from "@/lib/astro";
 import { KPPlanetDetail } from "@/components/kp/KPPlanetDetail";
 
 interface Props {
-  chart: D1ChartResponse;
+  profiles: KPPlanetProfileResponse[];
 }
 
-export function KPPlanetPortfolio({ chart }: Props) {
-  const profiles = useMemo(() => buildKPPlanetProfiles(chart), [chart]);
-  const [selected, setSelected] = useState<KPPlanetProfile | null>(null);
+export function KPPlanetPortfolio({ profiles }: Props) {
+  const [selected, setSelected] = useState<KPPlanetProfileResponse | null>(null);
 
   return (
     <div className="space-y-4">
@@ -59,7 +57,7 @@ export function KPPlanetPortfolio({ chart }: Props) {
       </div>
 
       {selected && (
-        <KPPlanetDetail profile={selected} chart={chart} onClose={() => setSelected(null)} />
+        <KPPlanetDetail profile={selected} onClose={() => setSelected(null)} />
       )}
     </div>
   );

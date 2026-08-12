@@ -2,17 +2,15 @@
 
 /**
  * KP Significator Matrix — the full 12-house significator table from the
- * shared A/B/C/D grading engine, presented as a ranked matrix with the
- * strongest significators first.
+ * shared A/B/C/D grading engine (computed on the backend), presented as a
+ * ranked matrix with the strongest significators first.
  */
 
-import { useMemo } from "react";
-import { getHouseSignificators } from "@/lib/kpAnalysis";
 import { GRADE_LABELS, type SignificatorGrade } from "@/lib/kpSignificators";
-import type { D1ChartResponse } from "@/lib/types";
+import type { HouseSignificatorsResponse } from "@/lib/types";
 
 interface Props {
-  chart: D1ChartResponse;
+  houses: HouseSignificatorsResponse[];
 }
 
 const GRADE_RANK: Record<SignificatorGrade, number> = { A: 4, B: 3, C: 2, D: 1 };
@@ -35,9 +33,7 @@ function GradeBadge({ grade }: { grade: SignificatorGrade }) {
   );
 }
 
-export function KPSignificatorMatrix({ chart }: Props) {
-  const houses = useMemo(() => getHouseSignificators(chart), [chart]);
-
+export function KPSignificatorMatrix({ houses }: Props) {
   return (
     <div className="space-y-4">
       <p className="text-xs" style={{ color: "var(--text-muted)" }}>
@@ -47,8 +43,8 @@ export function KPSignificatorMatrix({ chart }: Props) {
       </p>
       {houses.map((hs) => {
         const sorted = hs.significators.slice().sort((a, b) => {
-          const bestA = Math.max(...a.grades.map((g) => GRADE_RANK[g]));
-          const bestB = Math.max(...b.grades.map((g) => GRADE_RANK[g]));
+          const bestA = Math.max(...a.grades.map((g) => GRADE_RANK[g as SignificatorGrade]));
+          const bestB = Math.max(...b.grades.map((g) => GRADE_RANK[g as SignificatorGrade]));
           return bestB - bestA;
         });
         return (
@@ -71,7 +67,7 @@ export function KPSignificatorMatrix({ chart }: Props) {
                 >
                   {sig.planet}
                   {sig.grades.map((g) => (
-                    <GradeBadge key={g} grade={g} />
+                    <GradeBadge key={g} grade={g as SignificatorGrade} />
                   ))}
                 </span>
               ))}
