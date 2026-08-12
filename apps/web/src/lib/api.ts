@@ -229,7 +229,15 @@ async function _fetch<T>(
     headers["Authorization"] = `Bearer ${access}`;
   }
 
-  const res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...init, headers });
+  } catch {
+    // fetch() itself threw — the server was unreachable (down, restarting,
+    // offline), not an HTTP error response. Surface this distinctly so
+    // callers don't fall through to a generic "unexpected error" branch.
+    throw new ApiError(0, "Can't reach the server. Check your connection and try again.");
+  }
 
   // Attempt token refresh on first 401
   if (res.status === 401 && _retry) {
