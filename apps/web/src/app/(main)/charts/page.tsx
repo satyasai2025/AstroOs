@@ -26,10 +26,11 @@ import { YogaIntelligenceDashboard } from "@/components/charts/YogaIntelligenceD
 import AshtakavargaPanel from "@/components/charts/AshtakavargaPanel";
 import JaiminiPanel from "@/components/charts/JaiminiPanel";
 import PlanetExplorerPanel from "@/components/charts/PlanetExplorerPanel";
-import DivisionalChartsPanel from "@/components/charts/DivisionalChartsPanel";
+import VargaExplorer from "@/components/charts/VargaExplorer";
 import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
+import { ResizablePanels } from "@/components/ui";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
@@ -313,29 +314,35 @@ export default function ChartsPage() {
       )}
 
       {view === "chart" && (
-        <div id="panel-chart" role="tabpanel" aria-label="Chart visualization panel" className="grid grid-cols-1 gap-5 xl:grid-cols-[260px_1fr_1.1fr_320px] xl:items-start">
-          <div className="space-y-4">
-            <div className="glass-card p-4">
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Chart Details</h3>
-              <dl className="space-y-1 text-xs" style={{ color: "var(--text-secondary)" }}>
-                {request && (<div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Name</dt><dd style={{ color: "var(--text-primary)" }}>{request.subject_name}</dd></div>)}
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Ayanamsa</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ayanamsa_system}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>House System</dt><dd style={{ color: "var(--text-primary)" }}>{chart.house_system}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ascendant.rashi} {chart.ascendant.rashi_degree.toFixed(2)}°</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna Lord</dt><dd style={{ color: "var(--text-primary)" }}>{rashiLordFromApiName(chart.ascendant.rashi) ?? "—"}</dd></div>
-              </dl>
-            </div>
-            <div className="glass-card p-4">
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Quick View</h3>
-              <dl className="space-y-1 text-xs" style={{ color: "var(--text-secondary)" }}>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Sun Sign</dt><dd style={{ color: "var(--text-primary)" }}>{chart.planets.find((p) => p.planet === "Sun")?.rashi ?? "—"}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Moon Sign</dt><dd style={{ color: "var(--text-primary)" }}>{chart.planets.find((p) => p.planet === "Moon")?.rashi ?? "—"}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Nakshatra (Moon)</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.nakshatra.nakshatra}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Tithi</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.tithi.name} ({chart.panchanga.tithi.paksha})</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Yoga</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.yoga.name}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Karana</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.karana.name}</dd></div>
-              </dl>
-            </div>
+        <div id="panel-chart" role="tabpanel" aria-label="Chart visualization panel" className="space-y-5">
+          <div className="glass-card overflow-hidden" style={{ borderColor: "var(--border-primary)" }}>
+            <ResizablePanels defaultSizes={[0.3, 0.4, 0.3]} minSize={0.15}>
+              <div className="p-4">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Chart Details</h3>
+                <dl className="space-y-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+                  {request && (<div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Name</dt><dd style={{ color: "var(--text-primary)" }}>{request.subject_name}</dd></div>)}
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Ayanamsa</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ayanamsa_system}</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>House System</dt><dd style={{ color: "var(--text-primary)" }}>{chart.house_system}</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ascendant.rashi} {chart.ascendant.rashi_degree.toFixed(2)}°</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna Lord</dt><dd style={{ color: "var(--text-primary)" }}>{rashiLordFromApiName(chart.ascendant.rashi) ?? "—"}</dd></div>
+                </dl>
+              </div>
+              <PlanetDetailPanel bare planet={activePlanet} result={result} pinned={pinnedPlanet === activePlanet && activePlanet !== null} onUnpin={() => { setPinnedPlanet(null); setActivePlanet(null); }} />
+              <div className="p-4">
+                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Quick View</h3>
+                <dl className="space-y-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Sun Sign</dt><dd style={{ color: "var(--text-primary)" }}>{chart.planets.find((p) => p.planet === "Sun")?.rashi ?? "—"}</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Moon Sign</dt><dd style={{ color: "var(--text-primary)" }}>{chart.planets.find((p) => p.planet === "Moon")?.rashi ?? "—"}</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Nakshatra (Moon)</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.nakshatra.nakshatra}</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Tithi</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.tithi.name} ({chart.panchanga.tithi.paksha})</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Yoga</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.yoga.name}</dd></div>
+                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Karana</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.karana.name}</dd></div>
+                </dl>
+              </div>
+            </ResizablePanels>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-[220px_1fr_1.1fr] xl:items-start">
             <div className="glass-card p-4">
               <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Divisional Chart</h3>
               <div className="flex flex-wrap gap-1.5">
@@ -349,28 +356,25 @@ export default function ChartsPage() {
                 })}
               </div>
             </div>
-          </div>
-          <div className="glass-card flex flex-col items-center p-6">
-            <NorthIndianChart
-              title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
-              ascendant={currentAscendant}
-              planets={currentVargaPlanets}
-              size={380}
-              isVarga={selectedVarga !== "D1"}
-              vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
-              activePlanet={activePlanet}
-              onPlanetHover={handlePlanetHover}
-              onPlanetClick={handlePlanetClick}
-            />
-            <div className="mt-4 w-full rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>Ascendant</p>
-              <p className="font-semibold" style={{ color: "var(--accent)" }}>{currentAscendant.rashi} <span className="font-normal" style={{ color: "var(--text-secondary)" }}>{currentAscendant.rashi_degree?.toFixed(2)}°</span></p>
-              <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>Lord: {rashiLordFromApiName(currentAscendant.rashi) ?? "—"}</p>
+            <div className="glass-card flex flex-col items-center p-6">
+              <NorthIndianChart
+                title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+                ascendant={currentAscendant}
+                planets={currentVargaPlanets}
+                size={380}
+                isVarga={selectedVarga !== "D1"}
+                vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                activePlanet={activePlanet}
+                onPlanetHover={handlePlanetHover}
+                onPlanetClick={handlePlanetClick}
+              />
+              <div className="mt-4 w-full rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Ascendant</p>
+                <p className="font-semibold" style={{ color: "var(--accent)" }}>{currentAscendant.rashi} <span className="font-normal" style={{ color: "var(--text-secondary)" }}>{currentAscendant.rashi_degree?.toFixed(2)}°</span></p>
+                <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>Lord: {rashiLordFromApiName(currentAscendant.rashi) ?? "—"}</p>
+              </div>
             </div>
-          </div>
-          <div className="min-w-0"><ChartPanel chart={chart} /></div>
-          <div className="xl:sticky xl:top-20">
-            <PlanetDetailPanel planet={activePlanet} result={result} pinned={pinnedPlanet === activePlanet && activePlanet !== null} onUnpin={() => { setPinnedPlanet(null); setActivePlanet(null); }} />
+            <div className="min-w-0"><ChartPanel chart={chart} /></div>
           </div>
         </div>
       )}
@@ -505,11 +509,11 @@ export default function ChartsPage() {
       )}
 
       {view === "planets" && (
-        <div id="panel-planets" role="tabpanel" aria-label="Planet explorer panel"><PlanetExplorerPanel chart={chart} activePlanet={activePlanet} /></div>
+        <div id="panel-planets" role="tabpanel" aria-label="Planet explorer panel"><PlanetExplorerPanel result={result} request={request} selectedPlanet={pinnedPlanet ?? activePlanet} onSelectPlanet={(p) => { setPinnedPlanet(p); setActivePlanet(p); }} /></div>
       )}
 
       {view === "divisional" && (
-        <div id="panel-divisional" role="tabpanel" aria-label="Divisional charts panel"><DivisionalChartsPanel chart={chart} vargas={vargas} selectedVarga={selectedVarga} setSelectedVarga={setSelectedVarga} /></div>
+        <div id="panel-divisional" role="tabpanel" aria-label="Divisional charts panel"><VargaExplorer chart={chart} vargas={vargas} transits={result.transits} selectedVarga={selectedVarga} setSelectedVarga={setSelectedVarga} /></div>
       )}
     </>
   );

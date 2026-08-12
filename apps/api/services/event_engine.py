@@ -131,6 +131,7 @@ class EventEngine:
         event: EventRecord,
         dasha_trees: dict[str, DashaTree],
         natal_snapshot: NatalSnapshot,
+        event_datetime_utc: Optional[datetime] = None,
     ) -> EventAstrologicalContext:
         """
         Assembles one EventAstrologicalContext for `event`.
@@ -163,10 +164,15 @@ class EventEngine:
             # events.event_date is a date (no time-of-day is recorded by
             # the schema); approximated as midnight UTC on that date for
             # the transit moment. This is a documented approximation, not
-            # a hidden one — see Design Audit follow-ups.
-            event_datetime_utc = datetime.combine(event.event_date, time.min, tzinfo=timezone.utc)
+            # a hidden one — see Design Audit follow-ups. A caller that has
+            # the exact event moment (e.g. Event Analysis) may pass
+            # `event_datetime_utc` to override the midnight approximation
+            # and preserve the event's time-of-day.
+            transit_moment = event_datetime_utc or datetime.combine(
+                event.event_date, time.min, tzinfo=timezone.utc
+            )
             transits = tuple(
-                self._transit_engine.compute_transit(natal_snapshot.chart, event_datetime_utc)
+                self._transit_engine.compute_transit(natal_snapshot.chart, transit_moment)
             )
 
         return EventAstrologicalContext(
@@ -244,6 +250,7 @@ class EventEngine:
         dasha_trees: dict[str, DashaTree],
         natal_snapshot: NatalSnapshot,
         fact_registry: Optional[FactRegistry] = None,
+        event_datetime_utc: Optional[datetime] = None,
     ) -> EventAnalysis:
         """
         Top-level orchestration: builds the context, optionally runs
@@ -256,12 +263,16 @@ class EventEngine:
         requested, a new FactRegistry is built from its contents plus
         the dasha facts, so the caller's own registry is unaffected.
 
+        `event_datetime_utc` is passed through to build_context to set the
+        exact transit moment (Event Analysis); when omitted the transit
+        moment defaults to midnight UTC of `event.event_date`.
+
         rule_results is None (not evaluated) unless BOTH a RuleEngine
         was supplied at construction AND a `fact_registry` is passed
         here — matching FactBuilder's own graceful-degradation pattern
         for optional dependencies.
         """
-        context = self.build_context(event, dasha_trees, natal_snapshot)
+        context = self.build_context(event, dasha_trees, natal_snapshot, event_datetime_utc=event_datetime_utc)
 
         rule_results: Optional[tuple[RuleResult, ...]] = None
         if self._rule_engine is not None and fact_registry is not None:

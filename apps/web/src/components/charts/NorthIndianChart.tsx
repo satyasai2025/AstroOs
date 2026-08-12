@@ -189,13 +189,17 @@ export function NorthIndianChart({
       .style("stroke", lineColor)
       .style("stroke-width", 1);
 
-    // ── House number labels ──────────────────────────────────────────────────
+    // ── Rashi number labels — the absolute zodiac sign number (Mesha/
+    // Aries=1 … Meena/Pisces=12), not the house-from-Lagna number, and no
+    // rashi-name text alongside it (matches MixedVargaTransitChart). ──────
     const chartText = "var(--chart-text)";
     const accentColor = "var(--accent)";
     const ascColor = "var(--chart-ascendant)";
 
     for (let house = 1; house <= 12; house++) {
       const [lx, ly] = toPoint(HOUSE_NUMBER_UNIT_POS[house]);
+      const rashiName = houseRashis[house] ?? "";
+      const rashiNumber = rashiName ? rashiIndexFromApiName(rashiName) + 1 : house;
       svg.append("text")
         .attr("x", lx)
         .attr("y", ly)
@@ -207,31 +211,7 @@ export function NorthIndianChart({
         .style("stroke-width", "3px")
         .style("fill", chartText)
         .style("opacity", 0.7)
-        .text(house);
-    }
-
-    // ── Rashi labels (small, near each house's number) ──────────────────────
-    for (let house = 1; house <= 12; house++) {
-      const [nx, ny] = toPoint(HOUSE_NUMBER_UNIT_POS[house]);
-      const [cx, cy] = toPoint(HOUSE_CENTROIDS[house]);
-      // Nudge partway from the number position toward the centroid so the
-      // rashi abbreviation doesn't collide with the house-number digit.
-      const rx = nx + (cx - nx) * 0.35;
-      const ry = ny + (cy - ny) * 0.35;
-      const rashiName = houseRashis[house] ?? "";
-      svg.append("text")
-        .attr("x", rx)
-        .attr("y", ry)
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "central")
-        .attr("paint-order", "stroke")
-        .style("font-size", "9px")
-        .style("font-weight", "600")
-        .style("stroke", "var(--chart-bg)")
-        .style("stroke-width", "3px")
-        .style("fill", chartText)
-        .style("opacity", 0.9)
-        .text(rashiName.slice(0, 3));
+        .text(rashiNumber);
     }
 
     // ── Compute each planet's rendered position up front — reused for both

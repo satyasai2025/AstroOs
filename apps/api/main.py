@@ -7,6 +7,7 @@ Configuration is dependency-injected where needed.
 """
 
 import logging
+import re
 import ssl
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
@@ -39,6 +40,7 @@ from apps.api.routers import datasets as datasets_router
 from apps.api.routers import divisional as divisional_router
 from apps.api.routers import digital_twin as digital_twin_router
 from apps.api.routers import events as events_router
+from apps.api.routers import event_analysis as event_analysis_router
 from apps.api.routers import export as export_router
 from apps.api.routers import geocoding as geocoding_router
 from apps.api.routers import horoscope as horoscope_router
@@ -198,6 +200,7 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=_settings.ALLOWED_ORIGINS,
+        allow_origin_regex=r"http://localhost:\d+",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -242,10 +245,21 @@ def create_app() -> FastAPI:
         request: Request, exc: Exception
     ) -> JSONResponse:
         logger.exception("Unhandled exception: %s", exc)
-        return JSONResponse(
+        response = JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"detail": "An internal error occurred."},
         )
+        # A handler registered for the base `Exception` class runs inside
+        # Starlette's ServerErrorMiddleware, which sits OUTSIDE CORSMiddleware
+        # — so this response never passes back through CORS's header
+        # injection. Without this, every unhandled 500 looks like a network
+        # failure to the browser (CORS-blocked) instead of a real error.
+        origin = request.headers.get("origin")
+        if origin and (origin in _settings.ALLOWED_ORIGINS or re.fullmatch(r"http://localhost:\d+", origin)):
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Vary"] = "Origin"
+        return response
 
     # ── Routers ───────────────────────────────────────────────────────────────
 
@@ -271,6 +285,9 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         events_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        event_analysis_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         ashtakavarga_router.router, prefix="/api/v1", dependencies=_authenticated
