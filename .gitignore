@@ -80,5 +80,18 @@ summarize_task.md
 login page.txt
 how to start program.txt
 astroos my vision.txt
+event engine.txt
+kp analysis.txt
+kp analysis - Copy.txt
+mixed varga.txt
+mixed varga animated.txt
+mixed varga and transit  animated.txt
+nakshatra.txt
+nakshatra image.txt
+timings of event.txt
+birthdata for research.xlsx
 .claude/settings.local.json.bak
 .claude/settings.local.json
+
+# Database dumps (never commit data)
+backups/
