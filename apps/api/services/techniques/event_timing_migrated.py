@@ -65,11 +65,14 @@ facts:
     the old feature extractor had — see fact_builder.py's _build_transit_facts).
   - transit.is_sade_sati -> transit.saturn.sade_sati (already emitted).
   - dasha.mahadasha_lord -> dasha.current_mahadasha (already emitted).
-  - dasha.antardasha_lord, transit.{saturn,jupiter}_retrograde: FactBuilder
-    does not emit an antardasha-level or transiting-retrograde fact today.
-    Kept as pending fact references (same pattern as eye_health.py's
-    _PENDING_FACTS) so these rules honestly report INSUFFICIENT_DATA rather
-    than being dropped or fabricated.
+  - dasha.antardasha_lord -> dasha.antardasha_lord (now emitted: FactBuilder's
+    _build_dasha_facts looks up the matched Mahadasha's sub_periods for the
+    one bracketing the target date; only present when the DashaTree was
+    computed to max_depth >= 2, so a shallow tree still honestly yields
+    INSUFFICIENT_DATA rather than a fabricated antardasha).
+  - transit.{saturn,jupiter}_retrograde -> transit.{planet}.retrograde (now
+    emitted: TransitEngine's per-planet result already carried is_retrograde;
+    FactBuilder just wasn't surfacing it as a Fact).
   - varga.available -> varga.sun.D9.rashi (FactBuilder emits per-planet,
     per-varga facts, not a single boolean; existence of the Sun's D9 rashi
     fact is the concrete substitute for "is D9 available").
@@ -191,10 +194,10 @@ _register(RuleDefinition(
     priority=3,
     category="event_timing",
     conditions=(
-        # FactBuilder does not emit an antardasha-level dasha fact yet
-        # (only dasha.current_mahadasha/current_lord) — referencing it here
-        # is honest, not fabricated: this rule reports INSUFFICIENT_DATA
-        # until that fact exists, per eye_health.py's _PENDING_FACTS pattern.
+        # FactBuilder emits dasha.antardasha_lord only when the DashaTree was
+        # computed to max_depth >= 2 (sub_periods populated) — a shallow tree
+        # correctly leaves this rule reporting INSUFFICIENT_DATA rather than
+        # fabricating an antardasha.
         Condition("dasha.antardasha_lord", "!=", None, "An active Antardasha is present"),
     ),
     conclusion=Conclusion(
@@ -202,7 +205,7 @@ _register(RuleDefinition(
         description="Narrows within the Mahadasha using the level-2 lord.",
     ),
     explanation="Vimsottari Dasha tradition: the Antardasha (level-2) lord narrows within the Mahadasha.",
-    tags=("dasha", "antardasha", "pending_fact"),
+    tags=("dasha", "antardasha"),
 ))
 
 _register(RuleDefinition(
@@ -213,8 +216,6 @@ _register(RuleDefinition(
     priority=2,
     category="event_timing",
     conditions=(
-        # FactBuilder emits natal retrograde (planet.saturn.retrograde) but
-        # not transiting-moment retrograde — pending, same rationale as above.
         Condition("transit.saturn.retrograde", "==", True, "Saturn is retrograde at the event moment"),
     ),
     conclusion=Conclusion(
@@ -222,7 +223,7 @@ _register(RuleDefinition(
         description="Delay/obstruction modifier on Saturn's activating transits.",
     ),
     explanation="Gochara: Saturn retrograde at the transit moment modulates its activating/benefic transits.",
-    tags=("transit", "saturn", "retrograde", "pending_fact"),
+    tags=("transit", "saturn", "retrograde"),
 ))
 
 _register(RuleDefinition(
@@ -240,7 +241,7 @@ _register(RuleDefinition(
         description="Modulation of Jupiter's activating/benefic transits.",
     ),
     explanation="Gochara: Jupiter retrograde at the transit moment modulates its activating/benefic transits.",
-    tags=("transit", "jupiter", "retrograde", "pending_fact"),
+    tags=("transit", "jupiter", "retrograde"),
 ))
 
 _register(RuleDefinition(

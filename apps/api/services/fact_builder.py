@@ -185,6 +185,7 @@ class FactBuilder:
         for result in self._transit_engine.compute_transit(chart, transit_datetime_utc):
             registry.add_fact(Fact(f"transit.{result.planet}.house", result.house_from_natal_moon, "transit_engine"))
             registry.add_fact(Fact(f"transit.{result.planet}.rashi", result.transit_rashi, "transit_engine"))
+            registry.add_fact(Fact(f"transit.{result.planet}.retrograde", result.is_retrograde, "transit_engine"))
             if venus_index is not None and result.transit_rashi in _RASHI_INDEX:
                 registry.add_fact(Fact(
                     f"transit.{result.planet}.house_from_venus",
@@ -227,6 +228,12 @@ class FactBuilder:
                 registry.add_fact(Fact(
                     "dasha.current_mahadasha", md.lord, "dasha_engine",
                 ))
+                for ad in md.sub_periods:
+                    if ad.start_date <= target <= ad.end_date:
+                        registry.add_fact(Fact(
+                            "dasha.antardasha_lord", ad.lord, "dasha_engine",
+                        ))
+                        break
                 break
 
     def _build_varga_facts(
