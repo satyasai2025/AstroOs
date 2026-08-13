@@ -191,6 +191,61 @@ def _populate_yoga(registry: OntologyRegistry) -> None:
                 ))
 
 
+def _populate_technique(registry: OntologyRegistry) -> None:
+    """
+    Registers the generic Technique framework's catalogue (domain/technique.py
+    + services/techniques/) exactly like `_populate_yoga` registers Yogas:
+    one entity per technique (latest version only), a `Requires` edge to each
+    VARGA entity its `dependencies` names, and an `AppliesTo` edge to each
+    EVENT entity its `event_types` names — both only when the target entity
+    already exists in the ontology (same discipline `_populate_yoga` uses for
+    Varga: never invent an entity here just to link to it).
+    """
+    from apps.api.services import technique_registry
+    from apps.api.services import techniques as _techniques  # noqa: F401 — triggers registration
+
+    latest: dict[str, object] = {}
+    for t in technique_registry.all_techniques():
+        cur = latest.get(t.technique_id)
+        if cur is None or t.version > cur.version:
+            latest[t.technique_id] = t
+
+    for definition in latest.values():
+        registry.add_entity(OntologyEntity(
+            entity_id=f"TECHNIQUE-{definition.technique_id.upper()}",
+            entity_type="Technique",
+            name=definition.name,
+            metadata={
+                "tradition": definition.tradition,
+                "objective": definition.objective,
+                "status": definition.status,
+                "provenance": definition.provenance.value,
+                "version": definition.version,
+                "rule_count": len(definition.rule_refs),
+                "event_types": list(definition.event_types),
+                "timing_resolution": (
+                    definition.timing_resolution.value if definition.timing_resolution else None
+                ),
+            },
+        ))
+        for dependency in definition.dependencies:
+            varga_entity_id = f"VARGA-{dependency}"
+            if registry.get_entity(varga_entity_id) is not None:
+                registry.add_relationship(OntologyRelationship(
+                    subject_id=f"TECHNIQUE-{definition.technique_id.upper()}",
+                    relationship_type="Requires",
+                    object_id=varga_entity_id,
+                ))
+        for event_type in definition.event_types:
+            event_entity_id = f"EVENT-{event_type.upper()}"
+            if registry.get_entity(event_entity_id) is not None:
+                registry.add_relationship(OntologyRelationship(
+                    subject_id=f"TECHNIQUE-{definition.technique_id.upper()}",
+                    relationship_type="AppliesTo",
+                    object_id=event_entity_id,
+                ))
+
+
 def _populate_bala(registry: OntologyRegistry) -> None:
     """
     Uses ShadbalaEngine's own implemented_components() list — the exact
@@ -351,8 +406,9 @@ def _populate_dignity_relationships(registry: OntologyRegistry) -> None:
 def build_default_ontology() -> OntologyRegistry:
     """
     Construct and populate the full default ontology. Order matters:
-    Varga and Graha must be populated before Yoga/Karaka (which
-    reference them in relationships).
+    Varga and Graha must be populated before Yoga/Karaka/Technique (which
+    reference them in relationships); Event must be populated before
+    Technique (AppliesTo edges).
     """
     registry = OntologyRegistry()
 
@@ -368,6 +424,7 @@ def build_default_ontology() -> OntologyRegistry:
     _populate_aspect(registry)
     _populate_karaka(registry)
     _populate_event(registry)
+    _populate_technique(registry)
     _populate_dignity_relationships(registry)
 
     return registry

@@ -36,7 +36,8 @@ class OntologyEntity:
     """
     entity_id: str        # stable, permanent — e.g. "GRAHA-SUN", "YOGA-BPHS-PM-001"
     entity_type: str      # "Graha", "Rashi", "Bhava", "Nakshatra", "Pada",
-                           # "Yoga", "Bala", "Dasha", "Aspect", "Karaka", "Varga", "Event"
+                           # "Yoga", "Bala", "Dasha", "Aspect", "Karaka", "Varga", "Event",
+                           # "Technique"
     name: str              # human-readable name, e.g. "Sun", "Ruchaka Yoga"
     metadata: dict[str, Any] = field(default_factory=dict)
 
