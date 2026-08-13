@@ -9,6 +9,7 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Request
+from prometheus_client import Counter, Gauge
 
 from apps.api.services.collab_crypto import (
     decrypt_json,
@@ -26,6 +27,15 @@ from apps.api.services.ot_engine import (
 from apps.api.services.worker_pool import JobPriority
 
 router = APIRouter()
+
+# ── Metrics (observability/SLO.md — WebSocket connection health SLI) ─────────
+rtcollab_active_connections = Gauge(
+    "rtcollab_active_connections", "Currently connected RTCollab WS peers"
+)
+rtcollab_operations_total = Counter(
+    "rtcollab_operations_total", "RTCollab operations by outcome",
+    ["outcome"],  # applied | quota_rejected | error
+)
 
 # Sandbox per-device CPU quota (ADR-RTC-001, Milestone 4): each peer may have
 # at most this many operations in flight on the shared "cpu" WorkerPool at
@@ -162,6 +172,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, peer_id: Opt
         peer_id = f"peer-{uuid.uuid4().hex[:8]}"
     session.peers[peer_id] = {"connected": True, "name": f"peer-{peer_id}", "websocket": websocket}
     active_connections.setdefault(session_id, {})[peer_id] = websocket
+    rtcollab_active_connections.inc()
 
     # Send welcome message — the only message ever sent unencrypted, since
     # it's how the peer receives the session's AES-256-GCM key in the first
@@ -207,6 +218,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, peer_id: Opt
                     continue
 
                 if not _try_acquire_quota(peer_id):
+                    rtcollab_operations_total.labels(outcome="quota_rejected").inc()
                     await _send(websocket, session, {
                         "type": "error",
                         "detail": "CPU quota exceeded: too many operations in flight for this device",
@@ -216,6 +228,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, peer_id: Opt
                 try:
                     applied = await _apply_operation_quota_checked(websocket, ot_engine, op, peer_id)
                 except Exception as exc:
+                    rtcollab_operations_total.labels(outcome="error").inc()
                     await _send(websocket, session, {"type": "error", "detail": str(exc)})
                     continue
                 finally:
@@ -224,9 +237,11 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, peer_id: Opt
                 try:
                     session.document = ot_engine.merge_document(session.document, [applied])
                 except Exception as exc:
+                    rtcollab_operations_total.labels(outcome="error").inc()
                     await _send(websocket, session, {"type": "error", "detail": str(exc)})
                     continue
 
+                rtcollab_operations_total.labels(outcome="applied").inc()
                 await _broadcast(
                     session,
                     {"type": "operation", "operation": applied.to_dict()},
@@ -256,6 +271,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, peer_id: Opt
         session.peers.pop(peer_id, None)
         active_connections.get(session_id, {}).pop(peer_id, None)
         _clear_quota(peer_id)
+        rtcollab_active_connections.dec()
         await _broadcast(
             session,
             {"type": "presence", "peer_id": peer_id, "status": "left"},
