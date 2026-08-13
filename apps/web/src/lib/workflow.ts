@@ -13,6 +13,8 @@ import { api } from "./api";
 import type {
   BulkImportRow,
   BulkImportResponse,
+  FullReportRequest,
+  FullReportResponse,
   KPAnalysisRequest,
   KPAnalysisResponse,
   WorkflowAnalysisRequest,
@@ -25,6 +27,15 @@ export function useAnalyzeWorkflow() {
   return useMutation<WorkflowAnalysisResponse, Error, WorkflowAnalysisRequest>({
     mutationFn: (payload) =>
       api.post<WorkflowAnalysisResponse>("/api/v1/workflow/analyze", payload),
+  });
+}
+
+/** Full Report — the complete analysis pipeline + KP in one call
+ * (POST /api/v1/report/full). Used by the printable /reports/full page. */
+export function useFullReport() {
+  return useMutation<FullReportResponse, Error, FullReportRequest>({
+    mutationFn: (payload) =>
+      api.post<FullReportResponse>("/api/v1/report/full", payload),
   });
 }
 
