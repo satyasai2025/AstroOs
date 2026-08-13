@@ -30,17 +30,7 @@ async def list_jobs(
 
 @router.get("/pools", summary="Current size/queue-depth snapshot for each worker pool")
 async def list_pools(manager: WorkerPoolManager = Depends(get_worker_pool_manager)) -> dict:
-    return {
-        name: {
-            "current_size": p._current_size,
-            "min_workers": p.min_workers,
-            "max_workers": p.max_workers,
-            "queue_depth": len(p._heap),
-            "in_flight": p._in_flight,
-            "job_count": len(p._jobs),
-        }
-        for name, p in manager.pools.items()
-    }
+    return {name: p.status() for name, p in manager.pools.items()}
 
 
 @router.get("/{job_id}", response_model=JobStatusResponse, summary="Get a single job's status")
@@ -56,9 +46,9 @@ async def get_job(
 @router.get("/monitor/html", response_class=HTMLResponse, summary="Local job monitoring dashboard")
 async def monitor_html(manager: WorkerPoolManager = Depends(get_worker_pool_manager)) -> str:
     pools_html = "".join(
-        f'<div class="pool"><b>{name}</b> — size {p._current_size} '
-        f'(min {p.min_workers}/max {p.max_workers}) · queue {len(p._heap)} · in-flight {p._in_flight}</div>'
-        for name, p in manager.pools.items()
+        f'<div class="pool"><b>{name}</b> — size {status["current_size"]} '
+        f'(min {status["min_workers"]}/max {status["max_workers"]}) · queue {status["queue_depth"]} · in-flight {status["in_flight"]}</div>'
+        for name, status in ((n, p.status()) for n, p in manager.pools.items())
     )
     jobs = manager.list_all_jobs()[:200]
     rows = "".join(

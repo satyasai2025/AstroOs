@@ -247,6 +247,18 @@ class WorkerPool:
                 return True
         return False
 
+    def status(self) -> dict[str, int]:
+        """Current size/queue-depth snapshot — the public counterpart to
+        reaching into _current_size/_heap/_in_flight/_jobs directly."""
+        return {
+            "current_size": self._current_size,
+            "min_workers": self.min_workers,
+            "max_workers": self.max_workers,
+            "queue_depth": len(self._heap),
+            "in_flight": self._in_flight,
+            "job_count": len(self._jobs),
+        }
+
     # -- dispatch ---------------------------------------------------------------
 
     def _dispatch_loop(self) -> None:
