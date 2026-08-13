@@ -33,6 +33,8 @@ import math
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
+from packages.shared.rashi_offset import house_offset
+
 
 # ── Const Data Structures ──────────────────────────────────────────────────
 
@@ -330,7 +332,7 @@ class AshtakootaEngine:
     def calculate_bhakoot(rashi_a: str, rashi_b: str) -> KootaScore:
         r_idx_a = RASHIS.index(rashi_a) if rashi_a in RASHIS else 0
         r_idx_b = RASHIS.index(rashi_b) if rashi_b in RASHIS else 0
-        diff = ((r_idx_b - r_idx_a) % 12) + 1
+        diff = house_offset(r_idx_a, r_idx_b)
 
         # Bad positions: 2/12 (Dwirdwadasa), 6/8 (Shadashtaka), 5/9 (Navapanchama - conditioned)
         if diff in (1, 7, 3, 4, 10, 11):

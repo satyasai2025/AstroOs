@@ -30,18 +30,13 @@ from __future__ import annotations
 from apps.api.domain.ephemeris import SiderealPosition
 from apps.api.domain.shadbala import BalaComponentResult
 from apps.api.services.yoga_predicates import is_natural_benefic
+from packages.shared.degrees import shorter_arc_distance as _shorter_arc_distance
 
 _COMPONENT_ID = "SHADBALA-PAKSHA"
 _COMPONENT_NAME = "Paksha Bala"
 _RULE_VERSION = "1.0"
 
 _CLASSICAL_SEVEN = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]
-
-
-def _shorter_arc_distance(a: float, b: float) -> float:
-    """Shorter-arc angular distance (0-180°) between two ecliptic longitudes."""
-    diff = abs(a - b) % 360.0
-    return diff if diff <= 180.0 else 360.0 - diff
 
 
 class PakshaBalaCalculator:

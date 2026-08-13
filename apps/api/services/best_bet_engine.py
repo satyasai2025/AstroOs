@@ -23,6 +23,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
+from packages.shared.rashi_offset import house_offset
+
 logger = logging.getLogger(__name__)
 
 # Which of the 3 groups count toward total_score/max_score/percentage per
@@ -276,7 +278,7 @@ class BestBetEngine:
         def count_dosha(mars_h: int, moon_h: int, venus_h: int) -> int:
             count = 0
             for ref in [mars_h, moon_h, venus_h]:
-                if ((mars_h - ref) % 12) + 1 in dosha_houses:
+                if house_offset(ref, mars_h) in dosha_houses:
                     count += 1
             return count
 

@@ -37,21 +37,9 @@ try:
 except ImportError:
     SWISSEPH_AVAILABLE = False
 
+from packages.shared.rashi_offset import house_offset
 
 # ── Constants ──────────────────────────────────────────────────────────────
-
-# Swiss Ephemeris planet ids. Taken from the library when it is installed so
-# they can never drift out of sync; the literals are the documented Swiss
-# Ephemeris ABI values and only exist so this module still imports without
-# pyswisseph present.
-if SWISSEPH_AVAILABLE:
-    PLANET_VENUS = swe.VENUS
-    PLANET_JUPITER = swe.JUPITER
-    PLANET_SATURN = swe.SATURN
-else:
-    PLANET_VENUS = 3
-    PLANET_JUPITER = 5
-    PLANET_SATURN = 6
 
 # Sidereal Zodiac Signs (Rashis), in order. The scan compares natal and
 # transiting positions purely by rashi index, so every rashi name entering the
@@ -75,10 +63,11 @@ class TransitPositions:
     Jupiter and Saturn positions at one scan epoch.
 
     Supplied by the caller rather than computed here so the scan can run off
-    whichever ephemeris the caller already trusts. The HTTP path feeds it from
-    EphemerisWrapper, which applies the request's own ayanamsa under the lock
-    that guards pyswisseph's process-global sidereal mode; the standalone
-    `analyze()` path fills it straight from pyswisseph.
+    whichever ephemeris the caller already trusts. Both the HTTP path
+    (routers/ai_phase_e.py) and the standalone `analyze()` path build this
+    from an EphemerisWrapper instance, which applies the request's own
+    ayanamsa under the lock that guards pyswisseph's process-global sidereal
+    mode.
     """
     julian_day: float
     jupiter_tropical: float
@@ -138,14 +127,6 @@ class MarriageTimingEngine:
             swe.set_sid_mode(swe.SIDM_LAHIRI)
 
     @staticmethod
-    def _to_sidereal(tropical_longitude: float, ayanamsa: float) -> float:
-        """Convert tropical longitude to sidereal (Lahiri ayanamsa)."""
-        sidereal = tropical_longitude - ayanamsa
-        if sidereal < 0:
-            sidereal += 360.0
-        return sidereal
-
-    @staticmethod
     def _longitude_to_rashi(sidereal_longitude: float) -> str:
         """Convert sidereal longitude to sidereal Rashi."""
         idx = int(sidereal_longitude / 30.0) % 12
@@ -160,7 +141,7 @@ class MarriageTimingEngine:
         """Calculate house number from one rashi to another (1-indexed)."""
         from_idx = MarriageTimingEngine._rashi_index(from_rashi)
         to_idx = MarriageTimingEngine._rashi_index(to_rashi)
-        return ((to_idx - from_idx) % 12) + 1
+        return house_offset(from_idx, to_idx)
 
     @staticmethod
     def _is_aspecting_house(aspect_house: int) -> bool:
@@ -340,13 +321,14 @@ class MarriageTimingEngine:
         subject_name: str = ""
     ) -> MarriageTimingResult:
         """
-        Standalone entry point: compute the natal figures straight from
-        pyswisseph (Lahiri, Placidus cusps) and run `scan` over them.
+        Standalone entry point: compute the natal figures via a private
+        EphemerisWrapper instance (Lahiri, Placidus cusps) and run `scan`
+        over them.
 
-        NOTE: this mutates pyswisseph's process-global sidereal mode. Inside
-        the API, prefer the router's path, which drives `scan` from
-        EphemerisWrapper so the request's own ayanamsa is honoured and the
-        global mode stays under that class's lock.
+        This goes through the same locked, thread-safe EphemerisWrapper
+        calculation surface the HTTP path (routers/ai_phase_e.py) already
+        uses to drive `scan` — no direct pyswisseph calls here anymore, so
+        there is no separate raw-swisseph computation path to keep in sync.
 
         Args:
             birth_datetime_utc: ISO 8601 birth datetime (UTC)
@@ -362,41 +344,45 @@ class MarriageTimingEngine:
         if not SWISSEPH_AVAILABLE:
             raise RuntimeError("swisseph Python package is required. Install with: pip install swisseph")
 
-        swe.set_ephe_path(None)  # Use Swiss Ephemeris built-in data
-        swe.set_sid_mode(swe.SIDM_LAHIRI)
+        from apps.api.config import get_settings
+        from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd
+
+        wrapper = EphemerisWrapper(ephemeris_path=get_settings().EPHEMERIS_PATH)
 
         birth_dt = datetime.fromisoformat(birth_datetime_utc.replace('Z', '+00:00'))
         if birth_dt.tzinfo is None:
             birth_dt = birth_dt.replace(tzinfo=timezone.utc)
         birth_dt = birth_dt.astimezone(timezone.utc)
-        birth_jd = cls._julian_day(birth_dt)
+        birth_jd = datetime_to_jd(birth_dt)
 
         # Ayanamsa is read per epoch rather than pinned to a J2000 constant:
         # it drifts ~50" a year, so a fixed value misplaces rashi boundaries
         # across a 25-year scan.
-        birth_ayanamsa = swe.get_ayanamsa_ut(birth_jd)
+        birth_ayanamsa = wrapper.get_ayanamsa(birth_jd)
 
         # Natal chart, for Venus and the 7th cusp. Placidus houses (standard
         # for timing work).
-        houses, _ascmc = swe.houses(birth_jd, birth_latitude, birth_longitude, b'P')
+        _asc_tropical, cusp_tropicals = wrapper.get_ascendant_and_cusps(
+            birth_jd, birth_latitude, birth_longitude, house_system="P"
+        )
 
-        venus_tropical = swe.calc_ut(birth_jd, PLANET_VENUS)[0][0]
-        venus_sidereal = cls._to_sidereal(venus_tropical, birth_ayanamsa)
+        venus_tropical = wrapper.get_planet_position("venus", birth_jd).longitude
+        venus_sidereal = wrapper.to_sidereal(venus_tropical, birth_ayanamsa)
 
-        cusp_7_tropical = houses[6]  # 7th house cusp (0-indexed)
-        cusp_7_sidereal = cls._to_sidereal(cusp_7_tropical, birth_ayanamsa)
+        cusp_7_tropical = cusp_tropicals[6]  # 7th house cusp (0-indexed)
+        cusp_7_sidereal = wrapper.to_sidereal(cusp_7_tropical, birth_ayanamsa)
 
         def _positions(epoch: datetime) -> TransitPositions:
-            jd = cls._julian_day(epoch)
-            ayanamsa = swe.get_ayanamsa_ut(jd)
-            jupiter_tropical = swe.calc_ut(jd, PLANET_JUPITER)[0][0]
-            saturn_tropical = swe.calc_ut(jd, PLANET_SATURN)[0][0]
+            jd = datetime_to_jd(epoch)
+            ayanamsa = wrapper.get_ayanamsa(jd)
+            jupiter_tropical = wrapper.get_planet_position("jupiter", jd).longitude
+            saturn_tropical = wrapper.get_planet_position("saturn", jd).longitude
             return TransitPositions(
                 julian_day=jd,
                 jupiter_tropical=jupiter_tropical,
-                jupiter_sidereal=cls._to_sidereal(jupiter_tropical, ayanamsa),
+                jupiter_sidereal=wrapper.to_sidereal(jupiter_tropical, ayanamsa),
                 saturn_tropical=saturn_tropical,
-                saturn_sidereal=cls._to_sidereal(saturn_tropical, ayanamsa),
+                saturn_sidereal=wrapper.to_sidereal(saturn_tropical, ayanamsa),
             )
 
         return cls.scan(
@@ -408,13 +394,4 @@ class MarriageTimingEngine:
             scan_start_age=scan_start_age,
             scan_end_age=scan_end_age,
             subject_name=subject_name,
-        )
-
-    @staticmethod
-    def _julian_day(dt: datetime) -> float:
-        """Julian Day (UT) for a timezone-aware datetime."""
-        utc = dt.astimezone(timezone.utc)
-        return swe.julday(
-            utc.year, utc.month, utc.day,
-            utc.hour + utc.minute / 60.0 + utc.second / 3600.0,
         )

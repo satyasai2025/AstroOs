@@ -40,11 +40,11 @@ from apps.api.services.ephemeris_wrapper import (
     datetime_to_jd,
     longitude_to_rashi,
 )
+from packages.shared.degrees import shorter_arc_distance as _angular_distance
+from packages.shared.enums import Rashi
+from packages.shared.rashi_offset import house_offset
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 _ALL_PLANETS = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
 
@@ -66,17 +66,11 @@ _AVG_DAILY_MOTION: dict[str, float] = {
 # ── Helpers ─────────────────────────────────────────────────────────────────
 
 
-def _angular_distance(lon1: float, lon2: float) -> float:
-    """Shortest angular distance [0, 180] between two ecliptic longitudes."""
-    diff = abs(lon1 - lon2) % 360.0
-    return min(diff, 360.0 - diff)
-
-
 def _house_from_reference(ref_rashi: str, target_rashi: str) -> int:
     """House number (1-12) of `target_rashi` counted from `ref_rashi`."""
     ref_idx = _RASHI_LIST.index(ref_rashi)
     tgt_idx = _RASHI_LIST.index(target_rashi)
-    return ((tgt_idx - ref_idx) % 12) + 1
+    return house_offset(ref_idx, tgt_idx)
 
 
 def _jd_to_datetime(jd: float) -> datetime:

@@ -36,6 +36,7 @@ from datetime import datetime
 from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.shadbala import BalaComponentResult
 from apps.api.services.divisional_engine import DivisionalEngine
+from packages.shared.enums import Rashi
 
 _COMPONENT_ID = "SHADBALA-OJAYUGMA"
 _COMPONENT_NAME = "Ojayugmarasyamsa Bala"
@@ -50,10 +51,7 @@ _FEMALE_PLANETS = {"moon", "venus"}
 
 _CLASSICAL_SEVEN = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 
 def _is_odd_sign(rashi: str) -> bool:

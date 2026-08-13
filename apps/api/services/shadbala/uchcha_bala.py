@@ -20,26 +20,20 @@ from __future__ import annotations
 from apps.api.domain.ephemeris import SiderealPosition
 from apps.api.domain.shadbala import BalaComponentResult
 from packages.shared.constants import EXALTATION_DEGREES
+from packages.shared.degrees import shorter_arc_distance as _shorter_arc_distance
+from packages.shared.enums import Rashi
 
 _COMPONENT_ID = "SHADBALA-UCHCHA"
 _COMPONENT_NAME = "Uchcha Bala"
 _RULE_VERSION = "1.0"
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 _CLASSICAL_SEVEN = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]
 
 
 def _absolute_longitude(rashi: str, degree: float) -> float:
     return _RASHI_LIST.index(rashi) * 30.0 + degree
-
-
-def _shorter_arc_distance(a: float, b: float) -> float:
-    diff = abs(a - b) % 360.0
-    return diff if diff <= 180.0 else 360.0 - diff
 
 
 class UchchaBalaCalculator:

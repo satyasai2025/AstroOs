@@ -11,11 +11,9 @@ from __future__ import annotations
 
 from apps.api.domain.ashtakavarga import BhinnashtakavargaResult
 from packages.shared.ashtakavarga_bindu_table import BINDU_TABLE, CONTRIBUTORS, TARGET_PLANETS
+from packages.shared.enums import Rashi
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 _RULE_VERSION = "1.0"
 

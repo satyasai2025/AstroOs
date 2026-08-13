@@ -55,13 +55,12 @@ from dataclasses import dataclass, field
 from datetime import date
 
 from packages.shared.constants import SIGN_LORDS
+from packages.shared.enums import Rashi
+from packages.shared.rashi_offset import house_offset
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
-RASHIS = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+RASHIS = [r.value for r in Rashi]
 
 NATURAL_BENEFICS = {"jupiter", "venus", "mercury", "moon"}
 
@@ -155,7 +154,7 @@ class ChartPositions:
     # matching the workbook's C88/C90 formulas (see module docstring).
 
     def house_of_sign(self, sign_index: int) -> int:
-        return ((sign_index - self.lagna_sign_index) % 12) + 1
+        return house_offset(self.lagna_sign_index, sign_index)
 
     def house_of_planet(self, planet: str) -> int:
         return self.house_of_sign(self.planet_sign_index[planet])
@@ -209,7 +208,7 @@ class SadhuPadhdhatiResult:
 #    orb-based AspectInfo the rest of the app computes for D1 only) ────────
 
 def _aspects(from_planet: str, from_house: int, to_house: int) -> bool:
-    distance = ((to_house - from_house) % 12) + 1
+    distance = house_offset(from_house, to_house)
     return distance in ASPECT_OFFSETS.get(from_planet, {7})
 
 

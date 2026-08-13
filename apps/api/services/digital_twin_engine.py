@@ -30,6 +30,7 @@ from apps.api.domain.horoscope import AspectInfo, PlanetStrength
 from apps.api.services.aspect_engine import AspectEngine
 from apps.api.services.graha_engine import GrahaEngine
 from apps.api.services.yoga_engine import YogaEngine
+from packages.shared.degrees import normalize_degrees
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ def _rashi_from_longitude(lon: float) -> str:
         "Mesha", "Vrishabha", "Mithuna", "Karka", "Simha", "Kanya",
         "Tula", "Vrischika", "Dhanu", "Makara", "Kumbha", "Meena",
     ]
-    normalized = lon % 360.0
+    normalized = normalize_degrees(lon)
     idx = int(normalized / 30.0)
     return signs[min(idx, 11)]
 
@@ -58,8 +59,8 @@ def _house_from_longitude(lon: float, house_cusps: list) -> int:
         return 1
     # For simplicity: assign based on first house cusp (ascendant)
     asc_lon = house_cusps[0].longitude if house_cusps else 0
-    normalized = lon % 360.0
-    diff = (normalized - asc_lon) % 360.0
+    normalized = normalize_degrees(lon)
+    diff = normalize_degrees(normalized - asc_lon)
     return int(diff / 30.0) + 1
 
 
@@ -394,8 +395,8 @@ class DigitalTwinEngine:
             # Use first house cusp as reference; if ascendant changed, house boundaries shift
             asc_cusp = chart.houses[0] if chart.houses else None
             if asc_cusp:
-                normalized = planet.sidereal_longitude % 360.0
-                diff = (normalized - new_lon) % 360.0
+                normalized = normalize_degrees(planet.sidereal_longitude)
+                diff = normalize_degrees(normalized - new_lon)
                 new_house = int(diff / 30.0) + 1
             else:
                 new_house = planet.house_number

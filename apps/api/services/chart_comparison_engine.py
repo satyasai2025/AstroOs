@@ -21,11 +21,9 @@ from apps.api.domain.ai_phase_e import (
 )
 from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.yoga import YogaResult
+from packages.shared.enums import Rashi
 
-_RASHI_NAMES = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_NAMES = [r.value for r in Rashi]
 _PLANET_NAMES = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
 
 

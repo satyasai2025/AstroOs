@@ -34,12 +34,11 @@ from apps.api.services.ephemeris_wrapper import (
 from apps.api.services.gati_classifier import classify_gati
 from apps.api.services.nakshatra_vedha_calculator import NakshatraVedhaCalculator
 from apps.api.services.vedha_calculator import VedhaCalculator
+from packages.shared.enums import Rashi
+from packages.shared.rashi_offset import house_offset
 from packages.shared.sarvatobhadra_grid import longitude_to_sbc_nakshatra
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 _ALL_PLANETS = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
 _ASHTAKAVARGA_ELIGIBLE = {"sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"}
@@ -57,7 +56,7 @@ def _house_from_reference(reference_rashi: str, target_rashi: str) -> int:
     """
     reference_index = _RASHI_LIST.index(reference_rashi)
     target_index = _RASHI_LIST.index(target_rashi)
-    return ((target_index - reference_index) % 12) + 1
+    return house_offset(reference_index, target_index)
 
 
 class TransitEngine:

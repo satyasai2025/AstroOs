@@ -13,11 +13,9 @@ new classical facts.
 from __future__ import annotations
 
 from apps.api.domain.ontology import OntologyEntity, OntologyRelationship
+from packages.shared.enums import Rashi
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 _GRAHA_LIST = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
 
 

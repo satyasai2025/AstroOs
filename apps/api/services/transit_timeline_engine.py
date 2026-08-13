@@ -18,19 +18,18 @@ from apps.api.services.ephemeris_wrapper import (
     longitude_to_rashi,
 )
 from apps.api.services.transit_engine import TransitEngine
+from packages.shared.degrees import normalize_degrees
+from packages.shared.enums import Rashi
 
 logger = logging.getLogger(__name__)
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 _ALL_PLANETS = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
 
 
 def _longitude_to_navamsha(longitude: float) -> str:
     """Calculate D9 Navamsha rashi from sidereal longitude."""
-    normalized = ((longitude % 360) + 360) % 360
+    normalized = normalize_degrees(longitude)
     sign_index = int(normalized // 30)
     degree_in_sign = normalized % 30
     navamsha_size = 30.0 / 9.0

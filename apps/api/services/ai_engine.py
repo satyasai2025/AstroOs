@@ -51,11 +51,10 @@ from apps.api.domain.timeline import Timeline
 from apps.api.domain.verification import VerificationFindings
 from apps.api.domain.statistics import AggregateReport
 
+from packages.shared.enums import Rashi
+
 _ENGINE_VERSION = "1.0"
-_RASHI_NAMES = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_NAMES = [r.value for r in Rashi]
 
 
 def _planet_name(p: str) -> str:
