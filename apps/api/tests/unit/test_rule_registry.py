@@ -11,8 +11,10 @@ from apps.api.services.rule_registry import all_rules, clear_registry, get_rule,
 
 @pytest.fixture(autouse=True)
 def isolated_registry(monkeypatch):
-    fresh_registry: dict = {}
-    monkeypatch.setattr(rule_registry_module, "_REGISTRY", fresh_registry)
+    # rule_registry_module now stores entries in a shared Registry helper
+    # (services/_registry.py) rather than a bare module-level dict; swap out
+    # its internal storage the same way the old `_REGISTRY` dict was swapped.
+    monkeypatch.setattr(rule_registry_module._registry, "_items", {})
     yield
 
 
