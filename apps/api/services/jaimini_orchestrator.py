@@ -183,3 +183,25 @@ class JaiminiOrchestrator:
         from compute_bundle, to avoid recomputing the chart).
         """
         return self._argala_engine.compute(d1_chart, reference)
+
+    def compute_d1_chart(
+        self,
+        birth_datetime_utc: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str = "lahiri",
+        house_system: str = "W",
+    ) -> D1Chart:
+        """
+        Public entry point for callers that only need the D1 chart itself
+        (e.g. to then call compute_argala) without paying for the rest of
+        compute_bundle. Uses the same constructor-injected HoroscopeEngine
+        compute_bundle does — never construct a second one.
+        """
+        return self._horoscope_engine.generate_d1(
+            birth_datetime_utc=birth_datetime_utc,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+            house_system=house_system,
+        )

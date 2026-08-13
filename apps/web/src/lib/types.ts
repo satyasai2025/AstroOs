@@ -1482,3 +1482,162 @@ export interface SnapshotRebuildResult {
 export interface EvidenceRecalculationResult {
   patterns_refreshed: number;
 }
+
+// ── Jaimini (routers/jaimini.py) ────────────────────────────────────────────
+
+export type CharaKarakaScheme = "sapta_karaka" | "ashta_karaka";
+export type TiebreakRule = "speed" | "natural_benefic";
+
+export interface JaiminiBundleRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  scheme?: CharaKarakaScheme;
+  max_dasha_depth?: number;
+  include_karakamsa?: boolean;
+}
+
+export interface JaiminiArgalaRequest extends JaiminiBundleRequest {
+  reference: string;
+}
+
+export interface CharaKarakaResponse {
+  rank: number;
+  karaka_name: string;
+  planet: string;
+  rashi: string;
+  rashi_degree: number;
+  karaka_degree: number;
+  speed_deg_per_day: number;
+  is_retrograde: boolean;
+  tiebreak_rule?: TiebreakRule | null;
+}
+
+export interface JaiminiKarakasResponse {
+  scheme: CharaKarakaScheme;
+  karakas: CharaKarakaResponse[];
+  atmakaraka: CharaKarakaResponse;
+  darakaraka: CharaKarakaResponse;
+}
+
+export interface ArudhaPadaResponse {
+  house_number: number;
+  pada_name: string;
+  rashi: string;
+  raw_rashi: string;
+  lord: string;
+  lord_rashi: string;
+  exception_applied: boolean;
+}
+
+export interface JaiminiArudhaResponse {
+  padas: ArudhaPadaResponse[];
+  arudha_lagna: ArudhaPadaResponse;
+  upapada_lagna: ArudhaPadaResponse;
+}
+
+export interface RashiAspectResponse {
+  from_rashi: string;
+  to_rashi: string;
+  aspecting_planets: string[];
+  aspected_planets: string[];
+}
+
+export interface JaiminiAspectsResponse {
+  matrix: Record<string, string[]>;
+  aspects: RashiAspectResponse[];
+}
+
+export interface KarakamsaHouseEntryResponse {
+  house_number: number;
+  rashi: string;
+  planets: string[];
+}
+
+export interface JaiminiKarakamsaResponse {
+  scheme: CharaKarakaScheme;
+  atmakaraka: string;
+  karakamsa_rashi: string;
+  swamsa_rashi: string;
+  d1_atmakaraka_rashi: string;
+  d1_lagna_rashi: string;
+  relative_houses: KarakamsaHouseEntryResponse[];
+}
+
+export interface JaiminiDashaPeriodResponse {
+  rashi: string;
+  start_date: string;
+  end_date: string;
+  duration_days: number;
+  level: number;
+  sub_periods: JaiminiDashaPeriodResponse[];
+}
+
+export interface JaiminiDashaResponse {
+  system: "chara" | "narayana";
+  lagna_rashi: string;
+  periods: JaiminiDashaPeriodResponse[];
+  max_depth: number;
+  total_cycle_years: number;
+}
+
+export interface PredictionReasonResponse {
+  description: string;
+  matched_objects: string[];
+  is_satisfied: boolean;
+}
+
+export interface PredictionConfidenceResponse {
+  score: number;
+  satisfied_conditions: number;
+  total_conditions: number;
+  basis: string;
+}
+
+export interface PredictionRuleResponse {
+  rule_id: string;
+  name: string;
+  sutra_reference: string;
+  rule_version: string;
+  requires: string[];
+}
+
+export interface PredictionEvidenceResponse {
+  rule: PredictionRuleResponse;
+  is_matched: boolean;
+  triggering_conditions: string[];
+  reasons: PredictionReasonResponse[];
+  confidence: PredictionConfidenceResponse;
+  explanation: string;
+}
+
+export interface JaiminiBundleResponse {
+  chara_karaka: JaiminiKarakasResponse;
+  arudha: JaiminiArudhaResponse;
+  rashi_aspect: JaiminiAspectsResponse;
+  karakamsa: JaiminiKarakamsaResponse | null;
+  chara_dasha: JaiminiDashaResponse;
+  narayana_dasha: JaiminiDashaResponse;
+  yogas: PredictionEvidenceResponse[];
+}
+
+export interface JaiminiArgalaPairResponse {
+  argala_house: number;
+  virodhargala_house: number;
+  argala_rashi: string;
+  virodhargala_rashi: string;
+  argala_planets: string[];
+  virodhargala_planets: string[];
+  is_active: boolean;
+  is_cancelled: boolean;
+  strength_score: number;
+}
+
+export interface JaiminiArgalaResponse {
+  reference_rashi: string;
+  reference_label: string;
+  pairs: JaiminiArgalaPairResponse[];
+  net_strength: number;
+}

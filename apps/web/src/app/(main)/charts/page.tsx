@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
-import { PlanetRelationshipGraph } from "@/components/charts/PlanetRelationshipGraph";
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
 import { StrengthAnalysisCenter } from "@/components/charts/StrengthAnalysisCenter";
 import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
@@ -41,7 +40,6 @@ type ViewMode =
   | "nakshatra"
   | "dasha"
   | "strength"
-  | "relationships"
   | "relationships-v2"
   | "houses"
   | "timeline"
@@ -59,7 +57,6 @@ const VALID_VIEWS: ViewMode[] = [
   "nakshatra",
   "dasha",
   "strength",
-  "relationships",
   "relationships-v2",
   "houses",
   "timeline",
@@ -248,8 +245,7 @@ export default function ChartsPage() {
           { key: "nakshatra" as ViewMode, label: "Nakshatra / Pada" },
           { key: "dasha" as ViewMode, label: "Dasha Timeline" },
           { key: "strength" as ViewMode, label: "Strength" },
-          { key: "relationships" as ViewMode, label: "Relationships" },
-          { key: "relationships-v2" as ViewMode, label: "Relationships v2" },
+          { key: "relationships-v2" as ViewMode, label: "Relationships" },
           { key: "houses" as ViewMode, label: "House Network" },
           { key: "timeline" as ViewMode, label: "Timeline" },
           { key: "predictions" as ViewMode, label: "Prediction Chains" },
@@ -457,15 +453,9 @@ export default function ChartsPage() {
         </div>
       )}
 
-      {view === "relationships" && (
-        <div id="panel-relationships" role="tabpanel" aria-label="Planet relationship graph panel">
-          <PlanetRelationshipGraph planets={chart.planets} aspects={chart.aspects} yogas={result.yogas.results} mahadashas={dasha.mahadashas} result={result} />
-        </div>
-      )}
-
       {view === "relationships-v2" && (
-        <div id="panel-relationships-v2" role="tabpanel" aria-label="Planet relationship graph v2 panel">
-          <PlanetRelationshipGraph2 planets={chart.planets} aspects={chart.aspects} mahadashas={dasha.mahadashas} result={result} />
+        <div id="panel-relationships-v2" role="tabpanel" aria-label="Planet relationship graph panel">
+          <PlanetRelationshipGraph2 planets={chart.planets} aspects={chart.aspects} yogas={result.yogas.results} mahadashas={dasha.mahadashas} result={result} />
         </div>
       )}
 
@@ -505,7 +495,22 @@ export default function ChartsPage() {
       )}
 
       {view === "jaimini" && (
-        <div id="panel-jaimini" role="tabpanel" aria-label="Jaimini analysis panel"><JaiminiPanel result={result} /></div>
+        <div id="panel-jaimini" role="tabpanel" aria-label="Jaimini analysis panel">
+          <JaiminiPanel
+            result={result}
+            request={
+              request
+                ? {
+                    birth_datetime_utc: request.birth_datetime_utc,
+                    latitude: request.latitude,
+                    longitude: request.longitude,
+                    ayanamsa: request.ayanamsa,
+                    house_system: request.house_system,
+                  }
+                : null
+            }
+          />
+        </div>
       )}
 
       {view === "planets" && (
