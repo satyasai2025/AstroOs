@@ -126,6 +126,20 @@ class Settings(BaseSettings):
     LOCAL_LLM_MODEL: str = "llama3.1"
     LOCAL_LLM_TIMEOUT_SECONDS: float = 15.0
 
+    # ── Knowledge Retrieval / RAG (Phase IV, IV.3.1) ──────────────────────────
+    EMBEDDING_MODEL: str = "nomic-embed-text"
+    """
+    Embedding model served by the same local model server as LOCAL_LLM_*
+    (Ollama and LM Studio both support nomic-embed-text out of the box).
+    Only used when AI_BACKEND=local_llm — grounds the AI's answers in
+    AstroOS's own knowledge base (verses, rules) via semantic search
+    instead of the model's training-time memory alone. See
+    services/knowledge_retrieval.py and docs/rag-knowledge-search.md.
+    """
+    KNOWLEDGE_RETRIEVAL_TOP_K: int = 5
+    """How many of the most relevant knowledge-base passages to retrieve
+    and hand to the model per grounded question."""
+
     # ── Secrets at rest (per-user AI settings API keys) ───────────────────────
     ENCRYPTION_KEY: str
     """

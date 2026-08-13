@@ -54,6 +54,14 @@ class QuestionRequest(BirthDataInput):
     question: str = Field(min_length=1)
 
 
+class KnowledgeQuestionRequest(BaseModel):
+    """Request payload for a general astrology knowledge question — no
+    birth data, since this answers from AstroOS's classical-text
+    knowledge base (RAG), not from a specific chart. See
+    QuestionRequest above for chart-specific Q&A."""
+    question: str = Field(min_length=1)
+
+
 class ExplainRuleRequest(BirthDataInput):
     """Rule ID is passed as path parameter, not body field."""
     pass

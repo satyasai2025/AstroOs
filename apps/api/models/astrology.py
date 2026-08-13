@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from apps.api.models.dataset import DatasetModel
 
 from sqlalchemy import (
-    Boolean, Date, DateTime, ForeignKey, Integer,
+    Boolean, Date, DateTime, Float, ForeignKey, Integer,
     Numeric, SmallInteger, String, Text, text,
 )
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB
@@ -597,6 +597,37 @@ class KarakatvaModel(AstroBase):
         ForeignKey("karakatvas.id", ondelete="SET NULL"),
         nullable=True,
     )
+
+
+class KnowledgeEmbeddingModel(AstroBase):
+    """
+    One embedding vector for one piece of knowledge-base text (a verse's
+    translation, a rule's interpretation, etc.) — the retrieval index for
+    RAG-grounded AI answers (Phase IV.3.1).
+
+    Deliberately generic/polymorphic (source_type + source_id) rather than
+    a dedicated FK per knowledge table, so future embeddable content
+    (techniques, karakatvas, ...) doesn't need its own embeddings table.
+    Not a foreign key by design — source rows use soft-append versioning
+    (superseded_by) themselves, so a hard FK here would fight that model;
+    orphaned embeddings (source row superseded/deleted) are pruned by the
+    same backfill job that (re)creates them, not by DB cascade.
+    """
+    __tablename__ = "knowledge_embeddings"
+
+    source_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    """e.g. "verse", "rule". Not an enum — new embeddable content types
+    shouldn't require a migration."""
+    source_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    embedded_text: Mapped[str] = mapped_column(Text, nullable=False)
+    """The exact text that was embedded — kept so the embedding can be
+    audited/regenerated without re-deriving what was originally embedded
+    (source text may itself be versioned/superseded later)."""
+    embedding: Mapped[List[float]] = mapped_column(ARRAY(Float), nullable=False)
+    model_name: Mapped[str] = mapped_column(String(200), nullable=False)
+    """Which embedding model produced this vector — different models are
+    not comparable to each other, so a similarity search must only ever
+    compare embeddings produced by the same model_name."""
 
 
 # ---------------------------------------------------------------------------

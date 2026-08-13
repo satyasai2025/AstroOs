@@ -22,14 +22,16 @@ import logging
 from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_ephemeris_wrapper
+from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
 from apps.api.schemas.ai import (
     AIResponseSchema,
     ChartSummaryRequest,
     CitationResponse,
     DashaInterpretationRequest,
     ExplainRuleRequest,
+    KnowledgeQuestionRequest,
     QuestionRequest,
     TransitReadingRequest,
     YogaExplanationRequest,
@@ -42,6 +44,7 @@ from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.explanation_engine import ExplanationEngine
 from apps.api.services.fact_builder import FactBuilder
 from apps.api.services.horoscope_engine import HoroscopeEngine
+from apps.api.services.knowledge_retrieval import answer_from_knowledge_base
 from apps.api.services.rule_engine import RuleEngine
 from apps.api.services.transit_engine import TransitEngine
 from apps.api.services.yoga_engine import YogaEngine
@@ -184,6 +187,23 @@ async def answer_question(
 ) -> AIResponseSchema:
     chart = await _build_chart(body, wrapper)
     return _response(AIEngine.answer_question(body.question, chart))
+
+
+@router.post("/knowledge-qa", response_model=AIResponseSchema)
+async def knowledge_qa(
+    body: KnowledgeQuestionRequest,
+    session: AsyncSession = Depends(get_db_session),
+) -> AIResponseSchema:
+    """
+    Answer a general astrology knowledge question (not tied to a
+    specific birth chart) grounded in AstroOS's own classical-text
+    knowledge base (Phase IV, IV.3.1 — RAG). Requires AI_BACKEND=
+    local_llm and at least one embedded verse/rule (see
+    scripts/backfill_embeddings.py); otherwise returns an explicit
+    "no matching source found" response rather than an ungrounded
+    guess — see docs/rag-knowledge-search.md.
+    """
+    return _response(await answer_from_knowledge_base(session, body.question))
 
 
 @router.post("/explain-rule/{rule_id}", response_model=ExplanationResponse)
