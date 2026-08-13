@@ -36,10 +36,13 @@ Calculator Integration Pattern (Task #13):
 
 from __future__ import annotations
 
+import dataclasses
 import uuid
 from typing import Any, Optional
 
+from apps.api.config import get_settings
 from apps.api.domain.ai import AIResponse, Citation, ExplanationRequest
+from apps.api.services.local_llm_client import enrich_narration
 from apps.api.domain.dasha import DashaPeriod
 from apps.api.domain.horoscope import D1Chart
 from apps.api.domain.yoga import YogaResult
@@ -467,9 +470,35 @@ class QAResponder:
 
 
 class AIEngine:
-    """Dispatches explanation requests to the correct generator."""
+    """Dispatches explanation requests to the correct generator.
+
+    Phase IV (IV.3): every response passes through _maybe_enrich() before
+    returning. With the default AI_BACKEND=template, that's a no-op — the
+    plain deterministic template output goes straight through, unchanged.
+    Only with the opt-in AI_BACKEND=local_llm does it attempt to rewrite
+    `body` via a locally-hosted model, and even then falls straight back
+    to the template body if that local server is unreachable.
+    """
 
     _ENGINE_VERSION = _ENGINE_VERSION
+
+    @staticmethod
+    def _maybe_enrich(response: AIResponse) -> AIResponse:
+        """Opt-in narration enrichment. See local_llm_client.py's module
+        docstring for the fallback contract this relies on."""
+        settings = get_settings()
+        if settings.AI_BACKEND != "local_llm":
+            return response
+
+        enriched_body = enrich_narration(
+            base_url=settings.LOCAL_LLM_BASE_URL,
+            model=settings.LOCAL_LLM_MODEL,
+            timeout_seconds=settings.LOCAL_LLM_TIMEOUT_SECONDS,
+            grounding_text=response.body,
+        )
+        if enriched_body is None:
+            return response
+        return dataclasses.replace(response, body=enriched_body)
 
     @staticmethod
     def explain(request: ExplanationRequest) -> AIResponse:
@@ -482,7 +511,7 @@ class AIEngine:
             if not chart:
                 return _missing_data("chart")
             verification = data.get("verification")
-            return ChartSummarizer.generate(chart, style, verification)
+            return AIEngine._maybe_enrich(ChartSummarizer.generate(chart, style, verification))
 
         elif topic == "yoga_explanation":
             yoga = data.get("yoga")
@@ -490,41 +519,43 @@ class AIEngine:
                 return _missing_data("yoga")
             karakatvas = data.get("karakatvas", ())
             citations = data.get("citations", ())
-            return YogaExplainer.generate(yoga, karakatvas, citations)
+            return AIEngine._maybe_enrich(YogaExplainer.generate(yoga, karakatvas, citations))
 
         elif topic == "dasha_interpretation":
             period = data.get("period")
             if not period:
                 return _missing_data("dasha period")
             chart = data.get("chart")
-            return DashaIinterpreter.generate(period, chart)
+            return AIEngine._maybe_enrich(DashaIinterpreter.generate(period, chart))
 
         elif topic == "transit_reading":
             transits = data.get("transits", ())
-            return TransitReader.generate(tuple(transits))
+            return AIEngine._maybe_enrich(TransitReader.generate(tuple(transits)))
 
         elif topic == "verification_report":
             findings = data.get("findings")
             if not findings:
                 return _missing_data("verification findings")
-            return VerificationReporter.generate(findings)
+            return AIEngine._maybe_enrich(VerificationReporter.generate(findings))
 
         elif topic == "research_insight":
             stats = data.get("stats")
             if not stats:
                 return _missing_data("statistics")
-            return ResearchInsightGenerator.generate(stats)
+            return AIEngine._maybe_enrich(ResearchInsightGenerator.generate(stats))
 
         elif topic == "recommendation":
             timeline = data.get("timeline")
             verification = data.get("verification")
             transits = data.get("transits", ())
-            return RecommendationEngine.generate(timeline, verification, tuple(transits))
+            return AIEngine._maybe_enrich(
+                RecommendationEngine.generate(timeline, verification, tuple(transits))
+            )
 
         elif topic == "qa":
             question = data.get("question", "")
             chart = data.get("chart")
-            return QAResponder.generate(question, chart)
+            return AIEngine._maybe_enrich(QAResponder.generate(question, chart))
 
         else:
             return AIResponse(
@@ -544,7 +575,7 @@ class AIEngine:
         style: str = "concise",
         verification: Optional[VerificationFindings] = None,
     ) -> AIResponse:
-        return ChartSummarizer.generate(chart, style, verification)
+        return AIEngine._maybe_enrich(ChartSummarizer.generate(chart, style, verification))
 
     @staticmethod
     def explain_yoga(
@@ -552,32 +583,32 @@ class AIEngine:
         karakatvas: tuple = (),
         citations: tuple[Citation, ...] = (),
     ) -> AIResponse:
-        return YogaExplainer.generate(yoga, karakatvas, citations)
+        return AIEngine._maybe_enrich(YogaExplainer.generate(yoga, karakatvas, citations))
 
     @staticmethod
     def interpret_dasha(
         period: DashaPeriod,
         chart: Optional[D1Chart] = None,
     ) -> AIResponse:
-        return DashaIinterpreter.generate(period, chart)
+        return AIEngine._maybe_enrich(DashaIinterpreter.generate(period, chart))
 
     @staticmethod
     def read_transit(
         transits: tuple[TransitPlanetResult, ...],
     ) -> AIResponse:
-        return TransitReader.generate(transits)
+        return AIEngine._maybe_enrich(TransitReader.generate(transits))
 
     @staticmethod
     def report_verification(
         findings: VerificationFindings,
     ) -> AIResponse:
-        return VerificationReporter.generate(findings)
+        return AIEngine._maybe_enrich(VerificationReporter.generate(findings))
 
     @staticmethod
     def research_insight(
         stats: AggregateReport,
     ) -> AIResponse:
-        return ResearchInsightGenerator.generate(stats)
+        return AIEngine._maybe_enrich(ResearchInsightGenerator.generate(stats))
 
     @staticmethod
     def recommend(
@@ -585,14 +616,14 @@ class AIEngine:
         verification: Optional[VerificationFindings] = None,
         transits: tuple[TransitPlanetResult, ...] = (),
     ) -> AIResponse:
-        return RecommendationEngine.generate(timeline, verification, transits)
+        return AIEngine._maybe_enrich(RecommendationEngine.generate(timeline, verification, transits))
 
     @staticmethod
     def answer_question(
         question: str,
         chart: Optional[D1Chart] = None,
     ) -> AIResponse:
-        return QAResponder.generate(question, chart)
+        return AIEngine._maybe_enrich(QAResponder.generate(question, chart))
 
 
 def _missing_data(name: str) -> AIResponse:

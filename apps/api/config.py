@@ -103,6 +103,29 @@ class Settings(BaseSettings):
     """
     OPENAI_MODEL: str = "gpt-4o-mini"
 
+    # ── AI Engine Backend (Phase IV, IV.3 — opt-in local LLM narration) ───────
+    AI_BACKEND: str = "template"
+    """
+    "template" (default): the existing deterministic, template-based
+    narration in apps/api/services/ai_engine.py — no network access at
+    all, same output every time for the same input.
+
+    "local_llm": opt-in enrichment of that same template output via a
+    locally-hosted, OpenAI-compatible model server that YOU run
+    yourself (e.g. Ollama, LM Studio) — never a cloud/external API call,
+    unlike OPENAI_API_KEY above (which is a separate, already-existing
+    feature for research pattern explanations). The model is instructed
+    to rewrite using only the template's own facts, not invent new
+    astrological claims. If the local server is unreachable or times
+    out, AIEngine silently falls back to the plain template output —
+    the deterministic-fallback guarantee never breaks.
+    """
+    LOCAL_LLM_BASE_URL: str = "http://localhost:11434/v1"
+    """OpenAI-compatible base URL of the local model server. Ollama's
+    built-in OpenAI-compatible endpoint is http://localhost:11434/v1."""
+    LOCAL_LLM_MODEL: str = "llama3.1"
+    LOCAL_LLM_TIMEOUT_SECONDS: float = 15.0
+
     # ── Secrets at rest (per-user AI settings API keys) ───────────────────────
     ENCRYPTION_KEY: str
     """
