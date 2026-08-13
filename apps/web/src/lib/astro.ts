@@ -25,6 +25,25 @@ export const RASHIS = [
 
 export type RashiName = (typeof RASHIS)[number];
 
+/** English names for the same 12 signs, same order as RASHIS — several
+ * components need the English form (AshtakavargaPanel, StrengthPanel)
+ * and had independently duplicated this exact array before consolidating
+ * onto this export. */
+export const RASHI_NAMES_EN = [
+  "Aries",
+  "Taurus",
+  "Gemini",
+  "Cancer",
+  "Leo",
+  "Virgo",
+  "Libra",
+  "Scorpio",
+  "Sagittarius",
+  "Capricorn",
+  "Aquarius",
+  "Pisces",
+] as const;
+
 /** Rashi index 0-11 from a sidereal longitude in degrees (0-360). */
 export function rashiIndexFromLongitude(siderealDeg: number): number {
   return Math.floor(((siderealDeg % 360) + 360) % 360 / 30);

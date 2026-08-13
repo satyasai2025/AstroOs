@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge, Button, Card, Table, type TableColumn } from "@/components/ui";
 import { AppShell } from "@/components/layout/AppShell";
 import { researchCasesApi } from "@/lib/researchCases";
+import { titleCaseToken } from "@/lib/api";
 import type {
   ResearchCaseBatchImport,
   ResearchCaseBatchValidation,
@@ -11,14 +12,6 @@ import type {
   ResearchCaseSummary,
   ValidationIssue,
 } from "@/lib/types";
-
-function titleCase(value: string): string {
-  return value
-    .replace(/_/g, " ")
-    .split(" ")
-    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
-    .join(" ");
-}
 
 /** A small, valid sample payload so the page can be tested without a file. */
 const SAMPLE_PAYLOAD: ResearchCaseBatchImport = {
@@ -164,7 +157,7 @@ export default function ResearchImportPage() {
     { key: "person", label: "Person", render: (c) => c.person_name ?? "—" },
     { key: "dob", label: "DOB", render: (c) => c.dob },
     { key: "events", label: "Events", render: (c) => c.total_events },
-    { key: "gender", label: "Gender", render: (c) => titleCase(c.gender ?? "—") },
+    { key: "gender", label: "Gender", render: (c) => titleCaseToken(c.gender ?? "—") },
   ];
 
   return (

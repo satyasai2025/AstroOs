@@ -10,11 +10,8 @@ import {
   KARAKATVA_BASIC,
   CHART_COLORS,
 } from "@/lib/astro";
+import { titleCaseToken as titleCase } from "@/lib/api";
 import type { D1ChartResponse } from "@/lib/types";
-
-function titleCase(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-}
 
 const KENDRA_HOUSES = [1, 4, 7, 10];
 const TRIKONA_HOUSES = [1, 5, 9];
