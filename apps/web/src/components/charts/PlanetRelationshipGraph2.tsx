@@ -2,13 +2,16 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import * as d3 from "d3";
-import { NATURAL_RELATIONSHIPS, PLANET_SYMBOLS, rashiLordFromApiName } from "@/lib/astro";
+import { NATURAL_RELATIONSHIPS, PLANET_SYMBOLS } from "@/lib/astro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
+import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
+import { buildGraphLinks, ALL_LINK_KINDS, type LinkKind } from "@/lib/planetRelationshipGraph";
 import type {
   AspectSchema,
   DashaPeriodResponse,
   PlanetPositionSchema,
   WorkflowAnalysisResponse,
+  YogaResultResponse,
 } from "@/lib/types";
 
 /* ─── Types ──────────────────────────────────────────────────────── */
@@ -16,19 +19,17 @@ import type {
 interface Props {
   planets: PlanetPositionSchema[];
   aspects: AspectSchema[];
+  /** Active/present yogas for this chart — used for Yoga Participation
+   * edges. Optional so callers that don't pass it just lose that one
+   * edge kind rather than breaking. */
+  yogas?: YogaResultResponse[];
   mahadashas?: DashaPeriodResponse[];
+  /** Full workflow result — when provided, clicking a planet opens the
+   * same rich PlanetDetailPanel used on the Chart tab (real computed
+   * data: house, aspects, strength, yogas, varga positions, transit,
+   * classical relationships) instead of just the inline summary card. */
   result?: WorkflowAnalysisResponse;
   size?: number;
-}
-
-type LinkKind = "aspect" | "mutualAspect" | "friend" | "enemy" | "dispositor" | "nakshatraLord" | "conjunction" | "parivartana" | "yuddha" | "yoga" | "dasha";
-
-interface GraphLink {
-  source: string;
-  target: string;
-  kind: LinkKind;
-  weight: number;
-  label: string;
 }
 
 interface SimNode extends d3.SimulationNodeDatum {
@@ -41,10 +42,7 @@ interface SimNode extends d3.SimulationNodeDatum {
 
 /* ─── Constants ──────────────────────────────────────────────────── */
 
-const ALL_KINDS: LinkKind[] = [
-  "friend", "enemy", "aspect", "mutualAspect", "conjunction",
-  "parivartana", "dispositor", "nakshatraLord", "yoga", "dasha", "yuddha",
-];
+const ALL_KINDS: LinkKind[] = ALL_LINK_KINDS;
 
 const KIND_LABELS: Record<LinkKind, string> = {
   friend: "Friend", enemy: "Enemy", aspect: "Aspect",
@@ -83,63 +81,24 @@ const PLANET_THEME: Record<string, { fill: string; glow: string; stroke: string 
 
 const PLANET_NAMES = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
 
+/** Synthesized visual weight per edge kind, for line-thickness when
+ * several relationship types link the same pair — a UI convenience, not
+ * a classical measure of relationship strength. */
+const LINK_WEIGHT: Record<LinkKind, number> = {
+  friend: 2,
+  enemy: 2,
+  dispositor: 3,
+  nakshatraLord: 4,
+  aspect: 5,
+  conjunction: 6,
+  dasha: 6,
+  yoga: 7,
+  mutualAspect: 8,
+  yuddha: 9,
+  parivartana: 10,
+};
+
 /* ─── Helpers ────────────────────────────────────────────────────── */
-
-function buildGraphLinks(planets: PlanetPositionSchema[], aspects: AspectSchema[]): GraphLink[] {
-  const links: GraphLink[] = [];
-  const byName = new Map(planets.map((p) => [p.planet, p]));
-
-  // Natural relationships
-  for (const p of planets) {
-    const nat = NATURAL_RELATIONSHIPS[p.planet];
-    if (!nat) continue;
-    for (const f of nat.friends) {
-      if (byName.has(f)) links.push({ source: p.planet, target: f, kind: "friend", weight: 1, label: "Friend" });
-    }
-    for (const e of nat.enemies) {
-      if (byName.has(e)) links.push({ source: p.planet, target: e, kind: "enemy", weight: 1, label: "Enemy" });
-    }
-  }
-
-  // Aspects
-  for (const a of aspects) {
-    if (!a.from_planet || !a.to_planet) continue;
-    const isMutual = aspects.some(
-      (b) => b.from_planet === a.to_planet && b.to_planet === a.from_planet,
-    );
-    links.push({
-      source: a.from_planet,
-      target: a.to_planet,
-      kind: isMutual ? "mutualAspect" : "aspect",
-      weight: 2,
-      label: `${a.aspect_type} Aspect`,
-    });
-  }
-
-  // Dispositor
-  for (const p of planets) {
-    const lord = rashiLordFromApiName(p.rashi);
-    if (lord && lord !== p.planet && byName.has(lord)) {
-      links.push({ source: p.planet, target: lord, kind: "dispositor", weight: 1, label: "Dispositor" });
-    }
-  }
-
-  // Nakshatra lord
-  for (const p of planets) {
-    if (p.nakshatra_lord && p.nakshatra_lord !== p.planet && byName.has(p.nakshatra_lord)) {
-      links.push({ source: p.planet, target: p.nakshatra_lord, kind: "nakshatraLord", weight: 1, label: "Nakshatra Lord" });
-    }
-  }
-
-  // Deduplicate
-  const seen = new Set<string>();
-  return links.filter((l) => {
-    const key = [l.source, l.target, l.kind].sort().join("|");
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
 
 function angleForIndex(i: number, total: number): number {
   return (2 * Math.PI * i) / total - Math.PI / 2;
@@ -199,6 +158,7 @@ function SvgDefs() {
 export default function PlanetaryRelationshipGraph2({
   planets,
   aspects,
+  yogas,
   mahadashas,
   result,
   size = 600,
@@ -243,15 +203,19 @@ export default function PlanetaryRelationshipGraph2({
     return s;
   }, [dashaChain]);
 
-  // Graph links
-  const allLinks = useMemo(() => buildGraphLinks(planets, aspects), [planets, aspects]);
+  // Graph links — real edges only (see lib/planetRelationshipGraph.ts for
+  // what each of the 11 kinds means and how it's computed).
+  const allLinks = useMemo(
+    () => buildGraphLinks({ planets, aspects, yogas, dashaChain }),
+    [planets, aspects, yogas, dashaChain],
+  );
 
   // Edge weight map for link thickness
   const linkWeight = useMemo(() => {
     const map = new Map<string, number>();
     allLinks.forEach((l) => {
       const key = [l.source, l.target].sort().join("|");
-      map.set(key, (map.get(key) ?? 0) + l.weight);
+      map.set(key, (map.get(key) ?? 0) + LINK_WEIGHT[l.kind]);
     });
     return map;
   }, [allLinks]);
@@ -640,8 +604,18 @@ export default function PlanetaryRelationshipGraph2({
           className="w-72 flex-shrink-0 flex flex-col gap-4 overflow-y-auto"
           style={{ maxHeight: graphSize }}
         >
-          {/* Planet info card */}
-          {selectedPlanet ? (
+          {/* Planet detail — the same rich PlanetDetailPanel used on the
+              Chart tab (real house/aspects/strength/varga/transit data)
+              when a full workflow result is available; falls back to the
+              lighter inline card below (graph-local data only) otherwise. */}
+          {result ? (
+            <PlanetDetailPanel
+              planet={selected}
+              result={result}
+              pinned={selected !== null}
+              onUnpin={() => setSelected(null)}
+            />
+          ) : selectedPlanet ? (
             <div
               className="rounded-xl p-4"
               style={{ backgroundColor: "#111827", border: "1px solid #1e293b" }}
@@ -781,7 +755,7 @@ export default function PlanetaryRelationshipGraph2({
       </div>
 
       {/* ── Bottom summary cards ── */}
-      <div className="grid grid-cols-3 gap-4 mt-4 px-2">
+      <div className="grid grid-cols-2 gap-4 mt-4 px-2">
         {/* Relationship Summary */}
         <div
           className="rounded-xl p-4"
@@ -811,36 +785,6 @@ export default function PlanetaryRelationshipGraph2({
             <span className="text-xs" style={{ color: "#64748b" }}>
               Total Relationships: {summaryStats.total}
             </span>
-          </div>
-        </div>
-
-        {/* Influence Strength */}
-        <div
-          className="rounded-xl p-4"
-          style={{ backgroundColor: "#111827", border: "1px solid #1e293b" }}
-        >
-          <h4 className="text-xs font-semibold mb-3" style={{ color: "#94a3b8" }}>
-            Influence Strength
-          </h4>
-          <div className="space-y-3 text-xs">
-            {[
-              { label: "Natural Friends", pct: summaryStats.friend > 0 ? 85 : 30, color: "#22c55e" },
-              { label: "Aspects", pct: summaryStats.aspect > 0 ? 72 : 40, color: "#3b82f6" },
-              { label: "Dasha Active", pct: activeDashaPlanets.size > 0 ? 90 : 20, color: "#f97316" },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="flex justify-between mb-1">
-                  <span style={{ color: "#94a3b8" }}>{item.label}</span>
-                  <span style={{ color: "#e2e8f0" }}>{item.pct}%</span>
-                </div>
-                <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#1e293b" }}>
-                  <div
-                    className="h-full rounded-full"
-                    style={{ width: `${item.pct}%`, backgroundColor: item.color }}
-                  />
-                </div>
-              </div>
-            ))}
           </div>
         </div>
 

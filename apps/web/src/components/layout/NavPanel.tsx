@@ -116,8 +116,7 @@ const NAV_GROUPS: NavGroup[] = [
           { href: "/charts?view=planets", label: "Planet Explorer", icon: "search", disabled: false },
           { href: "/charts?view=houses", label: "House Explorer", subtitle: "Bhava analysis", icon: "house", viewId: "workspace-houses" },
           { href: "/charts?view=divisional", label: "Divisional Charts", subtitle: "D-1 through D-60", icon: "grid", viewId: "workspace-divisional" },
-          { href: "/charts?view=relationships", label: "Planet Relationships", subtitle: "Aspect graph", icon: "network", viewId: "workspace-relationships" },
-          { href: "/charts?view=relationships-v2", label: "Relationships v2", subtitle: "Center-focused graph", icon: "network", viewId: "workspace-relationships-v2" },
+          { href: "/charts?view=relationships-v2", label: "Planet Relationships", subtitle: "Aspect graph", icon: "network", viewId: "workspace-relationships-v2" },
         ],
       },
       {
