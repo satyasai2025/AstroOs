@@ -12,8 +12,11 @@ from __future__ import annotations
 from typing import Callable, Optional
 
 from apps.api.domain.yoga import YogaDefinition, YogaResult
+from apps.api.services._registry import Registry
 
-_REGISTRY: dict[str, YogaDefinition] = {}
+_registry: Registry[str, YogaDefinition] = Registry(
+    hash_line=lambda yoga_id, definition: f"{yoga_id}:{definition.rule_version}\n"
+)
 
 
 def register_yoga(
@@ -37,9 +40,7 @@ def register_yoga(
             ...
     """
     def decorator(evaluator: Callable[..., Optional[YogaResult]]) -> Callable:
-        if yoga_id in _REGISTRY:
-            raise ValueError(f"Duplicate yoga_id registered: {yoga_id!r}")
-        _REGISTRY[yoga_id] = YogaDefinition(
+        definition = YogaDefinition(
             yoga_id=yoga_id,
             name=name,
             category=category,
@@ -48,20 +49,24 @@ def register_yoga(
             requires=requires,
             evaluator=evaluator,
         )
+        _registry.register(
+            yoga_id, definition,
+            duplicate_message=f"Duplicate yoga_id registered: {yoga_id!r}",
+        )
         return evaluator
     return decorator
 
 
 def all_yogas() -> list[YogaDefinition]:
     """All registered yoga definitions, in registration order."""
-    return list(_REGISTRY.values())
+    return _registry.all()
 
 
 def get_yoga(yoga_id: str) -> Optional[YogaDefinition]:
     """Look up a registered yoga definition by its id, or None if unknown."""
-    return _REGISTRY.get(yoga_id)
+    return _registry.get(yoga_id)
 
 
 def clear_registry() -> None:
     """Test-only: clear all registrations. Not used by production code paths."""
-    _REGISTRY.clear()
+    _registry.clear()
