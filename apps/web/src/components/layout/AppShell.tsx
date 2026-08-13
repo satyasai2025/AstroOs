@@ -56,8 +56,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       { href: "/charts?view=chart", label: "Birth Chart", icon: "compass" },
       { href: "/charts?view=chart", label: "Divisional Charts", icon: "grid" },
-      { href: "/charts?view=relationships", label: "Planet Relationship Graph", icon: "network" },
-      { href: "/charts?view=relationships-v2", label: "Planet Relationship Graph V2", icon: "network" },
+      { href: "/charts?view=relationships-v2", label: "Planet Relationship Graph", icon: "network" },
       { href: "/charts?view=houses", label: "House Dependency", icon: "network" },
       { href: "/charts/house-dependency-2", label: "House Dependency 2", icon: "network" },
       { href: "/charts?view=dasha", label: "Dasha Analysis", icon: "clock" },

@@ -5,7 +5,6 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import NavPanel from "./NavPanel";
 import ResearchDashboard from "../dashboard/ResearchDashboard";
 import InteractiveKundliView from "../charts/InteractiveKundliView";
-import { PlanetRelationshipGraph } from "../charts/PlanetRelationshipGraph";
 import PlanetRelationshipGraph2 from "../charts/PlanetRelationshipGraph2";
 import { HouseDependencyNetwork } from "../charts/HouseDependencyNetwork";
 import ReverseSearchView from "../dashboard/ReverseSearchView";
@@ -149,15 +148,6 @@ const VIEW_COMPONENTS = {
     </div>
   ),
   "workspace-divisional": () => <PlaceholderView module="04" title="Divisional Charts" />,
-  "workspace-relationships": () => (
-    <div className="p-6">
-      <PlanetRelationshipGraph
-        planets={MOCK_CHART.planets}
-        aspects={MOCK_CHART.aspects}
-        size={520}
-      />
-    </div>
-  ),
   "workspace-relationships-v2": () => (
     <div className="p-6">
       <PlanetRelationshipGraph2

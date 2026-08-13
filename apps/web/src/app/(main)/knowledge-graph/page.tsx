@@ -8,7 +8,7 @@ import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import type { WorkflowAnalysisRequest, WorkflowAnalysisResponse } from "@/lib/types";
 import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
-import { PlanetRelationshipGraph } from "@/components/charts/PlanetRelationshipGraph";
+import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
 import { TransitTimeline } from "@/components/charts/TransitTimeline";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { PredictionChainExplorer } from "@/components/charts/PredictionChainExplorer";
@@ -98,7 +98,7 @@ const GRAPH_CARDS: GraphCard[] = [
     title: "Planet Relationship Network",
     description: "Conjunctions, aspects, exchanges and dispositorships between planets, weighted by strength.",
     categories: ["all", "entity-relationships", "strength-analysis"],
-    href: () => "/charts?view=relationships",
+    href: () => "/charts?view=relationships-v2",
     legend: ["Conjunction", "Aspect", "Exchange", "Dispositor"],
     thumbNodes: 6,
   },
@@ -198,7 +198,7 @@ function renderGraphTab(cardId: string, result: WorkflowAnalysisResponse): React
       return <YogasPanel result={result} />;
     case "planet-network":
       return (
-        <PlanetRelationshipGraph
+        <PlanetRelationshipGraph2
           planets={chart.planets}
           aspects={chart.aspects}
           yogas={result.yogas.results}
