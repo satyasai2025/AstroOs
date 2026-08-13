@@ -24,6 +24,7 @@ timezonefinder==8.2.4
 tzdata==2025.2
 truststore==0.10.4
 slowapi==0.1.10
+zeroconf==0.147.2
 
 # Declared in pyproject.toml but previously missing here -- main.py's
 # import chain needs these at startup (worker_pool.py imports

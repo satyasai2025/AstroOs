@@ -53,6 +53,7 @@ from apps.api.routers import research as research_router
 from apps.api.routers import search as search_router
 from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import avastha as avastha_router
+from apps.api.routers import collab as collab_router
 from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
 from apps.api.routers import technique as technique_router
@@ -394,8 +395,11 @@ def create_app() -> FastAPI:
     )
     app.include_router(datasets_router.router)
 
-    # ── Collaboration (RTCollab WebSocket) ────────────────────────────────────
+    # ── Collaboration (RTCollab WebSocket + mDNS session discovery) ───────────
     app.include_router(ws_router.router, prefix="/ws")
+    app.include_router(
+        collab_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
 
     # ── Monitoring ────────────────────────────────────────────────────────────
 
