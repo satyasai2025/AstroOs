@@ -58,10 +58,10 @@ from packages.shared.constants import (
     YOGINI_TOTAL_YEARS,
 )
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+from packages.shared.degrees import normalize_degrees
+from packages.shared.enums import Rashi
+
+_RASHI_LIST = [r.value for r in Rashi]
 
 _LEVEL_NAMES = {1: "Mahadasha", 2: "Antardasha", 3: "Pratyantar", 4: "Sookshma", 5: "Prana"}
 
@@ -215,7 +215,7 @@ def _nakshatra_balance(
     Returns:
         (first_lord, balance_years, first_maha_start_date)
     """
-    lon = moon_sidereal_lon % 360.0
+    lon = normalize_degrees(moon_sidereal_lon)
     nakshatra_idx = int(lon / DEGREES_PER_NAKSHATRA)
     nakshatra_idx = min(nakshatra_idx, 26)  # clamp edge case
     deg_in_nak = lon % DEGREES_PER_NAKSHATRA
@@ -429,7 +429,7 @@ class DashaEngine:
         birth_dt_date = birth_datetime_utc.date() if hasattr(birth_datetime_utc, 'date') else birth_datetime_utc
 
         # Determine first lord from the nakshatra lookup table
-        nakshatra_idx = min(int(moon_sid % 360.0 / DEGREES_PER_NAKSHATRA), 26)
+        nakshatra_idx = min(int(normalize_degrees(moon_sid) / DEGREES_PER_NAKSHATRA), 26)
         first_lord_raw = ASHTOTTARI_NAKSHATRA_LORDS[nakshatra_idx]
 
         # Reorder ASHTOTTARI_SEQUENCE to start from first_lord_raw

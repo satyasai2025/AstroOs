@@ -33,11 +33,9 @@ reductions, not either one alone.
 from __future__ import annotations
 
 from apps.api.domain.ashtakavarga import BhinnashtakavargaResult
+from packages.shared.enums import Rashi
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 TRIKONA_GROUPS: tuple[tuple[str, str, str], ...] = (
     ("aries", "leo", "sagittarius"),

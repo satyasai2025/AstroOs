@@ -54,6 +54,7 @@ from packages.shared.constants import (
 )
 from packages.shared.dignity import compute_dignity_value
 from packages.shared.enums import AyanamsaSystem, Graha, Nakshatra, Rashi
+from packages.shared.rashi_offset import house_offset
 
 logger = logging.getLogger(__name__)
 
@@ -830,7 +831,7 @@ class EphemerisWrapper:
 
             house_number = _house_number_from_cusps(sid_lon, cusp_sidereal_longitudes)
             rashi_idx = _RASHI_LIST.index(rashi)
-            rashi_house_number = ((rashi_idx - lagna_rashi_index_for_planets) % 12) + 1
+            rashi_house_number = house_offset(lagna_rashi_index_for_planets, rashi_idx)
 
             # Combustion (use tropical longitudes for angular distance)
             combust, comb_orb = self.is_combust(

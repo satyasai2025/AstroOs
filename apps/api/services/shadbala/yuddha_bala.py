@@ -32,6 +32,7 @@ from __future__ import annotations
 
 from apps.api.domain.shadbala import BalaComponentResult
 from apps.api.domain.ephemeris import SiderealPosition
+from packages.shared.degrees import shorter_arc_distance as _angular_distance
 
 _COMPONENT_ID = "SHADBALA-YUDDHA"
 _COMPONENT_NAME = "Yuddha Bala"
@@ -41,12 +42,6 @@ _WINNER_BONUS = 30.0
 _WAR_ORB_DEG = 1.0
 
 _ELIGIBLE_PLANETS = ["mars", "mercury", "jupiter", "venus", "saturn"]
-
-
-def _angular_distance(a: float, b: float) -> float:
-    """Shorter-arc angular distance (0-180°) between two ecliptic longitudes."""
-    diff = abs(a - b) % 360.0
-    return diff if diff <= 180.0 else 360.0 - diff
 
 
 def _find_war_opponent(

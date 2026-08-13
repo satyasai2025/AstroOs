@@ -37,13 +37,13 @@ from apps.api.services.ephemeris_wrapper import (
     longitude_to_nakshatra,
     longitude_to_rashi,
 )
+from packages.shared.degrees import normalize_degrees
+from packages.shared.enums import Rashi
+from packages.shared.rashi_offset import house_offset
 
 # ── Sign constants ────────────────────────────────────────────────────────────
 
-_RASHI_LIST = [
-    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-]
+_RASHI_LIST = [r.value for r in Rashi]
 
 # All supported vargas (divisor → label)
 SUPPORTED_VARGAS: dict[str, int] = {
@@ -403,7 +403,7 @@ def compute_varga_sign(varga: str, sidereal_longitude: float) -> tuple[str, floa
         raise ValueError(
             f"Unknown varga '{varga}'. Supported: {sorted(_VARGA_CALCULATOR)}"
         )
-    lon = sidereal_longitude % 360.0
+    lon = normalize_degrees(sidereal_longitude)
     sign_index = int(lon / 30.0)
     deg = lon % 30.0
     return _VARGA_CALCULATOR[varga](sign_index, deg)
@@ -670,7 +670,7 @@ class DivisionalEngine:
                 v_rashi, v_deg = compute_varga_sign(varga, d1_sid)
 
             v_rashi_idx = _RASHI_LIST.index(v_rashi)
-            house_number = ((v_rashi_idx - lagna_rashi_idx) % 12) + 1
+            house_number = house_offset(lagna_rashi_idx, v_rashi_idx)
             nak_info = longitude_to_nakshatra(d1_sid)
 
             varga_positions.append(

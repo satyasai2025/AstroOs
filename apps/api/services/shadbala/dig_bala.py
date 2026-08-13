@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from apps.api.domain.ephemeris import HouseCusp, SiderealPosition
 from apps.api.domain.shadbala import BalaComponentResult
+from packages.shared.degrees import shorter_arc_distance as _shorter_arc_distance
 
 _COMPONENT_ID = "SHADBALA-DIG"
 _COMPONENT_NAME = "Dig Bala"
@@ -38,12 +39,6 @@ _DIGBALA_HOUSE: dict[str, int] = {
     "jupiter": 1, "mercury": 1,
     "saturn": 7,
 }
-
-
-def _shorter_arc_distance(a: float, b: float) -> float:
-    """Shorter-arc angular distance (0-180°) between two ecliptic longitudes."""
-    diff = abs(a - b) % 360.0
-    return diff if diff <= 180.0 else 360.0 - diff
 
 
 class DigBalaCalculator:
