@@ -77,6 +77,28 @@ const _ASTRO_CASING_KEYS = new Set([
   // (2026-07-30) — same lowercase-token issue, on the standard 27-system
   // nakshatra field (distinct from transit_nakshatra_sbc above).
   "transit_nakshatra",
+  // Added for the Jaimini router (routers/jaimini.py) — same lowercase-
+  // token issue, on every rashi/planet-array field the bundle/argala
+  // responses carry that isn't already covered above. Deliberately NOT
+  // adding the bare "planets" key here (KarakamsaHouseEntrySchema) since
+  // that generic a name risks colliding with an unrelated field
+  // elsewhere expecting different casing; JaiminiPanel normalizes that
+  // one locally instead.
+  "from_rashi",
+  "to_rashi",
+  "raw_rashi",
+  "lord_rashi",
+  "karakamsa_rashi",
+  "swamsa_rashi",
+  "d1_atmakaraka_rashi",
+  "d1_lagna_rashi",
+  "argala_rashi",
+  "virodhargala_rashi",
+  "reference_rashi",
+  "aspecting_planets",
+  "aspected_planets",
+  "argala_planets",
+  "virodhargala_planets",
 ]);
 
 /**

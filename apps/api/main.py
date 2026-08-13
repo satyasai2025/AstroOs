@@ -44,6 +44,7 @@ from apps.api.routers import event_analysis as event_analysis_router
 from apps.api.routers import export as export_router
 from apps.api.routers import geocoding as geocoding_router
 from apps.api.routers import horoscope as horoscope_router
+from apps.api.routers import jaimini as jaimini_router
 from apps.api.routers import jobs as jobs_router
 from apps.api.routers import knowledge as knowledge_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
@@ -54,9 +55,12 @@ from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import avastha as avastha_router
 from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
+from apps.api.routers import technique as technique_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
-from apps.api.routers import transit_patterns as transit_patterns_router
+# Imported for its side effect: registers the /patterns route onto
+# transit_router.router (see routers/transit_patterns.py's docstring).
+from apps.api.routers import transit_patterns as transit_patterns_router  # noqa: F401
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
 from apps.api.routers import ws as ws_router
@@ -278,6 +282,9 @@ def create_app() -> FastAPI:
         horoscope_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
+        jaimini_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         divisional_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
@@ -301,11 +308,15 @@ def create_app() -> FastAPI:
     app.include_router(
         yoga_router.router, prefix="/api/v1", dependencies=_authenticated
     )
+    # transit_patterns_router registers its /patterns route onto
+    # transit_router's own router object (see routers/transit_patterns.py) —
+    # importing it above is what wires the route in; only one include_router
+    # call is needed for both files' routes.
     app.include_router(
         transit_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
-        transit_patterns_router.router, prefix="/api/v1", dependencies=_authenticated
+        technique_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         timeline_router.router, prefix="/api/v1", dependencies=_authenticated

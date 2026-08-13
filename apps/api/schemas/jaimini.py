@@ -1,22 +1,78 @@
 """
-AstroOS — Jaimini Chara Karaka Response Schema (Layer 6: Calculation Engine)
+AstroOS — Jaimini API Schemas (Layer 7: API Integration)
 
-Pydantic mirror of apps.api.domain.jaimini — the exact JSON shape a
-future POST /api/v1/jaimini/chara-karaka endpoint will return, and what
-the frontend's TanStack Query hooks are typed against. Not wired to a
-router yet — see jaimini_engine.py's module docstring for why (same
-scope discipline already established by YogaEngine/HouseEngine in this
-codebase: an engine is usable/testable standalone before it's exposed
-over HTTP).
+Pydantic mirror of apps.api.domain.jaimini — the JSON shape the Jaimini
+router (routers/jaimini.py) returns and what the frontend's JaiminiPanel
+is typed against.
 """
 
-from datetime import date
-from typing import Literal, Optional
+from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from datetime import date, datetime
+from typing import Annotated, Literal, Optional
+
+from pydantic import BaseModel, Field, field_validator
+
+from apps.api.schemas.divisional import AyanamsaCode, HouseSystemCode
 
 CharaKarakaSchemeSchema = Literal["sapta_karaka", "ashta_karaka"]
 TiebreakRuleSchema = Literal["speed", "natural_benefic"]
+
+
+# ── Requests ──────────────────────────────────────────────────────────────────
+
+
+class JaiminiBundleRequest(BaseModel):
+    """Request body for computing every chart-level Jaimini result at once."""
+
+    birth_datetime_utc: Annotated[
+        datetime,
+        Field(description="UTC birth datetime (ISO-8601, must include timezone offset)."),
+    ]
+    latitude: Annotated[
+        float,
+        Field(ge=-90.0, le=90.0, description="Geographic latitude in decimal degrees."),
+    ]
+    longitude: Annotated[
+        float,
+        Field(ge=-180.0, le=180.0, description="Geographic longitude in decimal degrees."),
+    ]
+    ayanamsa: Annotated[
+        AyanamsaCode,
+        Field(default="lahiri", description="Ayanamsa (sidereal correction) system."),
+    ] = "lahiri"
+    house_system: Annotated[
+        HouseSystemCode,
+        Field(default="W", description="House system used for D1 lagna."),
+    ] = "W"
+    scheme: Annotated[
+        CharaKarakaSchemeSchema,
+        Field(default="sapta_karaka", description="Chara Karaka scheme: 7 or 8 karakas."),
+    ] = "sapta_karaka"
+    max_dasha_depth: Annotated[
+        int,
+        Field(default=3, ge=1, le=5, description="Deepest Chara/Narayana dasha level to compute."),
+    ] = 3
+    include_karakamsa: Annotated[
+        bool,
+        Field(default=True, description="Whether to also compute the D9 Karakamsa/Swamsa."),
+    ] = True
+
+    @field_validator("birth_datetime_utc")
+    @classmethod
+    def must_be_timezone_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError("birth_datetime_utc must be timezone-aware (include UTC offset).")
+        return v
+
+
+class JaiminiArgalaRequest(JaiminiBundleRequest):
+    """Request body for computing Argala/Virodhargala from a reference sign or planet."""
+
+    reference: Annotated[
+        str,
+        Field(description="Reference sign (e.g. 'aries') or planet (e.g. 'moon') to count Argala from."),
+    ]
 
 
 class CharaKarakaSchema(BaseModel):
@@ -189,27 +245,50 @@ class PredictionEvidenceSchema(BaseModel):
     explanation: str
 
 
-# ── API response contracts (schemas only — router layer is a separate,  ────
-# ── later task; these give it an unambiguous contract to implement against) ─
+# ── API response contracts ───────────────────────────────────────────────────
 
 
 class JaiminiKarakasResponse(CharaKarakaResultSchema):
-    """GET /api/v1/jaimini/karakas response contract."""
+    """Chara Karaka piece of the bundle response."""
 
 
 class JaiminiArudhaResponse(ArudhaResultSchema):
-    """GET /api/v1/jaimini/arudha response contract."""
+    """Arudha piece of the bundle response."""
 
 
 class JaiminiAspectsResponse(RashiAspectResultSchema):
-    """GET /api/v1/jaimini/aspects response contract."""
+    """Rashi Aspect piece of the bundle response."""
 
 
 class JaiminiDashaResponse(JaiminiDashaResultSchema):
-    """GET /api/v1/jaimini/dasha response contract."""
+    """Chara or Narayana Dasha piece of the bundle response."""
 
 
 class JaiminiYogasResponse(BaseModel):
-    """GET /api/v1/jaimini/yogas response contract."""
+    """Yogas piece of the bundle response."""
 
     yogas: list[PredictionEvidenceSchema]
+
+
+class JaiminiKarakamsaResponse(KarakamsaResultSchema):
+    """Karakamsa/Swamsa piece of the bundle response — omitted from the
+    bundle when the request's include_karakamsa is False."""
+
+
+class JaiminiBundleResponse(BaseModel):
+    """POST /api/v1/jaimini/bundle response — every chart-level Jaimini
+    result for one birth chart, computed together in one call by
+    JaiminiOrchestrator.compute_bundle(). Mirrors JaiminiBundle 1:1,
+    minus the raw D1Chart (already available via /api/v1/horoscope)."""
+
+    chara_karaka: JaiminiKarakasResponse
+    arudha: JaiminiArudhaResponse
+    rashi_aspect: JaiminiAspectsResponse
+    karakamsa: Optional[JaiminiKarakamsaResponse] = None
+    chara_dasha: JaiminiDashaResponse
+    narayana_dasha: JaiminiDashaResponse
+    yogas: list[PredictionEvidenceSchema]
+
+
+class JaiminiArgalaResponse(ArgalaResultSchema):
+    """POST /api/v1/jaimini/argala response contract."""
