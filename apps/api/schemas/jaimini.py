@@ -14,6 +14,7 @@ from typing import Annotated, Literal, Optional
 from pydantic import BaseModel, Field
 
 from apps.api.schemas.common import BirthDataInput
+from apps.api.schemas.prediction_evidence import PredictionEvidenceSchema
 
 CharaKarakaSchemeSchema = Literal["sapta_karaka", "ashta_karaka"]
 TiebreakRuleSchema = Literal["speed", "natural_benefic"]
@@ -183,39 +184,6 @@ class JaiminiDashaResultSchema(BaseModel):
     periods: list[JaiminiDashaPeriodSchema]
     max_depth: int
     total_cycle_years: int = Field(description="Varies by chart — not a fixed 120 years like Vimshottari.")
-
-
-# ── Prediction Evidence ──────────────────────────────────────────────────────
-
-
-class PredictionReasonSchema(BaseModel):
-    description: str
-    matched_objects: list[str]
-    is_satisfied: bool
-
-
-class PredictionConfidenceSchema(BaseModel):
-    score: int = Field(ge=0, le=100)
-    satisfied_conditions: int
-    total_conditions: int
-    basis: str
-
-
-class PredictionRuleSchema(BaseModel):
-    rule_id: str
-    name: str
-    sutra_reference: str
-    rule_version: str
-    requires: list[str]
-
-
-class PredictionEvidenceSchema(BaseModel):
-    rule: PredictionRuleSchema
-    is_matched: bool
-    triggering_conditions: list[str]
-    reasons: list[PredictionReasonSchema]
-    confidence: PredictionConfidenceSchema
-    explanation: str
 
 
 # ── API response contracts ───────────────────────────────────────────────────

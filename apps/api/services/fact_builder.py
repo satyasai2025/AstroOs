@@ -29,6 +29,10 @@ from apps.api.services.house_engine import HouseEngine
 from apps.api.services.shadbala_engine import ShadbalaEngine
 from apps.api.services.transit_engine import TransitEngine
 from apps.api.services.yoga_engine import YogaEngine
+from packages.shared.enums import Rashi
+from packages.shared.rashi_offset import house_offset
+
+_RASHI_INDEX = {r.value: i for i, r in enumerate(Rashi)}
 
 _CLASSICAL_SEVEN = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]
 _ALL_NINE = _CLASSICAL_SEVEN + ["rahu", "ketu"]
@@ -161,11 +165,32 @@ class FactBuilder:
     def _build_transit_facts(
         self, chart: D1Chart, transit_datetime_utc: datetime, registry: FactRegistry
     ) -> None:
+        """
+        `transit.{planet}.house_from_venus` is a small FactBuilder-side
+        derivation (pure cyclic arithmetic over already-known rashis, via the
+        same `house_offset` helper TransitEngine's house-from-natal-Moon
+        already uses) — not a new astrology calculation. It's ported from the
+        (now-removed) Event Timing Foundation's feature extractor, which was
+        the one piece of that module not already duplicating a fact this
+        builder produces: the documented MarriageTimingEngine activation
+        vocabulary (Jupiter 1/5/7/9, Saturn 1/3/7/10 from natal Venus) needs
+        houses counted from Venus specifically, not from the Moon.
+        """
         if self._transit_engine is None:
             return
+        venus_rashi = next(
+            (p.rashi for p in chart.planets if p.planet == "venus"), None
+        )
+        venus_index = _RASHI_INDEX.get(venus_rashi) if venus_rashi else None
         for result in self._transit_engine.compute_transit(chart, transit_datetime_utc):
             registry.add_fact(Fact(f"transit.{result.planet}.house", result.house_from_natal_moon, "transit_engine"))
             registry.add_fact(Fact(f"transit.{result.planet}.rashi", result.transit_rashi, "transit_engine"))
+            if venus_index is not None and result.transit_rashi in _RASHI_INDEX:
+                registry.add_fact(Fact(
+                    f"transit.{result.planet}.house_from_venus",
+                    house_offset(venus_index, _RASHI_INDEX[result.transit_rashi]),
+                    "fact_builder",
+                ))
             if result.planet == "saturn":
                 registry.add_fact(Fact("transit.saturn.sade_sati", result.is_sade_sati, "transit_engine"))
                 registry.add_fact(Fact("transit.saturn.ashtama_shani", result.is_ashtama_shani, "transit_engine"))
