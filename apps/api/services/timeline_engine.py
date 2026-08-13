@@ -14,9 +14,11 @@ Architecture notes:
   - Density computation uses an O(n) two-pointer sliding-window
     algorithm over sorted event dates (not O(n × window_days)).
 
-Not wired into any router or persistence layer — same scope discipline
-as every engine before it (EventEngine, RuleEngine, YogaEngine, etc.
-at their own Phase 1).
+Wired into routers/timeline.py (build_timeline/find_clusters) and
+consumed by services/verification_engine.py and
+services/orchestration/stages/events_verification_stage.py; not
+persisted — every Timeline is recomputed per request from already-
+computed EventAnalysis objects rather than stored.
 """
 
 from __future__ import annotations

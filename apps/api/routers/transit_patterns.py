@@ -9,6 +9,12 @@ POST /api/v1/transit/patterns — Detect classical transit patterns
 
 Extends the existing /transit/current endpoint with pattern-level
 analysis — configurable orbs, phase detection, and date estimation.
+
+Registers onto the same `router` instance as routers/transit.py (imported,
+not re-created) rather than declaring a second APIRouter under the same
+"/transit" prefix — both files' routes now live on one router object, so
+main.py only needs to include it once (see routers/transit.py's docstring
+and main.py's app.include_router call).
 """
 
 from __future__ import annotations
@@ -16,9 +22,10 @@ from __future__ import annotations
 import asyncio
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status
 
 from apps.api.dependencies import get_ephemeris_wrapper
+from apps.api.routers.transit import router
 from apps.api.schemas.transit_patterns import (
     AshtamaShaniResponse,
     ReturnPeriodResponse,
@@ -39,8 +46,6 @@ from apps.api.services.transit_patterns import (
 )
 
 logger = logging.getLogger(__name__)
-
-router = APIRouter(prefix="/transit", tags=["Transit"])
 
 
 # ── DI ────────────────────────────────────────────────────────────────────────
