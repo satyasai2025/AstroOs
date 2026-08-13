@@ -81,11 +81,11 @@ def ontology():
     return build_default_ontology()
 
 
-def test_all_12_entity_types_present(ontology):
+def test_all_13_entity_types_present(ontology):
     types_present = {e.entity_type for e in ontology.all_entities()}
     assert types_present == {
         "Graha", "Rashi", "Bhava", "Nakshatra", "Pada", "Yoga",
-        "Bala", "Dasha", "Aspect", "Karaka", "Varga", "Event",
+        "Bala", "Dasha", "Aspect", "Karaka", "Varga", "Event", "Technique",
     }
 
 
