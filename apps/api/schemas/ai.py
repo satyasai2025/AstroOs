@@ -5,14 +5,11 @@ Pydantic request/response models for the AI Engine's template-based
 narration endpoints. AIEngine is never a live LLM call — see
 ai_engine.py's module docstring ("No external LLM, no network calls").
 
-Scope note: this router wires chart_summary, yoga_explanation,
+Scope note: routers/ai.py wires chart_summary, yoga_explanation,
 dasha_interpretation, transit_reading, and qa — the four generators
 computable directly from birth data. verification_report,
-research_insight, and recommendation all require the same
-Research/Statistics/Timeline/Verification placeholder reconstruction as
-routers/report.py and are left for a follow-up rather than duplicating
-that machinery a third time (see routers/report.py's module docstring
-for the pattern if/when that follow-up happens).
+research_insight, and recommendation are wired separately in
+routers/ai_phase_e.py (Task #13) — see that module's docstring.
 """
 
 from __future__ import annotations
@@ -22,27 +19,9 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import BirthDataInput
+
 DashaSystem = Literal["vimshottari", "yogini", "ashtottari", "kalachakra", "chara", "narayana"]
-
-
-class BirthDataInput(BaseModel):
-    """Model representing birth data input data."""
-    birth_datetime_utc: datetime = Field(
-        description="UTC birth datetime (ISO-8601, must include timezone offset)."
-    )
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
-    ayanamsa: AyanamsaCode = "lahiri"
-    house_system: HouseSystemCode = "W"
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
 
 
 class ChartSummaryRequest(BirthDataInput):

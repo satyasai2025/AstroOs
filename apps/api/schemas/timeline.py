@@ -17,18 +17,17 @@ from __future__ import annotations
 
 import uuid
 from datetime import date, datetime
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import BirthDataInput
 
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
 
-class TimelineBuildRequest(BaseModel):
+class TimelineBuildRequest(BirthDataInput):
     """
     Builds a Timeline from the events already recorded (via POST /events)
     against the birth chart identified by this same birth data — chart
@@ -38,14 +37,6 @@ class TimelineBuildRequest(BaseModel):
     those events were actually recorded under.
     """
 
-    birth_datetime_utc: Annotated[
-        datetime,
-        Field(description="UTC birth datetime (ISO-8601, must include timezone offset)."),
-    ]
-    latitude: Annotated[float, Field(ge=-90.0, le=90.0, description="Geographic latitude.")]
-    longitude: Annotated[float, Field(ge=-180.0, le=180.0, description="Geographic longitude.")]
-    ayanamsa: Annotated[AyanamsaCode, Field(default="lahiri")] = "lahiri"
-    house_system: Annotated[HouseSystemCode, Field(default="W")] = "W"
     category: Optional[str] = Field(default=None, description="Filter events by category.")
     limit: Annotated[int, Field(default=500, ge=1, le=2000)] = 500
     offset: Annotated[int, Field(default=0, ge=0)] = 0
@@ -55,13 +46,6 @@ class TimelineBuildRequest(BaseModel):
     min_events: Annotated[
         int, Field(default=2, ge=1, description="Minimum events for a cluster candidate window.")
     ] = 2
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
 
 
 # ── Response ──────────────────────────────────────────────────────────────────

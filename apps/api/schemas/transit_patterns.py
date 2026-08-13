@@ -8,18 +8,17 @@ Extends the base transit request with configurable aspect and return orbs.
 from __future__ import annotations
 
 from datetime import date, datetime, timezone
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import BirthDataInput
 
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
 
-class TransitPatternsRequest(BaseModel):
+class TransitPatternsRequest(BirthDataInput):
     """
     Request body for POST /transit/patterns.
 
@@ -27,26 +26,6 @@ class TransitPatternsRequest(BaseModel):
     return-period detection.
     """
 
-    birth_datetime_utc: Annotated[
-        datetime,
-        Field(description="UTC birth datetime (ISO-8601, must include timezone offset)."),
-    ]
-    latitude: Annotated[
-        float,
-        Field(ge=-90.0, le=90.0, description="Geographic birth latitude in decimal degrees."),
-    ]
-    longitude: Annotated[
-        float,
-        Field(ge=-180.0, le=180.0, description="Geographic birth longitude in decimal degrees."),
-    ]
-    ayanamsa: Annotated[
-        AyanamsaCode,
-        Field(default="lahiri", description="Ayanamsa (sidereal correction) system."),
-    ] = "lahiri"
-    house_system: Annotated[
-        HouseSystemCode,
-        Field(default="W", description="House system used for the natal D1 lagna."),
-    ] = "W"
     transit_datetime_utc: Annotated[
         Optional[datetime],
         Field(
@@ -76,13 +55,6 @@ class TransitPatternsRequest(BaseModel):
             description="Maximum orb in degrees for return-period detection (0-10).",
         ),
     ] = 3.0
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def birth_must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware (include UTC offset).")
-        return v
 
     @field_validator("transit_datetime_utc")
     @classmethod

@@ -18,9 +18,10 @@ import uuid
 from datetime import date, datetime
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 from apps.api.schemas.ashtakavarga import AllAshtakavargaResponse
+from apps.api.schemas.common import BirthDataInput
 from apps.api.schemas.dasha import DashaTreeResponse
 from apps.api.schemas.divisional import AllVargaChartsResponse
 from apps.api.schemas.horoscope import D1ChartResponse
@@ -29,24 +30,15 @@ from apps.api.schemas.report import ChartReportResponse
 from apps.api.schemas.transit import TransitResponse
 from apps.api.schemas.yoga import YogaEvaluationResponse
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
 DashaSystem = Literal["vimshottari", "yogini", "ashtottari", "kalachakra", "chara", "narayana"]
 
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
 
-class WorkflowAnalysisRequest(BaseModel):
+class WorkflowAnalysisRequest(BirthDataInput):
     """One birth-data submission drives the entire pipeline."""
 
-    birth_datetime_utc: datetime = Field(
-        description="UTC birth datetime (ISO-8601, must include timezone offset)."
-    )
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
-    ayanamsa: AyanamsaCode = "lahiri"
-    house_system: HouseSystemCode = "W"
     dasha_system: DashaSystem = "vimshottari"
     transit_datetime_utc: Optional[datetime] = Field(
         default=None, description="Defaults to now (UTC) if omitted — the 'current transits' moment."
@@ -109,13 +101,6 @@ class WorkflowAnalysisRequest(BaseModel):
         ),
     )
 
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
-
     @model_validator(mode="after")
     def chart_id_required_when_not_persisting(self) -> "WorkflowAnalysisRequest":
         if not self.persist and self.chart_id is None:
@@ -126,23 +111,10 @@ class WorkflowAnalysisRequest(BaseModel):
 # ── Duplicate check (confirm before persist) ─────────────────────────────────
 
 
-class WorkflowDuplicateCheckRequest(BaseModel):
+class WorkflowDuplicateCheckRequest(BirthDataInput):
     """Same natural key BirthChartRepository.get_or_create() dedups on —
     check before submitting persist=true so the caller can ask the user
     to confirm rather than silently merging into someone else's chart."""
-
-    birth_datetime_utc: datetime
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
-    ayanamsa: AyanamsaCode = "lahiri"
-    house_system: HouseSystemCode = "W"
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
 
 
 class WorkflowDuplicateCheckResponse(BaseModel):
@@ -155,30 +127,18 @@ class WorkflowDuplicateCheckResponse(BaseModel):
 # ── Bulk Import (CSV/JSON upload of birth data) ──────────────────────────────
 
 
-class BulkImportRow(BaseModel):
+class BulkImportRow(BirthDataInput):
     """One row of a bulk-import file — just enough to run through the same
     analysis pipeline as WorkflowAnalysisRequest, with saner client-side
     defaults (vargas skipped for speed, matching the recompute-for-display
     path elsewhere in this API)."""
 
     subject_name: str = "Unnamed"
-    birth_datetime_utc: datetime
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
     place_name: Optional[str] = None
-    ayanamsa: AyanamsaCode = "lahiri"
-    house_system: HouseSystemCode = "W"
     force_new: bool = Field(
         default=False,
         description="See WorkflowAnalysisRequest.force_new — applies per row.",
     )
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
 
 
 class BulkImportRequest(BaseModel):

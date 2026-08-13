@@ -12,6 +12,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from apps.api.schemas.common import BirthDataInput
+
 
 class AscendantSchema(BaseModel):
     """Schema representing ascendant data."""
@@ -137,21 +139,8 @@ class PanchangaSchema(BaseModel):
     ayanamsa_deg: float
 
 
-class D1ChartRequest(BaseModel):
+class D1ChartRequest(BirthDataInput):
     """Request payload for d1 chart operations."""
-    birth_datetime_utc: datetime = Field(
-        description="Birth date and time in UTC (ISO 8601 with timezone)"
-    )
-    latitude: float = Field(ge=-90.0, le=90.0, description="Geographic latitude (+N, -S)")
-    longitude: float = Field(ge=-180.0, le=180.0, description="Geographic longitude (+E, -W)")
-    ayanamsa: str = Field(
-        default="lahiri",
-        description="Ayanamsa system: lahiri | kp | raman | yukteshwar | fagan_bradley | true_chitra",
-    )
-    house_system: str = Field(
-        default="W",
-        description="House system: W=Whole Sign, P=Placidus, K=Koch, E=Equal",
-    )
 
 
 class D1ChartResponse(BaseModel):

@@ -9,42 +9,19 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import BirthDataInput
+
 DashaSystem = Literal["vimshottari", "yogini", "ashtottari", "kalachakra", "chara", "narayana"]
 
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
 
-class DashaRequest(BaseModel):
+class DashaRequest(BirthDataInput):
     """Request body shared by all dasha endpoints."""
 
-    birth_datetime_utc: Annotated[
-        datetime,
-        Field(description="UTC birth datetime (ISO-8601, must include timezone offset)."),
-    ]
-    latitude: Annotated[
-        float,
-        Field(ge=-90.0, le=90.0, description="Geographic latitude in decimal degrees."),
-    ]
-    longitude: Annotated[
-        float,
-        Field(ge=-180.0, le=180.0, description="Geographic longitude in decimal degrees."),
-    ]
-    ayanamsa: Annotated[
-        AyanamsaCode,
-        Field(default="lahiri", description="Ayanamsa system for sidereal conversion."),
-    ] = "lahiri"
-    house_system: Annotated[
-        HouseSystemCode,
-        Field(
-            default="W",
-            description="House system (used for Lagna in Chara/Narayana; ignored for others).",
-        ),
-    ] = "W"
     max_depth: Annotated[
         int,
         Field(
@@ -69,13 +46,6 @@ class DashaRequest(BaseModel):
             ),
         ),
     ] = True
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
 
 
 # ── Response ──────────────────────────────────────────────────────────────────

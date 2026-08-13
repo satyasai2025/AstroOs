@@ -19,7 +19,7 @@ from datetime import datetime
 from typing import Optional
 
 from apps.api.domain.dasha import DashaTree
-from apps.api.schemas.dasha import AyanamsaCode, HouseSystemCode
+from apps.api.schemas.common import AyanamsaCode, HouseSystemCode
 from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.dasha_registry import get_dasha_engine
 
