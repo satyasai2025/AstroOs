@@ -396,10 +396,13 @@ def create_app() -> FastAPI:
     app.include_router(datasets_router.router)
 
     # ── Collaboration (RTCollab WebSocket + mDNS session discovery) ───────────
-    app.include_router(ws_router.router, prefix="/ws")
-    app.include_router(
-        collab_router.router, prefix="/api/v1", dependencies=_authenticated
-    )
+    # Off by default (ENABLE_RTCOLLAB=false) per ASTROOS_PHASE_IV_V2_4_ROADMAP.md
+    # §IV.2's success criterion — the router isn't even mounted unless opted in.
+    if _settings.ENABLE_RTCOLLAB:
+        app.include_router(ws_router.router, prefix="/ws")
+        app.include_router(
+            collab_router.router, prefix="/api/v1", dependencies=_authenticated
+        )
 
     # ── Monitoring ────────────────────────────────────────────────────────────
 
