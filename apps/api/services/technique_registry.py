@@ -3,7 +3,7 @@ AstroOS — Technique Registry
 
 Central in-code catalogue of TechniqueDefinitions, mirroring the
 `_REGISTRY: dict[str, T]` + register/get/all convention already used by
-rule_registry.py, dasha_registry.py, event_timing_registry.py and
+rule_registry.py, dasha_registry.py and
 jaimini_yoga_registry.py.
 
 Techniques defined in code (see services/techniques/) register themselves

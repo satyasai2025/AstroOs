@@ -49,11 +49,13 @@ from apps.api.schemas.jaimini import (
     JaiminiKarakasResponse,
     JaiminiDashaPeriodSchema,
     KarakamsaHouseEntrySchema,
+    RashiAspectSchema,
+)
+from apps.api.schemas.prediction_evidence import (
     PredictionConfidenceSchema,
     PredictionEvidenceSchema,
     PredictionReasonSchema,
     PredictionRuleSchema,
-    RashiAspectSchema,
 )
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.jaimini_orchestrator import JaiminiOrchestrator
