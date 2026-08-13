@@ -13,6 +13,7 @@
 
 import { useMemo, useState } from "react";
 import { Badge, Modal } from "@/components/ui";
+import { titleCaseToken } from "@/lib/api";
 import type { LifeEventDetail } from "@/lib/types";
 
 type Tone = "cyan" | "gold" | "violet" | "success" | "danger";
@@ -37,10 +38,6 @@ function formatDate(iso: string): string {
   const d = new Date(iso + "T00:00:00Z");
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
-}
-
-function titleCase(raw: string): string {
-  return raw.replace(/[_-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 interface PositionedEvent {
@@ -118,9 +115,9 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {s.mahadasha && <Badge tone="cyan">Mahadasha: {titleCase(s.mahadasha)}</Badge>}
-              {s.antardasha && <Badge tone="violet">Antardasha: {titleCase(s.antardasha)}</Badge>}
-              {s.pratyantar && <Badge tone="gold">Pratyantar: {titleCase(s.pratyantar)}</Badge>}
+              {s.mahadasha && <Badge tone="cyan">Mahadasha: {titleCaseToken(s.mahadasha)}</Badge>}
+              {s.antardasha && <Badge tone="violet">Antardasha: {titleCaseToken(s.antardasha)}</Badge>}
+              {s.pratyantar && <Badge tone="gold">Pratyantar: {titleCaseToken(s.pratyantar)}</Badge>}
             </div>
 
             {s.active_yogas.length > 0 && (
@@ -139,7 +136,7 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
                 <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", marginBottom: 4 }}>Transits</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {activeTransits.map(([key]) => (
-                    <Badge key={key} tone="neutral">{titleCase(key)}</Badge>
+                    <Badge key={key} tone="neutral">{titleCaseToken(key)}</Badge>
                   ))}
                 </div>
               </div>
@@ -161,7 +158,7 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
                         padding: "4px 8px",
                       }}
                     >
-                      House {house}: {titleCase(status)}
+                      House {house}: {titleCaseToken(status)}
                     </div>
                   ))}
                 </div>
@@ -173,7 +170,7 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
                 <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", marginBottom: 4 }}>Nakshatra Placements</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {s.nakshatra_activations.map((n) => (
-                    <Badge key={n} tone="violet">{titleCase(n)}</Badge>
+                    <Badge key={n} tone="violet">{titleCaseToken(n)}</Badge>
                   ))}
                 </div>
               </div>

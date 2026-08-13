@@ -1,14 +1,10 @@
 import { useMemo, useState } from "react";
+import { RASHI_NAMES_EN as RASHI_NAMES } from "@/lib/astro";
 import type {
   AllAshtakavargaResponse,
   BhinnashtakavargaResponse,
   WorkflowAnalysisResponse,
 } from "@/lib/types";
-
-const RASHI_NAMES = [
-  "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
-];
 
 const RASHI_SYMBOLS = [
   "♈", "♉", "♊", "♋", "♌", "♍",

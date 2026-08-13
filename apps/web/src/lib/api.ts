@@ -114,14 +114,21 @@ const _ASTRO_CASING_KEYS = new Set([
  * 12 nakshatras specifically — single-word nakshatras were unaffected,
  * which is presumably why it went unnoticed. Now replaces underscores
  * with spaces before splitting.
+ *
+ * Exported as the one canonical title-casing helper — several
+ * components independently reimplemented a near-identical version of
+ * this before consolidating onto it (see e.g. ChartDetailPanel.tsx,
+ * EventTimelineChart.tsx, research/import/page.tsx's git history).
  */
-function _titleCaseToken(value: string): string {
+export function titleCaseToken(value: string): string {
   return value
     .replace(/_/g, " ")
     .split(" ")
     .map((word) => (word.length > 0 ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word))
     .join(" ");
 }
+
+const _titleCaseToken = titleCaseToken;
 
 /**
  * keyHint carries the object key this value was found under, one level
