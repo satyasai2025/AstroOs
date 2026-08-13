@@ -18,6 +18,7 @@ from typing import Literal
 
 from apps.api.domain.horoscope import D1Chart
 from packages.shared.enums import Rashi
+from packages.shared.rashi_offset import house_offset
 
 RASHI_LIST: tuple[str, ...] = tuple(r.value for r in Rashi)
 """Zodiacal order, index 0 = Aries ... 11 = Pisces."""
@@ -56,7 +57,7 @@ def house_count(from_rashi: str, to_rashi: str) -> int:
     sign as 2, ... up to and including to_rashi. Always 1-12 (never 0),
     matching how every Vedic "count from X to Y" sutra works.
     """
-    return ((rashi_index(to_rashi) - rashi_index(from_rashi)) % 12) + 1
+    return house_offset(rashi_index(from_rashi), rashi_index(to_rashi))
 
 
 def is_kendra(from_rashi: str, to_rashi: str) -> bool:
