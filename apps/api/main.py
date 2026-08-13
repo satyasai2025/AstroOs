@@ -47,6 +47,7 @@ from apps.api.routers import knowledge as knowledge_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import kp as kp_router
 from apps.api.routers import report as report_router
+from apps.api.routers import report_full as report_full_router
 from apps.api.routers import research as research_router
 from apps.api.routers import search as search_router
 from apps.api.routers import research_tools as research_tools_router
@@ -299,6 +300,9 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         report_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        report_full_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         export_router.router, prefix="/api/v1", dependencies=_authenticated

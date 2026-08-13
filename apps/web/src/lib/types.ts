@@ -714,6 +714,35 @@ export interface WorkflowAnalysisResponse {
   research_snapshot_id: string | null;
 }
 
+// ── Full Report (workflow pipeline + KP in one call) ──────────────────────────
+
+export interface FullReportRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  dasha_system?: DashaSystemCode;
+  transit_datetime_utc?: string | null;
+  include_vargas?: boolean;
+  include_kp?: boolean;
+  title?: string;
+  subject_name?: string;
+  generated_by?: string | null;
+}
+
+/** Response of POST /api/v1/report/full — the complete workflow analysis
+ * plus the KP analysis + evidence sections, rendered as a printable
+ * report page. chart_id is null because the full report never persists
+ * a birth_charts row. */
+export type FullReportResponse = Omit<WorkflowAnalysisResponse, "chart_id"> & {
+  chart_id: string | null;
+  title: string;
+  subject_name: string;
+  generated_at: string;
+  kp_analysis: KPAnalysisResponse | null;
+};
+
 // ── Duplicate check (confirm before persist) ──────────────────────────────────
 
 export interface WorkflowDuplicateCheckRequest {

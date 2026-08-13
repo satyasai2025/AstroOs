@@ -21,6 +21,7 @@ established this session for report.py's placeholder builders.
 from __future__ import annotations
 
 import logging
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -129,7 +130,13 @@ def _verification_response(findings) -> VerificationSummaryResponse:
     )
 
 
-def _result_to_response(result: WorkflowAnalysisResult) -> WorkflowAnalysisResponse:
+def _result_to_response(
+    result: WorkflowAnalysisResult,
+    *,
+    response_cls: type = WorkflowAnalysisResponse,
+    chart_id: Optional[uuid.UUID] = None,
+    extra_kwargs: Optional[dict] = None,
+) -> WorkflowAnalysisResponse:
     vargas_response = None
     if result.vargas is not None:
         serialised = {code: _serialise_chart(chart) for code, chart in result.vargas.items()}
@@ -183,8 +190,9 @@ def _result_to_response(result: WorkflowAnalysisResult) -> WorkflowAnalysisRespo
             ),
         )
 
-    return WorkflowAnalysisResponse(
-        chart_id=result.chart_id,
+    _id = chart_id if chart_id is not None else result.chart_id
+    kwargs = dict(
+        chart_id=_id,
         chart=_chart_to_response(result.chart),
         vargas=vargas_response,
         dasha=_serialise_tree(result.dasha_tree),
@@ -218,6 +226,9 @@ def _result_to_response(result: WorkflowAnalysisResult) -> WorkflowAnalysisRespo
         ),
         research_snapshot_id=result.research_snapshot_id,
     )
+    if extra_kwargs:
+        kwargs.update(extra_kwargs)
+    return response_cls(**kwargs)
 
 
 @router.post(
