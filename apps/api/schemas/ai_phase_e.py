@@ -13,8 +13,8 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field, model_validator
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import AyanamsaCode, BirthDataInput, HouseSystemCode
+
 RelationshipTypeCode = Literal["marriage", "business", "friendship", "parent_child"]
 
 
@@ -160,23 +160,14 @@ class BestBetCompatibilityResponse(BaseModel):
 MarriageTimingStatus = Literal["probable", "delayed", "not_indicated"]
 
 
-class MarriageTimingRequest(BaseModel):
+class MarriageTimingRequest(BirthDataInput):
     """Request payload for the Jupiter/Saturn marriage-window scan."""
-    birth_datetime_utc: datetime = Field(
-        description="UTC birth datetime (ISO-8601, must include timezone offset)."
-    )
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
     subject_name: str = Field(default="", max_length=100)
 
     # Scanned as ages rather than calendar years so the window travels with
     # the subject's birth date. Capped at 120 to bound the response size.
     scan_start_age: int = Field(default=20, ge=0, le=120)
     scan_end_age: int = Field(default=45, ge=0, le=120)
-
-    # Chart settings
-    ayanamsa: AyanamsaCode = "lahiri"
-    house_system: HouseSystemCode = "W"
 
     @model_validator(mode="after")
     def _check_age_range(self) -> "MarriageTimingRequest":

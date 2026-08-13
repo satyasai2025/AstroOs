@@ -12,14 +12,11 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
+from apps.api.schemas.common import BirthDataInput
 
-class BenchmarkValidateRequest(BaseModel):
+
+class BenchmarkValidateRequest(BirthDataInput):
     """Validate a chart against GC-MASTER by providing birth data."""
-    birth_datetime_utc: datetime
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
-    ayanamsa: str = "lahiri"
-    house_system: str = "W"
     subject_name: str = ""
     reference_id: Optional[str] = None
     include_houses: bool = True

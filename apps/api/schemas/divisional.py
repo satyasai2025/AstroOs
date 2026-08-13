@@ -6,11 +6,11 @@ Pydantic request/response models for all varga chart endpoints.
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Annotated, Literal
+from typing import Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
+from apps.api.schemas.common import BirthDataInput
 from apps.api.services.divisional_engine import SUPPORTED_VARGAS
 
 # ── Literals ──────────────────────────────────────────────────────────────────
@@ -21,49 +21,12 @@ VargaCode = Literal[
     "D27", "D30", "D40", "D45", "D60",
 ]
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
-
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
 
-class VargaChartRequest(BaseModel):
+class VargaChartRequest(BirthDataInput):
     """Request body for computing a single or all divisional chart(s)."""
-
-    birth_datetime_utc: Annotated[
-        datetime,
-        Field(description="UTC birth datetime (ISO-8601, must include timezone offset)."),
-    ]
-    latitude: Annotated[
-        float,
-        Field(ge=-90.0, le=90.0, description="Geographic latitude in decimal degrees."),
-    ]
-    longitude: Annotated[
-        float,
-        Field(ge=-180.0, le=180.0, description="Geographic longitude in decimal degrees."),
-    ]
-    ayanamsa: Annotated[
-        AyanamsaCode,
-        Field(default="lahiri", description="Ayanamsa (sidereal correction) system."),
-    ] = "lahiri"
-    house_system: Annotated[
-        HouseSystemCode,
-        Field(
-            default="W",
-            description=(
-                "House system used for D1 lagna: "
-                "W=Whole Sign, P=Placidus, K=Koch, E=Equal."
-            ),
-        ),
-    ] = "W"
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware (include UTC offset).")
-        return v
 
 
 # ── Response pieces ───────────────────────────────────────────────────────────

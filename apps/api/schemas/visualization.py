@@ -26,10 +26,9 @@ import uuid
 from datetime import datetime
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import BirthDataInput
 
 
 class VisualizationOptionsMixin(BaseModel):
@@ -39,22 +38,8 @@ class VisualizationOptionsMixin(BaseModel):
     height: int = Field(default=600, ge=100, le=4000)
 
 
-class ChartWheelRequest(VisualizationOptionsMixin):
+class ChartWheelRequest(VisualizationOptionsMixin, BirthDataInput):
     """Request payload for chart wheel operations."""
-    birth_datetime_utc: datetime = Field(
-        description="UTC birth datetime (ISO-8601, must include timezone offset)."
-    )
-    latitude: float = Field(ge=-90.0, le=90.0)
-    longitude: float = Field(ge=-180.0, le=180.0)
-    ayanamsa: AyanamsaCode = "lahiri"
-    house_system: HouseSystemCode = "W"
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware.")
-        return v
 
 
 class DistributionVisualizationRequest(VisualizationOptionsMixin):

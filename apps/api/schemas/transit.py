@@ -12,40 +12,19 @@ it — so this request carries both.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
-HouseSystemCode = Literal["W", "P", "K", "E"]
+from apps.api.schemas.common import BirthDataInput
 
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
 
-class TransitRequest(BaseModel):
+class TransitRequest(BirthDataInput):
     """Request body for computing Gochara (transit) against a natal chart."""
 
-    birth_datetime_utc: Annotated[
-        datetime,
-        Field(description="UTC birth datetime (ISO-8601, must include timezone offset)."),
-    ]
-    latitude: Annotated[
-        float,
-        Field(ge=-90.0, le=90.0, description="Geographic birth latitude in decimal degrees."),
-    ]
-    longitude: Annotated[
-        float,
-        Field(ge=-180.0, le=180.0, description="Geographic birth longitude in decimal degrees."),
-    ]
-    ayanamsa: Annotated[
-        AyanamsaCode,
-        Field(default="lahiri", description="Ayanamsa (sidereal correction) system."),
-    ] = "lahiri"
-    house_system: Annotated[
-        HouseSystemCode,
-        Field(default="W", description="House system used for the natal D1 lagna."),
-    ] = "W"
     transit_datetime_utc: Annotated[
         Optional[datetime],
         Field(
@@ -57,13 +36,6 @@ class TransitRequest(BaseModel):
             ),
         ),
     ] = None
-
-    @field_validator("birth_datetime_utc")
-    @classmethod
-    def birth_must_be_timezone_aware(cls, v: datetime) -> datetime:
-        if v.tzinfo is None:
-            raise ValueError("birth_datetime_utc must be timezone-aware (include UTC offset).")
-        return v
 
     @field_validator("transit_datetime_utc")
     @classmethod
@@ -163,3 +135,103 @@ class TransitResponse(BaseModel):
         description="Natal Moon's rashi — the reference point every house_from_natal_moon is counted from."
     )
     planets: list[TransitPlanetResponse]
+
+
+# ── Transit Timeline (Animated Mixed Varga / Transit) ─────────────────────────
+
+
+class TransitTimelinePlanet(BaseModel):
+    """One planet's state at a timeline keyframe."""
+
+    planet: str
+    sidereal_longitude: float = Field(description="Sidereal longitude in degrees [0, 360).")
+    rashi: str = Field(description="Rashi (sign) name.")
+    rashi_degree: float = Field(description="Degree within the rashi [0, 30).")
+    rashi_minute: int = Field(ge=0, lt=60, description="Minute within the rashi degree.")
+    rashi_second: int = Field(ge=0, lt=60, description="Second within the rashi minute.")
+    is_direct: bool = Field(description="True = direct motion, False = retrograde.")
+    is_station: bool = Field(default=False, description="True if at station (about to change direction).")
+    speed_deg_per_day: float = Field(description="Speed in degrees per day (negative = retrograde).")
+    nakshatra: str = Field(description="Nakshatra at this longitude.")
+    pada: int = Field(ge=1, le=4, description="Nakshatra pada (1-4).")
+    degree_in_nakshatra: float = Field(description="Degree within nakshatra [0, 13°20').")
+    navamsha_rashi: str = Field(default="", description="D9 Navamsha rashi.")
+    navamsha_lord: str = Field(default="", description="D9 Navamsha lord.")
+    is_combust: bool = Field(default=False, description="Combustion state.")
+    combustion_orb: Optional[float] = Field(default=None, description="Combustion orb in degrees.")
+    dignity: Optional[str] = Field(default=None, description="Dignity state.")
+    house_from_natal_moon: int = Field(ge=1, le=12, description="Transit house from natal Moon.")
+    house_from_natal_ascendant: int = Field(ge=1, le=12, description="Transit house from natal Ascendant.")
+    aspects: list[str] = Field(default_factory=list, description="Graha drishti aspects cast.")
+
+
+class PanchangaKeyframe(BaseModel):
+    """Panchanga data at a specific moment."""
+
+    tithi: dict
+    nakshatra: dict
+    yoga: dict
+    karana: dict
+    vara: dict
+    sunrise: str
+    sunset: str
+    rahu_kalam: dict
+    gulika: dict
+    yamaganda: dict
+    hora: list[dict]
+
+
+class TransitEvent(BaseModel):
+    """An event detected between keyframes."""
+
+    datetime_utc: datetime
+    planet: str
+    event_type: str
+    description: str
+    from_value: Optional[str] = None
+    to_value: Optional[str] = None
+
+
+class TransitTimelineKeyframe(BaseModel):
+    """One computed moment in a transit timeline."""
+
+    datetime_utc: datetime
+    planets: list[TransitTimelinePlanet]
+    panchanga: Optional[PanchangaKeyframe] = None
+    events: Optional[list[TransitEvent]] = None
+
+
+class TransitTimelineRequest(BaseModel):
+    """Request body for computing transit timeline."""
+
+    birth_datetime_utc: datetime
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    ayanamsa: str = "lahiri"
+    house_system: str = "W"
+    start_datetime_utc: datetime
+    end_datetime_utc: datetime
+    interval_minutes: int = Field(ge=1, le=1440, description="Preferred interval in minutes.")
+    adaptive: bool = True
+    include_panchanga: bool = True
+    include_navamsha: bool = True
+    include_combustion: bool = True
+    include_dignity: bool = True
+    planets: Optional[list[str]] = None
+
+    @field_validator("birth_datetime_utc", "start_datetime_utc", "end_datetime_utc")
+    @classmethod
+    def must_be_timezone_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError("datetime fields must be timezone-aware (include UTC offset).")
+        return v
+
+
+class TransitTimelineResponse(BaseModel):
+    """Transit timeline response with keyframes and events."""
+
+    request: dict
+    keyframes: list[TransitTimelineKeyframe]
+    events: list[TransitEvent]
+    computed_range: dict
+    actual_intervals: Optional[list[int]] = None
