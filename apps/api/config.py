@@ -103,6 +103,17 @@ class Settings(BaseSettings):
     """
     OPENAI_MODEL: str = "gpt-4o-mini"
 
+    # ── Real-Time Collaboration (Phase IV, IV.2 — local-network only) ────────
+    ENABLE_RTCOLLAB: bool = False
+    """
+    Off by default (roadmap success criterion, ASTROOS_PHASE_IV_V2_4_ROADMAP.md
+    §IV.2): the WebSocket collaboration router (/ws/session/*) and the mDNS
+    session-discovery REST router (/api/v1/collab/*) are only mounted when
+    this is explicitly set True. LAN-only by design (ADR-RTC-001) — this flag
+    does not add any external/internet-facing surface, it just gates whether
+    the local-network feature is present at all.
+    """
+
     # ── AI Engine Backend (Phase IV, IV.3 — opt-in local LLM narration) ───────
     AI_BACKEND: str = "template"
     """
