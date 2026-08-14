@@ -124,6 +124,7 @@ _AYANAMSA_IDS: dict[str, int] = {
     AyanamsaSystem.YUKTESHWAR.value:     swe.SIDM_YUKTESHWAR,
     AyanamsaSystem.FAGAN_BRADLEY.value:  swe.SIDM_FAGAN_BRADLEY,
     AyanamsaSystem.TRUE_CHITRA.value:    swe.SIDM_TRUE_CITRA,
+    AyanamsaSystem.TRUE_PUSHYA.value:    swe.SIDM_TRUE_PUSHYA,
 }
 
 

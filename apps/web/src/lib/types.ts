@@ -126,7 +126,8 @@ export type AyanamsaCode =
   | "raman"
   | "yukteshwar"
   | "fagan_bradley"
-  | "true_chitra";
+  | "true_chitra"
+  | "true_pushya";
 export type HouseSystemCode = "W" | "P" | "K" | "E";
 export type DashaSystemCode =
   | "vimshottari"

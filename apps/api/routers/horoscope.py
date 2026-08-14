@@ -233,7 +233,7 @@ async def generate_d1_chart(
     - **birth_datetime_utc**: UTC birth datetime (must include timezone, e.g. `2000-01-01T05:30:00+00:00`)
     - **latitude**: Decimal degrees (+N / -S)
     - **longitude**: Decimal degrees (+E / -W)
-    - **ayanamsa**: `lahiri` (default) | `kp` | `raman` | `yukteshwar` | `fagan_bradley` | `true_chitra`
+    - **ayanamsa**: `lahiri` (default) | `kp` | `raman` | `yukteshwar` | `fagan_bradley` | `true_chitra` | `true_pushya`
     - **house_system**: `W` = Whole Sign (default) | `P` = Placidus | `K` = Koch | `E` = Equal
     """
     try:

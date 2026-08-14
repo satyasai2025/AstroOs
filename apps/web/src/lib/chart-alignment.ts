@@ -70,6 +70,14 @@ const ALIGNMENT_MATRIX: Record<
     defaultHouseSystem: "W",
     defaultDashaSystem: "vimshottari",
   },
+  // True Pushya paksha — same sidereal family as Lahiri/True Chitra, so it
+  // carries the same house/dasha compatibility; only the ayanamsa value differs.
+  true_pushya: {
+    compatibleHouseSystems: ["W", "E"],
+    compatibleDashaSystems: ["vimshottari", "yogini", "ashtottari", "kalachakra", "chara", "narayana"],
+    defaultHouseSystem: "W",
+    defaultDashaSystem: "vimshottari",
+  },
   raman: {
     compatibleHouseSystems: ["W", "E"],
     compatibleDashaSystems: ["vimshottari", "yogini", "ashtottari"],
@@ -161,6 +169,7 @@ export function resolveAstrologicalAlignment(
   const disabledAyanamsa: Record<AyanamsaCode, string | undefined> = {
     lahiri: undefined,
     true_chitra: undefined,
+    true_pushya: undefined,
     raman: undefined,
     yukteshwar: undefined,
     kp: undefined,

@@ -14,6 +14,7 @@ const AYANAMSA_OPTIONS: SelectOption[] = [
   { value: "yukteshwar", label: "Yukteshwar" },
   { value: "fagan_bradley", label: "Fagan/Bradley" },
   { value: "true_chitra", label: "True Chitra" },
+  { value: "true_pushya", label: "True Pushya" },
 ];
 
 const HOUSE_SYSTEM_OPTIONS: SelectOption[] = [

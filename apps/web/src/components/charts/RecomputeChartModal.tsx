@@ -20,6 +20,7 @@ const AYANAMSA_OPTIONS: { value: AyanamsaCode; label: string }[] = [
   { value: "yukteshwar", label: "Yukteshwar" },
   { value: "fagan_bradley", label: "Fagan-Bradley" },
   { value: "true_chitra", label: "True Chitra" },
+  { value: "true_pushya", label: "True Pushya" },
 ];
 
 const HOUSE_SYSTEM_OPTIONS: { value: HouseSystemCode; label: string }[] = [

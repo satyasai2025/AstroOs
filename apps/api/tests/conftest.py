@@ -83,6 +83,7 @@ ENUM_DEFINITIONS = {
     ),
     "ayanamsa_system": (
         "lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra",
+        "true_pushya",
     ),
     "dignity_type": (
         "exalted", "own", "moolatrikona", "friendly", "neutral", "enemy", "debilitated",
