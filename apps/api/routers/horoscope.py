@@ -59,6 +59,9 @@ from apps.api.schemas.lagna_scan import (
     LagnaIntervalSchema,
     LagnaScanRequest,
     LagnaScanResponse,
+    PlanetSignChangeRequest,
+    PlanetSignChangeResponse,
+    PlanetSignPeriodSchema,
     ShiftBirthtimeRequest,
     ShiftBirthtimeResponse,
 )
@@ -70,6 +73,7 @@ from apps.api.schemas.upagraha import (
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.lagna_scan_engine import LagnaScanEngine
+from apps.api.services.sign_change_engine import SignChangeEngine
 from apps.api.services.upagraha_engine import UpagrahaEngine
 
 logger = logging.getLogger(__name__)
@@ -576,4 +580,87 @@ async def shift_birthtime(
         direction=request.direction,
         resulting_rashi=confirm.rashi,
         resulting_rashi_degree=confirm.rashi_degree,
+    )
+
+
+@router.post(
+    "/planet-sign-change",
+    response_model=PlanetSignChangeResponse,
+    summary="When will a planet change sign?",
+    description=(
+        "For each graha: when it entered its current rashi and when it will "
+        "leave. Pass `planet` to scan one, omit it for all nine.\n\n"
+        "These come from an actual scan, not from degrees-remaining ÷ speed — "
+        "planetary longitude is non-monotonic, so a retrograde planet can "
+        "approach a boundary, station, and cross much later or in the other "
+        "direction. On the reference chart the naive estimate puts Jupiter in "
+        "Libra in 56 days when it actually reaches Sagittarius after 190, and "
+        "puts Saturn's change at 196 days when a retrograde loop pushes it to "
+        "712.\n\n"
+        "`next_rashi` is therefore the sign genuinely entered, which for a "
+        "retrograde planet is the preceding one. Ketu is derived from Rahu, so "
+        "the two always turn together."
+    ),
+    status_code=status.HTTP_200_OK,
+)
+async def planet_sign_change(
+    request: PlanetSignChangeRequest,
+    user: User = Depends(get_current_user_from_bearer),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> PlanetSignChangeResponse:
+    engine = SignChangeEngine(wrapper)
+    valid = {"sun", "moon", "mars", "mercury", "jupiter",
+             "venus", "saturn", "rahu", "ketu"}
+    if request.planet is not None and request.planet not in valid:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unknown planet {request.planet!r}. Valid: {sorted(valid)}",
+        )
+
+    try:
+        # Saturn's scan can run a hundred pyswisseph calls — keep it off the
+        # event loop, same as /d1.
+        if request.planet:
+            periods = [
+                await asyncio.to_thread(
+                    engine.sign_period,
+                    request.planet, request.birth_datetime_utc,
+                    request.latitude, request.longitude, request.ayanamsa,
+                )
+            ]
+        else:
+            periods = await asyncio.to_thread(
+                engine.all_planets,
+                request.birth_datetime_utc,
+                request.latitude, request.longitude, request.ayanamsa,
+            )
+    except (RuntimeError, ValueError) as exc:
+        logger.exception("Planet sign-change scan failed")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Could not scan planet sign change: {exc}",
+        )
+
+    return PlanetSignChangeResponse(
+        planets=[
+            PlanetSignPeriodSchema(
+                planet=p.planet,
+                sidereal_longitude=p.sidereal_longitude,
+                rashi=p.rashi,
+                rashi_degree=p.rashi_degree,
+                nakshatra=p.nakshatra,
+                pada=p.pada,
+                is_retrograde=p.is_retrograde,
+                speed_deg_per_day=p.speed_deg_per_day,
+                entered_utc=p.entered_utc,
+                exits_utc=p.exits_utc,
+                days_since_entry=p.days_since_entry,
+                days_until_exit=p.days_until_exit,
+                previous_rashi=p.previous_rashi,
+                next_rashi=p.next_rashi,
+                exits_retrograde=p.exits_retrograde,
+                search_limit_days=p.search_limit_days,
+            )
+            for p in periods
+        ]
     )
