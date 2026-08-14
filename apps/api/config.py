@@ -103,6 +103,19 @@ class Settings(BaseSettings):
     """
     OPENAI_MODEL: str = "gpt-4o-mini"
 
+    # ── Lunar nodes (Rahu/Ketu) ───────────────────────────────────────────────
+    NODE_TYPE: str = "mean"
+    """
+    "mean" (default): the mean lunar node — classical Vedic practice, and what
+    both Jagannatha Hora and AstroSage produce (verified against a reference
+    chart: both agree to ~1 arc-minute on Rahu).
+
+    "true": the true/osculating node. Differs from the mean node by up to
+    ~1.8°, which is enough to place Rahu/Ketu in a different nakshatra and so
+    change the Vimshottari dasha balance — hence a deliberate, explicit
+    choice rather than a hardcoded default.
+    """
+
     # ── Real-Time Collaboration (Phase IV, IV.2 — local-network only) ────────
     ENABLE_RTCOLLAB: bool = False
     """
