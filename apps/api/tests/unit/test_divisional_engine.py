@@ -182,16 +182,32 @@ def test_d5_odd_sign_part1_is_aquarius():
     assert vsign == "aquarius"
 
 
-def test_d5_even_sign_reverses_order():
-    """Taurus (even, index 1), 2nd part → reversed table entry (Gemini)."""
+def test_d5_even_sign_part1_is_virgo():
+    """Taurus (even, index 1), 2nd part (6-12°) → Virgo.
+
+    Verified against a JHora reference chart (2026-08-15, Pune): Gulika
+    and Uranus both land in Taurus 6-12deg and both show D5=Virgo.
+    """
     vsign, _ = _d5_panchamsha(sign_index=1, deg=8.0)
-    assert vsign == "gemini"
+    assert vsign == "virgo"
 
 
-def test_d5_only_five_possible_signs():
-    """Panchamsha can only place planets in one of five target signs."""
-    allowed = {"aries", "aquarius", "sagittarius", "gemini", "libra"}
+def test_d5_even_sign_part0_is_taurus():
+    """Taurus (even), 1st part (0-6°) → Taurus (self).
+
+    Verified against the same JHora reference chart: Mrityu Sphuta in
+    Taurus 4°50' shows D5=Taurus.
+    """
+    vsign, _ = _d5_panchamsha(sign_index=1, deg=2.0)
+    assert vsign == "taurus"
+
+
+def test_d5_only_ten_possible_signs():
+    """Panchamsha places planets in one of five odd-sign or five even-sign targets."""
+    odd_allowed = {"aries", "aquarius", "sagittarius", "gemini", "libra"}
+    even_allowed = {"taurus", "virgo", "pisces", "capricorn", "scorpio"}
     for sign_idx in range(12):
+        allowed = odd_allowed if sign_idx % 2 == 0 else even_allowed
         for deg in (1.0, 7.0, 13.0, 19.0, 25.0):
             vsign, _ = _d5_panchamsha(sign_idx, deg)
             assert vsign in allowed
