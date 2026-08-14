@@ -560,7 +560,29 @@ class EphemerisWrapper:
     # ── Sidereal conversion ────────────────────────────────────────────────────
 
     def to_sidereal(self, tropical_lon: float, ayanamsa_val: float) -> float:
-        """Subtract ayanamsa to convert tropical → sidereal longitude."""
+        """Subtract ayanamsa to convert tropical → sidereal longitude.
+
+        NOTE — deliberate convention, do not "fix" to swe.FLG_SIDEREAL.
+
+        `tropical_lon` comes from swe.calc_ut() without FLG_SIDEREAL, i.e. an
+        *apparent* position (includes nutation), while `ayanamsa_val` comes
+        from swe.get_ayanamsa_ut(), i.e. the *mean* ayanamsa (excludes
+        nutation). Strictly astronomically those are different reference
+        frames, and the residual equals the nutation in longitude (±17"
+        over an ~18.6-year cycle; +11.98" on 1971-06-29).
+
+        That mismatch is nonetheless the traditional Vedic convention, and
+        measurably the right one here: benchmarked on a reference chart
+        against both Jagannatha Hora and AstroSage, this apparent-minus-mean
+        form is closer to BOTH than swe.FLG_SIDEREAL is —
+
+            apparent − mean ayanamsa : 0.99' vs AstroSage, 1.04' vs JHora
+            swe.FLG_SIDEREAL         : 1.14' vs AstroSage, 1.24' vs JHora
+
+        (mean absolute deviation over the seven classical grahas). Switching
+        to FLG_SIDEREAL would shift every longitude by the nutation and pull
+        AstroOS *away* from both reference implementations.
+        """
         return _normalize(tropical_lon - ayanamsa_val)
 
     # ── Combustion ────────────────────────────────────────────────────────────
