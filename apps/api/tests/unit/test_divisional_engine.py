@@ -23,6 +23,7 @@ from apps.api.services.divisional_engine import (
     DivisionalEngine,
     SUPPORTED_VARGAS,
     compute_varga_sign,
+    varga_divisor,
     _d2_hora,
     _d3_drekkana,
     _d4_chaturthamsha,
@@ -70,8 +71,70 @@ def sample_d9(engine) -> VargaChart:
 # ── compute_varga_sign() — unit tests ─────────────────────────────────────────
 
 def test_compute_varga_sign_invalid_varga():
+    """A code that is neither classical, custom "Dn", nor composite is rejected."""
     with pytest.raises(ValueError, match="Unknown varga"):
-        compute_varga_sign("D99", 0.0)
+        compute_varga_sign("X99", 0.0)
+
+
+# ── Custom D-n and sub-divisional D-a×D-b ─────────────────────────────────────
+
+def test_custom_divisor_is_accepted():
+    """A bare Dn with no classical rule falls back to the generic scheme."""
+    rashi, deg = compute_varga_sign("D13", 45.3)
+    assert rashi in _VALID_RASHIS
+    assert 0.0 <= deg < 30.0
+
+
+def test_custom_divisor_out_of_range_rejected():
+    for code in ("D0", "D9999"):
+        with pytest.raises(ValueError, match="Custom divisor must be between"):
+            compute_varga_sign(code, 10.0)
+
+
+def test_unknown_scheme_rejected():
+    with pytest.raises(ValueError, match="Unknown scheme"):
+        compute_varga_sign("D13", 10.0, scheme="nonsense")
+
+
+@pytest.mark.parametrize("lon", [0.0, 45.3, 123.456, 200.0, 287.9, 359.99])
+@pytest.mark.parametrize(
+    "composite,classical",
+    [("D9xD9", "D81"), ("D9xD12", "D108"), ("D12xD12", "D144")],
+)
+def test_subdivisional_reproduces_classical_composites(composite, classical, lon):
+    """The generic composition machinery must agree with the verified charts.
+
+    D81/D108/D144 were each checked against a JHora export; if the generic
+    "chart of a chart" builder reproduces them exactly at arbitrary
+    longitudes, it inherits that verification.
+    """
+    assert compute_varga_sign(composite, lon) == compute_varga_sign(classical, lon)
+
+
+def test_classical_rule_wins_over_generic_scheme():
+    """A classical code must never fall through to the generic divisor rule.
+
+    D9 has its own attested formula; resolving "D9" generically would
+    silently produce different (wrong) placements.
+    """
+    classical = compute_varga_sign("D9", 45.3)
+    generic = compute_varga_sign("D9", 45.3, scheme="from_sign")
+    assert classical == generic, "scheme must be ignored for classical codes"
+
+
+def test_varga_divisor_for_each_code_form():
+    assert varga_divisor("D9") == 9
+    assert varga_divisor("D108") == 108
+    assert varga_divisor("D9xD12") == 108  # composite matches the chart it generalises
+    assert varga_divisor("D13") == 13
+
+
+@pytest.mark.parametrize("scheme", ["cyclic", "from_sign"])
+@pytest.mark.parametrize("lon", [0.0, 45.3, 123.456, 359.99])
+def test_custom_schemes_stay_in_bounds(scheme, lon):
+    rashi, deg = compute_varga_sign("D13", lon, scheme=scheme)
+    assert rashi in _VALID_RASHIS
+    assert 0.0 <= deg < 30.0
 
 
 @pytest.mark.parametrize("varga", list(SUPPORTED_VARGAS))
@@ -532,9 +595,29 @@ def test_engine_compute_d30_sun_moon_keep_d1_sign(engine):
 
 
 def test_engine_compute_invalid_varga_raises(engine):
+    """A malformed code is rejected before the ephemeris call.
+
+    Note "D99" is *not* invalid any more — it resolves to a custom
+    divisor. The code must be structurally unparseable to be rejected.
+    """
     dt = datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
-    with pytest.raises(ValueError, match="Unsupported varga"):
-        engine.compute(birth_datetime_utc=dt, latitude=0.0, longitude=0.0, varga="D99")
+    with pytest.raises(ValueError, match="Unknown varga"):
+        engine.compute(birth_datetime_utc=dt, latitude=0.0, longitude=0.0, varga="X99")
+
+
+def test_engine_computes_custom_and_subdivisional(engine):
+    """Custom and sub-divisional codes flow through the full chart build."""
+    dt = datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+    for code, expected_divisor in (("D13", 13), ("D9xD12", 108)):
+        chart = engine.compute(
+            birth_datetime_utc=dt, latitude=28.6139, longitude=77.2090, varga=code
+        )
+        assert chart.varga == code
+        assert chart.divisor == expected_divisor
+        assert len(chart.planet_positions) == 9
+        for p in chart.planet_positions:
+            assert p.varga_rashi in _VALID_RASHIS
+            assert 1 <= p.varga_house_number <= 12
 
 
 @pytest.mark.parametrize("varga", list(SUPPORTED_VARGAS))

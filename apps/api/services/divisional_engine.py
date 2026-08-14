@@ -37,6 +37,7 @@ All degrees within a varga sign are normalised to [0, 30).
 
 from __future__ import annotations
 
+import re
 import uuid
 from datetime import datetime
 from typing import Optional
@@ -552,28 +553,192 @@ _VARGA_CALCULATOR = {
 
 # ── Low-level helpers ─────────────────────────────────────────────────────────
 
-def compute_varga_sign(varga: str, sidereal_longitude: float) -> tuple[str, float]:
+# ── Generic (non-classical) varga schemes ─────────────────────────────────────
+#
+# The 22 charts above each carry their own classically-attested starting-sign
+# rule, and those rules do not follow from any single generic formula — D5 uses
+# an explicit target table, D8 keys off sign quality, D11 counts anti-zodiacally,
+# and so on. So an arbitrary "D-n" cannot be derived by extrapolating from them.
+#
+# What *is* well-defined for arbitrary n is the Parivritti (cyclical) scheme:
+# cut the whole zodiac into equal 30/n° parts and hand them out to the signs in
+# unbroken zodiacal order, continuing across sign boundaries rather than
+# restarting each sign. Where a classical chart has its own rule, that rule
+# wins — use the named code (D9, D11, …), which dispatches to the verified
+# implementation. These generic schemes exist for exploring divisions that have
+# no classical rule of their own.
+
+MAX_CUSTOM_DIVISOR = 300
+
+
+def _parivritti_cyclic(n: int):
+    """
+    Build a calculator for the Parivritti (cyclical) D-n scheme.
+
+    The zodiac is divided into 12·n equal parts of 30/n° each, numbered
+    continuously from 0° Aries; part k lands in sign k mod 12.
+    """
+    part_size = 30.0 / n
+
+    def _calc(sign_index: int, deg: float) -> tuple[str, float]:
+        # Reconstruct the absolute longitude so parts run continuously across
+        # sign boundaries — the defining property of the cyclical scheme.
+        lon = sign_index * 30.0 + deg
+        part = int(lon / part_size)
+        vdeg = (lon % part_size) * n
+        return _RASHI_LIST[part % 12], vdeg
+
+    return _calc
+
+
+def _parivritti_from_sign(n: int):
+    """
+    Build a calculator for the "count from the natal sign" D-n scheme —
+    the generalisation of D12's rule: part k of a sign falls k signs
+    later, restarting from the natal sign in every sign.
+    """
+    part_size = 30.0 / n
+
+    def _calc(sign_index: int, deg: float) -> tuple[str, float]:
+        part = min(int(deg / part_size), n - 1)
+        vdeg = (deg % part_size) * n
+        return _RASHI_LIST[(sign_index + part) % 12], vdeg
+
+    return _calc
+
+
+_CUSTOM_SCHEMES = {
+    "cyclic": _parivritti_cyclic,
+    "from_sign": _parivritti_from_sign,
+}
+
+# "D9xD12" — apply D9, then D12 to its output. Same construction the
+# classical composites D81/D108/D144 are built from, generalised.
+_SUBDIVISIONAL_RE = re.compile(r"^(D\d+)X(D\d+)$")
+
+
+def _compose(outer_code: str, inner_code: str):
+    """
+    Build a calculator that applies `outer_code` first, then `inner_code`
+    to the resulting sign+degree.
+
+    Naming follows the classical composites: D108 is "the Dvadashamsha of
+    the Navamsha", i.e. D9 applied first and D12 second, written D9xD12.
+    """
+    first = _resolve_calculator(outer_code)
+    second = _resolve_calculator(inner_code)
+
+    def _calc(sign_index: int, deg: float) -> tuple[str, float]:
+        vsign, vdeg = first(sign_index, deg)
+        return second(_RASHI_LIST.index(vsign), vdeg)
+
+    return _calc
+
+
+def _resolve_calculator(varga: str):
+    """
+    Resolve a varga code to a calculator function.
+
+    Accepts, in precedence order:
+      1. A registered classical code ("D9", "D81", …) — always wins, so a
+         chart with its own attested rule never falls through to a generic one.
+      2. A composite "D<a>xD<b>" — each half resolved by this same function.
+      3. A bare "D<n>" with no classical rule — Parivritti cyclical scheme.
+
+    Raises ValueError with an actionable message for anything else.
+    """
+    code = varga.upper()
+
+    if code in _VARGA_CALCULATOR:
+        return _VARGA_CALCULATOR[code]
+
+    composite = _SUBDIVISIONAL_RE.match(code)
+    if composite:
+        return _compose(composite.group(1), composite.group(2))
+
+    if re.fullmatch(r"D\d+", code):
+        n = int(code[1:])
+        if n < 1 or n > MAX_CUSTOM_DIVISOR:
+            raise ValueError(
+                f"Custom divisor must be between 1 and {MAX_CUSTOM_DIVISOR}; got {n}."
+            )
+        return _parivritti_cyclic(n)
+
+    raise ValueError(
+        f"Unknown varga '{varga}'. Use a classical code "
+        f"({', '.join(sorted(_VARGA_CALCULATOR))}), a custom 'Dn', "
+        "or a sub-divisional 'DaxDb'."
+    )
+
+
+def varga_divisor(varga: str) -> int:
+    """
+    The effective divisor for any accepted varga code.
+
+    Classical codes use their registered divisor; a custom "Dn" uses n; a
+    sub-divisional "DaxDb" uses a·b (D9xD12 → 108, matching the classical
+    D108 it generalises).
+    """
+    code = varga.upper()
+    if code in SUPPORTED_VARGAS:
+        return SUPPORTED_VARGAS[code]
+
+    composite = _SUBDIVISIONAL_RE.match(code)
+    if composite:
+        return varga_divisor(composite.group(1)) * varga_divisor(composite.group(2))
+
+    if re.fullmatch(r"D\d+", code):
+        return int(code[1:])
+
+    raise ValueError(f"Unknown varga '{varga}'.")
+
+
+def compute_varga_sign(
+    varga: str,
+    sidereal_longitude: float,
+    scheme: str = "cyclic",
+) -> tuple[str, float]:
     """
     Public helper: compute the varga sign and degree for any planet or ascendant.
 
     Args:
-        varga:              One of SUPPORTED_VARGAS keys ("D2", "D9", …).
+        varga:              A classical code ("D2", "D9", … "D144"), a custom
+                            "Dn", or a sub-divisional "DaxDb" (e.g. "D9xD12").
         sidereal_longitude: Sidereal longitude in [0, 360).
+        scheme:             Only consulted for a custom "Dn" that has no
+                            classical rule — "cyclic" (default, Parivritti) or
+                            "from_sign". Ignored for classical and composite
+                            codes, which have their own defined behaviour.
 
     Returns:
         (varga_rashi, varga_rashi_degree) — sign name + degree within sign [0, 30).
 
     Raises:
-        ValueError: If the varga code is not recognised.
+        ValueError: If the varga code or scheme is not recognised.
     """
-    if varga not in _VARGA_CALCULATOR:
-        raise ValueError(
-            f"Unknown varga '{varga}'. Supported: {sorted(_VARGA_CALCULATOR)}"
-        )
+    code = varga.upper()
+    if (
+        code not in _VARGA_CALCULATOR
+        and re.fullmatch(r"D\d+", code)
+        and scheme != "cyclic"
+    ):
+        if scheme not in _CUSTOM_SCHEMES:
+            raise ValueError(
+                f"Unknown scheme '{scheme}'. Choose from: {sorted(_CUSTOM_SCHEMES)}."
+            )
+        n = int(code[1:])
+        if n < 1 or n > MAX_CUSTOM_DIVISOR:
+            raise ValueError(
+                f"Custom divisor must be between 1 and {MAX_CUSTOM_DIVISOR}; got {n}."
+            )
+        calculator = _CUSTOM_SCHEMES[scheme](n)
+    else:
+        calculator = _resolve_calculator(code)
+
     lon = normalize_degrees(sidereal_longitude)
     sign_index = int(lon / 30.0)
     deg = lon % 30.0
-    return _VARGA_CALCULATOR[varga](sign_index, deg)
+    return calculator(sign_index, deg)
 
 
 # ── Divisional Engine ─────────────────────────────────────────────────────────
@@ -614,6 +779,7 @@ class DivisionalEngine:
         varga: str,
         ayanamsa: str = "lahiri",
         house_system: str = "W",
+        scheme: str = "cyclic",
     ) -> VargaChart:
         """
         Compute a single Varga chart.
@@ -622,9 +788,12 @@ class DivisionalEngine:
             birth_datetime_utc: UTC birth datetime (timezone-aware).
             latitude:           Geographic latitude (-90 to +90).
             longitude:          Geographic longitude (-180 to +180).
-            varga:              Divisional chart code ('D2' … 'D60').
+            varga:              Divisional chart code — classical ('D2' … 'D144'),
+                                custom ('D13'), or sub-divisional ('D9xD12').
             ayanamsa:           Ayanamsa system key (default 'lahiri').
             house_system:       House system code — used only for D1 context (default 'W').
+            scheme:             Generic-division scheme, consulted only for a
+                                custom 'Dn' with no classical rule.
 
         Returns:
             A fully computed VargaChart.
@@ -632,10 +801,10 @@ class DivisionalEngine:
         Raises:
             ValueError: For unsupported varga codes or naive datetimes.
         """
-        if varga not in SUPPORTED_VARGAS:
-            raise ValueError(
-                f"Unsupported varga '{varga}'. Choose from: {sorted(SUPPORTED_VARGAS)}"
-            )
+        # Validate up front so a bad code fails before the ephemeris call
+        # rather than once per body inside _build_from_result. Accepts custom
+        # "Dn" and sub-divisional "DaxDb" alongside the classical codes.
+        _resolve_calculator(varga)
 
         result = self._wrapper.calculate(
             dt=birth_datetime_utc,
@@ -644,7 +813,7 @@ class DivisionalEngine:
             ayanamsa=ayanamsa,
             house_system=house_system,
         )
-        return self._build_from_result(result, varga, ayanamsa)
+        return self._build_from_result(result, varga, ayanamsa, scheme=scheme)
 
     def compute_all(
         self,
@@ -809,11 +978,12 @@ class DivisionalEngine:
         result,  # EphemerisResult — avoid circular import with type hint
         varga: str,
         ayanamsa: str,
+        scheme: str = "cyclic",
     ) -> VargaChart:
         """Build a VargaChart from an already-computed EphemerisResult."""
         asc_sid = result.ascendant.sidereal_longitude
         asc_d1_rashi, asc_d1_deg = longitude_to_rashi(asc_sid)
-        asc_v_rashi, asc_v_deg = compute_varga_sign(varga, asc_sid)
+        asc_v_rashi, asc_v_deg = compute_varga_sign(varga, asc_sid, scheme=scheme)
 
         varga_ascendant = VargaAscendant(
             d1_sidereal_longitude=asc_sid,
@@ -834,7 +1004,7 @@ class DivisionalEngine:
             if varga == "D30" and planet in ("sun", "moon"):
                 v_rashi, v_deg = d1_rashi, d1_deg
             else:
-                v_rashi, v_deg = compute_varga_sign(varga, d1_sid)
+                v_rashi, v_deg = compute_varga_sign(varga, d1_sid, scheme=scheme)
 
             v_rashi_idx = _RASHI_LIST.index(v_rashi)
             house_number = house_offset(lagna_rashi_idx, v_rashi_idx)
@@ -860,7 +1030,7 @@ class DivisionalEngine:
 
         return VargaChart(
             varga=varga,
-            divisor=SUPPORTED_VARGAS[varga],
+            divisor=varga_divisor(varga),
             ascendant=varga_ascendant,
             planet_positions=tuple(varga_positions),
             ayanamsa_system=ayanamsa,

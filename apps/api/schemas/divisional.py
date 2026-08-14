@@ -30,6 +30,21 @@ class VargaChartRequest(BirthDataInput):
     """Request body for computing a single or all divisional chart(s)."""
 
 
+class CustomVargaChartRequest(BirthDataInput):
+    """Request body for an arbitrary D-n chart with no classical rule."""
+
+    scheme: Literal["cyclic", "from_sign"] = Field(
+        default="cyclic",
+        description=(
+            "Which generic division scheme to use. 'cyclic' (Parivritti) cuts "
+            "the whole zodiac into equal 30/n° parts numbered continuously from "
+            "0° Aries. 'from_sign' restarts the count in every sign, "
+            "generalising D12's rule. Ignored when n happens to name a chart "
+            "with its own classical rule — that rule is used instead."
+        ),
+    )
+
+
 # ── Response pieces ───────────────────────────────────────────────────────────
 
 
