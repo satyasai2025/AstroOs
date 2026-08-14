@@ -405,4 +405,7 @@ export const VARGA_DIVISORS: Record<string, { label: string; divisor: number }> 
   D40: { label: "Khavedamsha (D40)", divisor: 40 },
   D45: { label: "Akshavedamsha (D45)", divisor: 45 },
   D60: { label: "Shastyamsha (D60)", divisor: 60 },
+  D81: { label: "Nava-Navamsha (D81)", divisor: 81 },
+  D108: { label: "Ashtottaramsha (D108)", divisor: 108 },
+  D144: { label: "Dwadasamsa² (D144)", divisor: 144 },
 };
