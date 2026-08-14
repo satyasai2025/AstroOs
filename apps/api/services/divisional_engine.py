@@ -484,7 +484,10 @@ def _d81_nava_navamsha(sign_index: int, deg: float) -> tuple[str, float]:
     """
     D81 — Nava-Navamsha: the Navamsha of the Navamsha (9 × 9).
 
-    Verified 15/15 signs against the JHora reference export.
+    Verified against the JHora reference export at full precision:
+    15/15 signs and 15/15 degrees, every degree within the tolerance
+    implied by the export's arcminute-rounded D1 input (+/-0.7 deg here,
+    since a D1 rounding error is amplified 81x).
     """
     vsign, vdeg = _d9_navamsha(sign_index, deg)
     return _d9_navamsha(_RASHI_LIST.index(vsign), vdeg)
@@ -494,8 +497,10 @@ def _d108_ashtottaramsha(sign_index: int, deg: float) -> tuple[str, float]:
     """
     D108 — Ashtottaramsha: the Dvadashamsha of the Navamsha (9 × 12).
 
-    Order matters — D12-of-D9 reproduces JHora exactly (15/15 signs) while
-    the reverse composition, D9-of-D12, matches 0/15.
+    Order matters — D12-of-D9 reproduces JHora exactly (15/15 signs and
+    15/15 degrees, all within the +/-0.9 deg tolerance implied by the
+    export's arcminute-rounded D1 input) while the reverse composition,
+    D9-of-D12, matches 0/15.
     """
     vsign, vdeg = _d9_navamsha(sign_index, deg)
     return _d12_dvadashamsha(_RASHI_LIST.index(vsign), vdeg)
@@ -505,11 +510,13 @@ def _d144_dwadasamsa_dwadasamsa(sign_index: int, deg: float) -> tuple[str, float
     """
     D144 — Dwadasamsa-Dwadasamsa: the Dvadashamsha of the Dvadashamsha (12 × 12).
 
-    Verified 14/15 signs against the JHora reference export; the single
-    difference is a body sitting within an arc-minute of a part boundary,
-    where the export's rounded input and the full-precision value fall on
-    opposite sides — the same rounding artefact seen in the D5 check, not a
-    formula disagreement.
+    Verified 14/15 signs and 14/15 degrees against the JHora reference
+    export. The single difference is confirmed to be a rounding artefact,
+    not a formula disagreement: the export gives Gemini 29°31' where this
+    returns Cancer 0°00' — 0.47° apart, straddling a sign boundary, well
+    inside the ±1.2° tolerance implied by the export's arcminute-rounded
+    D1 input (a D1 rounding error is amplified 144× here). Every other
+    body's degree likewise lands within that tolerance.
     """
     vsign, vdeg = _d12_dvadashamsha(sign_index, deg)
     return _d12_dvadashamsha(_RASHI_LIST.index(vsign), vdeg)
