@@ -97,6 +97,7 @@ class AyanamsaSystem(str, Enum):
     YUKTESHWAR = "yukteshwar"  # Sri Yukteshwar's ayanamsa
     FAGAN_BRADLEY = "fagan_bradley"  # Western sidereal
     TRUE_CHITRA = "true_chitra"      # True Chitrapaksha
+    TRUE_PUSHYA = "true_pushya"      # True Pushya paksha (used by P.V.R. Narasimha Rao)
 
 
 class ChartType(str, Enum):
