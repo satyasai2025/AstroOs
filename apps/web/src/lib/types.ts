@@ -173,6 +173,10 @@ export interface AscendantSchema {
   sub_lord: string;
   /** Sub Sub Lord (KP) */
   sub_sub_lord: string;
+  /** Navamsa (D9) sign of the ascendant */
+  navamsa_rashi?: string;
+  /** Degrees within navamsa sign (0–30) */
+  navamsa_rashi_degree?: number;
 }
 
 export interface HouseCuspSchema {
@@ -209,6 +213,10 @@ export interface PlanetPositionSchema {
   sub_sub_lord: string;
   /** Rashi (sign-counting) house — signs from the lagna's sign; can differ from house_number */
   rashi_house_number: number;
+  /** Navamsa (D9) sign of the planet */
+  navamsa_rashi?: string;
+  /** Degrees within navamsa sign (0–30) */
+  navamsa_rashi_degree?: number;
 }
 
 export interface AspectSchema {
@@ -848,6 +856,35 @@ export interface EventAnalysisResponse {
   created_at: string | null;
   updated_at: string | null;
 }
+
+// ── Full Report (workflow pipeline + KP in one call) ──────────────────────────
+
+export interface FullReportRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  dasha_system?: DashaSystemCode;
+  transit_datetime_utc?: string | null;
+  include_vargas?: boolean;
+  include_kp?: boolean;
+  title?: string;
+  subject_name?: string;
+  generated_by?: string | null;
+}
+
+/** Response of POST /api/v1/report/full — the complete workflow analysis
+ * plus the KP analysis + evidence sections, rendered as a printable
+ * report page. chart_id is null because the full report never persists
+ * a birth_charts row. */
+export type FullReportResponse = Omit<WorkflowAnalysisResponse, "chart_id"> & {
+  chart_id: string | null;
+  title: string;
+  subject_name: string;
+  generated_at: string;
+  kp_analysis: KPAnalysisResponse | null;
+};
 
 // ── Duplicate check (confirm before persist) ──────────────────────────────────
 
@@ -1640,4 +1677,194 @@ export interface JaiminiArgalaResponse {
   reference_label: string;
   pairs: JaiminiArgalaPairResponse[];
   net_strength: number;
+}
+
+// ── KP Analysis (/api/v1/kp/analyze) ─────────────────────────────────────────
+
+/** One birth-data submission drives the whole KP analysis — the same core
+ * fields the workflow request carries, reused as-is. */
+export interface KPAnalysisRequest {
+  birth_datetime_utc: string;
+  latitude: number;
+  longitude: number;
+  ayanamsa: AyanamsaCode;
+  house_system: HouseSystemCode;
+  /** Defaults to now (UTC) if omitted — the transit moment used for KP timing triggers. */
+  transit_datetime_utc?: string | null;
+}
+
+export interface KPCuspResponse {
+  house_number: number;
+  longitude: number;
+  rashi: string;
+  sign_lord: string | null;
+  star_lord: string;
+  sub_lord: string;
+  sub_sub_lord: string;
+  csl_signifies: number[];
+  csl_houses: number[];
+  interlinked_cusps: number[];
+}
+
+export interface KPPlanetProfileResponse {
+  planet: string;
+  rashi: string;
+  house_number: number;
+  rashi_house_number: number;
+  longitude: number;
+  sign_lord: string | null;
+  star_lord: string;
+  sub_lord: string;
+  sub_sub_lord: string;
+  is_retrograde: boolean;
+  is_combust: boolean;
+  dignity: string | null;
+  occupied_house: number;
+  owned_houses: number[];
+  star_lord_houses: number[];
+  sub_lord_houses: number[];
+  signifies: number[];
+  csl_of: number[];
+}
+
+export interface PlanetSignificatorResponse {
+  planet: string;
+  grades: string[];
+}
+
+export interface HouseSignificatorsResponse {
+  houseNumber: number;
+  rashi: string | null;
+  lord: string | null;
+  occupants: string[];
+  significators: PlanetSignificatorResponse[];
+}
+
+export interface RulingPlanetResponse {
+  planet: string;
+  source: string;
+  priority: number;
+}
+
+export interface CSLVerdictResponse {
+  cusp: number;
+  csl: string;
+  csl_star_lord: string;
+  csl_signifies: number[];
+  required_houses: number[];
+  prohibited_houses: number[];
+  verdict: "STRONG" | "PARTIAL" | "WEAK";
+  detail: string;
+}
+
+export interface EventSignificatorResponse {
+  planet: string;
+  grade: string;
+  housesSignified: number[];
+}
+
+export interface EventPromiseResponse {
+  eventKey: string;
+  label: string;
+  houses: number[];
+  primary_cusp: number;
+  csl_verdict: CSLVerdictResponse;
+  significators: EventSignificatorResponse[];
+  promise: "POSITIVE" | "PARTIAL" | "WEAK";
+}
+
+export interface SpecialFactorResponse {
+  name: string;
+  category: "CORE KP" | "EXTENDED KP" | "SUPPLEMENTARY";
+  value: string;
+  status: "positive" | "neutral" | "caution";
+  evidence: string;
+}
+
+export interface TransitPositionResponse {
+  planet: string;
+  transit_rashi: string;
+  transit_rashi_degree: number;
+  transit_nakshatra: string;
+  is_retrograde: boolean;
+  longitude: number;
+  star_lord: string;
+  sub_lord: string;
+  transit_rashi_house: number | null;
+}
+
+export interface TransitTriggerResponse {
+  transit_planet: string;
+  transit_rashi: string;
+  transit_sub_lord: string;
+  transit_star_lord: string;
+  type: "STAR" | "SUB" | "GURU" | "CUSP";
+  activated: string;
+  note: string;
+}
+
+export interface RulingPlanetTriggerResponse {
+  rp: string;
+  rpSource: string;
+  matched_significator: string;
+  note: string;
+}
+
+export interface DashaPeriodLinkResponse {
+  lord: string;
+  level: string;
+  start: string;
+  end: string;
+}
+
+export interface DashaLinkResponse {
+  active: boolean;
+  chain: DashaPeriodLinkResponse[];
+  significator_level: DashaPeriodLinkResponse | null;
+  next_significator_period: DashaPeriodLinkResponse | null;
+}
+
+export interface EventTimingAnalysisResponse {
+  eventKey: string;
+  label: string;
+  promise: "POSITIVE" | "PARTIAL" | "WEAK";
+  significators: string[];
+  dasha_link: DashaLinkResponse;
+  transit_triggers: TransitTriggerResponse[];
+  rp_triggers: RulingPlanetTriggerResponse[];
+  fructification: "OPEN" | "PARTIAL" | "CLOSED";
+  summary: string;
+}
+
+export interface EvidenceStepResponse {
+  label: string;
+  value: string;
+}
+
+export interface EventEvidenceResponse {
+  eventKey: string;
+  label: string;
+  houses: number[];
+  primary_cusp: number;
+  csl_verdict: CSLVerdictResponse;
+  significators: EventSignificatorResponse[];
+  promise: "POSITIVE" | "PARTIAL" | "WEAK";
+  top_significator: string | null;
+  fruitful_rp_intersection: string[];
+  active_dasha_level: string | null;
+  steps: EvidenceStepResponse[];
+  verdict_detail: string;
+}
+
+export interface KPAnalysisResponse {
+  cusps: KPCuspResponse[];
+  planet_profiles: KPPlanetProfileResponse[];
+  house_significators: HouseSignificatorsResponse[];
+  ruling_planets: RulingPlanetResponse[];
+  event_promises: EventPromiseResponse[];
+  special_factors: SpecialFactorResponse[];
+  timing: EventTimingAnalysisResponse[];
+  evidence: EventEvidenceResponse[];
+  transit_positions: TransitPositionResponse[];
+  transit_datetime_utc: string;
 }

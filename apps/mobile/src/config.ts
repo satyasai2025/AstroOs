@@ -20,6 +20,9 @@ export const Config = {
   /** Offline cache TTL in seconds */
   cacheTtlSeconds: 86400,
 
+  /** API request timeout in milliseconds */
+  requestTimeoutMs: 15000,
+
   /** Push notifications (optional — feature-flagged) */
   pushEnabled: false,
 };

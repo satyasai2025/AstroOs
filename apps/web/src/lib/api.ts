@@ -48,6 +48,7 @@ const _ASTRO_CASING_KEYS = new Set([
   "natal_moon_rashi",
   "transit_rashi",
   "lagna_rashi",
+  "navamsa_rashi",
   "nakshatra",
   "moon_nakshatra",
   "trigger_nakshatra",
@@ -99,6 +100,27 @@ const _ASTRO_CASING_KEYS = new Set([
   "aspected_planets",
   "argala_planets",
   "virodhargala_planets",
+  // Added for the backend KP Analysis engine (POST /api/v1/kp/analyze,
+  // 2026-08-11) — the KP response carries the same lowercase planet tokens
+  // in its cusp/planet lord fields, the CSL decision chain, the ruling
+  // planet triggers, the transit trigger fields, and the evidence
+  // top-significator / RP-intersection fields. All of them feed displays
+  // that match against the Title-Case constants in lib/astro.ts, so they
+  // must be normalized here exactly like the other planet-bearing keys.
+  "sign_lord",
+  "star_lord",
+  "transit_star_lord",
+  "transit_sub_lord",
+  "transit_planet",
+  "csl",
+  "csl_star_lord",
+  "rp",
+  "matched_significator",
+  "top_significator",
+  "activated",
+  "occupants",
+  "significators",
+  "fruitful_rp_intersection",
 ]);
 
 /**

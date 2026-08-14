@@ -32,7 +32,7 @@ export function useChart(): UseChartResult {
     setError(null);
     setFromCache(false);
 
-    const cacheKey = `chart:${data.birth_datetime_utc}:${data.latitude}:${data.longitude}`;
+    const cacheKey = `chart:${data.birth_datetime_utc}:${data.latitude}:${data.longitude}:${data.ayanamsa ?? 'lahiri'}:${data.house_system ?? 'W'}`;
 
     try {
       // Try the API first

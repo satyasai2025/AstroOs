@@ -232,6 +232,7 @@ const NAV_GROUPS: NavGroup[] = [
         color: "#F5A623",
         items: [
           { href: "/reports/pdf", label: "PDF Reports", icon: "document", viewId: "reports-pdf", disabled: false },
+          { href: "/reports/full", label: "Full Report", icon: "book", viewId: "reports-full", disabled: false },
           { href: "/reports/ai", label: "AI Reports", icon: "sparkle", viewId: "reports-ai", disabled: false },
           { href: "/reports/comparison", label: "Comparison", icon: "layers", viewId: "reports-comparison", disabled: false },
           { href: "/reports/export", label: "Export", icon: "download", viewId: "reports-export", disabled: false },

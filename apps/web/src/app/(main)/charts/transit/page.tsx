@@ -4,8 +4,10 @@ import { TransitAlerts } from "@/components/charts/transit/TransitAlerts";
 import { TransitWheel } from "@/components/charts/transit/TransitWheel";
 import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
 import { AnimatedTransitIntegration } from "@/app/(main)/charts/AnimatedTransitIntegration";
+import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, DonutChart, KpiCard, Table, Tabs, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
 import { PLANET_SYMBOLS, nakshatraFromLongitude } from "@/lib/astro";
+import { formatPosition } from "@/lib/formatAstro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import { useWorkflowStore } from "@/lib/store";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
@@ -49,12 +51,6 @@ const GATI_TONE: Record<string, "danger" | "gold" | "neutral" | "success"> = {
   chara: "success",
   atichara: "success",
 };
-
-function formatDegree(deg: number): string {
-  const whole = Math.floor(deg);
-  const minutes = Math.round((deg - whole) * 60);
-  return `${whole}° ${minutes}'`;
-}
 
 /** Real aspect_type values are 'opposition' | 'trine' | 'square' |
  * 'special_graha' (see TransitAspectResponse) — the last one reads oddly
@@ -280,7 +276,7 @@ export default function TransitAnalysisPage() {
       ),
     },
     { key: "transit_rashi", label: "Sign", render: (p) => <span style={{ textTransform: "capitalize" }}>{p.transit_rashi}</span> },
-    { key: "transit_rashi_degree", label: "Degree", mono: true, render: (p) => formatDegree(p.transit_rashi_degree) },
+    { key: "transit_rashi_degree", label: "Degree", mono: true, render: (p) => formatPosition(p.transit_rashi, p.transit_rashi_degree) },
     { key: "transit_nakshatra", label: "Nakshatra" },
     { key: "transit_pada", label: "Pada", align: "right", mono: true },
     {

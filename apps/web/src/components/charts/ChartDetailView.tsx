@@ -5,6 +5,8 @@ import { useState } from "react";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { ChartDetailPanel } from "@/components/charts/ChartDetailPanel";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
+import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
+import { PlanetaryPositionsTable } from "@/components/charts/PlanetaryPositionsTable";
 import type {
   DashaPeriodResponse,
   WorkflowAnalysisRequest,
@@ -176,6 +178,14 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
         </div>
       </div>
 
+      {/* Chart KPI Scorecards */}
+      <div className="mb-6">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
+          Chart KPI Scorecards
+        </h3>
+        <KpiScorecards result={result} />
+      </div>
+
       {/* Main content */}
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(300px,1.2fr)_1fr_320px]">
         {/* Chart */}
@@ -202,34 +212,11 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
 
         {/* Planetary Positions + Dasha */}
         <div className="space-y-5">
-          <div className="obsidian-card overflow-x-auto p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Planetary Positions</h2>
-              <Link href="/charts" className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>View All</Link>
-            </div>
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b text-xs uppercase" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                  <th className="py-2 pr-3">Planet</th>
-                  <th className="py-2 pr-3">Sign</th>
-                  <th className="py-2 pr-3">Degree</th>
-                  <th className="py-2 pr-3">House</th>
-                  <th className="py-2 pr-3">Nakshatra</th>
-                </tr>
-              </thead>
-              <tbody>
-                {chart.planets.map((p) => (
-                  <tr key={p.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                    <td className="py-2 pr-3 font-medium capitalize">{p.planet}</td>
-                    <td className="py-2 pr-3 capitalize">{p.rashi}</td>
-                    <td className="py-2 pr-3">{p.rashi_degree.toFixed(2)}°</td>
-                    <td className="py-2 pr-3">{p.house_number}</td>
-                    <td className="py-2 pr-3 capitalize">{p.nakshatra}{p.is_retrograde ? " (R)" : ""}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PlanetaryPositionsTable
+            ascendant={chart.ascendant}
+            planets={chart.planets}
+            href="/charts"
+          />
 
           <div className="obsidian-card p-5">
             <div className="mb-3 flex items-center justify-between">

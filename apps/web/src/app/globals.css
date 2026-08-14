@@ -500,3 +500,25 @@
 .__next_radix_portal__ {
   z-index: 9999 !important;
 }
+
+/* ── Print: continuous report output ── */
+@media print {
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-area {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+  .print-area .card,
+  .print-area section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
