@@ -52,6 +52,12 @@ const GATI_TONE: Record<string, "danger" | "gold" | "neutral" | "success"> = {
   atichara: "success",
 };
 
+function formatDegree(deg: number): string {
+  const whole = Math.floor(deg);
+  const minutes = Math.round((deg - whole) * 60);
+  return `${whole}° ${minutes}'`;
+}
+
 /** Real aspect_type values are 'opposition' | 'trine' | 'square' |
  * 'special_graha' (see TransitAspectResponse) — the last one reads oddly
  * inline ("Jupiter special_graha to natal Rahu"), so it gets a human label.
