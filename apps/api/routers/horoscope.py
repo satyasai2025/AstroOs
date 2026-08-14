@@ -54,6 +54,14 @@ from apps.api.schemas.horoscope import (
     VaraSchema,
     YogaSchema,
 )
+from apps.api.schemas.lagna_scan import (
+    BoundaryDistanceSchema,
+    LagnaIntervalSchema,
+    LagnaScanRequest,
+    LagnaScanResponse,
+    ShiftBirthtimeRequest,
+    ShiftBirthtimeResponse,
+)
 from apps.api.schemas.upagraha import (
     DerivedPointSchema,
     UpagrahaRequest,
@@ -61,6 +69,7 @@ from apps.api.schemas.upagraha import (
 )
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
+from apps.api.services.lagna_scan_engine import LagnaScanEngine
 from apps.api.services.upagraha_engine import UpagrahaEngine
 
 logger = logging.getLogger(__name__)
@@ -446,4 +455,125 @@ async def compute_upagrahas(
         weekday=result.weekday,
         starting_lord=result.starting_lord,
         part_duration_minutes=result.part_duration_hours * 60.0,
+    )
+
+
+@router.post(
+    "/lagna-scan",
+    response_model=LagnaScanResponse,
+    summary="When does the lagna change sign?",
+    description=(
+        "Birth-time rectification support: where the lagna sits, how close it "
+        "is to the next rashi / nakshatra / pada boundary, and a timeline of "
+        "lagna sign changes around the birth moment.\n\n"
+        "`arcmin_per_minute` is the sensitivity figure — how far the lagna "
+        "moves per minute of birth-time error at this latitude and rising "
+        "sign. Charts born near a boundary can flip sign on an uncertainty of "
+        "well under a minute, changing the lagna lord and every bhava."
+    ),
+    status_code=status.HTTP_200_OK,
+)
+async def lagna_scan(
+    request: LagnaScanRequest,
+    user: User = Depends(get_current_user_from_bearer),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> LagnaScanResponse:
+    engine = LagnaScanEngine(wrapper)
+    try:
+        # Bisection runs dozens of blocking pyswisseph calls — keep it off
+        # the event loop, same as /d1.
+        result = await asyncio.to_thread(
+            engine.scan,
+            request.birth_datetime_utc,
+            request.latitude,
+            request.longitude,
+            request.ayanamsa,
+            request.window_hours,
+        )
+    except (RuntimeError, ValueError) as exc:
+        logger.exception("Lagna scan failed")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Could not scan lagna: {exc}",
+        )
+
+    return LagnaScanResponse(
+        sidereal_longitude=result.sidereal_longitude,
+        rashi=result.rashi,
+        rashi_degree=result.rashi_degree,
+        nakshatra=result.nakshatra,
+        pada=result.pada,
+        arcmin_per_minute=result.arcmin_per_minute,
+        boundaries=[
+            BoundaryDistanceSchema(
+                label=b.label,
+                minutes_since_previous=b.minutes_since_previous,
+                minutes_until_next=b.minutes_until_next,
+                degrees_since_previous=b.degrees_since_previous,
+                degrees_until_next=b.degrees_until_next,
+            )
+            for b in result.boundaries
+        ],
+        intervals=[
+            LagnaIntervalSchema(
+                rashi=i.rashi,
+                start_utc=i.start_utc,
+                end_utc=i.end_utc,
+                duration_minutes=i.duration_minutes,
+                contains_birth=i.contains_birth,
+            )
+            for i in result.intervals
+        ],
+        window_start_utc=result.window_start_utc,
+        window_end_utc=result.window_end_utc,
+    )
+
+
+@router.post(
+    "/shift-birthtime",
+    response_model=ShiftBirthtimeResponse,
+    summary="Birth time that moves the lagna to the adjacent sign",
+    description=(
+        "Returns the birth time that would place the lagna just inside the "
+        "next or previous rashi — the counterpart to Jagannatha Hora's "
+        "\"Change birthtime to move lagna to → the previous / the next sign\". "
+        "Useful for bounding how far a birth time would have to be wrong for "
+        "the lagna to differ."
+    ),
+    status_code=status.HTTP_200_OK,
+)
+async def shift_birthtime(
+    request: ShiftBirthtimeRequest,
+    user: User = Depends(get_current_user_from_bearer),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> ShiftBirthtimeResponse:
+    engine = LagnaScanEngine(wrapper)
+    try:
+        shifted = await asyncio.to_thread(
+            engine.birthtime_for_adjacent_sign,
+            request.birth_datetime_utc,
+            request.latitude,
+            request.longitude,
+            request.direction,
+            request.ayanamsa,
+        )
+        confirm = await asyncio.to_thread(
+            engine.scan,
+            shifted, request.latitude, request.longitude, request.ayanamsa, 0.1,
+        )
+    except (RuntimeError, ValueError) as exc:
+        logger.exception("Birthtime shift failed")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Could not shift birth time: {exc}",
+        )
+
+    delta = shifted - request.birth_datetime_utc
+    return ShiftBirthtimeResponse(
+        original_birth_datetime_utc=request.birth_datetime_utc,
+        shifted_birth_datetime_utc=shifted,
+        shift_minutes=delta.total_seconds() / 60.0,
+        direction=request.direction,
+        resulting_rashi=confirm.rashi,
+        resulting_rashi_degree=confirm.rashi_degree,
     )
