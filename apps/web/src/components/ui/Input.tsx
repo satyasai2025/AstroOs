@@ -16,6 +16,8 @@ interface InputProps {
   style?: CSSProperties;
   name?: string;
   required?: boolean;
+  /** Passed straight to the input. For type="time", step={1} shows seconds. */
+  step?: number | string;
 }
 
 export function Input({
@@ -32,6 +34,7 @@ export function Input({
   style,
   name,
   required,
+  step,
 }: InputProps) {
   const height = size === "sm" ? 34 : size === "lg" ? 48 : 40;
   return (
@@ -65,6 +68,7 @@ export function Input({
         {icon && <span style={{ color: "var(--text-tertiary)", display: "flex" }}>{icon}</span>}
         <input
           type={type}
+          step={step}
           name={name}
           required={required}
           placeholder={placeholder}

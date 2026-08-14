@@ -95,6 +95,7 @@ def _make_ephemeris_wrapper() -> EphemerisWrapper:
     return EphemerisWrapper(
         ephemeris_path=_settings.EPHEMERIS_PATH,
         ayanamsa="lahiri",
+        node_type=_settings.NODE_TYPE,
     )
 
 

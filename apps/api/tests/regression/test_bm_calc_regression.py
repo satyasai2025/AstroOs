@@ -14,7 +14,7 @@ import pytest
 from apps.api.services.benchmark_engine import BenchmarkEngine, _positional_error
 
 _GC_PATH = "datasets/gc-master/GC-MASTER-v1.0.0.json"
-_AYANAMSA_SYSTEMS = ["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
+_AYANAMSA_SYSTEMS = ["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra", "true_pushya"]
 
 
 @pytest.fixture(scope="session")

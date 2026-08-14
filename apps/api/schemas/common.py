@@ -18,7 +18,10 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-AyanamsaCode = Literal["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"]
+AyanamsaCode = Literal[
+    "lahiri", "kp", "raman", "yukteshwar", "fagan_bradley",
+    "true_chitra", "true_pushya",
+]
 HouseSystemCode = Literal["W", "P", "K", "E"]
 
 

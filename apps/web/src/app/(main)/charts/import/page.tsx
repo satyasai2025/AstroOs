@@ -14,7 +14,7 @@ import type {
   WorkflowDuplicateCheckResponse,
 } from "@/lib/types";
 
-const VALID_AYANAMSAS: AyanamsaCode[] = ["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"];
+const VALID_AYANAMSAS: AyanamsaCode[] = ["lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra", "true_pushya"];
 const VALID_HOUSE_SYSTEMS: HouseSystemCode[] = ["W", "P", "K", "E"];
 
 /** Loose header aliases so a real-world export ("name", "lat", "lng", ...)

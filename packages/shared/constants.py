@@ -272,9 +272,21 @@ SWEPH_PLANET_IDS: Final[dict[str, int]] = {
     "jupiter": 5,
     "venus":   3,
     "saturn":  6,
-    "rahu":    11,  # True node
+    "rahu":    10,  # see SWEPH_NODE_IDS — default (mean) node; overridden per-wrapper
     "ketu":    -1,  # Derived as Rahu + 180°
 }
+
+# Lunar node variants. Classical Vedic practice — and both Jagannatha Hora and
+# AstroSage, verified against a reference chart — use the MEAN node; the true
+# (osculating) node can differ from it by up to ~1.8°, enough to shift Rahu/Ketu
+# into a different nakshatra and therefore change Vimshottari dasha balance.
+# Exposed as a choice (Settings.NODE_TYPE) rather than hardcoded, since some
+# schools and most Western software prefer the true node.
+SWEPH_NODE_IDS: Final[dict[str, int]] = {
+    "mean": 10,  # swe.MEAN_NODE
+    "true": 11,  # swe.TRUE_NODE
+}
+DEFAULT_NODE_TYPE: Final[str] = "mean"
 
 # ── Time ──────────────────────────────────────────────────────────────────────
 
