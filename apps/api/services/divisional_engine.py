@@ -373,16 +373,27 @@ def _d60_shashtiamsha(sign_index: int, deg: float) -> tuple[str, float]:
 # No classical rationale for this particular planet order is preserved in the
 # texts that describe it; it is simply the attested sequence.
 _D5_ODD_SIGNS = (0, 10, 8, 2, 6)     # Aries, Aquarius, Sagittarius, Gemini, Libra
-_D5_EVEN_SIGNS = (6, 2, 8, 10, 0)    # Libra, Gemini, Sagittarius, Aquarius, Aries (reverse)
+                                      # (Mars, Saturn, Jupiter, Mercury, Venus — own sign)
+_D5_EVEN_SIGNS = (1, 5, 11, 9, 7)    # Taurus, Virgo, Pisces, Capricorn, Scorpio
+                                      # (Venus, Mercury, Jupiter, Saturn, Mars — reverse
+                                      # planet order, EACH PLANET'S OTHER SIGN, not its
+                                      # sign used above.) Corrected against a JHora
+                                      # reference chart (2026-08-15, Pune) — the initial
+                                      # "reverse of the odd table" guess did not match;
+                                      # this table was reverse-engineered from ~15
+                                      # independent even-sign data points in that export
+                                      # and matches all of them exactly.
 
 
 def _d5_panchamsha(sign_index: int, deg: float) -> tuple[str, float]:
     """
     D5 — Panchamsha.
     Five equal 6° parts, mapped to explicit target signs (not a sequential
-    offset): odd sign -> Aries, Aquarius, Sagittarius, Gemini, Libra (Mars,
-    Saturn, Jupiter, Mercury, Venus); even sign -> the same five signs in
-    reverse order.
+    offset). Odd sign -> Aries, Aquarius, Sagittarius, Gemini, Libra (Mars,
+    Saturn, Jupiter, Mercury, Venus, in their primary sign). Even sign ->
+    Taurus, Virgo, Pisces, Capricorn, Scorpio — the same five planets in
+    reverse order (Venus, Mercury, Jupiter, Saturn, Mars), each in its
+    *other* sign rather than the one used for the odd table.
     """
     part_size = 6.0
     part = min(int(deg / part_size), 4)
