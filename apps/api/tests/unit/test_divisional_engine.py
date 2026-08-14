@@ -2,7 +2,7 @@
 AstroOS — Divisional Chart Engine Unit Tests (Task 5)
 
 Covers:
-  - compute_varga_sign() for all 15 varga codes
+  - compute_varga_sign() for all 19 varga codes
   - D2 Hora — odd/even sign, first/second half
   - D3 Drekkana — three trines
   - D4 Chaturthamsha — four kendras
@@ -11,7 +11,7 @@ Covers:
   - D30 Trimshamsha — Parashara non-uniform; Sun/Moon receive D1 sign
   - D60 Shashtiamsha — odd/even alternation
   - DivisionalEngine.compute() — structure, planet count, house ranges
-  - DivisionalEngine.compute_all() — all 15 vargas, determinism
+  - DivisionalEngine.compute_all() — all 19 vargas, determinism
 """
 
 from datetime import datetime, timezone
@@ -26,7 +26,11 @@ from apps.api.services.divisional_engine import (
     _d2_hora,
     _d3_drekkana,
     _d4_chaturthamsha,
+    _d5_panchamsha,
+    _d6_shashthamsha,
+    _d8_ashtamsha,
     _d9_navamsha,
+    _d11_rudramsha,
     _d12_dvadashamsha,
     _d30_trimshamsha,
     _d60_shashtiamsha,
@@ -160,6 +164,91 @@ def test_d3_degree_scaled_to_30():
     """Drekkana degree is scaled: 10° span → 30° in varga sign."""
     _, vdeg = _d3_drekkana(sign_index=0, deg=5.0)  # 5° in first 10° span
     assert abs(vdeg - 15.0) < 1e-9
+
+
+# ── D5 (Panchamsha) ───────────────────────────────────────────────────────────
+# Non-sequential target-sign scheme: Mars/Saturn/Jupiter/Mercury/Venus order,
+# not a simple offset. Worked example: Aries (odd), 2nd part (6-12deg, Saturn) -> Aquarius.
+
+def test_d5_odd_sign_part0_is_aries():
+    """Aries (odd, index 0), 1st part (0-6°, Mars) → Aries."""
+    vsign, _ = _d5_panchamsha(sign_index=0, deg=3.0)
+    assert vsign == "aries"
+
+
+def test_d5_odd_sign_part1_is_aquarius():
+    """Aries (odd), 2nd part (6-12°, Saturn) → Aquarius — worked example."""
+    vsign, _ = _d5_panchamsha(sign_index=0, deg=8.0)
+    assert vsign == "aquarius"
+
+
+def test_d5_even_sign_reverses_order():
+    """Taurus (even, index 1), 2nd part → reversed table entry (Gemini)."""
+    vsign, _ = _d5_panchamsha(sign_index=1, deg=8.0)
+    assert vsign == "gemini"
+
+
+def test_d5_only_five_possible_signs():
+    """Panchamsha can only place planets in one of five target signs."""
+    allowed = {"aries", "aquarius", "sagittarius", "gemini", "libra"}
+    for sign_idx in range(12):
+        for deg in (1.0, 7.0, 13.0, 19.0, 25.0):
+            vsign, _ = _d5_panchamsha(sign_idx, deg)
+            assert vsign in allowed
+
+
+# ── D6 (Shashthamsha) ─────────────────────────────────────────────────────────
+
+def test_d6_odd_sign_starts_from_aries():
+    """Aries (odd, index 0), 1st part (0-5°) → Aries."""
+    vsign, _ = _d6_shashthamsha(sign_index=0, deg=2.0)
+    assert vsign == "aries"
+
+
+def test_d6_even_sign_starts_from_libra():
+    """Taurus (even, index 1), 1st part (0-5°) → Libra."""
+    vsign, _ = _d6_shashthamsha(sign_index=1, deg=2.0)
+    assert vsign == "libra"
+
+
+def test_d6_degree_scaled_to_30():
+    """Shashthamsha degree is scaled: 5° span → 30° in varga sign."""
+    _, vdeg = _d6_shashthamsha(sign_index=0, deg=2.5)  # midpoint of first 5° span
+    assert abs(vdeg - 15.0) < 1e-9
+
+
+# ── D8 (Ashtamsha) ────────────────────────────────────────────────────────────
+
+def test_d8_movable_sign_starts_from_aries():
+    """Aries (movable, index 0) → starting sign Aries."""
+    vsign, _ = _d8_ashtamsha(sign_index=0, deg=1.0)
+    assert vsign == "aries"
+
+
+def test_d8_fixed_sign_starts_from_sagittarius():
+    """Taurus (fixed, index 1) → starting sign Sagittarius."""
+    vsign, _ = _d8_ashtamsha(sign_index=1, deg=1.0)
+    assert vsign == "sagittarius"
+
+
+def test_d8_dual_sign_starts_from_leo():
+    """Gemini (dual, index 2) → starting sign Leo."""
+    vsign, _ = _d8_ashtamsha(sign_index=2, deg=1.0)
+    assert vsign == "leo"
+
+
+# ── D11 (Rudramsha) ───────────────────────────────────────────────────────────
+
+def test_d11_start_sign_is_reverse_count_from_aries():
+    """Gemini (index 2) → start sign = (12-2)%12 = 10 → Aquarius, part 0."""
+    vsign, _ = _d11_rudramsha(sign_index=2, deg=1.0)
+    assert vsign == "aquarius"
+
+
+def test_d11_worked_example_gemini_5th_part_lands_back_in_gemini():
+    """Gemini, 5th part (Mercury @ 11°) → (10+4)%12 == 2 → Gemini."""
+    vsign, _ = _d11_rudramsha(sign_index=2, deg=11.0)
+    assert vsign == "gemini"
 
 
 # ── D4 (Chaturthamsha) ────────────────────────────────────────────────────────
@@ -406,7 +495,7 @@ def test_compute_all_returns_15_charts(engine):
     all_charts = engine.compute_all(
         birth_datetime_utc=dt, latitude=28.6139, longitude=77.2090
     )
-    assert len(all_charts) == 15
+    assert len(all_charts) == 19
     assert set(all_charts) == set(SUPPORTED_VARGAS)
 
 

@@ -87,7 +87,7 @@ def _nakshatra_col():
 
 def _chart_type_col():
     return PGENUM(
-        "D1", "D2", "D3", "D4", "D7", "D9", "D10",
+        "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11",
         "D12", "D16", "D20", "D24", "D27", "D30", "D40", "D45", "D60",
         name="chart_type", create_type=False,
     )

@@ -1,16 +1,20 @@
 """
 AstroOS — Divisional Chart Engine (Task 5)
 
-Computes all 15 Varga charts (D2–D60) using Parashara rules.
+Computes all 19 Varga charts (D2–D60) using Parashara rules.
 
 Varga rules implemented
 -----------------------
 D2  (Hora)              — 2 parts; Sun/Moon hora alternation by odd/even sign
 D3  (Drekkana)          — 3 parts; 1st/5th/9th trines from natal sign
 D4  (Chaturthamsha)     — 4 parts; successive kendras from natal sign
+D5  (Panchamsha)        — 5 non-sequential parts; Mars/Sat/Jup/Merc/Ven target signs
+D6  (Shashthamsha)      — 6 parts; odd sign from Aries, even sign from Libra
 D7  (Saptamsha)         — 7 parts; odd sign starts from same sign, even from 7th
+D8  (Ashtamsha)         — 8 parts; Movable→Aries, Fixed→Sagittarius, Dual→Leo
 D9  (Navamsha)          — 9 parts; standard zodiacal formula (sign × 9 + part)
 D10 (Dasamsha)          — 10 parts; odd sign from same, even sign from 9th
+D11 (Rudramsha)         — 11 parts; start sign = (12 − sign_index) mod 12
 D12 (Dvadashamsha)      — 12 parts; starts from natal sign
 D16 (Shodashamsha)      — 16 parts; Cardinal→Aries, Fixed→Leo, Mutable→Sagittarius
 D20 (Vimshamsha)        — 20 parts; Movable→Aries, Fixed→Sagittarius, Dual→Leo
@@ -47,8 +51,8 @@ _RASHI_LIST = [r.value for r in Rashi]
 
 # All supported vargas (divisor → label)
 SUPPORTED_VARGAS: dict[str, int] = {
-    "D2": 2, "D3": 3, "D4": 4, "D7": 7, "D9": 9,
-    "D10": 10, "D12": 12, "D16": 16, "D20": 20, "D24": 24,
+    "D2": 2, "D3": 3, "D4": 4, "D5": 5, "D6": 6, "D7": 7, "D8": 8, "D9": 9,
+    "D10": 10, "D11": 11, "D12": 12, "D16": 16, "D20": 20, "D24": 24,
     "D27": 27, "D30": 30, "D40": 40, "D45": 45, "D60": 60,
 }
 
@@ -362,15 +366,104 @@ def _d60_shashtiamsha(sign_index: int, deg: float) -> tuple[str, float]:
     return _RASHI_LIST[vsign_idx], vdeg
 
 
+# D5 target signs, by ruling planet in Parashari order (Mars, Saturn, Jupiter,
+# Mercury, Venus) — NOT a simple sequential/offset scheme like the other
+# vargas above. Corroborated across two independent sources including a
+# worked example (Sun 2nd part of Aries, ruled by Saturn -> D5 sign Aquarius).
+# No classical rationale for this particular planet order is preserved in the
+# texts that describe it; it is simply the attested sequence.
+_D5_ODD_SIGNS = (0, 10, 8, 2, 6)     # Aries, Aquarius, Sagittarius, Gemini, Libra
+_D5_EVEN_SIGNS = (6, 2, 8, 10, 0)    # Libra, Gemini, Sagittarius, Aquarius, Aries (reverse)
+
+
+def _d5_panchamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D5 — Panchamsha.
+    Five equal 6° parts, mapped to explicit target signs (not a sequential
+    offset): odd sign -> Aries, Aquarius, Sagittarius, Gemini, Libra (Mars,
+    Saturn, Jupiter, Mercury, Venus); even sign -> the same five signs in
+    reverse order.
+    """
+    part_size = 6.0
+    part = min(int(deg / part_size), 4)
+    targets = _D5_ODD_SIGNS if _is_odd_sign(sign_index) else _D5_EVEN_SIGNS
+    vdeg = (deg % part_size) * 5.0
+    return _RASHI_LIST[targets[part]], vdeg
+
+
+def _d6_shashthamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D6 — Shashthamsha.
+    Six equal 5° parts, sequential from a starting sign.
+    Odd sign: starts from Aries (0). Even sign: starts from Libra (6).
+    """
+    part_size = 5.0
+    part = min(int(deg / part_size), 5)
+    start = 0 if _is_odd_sign(sign_index) else 6
+    vsign_idx = (start + part) % 12
+    vdeg = (deg % part_size) * 6.0
+    return _RASHI_LIST[vsign_idx], vdeg
+
+
+# D8 starting signs by quality — identical scheme to D20's _D20_START:
+# Movable -> Aries(0), Fixed -> Sagittarius(8), Dual -> Leo(4).
+_D8_START: dict[int, int] = {
+    0: 0, 3: 0, 6: 0, 9: 0,   # Movable → Aries
+    1: 8, 4: 8, 7: 8, 10: 8,  # Fixed → Sagittarius
+    2: 4, 5: 4, 8: 4, 11: 4,  # Dual → Leo
+}
+
+
+def _d8_ashtamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D8 — Ashtamsha.
+    Eight equal 3°45' parts.
+    Starting sign by quality: Movable→Aries, Fixed→Sagittarius, Dual→Leo.
+    """
+    part_size = 30.0 / 8.0
+    part = min(int(deg / part_size), 7)
+    vsign_idx = (_D8_START[sign_index] + part) % 12
+    vdeg = (deg % part_size) * 8.0
+    return _RASHI_LIST[vsign_idx], vdeg
+
+
+def _d11_rudramsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D11 — Rudramsha (Ekadashamsha).
+    Eleven equal parts (30/11° ≈ 2°43'38" each).
+
+    Starting sign per P.V.R. Narasimha Rao's method (Vedic Astrology: An
+    Integrated Approach): count the rasi's position from Aries zodiacally
+    (1-indexed), then count that same number of positions from Aries
+    ANTI-zodiacally — the sign reached is where the 11 parts start.
+
+    Equivalently: start_sign_index = (12 - sign_index) % 12.
+
+    Verified against the source's own worked examples: Gemini (index 2) ->
+    start = Aquarius (index 10); the 5th part of Gemini (Mercury at 11°)
+    lands back in Gemini — (10 + 4) % 12 == 2. ✓
+    """
+    part_size = 30.0 / 11.0
+    part = min(int(deg / part_size), 10)
+    start = (12 - sign_index) % 12
+    vsign_idx = (start + part) % 12
+    vdeg = (deg % part_size) * 11.0
+    return _RASHI_LIST[vsign_idx], vdeg
+
+
 # ── Dispatch table ────────────────────────────────────────────────────────────
 
 _VARGA_CALCULATOR = {
     "D2":  _d2_hora,
     "D3":  _d3_drekkana,
     "D4":  _d4_chaturthamsha,
+    "D5":  _d5_panchamsha,
+    "D6":  _d6_shashthamsha,
     "D7":  _d7_saptamsha,
+    "D8":  _d8_ashtamsha,
     "D9":  _d9_navamsha,
     "D10": _d10_dasamsha,
+    "D11": _d11_rudramsha,
     "D12": _d12_dvadashamsha,
     "D16": _d16_shodashamsha,
     "D20": _d20_vimshamsha,
@@ -488,7 +581,7 @@ class DivisionalEngine:
         house_system: str = "W",
     ) -> dict[str, VargaChart]:
         """
-        Compute all 15 Varga charts in a single call.
+        Compute all 19 Varga charts in a single call.
 
         Returns:
             Mapping of varga code → VargaChart, e.g. {"D9": VargaChart(...), …}.
@@ -582,7 +675,7 @@ class DivisionalEngine:
     ) -> uuid.UUID:
         """
         Persist the full dict returned by compute_all() — one
-        birth_charts row shared across all 15 vargas, one
+        birth_charts row shared across all 19 vargas, one
         divisional_charts row per varga.
 
         birth_chart_id: pass this when the caller already resolved the

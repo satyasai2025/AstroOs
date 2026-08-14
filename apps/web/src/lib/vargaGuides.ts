@@ -91,6 +91,36 @@ export const VARGA_GUIDES: Record<string, VargaGuide> = {
     summary:
       "The four-part chart of lands, property, houses, and the fixed roots of one's material foundation.",
   },
+  D5: {
+    code: "D5",
+    classicName: "Panchamsha",
+    description:
+      "The Panchamsha chart (÷5) divides each sign into five 6° parts, mapped to a fixed set of five target signs — classically read for fame, power, and spiritual authority.",
+    governs: ["Fame", "Power", "Spiritual authority", "Status"],
+    mechanics:
+      "Each sign is split into five 6° parts; unlike most vargas, the parts map to an explicit, non-sequential set of target signs rather than a simple offset.",
+    howToUse: [
+      "Read D5 for fame, personal power, and spiritual or worldly authority.",
+      "Weigh it alongside D9 and D10 rather than as a standalone chart — D5 is a minor supporting varga.",
+    ],
+    summary:
+      "The five-part chart of fame, power, and spiritual authority.",
+  },
+  D6: {
+    code: "D6",
+    classicName: "Shashthamsha",
+    description:
+      "The Shashthamsha chart (÷6) divides each sign into six 5° parts — the chart of health, disease, obstacles, and enemies (6th-house matters).",
+    governs: ["Health", "Disease", "Obstacles", "Enemies", "Debts"],
+    mechanics:
+      "Each sign is split into six 5° parts, starting from Aries for odd signs and Libra for even signs.",
+    howToUse: [
+      "Read D6 for health vulnerabilities, chronic ailments, and the nature of obstacles or adversaries.",
+      "Check the 6th lord and any malefics' D6 placement for the type of struggle a planet's significations face.",
+    ],
+    summary:
+      "The six-part chart of health, disease, obstacles, and enemies.",
+  },
   D7: {
     code: "D7",
     classicName: "Saptamamsha",
@@ -106,6 +136,21 @@ export const VARGA_GUIDES: Record<string, VargaGuide> = {
     ],
     summary:
       "The seven-part chart of children, progeny, and generative creation.",
+  },
+  D8: {
+    code: "D8",
+    classicName: "Ashtamsha",
+    description:
+      "The Ashtamsha chart (÷8) divides each sign into eight 3°45′ parts — the chart of longevity, sudden events, and transformation (8th-house matters).",
+    governs: ["Longevity", "Sudden events", "Transformation", "Accidents", "Inheritance"],
+    mechanics:
+      "Each sign is split into eight parts, with the starting sign set by the natal sign's quality — Movable signs start from Aries, Fixed from Sagittarius, Dual from Leo.",
+    howToUse: [
+      "Read D8 for longevity indicators, sudden or transformative events, and the nature of unexpected reversals.",
+      "Use it as a supporting chart alongside D1 and the 8th house — not as a standalone longevity predictor.",
+    ],
+    summary:
+      "The eight-part chart of longevity, sudden events, and transformation.",
   },
   D9: {
     code: "D9",
@@ -139,6 +184,21 @@ export const VARGA_GUIDES: Record<string, VargaGuide> = {
     ],
     summary:
       "The ten-part chart of career, profession, and public reputation — the go-to for professional life.",
+  },
+  D11: {
+    code: "D11",
+    classicName: "Rudramsha",
+    description:
+      "The Rudramsha chart (÷11) divides each sign into eleven parts — the chart of death-related matters, gains through struggle, and destruction of adversaries (11th/8th-house overlap).",
+    governs: ["Gains through struggle", "Destruction of enemies", "Death-related matters", "Inheritance"],
+    mechanics:
+      "Each sign is split into eleven ~2°44′ parts; the starting sign is found by counting the natal sign's position from Aries and counting that same number backward from Aries.",
+    howToUse: [
+      "Read D11 for gains achieved through struggle or conflict, and the fate of adversaries.",
+      "Treat it as a minor, supporting varga — cross-check against D1's 8th and 11th houses rather than reading it alone.",
+    ],
+    summary:
+      "The eleven-part chart of gains through struggle and the destruction of adversaries.",
   },
   D12: {
     code: "D12",
