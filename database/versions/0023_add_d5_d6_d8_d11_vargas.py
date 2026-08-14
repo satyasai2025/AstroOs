@@ -1,4 +1,4 @@
-"""Add D5, D6, D8, D11 to the chart_type enum
+"""Add D5, D6, D8, D11, D81, D108, D144 to the chart_type enum
 
 Revision ID: 0023
 Revises: 0022
@@ -6,9 +6,11 @@ Create Date: 2026-08-15 00:00:00.000000
 
 Panchamsha, Shashthamsha, Ashtamsha, and Rudramsha were added to
 DivisionalEngine.SUPPORTED_VARGAS (apps/api/services/divisional_engine.py)
-per sourced classical formulas. The chart_type Postgres enum backing
-divisional_charts.chart_type must accept these codes so a saved chart
-for one of these vargas doesn't fail its check constraint on insert.
+per sourced classical formulas, followed by the three composite
+("varga of varga") charts D81, D108, and D144. The chart_type Postgres
+enum backing divisional_charts.chart_type must accept these codes so a
+saved chart for one of these vargas doesn't fail its check constraint
+on insert.
 
 ALTER TYPE ... ADD VALUE cannot run inside a transaction block in
 Postgres < 12; alembic's autocommit_block() handles this safely, and
@@ -25,7 +27,7 @@ down_revision: Union[str, None] = "0022"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
-_NEW_VALUES = ("D5", "D6", "D8", "D11")
+_NEW_VALUES = ("D5", "D6", "D8", "D11", "D81", "D108", "D144")
 
 
 def upgrade() -> None:

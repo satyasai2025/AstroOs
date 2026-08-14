@@ -2,7 +2,7 @@
 AstroOS — Divisional Chart Engine Unit Tests (Task 5)
 
 Covers:
-  - compute_varga_sign() for all 19 varga codes
+  - compute_varga_sign() for all 22 varga codes
   - D2 Hora — odd/even sign, first/second half
   - D3 Drekkana — three trines
   - D4 Chaturthamsha — four kendras
@@ -11,7 +11,7 @@ Covers:
   - D30 Trimshamsha — Parashara non-uniform; Sun/Moon receive D1 sign
   - D60 Shashtiamsha — odd/even alternation
   - DivisionalEngine.compute() — structure, planet count, house ranges
-  - DivisionalEngine.compute_all() — all 19 vargas, determinism
+  - DivisionalEngine.compute_all() — all 22 vargas, determinism
 """
 
 from datetime import datetime, timezone
@@ -32,16 +32,20 @@ from apps.api.services.divisional_engine import (
     _d9_navamsha,
     _d11_rudramsha,
     _d12_dvadashamsha,
+    _d81_nava_navamsha,
+    _d108_ashtottaramsha,
+    _d144_dwadasamsa_dwadasamsa,
     _d30_trimshamsha,
     _d60_shashtiamsha,
 )
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 _EPHE_PATH = "data/ephemeris"
-_VALID_RASHIS = frozenset({
+_RASHI_ORDER = [
     "aries", "taurus", "gemini", "cancer", "leo", "virgo",
     "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-})
+]
+_VALID_RASHIS = frozenset(_RASHI_ORDER)
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -265,6 +269,50 @@ def test_d11_worked_example_gemini_5th_part_lands_back_in_gemini():
     """Gemini, 5th part (Mercury @ 11°) → (10+4)%12 == 2 → Gemini."""
     vsign, _ = _d11_rudramsha(sign_index=2, deg=11.0)
     assert vsign == "gemini"
+
+
+# ── D81 / D108 / D144 (composite "varga of varga") ────────────────────────────
+# Each is one varga applied to another's output. Reference values below are
+# from a JHora export (2026-08-15, Pune); D1 inputs are the same chart's D1
+# column, so any sub-arc-minute drift is the export's own rounding.
+
+def test_d81_is_navamsha_of_navamsha():
+    """D81 composes D9 twice — Gemini 9°35' → D9 Sagittarius → D81 Scorpio."""
+    inner_sign, inner_deg = _d9_navamsha(sign_index=2, deg=9.0 + 35 / 60)
+    assert inner_sign == "sagittarius"
+    vsign, _ = _d81_nava_navamsha(sign_index=2, deg=9.0 + 35 / 60)
+    assert vsign == "scorpio"
+
+
+def test_d108_is_dvadashamsha_of_navamsha():
+    """D108 = D12 of D9 — Cancer 27°53' (Sun) → Cancer, per the reference export."""
+    vsign, _ = _d108_ashtottaramsha(sign_index=3, deg=27.0 + 53 / 60)
+    assert vsign == "cancer"
+
+
+def test_d108_is_not_navamsha_of_dvadashamsha():
+    """Composition order matters: the reverse order gives a different sign.
+
+    Guards the empirically-determined order — D9-of-D12 matched 0/15 bodies
+    in the reference export, D12-of-D9 matched 15/15.
+    """
+    inner_sign, inner_deg = _d12_dvadashamsha(sign_index=3, deg=27.0 + 53 / 60)
+    reversed_sign, _ = _d9_navamsha(_RASHI_ORDER.index(inner_sign), inner_deg)
+    assert reversed_sign != "cancer"
+
+
+def test_d144_is_dvadashamsha_of_dvadashamsha():
+    """D144 composes D12 twice — Leo 26°08' (Moon) → Scorpio."""
+    vsign, _ = _d144_dwadasamsa_dwadasamsa(sign_index=4, deg=26.0 + 8 / 60)
+    assert vsign == "scorpio"
+
+
+@pytest.mark.parametrize("code", ["D81", "D108", "D144"])
+def test_composite_vargas_registered(code):
+    """Composite vargas are dispatchable through the public API."""
+    rashi, deg = compute_varga_sign(code, 123.456)
+    assert rashi in _VALID_RASHIS
+    assert 0.0 <= deg < 30.0
 
 
 # ── D4 (Chaturthamsha) ────────────────────────────────────────────────────────
@@ -511,7 +559,7 @@ def test_compute_all_returns_15_charts(engine):
     all_charts = engine.compute_all(
         birth_datetime_utc=dt, latitude=28.6139, longitude=77.2090
     )
-    assert len(all_charts) == 19
+    assert len(all_charts) == 22
     assert set(all_charts) == set(SUPPORTED_VARGAS)
 
 

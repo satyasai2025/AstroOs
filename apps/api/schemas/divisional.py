@@ -19,6 +19,7 @@ VargaCode = Literal[
     "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
     "D10", "D11", "D12", "D16", "D20", "D24",
     "D27", "D30", "D40", "D45", "D60",
+    "D81", "D108", "D144",
 ]
 
 
@@ -70,7 +71,7 @@ class VargaChartResponse(BaseModel):
 
 
 class AllVargaChartsResponse(BaseModel):
-    """Response containing all 19 varga charts computed in a single pass."""
+    """Response containing all 22 varga charts computed in a single pass."""
 
     charts: dict[str, VargaChartResponse] = Field(
         description="Mapping of varga code → computed chart (D2 … D60)."

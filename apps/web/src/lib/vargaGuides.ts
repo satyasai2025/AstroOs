@@ -344,6 +344,51 @@ export const VARGA_GUIDES: Record<string, VargaGuide> = {
     summary:
       "The sixty-part karmic fine-print chart — the deepest refinement and finest judgment of a life.",
   },
+  D81: {
+    code: "D81",
+    classicName: "Nava-Navamsha",
+    description:
+      "The Nava-Navamsha chart (÷81) is a composite chart — the Navamsha of the Navamsha — used for the finest refinement of D9's marriage, dharma, and inner-strength significations.",
+    governs: ["Refined D9 matters", "Inner strength detail", "Dharma fine-print"],
+    mechanics:
+      "Not an independent division: the D9 formula is applied twice, so a planet's D81 sign is the Navamsha of its already-computed Navamsha position.",
+    howToUse: [
+      "Use D81 only to fine-tune a D9 reading, never as a standalone chart.",
+      "Because it compounds two divisions, it is extremely sensitive to birth-time error — treat it as meaningful only when the birth time is well rectified.",
+    ],
+    summary:
+      "The Navamsha of the Navamsha — the finest refinement of D9's significations.",
+  },
+  D108: {
+    code: "D108",
+    classicName: "Ashtottaramsha",
+    description:
+      "The Ashtottaramsha chart (÷108) is a composite chart — the Dvadashamsha of the Navamsha — combining D9's inner-quality reading with D12's parental and ancestral significations.",
+    governs: ["Composite D9/D12 detail", "Ancestral fine-print", "Deep karmic refinement"],
+    mechanics:
+      "Not an independent division: the D9 formula is applied first, then D12 to that result. The order matters — the reverse composition produces entirely different signs.",
+    howToUse: [
+      "Use D108 as a refinement layer over D9 and D12 conclusions, not as a primary chart.",
+      "As with all compounded vargas, it demands a rectified birth time to carry any weight.",
+    ],
+    summary:
+      "The Dvadashamsha of the Navamsha — a composite refinement of D9 and D12.",
+  },
+  D144: {
+    code: "D144",
+    classicName: "Dwadasamsa-Dwadasamsa",
+    description:
+      "The Dwadasamsa-Dwadasamsa chart (÷144) is a composite chart — the Dvadashamsha of the Dvadashamsha — the deepest refinement of D12's parental, ancestral, and lineage significations.",
+    governs: ["Refined D12 matters", "Parents", "Lineage fine-print"],
+    mechanics:
+      "Not an independent division: the D12 formula is applied twice, so a planet's D144 sign is the Dvadashamsha of its already-computed Dvadashamsha position.",
+    howToUse: [
+      "Use D144 only to fine-tune a D12 reading of parents and lineage.",
+      "The most birth-time-sensitive varga in the set — a few seconds of error can change the result, so rectify first.",
+    ],
+    summary:
+      "The Dvadashamsha of the Dvadashamsha — the finest refinement of D12's lineage significations.",
+  },
 };
 
 /** @returns the guide for a varga code, or undefined if the code is unknown. */
