@@ -29,63 +29,76 @@ from apps.api.services.horoscope_engine import HoroscopeEngine
 # Golden reference data (pyswisseph 2.10.03 + official .se1 files)
 # ---------------------------------------------------------------------------
 
+# REGENERATED — the previous values were computed from swe.utc_to_jd(...)[0],
+# i.e. jd_et (Ephemeris Time), the same mix-up that production code carried
+# until it was fixed (see ephemeris_wrapper.datetime_to_jd). swe.calc_ut() /
+# swe.houses() take UT, so the whole reference set was ~ΔT (≈64 s in 2000,
+# ≈69 s in 2020) ahead of the stated moment — visible as a ~0.23° ascendant
+# error. Nobody caught it because _check_se1_available() pointed at a path
+# that never exists, so every test in this module silently skipped.
+#
+# These are regenerated from swe.utc_to_jd(...)[1] (jd_ut) and, for Rahu/Ketu,
+# from the MEAN node (swe.MEAN_NODE) — matching the Settings.NODE_TYPE default
+# and both Jagannatha Hora and AstroSage.
+
 # Test Case 1: 2000-01-07 13:30:00 UTC, Delhi (28.6139 N, 77.2090 E)
-# JD = 2451551.0632428704
+# jd_ut = 2451551.0625040517
 
 _GOLDEN_TROPICAL_CASE1 = {
-    "sun":     286.550948,
-    "moon":    295.323407,
-    "mars":    332.666250,
-    "mercury": 281.429053,
-    "jupiter": 25.561668,
-    "venus":   248.915698,
-    "saturn":  40.308694,
-    "rahu":    123.656934,
+    "sun":     286.550195,
+    "moon":    295.314564,
+    "mars":    332.665677,
+    "mercury": 281.427877,
+    "jupiter": 25.561623,
+    "venus":   248.914800,
+    "saturn":  40.308701,
+    "rahu":    124.719741,
 }
 
 _GOLDEN_AYANAMSA_CASE1 = 23.857324
 
 _GOLDEN_SIDEREAL_CASE1 = {
-    "sun":     262.693624,
-    "moon":    271.466083,
-    "mars":    308.808926,
-    "mercury": 257.571728,
-    "jupiter": 1.704343,
-    "venus":   225.058374,
-    "saturn":  16.451370,
-    "rahu":    99.799610,
-    "ketu":    279.799610,
+    "sun":     262.692871,
+    "moon":    271.457239,
+    "mars":    308.808353,
+    "mercury": 257.570552,
+    "jupiter": 1.704299,
+    "venus":   225.057476,
+    "saturn":  16.451377,
+    "rahu":    100.862417,
+    "ketu":    280.862417,
 }
 
 _GOLDEN_DECLINATIONS_CASE1 = {
-    "sun":     -22.412376,
-    "moon":    -20.318303,
-    "mars":    -11.448372,
-    "mercury": -24.463068,
-    "jupiter": 8.735337,
-    "venus":   -19.932976,
-    "saturn":  12.615550,
-    "rahu":    19.334135,
-    "ketu":    -19.334135,
+    "sun":     -22.412468,
+    "moon":    -20.319113,
+    "mars":    -11.448587,
+    "mercury": -24.463114,
+    "jupiter": 8.735317,
+    "venus":   -19.932814,
+    "saturn":  12.615549,
+    "rahu":    19.082595,
+    "ketu":    -19.082595,
 }
 
-_GOLDEN_ASC_SIDEREAL_CASE1 = 101.054435
+_GOLDEN_ASC_SIDEREAL_CASE1 = 100.827724
 
 # Test Case 2: 2020-07-15 06:30:00 UTC, New York (40.7128 N, 74.0060 W)
+# jd_ut = 2459045.7708311416
 
 _GOLDEN_SIDEREAL_CASE2 = {
-    "sun":     89.090408,
-    "moon":    24.291456,
-    "mars":    345.775720,
-    "mercury": 71.724891,
-    "jupiter": 268.073151,
-    "venus":   47.740967,
-    "saturn":  274.914915,
-    "rahu":    64.789335,
-    "ketu":    244.789335,
+    "sun":     89.089642,
+    "moon":    24.281757,
+    "mars":    345.775285,
+    "mercury": 71.724682,
+    "jupiter": 268.073254,
+    "venus":   47.740490,
+    "saturn":  274.914974,
+    "rahu":    63.701974,
+    "ketu":    243.701974,
 }
 
-_GOLDEN_ASC_SIDEREAL_CASE2 = 45.063008
+_GOLDEN_ASC_SIDEREAL_CASE2 = 44.741476
 
 # Moshier vs .se1 arc-second differences (pre-measured)
 _MOSHIER_TOLERANCE_ARCSEC = {
@@ -117,9 +130,13 @@ def _check_se1_available() -> bool:
     """Return True if official .se1 files are present."""
     eph_path = os.environ.get("EPHEMERIS_PATH", "")
     if not eph_path:
-        # Try default relative path
+        # Default location is <repo_root>/data/ephemeris. This file lives at
+        # <repo_root>/apps/api/tests/precision/, so the repo root is
+        # parents[4] — parents[2] (used previously) resolves to apps/api,
+        # which never exists, so every golden-reference test in this module
+        # silently skipped instead of running.
         from pathlib import Path
-        eph_path = str(Path(__file__).resolve().parents[2] / "data" / "ephemeris")
+        eph_path = str(Path(__file__).resolve().parents[4] / "data" / "ephemeris")
     if not os.path.isdir(eph_path):
         return False
     return any(f.endswith(".se1") for f in os.listdir(eph_path))
@@ -143,7 +160,9 @@ class TestTropicalPositions:
         if not _check_se1_available():
             pytest.skip("Official .se1 files not available")
 
-        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[0]
+        # [1] = jd_ut. swe.calc_ut()/swe.houses() take Universal Time;
+        # [0] is jd_et (Ephemeris Time) and is ~ΔT ahead.
+        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[1]
         pos = ephemeris_wrapper.get_planet_position(planet, jd)
         diff_arcsec = _deg_to_arcsec(pos.longitude - expected)
         assert diff_arcsec < _ARCSEC_TOLERANCE, (
@@ -217,7 +236,9 @@ class TestAyanamsa:
         if not _check_se1_available():
             pytest.skip("Official .se1 files not available")
 
-        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[0]
+        # [1] = jd_ut. swe.calc_ut()/swe.houses() take Universal Time;
+        # [0] is jd_et (Ephemeris Time) and is ~ΔT ahead.
+        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[1]
         ayan = ephemeris_wrapper.get_ayanamsa(jd)
         diff_arcsec = _deg_to_arcsec(ayan - _GOLDEN_AYANAMSA_CASE1)
         assert diff_arcsec < _ARCSEC_TOLERANCE, (
@@ -286,7 +307,9 @@ class TestDeclinations:
         if not _check_se1_available():
             pytest.skip("Official .se1 files not available")
 
-        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[0]
+        # [1] = jd_ut. swe.calc_ut()/swe.houses() take Universal Time;
+        # [0] is jd_et (Ephemeris Time) and is ~ΔT ahead.
+        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[1]
         decl = ephemeris_wrapper.get_declination(planet, jd)
         diff_arcsec = _deg_to_arcsec(decl - expected)
         assert diff_arcsec < _ARCSEC_TOLERANCE, (
@@ -310,7 +333,9 @@ class TestMoshierFallback:
         """Moshier mode must not raise even without .se1 files."""
         swe.set_ephe_path("")  # No ephemeris files
         swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
-        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[0]
+        # [1] = jd_ut. swe.calc_ut()/swe.houses() take Universal Time;
+        # [0] is jd_et (Ephemeris Time) and is ~ΔT ahead.
+        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[1]
 
         xx, retflag = swe.calc_ut(jd, swe.SUN, swe.FLG_SWIEPH | swe.FLG_SPEED)
         assert retflag >= 0, "Moshier fallback returned error"
@@ -323,7 +348,9 @@ class TestMoshierFallback:
         if not _check_se1_available():
             pytest.skip("Official .se1 files not available for comparison")
 
-        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[0]
+        # [1] = jd_ut. swe.calc_ut()/swe.houses() take Universal Time;
+        # [0] is jd_et (Ephemeris Time) and is ~ΔT ahead.
+        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[1]
         swe.set_ephe_path("")  # Force Moshier
         swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
 
@@ -354,7 +381,9 @@ class TestMoshierFallback:
         """Verify that running without .se1 produces a detectable condition."""
         swe.set_ephe_path("")
         swe.set_sid_mode(swe.SIDM_LAHIRI, 0, 0)
-        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[0]
+        # [1] = jd_ut. swe.calc_ut()/swe.houses() take Universal Time;
+        # [0] is jd_et (Ephemeris Time) and is ~ΔT ahead.
+        jd = swe.utc_to_jd(2000, 1, 7, 13, 30, 0, swe.GREG_CAL)[1]
         xx, retflag = swe.calc_ut(jd, swe.SUN, swe.FLG_SWIEPH | swe.FLG_SPEED)
         is_moshier = bool(retflag & swe.FLG_MOSEPH)
         assert is_moshier, "Expected Moshier mode when no .se1 files available"
