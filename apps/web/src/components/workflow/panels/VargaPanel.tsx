@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Card, Table, type TableColumn } from "@/components/ui";
+import { formatPosition } from "@/lib/formatAstro";
 import type { AllVargaChartsResponse, VargaPlanetResponse } from "@/lib/types";
 
 export function VargaPanel({ vargas }: { vargas: AllVargaChartsResponse | null }) {
@@ -23,7 +24,11 @@ export function VargaPanel({ vargas }: { vargas: AllVargaChartsResponse | null }
   const columns: TableColumn<VargaPlanetResponse>[] = [
     { key: "planet", label: "Planet" },
     { key: "varga_rashi", label: "Varga Rashi" },
-    { key: "varga_rashi_degree", label: "Degree", render: (p) => `${p.varga_rashi_degree.toFixed(2)}°` },
+    {
+      key: "varga_rashi_degree",
+      label: "Degree",
+      render: (p) => formatPosition(p.varga_rashi, p.varga_rashi_degree),
+    },
     { key: "varga_house_number", label: "House" },
     { key: "nakshatra", label: "Nakshatra", render: (p) => `${p.nakshatra} (${p.pada})` },
   ];
@@ -59,8 +64,7 @@ export function VargaPanel({ vargas }: { vargas: AllVargaChartsResponse | null }
             className="mb-3 text-sm font-semibold uppercase tracking-wide"
             style={{ color: "var(--accent)" }}
           >
-            {chart.varga} (÷{chart.divisor}) — Lagna {chart.ascendant.varga_rashi}{" "}
-            {chart.ascendant.varga_rashi_degree.toFixed(2)}°
+            {chart.varga} (÷{chart.divisor}) — Lagna {formatPosition(chart.ascendant.varga_rashi, chart.ascendant.varga_rashi_degree)}
           </h3>
           <Table columns={columns} rows={chart.planet_positions} />
         </Card>

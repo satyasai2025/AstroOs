@@ -12,7 +12,7 @@ import { TransitTimeline, getCurrentPeriodChain } from "@/components/charts/Tran
 import { LifeEventTimeline } from "@/components/charts/LifeEventTimeline";
 import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
 import { PredictionChainExplorer } from "@/components/charts/PredictionChainExplorer";
-import { KPSignificatorExplorer } from "@/components/charts/KPSignificatorExplorer";
+import { KPAnalysisCenter } from "@/components/kp/KPAnalysisCenter";
 import { NakshatraPadaSelector } from "@/components/charts/NakshatraPadaSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { DashaSystemSwitcher } from "@/components/charts/DashaSystemSwitcher";
@@ -31,6 +31,7 @@ import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { ResizablePanels } from "@/components/ui";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
+import { formatPosition } from "@/lib/formatAstro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
 
@@ -249,7 +250,7 @@ export default function ChartsPage() {
           { key: "houses" as ViewMode, label: "House Network" },
           { key: "timeline" as ViewMode, label: "Timeline" },
           { key: "predictions" as ViewMode, label: "Prediction Chains" },
-          { key: "kp" as ViewMode, label: "KP Significators" },
+          { key: "kp" as ViewMode, label: "KP Analysis" },
           { key: "yogas" as ViewMode, label: "Yogas" },
           { key: "ashtakavarga" as ViewMode, label: "Ashtakavarga" },
           { key: "jaimini" as ViewMode, label: "Jaimini" },
@@ -479,8 +480,8 @@ export default function ChartsPage() {
       )}
 
       {view === "kp" && (
-        <div id="panel-kp" role="tabpanel" aria-label="KP significator explorer panel" className="flex justify-center">
-          <KPSignificatorExplorer result={result} />
+        <div id="panel-kp" role="tabpanel" aria-label="KP analysis panel" className="flex justify-center">
+          <KPAnalysisCenter request={request} result={result} />
         </div>
       )}
 

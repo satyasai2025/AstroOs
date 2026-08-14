@@ -1,0 +1,188 @@
+{# Shared macros for rendering report sections as formatted HTML. #}
+
+{% macro render_value(v) -%}
+  {% if v is mapping -%}
+    <table class="kv">
+      <tbody>
+      {% for k, vv in v.items() %}
+        <tr><th>{{ k | replace('_', ' ') | capitalize }}</th><td>{{ render_value(vv) | safe }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% elif v is sequence and v is not string -%}
+    <ul class="value-list">
+      {% for item in v %}
+        <li>{{ render_value(item) | safe }}</li>
+      {% endfor %}
+    </ul>
+  {% elif v is boolean -%}
+    {{ 'Yes' if v else 'No' }}
+  {% elif v is none -%}
+    &mdash;
+  {% else -%}
+    {{ v }}
+  {% endif -%}
+{%- endmacro %}
+
+{% macro render_chart_summary(data) -%}
+  <table class="kv">
+    <tbody>
+      <tr><th>Ayanamsa</th><td>{{ data.ayanamsa | rashi or '&mdash;' | safe }}</td></tr>
+      <tr><th>House System</th><td>{{ data.house_system | upper }}</td></tr>
+      <tr><th>Lagna (Ascendant)</th><td>{{ data.lagna_rashi | rashi }} {{ '%0.2f' | format(data.lagna_degree or 0) }}&deg;</td></tr>
+      <tr><th>Moon Nakshatra</th><td>{{ data.moon_nakshatra | rashi or '&mdash;' | safe }}</td></tr>
+    </tbody>
+  </table>
+{%- endmacro %}
+
+{% macro render_planets(data) -%}
+  <table>
+    <thead>
+      <tr><th>Planet</th><th>Rashi</th><th>House</th><th>Dignity</th><th>Retrograde</th></tr>
+    </thead>
+    <tbody>
+      {% for p in data.planets %}
+      <tr>
+        <td>{{ p.name | planet }}</td>
+        <td>{{ p.rashi | rashi }}</td>
+        <td>{{ p.house }}</td>
+        <td>{{ (p.dignity or 'neutral') | rashi }}</td>
+        <td>{{ 'Yes' if p.retrograde else 'No' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{%- endmacro %}
+
+{% macro render_timeline(data) -%}
+  <table class="kv">
+    <tbody>
+      <tr><th>Total Events</th><td>{{ data.total_events }}</td></tr>
+      <tr><th>Date Range</th><td>{{ data.date_range[0] }} &rarr; {{ data.date_range[1] }}</td></tr>
+    </tbody>
+  </table>
+  {% if data.events_per_category %}
+  <table>
+    <thead><tr><th>Category</th><th>Events</th></tr></thead>
+    <tbody>
+      {% for cat, count in data.events_per_category.items() %}
+      <tr><td>{{ cat | rashi }}</td><td>{{ count }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_verification(data) -%}
+  <table class="kv">
+    <tbody>
+      <tr><th>Total Pairs</th><td>{{ data.total_pairs }}</td></tr>
+      <tr><th>Rules Evaluated</th><td>{{ data.total_rules }}</td></tr>
+    </tbody>
+  </table>
+  {% if data.strengths %}
+  <table>
+    <thead><tr><th>Strength</th><th>Count</th></tr></thead>
+    <tbody>
+      {% for strength, count in data.strengths.items() %}
+      <tr><td>{{ strength | rashi }}</td><td>{{ count }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_statistics(data) -%}
+  <table class="kv">
+    <tbody>
+      <tr><th>Sample Size</th><td>{{ data.sample_size }}</td></tr>
+    </tbody>
+  </table>
+  {% if data.distributions %}
+  <table>
+    <thead><tr><th>Label</th><th>Variable</th><th>Total</th></tr></thead>
+    <tbody>
+      {% for d in data.distributions %}
+      <tr><td>{{ d.label }}</td><td>{{ d.variable }}</td><td>{{ d.total }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_citations(data) -%}
+  <ul class="citation-list">
+    {% for c in data.citations %}
+    <li>
+      <strong>{{ c.title }}</strong>
+      {% if c.book_title %} &mdash; <em>{{ c.book_title }}</em>{% endif %}
+      {% if c.tradition %} <span class="citation-tag">{{ c.tradition }}</span>{% endif %}
+      {% if c.snippet %}<div class="citation-snippet">{{ c.snippet }}</div>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+{%- endmacro %}
+
+{% macro render_planet_comparison(data) -%}
+  <table>
+    <thead><tr><th>Chart</th><th>Planet</th><th>Rashi</th><th>House</th><th>Dignity</th></tr></thead>
+    <tbody>
+      {% for p in data.planets %}
+      <tr>
+        <td>{{ p.chart_label }}</td>
+        <td>{{ p.planet | planet }}</td>
+        <td>{{ p.rashi | rashi }}</td>
+        <td>{{ p.house }}</td>
+        <td>{{ (p.dignity or 'neutral') | rashi }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{%- endmacro %}
+
+{% macro render_snapshot_overview(data) -%}
+  <table class="kv">
+    <tbody>
+      <tr><th>Snapshots</th><td>{{ data.snapshot_count }}</td></tr>
+      {% if data.labels %}
+      <tr><th>Labels</th><td>{{ data.labels | join(', ') }}</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+{%- endmacro %}
+
+{% macro render_section(section) -%}
+  {% if section.section_type == 'chart_summary' -%}
+    {{ render_chart_summary(section.data) }}
+  {% elif section.section_type == 'planets' -%}
+    {{ render_planets(section.data) }}
+  {% elif section.section_type == 'timeline_summary' -%}
+    {{ render_timeline(section.data) }}
+  {% elif section.section_type == 'verification_summary' -%}
+    {{ render_verification(section.data) }}
+  {% elif section.section_type == 'statistics_summary' -%}
+    {{ render_statistics(section.data) }}
+  {% elif section.section_type == 'knowledge_citations' -%}
+    {{ render_citations(section.data) }}
+  {% elif section.section_type == 'planet_comparison' -%}
+    {{ render_planet_comparison(section.data) }}
+  {% elif section.section_type == 'snapshot_overview' -%}
+    {{ render_snapshot_overview(section.data) }}
+  {% else -%}
+    {{ render_fallback(section.data) }}
+  {% endif -%}
+{%- endmacro %}
+
+{% macro render_fallback(data) -%}
+  {% if data is mapping -%}
+    <table class="kv">
+      <tbody>
+        {% for k, v in data.items() %}
+        <tr><th>{{ k | replace('_', ' ') | capitalize }}</th><td>{{ render_value(v) | safe }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else -%}
+    {{ render_value(data) | safe }}
+  {% endif -%}
+{%- endmacro %}

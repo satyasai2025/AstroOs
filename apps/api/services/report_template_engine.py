@@ -64,6 +64,10 @@ class ReportTemplateEngine:
     @staticmethod
     def list_templates() -> list[str]:
         try:
-            return [f for f in os.listdir(_TEMPLATES_DIR) if f.endswith(".html")]
+            return [
+                f
+                for f in os.listdir(_TEMPLATES_DIR)
+                if f.endswith(".html") and not f.startswith("_")
+            ]
         except FileNotFoundError:
             return []

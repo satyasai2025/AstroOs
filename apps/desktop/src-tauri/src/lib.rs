@@ -1,6 +1,8 @@
 use std::sync::Mutex;
 use std::process::{Child, Command, Stdio};
 use std::io::{BufRead, BufReader};
+use std::path::PathBuf;
+use std::time::Duration;
 use tauri::{
     AppHandle, Manager, State, menu::{MenuBuilder, MenuItemBuilder},
     tray::TrayIconBuilder,
@@ -36,6 +38,25 @@ const API_WORKING_DIR: &str = "resources/api"; // Bundled resource dir in releas
 
 // ── Helper: check Python availability ───────────────────────────────────
 
+/// Resolve the working directory for the bundled API process.
+///
+/// In dev, the API runs from the project root. In release, it runs from the
+/// bundled resource directory (`resources/api` under the app's resource dir).
+fn api_working_dir(resource_dir: Option<PathBuf>) -> PathBuf {
+    #[cfg(debug_assertions)]
+    {
+        let _ = resource_dir;
+        PathBuf::from(API_WORKING_DIR)
+    }
+    #[cfg(not(debug_assertions))]
+    {
+        match resource_dir {
+            Some(dir) => dir.join(API_WORKING_DIR),
+            None => PathBuf::from(API_WORKING_DIR),
+        }
+    }
+}
+
 fn find_python() -> Option<&'static str> {
     // Try python3 first, then python
     let candidates = &["python3", "python"];
@@ -56,7 +77,7 @@ fn find_python() -> Option<&'static str> {
 // ── FastAPI process management ──────────────────────────────────────────
 
 /// Start the FastAPI server as a child process.
-fn start_api(port: u16) -> Result<Child, String> {
+fn start_api(port: u16, working_dir: &PathBuf) -> Result<Child, String> {
     let python = find_python()
         .ok_or_else(|| "Python not found. Please install Python 3.11+ and ensure it is on your PATH.".to_string())?;
 
@@ -70,7 +91,7 @@ fn start_api(port: u16) -> Result<Child, String> {
 
     let child = Command::new(python)
         .args(args)
-        .current_dir(std::env::current_dir().unwrap_or_default())
+        .current_dir(working_dir)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
@@ -132,7 +153,7 @@ fn stop_api(api: &mut ApiProcess) {
 // ── Tauri commands — exposed to the frontend ────────────────────────────
 
 #[tauri::command]
-fn start_api_server(state: State<AppState>) -> Result<String, String> {
+fn start_api_server(app: tauri::AppHandle, state: State<AppState>) -> Result<String, String> {
     let mut api = state.api.lock().map_err(|e| e.to_string())?;
 
     if api.child.is_some() {
@@ -140,7 +161,8 @@ fn start_api_server(state: State<AppState>) -> Result<String, String> {
     }
 
     let port = api.port;
-    let child = start_api(port)?;
+    let working_dir = api_working_dir(app.path().resource_dir().ok());
+    let child = start_api(port, &working_dir)?;
     api.child = Some(child);
 
     Ok(format!("API server started on port {port}."))
@@ -160,13 +182,14 @@ fn stop_api_server(state: State<AppState>) -> Result<String, String> {
 }
 
 #[tauri::command]
-fn restart_api_server(state: State<AppState>) -> Result<String, String> {
+fn restart_api_server(app: tauri::AppHandle, state: State<AppState>) -> Result<String, String> {
     let mut api = state.api.lock().map_err(|e| e.to_string())?;
     let port = api.port;
+    let working_dir = api_working_dir(app.path().resource_dir().ok());
 
     stop_api(&mut api);
 
-    let child = start_api(port)?;
+    let child = start_api(port, &working_dir)?;
     api.child = Some(child);
 
     Ok(format!("API server restarted on port {port}."))
@@ -180,8 +203,12 @@ async fn check_api_health(state: State<'_, AppState>) -> Result<bool, String> {
     };
 
     let url = format!("http://127.0.0.1:{port}/api/healthz");
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(5))
+        .build()
+        .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
 
-    match reqwest::get(&url).await {
+    match client.get(&url).send().await {
         Ok(resp) => {
             Ok(resp.status().is_success())
         }
@@ -197,8 +224,14 @@ async fn get_api_health(state: State<'_, AppState>) -> Result<serde_json::Value,
     };
 
     let url = format!("http://127.0.0.1:{port}/api/healthz");
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(5))
+        .build()
+        .map_err(|e| format!("Failed to build HTTP client: {e}"))?;
 
-    let resp = reqwest::get(&url)
+    let resp = client
+        .get(&url)
+        .send()
         .await
         .map_err(|e| format!("Health check request failed: {e}"))?;
 
@@ -211,9 +244,9 @@ async fn get_api_health(state: State<'_, AppState>) -> Result<serde_json::Value,
 }
 
 #[tauri::command]
-fn get_api_port(state: State<AppState>) -> u16 {
-    let api = state.api.lock().unwrap();
-    api.port
+fn get_api_port(state: State<AppState>) -> Result<u16, String> {
+    let api = state.api.lock().map_err(|e| e.to_string())?;
+    Ok(api.port)
 }
 
 // ── Application entry point ─────────────────────────────────────────────
@@ -231,13 +264,18 @@ pub fn run() {
                 // Give the app window time to initialise before starting the API
                 std::thread::sleep(std::time::Duration::from_secs(1));
 
+                let working_dir = api_working_dir(handle.path().resource_dir().ok());
+
                 // Try to start the API
-                match start_api(port) {
+                match start_api(port, &working_dir) {
                     Ok(child) => {
                         let state = handle.state::<AppState>();
-                        let mut api = state.api.lock().unwrap();
-                        api.child = Some(child);
-                        let _ = handle.emit("api-status", "started");
+                        if let Ok(mut api) = state.api.lock() {
+                            api.child = Some(child);
+                            let _ = handle.emit("api-status", "started");
+                        } else {
+                            eprintln!("[astroos-desktop] API state lock poisoned");
+                        }
                     }
                     Err(e) => {
                         eprintln!("[astroos-desktop] Failed to start API: {e}");
@@ -271,8 +309,9 @@ pub fn run() {
                         "quit" => {
                             // Stop the API before exiting
                             let state = app.state::<AppState>();
-                            let mut api = state.api.lock().unwrap();
-                            stop_api(&mut api);
+                            if let Ok(mut api) = state.api.lock() {
+                                stop_api(&mut api);
+                            }
                             app.exit(0);
                         }
                         _ => {}
@@ -300,8 +339,9 @@ pub fn run() {
             if let tauri::WindowEvent::CloseRequested { .. } = event {
                 let app = window.app_handle();
                 let state = app.state::<AppState>();
-                let mut api = state.api.lock().unwrap();
-                stop_api(&mut api);
+                if let Ok(mut api) = state.api.lock() {
+                    stop_api(&mut api);
+                }
             }
         })
         .run(tauri::generate_context!())

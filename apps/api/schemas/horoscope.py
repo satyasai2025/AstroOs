@@ -26,6 +26,8 @@ class AscendantSchema(BaseModel):
     nakshatra_lord: str = Field(default="", description="Star Lord (KP)")
     sub_lord: str = Field(default="", description="Sub Lord (KP)")
     sub_sub_lord: str = Field(default="", description="Sub Sub Lord (KP)")
+    navamsa_rashi: str = Field(default="", description="Navamsa (D9) sign of the ascendant")
+    navamsa_rashi_degree: float = Field(default=0.0, description="Degrees within navamsa sign (0–30)")
 
 
 class HouseCuspSchema(BaseModel):
@@ -62,6 +64,8 @@ class PlanetPositionSchema(BaseModel):
         default=0, ge=0, le=12,
         description="Rashi (sign-counting) house — signs from the lagna's sign; can differ from house_number",
     )
+    navamsa_rashi: str = Field(default="", description="Navamsa (D9) sign of the planet")
+    navamsa_rashi_degree: float = Field(default=0.0, description="Degrees within navamsa sign (0–30)")
 
 
 class AspectSchema(BaseModel):

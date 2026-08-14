@@ -15,7 +15,7 @@ execution engine exists yet, see ASTROOS_V2_ROADMAP.md).
 from __future__ import annotations
 
 import uuid
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field, model_validator
@@ -26,7 +26,8 @@ from apps.api.schemas.dasha import DashaTreeResponse
 from apps.api.schemas.divisional import AllVargaChartsResponse
 from apps.api.schemas.horoscope import D1ChartResponse
 from apps.api.schemas.knowledge import KnowledgeSearchResultResponse
-from apps.api.schemas.report import ChartReportResponse
+from apps.api.schemas.kp import KPAnalysisResponse
+from apps.api.schemas.report import BirthDataInput, ChartReportResponse
 from apps.api.schemas.transit import TransitResponse
 from apps.api.schemas.yoga import YogaEvaluationResponse
 
@@ -276,4 +277,58 @@ class WorkflowAnalysisResponse(BaseModel):
             "id of the AstrologicalSnapshot captured into that project. "
             "None if no research_project_id was supplied."
         ),
+    )
+
+
+# ── Full Report (workflow pipeline + KP in one call) ─────────────────────────
+
+
+class FullReportRequest(BirthDataInput):
+    """
+    Request body for POST /report/full — the complete astrology report.
+
+    Extends BirthDataInput (the same birth-data contract as the other
+    report endpoints) plus the pipeline options: which dasha system,
+    whether to compute divisional charts / KP analysis, and the display
+    title / subject name. The full report never persists a new chart —
+    the pipeline runs with persist=false so a saved chart is not required.
+    """
+
+    title: str = "Complete Astrology Report"
+    subject_name: str = "Unnamed"
+    generated_by: Optional[str] = None
+    dasha_system: DashaSystem = "vimshottari"
+    transit_datetime_utc: Optional[datetime] = Field(
+        default=None,
+        description="Defaults to now (UTC) if omitted — the 'current transits' moment.",
+    )
+    include_vargas: bool = Field(
+        default=True, description="Compute all 15 divisional charts. Set false to skip for speed."
+    )
+    include_kp: bool = Field(
+        default=True, description="Include the KP analysis + evidence sections in the response."
+    )
+
+
+class FullReportResponse(WorkflowAnalysisResponse):
+    """
+    Response payload for POST /report/full.
+
+    The complete workflow analysis (chart, vargas, dasha, yogas,
+    shadbala, ashtakavarga, transits, rule results, knowledge citations,
+    verification, benchmark, report) plus the KP analysis + evidence
+    sections. chart_id is None because the full report runs the pipeline
+    with persist=false (no birth_charts row is written).
+    """
+
+    chart_id: Optional[uuid.UUID] = None
+    title: str = "Complete Astrology Report"
+    subject_name: str = "Unnamed"
+    generated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="When the full report was generated.",
+    )
+    kp_analysis: Optional[KPAnalysisResponse] = Field(
+        default=None,
+        description="KP analysis + evidence, when include_kp was requested.",
     )
