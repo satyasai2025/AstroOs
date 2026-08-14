@@ -78,6 +78,14 @@ interface PlanetPeriod {
 interface SignChangeResponse {
   planets: PlanetPeriod[];
 }
+interface VargaChart {
+  varga: string;
+  divisor: number;
+  ascendant: { varga_rashi: string; varga_rashi_degree: number };
+}
+interface AllVargas {
+  charts: Record<string, VargaChart>;
+}
 
 const titleCase = (s: string) =>
   s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -110,6 +118,10 @@ export default function RectifyPage() {
   const [signs, setSigns] = useState<SignChangeResponse | null>(null);
   /** Birth times before each applied shift, oldest first — powers undo. */
   const [history, setHistory] = useState<{ date: string; time: string }[]>([]);
+  const [vargas, setVargas] = useState<AllVargas | null>(null);
+  /** Varga lagnas as they were before the most recent shift, so the table
+   *  can mark which divisionals the birth-time change actually moved. */
+  const [prevVargas, setPrevVargas] = useState<Record<string, string> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -165,14 +177,16 @@ export default function RectifyPage() {
     setError(null);
     setLoading(true);
     try {
-      const [s, u, sc] = await Promise.all([
+      const [s, u, sc, vg] = await Promise.all([
         api.post<ScanResponse>("/api/v1/horoscope/lagna-scan", { ...b, window_hours: 2 }),
         api.post<UpagrahaResponse>("/api/v1/horoscope/upagrahas", b),
         api.post<SignChangeResponse>("/api/v1/horoscope/planet-sign-change", b),
+        api.post<AllVargas>("/api/v1/divisional/all", b),
       ]);
       setScan(s);
       setUpa(u);
       setSigns(sc);
+      setVargas(vg);
       setShift(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analysis failed.");
@@ -201,6 +215,15 @@ export default function RectifyPage() {
         const [nextDate, rest] = iso.replace("Z", "").split("T");
         const nextTime = rest.split(".")[0];
 
+        // Snapshot the current varga lagnas first — after re-analysis they
+        // are overwritten, and the diff is the point of the exercise.
+        if (vargas) {
+          setPrevVargas(
+            Object.fromEntries(
+              Object.entries(vargas.charts).map(([k, v]) => [k, v.ascendant.varga_rashi]),
+            ),
+          );
+        }
         setHistory((h) => [...h, { date: birthDate, time: birthTime }]);
         setBirthDate(nextDate);
         setBirthTime(nextTime);
@@ -209,13 +232,14 @@ export default function RectifyPage() {
         setError(e instanceof Error ? e.message : "Shift failed.");
       }
     },
-    [body, analyse, birthDate, birthTime],
+    [body, analyse, birthDate, birthTime, vargas],
   );
 
   const undoLast = useCallback(async () => {
     if (!history.length) return;
     const prev = history[history.length - 1];
     setHistory((h) => h.slice(0, -1));
+    setPrevVargas(null);
     setBirthDate(prev.date);
     setBirthTime(prev.time);
     setShift(null);
@@ -226,6 +250,7 @@ export default function RectifyPage() {
     if (!history.length) return;
     const first = history[0];
     setHistory([]);
+    setPrevVargas(null);
     setBirthDate(first.date);
     setBirthTime(first.time);
     setShift(null);
@@ -418,6 +443,61 @@ export default function RectifyPage() {
             </div>
           </Card>
         )}
+        {/* ── Divisional lagnas ──────────────────────────────────────── */}
+        {vargas && (
+          <Card padding="var(--space-4)">
+            <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", marginTop: 0 }}>
+              Divisional Lagnas
+            </h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)", marginTop: 0 }}>
+              Recomputed with the birth time above. Vargas divide the sign, so
+              they shift far faster than D1 — moving the lagna one sign can turn
+              over most of these. Changed ones are marked after a shift.
+            </p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+                gap: "var(--space-2)",
+                marginTop: "var(--space-3)",
+              }}
+            >
+              {Object.entries(vargas.charts)
+                .sort((a, b) => a[1].divisor - b[1].divisor)
+                .map(([code, v]) => {
+                  const before = prevVargas?.[code];
+                  const changed = before != null && before !== v.ascendant.varga_rashi;
+                  return (
+                    <div
+                      key={code}
+                      style={{
+                        padding: "var(--space-2) var(--space-3)",
+                        borderRadius: "var(--radius-md)",
+                        background: "var(--surface-2)",
+                        border: `1px solid ${changed ? "var(--gold-500, var(--border-default))" : "transparent"}`,
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: "var(--weight-semibold)", fontSize: "var(--text-sm)" }}>
+                          {code}
+                        </span>
+                        {changed && <Badge tone="gold">changed</Badge>}
+                      </div>
+                      <div style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}>
+                        {titleCase(v.ascendant.varga_rashi)}
+                      </div>
+                      {changed && (
+                        <div style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>
+                          was {titleCase(before!)}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+          </Card>
+        )}
+
         {/* ── Planet sign changes ────────────────────────────────────── */}
         {signs && (
           <Card padding="var(--space-4)">
