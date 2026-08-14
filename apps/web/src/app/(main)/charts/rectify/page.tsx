@@ -108,6 +108,8 @@ export default function RectifyPage() {
   const [upa, setUpa] = useState<UpagrahaResponse | null>(null);
   const [shift, setShift] = useState<ShiftResponse | null>(null);
   const [signs, setSigns] = useState<SignChangeResponse | null>(null);
+  /** Birth times before each applied shift, oldest first — powers undo. */
+  const [history, setHistory] = useState<{ date: string; time: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,12 +139,16 @@ export default function RectifyPage() {
     })();
   }, []);
 
-  const body = useCallback(() => {
+  const body = useCallback((dateOverride?: string, timeOverride?: string) => {
+    const d = dateOverride ?? birthDate;
+    const t = timeOverride ?? birthTime;
     const lat = parseFloat(latitude);
     const lng = parseFloat(longitude);
-    if (!birthDate || !birthTime || Number.isNaN(lat) || Number.isNaN(lng)) return null;
+    if (!d || !t || Number.isNaN(lat) || Number.isNaN(lng)) return null;
+    // A bare HH:MM would silently drop the seconds that decide a boundary case.
+    const hhmmss = t.length === 5 ? `${t}:00` : t;
     return {
-      birth_datetime_utc: `${birthDate}T${birthTime}Z`,
+      birth_datetime_utc: `${d}T${hhmmss}Z`,
       latitude: lat,
       longitude: lng,
       ayanamsa,
@@ -150,8 +156,8 @@ export default function RectifyPage() {
     };
   }, [birthDate, birthTime, latitude, longitude, ayanamsa]);
 
-  const analyse = useCallback(async () => {
-    const b = body();
+  const analyse = useCallback(async (dateOverride?: string, timeOverride?: string) => {
+    const b = body(dateOverride, timeOverride);
     if (!b) {
       setError("Enter a valid birth date, time, latitude and longitude.");
       return;
@@ -175,24 +181,56 @@ export default function RectifyPage() {
     }
   }, [body]);
 
+  /** Applies the shift for real: rewrites the birth time and re-analyses,
+   *  the way JHora's "Change birthtime to move lagna to" does. Merely
+   *  reporting the new time would leave the chart showing the old one. */
   const doShift = useCallback(
     async (direction: "next" | "previous") => {
       const b = body();
       if (!b) return;
       setError(null);
       try {
-        setShift(
-          await api.post<ShiftResponse>("/api/v1/horoscope/shift-birthtime", {
-            ...b,
-            direction,
-          }),
+        const res = await api.post<ShiftResponse>(
+          "/api/v1/horoscope/shift-birthtime",
+          { ...b, direction },
         );
+        setShift(res);
+
+        // Keep full seconds — the boundary is decided inside the minute.
+        const iso = res.shifted_birth_datetime_utc;
+        const [nextDate, rest] = iso.replace("Z", "").split("T");
+        const nextTime = rest.split(".")[0];
+
+        setHistory((h) => [...h, { date: birthDate, time: birthTime }]);
+        setBirthDate(nextDate);
+        setBirthTime(nextTime);
+        await analyse(nextDate, nextTime);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Shift failed.");
       }
     },
-    [body],
+    [body, analyse, birthDate, birthTime],
   );
+
+  const undoLast = useCallback(async () => {
+    if (!history.length) return;
+    const prev = history[history.length - 1];
+    setHistory((h) => h.slice(0, -1));
+    setBirthDate(prev.date);
+    setBirthTime(prev.time);
+    setShift(null);
+    await analyse(prev.date, prev.time);
+  }, [history, analyse]);
+
+  const undoAll = useCallback(async () => {
+    if (!history.length) return;
+    const first = history[0];
+    setHistory([]);
+    setBirthDate(first.date);
+    setBirthTime(first.time);
+    setShift(null);
+    await analyse(first.date, first.time);
+  }, [history, analyse]);
 
   const rashiBoundary = scan?.boundaries.find((b) => b.label === "rashi");
   const isFragile = (rashiBoundary?.minutes_until_next ?? 999) < 5;
@@ -246,7 +284,8 @@ export default function RectifyPage() {
             }}
           >
             <Input label="Birth Date" type="date" value={birthDate} onChange={setBirthDate} required />
-            <Input label="Birth Time (UTC)" type="time" value={birthTime} onChange={setBirthTime} required />
+            <Input label="Birth Time (UTC)" type="time" step={1} value={birthTime} onChange={setBirthTime} required
+              hint="Seconds matter near a sign boundary" />
             <Input label="Latitude" type="number" value={latitude} onChange={setLatitude} placeholder="e.g. 22.3" />
             <Input label="Longitude" type="number" value={longitude} onChange={setLongitude} placeholder="e.g. 73.2" />
             <div style={{ width: "100%" }}>
@@ -259,7 +298,7 @@ export default function RectifyPage() {
             </div>
           </div>
           <div style={{ marginTop: "var(--space-4)" }}>
-            <Button variant="gold" size="lg" disabled={loading} onClick={analyse}>
+            <Button variant="gold" size="lg" disabled={loading} onClick={() => void analyse()}>
               {loading ? "Analysing…" : "Analyse Chart"}
             </Button>
           </div>
@@ -326,22 +365,27 @@ export default function RectifyPage() {
               ))}
             </div>
 
-            <div style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-4)", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "var(--space-3)", marginTop: "var(--space-4)", flexWrap: "wrap", alignItems: "center" }}>
               <Button onClick={() => doShift("previous")}>← Move lagna to previous sign</Button>
               <Button onClick={() => doShift("next")}>Move lagna to next sign →</Button>
+              {history.length > 0 && (
+                <>
+                  <Button onClick={undoLast}>Undo last</Button>
+                  <Button onClick={undoAll}>Undo all</Button>
+                  <span style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>
+                    {history.length} change{history.length > 1 ? "s" : ""} applied
+                  </span>
+                </>
+              )}
             </div>
             {shift && (
               <p style={{ marginTop: "var(--space-3)", fontSize: "var(--text-sm)" }}>
-                Birth time of{" "}
+                Birth time moved {shift.shift_minutes > 0 ? "forward" : "back"} by{" "}
+                <strong>{Math.abs(shift.shift_minutes).toFixed(2)} min</strong> to{" "}
                 <strong style={{ fontFamily: "monospace" }}>
                   {timeOf(shift.shifted_birth_datetime_utc)}
                 </strong>{" "}
-                ({shift.shift_minutes > 0 ? "+" : ""}
-                {shift.shift_minutes.toFixed(2)} min) gives lagna{" "}
-                <strong>
-                  {titleCase(shift.resulting_rashi)} {degOf(shift.resulting_rashi_degree)}
-                </strong>
-                .
+                — the chart above now reflects it.
               </p>
             )}
           </Card>
