@@ -15,10 +15,12 @@ const nextConfig: NextConfig = {
   // Strict React mode
   reactStrictMode: true,
 
-  // Allow the platform preview host for the dev server
-  experimental: {
-    allowedHosts: [".monkeycode-ai.live"],
-  },
+  // Allow the platform preview host to hit the dev server.
+  // NOTE: the option is `allowedDevOrigins` and it is TOP-LEVEL. It was
+  // previously written as `experimental.allowedHosts`, which does not exist
+  // in Next.js 15.5 — that produced a TS2353 type error and, worse, silently
+  // did nothing, so the preview host was never actually allowed.
+  allowedDevOrigins: ["*.monkeycode-ai.live"],
 
   // Output standalone for Docker / production
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
