@@ -101,6 +101,7 @@ const NAV_GROUPS: NavGroup[] = [
           { href: "/dashboard", label: "New Chart", subtitle: "Create natal chart", icon: "plus", viewId: "chart-new" },
           { href: "/charts/import", label: "Import Chart", icon: "upload", disabled: false },
           { href: "/charts/compare", label: "Compare Charts", subtitle: "Side-by-side analysis", icon: "layers", viewId: "chart-compare" },
+          { href: "/charts/rectify", label: "Rectification", subtitle: "Lagna sensitivity & upagrahas", icon: "clock", disabled: false },
           { href: "/charts/collections", label: "Collections", icon: "folder", disabled: false },
         ],
       },
