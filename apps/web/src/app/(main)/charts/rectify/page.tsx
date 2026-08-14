@@ -64,6 +64,20 @@ interface ShiftResponse {
   resulting_rashi: string;
   resulting_rashi_degree: number;
 }
+interface PlanetPeriod {
+  planet: string;
+  rashi: string;
+  rashi_degree: number;
+  is_retrograde: boolean;
+  speed_deg_per_day: number;
+  days_since_entry: number | null;
+  days_until_exit: number | null;
+  previous_rashi: string | null;
+  next_rashi: string | null;
+}
+interface SignChangeResponse {
+  planets: PlanetPeriod[];
+}
 
 const titleCase = (s: string) =>
   s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -93,6 +107,7 @@ export default function RectifyPage() {
   const [scan, setScan] = useState<ScanResponse | null>(null);
   const [upa, setUpa] = useState<UpagrahaResponse | null>(null);
   const [shift, setShift] = useState<ShiftResponse | null>(null);
+  const [signs, setSigns] = useState<SignChangeResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -144,12 +159,14 @@ export default function RectifyPage() {
     setError(null);
     setLoading(true);
     try {
-      const [s, u] = await Promise.all([
+      const [s, u, sc] = await Promise.all([
         api.post<ScanResponse>("/api/v1/horoscope/lagna-scan", { ...b, window_hours: 2 }),
         api.post<UpagrahaResponse>("/api/v1/horoscope/upagrahas", b),
+        api.post<SignChangeResponse>("/api/v1/horoscope/planet-sign-change", b),
       ]);
       setScan(s);
       setUpa(u);
+      setSigns(sc);
       setShift(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analysis failed.");
@@ -354,6 +371,57 @@ export default function RectifyPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </Card>
+        )}
+        {/* ── Planet sign changes ────────────────────────────────────── */}
+        {signs && (
+          <Card padding="var(--space-4)">
+            <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", marginTop: 0 }}>
+              When Will Each Planet Change Sign?
+            </h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: "var(--text-sm)", marginTop: 0 }}>
+              Scanned, not extrapolated — a retrograde planet can station and
+              cross a boundary far later, or in the opposite direction.
+            </p>
+            <div style={{ overflowX: "auto", marginTop: "var(--space-3)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--text-sm)" }}>
+                <thead>
+                  <tr style={{ textAlign: "left", color: "var(--text-tertiary)", fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    <th style={{ padding: "var(--space-2)" }}>Graha</th>
+                    <th style={{ padding: "var(--space-2)" }}>Position</th>
+                    <th style={{ padding: "var(--space-2)" }}>Entered</th>
+                    <th style={{ padding: "var(--space-2)" }}>Leaves in</th>
+                    <th style={{ padding: "var(--space-2)" }}>Into</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {signs.planets.map((p) => (
+                    <tr key={p.planet} style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                      <td style={{ padding: "var(--space-2)", fontWeight: "var(--weight-medium)" }}>
+                        {titleCase(p.planet)}
+                        {p.is_retrograde && (
+                          <span style={{ marginLeft: 6 }}>
+                            <Badge tone="danger">R</Badge>
+                          </span>
+                        )}
+                      </td>
+                      <td style={{ padding: "var(--space-2)" }}>
+                        {titleCase(p.rashi)} {degOf(p.rashi_degree)}
+                      </td>
+                      <td style={{ padding: "var(--space-2)", color: "var(--text-muted)" }}>
+                        {p.days_since_entry != null ? `${p.days_since_entry.toFixed(1)} d ago` : "—"}
+                      </td>
+                      <td style={{ padding: "var(--space-2)", fontWeight: "var(--weight-medium)" }}>
+                        {p.days_until_exit != null ? `${p.days_until_exit.toFixed(1)} d` : "—"}
+                      </td>
+                      <td style={{ padding: "var(--space-2)" }}>
+                        {p.next_rashi ? titleCase(p.next_rashi) : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </Card>
         )}

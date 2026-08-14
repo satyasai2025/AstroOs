@@ -70,3 +70,46 @@ class ShiftBirthtimeResponse(BaseModel):
     direction: str
     resulting_rashi: str
     resulting_rashi_degree: float
+
+
+# ── Planet sign change ────────────────────────────────────────────────────────
+
+
+class PlanetSignChangeRequest(BirthDataInput):
+    planet: str | None = Field(
+        default=None,
+        description="Graha to scan (sun…ketu). Omit to scan all nine.",
+    )
+
+
+class PlanetSignPeriodSchema(BaseModel):
+    planet: str
+    sidereal_longitude: float
+    rashi: str
+    rashi_degree: float
+    nakshatra: str
+    pada: int
+
+    is_retrograde: bool
+    speed_deg_per_day: float
+
+    entered_utc: datetime | None
+    exits_utc: datetime | None
+    days_since_entry: float | None
+    days_until_exit: float | None
+
+    previous_rashi: str | None
+    next_rashi: str | None = Field(
+        default=None,
+        description="Sign entered on exit — not necessarily the next in "
+                    "zodiacal order, since a retrograde planet exits backwards.",
+    )
+    exits_retrograde: bool | None
+    search_limit_days: float = Field(
+        description="How far the scan looked. A null exits_utc means no change "
+                    "was found within this window, not that none occurs."
+    )
+
+
+class PlanetSignChangeResponse(BaseModel):
+    planets: list[PlanetSignPeriodSchema]
