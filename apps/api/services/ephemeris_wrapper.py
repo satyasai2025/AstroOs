@@ -43,9 +43,11 @@ from apps.api.domain.ephemeris import (
     DignityType,
 )
 from packages.shared.constants import (
+    DEFAULT_NODE_TYPE,
     DEGREES_PER_NAKSHATRA,
     DEGREES_PER_RASHI,
     PADAS_PER_NAKSHATRA,
+    SWEPH_NODE_IDS,
     SWEPH_PLANET_IDS,
     TOTAL_NAKSHATRAS,
     VIMSHOTTARI_DASHA_YEARS,
@@ -374,13 +376,30 @@ class EphemerisWrapper:
         loop — see the router DI helpers for the required pattern.
     """
 
-    def __init__(self, ephemeris_path: str, ayanamsa: str = AyanamsaSystem.LAHIRI.value) -> None:
+    def __init__(
+        self,
+        ephemeris_path: str,
+        ayanamsa: str = AyanamsaSystem.LAHIRI.value,
+        node_type: str = DEFAULT_NODE_TYPE,
+    ) -> None:
         import os
         self._path = os.path.abspath(ephemeris_path)
         self._ayanamsa = ayanamsa
+        self._node_type = node_type if node_type in SWEPH_NODE_IDS else DEFAULT_NODE_TYPE
         self._lock = threading.Lock()
         swe.set_ephe_path(self._path)
         self._set_ayanamsa(ayanamsa)
+
+    @property
+    def node_type(self) -> str:
+        """'mean' or 'true' — which lunar node Rahu/Ketu are computed from."""
+        return self._node_type
+
+    def _planet_id(self, planet: str) -> int:
+        """Swiss Ephemeris body id, resolving Rahu against the configured node."""
+        if planet == "rahu":
+            return SWEPH_NODE_IDS[self._node_type]
+        return SWEPH_PLANET_IDS[planet]
 
     # ── Ayanamsa ──────────────────────────────────────────────────────────────
 
@@ -400,7 +419,8 @@ class EphemerisWrapper:
         """
         Calculate tropical ecliptic position for one Graha.
 
-        Ketu is derived from Rahu (True Node) + 180°.
+        Ketu is derived from Rahu + 180°, using whichever node (mean/true)
+        this wrapper was configured with — see `node_type`.
         """
         flags = swe.FLG_SWIEPH | swe.FLG_SPEED
 
@@ -428,7 +448,7 @@ class EphemerisWrapper:
 
     def _calc_planet(self, planet: str, jd: float, flags: int) -> tuple:
         """Internal: call swe.calc_ut with the correct planet ID."""
-        planet_id = SWEPH_PLANET_IDS[planet]
+        planet_id = self._planet_id(planet)
         xx, retflag = swe.calc_ut(jd, planet_id, flags)
         if retflag < 0:
             raise RuntimeError(
@@ -499,13 +519,13 @@ class EphemerisWrapper:
         flags = swe.FLG_SWIEPH | swe.FLG_SPEED | swe.FLG_EQUATORIAL
 
         if planet == "ketu":
-            rahu_id = SWEPH_PLANET_IDS["rahu"]
+            rahu_id = self._planet_id("rahu")
             xx, retflag = swe.calc_ut(jd, rahu_id, flags)
             if retflag < 0:
                 raise RuntimeError(f"Swiss Ephemeris calculation error for ketu: retflag={retflag}")
             return -xx[1]
 
-        planet_id = SWEPH_PLANET_IDS[planet]
+        planet_id = self._planet_id(planet)
         xx, retflag = swe.calc_ut(jd, planet_id, flags)
         if retflag < 0:
             raise RuntimeError(f"Swiss Ephemeris calculation error for {planet}: retflag={retflag}")

@@ -15,6 +15,7 @@ Shadbala engine.
 
 from __future__ import annotations
 
+import math
 from datetime import datetime, timezone
 
 import pytest
@@ -164,7 +165,16 @@ class TestDigBala:
 # ---------------------------------------------------------------------------
 
 class TestDrikBala:
-    """Drik Bala is computed from aspects and should be non-negative."""
+    """Drik Bala is the NET of benefic minus malefic aspects, so it may
+    legitimately be negative — a planet aspected mainly by malefics loses
+    aspectual strength.
+
+    This previously asserted `>= 0`, which is astrologically wrong; it only
+    held by coincidence for this fixture chart. Jagannatha Hora's own Bhava
+    Bala output publishes negative DrigBala values (e.g. -0.87 for the 3rd
+    house, -3.95 for the 7th in a reference chart), confirming the classical
+    behaviour.
+    """
 
     def test_covers_planets_with_aspects(self, shadbala_engine, horoscope_engine):
         chart = _generate_chart(horoscope_engine)
@@ -172,13 +182,21 @@ class TestDrikBala:
         results = components["drik_bala"]
         assert len(results) > 0, "Drik Bala should produce at least one result"
 
-    def test_values_non_negative(self, shadbala_engine, horoscope_engine):
+    def test_values_are_finite_and_bounded(self, shadbala_engine, horoscope_engine):
+        """Guards against NaN/absurd output without asserting a sign.
+
+        A single aspect contributes at most ±60 Shashtiamsas (1 Rupa) under
+        the Drishti-Pinda scaling used here; with at most 8 aspecting bodies
+        a |value| above 480 would indicate a scaling bug.
+        """
         chart = _generate_chart(horoscope_engine)
         components = shadbala_engine.compute_phase1_components(chart)
         results = components["drik_bala"]
         for r in results:
-            assert r.value_shashtiamsas >= 0.0, (
-                f"Drik Bala for {r.planet} is negative: {r.value_shashtiamsas}"
+            v = r.value_shashtiamsas
+            assert math.isfinite(v), f"Drik Bala for {r.planet} is not finite: {v}"
+            assert abs(v) <= 480.0, (
+                f"Drik Bala for {r.planet} is out of plausible range: {v}"
             )
 
 
