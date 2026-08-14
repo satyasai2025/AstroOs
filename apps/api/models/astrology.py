@@ -96,6 +96,7 @@ def _chart_type_col():
 def _ayanamsa_col():
     return PGENUM(
         "lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra",
+        "true_pushya",
         name="ayanamsa_system", create_type=False,
     )
 

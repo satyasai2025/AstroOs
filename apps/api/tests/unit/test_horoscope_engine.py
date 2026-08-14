@@ -191,7 +191,7 @@ def test_aspects_orb_is_non_negative(sample_chart):
 # ── Different ayanamsa systems ────────────────────────────────────────────────
 
 @pytest.mark.parametrize("ayanamsa", [
-    "lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra"
+    "lahiri", "kp", "raman", "yukteshwar", "fagan_bradley", "true_chitra", "true_pushya"
 ])
 def test_generate_d1_all_ayanamsa_systems(engine, ayanamsa):
     """D1 chart must generate without error for every ayanamsa system."""
