@@ -136,21 +136,29 @@ def _normalize(deg: float) -> float:
 
 def datetime_to_jd(dt: datetime) -> float:
     """
-    Convert a UTC-aware datetime to Julian Day Number.
+    Convert a UTC-aware datetime to Julian Day Number in **Universal Time**.
 
-    Swiss Ephemeris expects Universal Time (UT) which is essentially UTC
-    for dates after 1972. Pre-1972 dates require ΔT correction — not
-    implemented here; use swe.utc_to_jd for those.
+    `swe.utc_to_jd` returns a 2-tuple ``(jd_et, jd_ut)``:
+      - ``jd_et`` — Ephemeris Time (TT), used by ``swe.calc()`` / ``swe.houses_ex2()``
+      - ``jd_ut`` — Universal Time (UT1), used by ``swe.calc_ut()`` / ``swe.houses()``
+
+    Every consumer in this wrapper calls the ``*_ut`` family, so we must
+    return ``jd_ut``. The two differ by ΔT — roughly 42 s in 1971 and ~69 s
+    today — which is small for the planets but shifts the **ascendant by
+    ~10–17 arc-minutes**, enough to move a lagna into the wrong rashi near a
+    sign boundary. (Verified against a Jagannatha Hora reference chart:
+    taking ``jd_et`` put the ascendant +8.7' off; ``jd_ut`` brings it to
+    -1.1', matching the residual ayanamsa difference seen on every planet.)
     """
     if dt.tzinfo is None:
         raise ValueError("datetime must be timezone-aware (UTC expected)")
     utc = dt.astimezone(timezone.utc)
-    jd, _ = swe.utc_to_jd(
+    _jd_et, jd_ut = swe.utc_to_jd(
         utc.year, utc.month, utc.day,
         utc.hour, utc.minute, utc.second + utc.microsecond / 1e6,
         swe.GREG_CAL,
     )
-    return jd
+    return jd_ut
 
 
 def longitude_to_rashi(lon: float) -> tuple[str, float]:
