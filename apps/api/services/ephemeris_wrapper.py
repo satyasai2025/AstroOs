@@ -23,6 +23,7 @@ All returned objects are frozen dataclasses (immutable).
 import logging
 import math
 import threading
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -413,6 +414,29 @@ class EphemerisWrapper:
     def get_ayanamsa(self, jd: float) -> float:
         """Return ayanamsa value in degrees for the given Julian Day."""
         return swe.get_ayanamsa_ut(jd)
+
+    @contextmanager
+    def sidereal_mode(self, ayanamsa: str):
+        """Hold the wrapper lock with `ayanamsa` active as the sidereal mode.
+
+        pyswisseph's sidereal mode is PROCESS-GLOBAL, so any code that reads
+        sidereal values outside `calculate()` must serialise on the same lock
+        and set the mode itself — otherwise it silently inherits whatever
+        ayanamsa the previous caller happened to leave set, which produces a
+        constant, easily-missed offset on every result.
+
+        Only call wrapper methods that do NOT take the lock themselves from
+        inside this block (get_ascendant_and_cusps, get_planet_position,
+        get_ayanamsa, to_sidereal are all safe); `calculate()` takes the lock
+        and would deadlock.
+        """
+        with self._lock:
+            previous = self._ayanamsa
+            self._set_ayanamsa(ayanamsa)
+            try:
+                yield
+            finally:
+                self._set_ayanamsa(previous)
 
     # ── Planet positions ───────────────────────────────────────────────────────
 

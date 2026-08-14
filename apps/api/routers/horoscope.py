@@ -54,8 +54,14 @@ from apps.api.schemas.horoscope import (
     VaraSchema,
     YogaSchema,
 )
+from apps.api.schemas.upagraha import (
+    DerivedPointSchema,
+    UpagrahaRequest,
+    UpagrahaResponse,
+)
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
+from apps.api.services.upagraha_engine import UpagrahaEngine
 
 logger = logging.getLogger(__name__)
 
@@ -370,3 +376,74 @@ async def set_default_chart(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No saved chart with that id, or it isn't yours.",
         )
+
+
+@router.post(
+    "/upagrahas",
+    response_model=UpagrahaResponse,
+    summary="Compute Gulika/Maandi and the Bhava/Hora/Ghati lagnas",
+    description=(
+        "Derived chart points that are not planets.\n\n"
+        "**Gulika / Maandi** — the day (sunrise→sunset) or night "
+        "(sunset→next sunrise) is split into eight equal parts, ruled by the "
+        "grahas in weekday order starting from the weekday lord (day birth) "
+        "or the 5th weekday onward (night birth). Gulika is the ascendant at "
+        "the start of Saturn's part, Maandi at its midpoint.\n\n"
+        "**Bhava / Hora / Ghati Lagna** — progressions of the Sun's position "
+        "at sunrise, advancing 15°, 30° and 75° per hour respectively.\n\n"
+        "Sunrise and sunset use the centre of the solar disc without "
+        "refraction, the classical Vedic convention (Swiss Ephemeris defaults "
+        "to the refracted upper limb, which shifts these points by ~1°). "
+        "`weekday` is reckoned sunrise-to-sunrise, so a pre-dawn birth carries "
+        "the previous calendar day."
+    ),
+    status_code=status.HTTP_200_OK,
+)
+async def compute_upagrahas(
+    request: UpagrahaRequest,
+    user: User = Depends(get_current_user_from_bearer),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> UpagrahaResponse:
+    """
+    - **birth_datetime_utc**: UTC birth datetime (must include timezone)
+    - **latitude** / **longitude**: decimal degrees (+N/-S, +E/-W)
+    - **ayanamsa**: `lahiri` (default) | `kp` | `raman` | `yukteshwar` |
+      `fagan_bradley` | `true_chitra` | `true_pushya`
+    """
+    engine = UpagrahaEngine(wrapper)
+    try:
+        # Blocking pyswisseph work — keep it off the event loop, same as /d1.
+        result = await asyncio.to_thread(
+            engine.compute,
+            request.birth_datetime_utc,
+            request.latitude,
+            request.longitude,
+            request.ayanamsa,
+        )
+    except (RuntimeError, ValueError) as exc:
+        logger.exception("Upagraha computation failed")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Could not compute upagrahas: {exc}",
+        )
+
+    def _point(p) -> DerivedPointSchema:
+        return DerivedPointSchema(
+            name=p.name,
+            sidereal_longitude=p.sidereal_longitude,
+            rashi=p.rashi,
+            rashi_degree=p.rashi_degree,
+            nakshatra=p.nakshatra,
+            pada=p.pada,
+            nakshatra_lord=p.nakshatra_lord,
+            house_number=p.house_number,
+        )
+
+    return UpagrahaResponse(
+        upagrahas=[_point(p) for p in result.upagrahas],
+        special_lagnas=[_point(p) for p in result.special_lagnas],
+        is_daytime_birth=result.is_daytime_birth,
+        weekday=result.weekday,
+        starting_lord=result.starting_lord,
+        part_duration_minutes=result.part_duration_hours * 60.0,
+    )
