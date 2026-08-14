@@ -15,6 +15,11 @@ const nextConfig: NextConfig = {
   // Strict React mode
   reactStrictMode: true,
 
+  // Allow the platform preview host for the dev server
+  experimental: {
+    allowedHosts: [".monkeycode-ai.live"],
+  },
+
   // Output standalone for Docker / production
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
 };
