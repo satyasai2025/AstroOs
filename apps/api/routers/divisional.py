@@ -4,7 +4,7 @@ AstroOS — Divisional Chart Router (Task 5)
 Endpoints
 ---------
 POST /api/v1/divisional/{varga}   — Compute a single varga chart (D2 … D60)
-POST /api/v1/divisional/all       — Compute all 15 varga charts in one call
+POST /api/v1/divisional/all       — Compute all 19 varga charts in one call
 
 No business logic lives here — all computation is delegated to DivisionalEngine.
 """
@@ -103,7 +103,7 @@ def _serialise_chart(chart: VargaChart) -> VargaChartResponse:
 @router.post(
     "/all",
     response_model=AllVargaChartsResponse,
-    summary="Compute all 15 divisional charts",
+    summary="Compute all 19 divisional charts",
     description=(
         "Computes D2 through D60 in a single ephemeris call. "
         "Returns a map of varga code → chart."
