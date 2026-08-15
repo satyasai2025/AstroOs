@@ -91,6 +91,9 @@ export default function KnowledgeHomePage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button href="/knowledge/ask" variant="primary">
+            Ask AstroOS
+          </Button>
           <Button href="/knowledge/browse" variant="violet">
             Browse Entities
           </Button>
