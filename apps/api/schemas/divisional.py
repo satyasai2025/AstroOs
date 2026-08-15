@@ -16,9 +16,10 @@ from apps.api.services.divisional_engine import SUPPORTED_VARGAS
 # ── Literals ──────────────────────────────────────────────────────────────────
 
 VargaCode = Literal[
-    "D2", "D3", "D4", "D7", "D9",
-    "D10", "D12", "D16", "D20", "D24",
+    "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
+    "D10", "D11", "D12", "D16", "D20", "D24",
     "D27", "D30", "D40", "D45", "D60",
+    "D81", "D108", "D144",
 ]
 
 
@@ -27,6 +28,21 @@ VargaCode = Literal[
 
 class VargaChartRequest(BirthDataInput):
     """Request body for computing a single or all divisional chart(s)."""
+
+
+class CustomVargaChartRequest(BirthDataInput):
+    """Request body for an arbitrary D-n chart with no classical rule."""
+
+    scheme: Literal["cyclic", "from_sign"] = Field(
+        default="cyclic",
+        description=(
+            "Which generic division scheme to use. 'cyclic' (Parivritti) cuts "
+            "the whole zodiac into equal 30/n° parts numbered continuously from "
+            "0° Aries. 'from_sign' restarts the count in every sign, "
+            "generalising D12's rule. Ignored when n happens to name a chart "
+            "with its own classical rule — that rule is used instead."
+        ),
+    )
 
 
 # ── Response pieces ───────────────────────────────────────────────────────────
@@ -70,7 +86,7 @@ class VargaChartResponse(BaseModel):
 
 
 class AllVargaChartsResponse(BaseModel):
-    """Response containing all 15 varga charts computed in a single pass."""
+    """Response containing all 22 varga charts computed in a single pass."""
 
     charts: dict[str, VargaChartResponse] = Field(
         description="Mapping of varga code → computed chart (D2 … D60)."

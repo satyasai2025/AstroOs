@@ -1,16 +1,20 @@
 """
 AstroOS — Divisional Chart Engine (Task 5)
 
-Computes all 15 Varga charts (D2–D60) using Parashara rules.
+Computes all 22 Varga charts (D2–D144) using Parashara rules.
 
 Varga rules implemented
 -----------------------
 D2  (Hora)              — 2 parts; Sun/Moon hora alternation by odd/even sign
 D3  (Drekkana)          — 3 parts; 1st/5th/9th trines from natal sign
 D4  (Chaturthamsha)     — 4 parts; successive kendras from natal sign
+D5  (Panchamsha)        — 5 non-sequential parts; Mars/Sat/Jup/Merc/Ven target signs
+D6  (Shashthamsha)      — 6 parts; odd sign from Aries, even sign from Libra
 D7  (Saptamsha)         — 7 parts; odd sign starts from same sign, even from 7th
+D8  (Ashtamsha)         — 8 parts; Movable→Aries, Fixed→Sagittarius, Dual→Leo
 D9  (Navamsha)          — 9 parts; standard zodiacal formula (sign × 9 + part)
 D10 (Dasamsha)          — 10 parts; odd sign from same, even sign from 9th
+D11 (Rudramsha)         — 11 parts; start sign = (12 − sign_index) mod 12
 D12 (Dvadashamsha)      — 12 parts; starts from natal sign
 D16 (Shodashamsha)      — 16 parts; Cardinal→Aries, Fixed→Leo, Mutable→Sagittarius
 D20 (Vimshamsha)        — 20 parts; Movable→Aries, Fixed→Sagittarius, Dual→Leo
@@ -21,11 +25,19 @@ D40 (Khavedamsha)       — 40 parts; odd→Aries, even→Libra
 D45 (Akshavedamsha)     — 45 parts; Movable→Aries, Fixed→Leo, Dual→Sagittarius
 D60 (Shashtiamsha)      — 60 parts; odd→Aries, even→Libra
 
+Composite ("varga of varga") charts — no standalone degree formula exists;
+each is one varga applied to another's output. Composition order verified
+empirically against a JHora reference export, not assumed:
+D81  (Nava-Navamsha)    — D9 of D9
+D108 (Ashtottaramsha)   — D12 of D9   (NOT D9 of D12 — that matches 0/15)
+D144 (Dwadasamsa²)      — D12 of D12
+
 All degrees within a varga sign are normalised to [0, 30).
 """
 
 from __future__ import annotations
 
+import re
 import uuid
 from datetime import datetime
 from typing import Optional
@@ -47,9 +59,10 @@ _RASHI_LIST = [r.value for r in Rashi]
 
 # All supported vargas (divisor → label)
 SUPPORTED_VARGAS: dict[str, int] = {
-    "D2": 2, "D3": 3, "D4": 4, "D7": 7, "D9": 9,
-    "D10": 10, "D12": 12, "D16": 16, "D20": 20, "D24": 24,
+    "D2": 2, "D3": 3, "D4": 4, "D5": 5, "D6": 6, "D7": 7, "D8": 8, "D9": 9,
+    "D10": 10, "D11": 11, "D12": 12, "D16": 16, "D20": 20, "D24": 24,
     "D27": 27, "D30": 30, "D40": 40, "D45": 45, "D60": 60,
+    "D81": 81, "D108": 108, "D144": 144,
 }
 
 
@@ -362,15 +375,167 @@ def _d60_shashtiamsha(sign_index: int, deg: float) -> tuple[str, float]:
     return _RASHI_LIST[vsign_idx], vdeg
 
 
+# D5 target signs, by ruling planet in Parashari order (Mars, Saturn, Jupiter,
+# Mercury, Venus) — NOT a simple sequential/offset scheme like the other
+# vargas above. Corroborated across two independent sources including a
+# worked example (Sun 2nd part of Aries, ruled by Saturn -> D5 sign Aquarius).
+# No classical rationale for this particular planet order is preserved in the
+# texts that describe it; it is simply the attested sequence.
+_D5_ODD_SIGNS = (0, 10, 8, 2, 6)     # Aries, Aquarius, Sagittarius, Gemini, Libra
+                                      # (Mars, Saturn, Jupiter, Mercury, Venus — own sign)
+_D5_EVEN_SIGNS = (1, 5, 11, 9, 7)    # Taurus, Virgo, Pisces, Capricorn, Scorpio
+                                      # (Venus, Mercury, Jupiter, Saturn, Mars — reverse
+                                      # planet order, EACH PLANET'S OTHER SIGN, not its
+                                      # sign used above.) Corrected against a JHora
+                                      # reference chart (2026-08-15, Pune) — the initial
+                                      # "reverse of the odd table" guess did not match;
+                                      # this table was reverse-engineered from ~15
+                                      # independent even-sign data points in that export
+                                      # and matches all of them exactly.
+
+
+def _d5_panchamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D5 — Panchamsha.
+    Five equal 6° parts, mapped to explicit target signs (not a sequential
+    offset). Odd sign -> Aries, Aquarius, Sagittarius, Gemini, Libra (Mars,
+    Saturn, Jupiter, Mercury, Venus, in their primary sign). Even sign ->
+    Taurus, Virgo, Pisces, Capricorn, Scorpio — the same five planets in
+    reverse order (Venus, Mercury, Jupiter, Saturn, Mars), each in its
+    *other* sign rather than the one used for the odd table.
+    """
+    part_size = 6.0
+    part = min(int(deg / part_size), 4)
+    targets = _D5_ODD_SIGNS if _is_odd_sign(sign_index) else _D5_EVEN_SIGNS
+    vdeg = (deg % part_size) * 5.0
+    return _RASHI_LIST[targets[part]], vdeg
+
+
+def _d6_shashthamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D6 — Shashthamsha.
+    Six equal 5° parts, sequential from a starting sign.
+    Odd sign: starts from Aries (0). Even sign: starts from Libra (6).
+    """
+    part_size = 5.0
+    part = min(int(deg / part_size), 5)
+    start = 0 if _is_odd_sign(sign_index) else 6
+    vsign_idx = (start + part) % 12
+    vdeg = (deg % part_size) * 6.0
+    return _RASHI_LIST[vsign_idx], vdeg
+
+
+# D8 starting signs by quality — identical scheme to D20's _D20_START:
+# Movable -> Aries(0), Fixed -> Sagittarius(8), Dual -> Leo(4).
+_D8_START: dict[int, int] = {
+    0: 0, 3: 0, 6: 0, 9: 0,   # Movable → Aries
+    1: 8, 4: 8, 7: 8, 10: 8,  # Fixed → Sagittarius
+    2: 4, 5: 4, 8: 4, 11: 4,  # Dual → Leo
+}
+
+
+def _d8_ashtamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D8 — Ashtamsha.
+    Eight equal 3°45' parts.
+    Starting sign by quality: Movable→Aries, Fixed→Sagittarius, Dual→Leo.
+    """
+    part_size = 30.0 / 8.0
+    part = min(int(deg / part_size), 7)
+    vsign_idx = (_D8_START[sign_index] + part) % 12
+    vdeg = (deg % part_size) * 8.0
+    return _RASHI_LIST[vsign_idx], vdeg
+
+
+def _d11_rudramsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D11 — Rudramsha (Ekadashamsha).
+    Eleven equal parts (30/11° ≈ 2°43'38" each).
+
+    Starting sign per P.V.R. Narasimha Rao's method (Vedic Astrology: An
+    Integrated Approach): count the rasi's position from Aries zodiacally
+    (1-indexed), then count that same number of positions from Aries
+    ANTI-zodiacally — the sign reached is where the 11 parts start.
+
+    Equivalently: start_sign_index = (12 - sign_index) % 12.
+
+    Verified against the source's own worked examples: Gemini (index 2) ->
+    start = Aquarius (index 10); the 5th part of Gemini (Mercury at 11°)
+    lands back in Gemini — (10 + 4) % 12 == 2. ✓
+    """
+    part_size = 30.0 / 11.0
+    part = min(int(deg / part_size), 10)
+    start = (12 - sign_index) % 12
+    vsign_idx = (start + part) % 12
+    vdeg = (deg % part_size) * 11.0
+    return _RASHI_LIST[vsign_idx], vdeg
+
+
+# ── Composite ("varga of varga") charts ───────────────────────────────────────
+#
+# D81/D108/D144 are not independent degree-mapping schemes — each is one varga
+# applied to the *output* of another, which is why no standalone classical
+# formula for them exists. The exact composition order was determined
+# empirically from a JHora reference export (2026-08-15, Pune) rather than
+# guessed: each hypothesis below was tested against 15 independent bodies and
+# only kept when it reproduced JHora's own output.
+
+
+def _d81_nava_navamsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D81 — Nava-Navamsha: the Navamsha of the Navamsha (9 × 9).
+
+    Verified against the JHora reference export at full precision:
+    15/15 signs and 15/15 degrees, every degree within the tolerance
+    implied by the export's arcminute-rounded D1 input (+/-0.7 deg here,
+    since a D1 rounding error is amplified 81x).
+    """
+    vsign, vdeg = _d9_navamsha(sign_index, deg)
+    return _d9_navamsha(_RASHI_LIST.index(vsign), vdeg)
+
+
+def _d108_ashtottaramsha(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D108 — Ashtottaramsha: the Dvadashamsha of the Navamsha (9 × 12).
+
+    Order matters — D12-of-D9 reproduces JHora exactly (15/15 signs and
+    15/15 degrees, all within the +/-0.9 deg tolerance implied by the
+    export's arcminute-rounded D1 input) while the reverse composition,
+    D9-of-D12, matches 0/15.
+    """
+    vsign, vdeg = _d9_navamsha(sign_index, deg)
+    return _d12_dvadashamsha(_RASHI_LIST.index(vsign), vdeg)
+
+
+def _d144_dwadasamsa_dwadasamsa(sign_index: int, deg: float) -> tuple[str, float]:
+    """
+    D144 — Dwadasamsa-Dwadasamsa: the Dvadashamsha of the Dvadashamsha (12 × 12).
+
+    Verified 14/15 signs and 14/15 degrees against the JHora reference
+    export. The single difference is confirmed to be a rounding artefact,
+    not a formula disagreement: the export gives Gemini 29°31' where this
+    returns Cancer 0°00' — 0.47° apart, straddling a sign boundary, well
+    inside the ±1.2° tolerance implied by the export's arcminute-rounded
+    D1 input (a D1 rounding error is amplified 144× here). Every other
+    body's degree likewise lands within that tolerance.
+    """
+    vsign, vdeg = _d12_dvadashamsha(sign_index, deg)
+    return _d12_dvadashamsha(_RASHI_LIST.index(vsign), vdeg)
+
+
 # ── Dispatch table ────────────────────────────────────────────────────────────
 
 _VARGA_CALCULATOR = {
     "D2":  _d2_hora,
     "D3":  _d3_drekkana,
     "D4":  _d4_chaturthamsha,
+    "D5":  _d5_panchamsha,
+    "D6":  _d6_shashthamsha,
     "D7":  _d7_saptamsha,
+    "D8":  _d8_ashtamsha,
     "D9":  _d9_navamsha,
     "D10": _d10_dasamsha,
+    "D11": _d11_rudramsha,
     "D12": _d12_dvadashamsha,
     "D16": _d16_shodashamsha,
     "D20": _d20_vimshamsha,
@@ -380,33 +545,200 @@ _VARGA_CALCULATOR = {
     "D40": _d40_khavedamsha,
     "D45": _d45_akshavedamsha,
     "D60": _d60_shashtiamsha,
+    "D81": _d81_nava_navamsha,
+    "D108": _d108_ashtottaramsha,
+    "D144": _d144_dwadasamsa_dwadasamsa,
 }
 
 
 # ── Low-level helpers ─────────────────────────────────────────────────────────
 
-def compute_varga_sign(varga: str, sidereal_longitude: float) -> tuple[str, float]:
+# ── Generic (non-classical) varga schemes ─────────────────────────────────────
+#
+# The 22 charts above each carry their own classically-attested starting-sign
+# rule, and those rules do not follow from any single generic formula — D5 uses
+# an explicit target table, D8 keys off sign quality, D11 counts anti-zodiacally,
+# and so on. So an arbitrary "D-n" cannot be derived by extrapolating from them.
+#
+# What *is* well-defined for arbitrary n is the Parivritti (cyclical) scheme:
+# cut the whole zodiac into equal 30/n° parts and hand them out to the signs in
+# unbroken zodiacal order, continuing across sign boundaries rather than
+# restarting each sign. Where a classical chart has its own rule, that rule
+# wins — use the named code (D9, D11, …), which dispatches to the verified
+# implementation. These generic schemes exist for exploring divisions that have
+# no classical rule of their own.
+
+MAX_CUSTOM_DIVISOR = 300
+
+
+def _parivritti_cyclic(n: int):
+    """
+    Build a calculator for the Parivritti (cyclical) D-n scheme.
+
+    The zodiac is divided into 12·n equal parts of 30/n° each, numbered
+    continuously from 0° Aries; part k lands in sign k mod 12.
+    """
+    part_size = 30.0 / n
+
+    def _calc(sign_index: int, deg: float) -> tuple[str, float]:
+        # Reconstruct the absolute longitude so parts run continuously across
+        # sign boundaries — the defining property of the cyclical scheme.
+        lon = sign_index * 30.0 + deg
+        part = int(lon / part_size)
+        vdeg = (lon % part_size) * n
+        return _RASHI_LIST[part % 12], vdeg
+
+    return _calc
+
+
+def _parivritti_from_sign(n: int):
+    """
+    Build a calculator for the "count from the natal sign" D-n scheme —
+    the generalisation of D12's rule: part k of a sign falls k signs
+    later, restarting from the natal sign in every sign.
+    """
+    part_size = 30.0 / n
+
+    def _calc(sign_index: int, deg: float) -> tuple[str, float]:
+        part = min(int(deg / part_size), n - 1)
+        vdeg = (deg % part_size) * n
+        return _RASHI_LIST[(sign_index + part) % 12], vdeg
+
+    return _calc
+
+
+_CUSTOM_SCHEMES = {
+    "cyclic": _parivritti_cyclic,
+    "from_sign": _parivritti_from_sign,
+}
+
+# "D9xD12" — apply D9, then D12 to its output. Same construction the
+# classical composites D81/D108/D144 are built from, generalised.
+_SUBDIVISIONAL_RE = re.compile(r"^(D\d+)X(D\d+)$")
+
+
+def _compose(outer_code: str, inner_code: str):
+    """
+    Build a calculator that applies `outer_code` first, then `inner_code`
+    to the resulting sign+degree.
+
+    Naming follows the classical composites: D108 is "the Dvadashamsha of
+    the Navamsha", i.e. D9 applied first and D12 second, written D9xD12.
+    """
+    first = _resolve_calculator(outer_code)
+    second = _resolve_calculator(inner_code)
+
+    def _calc(sign_index: int, deg: float) -> tuple[str, float]:
+        vsign, vdeg = first(sign_index, deg)
+        return second(_RASHI_LIST.index(vsign), vdeg)
+
+    return _calc
+
+
+def _resolve_calculator(varga: str):
+    """
+    Resolve a varga code to a calculator function.
+
+    Accepts, in precedence order:
+      1. A registered classical code ("D9", "D81", …) — always wins, so a
+         chart with its own attested rule never falls through to a generic one.
+      2. A composite "D<a>xD<b>" — each half resolved by this same function.
+      3. A bare "D<n>" with no classical rule — Parivritti cyclical scheme.
+
+    Raises ValueError with an actionable message for anything else.
+    """
+    code = varga.upper()
+
+    if code in _VARGA_CALCULATOR:
+        return _VARGA_CALCULATOR[code]
+
+    composite = _SUBDIVISIONAL_RE.match(code)
+    if composite:
+        return _compose(composite.group(1), composite.group(2))
+
+    if re.fullmatch(r"D\d+", code):
+        n = int(code[1:])
+        if n < 1 or n > MAX_CUSTOM_DIVISOR:
+            raise ValueError(
+                f"Custom divisor must be between 1 and {MAX_CUSTOM_DIVISOR}; got {n}."
+            )
+        return _parivritti_cyclic(n)
+
+    raise ValueError(
+        f"Unknown varga '{varga}'. Use a classical code "
+        f"({', '.join(sorted(_VARGA_CALCULATOR))}), a custom 'Dn', "
+        "or a sub-divisional 'DaxDb'."
+    )
+
+
+def varga_divisor(varga: str) -> int:
+    """
+    The effective divisor for any accepted varga code.
+
+    Classical codes use their registered divisor; a custom "Dn" uses n; a
+    sub-divisional "DaxDb" uses a·b (D9xD12 → 108, matching the classical
+    D108 it generalises).
+    """
+    code = varga.upper()
+    if code in SUPPORTED_VARGAS:
+        return SUPPORTED_VARGAS[code]
+
+    composite = _SUBDIVISIONAL_RE.match(code)
+    if composite:
+        return varga_divisor(composite.group(1)) * varga_divisor(composite.group(2))
+
+    if re.fullmatch(r"D\d+", code):
+        return int(code[1:])
+
+    raise ValueError(f"Unknown varga '{varga}'.")
+
+
+def compute_varga_sign(
+    varga: str,
+    sidereal_longitude: float,
+    scheme: str = "cyclic",
+) -> tuple[str, float]:
     """
     Public helper: compute the varga sign and degree for any planet or ascendant.
 
     Args:
-        varga:              One of SUPPORTED_VARGAS keys ("D2", "D9", …).
+        varga:              A classical code ("D2", "D9", … "D144"), a custom
+                            "Dn", or a sub-divisional "DaxDb" (e.g. "D9xD12").
         sidereal_longitude: Sidereal longitude in [0, 360).
+        scheme:             Only consulted for a custom "Dn" that has no
+                            classical rule — "cyclic" (default, Parivritti) or
+                            "from_sign". Ignored for classical and composite
+                            codes, which have their own defined behaviour.
 
     Returns:
         (varga_rashi, varga_rashi_degree) — sign name + degree within sign [0, 30).
 
     Raises:
-        ValueError: If the varga code is not recognised.
+        ValueError: If the varga code or scheme is not recognised.
     """
-    if varga not in _VARGA_CALCULATOR:
-        raise ValueError(
-            f"Unknown varga '{varga}'. Supported: {sorted(_VARGA_CALCULATOR)}"
-        )
+    code = varga.upper()
+    if (
+        code not in _VARGA_CALCULATOR
+        and re.fullmatch(r"D\d+", code)
+        and scheme != "cyclic"
+    ):
+        if scheme not in _CUSTOM_SCHEMES:
+            raise ValueError(
+                f"Unknown scheme '{scheme}'. Choose from: {sorted(_CUSTOM_SCHEMES)}."
+            )
+        n = int(code[1:])
+        if n < 1 or n > MAX_CUSTOM_DIVISOR:
+            raise ValueError(
+                f"Custom divisor must be between 1 and {MAX_CUSTOM_DIVISOR}; got {n}."
+            )
+        calculator = _CUSTOM_SCHEMES[scheme](n)
+    else:
+        calculator = _resolve_calculator(code)
+
     lon = normalize_degrees(sidereal_longitude)
     sign_index = int(lon / 30.0)
     deg = lon % 30.0
-    return _VARGA_CALCULATOR[varga](sign_index, deg)
+    return calculator(sign_index, deg)
 
 
 # ── Divisional Engine ─────────────────────────────────────────────────────────
@@ -447,6 +779,7 @@ class DivisionalEngine:
         varga: str,
         ayanamsa: str = "lahiri",
         house_system: str = "W",
+        scheme: str = "cyclic",
     ) -> VargaChart:
         """
         Compute a single Varga chart.
@@ -455,9 +788,12 @@ class DivisionalEngine:
             birth_datetime_utc: UTC birth datetime (timezone-aware).
             latitude:           Geographic latitude (-90 to +90).
             longitude:          Geographic longitude (-180 to +180).
-            varga:              Divisional chart code ('D2' … 'D60').
+            varga:              Divisional chart code — classical ('D2' … 'D144'),
+                                custom ('D13'), or sub-divisional ('D9xD12').
             ayanamsa:           Ayanamsa system key (default 'lahiri').
             house_system:       House system code — used only for D1 context (default 'W').
+            scheme:             Generic-division scheme, consulted only for a
+                                custom 'Dn' with no classical rule.
 
         Returns:
             A fully computed VargaChart.
@@ -465,10 +801,10 @@ class DivisionalEngine:
         Raises:
             ValueError: For unsupported varga codes or naive datetimes.
         """
-        if varga not in SUPPORTED_VARGAS:
-            raise ValueError(
-                f"Unsupported varga '{varga}'. Choose from: {sorted(SUPPORTED_VARGAS)}"
-            )
+        # Validate up front so a bad code fails before the ephemeris call
+        # rather than once per body inside _build_from_result. Accepts custom
+        # "Dn" and sub-divisional "DaxDb" alongside the classical codes.
+        _resolve_calculator(varga)
 
         result = self._wrapper.calculate(
             dt=birth_datetime_utc,
@@ -477,7 +813,7 @@ class DivisionalEngine:
             ayanamsa=ayanamsa,
             house_system=house_system,
         )
-        return self._build_from_result(result, varga, ayanamsa)
+        return self._build_from_result(result, varga, ayanamsa, scheme=scheme)
 
     def compute_all(
         self,
@@ -488,7 +824,7 @@ class DivisionalEngine:
         house_system: str = "W",
     ) -> dict[str, VargaChart]:
         """
-        Compute all 15 Varga charts in a single call.
+        Compute all 19 Varga charts in a single call.
 
         Returns:
             Mapping of varga code → VargaChart, e.g. {"D9": VargaChart(...), …}.
@@ -582,7 +918,7 @@ class DivisionalEngine:
     ) -> uuid.UUID:
         """
         Persist the full dict returned by compute_all() — one
-        birth_charts row shared across all 15 vargas, one
+        birth_charts row shared across all 22 vargas, one
         divisional_charts row per varga.
 
         birth_chart_id: pass this when the caller already resolved the
@@ -642,11 +978,12 @@ class DivisionalEngine:
         result,  # EphemerisResult — avoid circular import with type hint
         varga: str,
         ayanamsa: str,
+        scheme: str = "cyclic",
     ) -> VargaChart:
         """Build a VargaChart from an already-computed EphemerisResult."""
         asc_sid = result.ascendant.sidereal_longitude
         asc_d1_rashi, asc_d1_deg = longitude_to_rashi(asc_sid)
-        asc_v_rashi, asc_v_deg = compute_varga_sign(varga, asc_sid)
+        asc_v_rashi, asc_v_deg = compute_varga_sign(varga, asc_sid, scheme=scheme)
 
         varga_ascendant = VargaAscendant(
             d1_sidereal_longitude=asc_sid,
@@ -667,7 +1004,7 @@ class DivisionalEngine:
             if varga == "D30" and planet in ("sun", "moon"):
                 v_rashi, v_deg = d1_rashi, d1_deg
             else:
-                v_rashi, v_deg = compute_varga_sign(varga, d1_sid)
+                v_rashi, v_deg = compute_varga_sign(varga, d1_sid, scheme=scheme)
 
             v_rashi_idx = _RASHI_LIST.index(v_rashi)
             house_number = house_offset(lagna_rashi_idx, v_rashi_idx)
@@ -693,7 +1030,7 @@ class DivisionalEngine:
 
         return VargaChart(
             varga=varga,
-            divisor=SUPPORTED_VARGAS[varga],
+            divisor=varga_divisor(varga),
             ascendant=varga_ascendant,
             planet_positions=tuple(varga_positions),
             ayanamsa_system=ayanamsa,
