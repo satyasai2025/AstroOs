@@ -218,7 +218,7 @@ def create_app() -> FastAPI:
     # and the `limiter` instance already existed in
     # apps/api/middleware/rate_limit.py but were never wired in anywhere
     # — the retroactive security review flagged POST /workflow/analyze
-    # (the CPU-expensive full pipeline: D1 + 15 vargas + dasha + yogas +
+    # (the CPU-expensive full pipeline: D1 + 22 vargas + dasha + yogas +
     # shadbala + ashtakavarga + transits + rules, all per request) as
     # reachable with zero throttling by any authenticated user. This
     # activates the global per-remote-address default (100/hour,

@@ -3,8 +3,10 @@ AstroOS — Divisional Chart Router (Task 5)
 
 Endpoints
 ---------
-POST /api/v1/divisional/{varga}   — Compute a single varga chart (D2 … D60)
-POST /api/v1/divisional/all       — Compute all 15 varga charts in one call
+POST /api/v1/divisional/{varga}                  — One classical varga (D2 … D144)
+POST /api/v1/divisional/all                      — All 22 classical vargas at once
+POST /api/v1/divisional/custom/{n}               — Arbitrary D-n (generic scheme)
+POST /api/v1/divisional/subdivisional/{a}x{b}    — Chart-of-a-chart, e.g. D9xD12
 
 No business logic lives here — all computation is delegated to DivisionalEngine.
 """
@@ -25,12 +27,17 @@ from apps.api.repositories.divisional_chart_repository import DivisionalChartRep
 from apps.api.repositories.divisional_planet_repository import DivisionalPlanetRepository
 from apps.api.schemas.divisional import (
     AllVargaChartsResponse,
+    CustomVargaChartRequest,
     VargaAscendantResponse,
     VargaChartRequest,
     VargaChartResponse,
     VargaPlanetResponse,
 )
-from apps.api.services.divisional_engine import SUPPORTED_VARGAS, DivisionalEngine
+from apps.api.services.divisional_engine import (
+    MAX_CUSTOM_DIVISOR,
+    SUPPORTED_VARGAS,
+    DivisionalEngine,
+)
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 
 logger = logging.getLogger(__name__)
@@ -103,7 +110,7 @@ def _serialise_chart(chart: VargaChart) -> VargaChartResponse:
 @router.post(
     "/all",
     response_model=AllVargaChartsResponse,
-    summary="Compute all 15 divisional charts",
+    summary="Compute all 22 divisional charts",
     description=(
         "Computes D2 through D60 in a single ephemeris call. "
         "Returns a map of varga code → chart."
@@ -161,6 +168,89 @@ async def compute_all_vargas(
         julian_day=sample.julian_day,
         ayanamsa_system=sample.ayanamsa_system,
     )
+
+
+async def _compute_unpersisted(
+    engine: DivisionalEngine,
+    body,
+    varga_code: str,
+    label: str,
+    scheme: str = "cyclic",
+) -> VargaChartResponse:
+    """
+    Compute a varga chart without persisting it.
+
+    Custom and sub-divisional charts are deliberately not saved: the
+    divisional_charts.chart_type Postgres enum only accepts the classical
+    codes, and widening it to an open-ended set of generated codes would
+    make that column unvalidatable. These charts are cheap to recompute,
+    so they are treated as exploratory output rather than stored records.
+    """
+    try:
+        # Blocking pyswisseph call — offload so it does not freeze the loop.
+        chart = await asyncio.to_thread(
+            engine.compute,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            varga=varga_code,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+            scheme=scheme,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
+        ) from exc
+    except Exception as exc:
+        logger.exception("Error computing %s: %s", label, exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to compute {label} chart.",
+        ) from exc
+
+    return _serialise_chart(chart)
+
+
+@router.post(
+    "/custom/{n}",
+    response_model=VargaChartResponse,
+    summary="Compute a custom D-n divisional chart",
+    description=(
+        "Compute an arbitrary D-n chart for a divisor with no classical rule "
+        f"(1–{MAX_CUSTOM_DIVISOR}), using a generic division scheme. If n names "
+        "a chart that does have a classical rule (e.g. 9), that verified rule "
+        "is used instead and the scheme parameter is ignored. Not persisted."
+    ),
+)
+async def compute_custom_varga(
+    body: CustomVargaChartRequest,
+    engine: DivisionalEngine = Depends(_get_divisional_engine),
+    n: int = Path(..., ge=1, le=MAX_CUSTOM_DIVISOR, description="Divisor."),
+) -> VargaChartResponse:
+    code = f"D{n}"
+    return await _compute_unpersisted(engine, body, code, code, scheme=body.scheme)
+
+
+@router.post(
+    "/subdivisional/{outer}x{inner}",
+    response_model=VargaChartResponse,
+    summary="Compute a sub-divisional D-m×n chart",
+    description=(
+        "Compute a chart-of-a-chart: apply `outer` first, then `inner` to its "
+        "result — the same construction behind the classical composites "
+        "(D9xD12 reproduces D108 exactly). Both halves may be any classical or "
+        "custom code. Not persisted."
+    ),
+)
+async def compute_subdivisional_varga(
+    body: VargaChartRequest,
+    engine: DivisionalEngine = Depends(_get_divisional_engine),
+    outer: str = Path(..., description="Chart applied first, e.g. D9."),
+    inner: str = Path(..., description="Chart applied to that result, e.g. D12."),
+) -> VargaChartResponse:
+    code = f"{outer.upper()}x{inner.upper()}"
+    return await _compute_unpersisted(engine, body, code, code)
 
 
 @router.post(
