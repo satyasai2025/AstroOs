@@ -1,4 +1,5 @@
 import { ResearchPatternsFiltersProvider } from "@/components/research/ResearchPatternsFiltersContext";
+import { SplitWorkspaceLayout } from "@/components/layout/SplitWorkspaceLayout";
 
 /**
  * Wraps every /research/patterns/* route (Overview, Patterns, Combinations,
@@ -12,5 +13,11 @@ export default function ResearchPatternsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ResearchPatternsFiltersProvider>{children}</ResearchPatternsFiltersProvider>;
+  return (
+    <ResearchPatternsFiltersProvider>
+      <SplitWorkspaceLayout>
+        {children}
+      </SplitWorkspaceLayout>
+    </ResearchPatternsFiltersProvider>
+  );
 }

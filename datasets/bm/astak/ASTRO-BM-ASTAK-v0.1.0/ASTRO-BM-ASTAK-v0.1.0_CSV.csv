@@ -1,0 +1,16 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,test_id,astak_type,planet,house_number,rashi,expected_bindu_range,source_reference,notes
+ASTRO-REC-BMAST-000001,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SUN-1H,sun_bhinna,sun,1,aries,1-8,Classical: Sun bindu in 1st house from any graha,Sun Bhinna Ashtakavarga — bindu in 1st house
+ASTRO-REC-BMAST-000002,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SUN-7H,sun_bhinna,sun,7,libra,1-8,Classical: Sun bindu in 7th house from any graha,Sun Bhinna Ashtakavarga — bindu in 7th house
+ASTRO-REC-BMAST-000003,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,MOON-4H,moon_bhinna,moon,4,cancer,1-8,Classical: Moon bindu in 4th house from any graha,Moon Bhinna Ashtakavarga — bindu in 4th house
+ASTRO-REC-BMAST-000004,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,MOON-10H,moon_bhinna,moon,10,capricorn,1-8,Classical: Moon bindu in 10th house from any graha,Moon Bhinna Ashtakavarga — bindu in 10th house
+ASTRO-REC-BMAST-000005,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,MARS-3H,mars_bhinna,mars,3,gemini,1-8,Classical: Mars bindu in 3rd house from any graha,Mars Bhinna Ashtakavarga — bindu in 3rd house
+ASTRO-REC-BMAST-000006,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,MARS-11H,mars_bhinna,mars,11,aquarius,1-8,Classical: Mars bindu in 11th house from any graha,Mars Bhinna Ashtakavarga — bindu in 11th house
+ASTRO-REC-BMAST-000007,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,JUP-5H,jupiter_bhinna,jupiter,5,leo,1-8,Classical: Jupiter bindu in 5th house from any graha,Jupiter Bhinna Ashtakavarga — bindu in 5th house
+ASTRO-REC-BMAST-000008,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,JUP-9H,jupiter_bhinna,jupiter,9,sagittarius,1-8,Classical: Jupiter bindu in 9th house from any graha,Jupiter Bhinna Ashtakavarga — bindu in 9th house
+ASTRO-REC-BMAST-000009,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SAT-3H,saturn_bhinna,saturn,3,gemini,1-8,Classical: Saturn bindu in 3rd house from any graha,Saturn Bhinna Ashtakavarga — bindu in 3rd house
+ASTRO-REC-BMAST-000010,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SAT-11H,saturn_bhinna,saturn,11,aquarius,1-8,Classical: Saturn bindu in 11th house from any graha,Saturn Bhinna Ashtakavarga — bindu in 11th house
+ASTRO-REC-BMAST-000011,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SARVA-TOTAL,sarva_total,sun,1,aries,8-56,Classical: Sarva Ashtakavarga total per house,Sarva Ashtakavarga — total bindus in 1st house (8-56 range)
+ASTRO-REC-BMAST-000012,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SARVA-H7,sarva_total,sun,7,libra,8-56,Classical: Sarva Ashtakavarga total for 7th house,Sarva Ashtakavarga — total bindus in 7th house
+ASTRO-REC-BMAST-000013,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,BINDU-RANGE,bindu_validation,sun,1,aries,0-8,Classical: Each Bhinna Ashtakavarga bindu count 0-8,Individual Bhinna bindu must be 0-8
+ASTRO-REC-BMAST-000014,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,SUM-CHECK,sum_validation,sun,1,aries,0-56,Classical: Sum of Bhinna = Sarva,Sarva total must equal sum of all Bhinna values
+ASTRO-REC-BMAST-000015,ASTRO-BM-ASTAK-v0.1.0,reference,1,false,REKHA-GRAHA,special_bindu,sun,1,aries,0-8,Classical: Rekha and special graha bindu rules,Special Ashtakavarga bindu rules for Rekha and Graha

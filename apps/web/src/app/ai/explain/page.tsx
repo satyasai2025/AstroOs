@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Badge, Button, Card, Input, Select, type SelectOption } from "@/components/ui";
 import { api } from "@/lib/api";
 import { aiApi, type BirthDataInput } from "@/lib/ai";
-import { ResearchPatternsShell } from "@/components/research/ResearchPatternsShell";
+import { SplitWorkspaceLayout } from "@/components/layout/SplitWorkspaceLayout";
 import type { AIResponseSchema, AyanamsaCode, ExplanationResponse, HouseSystemCode } from "@/lib/types";
 
 const AYANAMSA_OPTIONS: SelectOption[] = [
@@ -398,6 +398,6 @@ export default function AiExplainPage() {
         </Card>
         {ruleResult && <RuleExplanationCard result={ruleResult} />}
       </div>
-    </ResearchPatternsShell>
+    </SplitWorkspaceLayout>
   );
 }

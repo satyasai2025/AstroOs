@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
+import { CommandPalette } from "./CommandPalette";
 
 import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
 
@@ -785,6 +786,8 @@ export function AppShell({
         >
           {children}
         </main>
+        
+        <CommandPalette />
       </div>
     </div>
   );

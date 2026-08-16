@@ -448,7 +448,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
           </div>
 
           {/* Step content */}
-          <div className="flex-1 overflow-y-auto p-5">
+          <div className="flex-1 overflow-y-auto p-5 pb-8 max-h-[75vh]">
             {step === 1 && (
               <div>
                 <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Select Chart Type</h3>
@@ -592,7 +592,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                   Local date and time at the birth place — not UTC. The birth place below determines the conversion.
                 </p>
 
-                <div>
+                <div className="mt-4">
                   <div className="mb-1.5 flex items-center justify-between">
                     <label className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Birth Place</label>
                     <button

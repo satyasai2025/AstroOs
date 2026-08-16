@@ -4,6 +4,7 @@ import { TransitAlerts } from "@/components/charts/transit/TransitAlerts";
 import { TransitWheel } from "@/components/charts/transit/TransitWheel";
 import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
 import { AnimatedTransitIntegration } from "@/app/(main)/charts/AnimatedTransitIntegration";
+import { SplitWorkspaceLayout } from "@/components/layout/SplitWorkspaceLayout";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, DonutChart, KpiCard, Table, Tabs, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
 import { PLANET_SYMBOLS, nakshatraFromLongitude } from "@/lib/astro";
@@ -392,7 +393,7 @@ export default function TransitAnalysisPage() {
   };
 
   return (
-    <>
+    <SplitWorkspaceLayout>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
@@ -767,6 +768,6 @@ export default function TransitAnalysisPage() {
       </div>
         </>
       )}
-    </>
+    </SplitWorkspaceLayout>
   );
 }
