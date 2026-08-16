@@ -13,9 +13,8 @@ interface CardProps {
 export function Card({ children, glow, padding = "var(--space-3)", style, className }: CardProps) {
   return (
     <div
-      className={`border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none transition-all ${className ?? ""}`}
+      className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none transition-all ${className ?? ""}`}
       style={{
-        background: "var(--bg-card)",
         borderRadius: "var(--radius-lg, 0.75rem)",
         padding,
         boxShadow: glow ? `var(--shadow-md), var(--glow-${glow})` : undefined,
@@ -26,4 +25,5 @@ export function Card({ children, glow, padding = "var(--space-3)", style, classN
     </div>
   );
 }
+
 
