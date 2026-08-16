@@ -253,7 +253,7 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
   return (
     <Link
       href="/charts/history"
-      className="flex items-center gap-2.5 rounded-lg p-2.5 text-xs transition bg-white hover:bg-slate-50 dark:bg-slate-900/60 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 shadow-sm shadow-slate-200/50 dark:shadow-none"
+      className="flex items-center gap-2.5 rounded-lg p-2.5 text-xs transition bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/60 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 shadow-sm shadow-slate-200/50 dark:shadow-none"
     >
       <span
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
@@ -265,12 +265,12 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
         <p className="truncate font-semibold text-slate-900 dark:text-slate-100">
           {chart.subject_name}
         </p>
-        <p className="truncate text-slate-600 dark:text-slate-400">
+        <p className="truncate text-xs text-slate-600 dark:text-slate-400">
           {chart.lagna_rashi ?? "—"} Lagna · {timeAgo(chart.created_at)}
         </p>
       </div>
       <span
-        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800"
+        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800"
       >
         D1 Chart
       </span>
@@ -452,7 +452,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
         <button
           type="button"
           onClick={onStartNewChart}
-          className="flex items-center gap-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-slate-950 shadow-md shadow-cyan-500/20 transition"
+          className="flex items-center gap-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-md shadow-cyan-400/20 transition"
         >
           + New Chart
         </button>
@@ -562,12 +562,12 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               </div>
               <div>
                 <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No chart loaded</p>
-                <p className="mt-0.5 text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its current dasha &amp; transits</p>
+                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">Open or generate a chart to see its current dasha &amp; transits</p>
               </div>
               <button
                 type="button"
                 onClick={onStartNewChart}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-3 py-1.5 text-xs font-medium shadow-sm transition"
               >
                 Load Active Chart
               </button>
@@ -601,17 +601,18 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               </div>
               <div>
                 <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No active yogas</p>
-                <p className="mt-0.5 text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its present yogas</p>
+                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">Open or generate a chart to see its present yogas</p>
               </div>
               <button
                 type="button"
                 onClick={onStartNewChart}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-3 py-1.5 text-xs font-medium shadow-sm transition"
               >
                 Load Active Chart
               </button>
             </div>
           )}
+
 
         </Card>
       </div>
