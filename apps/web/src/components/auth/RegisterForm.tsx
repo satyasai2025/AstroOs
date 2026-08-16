@@ -20,7 +20,11 @@ export function RegisterForm() {
     try {
       await register.mutateAsync({
         email: email.trim().toLowerCase(),
-        display_name: displayName.trim(),
+        display_name: displayName
+          .trim()
+          .split(/\s+/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(" "),
         password,
       });
       router.push("/dashboard");

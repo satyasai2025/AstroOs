@@ -22,12 +22,17 @@ from apps.api.domain.user import User, UserId, UserRole, UserStatus
 from apps.api.models.user import PasswordResetTokenModel, UserModel, UserSessionModel
 
 
+def _capitalize_name(name: str) -> str:
+    """Capitalize each word in a name string."""
+    return " ".join(word.capitalize() for word in name.strip().split())
+
+
 def _model_to_domain(model: UserModel) -> User:
     """Convert ORM row → domain User. Explicit, not magic."""
     return User(
         id=UserId(model.id),
         email=model.email,
-        display_name=model.display_name,
+        display_name=_capitalize_name(model.display_name),
         hashed_password=model.hashed_password,
         role=UserRole(model.role),
         status=UserStatus(model.status),
@@ -86,7 +91,7 @@ class UserRepository:
     ) -> User:
         model = UserModel(
             email=email.lower().strip(),
-            display_name=display_name.strip(),
+            display_name=_capitalize_name(display_name),
             hashed_password=hashed_password,
             role=role,
             status=UserStatus.ACTIVE,
@@ -192,7 +197,7 @@ class UserRepository:
         """
         values: dict = {}
         if display_name is not None:
-            values["display_name"] = display_name.strip()
+            values["display_name"] = _capitalize_name(display_name)
         if email is not None:
             values["email"] = email.lower().strip()
         if timezone is not None:

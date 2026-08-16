@@ -5,10 +5,10 @@
 --shadow-xl:0 24px 64px rgba(0,0,0,0.55);
 --shadow-inset:inset 0 1px 0 rgba(255,255,255,0.05);
 
---glow-cyan:0 0 24px rgba(6,207,255,0.35), 0 0 60px rgba(6,207,255,0.1);
---glow-gold:0 0 24px rgba(245,166,35,0.35), 0 0 60px rgba(245,166,35,0.1);
---glow-violet:0 0 24px rgba(139,92,246,0.35), 0 0 60px rgba(139,92,246,0.1);
---glow-success:0 0 20px rgba(16,185,129,0.3);
+--glow-cyan:0 0 16px rgba(41,184,212,0.30), 0 0 40px rgba(41,184,212,0.08);
+--glow-gold:0 0 16px rgba(245,166,35,0.28), 0 0 40px rgba(245,166,35,0.08);
+--glow-violet:0 0 16px rgba(139,92,246,0.28), 0 0 40px rgba(139,92,246,0.08);
+--glow-success:0 0 14px rgba(16,185,129,0.22);
 
 --blur-glass:blur(20px);
 --blur-glass-lg:blur(32px);

@@ -6,6 +6,12 @@ from pathlib import Path
 
 TEMPLATE_DIR = Path(__file__).parent
 
+
+def _capitalize_name(name: str) -> str:
+    """Capitalize each word in a name/place string."""
+    return " ".join(word.capitalize() for word in name.strip().split())
+
+
 HEADERS = [
     "_record_id",
     "subject_first_name",
@@ -30,22 +36,67 @@ HEADERS = [
 
 EXAMPLE_ROWS = [
     [
-        "ASTRO-REC-COHORT-000001", "Ada", "Lovelace", "F",
-        "London", "England", 51.5072, -0.1275,
-        10, "Dec", 1815, 15, 0, "g", 2379667.5, "AA",
-        "1815-12-10T15:00:00+00:00", "biography", "verified",
+        "ASTRO-REC-COHORT-000001",
+        _capitalize_name("Ada"),
+        _capitalize_name("Lovelace"),
+        "F",
+        _capitalize_name("London"),
+        "England",
+        51.5072,
+        -0.1275,
+        10,
+        "Dec",
+        1815,
+        15,
+        0,
+        "g",
+        2379667.5,
+        "AA",
+        "1815-12-10T15:00:00+00:00",
+        "biography",
+        "verified",
     ],
     [
-        "ASTRO-REC-COHORT-000002", "Nikola", "Tesla", "M",
-        "Smiljan", "Croatia", 44.5, 15.3,
-        10, "Jul", 1856, 0, 0, "g", 2398029.5, "AA",
-        "1856-07-10T00:00:00+00:00", "biography", "verified",
+        "ASTRO-REC-COHORT-000002",
+        _capitalize_name("Nikola"),
+        _capitalize_name("Tesla"),
+        "M",
+        _capitalize_name("Smiljan"),
+        "Croatia",
+        44.5,
+        15.3,
+        10,
+        "Jul",
+        1856,
+        0,
+        0,
+        "g",
+        2398029.5,
+        "AA",
+        "1856-07-10T00:00:00+00:00",
+        "biography",
+        "verified",
     ],
     [
-        "ASTRO-REC-COHORT-000003", "Marie", "Curie", "F",
-        "Warsaw", "Poland", 52.2297, 21.0122,
-        7, "Nov", 1867, 0, 0, "g", 2404043.5, "A",
-        "1867-11-07T00:00:00+00:00", "biography", "estimated",
+        "ASTRO-REC-COHORT-000003",
+        _capitalize_name("Marie"),
+        _capitalize_name("Curie"),
+        "F",
+        _capitalize_name("Warsaw"),
+        "Poland",
+        52.2297,
+        21.0122,
+        7,
+        "Nov",
+        1867,
+        0,
+        0,
+        "g",
+        2404043.5,
+        "A",
+        "1867-11-07T00:00:00+00:00",
+        "biography",
+        "estimated",
     ],
 ]
 

@@ -31,33 +31,29 @@ export function ResearchModeToggle({ compact = false }: { compact?: boolean }) {
   }
 
   if (compact) {
+    const isEnabled = !!mode?.enabled;
     return (
       <button
         type="button"
         onClick={handleToggle}
         disabled={toggling}
-        className="flex items-center gap-1.5 rounded-full px-2 py-1 text-[10px] font-medium transition-colors"
-        style={{
-          backgroundColor: mode?.enabled
-            ? "rgba(34, 197, 94, 0.15)"
-            : "var(--bg-card)",
-          color: mode?.enabled ? "#22c55e" : "var(--text-muted)",
-          border: `1px solid ${
-            mode?.enabled ? "rgba(34, 197, 94, 0.3)" : "var(--border-primary)"
-          }`,
-        }}
-        aria-label={`Research mode: ${mode?.enabled ? "ON" : "OFF"}. Click to toggle.`}
+        className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-medium transition-colors border ${
+          isEnabled
+            ? "border-green-500/40 bg-green-500/15 text-green-600 dark:text-green-400"
+            : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 shadow-sm"
+        }`}
+        aria-label={`Research mode: ${isEnabled ? "ON" : "OFF"}. Click to toggle.`}
       >
         <span
-          className="inline-block h-1.5 w-1.5 rounded-full"
-          style={{
-            backgroundColor: mode?.enabled ? "#22c55e" : "var(--text-muted)",
-          }}
+          className={`inline-block h-1.5 w-1.5 rounded-full ${
+            isEnabled ? "bg-green-500 animate-pulse" : "bg-slate-400 dark:bg-slate-500"
+          }`}
         />
-        {mode?.enabled ? "Research ON" : "Research OFF"}
+        <span>{isEnabled ? "Research ON" : "Research OFF"}</span>
       </button>
     );
   }
+
 
   return (
     <button

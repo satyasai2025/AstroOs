@@ -258,12 +258,21 @@ def _populate_bala(registry: OntologyRegistry) -> None:
     for component_id in component_ids:
         category = component_id.split(".")[0] if "." in component_id else "kala_bala"
         name = component_id.split(".")[-1].replace("_", " ").title()
+        bala_entity_id = f"BALA-{component_id.upper().replace('.', '-')}"
         registry.add_entity(OntologyEntity(
-            entity_id=f"BALA-{component_id.upper().replace('.', '-')}",
+            entity_id=bala_entity_id,
             entity_type="Bala",
             name=name,
             metadata={"category": category, "component_key": component_id},
         ))
+        for planet in _GRAHA_LIST[:7]:  # 7 classical grahas evaluated by Shadbala
+            graha_id = f"GRAHA-{planet.upper()}"
+            if registry.get_entity(graha_id) is not None:
+                registry.add_relationship(OntologyRelationship(
+                    subject_id=bala_entity_id,
+                    relationship_type="Evaluates",
+                    object_id=graha_id,
+                ))
 
 
 def _populate_dasha(registry: OntologyRegistry) -> None:

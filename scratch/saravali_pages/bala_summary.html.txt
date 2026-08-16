@@ -1,0 +1,72 @@
+Bala Summary
+Strength and weakness of the planets depend upon their net Bala strength
+i.e. the sum of the Balas. The net strength is important for the
+judgement of the effects during Dasas and transits.
+Planets with high net Bala will have strong effects. These effects will
+be auspisious in most cases. But strong planets can also have strong
+inauspisious effects, especially Saturn and Mars. Planets with low net
+Bala will prove inauspicious or harmless.
+Shadbala Requirements
+Strength and weakness of planets depend upon their total Shadbala.
+Planets are considered to be strong if they meet the minimum Shadbala
+requirements mentioned in Hora Shastra. The values are
+Planet
+Required (Rupas)
+Virupas
+Sun
+6.5
+390
+Moon
+6.0
+360
+Mars
+5.0
+300
+Mercury
+7.0
+420
+Jupiter
+6.5
+390
+Venus
+5.5
+330
+Saturn
+5
+300
+A planet that has at least the required Shadbala Pinda is considered to
+be strong and will show favourable results. Nevertheless malefics like
+Saturn or Mars can give problems and miseries, too.
+Requirements for Individual Shadbala Types
+There is another Shadbala requirement template that is based upon
+individual requirements for different types of Sub-Balas. This approach
+can be used as an alternative method for judgement of strength, even if
+the requirements mentioned above do not match.
+Planets are arranged in groups. The corresponding planet must match
+all
+the requirements in order to be considered as strong.
+The table shows the required Balas in Virupas.
+Planets
+Sthana Bala
+Dig Bala
+Kala Bala
+Cheshta Bala
+Ayana Bala
+Sun, Jupiter, Mercury
+165
+35
+50
+112
+30
+Moon, Venus
+133
+50
+30
+100
+40
+Mars, Saturn
+96
+30
+40
+67
+20

@@ -12,6 +12,11 @@ from dataclasses import dataclass
 from typing import Optional
 
 
+def _capitalize_place_name(name: str) -> str:
+    """Capitalize each word in a place name string."""
+    return " ".join(word.capitalize() for word in name.strip().split())
+
+
 @dataclass(frozen=True)
 class PlaceResult:
     """One candidate location from a place-name search."""
@@ -21,6 +26,11 @@ class PlaceResult:
     longitude: float
     country: Optional[str] = None
     state: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self, "display_name", _capitalize_place_name(self.display_name)
+        )
 
 
 @dataclass(frozen=True)

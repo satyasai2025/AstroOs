@@ -17,33 +17,36 @@ export default function HouseDependency2Page() {
   // Mock chart data for demonstration - in real app this comes from workflow store
   const mockHouses: HouseCuspSchema[] = Array.from({ length: 12 }, (_, i) => ({
     house_number: i + 1,
-    rashi: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"][i],
-    degree: 0,
-    sign_lord: "",
+    longitude: i * 30,
+    sidereal_longitude: i * 30,
+    rashi: ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"][i] ?? "Aries",
+    nakshatra_lord: "Ketu",
+    sub_lord: "Venus",
+    sub_sub_lord: "Sun",
   }));
 
   const mockPlanets: PlanetPositionSchema[] = [
-    { planet: "Sun", house_number: 10, rashi: "Capricorn", degree: 18.4, dignity: "neutral", retrograde: false, nakshatra: "Shravana", pada: 1 },
-    { planet: "Moon", house_number: 4, rashi: "Cancer", degree: 12.3, dignity: "own", retrograde: false, nakshatra: "Pushya", pada: 2 },
-    { planet: "Mars", house_number: 7, rashi: "Libra", degree: 5.7, dignity: "neutral", retrograde: false, nakshatra: "Chitra", pada: 3 },
-    { planet: "Mercury", house_number: 10, rashi: "Capricorn", degree: 22.1, dignity: "neutral", retrograde: false, nakshatra: "Dhanishta", pada: 1 },
-    { planet: "Jupiter", house_number: 9, rashi: "Sagittarius", degree: 15.6, dignity: "own", retrograde: false, nakshatra: "Purva Ashadha", pada: 2 },
-    { planet: "Venus", house_number: 9, rashi: "Sagittarius", degree: 8.2, dignity: "neutral", retrograde: false, nakshatra: "Mula", pada: 4 },
-    { planet: "Saturn", house_number: 10, rashi: "Capricorn", degree: 3.9, dignity: "own", retrograde: false, nakshatra: "Uttara Ashadha", pada: 1 },
-    { planet: "Rahu", house_number: 2, rashi: "Taurus", degree: 11.5, dignity: "exalted", retrograde: true, nakshatra: "Rohini", pada: 2 },
-    { planet: "Ketu", house_number: 8, rashi: "Scorpio", degree: 11.5, dignity: "debilitated", retrograde: true, nakshatra: "Jyeshtha", pada: 4 },
+    { planet: "Sun", house_number: 10, rashi: "Capricorn", rashi_degree: 18.4, sidereal_longitude: 288.4, dignity: "neutral", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Shravana", pada: 1, nakshatra_lord: "Moon", sub_lord: "Mercury", sub_sub_lord: "Venus", rashi_house_number: 10 },
+    { planet: "Moon", house_number: 4, rashi: "Cancer", rashi_degree: 12.3, sidereal_longitude: 102.3, dignity: "own", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Pushya", pada: 2, nakshatra_lord: "Saturn", sub_lord: "Rahu", sub_sub_lord: "Jupiter", rashi_house_number: 4 },
+    { planet: "Mars", house_number: 7, rashi: "Libra", rashi_degree: 5.7, sidereal_longitude: 185.7, dignity: "neutral", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Chitra", pada: 3, nakshatra_lord: "Mars", sub_lord: "Sun", sub_sub_lord: "Moon", rashi_house_number: 7 },
+    { planet: "Mercury", house_number: 10, rashi: "Capricorn", rashi_degree: 22.1, sidereal_longitude: 292.1, dignity: "neutral", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Dhanishta", pada: 1, nakshatra_lord: "Mars", sub_lord: "Mercury", sub_sub_lord: "Saturn", rashi_house_number: 10 },
+    { planet: "Jupiter", house_number: 9, rashi: "Sagittarius", rashi_degree: 15.6, sidereal_longitude: 255.6, dignity: "own", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Purva Ashadha", pada: 2, nakshatra_lord: "Venus", sub_lord: "Sun", sub_sub_lord: "Rahu", rashi_house_number: 9 },
+    { planet: "Venus", house_number: 9, rashi: "Sagittarius", rashi_degree: 8.2, sidereal_longitude: 248.2, dignity: "neutral", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Mula", pada: 4, nakshatra_lord: "Ketu", sub_lord: "Jupiter", sub_sub_lord: "Saturn", rashi_house_number: 9 },
+    { planet: "Saturn", house_number: 10, rashi: "Capricorn", rashi_degree: 3.9, sidereal_longitude: 273.9, dignity: "own", is_retrograde: false, is_combust: false, combustion_orb: null, nakshatra: "Uttara Ashadha", pada: 1, nakshatra_lord: "Sun", sub_lord: "Saturn", sub_sub_lord: "Venus", rashi_house_number: 10 },
+    { planet: "Rahu", house_number: 2, rashi: "Taurus", rashi_degree: 11.5, sidereal_longitude: 41.5, dignity: "exalted", is_retrograde: true, is_combust: false, combustion_orb: null, nakshatra: "Rohini", pada: 2, nakshatra_lord: "Moon", sub_lord: "Mars", sub_sub_lord: "Rahu", rashi_house_number: 2 },
+    { planet: "Ketu", house_number: 8, rashi: "Scorpio", rashi_degree: 11.5, sidereal_longitude: 221.5, dignity: "debilitated", is_retrograde: true, is_combust: false, combustion_orb: null, nakshatra: "Jyeshtha", pada: 4, nakshatra_lord: "Mercury", sub_lord: "Rahu", sub_sub_lord: "Jupiter", rashi_house_number: 8 },
   ];
 
   const mockPlanetStrengths: PlanetStrengthSchema[] = [
-    { planet: "Sun", strength_score: 6.2, dignity: "neutral", shadbala: {} },
-    { planet: "Moon", strength_score: 8.5, dignity: "own", shadbala: {} },
-    { planet: "Mars", strength_score: 5.8, dignity: "neutral", shadbala: {} },
-    { planet: "Mercury", strength_score: 6.5, dignity: "neutral", shadbala: {} },
-    { planet: "Jupiter", strength_score: 9.1, dignity: "own", shadbala: {} },
-    { planet: "Venus", strength_score: 7.3, dignity: "neutral", shadbala: {} },
-    { planet: "Saturn", strength_score: 8.8, dignity: "own", shadbala: {} },
-    { planet: "Rahu", strength_score: 7.9, dignity: "exalted", shadbala: {} },
-    { planet: "Ketu", strength_score: 4.2, dignity: "debilitated", shadbala: {} },
+    { planet: "Sun", strength_score: 6.2, dignity: "neutral", is_retrograde: false, is_combust: false, house_number: 10, is_in_own_sign: false, is_exalted: false, is_debilitated: false, is_in_kendra: true, is_in_trikona: false, is_in_dusthana: false },
+    { planet: "Moon", strength_score: 8.5, dignity: "own", is_retrograde: false, is_combust: false, house_number: 4, is_in_own_sign: true, is_exalted: false, is_debilitated: false, is_in_kendra: true, is_in_trikona: false, is_in_dusthana: false },
+    { planet: "Mars", strength_score: 5.8, dignity: "neutral", is_retrograde: false, is_combust: false, house_number: 7, is_in_own_sign: false, is_exalted: false, is_debilitated: false, is_in_kendra: true, is_in_trikona: false, is_in_dusthana: false },
+    { planet: "Mercury", strength_score: 6.5, dignity: "neutral", is_retrograde: false, is_combust: false, house_number: 10, is_in_own_sign: false, is_exalted: false, is_debilitated: false, is_in_kendra: true, is_in_trikona: false, is_in_dusthana: false },
+    { planet: "Jupiter", strength_score: 9.1, dignity: "own", is_retrograde: false, is_combust: false, house_number: 9, is_in_own_sign: true, is_exalted: false, is_debilitated: false, is_in_kendra: false, is_in_trikona: true, is_in_dusthana: false },
+    { planet: "Venus", strength_score: 7.3, dignity: "neutral", is_retrograde: false, is_combust: false, house_number: 9, is_in_own_sign: false, is_exalted: false, is_debilitated: false, is_in_kendra: false, is_in_trikona: true, is_in_dusthana: false },
+    { planet: "Saturn", strength_score: 8.8, dignity: "own", is_retrograde: false, is_combust: false, house_number: 10, is_in_own_sign: true, is_exalted: false, is_debilitated: false, is_in_kendra: true, is_in_trikona: false, is_in_dusthana: false },
+    { planet: "Rahu", strength_score: 7.9, dignity: "exalted", is_retrograde: true, is_combust: false, house_number: 2, is_in_own_sign: false, is_exalted: true, is_debilitated: false, is_in_kendra: false, is_in_trikona: false, is_in_dusthana: false },
+    { planet: "Ketu", strength_score: 4.2, dignity: "debilitated", is_retrograde: true, is_combust: false, house_number: 8, is_in_own_sign: false, is_exalted: false, is_debilitated: true, is_in_kendra: false, is_in_trikona: false, is_in_dusthana: true },
   ];
 
   return (

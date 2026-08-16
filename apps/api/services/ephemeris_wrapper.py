@@ -165,6 +165,21 @@ def datetime_to_jd(dt: datetime) -> float:
     return jd_ut
 
 
+def jd_to_datetime(jd: float) -> datetime:
+    """Convert a Julian Day (UT) back to a UTC-aware datetime. Inverse of datetime_to_jd."""
+    year, month, day, hour_frac = swe.revjul(jd, swe.GREG_CAL)
+    hour = int(hour_frac)
+    minute_frac = (hour_frac - hour) * 60
+    minute = int(minute_frac)
+    second = (minute_frac - minute) * 60
+    whole_second = int(second)
+    microsecond = round((second - whole_second) * 1_000_000)
+    if microsecond >= 1_000_000:
+        microsecond -= 1_000_000
+        whole_second += 1
+    return datetime(year, month, day, hour, minute, whole_second, microsecond, tzinfo=timezone.utc)
+
+
 def longitude_to_rashi(lon: float) -> tuple[str, float]:
     """
     Convert a sidereal ecliptic longitude to (rashi_name, degrees_in_rashi).

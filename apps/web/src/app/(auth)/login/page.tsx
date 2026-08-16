@@ -6,40 +6,42 @@ export const metadata: Metadata = { title: "Sign In" };
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
+    <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-12" style={{ backgroundColor: "var(--bg-primary)" }}>
       <div className="w-full max-w-sm animate-slide-up">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <Link href="/" className="inline-block mb-4">
-            <span className="text-3xl font-bold" style={{ color: "var(--obsidian-text-primary)" }}>
-              Astro
-              <span style={{ color: "var(--obsidian-accent-secondary)" }}>OS</span>
+        <div className="mb-6 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 mb-3">
+            <span
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold shadow-sm"
+              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+            >
+              ॐ
+            </span>
+            <span className="text-2xl font-bold tracking-wide" style={{ color: "var(--text-primary)" }}>
+              ASTRO<span style={{ color: "var(--accent)" }}>OS</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--obsidian-text-primary)" }}>
-            Welcome back
+          <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+            Researcher Sign In
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--obsidian-text-muted)" }}>
-            Sign in to your research account
+          <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
+            Access computational engines & research datasets
           </p>
         </div>
 
         {/* Form card */}
-        <div className="glass-card p-6">
+        <div
+          className="rounded-xl border p-6 shadow-sm"
+          style={{
+            borderColor: "var(--border-primary)",
+            backgroundColor: "var(--bg-card)",
+          }}
+        >
           <LoginForm />
         </div>
-
-        <p className="mt-4 text-center text-sm" style={{ color: "var(--obsidian-text-muted)" }}>
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="font-medium transition"
-            style={{ color: "var(--obsidian-accent-primary)" }}
-          >
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );
 }
+
+

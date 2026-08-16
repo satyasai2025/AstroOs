@@ -13,6 +13,7 @@ import {
 import { PlanetStrengthRadar } from "./PlanetStrengthRadar";
 import { IshtaKashtaBalaPanel } from "./IshtaKashtaBalaPanel";
 import { AvasthaPanel } from "./AvasthaPanel";
+import { SaravaliShadbalaSuite } from "./SaravaliShadbalaSuite";
 import type { PlanetStrengthSchema, ShadbalaTotalResponse, WorkflowAnalysisRequest } from "@/lib/types";
 
 interface StrengthAnalysisCenterProps {
@@ -218,24 +219,11 @@ export function StrengthAnalysisCenter({
       )}
 
       {tab === "shadbala" && (
-        <div className="glass-card p-5">
-          <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Shadbala Breakdown</h3>
-          <div className="space-y-3">
-            {planets.filter((p) => p.rupas !== null).map((p) => (
-              <div key={p.planet} className="flex items-center gap-3">
-                <span className="w-20 flex-shrink-0 text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
-                  {PLANET_SYMBOLS[p.planet] ?? ""} {PLANET_ABBREV[p.planet] ?? p.planet.slice(0, 2)}
-                </span>
-                <div className="h-3 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-primary)" }}>
-                  <div className="h-full rounded-full" style={{ width: `${p.score}%`, backgroundColor: BAND_COLOR[p.band] }} />
-                </div>
-                <span className="w-28 flex-shrink-0 text-right text-xs" style={{ color: "var(--text-muted)" }}>
-                  {p.rupas?.toFixed(2)} / {p.requiredRupas?.toFixed(1) ?? "—"} rupas
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SaravaliShadbalaSuite
+          request={request}
+          activePlanet={pinnedPlanet ?? activePlanet}
+          onPlanetSelect={onPlanetClick}
+        />
       )}
 
       {tab === "dignity" && (

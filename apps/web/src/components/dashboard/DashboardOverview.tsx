@@ -253,8 +253,7 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
   return (
     <Link
       href="/charts/history"
-      className="flex items-center gap-2.5 rounded-lg p-2 text-xs transition hover:opacity-80"
-      style={{ border: "1px solid var(--border-primary)" }}
+      className="flex items-center gap-2.5 rounded-lg p-2.5 text-xs transition hover:opacity-90 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-sm"
     >
       <span
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
@@ -263,16 +262,15 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
         {initialsOf(chart.subject_name)}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate font-medium" style={{ color: "var(--text-primary)" }}>
+        <p className="truncate font-semibold text-slate-800 dark:text-slate-100">
           {chart.subject_name}
         </p>
-        <p className="truncate" style={{ color: "var(--text-muted)" }}>
+        <p className="truncate text-slate-500 dark:text-slate-400">
           {chart.lagna_rashi ?? "—"} Lagna · {timeAgo(chart.created_at)}
         </p>
       </div>
       <span
-        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
-        style={{ color: "var(--section-research)", border: "1px solid var(--section-research)" }}
+        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900"
       >
         D1 Chart
       </span>
@@ -321,41 +319,55 @@ function QuickAction({
   const content = (
     <>
       <span
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border text-sm font-bold"
-        style={{
-          backgroundColor: primary ? "rgba(255,255,255,0.15)" : color.bg,
-          borderColor: primary ? "rgba(255,255,255,0.3)" : `${color.fg}66`,
-          color: primary ? "#ffffff" : color.fg,
-        }}
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border text-sm font-bold ${
+          primary
+            ? "bg-slate-950/15 border-slate-950/20 text-slate-950"
+            : ""
+        }`}
+        style={
+          !primary
+            ? {
+                backgroundColor: color.bg,
+                borderColor: `${color.fg}66`,
+                color: color.fg,
+              }
+            : undefined
+        }
       >
         +
       </span>
       <span className="min-w-0 text-left">
         <span
-          className="block truncate text-xs font-semibold"
-          style={{ color: primary ? "#ffffff" : "var(--text-primary)" }}
+          className={`block truncate text-xs font-semibold ${
+            primary ? "text-slate-950" : "text-slate-800 dark:text-slate-100"
+          }`}
         >
           {label}
         </span>
-        <span className="block truncate text-[10px]" style={{ color: primary ? "rgba(255,255,255,0.8)" : "var(--text-muted)" }}>
+        <span
+          className={`block truncate text-[10px] ${
+            primary ? "text-slate-800" : "text-slate-500 dark:text-slate-400"
+          }`}
+        >
           {sublabel}
         </span>
       </span>
     </>
   );
-  const className = "flex items-center gap-2 rounded-lg p-2.5 text-left transition hover:opacity-90";
-  const style = primary
-    ? { backgroundColor: "var(--accent)" }
-    : { border: "1px solid var(--border-primary)" };
+  const className = `flex items-center gap-2 rounded-lg p-2.5 text-left transition hover:opacity-90 ${
+    primary
+      ? "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-500/20"
+      : "bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-sm"
+  }`;
   if (href) {
     return (
-      <Link href={href} className={className} style={style}>
+      <Link href={href} className={className}>
         {content}
       </Link>
     );
   }
   return (
-    <button type="button" onClick={onClick} className={className} style={style}>
+    <button type="button" onClick={onClick} className={className}>
       {content}
     </button>
   );
@@ -373,7 +385,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
   });
 
   const { data: allHypotheses } = useQuery({
-    queryKey: ["research-tools", "validations", "total"],
+    queryKey: ["research", "hypotheses", "all"],
     queryFn: () => hypothesisValidationApi.list({ limit: 1 }),
     enabled: hasSession,
   });
@@ -436,7 +448,13 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
             Here&apos;s what&apos;s happening with your research.
           </p>
         </div>
-        <Button onClick={onStartNewChart}>+ New Chart</Button>
+        <button
+          type="button"
+          onClick={onStartNewChart}
+          className="flex items-center gap-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-slate-950 shadow-md shadow-cyan-500/20 transition"
+        >
+          + New Chart
+        </button>
       </div>
 
       {/* Stats row — every number is a real count, not a mockup placeholder */}
@@ -534,9 +552,25 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               </p>
             </div>
           ) : (
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-              Open or generate a chart to see its current dasha period and transit flags here.
-            </p>
+            <div className="flex flex-col items-center gap-3 py-4 text-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-slate-500" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="m15 9-2 6-6 2 2-6 6-2Z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">No chart loaded</p>
+                <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-500">Load a chart to see dasha &amp; transit data</p>
+              </div>
+              <button
+                type="button"
+                onClick={onStartNewChart}
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
+              >
+                Load a chart
+              </button>
+            </div>
           )}
         </Card>
 
@@ -557,9 +591,25 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               </p>
             )
           ) : (
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-              Open or generate a chart to see its present yogas here.
-            </p>
+            <div className="flex flex-col items-center gap-3 py-4 text-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-slate-500" aria-hidden="true">
+                  <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
+                  <path d="m6 6 2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">No active yogas</p>
+                <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-500">Load a chart to see its present yogas</p>
+              </div>
+              <button
+                type="button"
+                onClick={onStartNewChart}
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
+              >
+                Load a chart
+              </button>
+            </div>
           )}
         </Card>
       </div>
@@ -624,7 +674,6 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               label="New Chart"
               sublabel="Create a new birth chart"
               color={PALETTE[0]}
-              primary
             />
             <QuickAction
               href="/charts?view=dasha"

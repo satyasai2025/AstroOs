@@ -189,13 +189,7 @@ export function NorthIndianChart({
       .style("stroke", lineColor)
       .style("stroke-width", 1);
 
-    // ── Rashi number labels — the absolute zodiac sign number (Mesha/
-    // Aries=1 … Meena/Pisces=12), not the house-from-Lagna number, and no
-    // rashi-name text alongside it (matches MixedVargaTransitChart). ──────
-    const chartText = "var(--chart-text)";
-    const accentColor = "var(--accent)";
-    const ascColor = "var(--chart-ascendant)";
-
+    // ── Rashi number labels ───────────────────────────────────────────────
     for (let house = 1; house <= 12; house++) {
       const [lx, ly] = toPoint(HOUSE_NUMBER_UNIT_POS[house]);
       const rashiName = houseRashis[house] ?? "";
@@ -206,75 +200,63 @@ export function NorthIndianChart({
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "central")
         .attr("paint-order", "stroke")
-        .style("font-size", "8px")
+        .style("font-size", "10px")
+        .style("font-weight", "700")
         .style("stroke", "var(--chart-bg)")
-        .style("stroke-width", "3px")
-        .style("fill", chartText)
-        .style("opacity", 0.7)
+        .style("stroke-width", "2px")
+        .style("fill", "var(--text-secondary, #475569)")
+        .style("opacity", 0.85)
         .text(rashiNumber);
     }
 
-    // ── Compute each planet's rendered position up front — reused for both
-    // the aspect lines (drawn first, underneath) and the planet glyphs
-    // themselves (drawn after, on top). ─────────────────────────────────
-    // Dynamic line height: single planets are centered; dense stacks
-    // (3+ planets per house) space out more and scale the glyphs so
-    // labels and degrees never collide with the neighbouring row.
+    // ── Compute each planet's rendered position ──────────────────────────
     const planetPositions: Record<string, [number, number]> = {};
-    const perHouseCounts: Record<number, number> = {};
-    for (const [houseStr, ps] of Object.entries(housePlanets)) {
-      perHouseCounts[Number(houseStr)] = ps.length;
-    }
     for (const [houseStr, ps] of Object.entries(housePlanets)) {
       const house = Number(houseStr);
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
       const count = ps.length;
-      // More planets per house → bigger spacing so nothing collides.
-      const lineHeight = count >= 5 ? 17 : count >= 3 ? 16 : 15;
+      const lineHeight = count >= 5 ? 18 : count >= 3 ? 17 : 16;
       ps.forEach((planet, i) => {
         const offsetY = (i - (ps.length - 1) / 2) * lineHeight;
         planetPositions[planet.planet] = [px, py + offsetY];
       });
     }
 
-    // ── Aspect lines between planets — dim by default; hovering/pinning a
-    // planet highlights only the lines touching it, per the interactive
-    // Kundli spec ("hover a planet → shows aspect lines to connected
-    // planets"), while still leaving a faint always-on hint of the full
-    // aspect network so the chart isn't blank at rest. ───────────────────
+    // ── Aspect lines ─────────────────────────────────────────────────────
     for (const asp of aspects) {
       const from = planetPositions[asp.from_planet];
       const to = planetPositions[asp.to_planet];
       if (!from || !to) continue;
       const color = ASPECT_COLORS[asp.aspect_type] ?? ASPECT_DEFAULT_COLOR;
-      const touchesActive =
-        !!activePlanet && (asp.from_planet === activePlanet || asp.to_planet === activePlanet);
-      const dimmed = !!activePlanet && !touchesActive;
+      const touchesActive = activePlanet && (asp.from_planet === activePlanet || asp.to_planet === activePlanet);
       svg
         .append("line")
-        .attr("x1", from[0]).attr("y1", from[1])
-        .attr("x2", to[0]).attr("y2", to[1])
+        .attr("x1", from[0])
+        .attr("y1", from[1])
+        .attr("x2", to[0])
+        .attr("y2", to[1])
         .style("stroke", color)
-        .style("stroke-width", touchesActive ? 1.75 : 1)
-        .style("stroke-dasharray", "3,3")
-        .style("opacity", dimmed ? 0.12 : touchesActive ? 0.9 : 0.35);
+        .style("stroke-width", touchesActive ? 2 : 1)
+        .style("stroke-dasharray", touchesActive ? "none" : "3 3")
+        .style("stroke-opacity", touchesActive ? 0.9 : 0.25)
+        .style("pointer-events", "none");
     }
 
-    // ── Place planets in houses (at each house's centroid) ──────────────────
+    // ── Planet glyphs + names ─────────────────────────────────────────────
     for (const [houseStr, ps] of Object.entries(housePlanets)) {
       const house = Number(houseStr);
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
-
-      const houseCount = perHouseCounts[house] ?? ps.length;
+      const houseCount = ps.length;
       const dense = houseCount >= 4;
+
       ps.forEach((planet, i) => {
         const abbrev = PLANET_ABBREV[planet.planet] ?? planet.planet.slice(0, 2);
         const symbol = PLANET_SYMBOLS[planet.planet] ?? "";
         const isAsc = house === 1 && i === 0;
         const isActive = activePlanet === planet.planet;
+        const ascColor = "var(--chart-ascendant)";
 
-        // Stack planets vertically within the house if there's more than one.
-        const lineHeight = houseCount >= 5 ? 17 : houseCount >= 3 ? 16 : 15;
+        const lineHeight = houseCount >= 5 ? 18 : houseCount >= 3 ? 17 : 16;
         const offsetY = (i - (ps.length - 1) / 2) * lineHeight;
 
         const g = svg.append("g")
@@ -284,38 +266,29 @@ export function NorthIndianChart({
           .on("mouseleave", () => onPlanetHover?.(null))
           .on("click", () => onPlanetClick?.(planet.planet));
 
-        // SVG <title> tooltip so hover always shows full details, even in
-        // dense charts where the in-chart degree text is hidden.
         g.append("title")
-          .text(
-            `${planet.planet}${planet.is_retrograde ? " (Retrograde)" : ""} — ${
-              planet.rashi
-            }${planet.rashi_degree !== undefined ? ` ${planet.rashi_degree.toFixed(2)}°` : ""}${
-              planet.house_number ? ` · House ${planet.house_number}` : ""
-            }`,
-          );
+          .text(`${planet.planet}${planet.is_retrograde ? " (Retrograde)" : ""} — ${planet.rashi}${planet.rashi_degree !== undefined ? ` ${planet.rashi_degree.toFixed(2)}°` : ""}`);
 
         if (isActive) {
           g.append("circle")
             .attr("cx", 0)
             .attr("cy", -2)
-            .attr("r", 14)
+            .attr("r", 15)
             .style("fill", "var(--accent)")
-            .style("opacity", 0.18);
+            .style("opacity", 0.22);
         }
 
-        // Symbol + abbreviation side by side with a small gap. In dense
-        // charts, shrink both so they stay on one legible line.
-        const labelFontSize = dense ? 8.5 : 10;
-        const symbolX = dense ? -12 : -14;
-        const abbrevX = dense ? 3 : 4;
+        const labelFontSize = dense ? 10.5 : 12.5;
+        const symbolX = dense ? -14 : -16;
+        const abbrevX = dense ? 3 : 5;
         g.append("text")
           .attr("x", symbolX)
           .attr("y", 0)
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "central")
-          .style("font-size", dense ? "8px" : "9px")
-          .style("fill", isAsc ? ascColor : accentColor)
+          .style("font-size", dense ? "9.5px" : "11px")
+          .style("font-weight", "800")
+          .style("fill", isAsc ? ascColor : "var(--text-primary, #0f172a)")
           .text(symbol);
 
         g.append("text")
@@ -324,32 +297,31 @@ export function NorthIndianChart({
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "central")
           .style("font-size", `${labelFontSize}px`)
-          .style("font-weight", isActive ? "900" : "bold")
-          .style("fill", isAsc ? ascColor : accentColor)
+          .style("font-weight", "800")
+          .style("fill", isAsc ? ascColor : "var(--text-primary, #0f172a)")
           .text(abbrev);
 
         if (planet.is_retrograde) {
           g.append("text")
-            .attr("x", abbrevX + (dense ? 14 : 17))
+            .attr("x", abbrevX + (dense ? 16 : 19))
             .attr("y", 0)
             .attr("text-anchor", "start")
             .attr("dominant-baseline", "central")
-            .style("font-size", "7px")
-            .style("fill", "var(--chart-ascendant)")
+            .style("font-size", "8.5px")
+            .style("font-weight", "800")
+            .style("fill", "var(--danger-400, #f87171)")
             .text("R");
         }
 
-        // Degree text: only show when the house isn't too dense (3+ per
-        // house), otherwise it collides with the next planet's row. Full
-        // degree is always available via the SVG tooltip above.
         if (planet.rashi_degree !== undefined && houseCount < 3) {
           g.append("text")
             .attr("x", 2)
-            .attr("y", 11)
+            .attr("y", 13)
             .attr("text-anchor", "middle")
-            .style("font-size", "6px")
-            .style("fill", chartText)
-            .style("opacity", 0.7)
+            .style("font-size", "8px")
+            .style("font-weight", "600")
+            .style("fill", "var(--text-secondary, #475569)")
+            .style("opacity", 0.9)
             .text(`${planet.rashi_degree.toFixed(1)}°`);
         }
       });
@@ -359,11 +331,11 @@ export function NorthIndianChart({
     const [ascX, ascY] = toPoint(HOUSE_CENTROIDS[1]);
     svg.append("text")
       .attr("x", ascX)
-      .attr("y", ascY - 20)
+      .attr("y", ascY - 22)
       .attr("text-anchor", "middle")
-      .style("font-size", "8px")
-      .style("font-weight", "bold")
-      .style("fill", ascColor)
+      .style("font-size", "9.5px")
+      .style("font-weight", "800")
+      .style("fill", "var(--chart-ascendant)")
       .text("LAGNA");
   }, [
     size,

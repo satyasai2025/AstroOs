@@ -132,8 +132,17 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
       house_system: houseSystem,
       dasha_system: dashaSystem,
       include_vargas: includeVargas,
-      subject_name: subjectName.trim() || "Unnamed",
-      place_name: manualOverride ? null : resolvedPlace?.display_name ?? null,
+      subject_name: subjectName
+        .trim()
+        .split(/\s+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ") || "Unnamed",
+      place_name: manualOverride
+        ? null
+        : resolvedPlace?.display_name
+            ?.split(/\s+/)
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join(" ") ?? null,
     });
   };
 

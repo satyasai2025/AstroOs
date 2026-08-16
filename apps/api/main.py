@@ -34,6 +34,7 @@ from apps.api.routers import ashtakavarga as ashtakavarga_router
 from apps.api.routers import auth
 from apps.api.routers import batch as batch_router
 from apps.api.routers import benchmark as benchmark_router
+from apps.api.routers import calendar as calendar_router
 from apps.api.routers import dasha as dasha_router
 from apps.api.routers import dataset_import as dataset_import_router
 from apps.api.routers import datasets as datasets_router
@@ -49,6 +50,8 @@ from apps.api.routers import jobs as jobs_router
 from apps.api.routers import knowledge as knowledge_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import kp as kp_router
+from apps.api.routers import muhurta as muhurta_router
+from apps.api.routers import prashna as prashna_router
 from apps.api.routers import report as report_router
 from apps.api.routers import report_full as report_full_router
 from apps.api.routers import research as research_router
@@ -56,14 +59,17 @@ from apps.api.routers import search as search_router
 from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import avastha as avastha_router
 from apps.api.routers import collab as collab_router
+from apps.api.routers import sbc as sbc_router
 from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
+from apps.api.routers import tarabala as tarabala_router
 from apps.api.routers import technique as technique_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
 # Imported for its side effect: registers the /patterns route onto
 # transit_router.router (see routers/transit_patterns.py's docstring).
 from apps.api.routers import transit_patterns as transit_patterns_router  # noqa: F401
+from apps.api.routers import varshaphal as varshaphal_router
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
 from apps.api.routers import ws as ws_router
@@ -320,6 +326,12 @@ def create_app() -> FastAPI:
         transit_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
+        sbc_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        tarabala_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         technique_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
@@ -355,6 +367,18 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         geocoding_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        muhurta_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        prashna_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        calendar_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        varshaphal_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(batch_router.router, dependencies=_authenticated)
     app.include_router(jobs_router.router, dependencies=_authenticated)

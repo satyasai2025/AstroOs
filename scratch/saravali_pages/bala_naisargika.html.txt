@@ -1,0 +1,44 @@
+Naisargika Bala
+Naisargika Bala is the natural strength of the planets. This strength
+does not depend on the specific chart but is fixed for all charts.
+Signification
+Planets with nearly identical Shadbala can be evaluated by their
+Naisargika Bala, i.e. the planet with higher Naisargika Bala can be
+regarded as stronger.
+Calculation
+The seven bodies are ordered by their luminosity and get relative
+strength according to their position in that order. Sun has the highest
+luminosity, Saturn is the darkest planet; other planets get portions of
+1/7 Rupa according to their position in that order.
+Position
+Body
+Strength (Rupas)
+Virupas
+1
+Sun
+7/7
+60
+2
+Moon
+6/7
+51.4
+3
+Venus
+5/7
+42.9
+4
+Jupiter
+4/7
+34.3
+5
+Mercury
+3/7
+25.7
+6
+Mars
+2/7
+17.1
+7
+Saturn
+1/7
+8.6

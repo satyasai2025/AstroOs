@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLogin } from "@/lib/auth";
 import { ApiError } from "@/lib/api";
+import { SHOW_BETA_FEATURES } from "@/config/navConfig";
 
 export function LoginForm() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="email" className="field-label">
+        <label htmlFor="email" className="field-label mb-1 block text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
           Email address
         </label>
         <input
@@ -42,14 +43,19 @@ export function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="field-input"
-          placeholder="you@example.com"
+          className="field-input w-full rounded-lg border px-3 py-2 text-sm transition focus:outline-none"
+          style={{
+            borderColor: "var(--border-secondary, var(--border-primary))",
+            backgroundColor: "var(--bg-primary)",
+            color: "var(--text-primary)",
+          }}
+          placeholder="researcher@astroos.org"
           disabled={login.isPending}
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="field-label">
+        <label htmlFor="password" className="field-label mb-1 block text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>
           Password
         </label>
         <input
@@ -59,73 +65,106 @@ export function LoginForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="field-input"
+          className="field-input w-full rounded-lg border px-3 py-2 text-sm transition focus:outline-none"
+          style={{
+            borderColor: "var(--border-secondary, var(--border-primary))",
+            backgroundColor: "var(--bg-primary)",
+            color: "var(--text-primary)",
+          }}
           placeholder="••••••••"
           disabled={login.isPending}
         />
       </div>
 
-      <div className="flex justify-end">
-        <Link
-          href="/forgot-password"
-          className="text-xs transition"
-          style={{ color: "var(--obsidian-accent-primary)" }}
-        >
-          Forgot password?
-        </Link>
-      </div>
-
       {fieldError && (
-        <p className="text-error animate-fade-in">{fieldError}</p>
+        <div
+          className="rounded-lg border p-2.5 text-xs animate-fade-in"
+          style={{
+            borderColor: "var(--error, #ef4444)",
+            backgroundColor: "rgba(239, 68, 68, 0.1)",
+            color: "var(--error, #ef4444)",
+          }}
+        >
+          {fieldError}
+        </div>
       )}
 
       <button
         type="submit"
         disabled={login.isPending}
-        className="btn-primary w-full"
+        className="btn-primary w-full py-2.5 text-sm font-semibold transition"
       >
         {login.isPending ? (
-          <>
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-cosmos-800 border-t-transparent" />
+          <span className="flex items-center justify-center gap-2">
+            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
             Signing in…
-          </>
+          </span>
         ) : (
           "Sign in"
         )}
       </button>
 
-      <div className="flex items-center gap-3 py-1" aria-hidden="true">
-        <span className="h-px flex-1" style={{ background: "var(--obsidian-border)" }} />
-        <span className="text-xs" style={{ color: "var(--obsidian-text-muted)" }}>
-          or
-        </span>
-        <span className="h-px flex-1" style={{ background: "var(--obsidian-border)" }} />
+      {/* ── Centered Forgot password link below button (matching reference) ── */}
+      <div className="text-center pt-0.5">
+        <Link
+          href="/forgot-password"
+          className="text-xs transition hover:underline"
+          style={{ color: "var(--accent)" }}
+        >
+          Forgot password?
+        </Link>
       </div>
 
-      {/* No Google OAuth flow exists on the backend yet — shown disabled
-       * with a clear "coming soon" state rather than pretending it works
-       * or hiding the affordance entirely. */}
-      <button
-        type="button"
-        disabled
-        title="Google sign-in isn't available yet"
-        className="obsidian-btn-secondary w-full cursor-not-allowed opacity-60"
+      {/* ── Divider ── */}
+      <div className="flex items-center gap-3 py-1" aria-hidden="true">
+        <span className="h-px flex-1" style={{ background: "var(--border-primary)" }} />
+        <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+          or
+        </span>
+        <span className="h-px flex-1" style={{ background: "var(--border-primary)" }} />
+      </div>
+
+      {/* ── Create New Account CTA Button ── */}
+      <Link
+        href="/register"
+        className="flex w-full items-center justify-center rounded-lg border py-2.5 text-xs font-semibold shadow-sm transition hover:bg-[var(--border-primary)]"
+        style={{
+          borderColor: "var(--border-primary)",
+          backgroundColor: "var(--bg-primary)",
+          color: "var(--text-primary)",
+        }}
       >
-        <GoogleIcon />
-        Sign in with Google
-        <span
-          className="ml-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+        Create new account
+      </Link>
+
+      {/* ── Feature Flagged Google Sign In ── */}
+      {SHOW_BETA_FEATURES && (
+        <button
+          type="button"
+          disabled
+          title="Google sign-in isn't available yet"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border py-2 text-xs font-medium opacity-60 cursor-not-allowed mt-2"
           style={{
-            background: "var(--obsidian-accent-primary-soft)",
-            color: "var(--obsidian-accent-primary)",
+            borderColor: "var(--border-primary)",
+            backgroundColor: "var(--bg-primary)",
+            color: "var(--text-secondary)",
           }}
         >
-          Soon
-        </span>
-      </button>
+          <GoogleIcon />
+          <span>Sign in with Google</span>
+          <span
+            className="ml-1 rounded px-1.5 py-0.5 text-[9px] uppercase tracking-wide border"
+            style={{ borderColor: "var(--border-primary)" }}
+          >
+            Soon
+          </span>
+        </button>
+      )}
     </form>
   );
 }
+
+
 
 function GoogleIcon() {
   return (

@@ -1,0 +1,670 @@
+Correct. **Problem sirf sidebar repetition ka nahi hai — overall visual language bhi professional product jaisi feel nahi de rahi.**
+
+Dark theme hone se interface automatically premium/professional nahi ban jata. AstroOS ko generic “dark SaaS dashboard” ke bajay **professional astrology research workstation** jaisa feel hona chahiye.
+
+Audit prompt mein ek dedicated **Visual Design Audit** section add karo:
+
+# AstroOS — Professional Visual Design & UX Audit
+
+Perform a **full visual and UX audit of the existing AstroOS frontend before making any UI changes**.
+
+The current dark theme is functional but the overall interface does not yet look sufficiently professional, cohesive, refined, or premium for a serious astrology research and analysis platform.
+
+The problem is NOT simply "make it darker" or "add better colors".
+
+The objective is to determine why the interface currently feels visually weak and define a professional design system before implementation.
+
+---
+
+## 1. Audit the Overall Visual Identity
+
+Evaluate the complete application, not just the sidebar.
+
+Inspect:
+
+* Sidebar
+* Top navigation/header
+* Page headers
+* Workspace layouts
+* Cards
+* Panels
+* Tables
+* Charts
+* Tabs
+* Buttons
+* Inputs
+* Dropdowns
+* Modals
+* Tooltips
+* Badges
+* Empty states
+* Loading states
+* Alerts
+* Breadcrumbs
+* Analysis panels
+* Research panels
+* Knowledge Graph UI
+* AI panels
+
+Determine whether these elements look like they belong to **one coherent product**.
+
+---
+
+# 2. Determine Why the Current Dark Theme Looks Unprofessional
+
+Do not assume the problem is simply the color palette.
+
+Audit:
+
+### Color
+
+* Background hierarchy
+* Surface hierarchy
+* Border contrast
+* Text contrast
+* Muted text
+* Accent colors
+* Status colors
+* Chart colors
+* Excessive saturation
+* Color consistency
+
+### Typography
+
+* Font family
+* Font weights
+* Font sizes
+* Line heights
+* Heading hierarchy
+* Label hierarchy
+* Numeric/data typography
+* Letter spacing
+
+### Spacing
+
+* Sidebar density
+* Card padding
+* Section spacing
+* Vertical rhythm
+* Grid gaps
+* Tab spacing
+* Header spacing
+
+### Shape
+
+* Border radius
+* Card shape
+* Button shape
+* Input shape
+* Panel shape
+* Excessive rounded corners
+* Excessive borders
+
+### Depth
+
+Evaluate whether the interface uses:
+
+* Flat surfaces
+* Borders
+* Shadows
+* Elevation
+* Layering
+* Background contrast
+
+appropriately.
+
+Avoid excessive glassmorphism, excessive gradients, excessive glow, or decorative effects.
+
+---
+
+# 3. Establish AstroOS Visual Positioning
+
+AstroOS should NOT visually resemble:
+
+* Generic admin dashboard
+* Crypto dashboard
+* Gaming UI
+* Neon AI dashboard
+* Generic SaaS template
+* Overly decorative astrology website
+
+The desired visual direction is:
+
+**Professional research workstation + astronomical precision + modern scientific software + restrained Indian/Vedic identity.**
+
+The UI should communicate:
+
+```text
+Precision
+Research
+Intelligence
+Depth
+Trust
+Calm
+Technical sophistication
+```
+
+It should NOT communicate:
+
+```text
+Flashy
+Gimmicky
+Over-decorated
+Toy-like
+Template-based
+Gaming
+Crypto
+```
+
+---
+
+# 4. Audit Visual Hierarchy
+
+For every major screen determine:
+
+### Primary visual focus
+
+What should the user notice first?
+
+### Secondary focus
+
+What should they notice next?
+
+### Tertiary information
+
+What should remain visually quiet?
+
+The current UI should not give equal visual weight to:
+
+```text
+Page title
+Navigation
+Tabs
+Cards
+Metrics
+Actions
+Secondary metadata
+```
+
+Create a clear hierarchy.
+
+---
+
+# 5. Design a Surface Hierarchy
+
+Define a restrained surface system.
+
+Example structure:
+
+```text
+Application Background
+        ↓
+Workspace Background
+        ↓
+Primary Surface
+        ↓
+Secondary Surface
+        ↓
+Elevated Surface
+        ↓
+Interactive Surface
+```
+
+Each layer should have a clear visual distinction.
+
+Do not solve hierarchy by adding more colors.
+
+Prefer subtle changes in:
+
+* luminance
+* border
+* elevation
+* spacing
+
+---
+
+# 6. Redesign the Sidebar Conceptually
+
+The sidebar should feel like part of a professional application shell.
+
+Audit:
+
+* Width
+* Density
+* Grouping
+* Iconography
+* Active state
+* Hover state
+* Collapsed state
+* Section headers
+* User/profile area
+* Bottom utility area
+
+Avoid:
+
+* Too many permanent items
+* Excessive separators
+* Large colorful icons
+* Excessive badges
+* Giant active backgrounds
+* Random icon styles
+* Decorative gradients
+
+The active item should be **clear but restrained**.
+
+---
+
+# 7. Create a Professional Navigation Language
+
+Establish:
+
+```text
+Primary navigation
+Secondary navigation
+Contextual navigation
+Utility navigation
+```
+
+Do not allow every feature to compete for sidebar space.
+
+Use contextual navigation inside workspaces where appropriate.
+
+---
+
+# 8. Audit Cards and Panels
+
+The application should not become a collection of identical rounded cards.
+
+Identify whether the current design overuses:
+
+```text
+Card
+Card
+Card
+Card
+Card
+```
+
+Instead establish multiple visual structures:
+
+```text
+Metric
+Analysis Panel
+Data Panel
+Research Result
+Evidence Panel
+Timeline
+Table
+Inspector
+Workspace
+```
+
+Each component type should have a distinct purpose and visual treatment.
+
+---
+
+# 9. Audit Data-Dense Screens
+
+AstroOS is a research and calculation platform.
+
+Therefore prioritize:
+
+* Information density
+* Readability
+* Numerical alignment
+* Table hierarchy
+* Scientific notation
+* Planetary data
+* Degrees
+* Houses
+* Nakshatras
+* Vargas
+* Dashas
+* Evidence
+* Rule results
+
+The UI should support **analysis**, not merely look attractive.
+
+Avoid excessive whitespace that reduces analytical density.
+
+Also avoid excessive density that makes the application feel like an old enterprise system.
+
+Find the correct balance.
+
+---
+
+# 10. Establish Typography System
+
+Define a complete typography scale.
+
+Include:
+
+```text
+Display
+Page Title
+Section Title
+Subsection
+Body
+Label
+Caption
+Metadata
+Numerical/Data
+Monospace/Technical
+```
+
+Use a consistent hierarchy throughout the application.
+
+Do not allow every component to introduce its own font sizing.
+
+---
+
+# 11. Establish Iconography Rules
+
+Audit all icons.
+
+Determine:
+
+* Icon library
+* Stroke weight
+* Size
+* Alignment
+* Active state
+* Meaning
+* Consistency
+
+Remove arbitrary combinations of icons.
+
+Icons should support navigation rather than become decoration.
+
+---
+
+# 12. Establish Color Strategy
+
+Create a restrained AstroOS color system.
+
+It must define:
+
+```text
+Background
+Surface
+Surface Elevated
+Border
+Text Primary
+Text Secondary
+Text Muted
+Accent
+Accent Hover
+Success
+Warning
+Error
+Info
+```
+
+Then define where accent colors are allowed.
+
+Do NOT use a different accent color for every module simply to make modules visually distinct.
+
+Module identity should primarily come from:
+
+* typography
+* icon
+* contextual label
+* content
+
+rather than rainbow navigation.
+
+---
+
+# 13. Professional AstroOS Identity
+
+Explore a subtle visual language inspired by:
+
+* astronomical observation
+* celestial coordinates
+* scientific instruments
+* archival research
+* classical Indian astronomical manuscripts
+
+But keep it extremely restrained.
+
+Do NOT introduce:
+
+* decorative mandalas everywhere
+* zodiac backgrounds
+* astrology clip-art
+* glowing planets
+* excessive stars
+* ornamental borders
+* spiritual/golden gradients everywhere
+
+The identity should be **implicit and sophisticated**, not literal decoration.
+
+---
+
+# 14. Audit Charts and Visualizations
+
+Charts must belong to the same design system.
+
+Evaluate:
+
+* Axis styling
+* Grid lines
+* Labels
+* Tooltip
+* Legend
+* Data colors
+* Background
+* Contrast
+* Highlighting
+* Selected states
+
+Astrological charts should look like professional analytical instruments, not decorative astrology widgets.
+
+---
+
+# 15. Audit Responsive Design
+
+Test:
+
+```text
+Desktop
+Laptop
+Tablet
+Mobile
+```
+
+Especially inspect:
+
+* Sidebar collapse
+* Tab overflow
+* Header density
+* Tables
+* Charts
+* Analysis panels
+* Dialogs
+* Knowledge Graph
+* Research screens
+
+Do not simply shrink desktop UI.
+
+Define intentional responsive behavior.
+
+---
+
+# 16. Compare Against Professional Product Standards
+
+Evaluate the current UI against the visual principles used by serious:
+
+* Research platforms
+* Scientific software
+* Data analysis applications
+* Financial analysis terminals
+* Developer tools
+* Professional knowledge systems
+
+Do not copy another product.
+
+Use them only as quality references.
+
+---
+
+# 17. Produce a Visual Design Diagnosis
+
+Before implementation, provide:
+
+### A. Current Problems
+
+Categorized as:
+
+```text
+Critical
+High
+Medium
+Low
+```
+
+### B. Why It Looks Unprofessional
+
+Give concrete UI reasons.
+
+### C. Current Design Anti-Patterns
+
+Examples:
+
+```text
+Excessive cards
+Inconsistent spacing
+Weak hierarchy
+Too many visual accents
+Inconsistent icons
+Navigation overload
+Poor surface hierarchy
+Weak typography
+Excessive rounded elements
+```
+
+Only list findings actually discovered in the codebase.
+
+### D. Recommended Visual Direction
+
+Define the final visual character in precise terms.
+
+### E. Design Tokens
+
+Provide proposed:
+
+```text
+Colors
+Typography
+Spacing
+Radius
+Borders
+Shadows
+Icon sizes
+Component heights
+```
+
+### F. Component Rules
+
+Define how:
+
+```text
+Sidebar
+Header
+Tabs
+Cards
+Panels
+Tables
+Buttons
+Inputs
+Modals
+Charts
+Analysis results
+```
+
+should look.
+
+### G. Before → After Architecture
+
+Explain how the existing UI should evolve.
+
+---
+
+# 18. Critical Constraint
+
+**DO NOT IMPLEMENT ANY CHANGES DURING THIS AUDIT.**
+
+Do not:
+
+* rewrite components
+* change CSS
+* change Tailwind classes
+* rename routes
+* remove navigation
+* redesign pages
+* change backend
+* change functionality
+
+First produce the audit.
+
+---
+
+# 19. Final Quality Target
+
+The final AstroOS UI should feel like:
+
+> **A serious professional astrology research and computational analysis workstation.**
+
+It should be:
+
+```text
+Clean
+Precise
+Calm
+Dense where necessary
+Highly structured
+Technically sophisticated
+Visually consistent
+Premium
+Research-oriented
+```
+
+It should NOT feel:
+
+```text
+Generic SaaS
+Template-generated
+Gaming
+Crypto
+Neon AI
+Overly spiritual
+Overly decorative
+```
+
+---
+
+# Final Deliverable
+
+Return a complete:
+
+**ASTROOS VISUAL + NAVIGATION AUDIT**
+
+containing:
+
+1. Current visual diagnosis
+2. Current navigation diagnosis
+3. Repetition analysis
+4. Information architecture problems
+5. Typography problems
+6. Color problems
+7. Spacing problems
+8. Component problems
+9. Professionalism problems
+10. Recommended design language
+11. Recommended navigation architecture
+12. Design-token proposal
+13. Component design rules
+14. Implementation priorities
+15. Exact list of files/components that would eventually need modification
+
+**Do not modify the code until the audit is complete and approved.**

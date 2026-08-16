@@ -13,14 +13,12 @@ interface CardProps {
 export function Card({ children, glow, padding = "var(--space-3)", style, className }: CardProps) {
   return (
     <div
-      className={className}
+      className={`border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none transition-all ${className ?? ""}`}
       style={{
-        background: "linear-gradient(180deg, var(--bg-surface-800), var(--bg-surface-700))",
-        border: "1px solid var(--border-default)",
-        borderRadius: "var(--radius-lg)",
+        background: "var(--bg-card)",
+        borderRadius: "var(--radius-lg, 0.75rem)",
         padding,
-        boxShadow: glow ? `var(--shadow-md), var(--glow-${glow})` : "var(--shadow-md), var(--shadow-inset)",
-        backdropFilter: "var(--blur-glass)",
+        boxShadow: glow ? `var(--shadow-md), var(--glow-${glow})` : undefined,
         ...style,
       }}
     >
@@ -28,3 +26,4 @@ export function Card({ children, glow, padding = "var(--space-3)", style, classN
     </div>
   );
 }
+

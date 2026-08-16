@@ -24,29 +24,29 @@
 --text-disabled:#3D4A63;
 --text-inverse:#070C1A;
 
-/* accent: cyan */
---cyan-300:#7DE8FF;
---cyan-400:#06CFFF;
---cyan-500:#06CFFF;
---cyan-600:#0496B8;
---cyan-glow:0 0 24px rgba(6,207,255,0.35), 0 0 60px rgba(6,207,255,0.1);
---cyan-glow-soft:rgba(6,207,255,0.1);
+/* accent: cyan — instrument teal, not neon */
+--cyan-300:#7DCCDC;
+--cyan-400:#29B8D4;
+--cyan-500:#29B8D4;
+--cyan-600:#1A8FA3;
+--cyan-glow:0 0 16px rgba(41,184,212,0.30), 0 0 40px rgba(41,184,212,0.08);
+--cyan-glow-soft:rgba(41,184,212,0.08);
 
 /* accent: gold */
 --gold-300:#FCD07A;
 --gold-400:#F5A623;
 --gold-500:#F5A623;
 --gold-600:#B87316;
---gold-glow:0 0 24px rgba(245,166,35,0.35), 0 0 60px rgba(245,166,35,0.1);
---gold-glow-soft:rgba(245,166,35,0.1);
+--gold-glow:0 0 16px rgba(245,166,35,0.28), 0 0 40px rgba(245,166,35,0.08);
+--gold-glow-soft:rgba(245,166,35,0.08);
 
 /* accent: violet */
 --violet-300:#C4B5FD;
 --violet-400:#8B5CF6;
 --violet-500:#8B5CF6;
 --violet-600:#6D28D9;
---violet-glow:0 0 24px rgba(139,92,246,0.35), 0 0 60px rgba(139,92,246,0.1);
---violet-glow-soft:rgba(139,92,246,0.1);
+--violet-glow:0 0 16px rgba(139,92,246,0.28), 0 0 40px rgba(139,92,246,0.08);
+--violet-glow-soft:rgba(139,92,246,0.08);
 
 /* semantic */
 --success-400:#10B981;

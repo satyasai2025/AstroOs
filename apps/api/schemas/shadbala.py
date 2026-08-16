@@ -69,11 +69,80 @@ class SthanaBalaComponentsResponse(BaseModel):
     drekkana_bala: list[BalaComponentResponse]
 
 
+class SubBalaCheckResponse(BaseModel):
+    """Pass/fail status of an individual sub-bala criteria."""
+
+    bala_key: str
+    bala_name: str
+    obtained_virupas: float
+    required_virupas: float
+    passed: bool
+
+
+class SaravaliPlanetSummaryResponse(BaseModel):
+    """Complete Saravali Shadbala summary for a single planet."""
+
+    planet: str
+    planet_display_name: str
+
+    # 6 Main Balas (Virupas)
+    sthana_bala_virupas: float
+    dig_bala_virupas: float
+    kala_bala_virupas: float
+    chesta_bala_virupas: float
+    naisargika_bala_virupas: float
+    drig_bala_virupas: float
+
+    # Sthana Sub-components
+    uchcha_bala_virupas: float
+    saptavargaja_bala_virupas: float
+    ojayugmarasyamsa_bala_virupas: float
+    kendradi_bala_virupas: float
+    drekkana_bala_virupas: float
+
+    # Kala Sub-components
+    nathonnata_bala_virupas: float
+    paksha_bala_virupas: float
+    tribhaga_bala_virupas: float
+    dina_hora_bala_virupas: float
+    ayana_bala_virupas: float
+    yuddha_bala_virupas: float
+
+    # Total Shadbala Pinda
+    total_virupas: float
+    total_rupas: float
+    required_virupas: float
+    required_rupas: float
+    strength_ratio: float
+    percentage: float
+    is_strong: bool
+    status_label: str
+    rank: int
+
+    # Ishta / Kashta
+    ishta_bala_virupas: float
+    kashta_bala_virupas: float
+
+    # Individual Sub-Bala Checks
+    sub_bala_checks: list[SubBalaCheckResponse]
+    all_sub_balas_passed: bool
+
+
+class SaravaliShadbalaReportResponse(BaseModel):
+    """Complete aggregated Saravali Shadbala Report for all 7 classical grahas."""
+
+    planets: list[SaravaliPlanetSummaryResponse]
+    strongest_planet: str
+    weakest_planet: str
+    average_strength_ratio: float
+    chart_strength_score: float
+
+
 class AllShadbalaResponse(BaseModel):
     """
     Every implemented Shadbala component/sub-component, grouped exactly
-    as ShadbalaEngine's compute_*() methods group them. No total sum is
-    provided — see module docstring.
+    as ShadbalaEngine's compute_*() methods group them, plus full Saravali
+    evaluation summary.
     """
 
     phase1: Phase1ComponentsResponse
@@ -88,3 +157,5 @@ class AllShadbalaResponse(BaseModel):
     kashta_bala: list[BalaComponentResponse] = Field(default_factory=list)
     implemented_components: list[str]
     not_yet_implemented_components: list[str]
+    summary: SaravaliShadbalaReportResponse | None = None
+

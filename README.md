@@ -133,8 +133,6 @@ brew install redis && brew services start redis
 # Ubuntu/Debian
 sudo apt install redis-server && sudo systemctl start redis
 
-# Docker
-docker run -d --name astroos-redis -p 6379:6379 redis:7
 ```
 
 ---
