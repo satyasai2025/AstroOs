@@ -54,23 +54,22 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
           ? { ...cardStyle, cursor: "pointer", transition: "border-color var(--duration-fast, 150ms), transform var(--duration-fast, 150ms)" }
           : cardStyle
       }
-      className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-sm shadow-slate-200/60 dark:shadow-none ${
+      className={`bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none ${
         href ? "group hover:-translate-y-0.5 hover:border-cyan-500/60 dark:hover:border-cyan-500/40" : ""
       }`}
     >
-
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
+        <span className="text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
           {label}
         </span>
         {icon && <span style={{ color: a.text }}>{icon}</span>}
       </div>
       <div
+        className="text-slate-900 dark:text-slate-100"
         style={{
           fontFamily: "var(--font-display)",
           fontSize: valueFontSize,
           fontWeight: "var(--weight-bold)",
-          color: "var(--text-primary)",
           letterSpacing: "var(--tracking-tight)",
         }}
       >
@@ -94,7 +93,7 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
         </div>
       )}
       {caveat && (
-        <div className="text-xs leading-snug text-slate-500 dark:text-slate-500">{caveat}</div>
+        <div className="text-xs leading-snug text-slate-600 dark:text-slate-400">{caveat}</div>
       )}
     </div>
   );

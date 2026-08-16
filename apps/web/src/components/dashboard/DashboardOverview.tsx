@@ -253,7 +253,7 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
   return (
     <Link
       href="/charts/history"
-      className="flex items-center gap-2.5 rounded-lg p-2.5 text-xs transition hover:opacity-90 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-sm"
+      className="flex items-center gap-2.5 rounded-lg p-2.5 text-xs transition bg-white hover:bg-slate-50 dark:bg-slate-900/60 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 shadow-sm shadow-slate-200/50 dark:shadow-none"
     >
       <span
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold"
@@ -262,15 +262,15 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
         {initialsOf(chart.subject_name)}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="truncate font-semibold text-slate-800 dark:text-slate-100">
+        <p className="truncate font-semibold text-slate-900 dark:text-slate-100">
           {chart.subject_name}
         </p>
-        <p className="truncate text-slate-500 dark:text-slate-400">
+        <p className="truncate text-slate-600 dark:text-slate-400">
           {chart.lagna_rashi ?? "—"} Lagna · {timeAgo(chart.created_at)}
         </p>
       </div>
       <span
-        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900"
+        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800"
       >
         D1 Chart
       </span>
@@ -294,8 +294,8 @@ function ActivityRow({ log }: { log: QueryLogEntry }) {
         </svg>
       </span>
       <div className="min-w-0 flex-1">
-        <p style={{ color: "var(--text-primary)" }}>{actionLabel(log.action)}</p>
-        <p style={{ color: "var(--text-muted)" }}>{timeAgo(log.created_at)}</p>
+        <p className="font-medium text-slate-900 dark:text-slate-100">{actionLabel(log.action)}</p>
+        <p className="text-slate-600 dark:text-slate-400">{timeAgo(log.created_at)}</p>
       </div>
     </li>
   );
@@ -339,14 +339,14 @@ function QuickAction({
       <span className="min-w-0 text-left">
         <span
           className={`block truncate text-xs font-semibold ${
-            primary ? "text-slate-950" : "text-slate-800 dark:text-slate-100"
+            primary ? "text-slate-950" : "text-slate-900 dark:text-slate-100"
           }`}
         >
           {label}
         </span>
         <span
           className={`block truncate text-[10px] ${
-            primary ? "text-slate-800" : "text-slate-500 dark:text-slate-400"
+            primary ? "text-slate-800" : "text-slate-600 dark:text-slate-400"
           }`}
         >
           {sublabel}
@@ -357,7 +357,7 @@ function QuickAction({
   const className = `flex items-center gap-2 rounded-lg p-2.5 text-left transition hover:opacity-90 ${
     primary
       ? "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-500/20"
-      : "bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 shadow-sm"
+      : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800/80 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 shadow-sm shadow-slate-200/50 dark:shadow-none"
   }`;
   if (href) {
     return (
@@ -372,6 +372,7 @@ function QuickAction({
     </button>
   );
 }
+
 
 export function DashboardOverview({ activeResult, activeSubjectName, onStartNewChart }: DashboardOverviewProps) {
   const hasSession = typeof window !== "undefined" && !!tokenStore.getAccess();
@@ -552,23 +553,23 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               </p>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3 py-4 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-slate-500" aria-hidden="true">
+            <div className="flex flex-col items-center gap-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-6 text-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
                   <circle cx="12" cy="12" r="9" />
                   <path d="m15 9-2 6-6 2 2-6 6-2Z" />
                 </svg>
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">No chart loaded</p>
-                <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-500">Load a chart to see dasha &amp; transit data</p>
+                <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No chart loaded</p>
+                <p className="mt-0.5 text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its current dasha &amp; transits</p>
               </div>
               <button
                 type="button"
                 onClick={onStartNewChart}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition"
               >
-                Load a chart
+                Load Active Chart
               </button>
             </div>
           )}
@@ -591,26 +592,27 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               </p>
             )
           ) : (
-            <div className="flex flex-col items-center gap-3 py-4 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400 dark:text-slate-500" aria-hidden="true">
+            <div className="flex flex-col items-center gap-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-6 text-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
                   <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
                   <path d="m6 6 2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
                 </svg>
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">No active yogas</p>
-                <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-500">Load a chart to see its present yogas</p>
+                <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No active yogas</p>
+                <p className="mt-0.5 text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its present yogas</p>
               </div>
               <button
                 type="button"
                 onClick={onStartNewChart}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-sm hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition"
               >
-                Load a chart
+                Load Active Chart
               </button>
             </div>
           )}
+
         </Card>
       </div>
 
