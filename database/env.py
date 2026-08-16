@@ -38,6 +38,11 @@ from apps.api.models.pattern import (  # noqa: E402
     PatternDiscoveryRunModel,
 )
 from apps.api.models.ai_settings import AISettingsModel  # noqa: E402
+from apps.api.models.technique import (  # noqa: E402
+    TechniqueModel,
+    TechniqueSourceModel,
+    TechniqueValidationCaseModel,
+)
 
 # ── Alembic Config ────────────────────────────────────────────────────────────
 config = context.config

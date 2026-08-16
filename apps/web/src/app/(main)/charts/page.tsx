@@ -7,7 +7,7 @@ import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
 import { StrengthAnalysisCenter } from "@/components/charts/StrengthAnalysisCenter";
-import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
+import { HouseDependencyNetwork, type EdgeKind } from "@/components/charts/HouseDependencyNetwork";
 import { TransitTimeline, getCurrentPeriodChain } from "@/components/charts/TransitTimeline";
 import { LifeEventTimeline } from "@/components/charts/LifeEventTimeline";
 import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
@@ -34,6 +34,25 @@ import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
 import { formatPosition } from "@/lib/formatAstro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
+
+type HousesMode = "standard" | "advanced";
+
+const ALL_EDGE_KINDS: EdgeKind[] = [
+  "lordship", "aspect", "parivartana", "argala",
+  "trinal", "angular", "dusthana", "functional", "maraka",
+];
+
+const HOUSE_EDGE_FILTERS: { key: EdgeKind | "all"; label: string }[] = [
+  { key: "all",          label: "All" },
+  { key: "lordship",     label: "Lordship" },
+  { key: "aspect",       label: "Aspects" },
+  { key: "parivartana",  label: "Parivartana" },
+  { key: "argala",       label: "Argala" },
+  { key: "trinal",       label: "Trinal 1·5·9" },
+  { key: "angular",      label: "Angular 1·4·7·10" },
+  { key: "dusthana",     label: "Dusthana 6·8·12" },
+  { key: "maraka",       label: "Maraka" },
+];
 
 type ViewMode =
   | "kundli"
@@ -102,11 +121,17 @@ export default function ChartsPage() {
   const searchParams = useSearchParams();
   const [view, setView] = useState<ViewMode>("chart");
   const [dashaSubView, setDashaSubView] = useState<DashaSubView>("timeline");
+  const [housesMode, setHousesMode] = useState<HousesMode>("standard");
+  const [activeKinds, setActiveKinds] = useState<Set<EdgeKind>>(new Set(ALL_EDGE_KINDS));
 
   useEffect(() => {
     const requested = searchParams.get("view");
     if (requested && (VALID_VIEWS as string[]).includes(requested)) {
       setView(requested as ViewMode);
+    }
+    const requestedMode = searchParams.get("mode");
+    if (requestedMode === "advanced" || requestedMode === "standard") {
+      setHousesMode(requestedMode);
     }
   }, [searchParams]);
 
@@ -461,8 +486,83 @@ export default function ChartsPage() {
       )}
 
       {view === "houses" && (
-        <div id="panel-houses" role="tabpanel" aria-label="House dependency network panel" className="flex justify-center">
-          <HouseDependencyNetwork houses={chart.houses} planetStrengths={chart.planet_strengths} planets={chart.planets} />
+        <div id="panel-houses" role="tabpanel" aria-label="House dependency network panel" className="space-y-4">
+
+          {/* ── Mode sub-tabs ───────────────────────────────────────── */}
+          <div
+            className="flex gap-1 border-b pb-2"
+            style={{ borderColor: "var(--border-primary)" }}
+            role="tablist"
+            aria-label="House view mode"
+          >
+            {(["standard", "advanced"] as HousesMode[]).map((m) => (
+              <button
+                key={m}
+                type="button"
+                role="tab"
+                aria-selected={housesMode === m}
+                onClick={() => setHousesMode(m)}
+                className="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+                style={{
+                  backgroundColor: housesMode === m ? "var(--accent)" : "transparent",
+                  color: housesMode === m ? "var(--accent-text)" : "var(--text-secondary)",
+                }}
+              >
+                {m === "standard" ? "Standard" : "Advanced · Edge Filters"}
+              </button>
+            ))}
+          </div>
+
+          {/* ── Edge-kind filter chips (advanced mode only) ─────────── */}
+          {housesMode === "advanced" && (
+            <div className="flex flex-wrap items-center gap-2">
+              {HOUSE_EDGE_FILTERS.map((filter) => {
+                const isAll = filter.key === "all";
+                const isActive = isAll
+                  ? activeKinds.size === ALL_EDGE_KINDS.length
+                  : activeKinds.has(filter.key as EdgeKind);
+                return (
+                  <button
+                    key={filter.key}
+                    type="button"
+                    onClick={() => {
+                      if (isAll) {
+                        setActiveKinds(
+                          isActive ? new Set() : new Set(ALL_EDGE_KINDS),
+                        );
+                      } else {
+                        setActiveKinds((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(filter.key as EdgeKind)) next.delete(filter.key as EdgeKind);
+                          else next.add(filter.key as EdgeKind);
+                          return next;
+                        });
+                      }
+                    }}
+                    className="rounded-lg border px-3 py-1.5 text-xs font-medium transition-all"
+                    style={{
+                      backgroundColor: isActive ? "var(--cyan-glow-soft)" : "transparent",
+                      borderColor: isActive ? "var(--cyan-400)" : "var(--border-primary)",
+                      color: isActive ? "var(--cyan-400)" : "var(--text-secondary)",
+                    }}
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* ── Network — live workflow store data in both modes ─────── */}
+          <div className="flex justify-center">
+            <HouseDependencyNetwork
+              houses={chart.houses}
+              planetStrengths={chart.planet_strengths}
+              planets={chart.planets}
+              activeKinds={housesMode === "advanced" ? activeKinds : undefined}
+              onFilterChange={housesMode === "advanced" ? setActiveKinds : undefined}
+            />
+          </div>
         </div>
       )}
 

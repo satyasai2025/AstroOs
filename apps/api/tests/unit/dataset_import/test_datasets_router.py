@@ -3,18 +3,33 @@
 import json
 import os
 import tempfile
+from datetime import datetime, timezone
+import uuid
 import pytest
 from fastapi.testclient import TestClient
 
-from apps.api.dependencies import get_dataset_service
+from apps.api.dependencies import get_dataset_service, require_researcher
+from apps.api.domain.user import User, UserId, UserRole, UserStatus
 from apps.api.main import create_app
 
 
 @pytest.fixture
 def app():
     app = create_app()
+    now = datetime.now(timezone.utc)
+    fake_user = User(
+        id=UserId(uuid.uuid4()),
+        email="researcher@astroos.io",
+        display_name="Researcher",
+        hashed_password="mock",
+        role=UserRole.RESEARCHER,
+        status=UserStatus.ACTIVE,
+        created_at=now,
+        updated_at=now,
+    )
     # Override dataset_service dependency to return None (skip DB persistence)
     app.dependency_overrides[get_dataset_service] = lambda: None
+    app.dependency_overrides[require_researcher] = lambda: fake_user
     return app
 
 

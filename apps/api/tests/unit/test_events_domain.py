@@ -14,7 +14,7 @@ class TestEventRecord:
             title="Career change", description="Started new role", category="career",
             is_verified=True,
         )
-        assert record.title == "Career change"
+        assert record.title == "Career Change"
         assert record.category == "career"
         assert record.is_verified is True
 

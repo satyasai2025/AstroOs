@@ -78,6 +78,11 @@ class NatalSnapshot:
     snapshot_version: str = "1.0"
 
 
+def _capitalize_title(title: str) -> str:
+    """Capitalize each word in a title/name string."""
+    return " ".join(word.capitalize() for word in title.strip().split())
+
+
 @dataclass(frozen=True)
 class EventRecord:
     """
@@ -98,6 +103,9 @@ class EventRecord:
     description: Optional[str] = None
     category: Optional[str] = None
     is_verified: bool = False
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "title", _capitalize_title(self.title))
 
 
 @dataclass(frozen=True)

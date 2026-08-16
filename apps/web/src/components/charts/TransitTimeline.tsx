@@ -267,6 +267,17 @@ export function TransitTimeline({ dasha, transits }: TransitTimelineProps) {
       <div className="border-t pt-4" style={{ borderColor: "var(--border-primary)" }}>
         <VedhaAnalysisPanel transits={transits} dashaChain={currentChain} />
       </div>
+
+      {/* ── Sarvatobhadra Chakra: full grid lives on its own page ── */}
+      <div className="border-t pt-4" style={{ borderColor: "var(--border-primary)" }}>
+        <a
+          href="/charts/sbc"
+          className="text-xs underline decoration-dotted"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          Open full Sarvatobhadra Chakra grid →
+        </a>
+      </div>
     </div>
   );
 }

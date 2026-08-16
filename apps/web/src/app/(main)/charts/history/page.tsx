@@ -24,6 +24,28 @@ function formatDateTime(iso: string): string {
   }
 }
 
+/** Format raw decimal coordinates into compact directional notation.
+ * e.g. (23.03714521, 72.55123910) → "23.037° N, 72.551° E" */
+function formatCoords(lat: number | null | undefined, lng: number | null | undefined): string {
+  if (lat == null || lng == null) return "—";
+  const latDir = lat >= 0 ? "N" : "S";
+  const lngDir = lng >= 0 ? "E" : "W";
+  return `${Math.abs(lat).toFixed(3)}° ${latDir}, ${Math.abs(lng).toFixed(3)}° ${lngDir}`;
+}
+
+/** Display value for the Place cell: prefer place_name if non-empty,
+ * else fall back to formatted coords, else em-dash. */
+function placeDisplay(c: BirthChartSummary): string {
+  if (c.place_name && c.place_name.trim()) return c.place_name.trim();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = c as any;
+  if (raw.latitude != null && raw.longitude != null) {
+    return formatCoords(raw.latitude as number, raw.longitude as number);
+  }
+  return "—";
+}
+
+
 export default function ChartHistoryPage() {
   const router = useRouter();
   const { data, isLoading, isError, error } = useMyCharts();
@@ -126,7 +148,22 @@ export default function ChartHistoryPage() {
       },
     },
     { key: "birth_datetime_utc", label: "Birth (UTC)", render: (c) => formatDateTime(c.birth_datetime_utc), mono: true },
-    { key: "place_name", label: "Place", render: (c) => c.place_name ?? "—" },
+    {
+      key: "place_name",
+      label: "Place",
+      render: (c) => {
+        const display = placeDisplay(c);
+        return (
+          <span
+            className="block max-w-[180px] sm:max-w-[220px] truncate"
+            title={display}
+          >
+            {display}
+          </span>
+        );
+      },
+    },
+
     { key: "lagna_rashi", label: "Lagna", render: (c) => <span style={{ textTransform: "capitalize" }}>{c.lagna_rashi ?? "—"}</span> },
     { key: "moon_nakshatra", label: "Moon Nakshatra", render: (c) => <span style={{ textTransform: "capitalize" }}>{c.moon_nakshatra ?? "—"}</span> },
     { key: "created_at", label: "Saved", render: (c) => formatDateTime(c.created_at), mono: true },
@@ -181,7 +218,8 @@ export default function ChartHistoryPage() {
             {data ? `${data.total} chart${data.total === 1 ? "" : "s"} saved to your account.` : "Charts you've generated while signed in, most recent first."}
           </p>
         </div>
-        <Button
+        <button
+          type="button"
           onClick={() => {
             // Dashboard shows the last analysis result (from the shared
             // store) instead of the blank form if one exists — clear it
@@ -190,9 +228,10 @@ export default function ChartHistoryPage() {
             clearWorkflowResult();
             router.push("/dashboard");
           }}
+          className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 shadow-sm transition"
         >
           + Create Chart
-        </Button>
+        </button>
       </div>
 
       {deleteError && (
@@ -254,7 +293,11 @@ export default function ChartHistoryPage() {
 
           <Card padding="0">
             <div style={{ padding: "12px 20px 20px" }}>
-              <Table<BirthChartSummary> columns={columns} rows={visibleCharts} />
+              <Table<BirthChartSummary>
+                columns={columns}
+                rows={visibleCharts}
+                onRowClick={(c) => router.push(`/charts/${c.id}`)}
+              />
             </div>
           </Card>
 

@@ -61,8 +61,9 @@ class RegisterRequest(BaseModel):
 
     @field_validator("display_name")
     @classmethod
-    def strip_display_name(cls, v: str) -> str:
-        return v.strip()
+    def normalize_display_name(cls, v: str) -> str:
+        # Capitalize each word in display_name (name/last name)
+        return " ".join(word.capitalize() for word in v.strip().split())
 
     @field_validator("password")
     @classmethod
@@ -123,10 +124,11 @@ class UpdateProfileRequest(BaseModel):
 
     @field_validator("display_name")
     @classmethod
-    def strip_display_name(cls, v: Optional[str]) -> Optional[str]:
+    def normalize_display_name(cls, v: Optional[str]) -> Optional[str]:
         if v is None:
             return v
-        return v.strip()
+        # Capitalize each word in display_name (name/last name)
+        return " ".join(word.capitalize() for word in v.strip().split())
 
     @field_validator("email")
     @classmethod

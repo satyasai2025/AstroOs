@@ -37,14 +37,11 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
   const valueFontSize = typeof value === "string" && value.length > 4 ? "var(--text-xl)" : "var(--text-3xl)";
 
   const cardStyle: CSSProperties = {
-    background: "linear-gradient(180deg, var(--bg-surface-800), var(--bg-surface-700))",
-    border: "1px solid var(--border-default)",
     borderRadius: "var(--radius-lg)",
     padding: "var(--space-2_5)",
     display: "flex",
     flexDirection: "column",
     gap: "var(--space-1_5)",
-    boxShadow: "var(--shadow-md)",
     position: "relative",
     overflow: "hidden",
     minWidth: 180,
@@ -57,22 +54,13 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
           ? { ...cardStyle, cursor: "pointer", transition: "border-color var(--duration-fast, 150ms), transform var(--duration-fast, 150ms)" }
           : cardStyle
       }
-      className={href ? "group hover:-translate-y-0.5 hover:border-white/30" : undefined}
+      className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-sm shadow-slate-200/60 dark:shadow-none ${
+        href ? "group hover:-translate-y-0.5 hover:border-cyan-500/60 dark:hover:border-cyan-500/40" : ""
+      }`}
     >
-      <div
-        style={{
-          position: "absolute",
-          top: -30,
-          right: -30,
-          width: 100,
-          height: 100,
-          borderRadius: "50%",
-          background: a.glow,
-          filter: "blur(10px)",
-        }}
-      />
+
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", fontWeight: "var(--weight-medium)" }}>
+        <span className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
           {label}
         </span>
         {icon && <span style={{ color: a.text }}>{icon}</span>}
@@ -106,7 +94,7 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
         </div>
       )}
       {caveat && (
-        <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", lineHeight: "var(--leading-snug)" }}>{caveat}</div>
+        <div className="text-xs leading-snug text-slate-500 dark:text-slate-500">{caveat}</div>
       )}
     </div>
   );

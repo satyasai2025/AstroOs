@@ -24,7 +24,7 @@ from sdks.python.astroos.models import ChartReportRequest, ChartReportResponse
 def test_chart_report_request_model():
     req = ChartReportRequest(birth_datetime_utc="2020-01-01T00:00:00Z", latitude=10.0, longitude=20.0)
     assert req.ayanamsa == "lahiri"
-    assert req.house_system == "placidus"
+    assert req.house_system == "W"
     assert req.title is None
 
 

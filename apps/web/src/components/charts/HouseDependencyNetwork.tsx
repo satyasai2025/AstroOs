@@ -18,7 +18,7 @@ export interface HouseDependencyNetworkProps {
 }
 
 // ── EDGE TYPES ──────────────────────────────────────────────────────────────
-type EdgeKind = "lordship" | "aspect" | "parivartana" | "argala" | "trinal" | "angular" | "dusthana" | "functional" | "maraka";
+export type EdgeKind = "lordship" | "aspect" | "parivartana" | "argala" | "trinal" | "angular" | "dusthana" | "functional" | "maraka";
 
 // Shared fallback for missing houses (when input data lacks a house_number)
 // Prevents "Cannot read properties of undefined" crashes downstream.
@@ -573,11 +573,11 @@ export function HouseDependencyNetwork({
           from,
           to: target,
           kind: "maraka",
-          lord: fromInfo.lord,
-          label: `Maraka ${ordinal(from)} lord (${fromInfo.lord}) aspects ${ordinal(target)}`,
+          lord: fromInfo.lord ?? "",
+          label: `Maraka ${ordinal(from)} lord (${fromInfo.lord ?? ""}) aspects ${ordinal(target)}`,
           weak: fromInfo.weak || targetInfo.weak,
           strengthScore: score(fromInfo.lordStrength),
-          description: `${fromInfo.lord} as maraka lord of ${ordinal(from)} house influences ${ordinal(target)} — can trigger transformative events.`,
+          description: `${fromInfo.lord ?? ""} as maraka lord of ${ordinal(from)} house influences ${ordinal(target)} — can trigger transformative events.`,
         });
       });
       // Maraka house to maraka house connection
@@ -590,7 +590,7 @@ export function HouseDependencyNetwork({
           from,
           to,
           kind: "maraka",
-          lord: fromInfo.lord,
+          lord: fromInfo.lord ?? "",
           label: `Maraka link: ${ordinal(from)} ↔ ${ordinal(to)}`,
           weak: fromInfo.weak || toInfo.weak,
           strengthScore: score(fromInfo.lordStrength),
@@ -613,12 +613,10 @@ export function HouseDependencyNetwork({
 
   // ── FILTER TOGGLE ─────────────────────────────────────────────────────────
   const toggleKind = (kind: EdgeKind) => {
-    setActiveKinds((prev) => {
-      const next = new Set(prev);
-      if (next.has(kind)) next.delete(kind);
-      else next.add(kind);
-      return next;
-    });
+    const next = new Set<EdgeKind>(activeKinds);
+    if (next.has(kind)) next.delete(kind);
+    else next.add(kind);
+    setActiveKinds(next);
   };
 
   // ── COMPUTED STATE FOR RENDERING ──────────────────────────────────────────

@@ -1,267 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
+import { useWorkflowStore } from "@/lib/store";
+
+import { NAV_CONFIG as NAV_GROUPS, SHOW_BETA_FEATURES, isRouteActive, type NavItem, type NavModule, type NavGroup } from "@/config/navConfig";
 
 /* ------------------------------------------------------------------ */
-/*  Types                                                              */
+/*  12-Module Navigation Map — now in src/config/navConfig.ts          */
 /* ------------------------------------------------------------------ */
 
-interface NavItem {
-  href: string;
-  label: string;
-  subtitle?: string;
-  icon: string;
-  disabled?: boolean;
-  /** Optional client-side view ID for SPA-style routing within workspace */
-  viewId?: string;
-}
-
-interface NavModule {
-  id: string;
-  number: string;
-  label: string;
-  subtitle?: string;
-  icon: string;
-  color: string;
-  items: NavItem[];
-}
-
-interface NavGroup {
-  label: string;
-  modules: NavModule[];
-}
-
-/* ------------------------------------------------------------------ */
-/*  12-Module Navigation Map                                           */
-/* ------------------------------------------------------------------ */
-
-const NAV_GROUPS: NavGroup[] = [
-  {
-    label: "Core",
-    modules: [
-      {
-        id: "auth",
-        number: "01",
-        label: "Authentication",
-        subtitle: "Login · Register · OAuth",
-        icon: "user",
-        color: "--obsidian-accent-primary",
-        items: [
-          { href: "/login", label: "Sign In", subtitle: "Email & password", icon: "login", viewId: "auth-signin" },
-          { href: "/register", label: "Register", subtitle: "Create account", icon: "register", viewId: "auth-register" },
-          { href: "/forgot-password", label: "Forgot Password", icon: "key", disabled: false },
-          { href: "/settings/profile", label: "Profile Setup", icon: "settings", disabled: false },
-          { href: "/charts/compare", label: "Compare Charts", subtitle: "Compare two or more charts", icon: "comparison", viewId: "compare-charts", disabled: false },
-        ],
-      },
-      {
-        id: "dashboard",
-        number: "02",
-        label: "Dashboard",
-        subtitle: "Overview · Metrics · Activity",
-        icon: "dashboard",
-        color: "--obsidian-accent-primary",
-        items: [
-          { href: "/dashboard", label: "Executive Overview", subtitle: "KPIs & charts", icon: "chart", viewId: "dashboard-executive" },
-          { href: "/research/dashboard", label: "Research Dashboard", subtitle: "Research analytics", icon: "search", viewId: "research-dashboard" },
-          { href: "/dashboard/notifications", label: "Notifications", icon: "bell", disabled: true },
-          { href: "/dashboard/timeline", label: "Timeline", icon: "clock", disabled: true },
-        ],
-      },
-      {
-        id: "settings",
-        number: "12",
-        label: "Settings",
-        subtitle: "Profile · Theme · Security",
-        icon: "settings",
-        color: "--obsidian-text-muted",
-        items: [
-          { href: "/settings/profile", label: "Profile", icon: "user", viewId: "settings-profile", disabled: false },
-          { href: "/settings/theme", label: "Theme", icon: "palette", viewId: "settings-theme", disabled: false },
-          { href: "/settings/security", label: "Security", icon: "shield", viewId: "settings-security", disabled: false },
-          { href: "/settings/preferences", label: "Preferences", icon: "settings", viewId: "settings-preferences", disabled: false },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Charts & Analysis",
-    modules: [
-      {
-        id: "chart-management",
-        number: "03",
-        label: "Chart Management",
-        subtitle: "Library · Import · Compare",
-        icon: "library",
-        color: "#06CFFF",
-        items: [
-          { href: "/charts/history", label: "Chart Library", subtitle: "Browse saved charts", icon: "grid", viewId: "chart-library" },
-          { href: "/dashboard", label: "New Chart", subtitle: "Create natal chart", icon: "plus", viewId: "chart-new" },
-          { href: "/charts/import", label: "Import Chart", icon: "upload", disabled: false },
-          { href: "/charts/compare", label: "Compare Charts", subtitle: "Side-by-side analysis", icon: "layers", viewId: "chart-compare" },
-          { href: "/charts/rectify", label: "Rectification", subtitle: "Lagna sensitivity & upagrahas", icon: "clock", disabled: false },
-          { href: "/charts/collections", label: "Collections", icon: "folder", disabled: false },
-        ],
-      },
-      {
-        id: "chart-workspace",
-        number: "04",
-        label: "Chart Workspace",
-        subtitle: "Kundli · Planets · Houses",
-        icon: "compass",
-        color: "#06CFFF",
-        items: [
-          { href: "/charts?view=chart", label: "Interactive Kundli", subtitle: "Birth chart visualization", icon: "compass", viewId: "workspace-kundli" },
-          { href: "/charts?view=planets", label: "Planet Explorer", icon: "search", disabled: false },
-          { href: "/charts?view=houses", label: "House Explorer", subtitle: "Bhava analysis", icon: "house", viewId: "workspace-houses" },
-          { href: "/charts?view=divisional", label: "Divisional Charts", subtitle: "D-1 through D-60", icon: "grid", viewId: "workspace-divisional" },
-          { href: "/charts?view=relationships-v2", label: "Planet Relationships", subtitle: "Aspect graph", icon: "network", viewId: "workspace-relationships-v2" },
-        ],
-      },
-      {
-        id: "analysis",
-        number: "05",
-        label: "Analysis",
-        subtitle: "Dasha · Transit · Yogas",
-        icon: "analysis",
-        color: "#06CFFF",
-        items: [
-          { href: "/charts?view=dasha", label: "Dasha", subtitle: "Vimshottari periods", icon: "clock", viewId: "analysis-dasha" },
-          { href: "/charts?view=timeline", label: "Transit", subtitle: "Current planetary positions", icon: "orbit", viewId: "analysis-transit" },
-          { href: "/charts?view=yogas", label: "Yogas", icon: "star", disabled: false },
-          { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid", disabled: false },
-          { href: "/charts?view=strength", label: "Shadbala", subtitle: "Planet strength", icon: "bar", viewId: "analysis-shadbala" },
-          { href: "/charts?view=kp", label: "KP Analysis", subtitle: "Krishnamurti Paddhati", icon: "target", viewId: "analysis-kp" },
-          { href: "/charts?view=jaimini", label: "Jaimini", icon: "book", disabled: false },
-        ],
-      },
-      {
-        id: "nakshatra",
-        number: "05",
-        label: "Nakshatra",
-        subtitle: "27 Stars · Padas · Tara",
-        icon: "star",
-        color: "#F5A623",
-        items: [
-          { href: "/nakshatra", label: "Nakshatra Module", subtitle: "Overview · Natal · Planetary", icon: "star", viewId: "nakshatra-overview" },
-          { href: "/nakshatra?tab=tara", label: "Tara Bala", subtitle: "9-fold matrix", icon: "target", viewId: "nakshatra-tara" },
-          { href: "/nakshatra?tab=dasha", label: "Lords & Dasha", subtitle: "Vimshottari timeline", icon: "clock", viewId: "nakshatra-dasha" },
-          { href: "/nakshatra?tab=transit", label: "Transit / Gochara", subtitle: "Live transit analysis", icon: "orbit", viewId: "nakshatra-transit" },
-          { href: "/nakshatra?tab=muhurta", label: "Muhurta", subtitle: "Timing suitability", icon: "sparkle", viewId: "nakshatra-muhurta" },
-          { href: "/nakshatra?tab=special", label: "Special Rules", subtitle: "Gandanta · Tripadi", icon: "shield", viewId: "nakshatra-special" },
-          { href: "/nakshatra?tab=namakshara", label: "Namakshara", subtitle: "Name syllables", icon: "book", viewId: "nakshatra-namakshara" },
-          { href: "/nakshatra?tab=combined", label: "Combined Analysis", subtitle: "Full synthesis", icon: "layers", viewId: "nakshatra-combined" },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Intelligence",
-    modules: [
-      {
-        id: "ai",
-        number: "06",
-        label: "AI",
-        subtitle: "Explain · Chat · Confidence",
-        icon: "sparkle",
-        color: "#8B5CF6",
-        items: [
-          { href: "/ai/explain", label: "AI Explain", icon: "sparkle", viewId: "ai-explain", disabled: true },
-          { href: "/ai/chat", label: "AI Chat", icon: "chat", viewId: "ai-chat", disabled: true },
-          { href: "/ai/confidence", label: "Confidence Scores", icon: "target", viewId: "ai-confidence", disabled: true },
-          { href: "/ai/evidence", label: "Evidence Chain", icon: "chain", viewId: "ai-evidence", disabled: true },
-        ],
-      },
-      {
-        id: "research",
-        number: "07",
-        label: "Research",
-        subtitle: "Search · Patterns · Graph",
-        icon: "research",
-        color: "#8B5CF6",
-        items: [
-          { href: "/research/reverse-search", label: "Reverse Search", icon: "search", viewId: "research-reverse-search" },
-          { href: "/research/projects", label: "Research Explorer", subtitle: "Browse projects", icon: "compass", viewId: "research-explorer" },
-          { href: "/research/import", label: "Case Import", icon: "document", viewId: "research-import" },
-          { href: "/research/patterns", label: "Pattern Discovery", icon: "sparkle", viewId: "research-patterns" },
-          { href: "/research/knowledge-graph", label: "Knowledge Graph", icon: "network", viewId: "research-knowledge-graph", disabled: true },
-          { href: "/research/notebook", label: "Notebook", icon: "document", viewId: "research-notebook", disabled: false },
-        ],
-      },
-      {
-        id: "knowledge-base",
-        number: "08",
-        label: "Knowledge Base",
-        subtitle: "BPHS · Saravali · Rules",
-        icon: "book",
-        color: "#8B5CF6",
-        items: [
-          { href: "/knowledge/bphs", label: "BPHS", icon: "book", viewId: "kb-bphs" },
-          { href: "/knowledge/saravali", label: "Saravali", icon: "book", viewId: "kb-saravali" },
-          { href: "/knowledge/rules", label: "Rule Explorer", icon: "settings", viewId: "kb-rules", disabled: true },
-          { href: "/knowledge/literature", label: "Literature", icon: "document", viewId: "kb-literature" },
-          { href: "/knowledge/citations", label: "Citations", icon: "link", viewId: "kb-citations", disabled: true },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Life & Reports",
-    modules: [
-      {
-        id: "life-events",
-        number: "09",
-        label: "Life Events",
-        subtitle: "Marriage · Career · Health",
-        icon: "heart",
-        color: "#F5A623",
-        items: [
-          { href: "/life/marriage", label: "Marriage", icon: "heart", viewId: "life-marriage", disabled: false },
-          { href: "/life/career", label: "Career", icon: "briefcase", viewId: "life-career", disabled: false },
-          { href: "/life/health", label: "Health", icon: "health", viewId: "life-health", disabled: false },
-          { href: "/life/timeline", label: "Timeline", icon: "clock", viewId: "life-timeline", disabled: false },
-        ],
-      },
-      {
-        id: "reports",
-        number: "10",
-        label: "Reports",
-        subtitle: "PDF · AI · Export",
-        icon: "report",
-        color: "#F5A623",
-        items: [
-          { href: "/reports/pdf", label: "PDF Reports", icon: "document", viewId: "reports-pdf", disabled: false },
-          { href: "/reports/full", label: "Full Report", icon: "book", viewId: "reports-full", disabled: false },
-          { href: "/reports/ai", label: "AI Reports", icon: "sparkle", viewId: "reports-ai", disabled: false },
-          { href: "/reports/comparison", label: "Comparison", icon: "layers", viewId: "reports-comparison", disabled: false },
-          { href: "/reports/export", label: "Export", icon: "download", viewId: "reports-export", disabled: false },
-        ],
-      },
-    ],
-  },
-  {
-    label: "System",
-    modules: [
-      {
-        id: "admin",
-        number: "11",
-        label: "Administration",
-        subtitle: "Rules · Plugins · Logs",
-        icon: "shield",
-        color: "#5A6B80",
-        items: [
-          { href: "/admin/rules", label: "Rules Engine", icon: "settings", viewId: "admin-rules", disabled: false },
-          { href: "/admin/literature", label: "Literature", icon: "book", viewId: "admin-literature", disabled: false },
-          { href: "/admin/plugins", label: "Plugins", icon: "puzzle", viewId: "admin-plugins", disabled: false },
-          { href: "/admin", label: "Audit & Logs", subtitle: "System activity", icon: "shield", viewId: "admin-audit" },
-          { href: "/admin/health", label: "System Health", icon: "heart", viewId: "admin-health", disabled: false },
-        ],
-      },
-    ],
-  },
-];
 
 /* ------------------------------------------------------------------ */
 /*  SVG Icon Map                                                       */
@@ -445,13 +194,18 @@ export default function NavPanel({
   currentView = "",
   collapsed = false,
 }: NavPanelProps) {
+  const router = useRouter();
   const pathname = usePathname();
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
+  const clearWorkflowResult = useWorkflowStore((s) => s.clear);
+  const [quickActionOpen, setQuickActionOpen] = useState(false);
+
   const [filter, setFilter] = useState("");
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
     return Object.fromEntries(NAV_GROUPS.map((g) => [g.label, true]));
   });
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>(() => {
-    return { dashboard: true };
+    return { "chart-management": true, "chart-workspace": true };
   });
 
   const toggleGroup = (label: string) =>
@@ -460,16 +214,17 @@ export default function NavPanel({
   const toggleModule = (id: string) =>
     setExpandedModules((prev) => ({ ...prev, [id]: !prev[id] }));
 
+  const searchParams = useSearchParams();
+
   /** Determine if an item is active: uses viewId match (SPA mode) or pathname (normal mode) */
   const isActive = useCallback(
     (item: NavItem) => {
       if (onNavigate && item.viewId) {
         return currentView === item.viewId;
       }
-      if (!item.href || item.href === "#" || item.href.startsWith("?")) return false;
-      return pathname === item.href || pathname.startsWith(item.href + "/");
+      return isRouteActive(item.href, pathname, searchParams);
     },
-    [onNavigate, currentView, pathname],
+    [onNavigate, currentView, pathname, searchParams],
   );
 
   /** Handle navigation click: either call onNavigate (SPA) or let Link navigate normally */
@@ -487,6 +242,9 @@ export default function NavPanel({
     item.label.toLowerCase().includes(filterLower);
 
   const filterLower = filter.toLowerCase().trim();
+
+  // All beta/disabled items across modules for feature-flagged section
+  const allBetaItems = NAV_GROUPS.flatMap((g) => g.modules.flatMap((m) => m.items)).filter((i) => i.disabled || i.beta);
 
   return (
     <aside
@@ -515,14 +273,91 @@ export default function NavPanel({
         )}
       </div>
 
-      {/* ── Enterprise Badge ── */}
-      {!collapsed && (
-        <div className="px-4 py-2">
-          <span className="obsidian-badge-gold w-full justify-center gap-1.5" style={{ fontSize: "11px" }}>
-            ✦ Vedic Research Platform
-          </span>
-        </div>
-      )}
+      {/* ── Quick Action CTA Dropdown (Sidebar) ── */}
+      <div className="relative px-2 pt-3">
+        <button
+          type="button"
+          onClick={() => setQuickActionOpen((v) => !v)}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-cyan-500/20 transition"
+          title="Quick Action"
+        >
+          <NavIcon name="plus" className="h-3.5 w-3.5 text-slate-950" />
+          {!collapsed && <span className="text-slate-950 font-bold">Quick Action</span>}
+        </button>
+
+
+        {quickActionOpen && (
+          <div
+            className="absolute left-2 right-2 top-full z-50 mt-1.5 flex flex-col rounded-lg border p-1 shadow-2xl"
+            style={{
+              borderColor: "var(--obsidian-border)",
+              backgroundColor: "var(--obsidian-surface)",
+            }}
+          >
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={() => {
+                setQuickActionOpen(false);
+                clearWorkflowResult();
+                openCreateModal("natal");
+              }}
+            >
+              <NavIcon name="plus" className="h-3.5 w-3.5" />
+              <span>New Natal Chart</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={() => {
+                setQuickActionOpen(false);
+                openCreateModal("compatibility");
+              }}
+            >
+              <NavIcon name="layers" className="h-3.5 w-3.5" />
+              <span>New Compatibility Match</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={() => {
+                setQuickActionOpen(false);
+                openCreateModal("transit");
+              }}
+            >
+              <NavIcon name="orbit" className="h-3.5 w-3.5" />
+              <span>New Transit Analysis</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={() => {
+                setQuickActionOpen(false);
+                router.push("/charts/import");
+              }}
+            >
+              <NavIcon name="upload" className="h-3.5 w-3.5" />
+              <span>Import Chart</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={() => {
+                setQuickActionOpen(false);
+                router.push("/research/projects");
+              }}
+            >
+              <NavIcon name="research" className="h-3.5 w-3.5" />
+              <span>New Research Project</span>
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* ── Search (hidden when collapsed) ── */}
       {!collapsed && (
@@ -533,6 +368,7 @@ export default function NavPanel({
 
       {/* ── Navigation Tree ── */}
       <nav className="flex-1 overflow-y-auto px-2 pb-4" aria-label="Navigation modules">
+
         {NAV_GROUPS.map((group) => {
           const filteredModules = group.modules
             .map((mod) => {
@@ -615,7 +451,7 @@ export default function NavPanel({
                         {modOpen && !collapsed && (
                           <div className="ml-3 mt-0.5 flex flex-col gap-0.5 border-l pl-2" style={{ borderColor: "var(--obsidian-border)" }}>
                             {mod.items
-                              .filter((item) => !filterLower || matchesFilter(item, filterLower))
+                              .filter((item) => (filterLower ? matchesFilter(item, filterLower) : (!item.disabled && !item.beta)))
                               .map((item) =>
                                 item.disabled ? (
                                   <span
@@ -683,6 +519,34 @@ export default function NavPanel({
           );
         })}
 
+        {/* ── Beta Tools / Incomplete Routes Accordion ── */}
+        {!collapsed && allBetaItems.length > 0 && (
+          <details className="mt-4 border-t pt-2 group mx-1" style={{ borderColor: "var(--obsidian-border)" }}>
+            <summary className="flex cursor-pointer items-center justify-between rounded px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--obsidian-text-muted)] hover:text-[var(--obsidian-text-secondary)] transition-colors">
+              <span>Beta Tools</span>
+              <span className="text-[9px] px-1 rounded border border-[var(--obsidian-border)]">
+                {allBetaItems.length}
+              </span>
+            </summary>
+            <div className="mt-1 flex flex-col gap-0.5 pl-2 border-l border-[var(--obsidian-border)]">
+              {allBetaItems.map((item) => (
+                <span
+                  key={item.label}
+                  className="flex items-center justify-between gap-2 rounded px-2 py-1.5 text-[11px] text-[var(--obsidian-text-muted)] opacity-50 cursor-default"
+                >
+                  <span className="flex items-center gap-2">
+                    <NavIcon name={item.icon} className="h-3.5 w-3.5" />
+                    {item.label}
+                  </span>
+                  <span className="obsidian-badge" style={{ border: "1px solid var(--obsidian-border)", fontSize: "8px" }}>
+                    Soon
+                  </span>
+                </span>
+              ))}
+            </div>
+          </details>
+        )}
+
         {filterLower && NAV_GROUPS.every((g) => {
           const mods = g.modules.filter((m) =>
             m.label.toLowerCase().includes(filterLower) ||
@@ -693,6 +557,7 @@ export default function NavPanel({
           <p className="obsidian-label mt-4 text-center text-xs">No results for &ldquo;{filter}&rdquo;</p>
         )}
       </nav>
+
 
       {/* ── Footer ── */}
       <div className="border-t px-3 py-3" style={{ borderColor: "var(--obsidian-border)" }}>

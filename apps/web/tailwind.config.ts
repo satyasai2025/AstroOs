@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Obsidian Dark SaaS Theme - Deep cosmic navy + amber accents
+        // AstroOS Research Workstation Theme — deep navy + instrument teal + gold + violet
         cosmos: {
           50:  "#f0f4ff",
           100: "#dde6ff",

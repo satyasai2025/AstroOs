@@ -172,12 +172,12 @@
   --bg-input: #ffffff;
   --border-primary: #e2e8f0;
   --border-hover: #cbd5e1;
-  --border-focus: #06CFFF;
+  --border-focus: #29B8D4;
   --text-primary: #1e293b;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  --accent: #06CFFF;
-  --accent-hover: #05a8d1;
+  --accent: #29B8D4;
+  --accent-hover: #1A8FA3;
   --accent-text: #0B0E14;
 
   /* These "obsidian-*"/"chart-*" variables mirror the tokens above but are
@@ -201,8 +201,8 @@
   --chart-planet: #c2410c;
   --chart-ascendant: #dc2626;
 
-  --section-charts: #06CFFF;
-  --section-charts-hover: #05a8d1;
+  --section-charts: #29B8D4;
+  --section-charts-hover: #1A8FA3;
   --section-analysis: #f97316;
   --section-analysis-hover: #ea580c;
   --section-research: #8B5CF6;
@@ -259,12 +259,13 @@
   .obsidian-btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all;
     background: var(--accent);
-    color: var(--accent-text);
+    color: #020617;
     box-shadow: var(--obsidian-glow-cyan);
   }
+
   .obsidian-btn-primary:hover {
-    filter: brightness(1.15);
-    box-shadow: 0 0 32px rgba(6, 207, 255, 0.50);
+    filter: brightness(1.1);
+    box-shadow: 0 0 24px rgba(41, 184, 212, 0.40);
   }
 
   .obsidian-btn-secondary {
@@ -419,20 +420,7 @@
     color: var(--text-muted);
   }
 
-  /* ── Aliases used across app/dashboard/chart/workflow components ── */
-  .glass-card {
-    @apply rounded-xl backdrop-blur-md transition-all;
-    background: var(--bg-card);
-    border: 1px solid var(--border-primary);
-  }
-  .glass-card:hover {
-    border-color: var(--border-hover);
-  }
-
-  .btn-primary {
-    @apply obsidian-btn-primary;
-  }
-
+  /* ── btn-ghost / obsidian-btn-ghost (ghost button variant) ── */
   .btn-ghost,
   .obsidian-btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all;
@@ -445,10 +433,6 @@
     background: var(--obsidian-surface-hover);
     color: var(--text-primary);
     border-color: var(--border-hover);
-  }
-
-  .field-input {
-    @apply obsidian-input;
   }
 
   .theme-toggle {
@@ -488,8 +472,8 @@
 
 /* ── Glow pulse for live indicators ── */
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(6, 207, 255, 0.3); }
-  50% { box-shadow: 0 0 16px rgba(6, 207, 255, 0.6); }
+  0%, 100% { box-shadow: 0 0 6px rgba(41, 184, 212, 0.25); }
+  50% { box-shadow: 0 0 14px rgba(41, 184, 212, 0.50); }
 }
 
 .animate-glow-pulse {

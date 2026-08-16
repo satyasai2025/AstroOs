@@ -41,13 +41,20 @@ from apps.api.schemas.shadbala import (
     BalaComponentResponse,
     Phase1ComponentsResponse,
     Phase2ComponentsResponse,
+    SaravaliPlanetSummaryResponse,
+    SaravaliShadbalaReportResponse,
     ShadbalaRequest,
     SthanaBalaComponentsResponse,
+    SubBalaCheckResponse,
 )
 from apps.api.services.divisional_engine import DivisionalEngine
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.shadbala_engine import ShadbalaEngine
+from apps.api.services.shadbala.saravali_summary import (
+    SaravaliShadbalaEvaluator,
+    SaravaliShadbalaReport,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -133,6 +140,66 @@ def _serialise_component(c: BalaComponentResult) -> BalaComponentResponse:
 
 def _serialise_list(results: list[BalaComponentResult]) -> list[BalaComponentResponse]:
     return [_serialise_component(r) for r in results]
+
+
+def _serialise_saravali_report(report: SaravaliShadbalaReport) -> SaravaliShadbalaReportResponse:
+    planets_resp: list[SaravaliPlanetSummaryResponse] = []
+    for p in report.planets:
+        checks_resp = [
+            SubBalaCheckResponse(
+                bala_key=c.bala_key,
+                bala_name=c.bala_name,
+                obtained_virupas=c.obtained_virupas,
+                required_virupas=c.required_virupas,
+                passed=c.passed,
+            )
+            for c in p.sub_bala_checks
+        ]
+        planets_resp.append(
+            SaravaliPlanetSummaryResponse(
+                planet=p.planet,
+                planet_display_name=p.planet_display_name,
+                sthana_bala_virupas=p.sthana_bala_virupas,
+                dig_bala_virupas=p.dig_bala_virupas,
+                kala_bala_virupas=p.kala_bala_virupas,
+                chesta_bala_virupas=p.chesta_bala_virupas,
+                naisargika_bala_virupas=p.naisargika_bala_virupas,
+                drig_bala_virupas=p.drig_bala_virupas,
+                uchcha_bala_virupas=p.uchcha_bala_virupas,
+                saptavargaja_bala_virupas=p.saptavargaja_bala_virupas,
+                ojayugmarasyamsa_bala_virupas=p.ojayugmarasyamsa_bala_virupas,
+                kendradi_bala_virupas=p.kendradi_bala_virupas,
+                drekkana_bala_virupas=p.drekkana_bala_virupas,
+                nathonnata_bala_virupas=p.nathonnata_bala_virupas,
+                paksha_bala_virupas=p.paksha_bala_virupas,
+                tribhaga_bala_virupas=p.tribhaga_bala_virupas,
+                dina_hora_bala_virupas=p.dina_hora_bala_virupas,
+                ayana_bala_virupas=p.ayana_bala_virupas,
+                yuddha_bala_virupas=p.yuddha_bala_virupas,
+                total_virupas=p.total_virupas,
+                total_rupas=p.total_rupas,
+                required_virupas=p.required_virupas,
+                required_rupas=p.required_rupas,
+                strength_ratio=p.strength_ratio,
+                percentage=p.percentage,
+                is_strong=p.is_strong,
+                status_label=p.status_label,
+                rank=p.rank,
+                ishta_bala_virupas=p.ishta_bala_virupas,
+                kashta_bala_virupas=p.kashta_bala_virupas,
+                sub_bala_checks=checks_resp,
+                all_sub_balas_passed=p.all_sub_balas_passed,
+            )
+        )
+
+    return SaravaliShadbalaReportResponse(
+        planets=planets_resp,
+        strongest_planet=report.strongest_planet,
+        weakest_planet=report.weakest_planet,
+        average_strength_ratio=report.average_strength_ratio,
+        chart_strength_score=report.chart_strength_score,
+    )
+
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -488,6 +555,28 @@ async def compute_all_shadbala(
             engine.compute_dina_hora_bala, chart, latitude=body.latitude, longitude=body.longitude
         )
         ishta_kashta = await asyncio.to_thread(engine.compute_ishta_kashta_bala, chart)
+        
+        # Aggregate and evaluate complete classical Saravali Shadbala summary
+        saravali_report = await asyncio.to_thread(
+            SaravaliShadbalaEvaluator.evaluate,
+            naisargika=phase1["naisargika_bala"],
+            dig=phase1["dig_bala"],
+            drik=phase1["drik_bala"],
+            chesta=phase2["chesta_bala"],
+            paksha=phase2["paksha_bala"],
+            ayana=phase2["ayana_bala"],
+            yuddha=phase2["yuddha_bala"],
+            uchcha=sthana["uchcha_bala"],
+            kendradi=sthana["kendradi_bala"],
+            drekkana=sthana["drekkana_bala"],
+            saptavargaja=saptavargaja,
+            ojayugmarasyamsa=ojayugmarasyamsa,
+            tribhaga=tribhaga,
+            nathonnata=nathonnata,
+            dina_hora=dina_hora,
+            ishta=ishta_kashta["ishta_bala"],
+            kashta=ishta_kashta["kashta_bala"],
+        )
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
@@ -525,4 +614,90 @@ async def compute_all_shadbala(
         kashta_bala=_serialise_list(ishta_kashta["kashta_bala"]),
         implemented_components=engine.implemented_components(),
         not_yet_implemented_components=engine.not_yet_implemented_components(),
+        summary=_serialise_saravali_report(saravali_report),
     )
+
+
+@router.post(
+    "/summary",
+    response_model=SaravaliShadbalaReportResponse,
+    summary="Compute complete Saravali Shadbala summary and evaluation",
+    description=(
+        "Computes the 6-fold aggregate Shadbala strengths, requirements comparison "
+        "(Virupas and Rupas), individual sub-bala criteria checks, and Dasha/Transit "
+        "interpretations based on Saravali and BPHS Chapter 27."
+    ),
+)
+async def compute_saravali_summary(
+    body: ShadbalaRequest,
+    horoscope_engine: HoroscopeEngine = Depends(_get_horoscope_engine),
+    engine: ShadbalaEngine = Depends(_get_shadbala_engine),
+) -> SaravaliShadbalaReportResponse:
+    chart = await _build_chart(horoscope_engine, body)
+
+    try:
+        phase1 = await asyncio.to_thread(engine.compute_phase1_components, chart)
+        phase2 = await asyncio.to_thread(engine.compute_phase2_components, chart)
+        sthana = await asyncio.to_thread(engine.compute_sthana_bala_components, chart)
+        saptavargaja = await asyncio.to_thread(
+            engine.compute_saptavargaja_bala,
+            chart,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+        ojayugmarasyamsa = await asyncio.to_thread(
+            engine.compute_ojayugmarasyamsa_bala,
+            chart,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+        tribhaga = await asyncio.to_thread(
+            engine.compute_tribhaga_bala, chart, latitude=body.latitude, longitude=body.longitude
+        )
+        nathonnata = await asyncio.to_thread(
+            engine.compute_nathonnata_bala, chart, latitude=body.latitude, longitude=body.longitude
+        )
+        dina_hora = await asyncio.to_thread(
+            engine.compute_dina_hora_bala, chart, latitude=body.latitude, longitude=body.longitude
+        )
+        ishta_kashta = await asyncio.to_thread(engine.compute_ishta_kashta_bala, chart)
+
+        saravali_report = await asyncio.to_thread(
+            SaravaliShadbalaEvaluator.evaluate,
+            naisargika=phase1["naisargika_bala"],
+            dig=phase1["dig_bala"],
+            drik=phase1["drik_bala"],
+            chesta=phase2["chesta_bala"],
+            paksha=phase2["paksha_bala"],
+            ayana=phase2["ayana_bala"],
+            yuddha=phase2["yuddha_bala"],
+            uchcha=sthana["uchcha_bala"],
+            kendradi=sthana["kendradi_bala"],
+            drekkana=sthana["drekkana_bala"],
+            saptavargaja=saptavargaja,
+            ojayugmarasyamsa=ojayugmarasyamsa,
+            tribhaga=tribhaga,
+            nathonnata=nathonnata,
+            dina_hora=dina_hora,
+            ishta=ishta_kashta["ishta_bala"],
+            kashta=ishta_kashta["kashta_bala"],
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
+        ) from exc
+    except Exception as exc:
+        logger.exception("Error computing Saravali Shadbala summary: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to compute Saravali Shadbala summary.",
+        ) from exc
+
+    return _serialise_saravali_report(saravali_report)
+

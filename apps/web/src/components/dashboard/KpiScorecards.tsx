@@ -52,69 +52,78 @@ interface RiskCardDef {
 
 type CardDef = PercentCardDef | TextCardDef | RiskCardDef;
 
-const RISK_COLORS: Record<HealthRiskLabel, string> = {
-  Low: "#34d399",
-  Medium: "#fbbf24",
-  High: "#f87171",
-  Unknown: "var(--text-muted)",
+const RISK_BADGES: Record<HealthRiskLabel, { text: string; bg: string; border: string }> = {
+  Low: {
+    text: "text-emerald-700 dark:text-emerald-300",
+    bg: "bg-emerald-50 dark:bg-emerald-950/50",
+    border: "border-emerald-300 dark:border-emerald-700",
+  },
+  Medium: {
+    text: "text-amber-700 dark:text-amber-300",
+    bg: "bg-amber-50 dark:bg-amber-950/50",
+    border: "border-amber-300 dark:border-amber-700",
+  },
+  High: {
+    text: "text-rose-700 dark:text-rose-300",
+    bg: "bg-rose-50 dark:bg-rose-950/50",
+    border: "border-rose-300 dark:border-rose-700",
+  },
+  Unknown: {
+    text: "text-slate-600 dark:text-slate-400",
+    bg: "bg-slate-100 dark:bg-slate-800",
+    border: "border-slate-300 dark:border-slate-700",
+  },
 };
 
-/** Percentage color ramp — low scores read as warning-toned, high scores as
- * accent/positive. Purely presentational, not a new scoring rule. */
-function percentColor(value: number): string {
-  if (value >= 66) return "#34d399";
-  if (value >= 40) return "#fbbf24";
-  return "#f87171";
+function percentColorClasses(value: number): { text: string; bg: string } {
+  if (value >= 66) return { text: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500" };
+  if (value >= 40) return { text: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500" };
+  return { text: "text-rose-600 dark:text-rose-400", bg: "bg-rose-500" };
 }
 
 function PercentCard({ label, value, caveat, href }: PercentCardDef) {
-  const color = percentColor(value);
+  const { text: colorClass, bg: barColorClass } = percentColorClasses(value);
   const content = (
     <>
-      <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
-        {label}
-      </span>
-      <span className="mt-2 text-2xl font-bold" style={{ color }}>
-        {value}%
-      </span>
-      <div
-        className="mt-2 h-1.5 w-full overflow-hidden rounded-full"
-        style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-primary)" }}
-      >
-        <div className="h-full rounded-full" style={{ width: `${value}%`, backgroundColor: color }} />
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+          {label}
+        </span>
+        <span className={`text-lg font-extrabold ${colorClass}`}>
+          {value}%
+        </span>
       </div>
-      <p className="mt-2 text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
+      <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+        <div className={`h-full rounded-full transition-all ${barColorClass}`} style={{ width: `${value}%` }} />
+      </div>
+      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-400">
         {caveat}
       </p>
     </>
   );
+  const cardClass = "flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm shadow-slate-200/50 dark:shadow-none transition hover:border-cyan-500/50";
   if (href) {
     return (
-      <Link href={href} className="glass-card flex flex-col justify-between p-4 transition" style={{ borderColor: "var(--border-primary)" }}>
+      <Link href={href} className={cardClass}>
         {content}
       </Link>
     );
   }
-  return (
-    <div className="glass-card flex flex-col justify-between p-4" style={{ borderColor: "var(--border-primary)" }}>
-      {content}
-    </div>
-  );
+  return <div className={cardClass}>{content}</div>;
 }
 
 function TextCard({ label, value, caveat }: TextCardDef) {
   return (
-    <div
-      className="glass-card flex flex-col justify-between p-4"
-      style={{ borderColor: "var(--border-primary)" }}
-    >
-      <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
-        {label}
-      </span>
-      <span className="mt-2 text-sm font-semibold leading-snug" style={{ color: "var(--accent)" }}>
-        {value}
-      </span>
-      <p className="mt-2 text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
+    <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm shadow-slate-200/50 dark:shadow-none">
+      <div>
+        <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+          {label}
+        </span>
+        <p className="mt-1.5 text-sm font-bold leading-snug text-cyan-600 dark:text-cyan-400">
+          {value}
+        </p>
+      </div>
+      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-400">
         {caveat}
       </p>
     </div>
@@ -122,36 +131,35 @@ function TextCard({ label, value, caveat }: TextCardDef) {
 }
 
 function RiskCard({ label, value, caveat, href }: RiskCardDef) {
-  const color = RISK_COLORS[value];
+  const badge = RISK_BADGES[value] ?? RISK_BADGES.Unknown;
   const content = (
     <>
-      <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
-        {label}
-      </span>
-      <span
-        className="mt-2 inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-sm font-bold"
-        style={{ color, border: `1px solid ${color}` }}
-      >
-        {value}
-      </span>
-      <p className="mt-2 text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
+          {label}
+        </span>
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold border ${badge.text} ${badge.bg} ${badge.border}`}
+        >
+          {value}
+        </span>
+      </div>
+      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-400">
         {caveat}
       </p>
     </>
   );
+  const cardClass = "flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm shadow-slate-200/50 dark:shadow-none transition hover:border-cyan-500/50";
   if (href) {
     return (
-      <Link href={href} className="glass-card flex flex-col justify-between p-4 transition" style={{ borderColor: "var(--border-primary)" }}>
+      <Link href={href} className={cardClass}>
         {content}
       </Link>
     );
   }
-  return (
-    <div className="glass-card flex flex-col justify-between p-4" style={{ borderColor: "var(--border-primary)" }}>
-      {content}
-    </div>
-  );
+  return <div className={cardClass}>{content}</div>;
 }
+
 
 /**
  * KpiScorecards — Dashboard KPI scorecard row from ASTROOS_VISION_V3_ROADMAP.md
@@ -256,7 +264,7 @@ export function KpiScorecards({ result }: KpiScorecardsProps) {
 
   return (
     <div
-      className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8"
+      className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
       role="region"
       aria-label="Chart KPI scorecards"
     >
@@ -268,3 +276,4 @@ export function KpiScorecards({ result }: KpiScorecardsProps) {
     </div>
   );
 }
+

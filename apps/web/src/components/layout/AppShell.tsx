@@ -7,106 +7,15 @@ import { tokenStore } from "@/lib/api";
 import { useCurrentUser, useLogout } from "@/lib/auth";
 import { useWorkflowStore } from "@/lib/store";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 
-interface NavItem {
-  href: string;
-  label: string;
-  icon: string;
-  disabled?: boolean;
-  adminOnly?: boolean;
-}
-
-interface NavSection {
-  title: string;
-  color: string;
-  items: NavItem[];
-}
-
-const NAV_SECTIONS: NavSection[] = [
-  {
-    title: "Charts",
-    color: "--section-charts",
-    items: [
-      { href: "/dashboard", label: "New Chart", icon: "plus" },
-      { href: "/charts/history", label: "My Charts", icon: "grid" },
-      { href: "/charts/compare", label: "Compare Charts", icon: "layers" },
-      { href: "/charts/import", label: "Import Chart", icon: "upload" },
-    ],
-  },
-  {
-    title: "Nakshatra",
-    color: "--section-analysis",
-    items: [
-      { href: "/nakshatra", label: "Nakshatra Module", icon: "star" },
-      { href: "/nakshatra?tab=tara", label: "Tara Bala", icon: "target" },
-      { href: "/nakshatra?tab=dasha", label: "Lords & Dasha", icon: "clock" },
-      { href: "/nakshatra?tab=transit", label: "Transit / Gochara", icon: "orbit" },
-      { href: "/nakshatra?tab=muhurta", label: "Muhurta", icon: "sparkle" },
-      { href: "/nakshatra?tab=special", label: "Special Rules", icon: "shield" },
-      { href: "/nakshatra?tab=namakshara", label: "Namakshara", icon: "book" },
-      { href: "/nakshatra?tab=combined", label: "Combined Analysis", icon: "layers" },
-    ],
-  },
-  {
-    title: "Analysis",
-    color: "--section-analysis",
-    items: [
-      { href: "/charts?view=chart", label: "Birth Chart", icon: "compass" },
-      { href: "/charts?view=chart", label: "Divisional Charts", icon: "grid" },
-      { href: "/charts?view=relationships-v2", label: "Planet Relationship Graph", icon: "network" },
-      { href: "/charts?view=houses", label: "House Dependency", icon: "network" },
-      { href: "/charts/house-dependency-2", label: "House Dependency 2", icon: "network" },
-      { href: "/charts?view=dasha", label: "Dasha Analysis", icon: "clock" },
-      { href: "/charts/transit", label: "Transit Analysis", icon: "orbit" },
-      { href: "/charts?view=yogas", label: "Yogas & Combinations", icon: "star", disabled: false },
-      { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid", disabled: false },
-      { href: "/charts?view=strength", label: "Shadbala", icon: "bar" },
-      { href: "/charts?view=kp", label: "KP Analysis", icon: "target" },
-      { href: "/charts?view=jaimini", label: "Jaimini Analysis", icon: "book", disabled: false },
-      { href: "/predictions", label: "Prediction Chain Explorer", icon: "sparkle" },
-    ],
-  },
-  {
-    title: "Knowledge Graph",
-    color: "--section-research",
-    items: [
-      { href: "/knowledge-graph", label: "Visualizations", icon: "network" },
-      { href: "/knowledge-graph/explorer", label: "Graph Explorer", icon: "search" },
-      { href: "/knowledge-graph/entities", label: "Entity Browser", icon: "book", disabled: true },
-      { href: "/knowledge-graph/rules", label: "Rule Explorer", icon: "shield", disabled: true },
-      { href: "/knowledge-graph/saved", label: "Saved Graphs", icon: "camera", disabled: true },
-      { href: "/knowledge-graph/compare", label: "Graph Compare", icon: "layers", disabled: true },
-    ],
-  },
-  {
-    title: "Research",
-    color: "--section-research",
-    items: [
-      { href: "/knowledge", label: "Knowledge Base", icon: "book" },
-      { href: "/research/projects", label: "Research Explorer", icon: "search" },
-      { href: "/research/dashboard", label: "Researcher Dashboard", icon: "bar" },
-      { href: "/research/datasets", label: "Datasets", icon: "grid" },
-      { href: "/research/query-builder", label: "Query Builder", icon: "search" },
-      { href: "/research/events", label: "Event Verification", icon: "document" },
-      { href: "/research/rules", label: "Rule Validation", icon: "shield" },
-      { href: "/research/notebook", label: "Research Notebook", icon: "document" },
-      { href: "/research/import", label: "Case Import", icon: "document" },
-      { href: "/research/patterns", label: "Pattern Discovery", icon: "sparkle", disabled: false },
-      { href: "/research/cases", label: "Case Studies", icon: "document", disabled: false },
-      { href: "/research/projects", label: "Snapshot Manager", icon: "camera" },
-    ],
-  },
-  {
-    title: "System",
-    color: "--section-system",
-    items: [{ href: "/admin", label: "Audit & Logs", icon: "shield", adminOnly: true }],
-  },
-];
+import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
 
 const _FLAT_LINKS = NAV_SECTIONS.flatMap((s) => s.items).filter((i) => !i.disabled);
+
+
 
 export function NavIcon({ name }: { name: string }) {
   const common = {
@@ -320,12 +229,16 @@ export function AppShell({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { data: user, isLoading, isError } = useCurrentUser();
   const logout = useLogout();
   const clearWorkflowResult = useWorkflowStore((s) => s.clear);
   const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
+  const request = useWorkflowStore((s) => s.request);
+  const result = useWorkflowStore((s) => s.result);
   const { theme, toggle } = useTheme();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -343,6 +256,20 @@ export function AppShell({
       router.replace("/login");
     }
   }, [hasToken, isError, router]);
+
+  const isActive = (href: string) => {
+    return isRouteActive(href, pathname, searchParams);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((v) => {
+      const next = !v;
+      try {
+        localStorage.setItem("sidebar:collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   if (!hasToken || isLoading) {
     return (
@@ -364,21 +291,8 @@ export function AppShell({
     return null;
   }
 
-  const isActive = (href: string) => {
-    if (href === "#") return false;
-    const [base] = href.split("?");
-    return pathname === base || (base !== "/dashboard" && base !== "/charts" && pathname.startsWith(base));
-  };
-
-  const toggleSidebar = () => {
-    setSidebarCollapsed((v) => {
-      const next = !v;
-      try {
-        localStorage.setItem("sidebar:collapsed", String(next));
-      } catch {}
-      return next;
-    });
-  };
+  // Extract any beta / disabled items across sections for feature-flagged Beta Tools accordion
+  const betaItems = NAV_SECTIONS.flatMap((s) => s.items).filter((i) => i.disabled || i.beta);
 
   return (
     <div className="flex min-h-dvh" style={{ backgroundColor: "var(--bg-primary)" }}>
@@ -391,7 +305,7 @@ export function AppShell({
         aria-label="Main navigation"
         aria-expanded={!sidebarCollapsed}
       >
-        <div className={`mb-6 flex items-center gap-2 px-2 ${sidebarCollapsed ? "flex-col" : ""}`}>
+        <div className={`mb-4 flex items-center gap-2 px-2 ${sidebarCollapsed ? "flex-col" : ""}`}>
           <Link
             href="/dashboard"
             className="flex items-center gap-2"
@@ -430,9 +344,98 @@ export function AppShell({
           </button>
         </div>
 
+        {/* ── Quick Action CTA Dropdown (Sidebar) ── */}
+        <div className="relative mb-5 px-1">
+          <button
+            type="button"
+            onClick={() => setQuickActionOpen((v) => !v)}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-cyan-500/20 transition"
+            title="Quick Action"
+          >
+            <NavIcon name="plus" />
+            {!sidebarCollapsed && <span>Quick Action</span>}
+          </button>
+
+
+          {quickActionOpen && (
+            <div
+              className="absolute left-1 right-1 top-full z-50 mt-1.5 flex flex-col rounded-lg border p-1 shadow-xl"
+              style={{
+                borderColor: "var(--border-primary)",
+                backgroundColor: "var(--bg-card)",
+              }}
+            >
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={() => {
+                  setQuickActionOpen(false);
+                  clearWorkflowResult();
+                  openCreateModal("natal");
+                }}
+              >
+                <NavIcon name="plus" />
+                <span>New Natal Chart</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={() => {
+                  setQuickActionOpen(false);
+                  openCreateModal("compatibility");
+                }}
+              >
+                <NavIcon name="layers" />
+                <span>New Compatibility Match</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={() => {
+                  setQuickActionOpen(false);
+                  openCreateModal("transit");
+                }}
+              >
+                <NavIcon name="orbit" />
+                <span>New Transit Analysis</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={() => {
+                  setQuickActionOpen(false);
+                  router.push("/charts/import");
+                }}
+              >
+                <NavIcon name="upload" />
+                <span>Import Chart</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={() => {
+                  setQuickActionOpen(false);
+                  router.push("/research/projects");
+                }}
+              >
+                <NavIcon name="search" />
+                <span>New Research Project</span>
+              </button>
+            </div>
+          )}
+        </div>
+
         <nav className="flex flex-1 flex-col gap-5">
           {NAV_SECTIONS.map((section) => {
-            const items = section.items.filter((item) => !item.adminOnly || user.role === "admin");
+            // In primary navigation flow, show active, non-disabled items
+            const items = section.items.filter(
+              (item) => (!item.adminOnly || user.role === "admin") && !item.disabled && !item.beta
+            );
             if (items.length === 0) return null;
             const sectionColor = `var(${section.color})`;
             return (
@@ -444,63 +447,77 @@ export function AppShell({
                   {section.title}
                 </p>
                 <div className="flex flex-col gap-0.5">
-                  {items.map((item) =>
-                    item.disabled ? (
-                      <span
-                        key={item.label}
-                        className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-xs"
-                        style={{ color: "var(--text-muted)", opacity: 0.55, cursor: "default" }}
-                        title={sidebarCollapsed ? item.label : "Not built yet"}
-                      >
-                        <span className="flex items-center gap-2">
-                          <NavIcon name={item.icon} />
-                          {!sidebarCollapsed && item.label}
-                        </span>
-                        {!sidebarCollapsed && (
-                          <span
-                            className="rounded-full px-1.5 py-0.5 text-[9px] uppercase tracking-wide"
-                            style={{ border: "1px solid var(--border-primary)" }}
-                          >
-                            Soon
-                          </span>
-                        )}
-                      </span>
-                    ) : (
-                      <Link
-                        key={item.label + item.href}
-                        href={item.href}
-                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition"
-                        style={{
-                          backgroundColor: isActive(item.href) ? "var(--border-primary)" : "transparent",
-                          color: isActive(item.href) ? sectionColor : "var(--text-secondary)",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isActive(item.href)) e.currentTarget.style.color = sectionColor;
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isActive(item.href)) e.currentTarget.style.color = "var(--text-secondary)";
-                        }}
-                        onClick={
-                          item.href === "/dashboard" && item.label === "New Chart"
-                            ? () => {
-                                clearWorkflowResult();
-                                openCreateModal();
-                              }
-                            : undefined
-                        }
-                        aria-current={isActive(item.href) ? "page" : undefined}
-                        title={sidebarCollapsed ? item.label : undefined}
-                      >
-                        <NavIcon name={item.icon} />
-                        {!sidebarCollapsed && item.label}
-                      </Link>
-                    ),
-                  )}
+                  {items.map((item) => (
+                    <Link
+                      key={item.label + item.href}
+                      href={item.href}
+                      className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition"
+                      style={{
+                        backgroundColor: isActive(item.href) ? "var(--border-primary)" : "transparent",
+                        color: isActive(item.href) ? sectionColor : "var(--text-secondary)",
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive(item.href)) e.currentTarget.style.color = sectionColor;
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive(item.href)) e.currentTarget.style.color = "var(--text-secondary)";
+                      }}
+                      onClick={
+                        item.href === "/dashboard" && item.label === "New Chart"
+                          ? () => {
+                              clearWorkflowResult();
+                              openCreateModal();
+                            }
+                          : undefined
+                      }
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      title={sidebarCollapsed ? item.label : undefined}
+                    >
+                      <NavIcon name={item.icon} />
+                      {!sidebarCollapsed && item.label}
+                    </Link>
+                  ))}
                 </div>
               </div>
             );
           })}
+
+          {/* ── Beta Tools / Pending Routes Accordion (Feature Flagged) ── */}
+          {betaItems.length > 0 && (
+            <details className="mt-2 border-t pt-2 group" style={{ borderColor: "var(--border-primary)" }}>
+              <summary className="flex cursor-pointer items-center justify-between px-2 py-1.5 text-[10px] font-semibold uppercase tracking-widest transition" style={{ color: "var(--text-muted)" }}>
+                <span>Beta Tools</span>
+                <span className="text-[9px] rounded px-1 border" style={{ borderColor: "var(--border-primary)" }}>
+                  {betaItems.length}
+                </span>
+              </summary>
+              <div className="mt-1 flex flex-col gap-0.5">
+                {betaItems.map((item) => (
+                  <span
+                    key={item.label}
+                    className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-xs"
+                    style={{ color: "var(--text-muted)", opacity: 0.55, cursor: "default" }}
+                    title={sidebarCollapsed ? item.label : "Pending route / In development"}
+                  >
+                    <span className="flex items-center gap-2">
+                      <NavIcon name={item.icon} />
+                      {!sidebarCollapsed && item.label}
+                    </span>
+                    {!sidebarCollapsed && (
+                      <span
+                        className="rounded-full px-1.5 py-0.5 text-[9px] uppercase tracking-wide"
+                        style={{ border: "1px solid var(--border-primary)" }}
+                      >
+                        Soon
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            </details>
+          )}
         </nav>
+
 
         <div className="mt-4 border-t pt-3" style={{ borderColor: "var(--border-primary)" }}>
           <button
@@ -523,7 +540,7 @@ export function AppShell({
           <div className="flex items-center gap-3 lg:hidden">
             <button
               type="button"
-              onClick={() => setMobileNavOpen((v) => !v)}
+              onClick={() => setMobileNavOpen(true)}
               className="theme-toggle"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileNavOpen}
@@ -538,6 +555,44 @@ export function AppShell({
           </div>
 
           <SearchBar />
+
+          {/* ── Active Chart Context Pill (Header) ── */}
+          <div className="hidden md:flex items-center">
+            {request ? (
+              <div
+                className="flex items-center gap-2 rounded-lg border px-2.5 py-1 text-xs transition"
+                style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}
+              >
+                <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--accent)" }} />
+                <span className="font-semibold max-w-[140px] truncate" style={{ color: "var(--text-primary)" }}>
+                  {request.subject_name || "Active Chart"}
+                </span>
+                {request.place_name && (
+                  <span className="text-[10px] hidden lg:inline max-w-[100px] truncate" style={{ color: "var(--text-muted)" }}>
+                    · {request.place_name}
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => router.push("/charts/birth")}
+                  className="ml-1 text-[11px] font-semibold hover:underline"
+                  style={{ color: "var(--accent)" }}
+                  title="View active birth chart"
+                >
+                  View
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => openCreateModal()}
+                className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition shadow-sm"
+              >
+                <NavIcon name="plus" />
+                <span>Select Chart</span>
+              </button>
+            )}
+          </div>
 
           <div className="flex items-center gap-3">
             {sidebarCollapsed && (
@@ -609,30 +664,113 @@ export function AppShell({
           </div>
         </header>
 
-        {/* Mobile nav drawer */}
+        {/* ── Mobile Slide-Over Navigation Drawer ── */}
         {mobileNavOpen && (
-          <nav
-            className="border-b px-4 py-3 lg:hidden"
-            style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
-            aria-label="Mobile navigation"
-          >
-            <select
-              className="field-input"
-              value={pathname}
-              onChange={(e) => {
-                router.push(e.target.value);
-                setMobileNavOpen(false);
-              }}
-              aria-label="Navigate to page"
+          <div className="fixed inset-0 z-50 flex lg:hidden" role="dialog" aria-modal="true">
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+              onClick={() => setMobileNavOpen(false)}
+              aria-hidden="true"
+            />
+
+            {/* Slide-over panel */}
+            <div
+              className="relative flex w-full max-w-xs flex-1 flex-col overflow-y-auto border-r p-4 shadow-2xl"
+              style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
             >
-              {_FLAT_LINKS.filter((l) => !l.adminOnly || user.role === "admin").map((link) => (
-                <option key={link.label + link.href} value={link.href}>
-                  {link.label}
-                </option>
-              ))}
-            </select>
-          </nav>
+              <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: "var(--border-primary)" }}>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="flex items-center gap-2"
+                >
+                  <span
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold"
+                    style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+                  >
+                    ॐ
+                  </span>
+                  <span className="text-sm font-bold tracking-wide" style={{ color: "var(--text-primary)" }}>
+                    ASTRO<span style={{ color: "var(--accent)" }}>OS</span>
+                  </span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="theme-toggle h-8 w-8"
+                  aria-label="Close navigation menu"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Quick Action Button in Mobile Drawer */}
+              <div className="my-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileNavOpen(false);
+                    clearWorkflowResult();
+                    openCreateModal("natal");
+                  }}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-cyan-500/20"
+                >
+                  <NavIcon name="plus" />
+                  <span>+ New Natal Chart</span>
+                </button>
+
+              </div>
+
+              {/* Navigation Sections */}
+              <nav className="flex-1 space-y-4">
+                {NAV_SECTIONS.map((section) => {
+                  const items = section.items.filter((item) => (!item.adminOnly || user.role === "admin") && !item.disabled && !item.beta);
+                  if (items.length === 0) return null;
+                  const sectionColor = `var(${section.color})`;
+                  return (
+                    <div key={section.title}>
+                      <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest" style={{ color: sectionColor }}>
+                        {section.title}
+                      </p>
+                      <div className="flex flex-col gap-0.5">
+                        {items.map((item) => (
+                          <Link
+                            key={item.label + item.href}
+                            href={item.href}
+                            onClick={() => setMobileNavOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition"
+                            style={{
+                              backgroundColor: isActive(item.href) ? "var(--border-primary)" : "transparent",
+                              color: isActive(item.href) ? sectionColor : "var(--text-secondary)",
+                            }}
+                          >
+                            <NavIcon name={item.icon} />
+                            <span>{item.label}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </nav>
+
+              {/* Mobile Drawer Footer */}
+              <div className="mt-4 border-t pt-3" style={{ borderColor: "var(--border-primary)" }}>
+                <button
+                  type="button"
+                  onClick={() => logout.mutate()}
+                  className="btn-ghost w-full text-xs"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          </div>
         )}
+
 
         <main
           className="mx-auto w-full max-w-7xl flex-1 px-4 py-8"

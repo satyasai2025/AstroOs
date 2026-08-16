@@ -14,22 +14,23 @@ const SIZE: Record<ButtonSize, { padding: string; fontSize: string; gap: number;
 
 const VARIANT: Record<ButtonVariant, CSSProperties> = {
   primary: {
-    background: "linear-gradient(135deg, var(--cyan-400), var(--cyan-600))",
-    color: "#04141a",
+    background: "var(--cyan-400)",
+    color: "#020617",
     border: "1px solid transparent",
-    boxShadow: "var(--glow-cyan)",
+    boxShadow: "none",
   },
+
   gold: {
-    background: "linear-gradient(135deg, var(--gold-300), var(--gold-600))",
+    background: "var(--gold-400)",
     color: "#1c1305",
     border: "1px solid transparent",
-    boxShadow: "var(--glow-gold)",
+    boxShadow: "none",
   },
   violet: {
-    background: "linear-gradient(135deg, var(--violet-300), var(--violet-600))",
+    background: "var(--violet-400)",
     color: "#160c2e",
     border: "1px solid transparent",
-    boxShadow: "var(--glow-violet)",
+    boxShadow: "none",
   },
   secondary: {
     background: "var(--surface-glass-strong)",

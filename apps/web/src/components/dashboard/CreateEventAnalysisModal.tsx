@@ -116,12 +116,19 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
     createAnalysis.mutate(
       {
         birth_chart_id: selectedChart.id,
-        event_name: eventName.trim() || "Untitled Event",
+        event_name: eventName
+          .trim()
+          .split(/\s+/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(" ") || "Untitled Event",
         category: category.trim() || null,
         event_datetime_utc: eventDatetimeUtc,
         latitude: eventPlace ? eventPlace.latitude : null,
         longitude: eventPlace ? eventPlace.longitude : null,
-        place_name: eventPlace?.display_name ?? null,
+        place_name: eventPlace?.display_name
+          ?.split(/\s+/)
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(" ") ?? null,
         timezone_iana: tzQuery.data.iana_name,
         scope,
       },

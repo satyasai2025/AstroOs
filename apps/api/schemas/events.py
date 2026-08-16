@@ -13,7 +13,12 @@ import uuid
 from datetime import date
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+
+def _capitalize_title(title: str) -> str:
+    """Capitalize each word in a title string."""
+    return " ".join(word.capitalize() for word in title.strip().split())
 
 
 class EventCreateRequest(BaseModel):
@@ -25,6 +30,12 @@ class EventCreateRequest(BaseModel):
     description: Optional[str] = None
     category: Optional[str] = None
     is_verified: bool = False
+
+    @field_validator("title")
+    @classmethod
+    def normalize_title(cls, v: str) -> str:
+        # Capitalize each word in title (event name)
+        return _capitalize_title(v)
 
 
 class EventUpdateRequest(BaseModel):
@@ -44,6 +55,14 @@ class EventUpdateRequest(BaseModel):
     category: Optional[str] = None
     is_verified: Optional[bool] = None
     event_date: Optional[date] = None
+
+    @field_validator("title")
+    @classmethod
+    def normalize_title(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        # Capitalize each word in title (event name)
+        return _capitalize_title(v)
 
 
 class EventResponse(BaseModel):

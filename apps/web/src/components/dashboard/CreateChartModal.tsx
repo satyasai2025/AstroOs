@@ -345,9 +345,18 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       house_system: houseSystem,
       dasha_system: dashaSystem,
       include_vargas: includeVargas,
-      subject_name: subjectName.trim() || "Unnamed",
+      subject_name: subjectName
+        .trim()
+        .split(/\s+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ") || "Unnamed",
       gender: gender,
-      place_name: manualOverride ? null : resolvedPlace?.display_name ?? null,
+      place_name: manualOverride
+        ? null
+        : resolvedPlace?.display_name
+            ?.split(/\s+/)
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+            .join(" ") ?? null,
     });
   }
 

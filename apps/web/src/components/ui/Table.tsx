@@ -47,9 +47,14 @@ export function Table<Row extends object>({ columns = [], rows = [], onRowClick 
               <tr
                 key={i}
                 onClick={() => onRowClick && onRowClick(r)}
-                style={{ cursor: onRowClick ? "pointer" : "default", transition: "background var(--duration-fast)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--surface-glass)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                style={{ cursor: onRowClick ? "pointer" : "default", transition: "background 120ms ease" }}
+                className={onRowClick ? "hover:bg-slate-100 dark:hover:bg-slate-800/70" : ""}
+                onMouseEnter={(e) => {
+                  if (!onRowClick) e.currentTarget.style.background = "var(--surface-glass)";
+                }}
+                onMouseLeave={(e) => {
+                  if (!onRowClick) e.currentTarget.style.background = "transparent";
+                }}
               >
                 {columns.map((c) => (
                   <td

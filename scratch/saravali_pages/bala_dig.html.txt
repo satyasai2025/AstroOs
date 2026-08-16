@@ -1,0 +1,57 @@
+Dig Bala
+Dig Bala is the strength of planetary directions, i.e. their position
+relative to the angles of the chart.
+Signification
+Digbala has high influence on the effects of the planets.
+Planets with high Digbala will have auspicious effects in the
+direction of their strength.
+Planets with bad Digbala will cause losses and difficulties in their
+direction of strength or the opposite direction.
+Remark:
+It is difficult to determine the correct direction in which
+events will take place because there are different views of planetary
+directions. Digbala is the source of strength but events may take place
+in the directions attributed to the planets, i.e.
+Sun: east
+Saturn: west
+Mercury: north
+Mars: south
+Jupiter: north-east
+Rahu: south-west
+Moon: north-west
+Venus: north-east
+Calculation
+Each planet has directional strength in an angle of the chart. These
+points of strength are: the cusp of 1st house (Ascandant), 7th house
+(Descendant), 4th house (Nadir, Imum Coeli) or 10th house (Meridian,
+Medium Coeli).
+Sun and Mars are strong in the 10th, Jupiter and Mercury in the
+Ascendant, Moon and Venus in the 4th and Saturn in the 7th.
+Dig Bala of a planet is the distance between his position and the
+corresponding point of mimimum strength (in Virupas). Values greater
+than 180° or 60 Virupas must be deducted from 360° resp. 120 Virupas, so
+the Dig Bala of a planet must be between zero and 60 Virupas.
+The table below shows the strongest and weakest points of Dig Bala for
+the planets.
+Planets
+Strongest
+Weakest
+Sun, Mars
+Meridian
+Nadir
+Mercury, Jupiter
+Ascendant
+Descendant
+Moon, Venus
+Nadir
+Meridian
+Saturn
+Descendant
+Ascendant
+Examples
+Let Moon be in 3° Taurus and Meridian in 17° Cancer. Dig Bala of the
+Moon is therefore
+digbala = ( 97° - 33° ) / 3 = 64/3 = 21 Virupas
+Let Sun be in 12° Capricorn and Ascendant in 23° Cancer. Dig Bala of
+the Sun must be calculated from the Descendant i.e. 23° Capricorn
+digbala = ( 293° - 272° ) / 3 = 21/3 = 7 Virupas

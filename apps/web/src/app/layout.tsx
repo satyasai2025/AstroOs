@@ -3,10 +3,11 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 
-// Google Fonts: Outfit (headings), Inter (body UI), JetBrains Mono (code)
+// Google Fonts: Outfit (headings), Inter (body UI), JetBrains Mono (code), Noto Serif Devanagari (Sanskrit)
 const fontHeadings = "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap";
 const fontBody = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap";
 const fontMono = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap";
+const fontVedic = "https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600&display=swap";
 
 export const metadata: Metadata = {
   title: {
@@ -35,6 +36,7 @@ export default function RootLayout({
         <link href={fontHeadings} rel="stylesheet" />
         <link href={fontBody} rel="stylesheet" />
         <link href={fontMono} rel="stylesheet" />
+        <link href={fontVedic} rel="stylesheet" />
       </head>
       <body>
         <ThemeProvider>

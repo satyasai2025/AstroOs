@@ -1,0 +1,55 @@
+Shadbala Basics
+Signification
+Planetary strength is important for chart prediction. Strong planets
+will have auspicious effects during their time of influence (Dasas,
+transits). Weak planets will have inauspicious effects.
+Strength of Rasi resp. Bhava lords is another important aspect of the
+chart. Bhavas will have effects according to their strength and the
+strength of their lords.
+Some sources of strength give hints for special purposes: e.g. Digbala
+gives informations about directions having positive or negative effects.
+Calculation
+The complete Shadbala is the sum of all Balas. Balas are calculated in
+Rupas or Virupas. One Rupa has 60 Virupas. Most sources of strength have
+values between 0 Virupas (very weak) and maximum value of 60 Virupas
+(very strong). Other sources (like Drekkana Bala) have only a maximum
+value of 30 Virupas.
+Parasara gives required values of strength for each planet. Planets
+meeting these requirements are considered to be strong. These planets
+will have favourable effects. Planets without strength will prove
+inauspicious.
+Types of Shadbala
+There are 6 main types of Shadbala. Sthana Bala and Kala Bala have
+several sub-Balas. The hierarchy (including translation of Sanskrit
+terms) is shown below. Please follow the links.
+Sthana Bala
+- positional strength
+1.1 Uchcha Bala - divisional strength
+1.2 Saptavargaja Bala - strength of exaltation
+1.3 Ojhajugmariamsa Bala - strength related to placement in odd/even
+Rasis and Navamsas
+1.4 Kendradi Bala - strength of placement in angle, succedent or
+cadent houses
+1.5 Drekkana Bala - strength according to Drekkana placement of
+planets
+Dig Bala
+- directional strength
+Kala Bala
+- temporary strength
+3.1 Nathonatha Bala - diurnal/nocturnal strength
+3.2 Paksha Bala - strength related to Lunar phase
+3.3 Tribhaga Bala - strength related to portions of the day/night
+3.4 Varsha-Masa-Dina-Hora Bala - strength of astrological year,
+month, day and hour
+3.5 Yudhdha Bala - strength caused by planetary war
+3.6
+Ayana Bala
+- equinoctial strength
+Cheshta Bala
+- motional strength
+Naisargika Bala
+- natural strength
+Drig Bala
+- aspectual strength
+Summary
+Bala Summary

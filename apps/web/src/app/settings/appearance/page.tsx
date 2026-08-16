@@ -73,7 +73,7 @@ export default function AppearanceSettingsPage() {
                   style={{
                     backgroundColor: accent.color,
                     borderColor: "var(--border-primary)",
-                    ringColor: accent.color,
+                    boxShadow: `0 0 0 2px ${accent.color}`,
                   }}
                 />
               </label>

@@ -44,6 +44,7 @@ class User:
     - Email must be lowercase and stripped.
     - A suspended user cannot generate tokens.
     - Role elevation requires explicit intent (no default admin).
+    - Display name is capitalized (each word title-cased).
     """
 
     id: UserId
@@ -60,9 +61,13 @@ class User:
 
     def __post_init__(self) -> None:
         self.email = self.email.lower().strip()
+        # Capitalize each word in display_name (name/last name)
+        self.display_name = " ".join(
+            word.capitalize() for word in self.display_name.strip().split()
+        )
         if not self.email:
             raise ValueError("User email must not be empty.")
-        if not self.display_name.strip():
+        if not self.display_name:
             raise ValueError("User display_name must not be empty.")
 
     @property
