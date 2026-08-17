@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow", // Private research platform
 };
 
+import { Suspense } from "react";
+
 export default function RootLayout({
   children,
 }: {
@@ -40,7 +42,9 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <Providers>{children}</Providers>
+          <Suspense fallback={null}>
+            <Providers>{children}</Providers>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>

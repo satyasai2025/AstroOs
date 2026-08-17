@@ -54,6 +54,11 @@ const nextConfig: NextConfig = {
 
   // Output standalone for Docker / production
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
+
+  // ESLint during builds is handled separately via dedicated lint scripts
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 
