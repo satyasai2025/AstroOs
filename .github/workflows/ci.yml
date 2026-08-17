@@ -1,54 +1,49 @@
-name: CI
+name: AstroOS CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
-  typecheck-and-crawl:
-    name: Typecheck & Playwright Health Crawler
+  audit-and-typecheck:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install pnpm
-        run: npm install -g pnpm@latest
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Run Web Typecheck
-        run: pnpm --filter @workspace/web run typecheck
+      - name: Install Dependencies
+        run: npm install
 
       - name: Install Playwright Browsers
-        run: npx -y playwright install --with-deps chromium
-        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify TypeScript Types
+        run: npm run typecheck --workspace=apps/web
 
       - name: Build Web Application
-        run: pnpm --filter @workspace/web run build
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
+        run: npm run build --workspace=apps/web
 
-      - name: Start Next.js Server & Run Health Crawler
-        run: |
-          pnpm --filter @workspace/web run start &
-          node -e "const http = require('http'); let tries = 0; function ping() { http.get('http://127.0.0.1:3000', (res) => { console.log('Next.js Server Ready!'); process.exit(0); }).on('error', (err) => { if (++tries > 45) { console.error('Server timeout'); process.exit(1); } setTimeout(ping, 1000); }); } ping();"
-          pnpm --filter @workspace/web run crawl
-        env:
-          BASE_URL: http://127.0.0.1:3000
+      - name: Start Production Web Server
+        run: npm run start --workspace=apps/web &
 
-      - name: Upload Crawler Screenshots & Report
+      - name: Wait for Web Server
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run Playwright Site Health Crawler
+        run: node apps/web/scripts/crawl-site.js
+
+      - name: Upload Crawler Reports & Screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-crawler-reports
+          name: crawler-reports
           path: apps/web/crawler-reports/
-          if-no-files-found: ignore
+          retention-days: 14
