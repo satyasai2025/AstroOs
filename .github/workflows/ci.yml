@@ -14,19 +14,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11.10.0
-
-      - name: Set up Node.js
+      - name: Set up Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+
+      - name: Enable Corepack & Setup pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile || pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run Web Typecheck
         run: pnpm --filter @workspace/web run typecheck
@@ -43,10 +42,10 @@ jobs:
       - name: Start Next.js Server & Run Health Crawler
         run: |
           pnpm --filter @workspace/web run start &
-          npx wait-on http://localhost:3000 --timeout 60000
+          npx wait-on http://127.0.0.1:3000 --timeout 60000
           pnpm --filter @workspace/web run crawl
         env:
-          BASE_URL: http://localhost:3000
+          BASE_URL: http://127.0.0.1:3000
 
       - name: Upload Crawler Screenshots & Report
         if: always()
