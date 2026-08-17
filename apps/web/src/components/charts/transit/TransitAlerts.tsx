@@ -77,31 +77,37 @@ export function TransitAlerts({
 
   return (
     <Card padding="0">
-      <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
-        <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
+      <div className="px-4 py-3.5 border-b border-slate-200 dark:border-slate-800">
+        <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
           Transit Alerts
         </span>
       </div>
-      <div className="flex flex-col gap-2 p-4">
+      <div className="flex flex-col gap-2.5 p-4">
         {alerts.length === 0 ? (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             No active Sade Sati, Ashtama Shani, or Vedha obstructions right now.
           </p>
         ) : (
           alerts.map((a) => {
-            const color = a.tone === "danger" ? "var(--status-danger)" : "var(--status-warning)";
-            const bg = a.tone === "danger" ? "var(--status-danger-bg)" : "var(--status-warning-bg)";
+            const isDanger = a.tone === "danger";
             return (
-              <div key={a.key} className="rounded-lg border p-3" style={{ borderColor: color, backgroundColor: bg }}>
-                <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              <div
+                key={a.key}
+                className={`rounded-xl border p-3.5 transition ${
+                  isDanger
+                    ? "bg-rose-50/80 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800/60"
+                    : "bg-amber-50/80 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/60"
+                }`}
+              >
+                <span className={`text-sm font-semibold block ${isDanger ? "text-rose-900 dark:text-rose-200" : "text-amber-900 dark:text-amber-200"}`}>
                   {a.title}
                 </span>
                 {a.range && (
-                  <div className="mt-0.5 font-mono text-[10px]" style={{ color: "var(--text-muted)" }}>
+                  <div className="mt-0.5 font-mono text-[10px] text-slate-600 dark:text-slate-400">
                     {a.range}
                   </div>
                 )}
-                <div className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+                <div className="mt-1 text-xs text-slate-700 dark:text-slate-300">
                   {a.description}
                 </div>
               </div>

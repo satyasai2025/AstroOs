@@ -216,9 +216,19 @@ async def explain_rule(
     Explain why a specific rule fired or didn't fire. Computes the chart,
     builds facts, evaluates the single rule, returns structured explanation.
     """
-    from apps.api.services.rule_registry import get_rule as get_rule_def
+    RULE_ALIAS_MAP = {
+        "GAJA-001": "RULE-YOGA-003",
+        "DHANA-001": "RULE-YOGA-008",
+        "RAJA-001": "RULE-YOGA-004",
+        "BUDHA-001": "RULE-YOGA-007",
+        "EYE-001": "RULE-HOUSE-002",
+        "TRN-SJ-001": "RULE-TRANSIT-001",
+    }
+    normalized_rule_id = rule_id.upper().strip()
+    target_rule_id = RULE_ALIAS_MAP.get(normalized_rule_id, rule_id)
 
-    if get_rule_def(rule_id) is None:
+    rule_def = get_rule_def(target_rule_id) or get_rule_def(rule_id)
+    if rule_def is None:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"Unknown rule_id '{rule_id}'.",
@@ -236,7 +246,7 @@ async def explain_rule(
         transit_engine=TransitEngine(wrapper),
     ).build_facts(chart, transit_dt)
 
-    rule_result = RuleEngine().evaluate(rule_id, facts)
+    rule_result = RuleEngine().evaluate(rule_def.rule_id, facts)
 
     explanation = ExplanationEngine.explain_rule_result(rule_result, facts)
     from apps.api.schemas.explanation import (

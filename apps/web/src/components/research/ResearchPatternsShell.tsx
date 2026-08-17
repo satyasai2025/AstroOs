@@ -99,16 +99,6 @@ export function ResearchPatternsShell({
   const { data: user } = useCurrentUser();
   const { dataset, setDataset, dateFrom, setDateFrom, dateTo, setDateTo } = useResearchPatternsFilters();
 
-  // This dashboard's Cards/sidebar use hardcoded dark backgrounds
-  // (--bg-surface-800 etc.) regardless of the light/dark toggle, but text
-  // color tokens (--text-primary/secondary/tertiary) DO flip between
-  // themes. In light mode that combination is dark text on a dark
-  // background — unreadable. Force dark mode here so the two always match.
-  const { theme, setTheme } = useTheme();
-  useEffect(() => {
-    if (theme !== "dark") setTheme("dark");
-  }, [theme, setTheme]);
-
   const handleExport = () => {
     const csv = toCsv(exportRows);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });

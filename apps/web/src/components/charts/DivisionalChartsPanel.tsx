@@ -2,9 +2,12 @@
 
 import { useMemo } from "react";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
+import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { VargaGuideCard } from "@/components/charts/VargaGuideCard";
 import { Table, type TableColumn } from "@/components/ui";
+import { DivisionalChartSelector } from "@/components/charts/DivisionalChartSelector";
 import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
+import { useWorkflowStore } from "@/lib/store";
 import type {
   AllVargaChartsResponse,
   D1ChartResponse,
@@ -35,6 +38,9 @@ export default function DivisionalChartsPanel({
   selectedVarga,
   setSelectedVarga,
 }: Props) {
+  const chartStyle = useWorkflowStore((s) => s.chartStyle);
+  const setChartStyle = useWorkflowStore((s) => s.setChartStyle);
+
   const vargaKeys = useMemo(
     () =>
       ["D1", ...Object.keys(vargas?.charts ?? {})].filter(
@@ -133,14 +139,25 @@ export default function DivisionalChartsPanel({
           {selectedVarga} — {VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}
         </h2>
 
-        <NorthIndianChart
-          title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
-          ascendant={currentAscendant}
-          planets={currentPlanets}
-          size={380}
-          isVarga={selectedVarga !== "D1"}
-          vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
-        />
+        {chartStyle === "south" ? (
+          <SouthIndianChart
+            title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+            ascendant={currentAscendant}
+            planets={currentPlanets}
+            size={380}
+            isVarga={selectedVarga !== "D1"}
+            vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+          />
+        ) : (
+          <NorthIndianChart
+            title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+            ascendant={currentAscendant}
+            planets={currentPlanets}
+            size={380}
+            isVarga={selectedVarga !== "D1"}
+            vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+          />
+        )}
 
         <div
           className="mt-4 w-full rounded-lg border p-3"
@@ -165,37 +182,54 @@ export default function DivisionalChartsPanel({
       </div>
 
       <div className="space-y-4">
-        <div className="glass-card p-4">
-          <h3
-            className="mb-3 text-xs font-semibold uppercase tracking-wide"
-            style={{ color: "var(--accent)" }}
-          >
-            Varga
-          </h3>
-          <div className="flex flex-wrap gap-1.5">
-            {vargaKeys.map((vk) => {
-              const vd = VARGA_DIVISORS[vk];
-              const isActive = selectedVarga === vk;
-              return (
-                <button
-                  key={vk}
-                  type="button"
-                  onClick={() => setSelectedVarga(vk)}
-                  className="rounded-full px-2.5 py-1 text-xs font-semibold transition"
-                  style={{
-                    backgroundColor: isActive ? "var(--accent)" : "var(--bg-card)",
-                    color: isActive ? "var(--accent-text)" : "var(--text-secondary)",
-                    border: `1px solid ${
-                      isActive ? "var(--accent)" : "var(--border-primary)"
-                    }`,
-                  }}
-                  aria-pressed={isActive}
-                  aria-label={`Show ${vd?.label ?? vk} chart`}
-                >
-                  {vd?.label ?? vk}
-                </button>
-              );
-            })}
+        <div className="glass-card p-4 flex flex-col gap-4">
+          <div>
+            <h3
+              className="mb-2 text-xs font-semibold uppercase tracking-wide"
+              style={{ color: "var(--accent)" }}
+            >
+              Chart Style
+            </h3>
+            <div className="flex items-center rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <button
+                type="button"
+                onClick={() => setChartStyle("north")}
+                className={`w-1/2 rounded-md py-1.5 text-xs font-semibold transition ${
+                  chartStyle === "north"
+                    ? "bg-cyan-500 text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                }`}
+                aria-pressed={chartStyle === "north"}
+              >
+                North Indian
+              </button>
+              <button
+                type="button"
+                onClick={() => setChartStyle("south")}
+                className={`w-1/2 rounded-md py-1.5 text-xs font-semibold transition ${
+                  chartStyle === "south"
+                    ? "bg-cyan-500 text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                }`}
+                aria-pressed={chartStyle === "south"}
+              >
+                South Indian
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <h3
+              className="mb-2 text-xs font-semibold uppercase tracking-wide"
+              style={{ color: "var(--accent)" }}
+            >
+              Varga
+            </h3>
+            <DivisionalChartSelector
+              selectedVarga={selectedVarga}
+              onSelectVarga={setSelectedVarga}
+              availableVargas={vargaKeys}
+            />
           </div>
         </div>
 

@@ -101,6 +101,8 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "recommendations", label: "Recommendations" },
 ];
 
+import { ShareButton } from "@/components/ui";
+
 export default function CompatibilityReportPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -108,7 +110,6 @@ export default function CompatibilityReportPage() {
 
   const checkAnotherCompatibility = () => {
     openCreateModal("compatibility");
-    router.push("/dashboard");
   };
 
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "failed">("idle");
@@ -462,18 +463,7 @@ export default function CompatibilityReportPage() {
             >
               🖨 Print
             </button>
-            <button
-              onClick={handleShare}
-              className={`rounded-lg border px-3 py-1.5 text-xs font-bold transition ${
-                shareStatus === "copied"
-                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                  : shareStatus === "failed"
-                    ? "border-red-500/40 bg-red-500/10 text-red-300"
-                    : "border-white/10 text-slate-300 hover:bg-white/5"
-              }`}
-            >
-              {shareStatus === "copied" ? "✓ Link Copied" : shareStatus === "failed" ? "✗ Copy Failed" : "🔗 Share"}
-            </button>
+            <ShareButton />
           </div>
         </div>
       </div>

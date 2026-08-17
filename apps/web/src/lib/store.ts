@@ -25,6 +25,8 @@ interface WorkflowState {
     result: WorkflowAnalysisResponse,
     request: WorkflowAnalysisRequest,
   ) => void;
+  /** Set request independently. */
+  setRequest: (request: WorkflowAnalysisRequest | null) => void;
   /** Clear everything. */
   clear: () => void;
   /**
@@ -56,12 +58,18 @@ interface WorkflowState {
    */
   transitChart: BirthChartSummary | null;
   setTransitChart: (chart: BirthChartSummary | null) => void;
+  /**
+   * Preferred Vedic chart rendering style: "north" (Diamond) or "south" (Fixed-Box).
+   */
+  chartStyle: "north" | "south";
+  setChartStyle: (style: "north" | "south") => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>((set) => ({
   result: null,
   request: null,
   setResult: (result, request) => set({ result, request }),
+  setRequest: (request) => set({ request }),
   clear: () => set({ result: null, request: null, transitChart: null }),
   createModalOpen: false,
   createModalInitialType: null,
@@ -69,4 +77,14 @@ export const useWorkflowStore = create<WorkflowState>((set) => ({
   closeCreateModal: () => set({ createModalOpen: false, createModalInitialType: null }),
   transitChart: null,
   setTransitChart: (chart) => set({ transitChart: chart }),
+  chartStyle:
+    typeof window !== "undefined" && window.localStorage.getItem("astroos_chart_style") === "south"
+      ? "south"
+      : "north",
+  setChartStyle: (style) => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("astroos_chart_style", style);
+    }
+    set({ chartStyle: style });
+  },
 }));

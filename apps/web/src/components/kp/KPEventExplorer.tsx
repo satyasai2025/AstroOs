@@ -93,24 +93,26 @@ export function KPEventExplorer({ eventPromises }: Props) {
             {result.significators.length === 0 ? (
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>No planets signify these houses.</p>
             ) : (
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                    <th className="py-1.5 pr-3">Planet</th>
-                    <th className="py-1.5 pr-3">Grade</th>
-                    <th className="py-1.5">Houses</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {result.significators.map((s) => (
-                    <tr key={s.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                      <td className="py-1.5 pr-3 font-medium">{s.planet}</td>
-                      <td className="py-1.5 pr-3" style={{ color: "var(--text-secondary)" }}>{s.grade}</td>
-                      <td className="py-1.5" style={{ color: "var(--text-secondary)" }}>{s.housesSignified.join(", ")}</td>
+              <div className="w-full overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead>
+                    <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                      <th className="py-1.5 pr-3">Planet</th>
+                      <th className="py-1.5 pr-3">Grade</th>
+                      <th className="py-1.5">Houses</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {result.significators.map((s) => (
+                      <tr key={s.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
+                        <td className="py-1.5 pr-3 font-medium">{s.planet}</td>
+                        <td className="py-1.5 pr-3" style={{ color: "var(--text-secondary)" }}>{s.grade}</td>
+                        <td className="py-1.5" style={{ color: "var(--text-secondary)" }}>{s.housesSignified.join(", ")}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>

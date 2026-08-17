@@ -13,6 +13,7 @@ import { useTheme } from "./ThemeProvider";
 import { CommandPalette } from "./CommandPalette";
 
 import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
+import { ShareButton } from "@/components/ui";
 
 const _FLAT_LINKS = NAV_SECTIONS.flatMap((s) => s.items).filter((i) => !i.disabled);
 
@@ -238,6 +239,8 @@ export function AppShell({
   const request = useWorkflowStore((s) => s.request);
   const result = useWorkflowStore((s) => s.result);
   const { theme, toggle } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
@@ -370,7 +373,8 @@ export function AppShell({
                 type="button"
                 className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
                 style={{ color: "var(--text-primary)" }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setQuickActionOpen(false);
                   clearWorkflowResult();
                   openCreateModal("natal");
@@ -383,31 +387,60 @@ export function AppShell({
                 type="button"
                 className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
                 style={{ color: "var(--text-primary)" }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  setQuickActionOpen(false);
+                  router.push("/charts/compare");
+                }}
+              >
+                <NavIcon name="layers" />
+                <span>Compare Charts</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={(e) => {
+                  e.preventDefault();
                   setQuickActionOpen(false);
                   openCreateModal("compatibility");
                 }}
               >
-                <NavIcon name="layers" />
+                <NavIcon name="target" />
                 <span>New Compatibility Match</span>
               </button>
               <button
                 type="button"
                 className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
                 style={{ color: "var(--text-primary)" }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setQuickActionOpen(false);
                   openCreateModal("transit");
                 }}
               >
                 <NavIcon name="orbit" />
-                <span>New Transit Analysis</span>
+                <span>Transit Analysis</span>
               </button>
               <button
                 type="button"
                 className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
                 style={{ color: "var(--text-primary)" }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  setQuickActionOpen(false);
+                  router.push("/charts?view=dasha");
+                }}
+              >
+                <NavIcon name="clock" />
+                <span>Dasha Explorer</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={(e) => {
+                  e.preventDefault();
                   setQuickActionOpen(false);
                   router.push("/charts/import");
                 }}
@@ -419,7 +452,8 @@ export function AppShell({
                 type="button"
                 className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
                 style={{ color: "var(--text-primary)" }}
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   setQuickActionOpen(false);
                   router.push("/research/projects");
                 }}
@@ -533,9 +567,9 @@ export function AppShell({
       </aside>
 
       {/* ── Main column ── */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
         <header
-          className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b px-4 py-3 backdrop-blur-md"
+          className="sticky top-0 z-10 flex w-full max-w-full flex-wrap items-center justify-between gap-3 border-b px-4 py-3 backdrop-blur-md"
           style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
         >
           <div className="flex items-center gap-3 lg:hidden">
@@ -613,14 +647,31 @@ export function AppShell({
 
             <ResearchModeToggle compact />
 
+            <ShareButton />
+
             <button
               type="button"
               onClick={toggle}
               className="theme-toggle"
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              aria-label={mounted ? `Switch to ${theme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
+              title={mounted ? `Switch to ${theme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
             >
-              {theme === "dark" ? (
+              {mounted && theme === "light" ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                </svg>
+              ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -642,21 +693,6 @@ export function AppShell({
                   <path d="M20 12h2" />
                   <path d="m6.34 17.66-1.41 1.41" />
                   <path d="m19.07 4.93-1.41 1.41" />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
                 </svg>
               )}
             </button>
@@ -774,7 +810,7 @@ export function AppShell({
 
 
         <main
-          className="mx-auto w-full max-w-7xl flex-1 px-4 py-8"
+          className="mx-auto w-full max-w-7xl flex-1 min-w-0 overflow-x-hidden p-3 md:p-4"
           style={
             sectionColor
               ? ({

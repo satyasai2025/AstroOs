@@ -62,30 +62,32 @@ export function KPSnapshot({ cusps, profiles, rulingPlanets, eventPromises, timi
           <p className="mb-2 text-[10px] uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
             Planet Star / Sub / Sub-Sub Lords
           </p>
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                <th className="py-1.5 pr-3">Planet</th>
-                <th className="py-1.5 pr-3">Rashi</th>
-                <th className="py-1.5 pr-3">Star</th>
-                <th className="py-1.5 pr-3">Sub</th>
-                <th className="py-1.5">Sub-Sub</th>
-              </tr>
-            </thead>
-            <tbody>
-              {profiles.map((p) => (
-                <tr key={p.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                  <td className="py-1.5 pr-3 font-medium">
-                    <span aria-hidden="true" style={{ color: "var(--accent)" }}>{PLANET_SYMBOLS[p.planet] ?? ""}</span> {p.planet}
-                  </td>
-                  <td className="py-1.5 pr-3" style={{ color: "var(--text-secondary)" }}>{p.rashi}</td>
-                  <td className="py-1.5 pr-3" style={{ color: "var(--text-secondary)" }}>{p.star_lord || "—"}</td>
-                  <td className="py-1.5 pr-3 font-medium" style={{ color: "var(--accent)" }}>{p.sub_lord || "—"}</td>
-                  <td className="py-1.5" style={{ color: "var(--text-secondary)" }}>{p.sub_sub_lord || "—"}</td>
+          <div className="w-full overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                  <th className="py-1.5 pr-3">Planet</th>
+                  <th className="py-1.5 pr-3">Rashi</th>
+                  <th className="py-1.5 pr-3">Star</th>
+                  <th className="py-1.5 pr-3">Sub</th>
+                  <th className="py-1.5">Sub-Sub</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {profiles.map((p) => (
+                  <tr key={p.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
+                    <td className="py-1.5 pr-3 font-medium">
+                      <span aria-hidden="true" style={{ color: "var(--accent)" }}>{PLANET_SYMBOLS[p.planet] ?? ""}</span> {p.planet}
+                    </td>
+                    <td className="py-1.5 pr-3" style={{ color: "var(--text-secondary)" }}>{p.rashi}</td>
+                    <td className="py-1.5 pr-3" style={{ color: "var(--text-secondary)" }}>{p.star_lord || "—"}</td>
+                    <td className="py-1.5 pr-3 font-medium" style={{ color: "var(--accent)" }}>{p.sub_lord || "—"}</td>
+                    <td className="py-1.5" style={{ color: "var(--text-secondary)" }}>{p.sub_sub_lord || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="space-y-4">

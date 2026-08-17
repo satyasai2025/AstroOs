@@ -53,7 +53,7 @@ export function BirthPlaceSearch({ value, onChange, onSelect, disabled }: Props)
       )}
 
       {isOpen && debounced.trim().length >= 2 && (
-        <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-white/10 bg-cosmos-900 shadow-xl">
+        <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl">
           {results.length > 0 ? (
             <ul>
               {results.map((place, i) => (
@@ -68,7 +68,7 @@ export function BirthPlaceSearch({ value, onChange, onSelect, disabled }: Props)
                       onSelect(place);
                       setIsOpen(false);
                     }}
-                    className="block w-full px-4 py-2 text-left text-sm text-slate-200 hover:bg-white/10"
+                    className="block w-full px-4 py-2 text-left text-xs font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                   >
                     {place.display_name}
                   </button>
@@ -76,7 +76,7 @@ export function BirthPlaceSearch({ value, onChange, onSelect, disabled }: Props)
               ))}
             </ul>
           ) : !isFetching ? (
-            <p className="px-4 py-2 text-sm text-slate-500">
+            <p className="px-4 py-2 text-xs text-slate-500 dark:text-slate-400">
               {isError ? "Place search is temporarily unavailable." : "No matching places found."}
             </p>
           ) : null}

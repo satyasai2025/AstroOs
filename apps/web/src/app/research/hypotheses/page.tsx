@@ -183,9 +183,7 @@ export default function HypothesisValidationPage() {
                             <textarea
                               value={reviewNotes}
                               onChange={(e) => setReviewNotes(e.target.value)}
-                              placeholder="Optional notes..."
-                              rows={2}
-                              className="w-[180px] rounded-lg border border-gray-700 bg-black/40 px-2 py-1 text-xs text-gray-100 outline-none"
+                              className="w-[180px] rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500"
                             />
                             <div className="flex flex-col gap-1">
                               <button

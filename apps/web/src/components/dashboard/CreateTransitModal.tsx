@@ -444,18 +444,18 @@ export function CreateTransitModal({ open, onClose }: Props) {
                       setTransitDate(e.target.value);
                       setDatePreset("custom");
                     }}
-                    className="obsidian-input w-full [color-scheme:dark]"
+                    className="obsidian-input w-full"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
+                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                     Time
                   </label>
                   <input
                     type="time"
                     value={transitTime}
                     onChange={(e) => setTransitTime(e.target.value)}
-                    className="obsidian-input w-full [color-scheme:dark]"
+                    className="obsidian-input w-full"
                   />
                 </div>
               </div>

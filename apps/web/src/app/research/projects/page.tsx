@@ -203,16 +203,16 @@ export default function ResearchProjectsPage() {
           {showForm && (
             <Card padding="0" className="p-5">
               <form onSubmit={handleCreateProject} className="space-y-3">
-                <h3 className="text-sm font-semibold text-gray-100">New Research Project</h3>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">New Research Project</h3>
                 <Input
-                  label="Title *"
+                  label="Title"
                   value={newTitle}
                   onChange={setNewTitle}
                   required
                   placeholder="e.g. Sade Sati Correlation Study"
                 />
                 <div>
-                  <label htmlFor="project-description" className="mb-1 block text-xs text-gray-400">
+                  <label htmlFor="project-description" className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                     Description
                   </label>
                   <textarea
@@ -221,7 +221,7 @@ export default function ResearchProjectsPage() {
                     onChange={(e) => setNewDescription(e.target.value)}
                     placeholder="Optional description of the research project..."
                     rows={3}
-                    className="w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2 text-sm text-gray-100 outline-none transition-colors focus:border-cyan-400"
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                 </div>
                 <Button type="submit" size="sm" disabled={!newTitle.trim()}>

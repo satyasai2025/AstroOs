@@ -54,7 +54,7 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
           ? { ...cardStyle, cursor: "pointer", transition: "border-color var(--duration-fast, 150ms), transform var(--duration-fast, 150ms)" }
           : cardStyle
       }
-      className={`bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none ${
+      className={`bg-white dark:bg-slate-900/90 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none ${
         href ? "group hover:-translate-y-0.5 hover:border-cyan-500/60 dark:hover:border-cyan-500/40" : ""
       }`}
     >

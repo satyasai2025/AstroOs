@@ -22,6 +22,8 @@ import { formatLongitude, formatPosition } from "@/lib/formatAstro";
 import { useShadbalaAll } from "@/lib/shadbala";
 import { useKarakatvaSearch, type Karakatva } from "@/lib/karakatva";
 import { useAvastha } from "@/lib/avastha";
+import { useWorkflowStore } from "@/lib/store";
+import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -532,175 +534,223 @@ const asc = chart.ascendant;
     [],
   );
 
+  const chartStyle = useWorkflowStore((s) => s.chartStyle);
+  const setChartStyle = useWorkflowStore((s) => s.setChartStyle);
+
   return (
     <div className="flex h-full flex-col lg:flex-row">
       {/* ── Left: Chart + Controls ── */}
       <div className="flex flex-1 flex-col min-w-0">
-        {/* Tab bar */}
+        {/* Tab bar + Chart Style Toggle */}
         <div
-          className="flex items-center gap-1 border-b px-4 py-2"
+          className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-2"
           style={{ borderColor: "var(--obsidian-border)" }}
         >
-          {(["chart", "planets", "houses", "aspects"] as TabId[]).map(
-            (tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className="rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-all"
-                style={{
-                  backgroundColor:
-                    activeTab === tab
-                      ? "var(--obsidian-accent-primary-soft)"
-                      : "transparent",
-                  color:
-                    activeTab === tab
-                      ? "var(--obsidian-accent-primary)"
-                      : "var(--obsidian-text-muted)",
-                }}
-              >
-                {tab}
-              </button>
-            ),
-          )}
+          <div className="flex items-center gap-1">
+            {(["chart", "planets", "houses", "aspects"] as TabId[]).map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className="rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-all"
+                  style={{
+                    backgroundColor:
+                      activeTab === tab
+                        ? "var(--obsidian-accent-primary-soft)"
+                        : "transparent",
+                    color:
+                      activeTab === tab
+                        ? "var(--obsidian-accent-primary)"
+                        : "var(--obsidian-text-muted)",
+                  }}
+                >
+                  {tab}
+                </button>
+              ),
+            )}
+          </div>
+
+          {/* North / South Style Toggle Button Group */}
+          <div className="flex items-center rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <button
+              type="button"
+              onClick={() => setChartStyle("north")}
+              className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition ${
+                chartStyle === "north"
+                  ? "bg-cyan-500 text-white shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+              }`}
+              aria-pressed={chartStyle === "north"}
+            >
+              North Indian
+            </button>
+            <button
+              type="button"
+              onClick={() => setChartStyle("south")}
+              className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition ${
+                chartStyle === "south"
+                  ? "bg-cyan-500 text-white shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+              }`}
+              aria-pressed={chartStyle === "south"}
+            >
+              South Indian
+            </button>
+          </div>
         </div>
 
         {/* Chart area */}
         <div className="flex flex-1 items-center justify-center p-4">
-          <svg
-            viewBox={`0 0 ${CHART_SIZE} ${CHART_SIZE}`}
-            className="max-h-full max-w-full"
-            style={{ filter: "drop-shadow(0 0 20px rgba(6, 207, 255, 0.08))" }}
-          >
-            {/* Background */}
-            <rect
-              x={0}
-              y={0}
-              width={CHART_SIZE}
-              height={CHART_SIZE}
-              fill="var(--obsidian-surface)"
-              rx={12}
+          {chartStyle === "south" ? (
+            <SouthIndianChart
+              title="D1 Rashi Chart"
+              ascendant={chart.ascendant}
+              planets={chart.planets}
+              size={400}
+              activePlanet={activePlanet}
+              activeHouse={activeHouse}
+              onPlanetHover={(p) => !pinnedPlanet && setHoveredPlanet(p)}
+              onPlanetClick={handlePlanetClick}
+              onHouseHover={(h) => !selectedHouse && setHoveredHouse(h)}
+              onHouseClick={(h) => setSelectedHouse(selectedHouse === h ? null : h)}
             />
+          ) : (
+            <svg
+              viewBox={`0 0 ${CHART_SIZE} ${CHART_SIZE}`}
+              className="w-full h-auto max-w-full max-h-[350px] mx-auto block"
+              style={{ filter: "drop-shadow(0 0 20px rgba(6, 207, 255, 0.08))" }}
+            >
+              {/* Background */}
+              <rect
+                x={0}
+                y={0}
+                width={CHART_SIZE}
+                height={CHART_SIZE}
+                fill="var(--obsidian-surface)"
+                rx={12}
+              />
 
-            {/* House sectors */}
-            {Array.from({ length: 12 }, (_, i) => {
-              const houseNum = i + 1;
-              const isActive = activeHouse === houseNum;
-              return (
-                <g key={houseNum}>
-                  <path
-                    d={housePath(houseNum)}
-                    fill={
-                      isActive
-                        ? "rgba(6, 207, 255, 0.06)"
-                        : "transparent"
-                    }
-                    stroke="var(--obsidian-border)"
-                    strokeWidth={0.8}
-                    onMouseEnter={() => setHoveredHouse(houseNum)}
-                    onMouseLeave={() => setHoveredHouse(null)}
-                    onClick={() =>
-                      setSelectedHouse(
-                        selectedHouse === houseNum ? null : houseNum,
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  />
-                  {/* House number */}
-                  <text
-                    x={houseLabelPos(houseNum).x}
-                    y={houseLabelPos(houseNum).y - 24}
-                    textAnchor="middle"
-                    dominantBaseline="central"
-                    fill="var(--obsidian-text-muted)"
-                    fontSize={8}
-                    fontFamily="var(--font-mono)"
-                    opacity={isActive ? 0.8 : 0.35}
-                  >
-                    {houseNum}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Outer diamond border */}
-            <polygon
-              points={`${DIAMOND.top.x},${DIAMOND.top.y} ${DIAMOND.right.x},${DIAMOND.right.y} ${DIAMOND.bottom.x},${DIAMOND.bottom.y} ${DIAMOND.left.x},${DIAMOND.left.y}`}
-              fill="none"
-              stroke="var(--obsidian-accent-primary)"
-              strokeWidth={1.5}
-              opacity={0.3}
-            />
-
-            {/* Cross lines */}
-            <line
-              x1={DIAMOND.top.x}
-              y1={DIAMOND.top.y}
-              x2={DIAMOND.bottom.x}
-              y2={DIAMOND.bottom.y}
-              stroke="var(--obsidian-border)"
-              strokeWidth={0.8}
-            />
-            <line
-              x1={DIAMOND.left.x}
-              y1={DIAMOND.left.y}
-              x2={DIAMOND.right.x}
-              y2={DIAMOND.right.y}
-              stroke="var(--obsidian-border)"
-              strokeWidth={0.8}
-            />
-
-            {/* Aspect lines */}
-            {activeTab === "aspects" &&
-              aspectLines.map((line, i) => {
-                if (!line) return null;
-                const isHighlighted =
-                  activePlanet &&
-                  (line.from_planet === activePlanet ||
-                    line.to_planet === activePlanet);
-                const color =
-                  line.aspect_type === "conjunction"
-                    ? "#22C55E"
-                    : line.aspect_type === "opposition"
-                      ? "#EF4444"
-                      : line.aspect_type === "trine"
-                        ? "#06CFFF"
-                        : line.aspect_type === "square"
-                          ? "#F59E0B"
-                          : "#B0BEC5";
+              {/* House sectors */}
+              {Array.from({ length: 12 }, (_, i) => {
+                const houseNum = i + 1;
+                const isActive = activeHouse === houseNum;
                 return (
-                  <line
-                    key={i}
-                    x1={line.x1}
-                    y1={line.y1}
-                    x2={line.x2}
-                    y2={line.y2}
-                    stroke={color}
-                    strokeWidth={isHighlighted ? 2 : 0.8}
-                    strokeDasharray={
-                      line.aspect_type === "conjunction" ? "none" : "4 2"
-                    }
-                    opacity={isHighlighted ? 0.8 : 0.25}
-                  />
+                  <g key={houseNum}>
+                    <path
+                      d={housePath(houseNum)}
+                      fill={
+                        isActive
+                          ? "rgba(6, 207, 255, 0.06)"
+                          : "transparent"
+                      }
+                      stroke="var(--obsidian-border)"
+                      strokeWidth={0.8}
+                      onMouseEnter={() => setHoveredHouse(houseNum)}
+                      onMouseLeave={() => setHoveredHouse(null)}
+                      onClick={() =>
+                        setSelectedHouse(
+                          selectedHouse === houseNum ? null : houseNum,
+                        )
+                      }
+                      style={{ cursor: "pointer" }}
+                    />
+                    {/* House number */}
+                    <text
+                      x={houseLabelPos(houseNum).x}
+                      y={houseLabelPos(houseNum).y - 24}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      fill="var(--obsidian-text-muted)"
+                      fontSize={8}
+                      fontFamily="var(--font-mono)"
+                      opacity={isActive ? 0.8 : 0.35}
+                    >
+                      {houseNum}
+                    </text>
+                  </g>
                 );
               })}
 
-            {/* Planet badges */}
-            {activeTab !== "aspects" &&
-              planetPositions.map((pp) => (
-                <PlanetBadge
-                  key={pp.planet}
-                  planet={pp.planet}
-                  position={pp.position}
-                  x={pp.x}
-                  y={pp.y}
-                  isHovered={hoveredPlanet === pp.planet}
-                  isPinned={pinnedPlanet === pp.planet}
-                  onHover={() => setHoveredPlanet(pp.planet)}
-                  onLeave={() => setHoveredPlanet(null)}
-                  onClick={() => handlePlanetClick(pp.planet)}
-                />
-              ))}
-          </svg>
+              {/* Outer diamond border */}
+              <polygon
+                points={`${DIAMOND.top.x},${DIAMOND.top.y} ${DIAMOND.right.x},${DIAMOND.right.y} ${DIAMOND.bottom.x},${DIAMOND.bottom.y} ${DIAMOND.left.x},${DIAMOND.left.y}`}
+                fill="none"
+                stroke="var(--obsidian-accent-primary)"
+                strokeWidth={1.5}
+                opacity={0.3}
+              />
+
+              {/* Cross lines */}
+              <line
+                x1={DIAMOND.top.x}
+                y1={DIAMOND.top.y}
+                x2={DIAMOND.bottom.x}
+                y2={DIAMOND.bottom.y}
+                stroke="var(--obsidian-border)"
+                strokeWidth={0.8}
+              />
+              <line
+                x1={DIAMOND.left.x}
+                y1={DIAMOND.left.y}
+                x2={DIAMOND.right.x}
+                y2={DIAMOND.right.y}
+                stroke="var(--obsidian-border)"
+                strokeWidth={0.8}
+              />
+
+              {/* Aspect lines */}
+              {activeTab === "aspects" &&
+                aspectLines.map((line, i) => {
+                  if (!line) return null;
+                  const isHighlighted =
+                    activePlanet &&
+                    (line.from_planet === activePlanet ||
+                      line.to_planet === activePlanet);
+                  const color =
+                    line.aspect_type === "conjunction"
+                      ? "#22C55E"
+                      : line.aspect_type === "opposition"
+                        ? "#EF4444"
+                        : line.aspect_type === "trine"
+                          ? "#06CFFF"
+                          : line.aspect_type === "square"
+                            ? "#F59E0B"
+                            : "#B0BEC5";
+                  return (
+                    <line
+                      key={i}
+                      x1={line.x1}
+                      y1={line.y1}
+                      x2={line.x2}
+                      y2={line.y2}
+                      stroke={color}
+                      strokeWidth={isHighlighted ? 2 : 0.8}
+                      strokeDasharray={
+                        line.aspect_type === "conjunction" ? "none" : "4 2"
+                      }
+                      opacity={isHighlighted ? 0.8 : 0.25}
+                    />
+                  );
+                })}
+
+              {/* Planet badges */}
+              {activeTab !== "aspects" &&
+                planetPositions.map((pp) => (
+                  <PlanetBadge
+                    key={pp.planet}
+                    planet={pp.planet}
+                    position={pp.position}
+                    x={pp.x}
+                    y={pp.y}
+                    isHovered={hoveredPlanet === pp.planet}
+                    isPinned={pinnedPlanet === pp.planet}
+                    onHover={() => setHoveredPlanet(pp.planet)}
+                    onLeave={() => setHoveredPlanet(null)}
+                    onClick={() => handlePlanetClick(pp.planet)}
+                  />
+                ))}
+            </svg>
+          )}
         </div>
 
         {/* Info bar below chart */}

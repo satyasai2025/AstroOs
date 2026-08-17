@@ -248,7 +248,7 @@ export default function NavPanel({
 
   return (
     <aside
-      className={`flex h-dvh flex-shrink-0 flex-col overflow-hidden border-r ${className}`}
+      className={`flex h-dvh flex-shrink-0 flex-col overflow-y-auto border-r ${className}`}
       style={{
         width: collapsed ? "56px" : "288px",
         borderColor: "var(--obsidian-border)",
@@ -298,7 +298,8 @@ export default function NavPanel({
               type="button"
               className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
               style={{ color: "var(--obsidian-text-primary)" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setQuickActionOpen(false);
                 clearWorkflowResult();
                 openCreateModal("natal");
@@ -311,31 +312,60 @@ export default function NavPanel({
               type="button"
               className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
               style={{ color: "var(--obsidian-text-primary)" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                setQuickActionOpen(false);
+                router.push("/charts/compare");
+              }}
+            >
+              <NavIcon name="layers" className="h-3.5 w-3.5" />
+              <span>Compare Charts</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={(e) => {
+                e.preventDefault();
                 setQuickActionOpen(false);
                 openCreateModal("compatibility");
               }}
             >
-              <NavIcon name="layers" className="h-3.5 w-3.5" />
+              <NavIcon name="target" className="h-3.5 w-3.5" />
               <span>New Compatibility Match</span>
             </button>
             <button
               type="button"
               className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
               style={{ color: "var(--obsidian-text-primary)" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setQuickActionOpen(false);
                 openCreateModal("transit");
               }}
             >
               <NavIcon name="orbit" className="h-3.5 w-3.5" />
-              <span>New Transit Analysis</span>
+              <span>Transit Analysis</span>
             </button>
             <button
               type="button"
               className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
               style={{ color: "var(--obsidian-text-primary)" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                setQuickActionOpen(false);
+                router.push("/charts?view=dasha");
+              }}
+            >
+              <NavIcon name="clock" className="h-3.5 w-3.5" />
+              <span>Dasha Explorer</span>
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
+              style={{ color: "var(--obsidian-text-primary)" }}
+              onClick={(e) => {
+                e.preventDefault();
                 setQuickActionOpen(false);
                 router.push("/charts/import");
               }}
@@ -347,7 +377,8 @@ export default function NavPanel({
               type="button"
               className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--obsidian-border)]"
               style={{ color: "var(--obsidian-text-primary)" }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 setQuickActionOpen(false);
                 router.push("/research/projects");
               }}

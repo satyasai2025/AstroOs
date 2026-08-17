@@ -41,7 +41,7 @@
  * variety to match the mockup's visual style, not a new data dimension.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/lib/auth";
@@ -55,7 +55,7 @@ import {
 } from "@/lib/research";
 import { getCurrentDashaChain, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisResponse, YogaResultResponse, BirthChartSummary } from "@/lib/types";
-import { Button, Card, KpiCard } from "@/components/ui";
+import { Badge, Button, Card, KpiCard, SearchInput } from "@/components/ui";
 import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
 
 interface DashboardOverviewProps {
@@ -64,6 +64,7 @@ interface DashboardOverviewProps {
   activeResult?: WorkflowAnalysisResponse | null;
   activeSubjectName?: string | null;
   onStartNewChart: () => void;
+  onSelectChart?: (chart: BirthChartSummary) => void;
 }
 
 function formatDate(iso: string | null | undefined): string {
@@ -374,10 +375,32 @@ function QuickAction({
 }
 
 
-export function DashboardOverview({ activeResult, activeSubjectName, onStartNewChart }: DashboardOverviewProps) {
+export function DashboardOverview({ activeResult, activeSubjectName, onStartNewChart, onSelectChart }: DashboardOverviewProps) {
   const hasSession = typeof window !== "undefined" && !!tokenStore.getAccess();
   const { data: user } = useCurrentUser();
   const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [pickerSearch, setPickerSearch] = useState("");
+
+  const handleLoadActiveChartClick = () => {
+    if (chartsData && chartsData.charts.length > 0) {
+      setIsPickerOpen(true);
+    } else {
+      onStartNewChart();
+    }
+  };
+
+  const filteredPickerCharts = useMemo(() => {
+    const charts = chartsData?.charts ?? [];
+    const q = pickerSearch.trim().toLowerCase();
+    if (!q) return charts;
+    return charts.filter(
+      (c) =>
+        c.subject_name.toLowerCase().includes(q) ||
+        (c.place_name ?? "").toLowerCase().includes(q) ||
+        (c.lagna_rashi ?? "").toLowerCase().includes(q),
+    );
+  }, [chartsData, pickerSearch]);
 
   const { data: activeProjects } = useQuery({
     queryKey: ["research", "projects", user?.id, "active"],
@@ -438,28 +461,28 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
   const recentLogs = activityLogs?.logs ?? [];
 
   return (
-    <div className="space-y-6">
-      {/* Greeting */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-3">
+      {/* Title + New Chart button */}
+      <div className="mb-3 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-            Welcome back{user?.display_name ? `, ${user.display_name}` : ""} 👋
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+            Dashboard Overview
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-            Here&apos;s what&apos;s happening with your research.
+          <p className="text-xs text-slate-600 dark:text-slate-400">
+            Live astrological analysis and research console.
           </p>
         </div>
         <button
           type="button"
           onClick={onStartNewChart}
-          className="flex items-center gap-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-md shadow-cyan-400/20 transition"
+          className="flex items-center gap-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-sm transition"
         >
           + New Chart
         </button>
       </div>
 
       {/* Stats row — every number is a real count, not a mockup placeholder */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard
           label="Total Charts"
           value={chartsLoading ? "…" : String(chartsData?.total ?? 0)}
@@ -498,8 +521,8 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           Health Risk, Wealth, Dasha, Transit) — only for a chart actually
           loaded this session; no placeholder/demo chart is substituted. */}
       {activeResult && (
-        <div className="mb-6">
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
+        <div className="mb-3">
+          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
             Chart KPI Scorecards
           </h3>
           <KpiScorecards result={activeResult} />
@@ -508,66 +531,65 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
 
       {/* Current Dasha & Transit + Active Yogas — only for a chart actually
           loaded this session; no placeholder/demo chart is substituted. */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mb-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
         <Card>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-charts)" }}>
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">
             Current Dasha &amp; Transit
           </h3>
           {activeResult ? (
             <div className="space-y-2 text-xs">
               {activeSubjectName && (
-                <p style={{ color: "var(--text-muted)" }}>{activeSubjectName}</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200">{activeSubjectName}</p>
               )}
               {dashaChain.length > 0 ? (
                 <>
-                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
                     {dashaChain.map((p) => p.lord).join(" → ")}
                   </p>
                   {deepestPeriod && (
                     <>
-                      <p style={{ color: "var(--text-muted)" }}>
+                      <p className="text-slate-600 dark:text-slate-400">
                         {formatDate(deepestPeriod.start_date)} – {formatDate(deepestPeriod.end_date)}
                       </p>
                       {elapsedPct !== null && (
                         <div
-                          className="h-1.5 w-full overflow-hidden rounded-full"
-                          style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border-primary)" }}
+                          className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700"
                         >
                           <div
-                            className="h-full rounded-full"
-                            style={{ width: `${elapsedPct}%`, backgroundColor: "var(--section-charts)" }}
+                            className="h-full rounded-full bg-cyan-500"
+                            style={{ width: `${elapsedPct}%` }}
                           />
                         </div>
                       )}
                       {elapsedPct !== null && (
-                        <p style={{ color: "var(--text-muted)" }}>{elapsedPct}% elapsed</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-[11px]">{elapsedPct}% elapsed</p>
                       )}
                     </>
                   )}
                 </>
               ) : (
-                <p style={{ color: "var(--text-muted)" }}>No active dasha period found.</p>
+                <p className="text-slate-500 dark:text-slate-400">No active dasha period found.</p>
               )}
-              <p className="pt-1" style={{ color: "var(--text-secondary)" }}>
+              <p className="pt-1 text-slate-700 dark:text-slate-300 font-medium">
                 {currentTransitSummary(activeResult)}
               </p>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-6 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
+            <div className="flex flex-col items-center gap-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-4 text-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
                   <circle cx="12" cy="12" r="9" />
                   <path d="m15 9-2 6-6 2 2-6 6-2Z" />
                 </svg>
               </div>
               <div>
                 <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No chart loaded</p>
-                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">Open or generate a chart to see its current dasha &amp; transits</p>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its current dasha &amp; transits</p>
               </div>
               <button
                 type="button"
-                onClick={onStartNewChart}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-3 py-1.5 text-xs font-medium shadow-sm transition"
+                onClick={handleLoadActiveChartClick}
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-2.5 py-1 text-xs font-medium shadow-sm transition"
               >
                 Load Active Chart
               </button>
@@ -576,37 +598,37 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
         </Card>
 
         <Card>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--success-400)" }}>
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">
             Active Yogas
           </h3>
           {activeResult ? (
             topYogas.length > 0 ? (
-              <div className="divide-y" style={{ borderColor: "var(--border-primary)" }}>
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {topYogas.map((y) => (
                   <ActiveYogaRow key={y.yoga_id} yoga={y} />
                 ))}
               </div>
             ) : (
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 No yogas are currently flagged as present for this chart.
               </p>
             )
           ) : (
-            <div className="flex flex-col items-center gap-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-6 text-center">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
+            <div className="flex flex-col items-center gap-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-4 text-center">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
                   <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
                   <path d="m6 6 2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
                 </svg>
               </div>
               <div>
                 <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No active yogas</p>
-                <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">Open or generate a chart to see its present yogas</p>
+                <p className="text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its present yogas</p>
               </div>
               <button
                 type="button"
-                onClick={onStartNewChart}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-3 py-1.5 text-xs font-medium shadow-sm transition"
+                onClick={handleLoadActiveChartClick}
+                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-2.5 py-1 text-xs font-medium shadow-sm transition"
               >
                 Load Active Chart
               </button>
@@ -618,7 +640,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
       </div>
 
       {/* Recent Charts + Research Activity + Quick Actions */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
         <Card>
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-charts)" }}>
@@ -711,6 +733,116 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           </div>
         </Card>
       </div>
+
+      {/* ── Select Active Chart Picker Modal ── */}
+      {isPickerOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.75)", backdropFilter: "blur(4px)" }}
+          onClick={() => setIsPickerOpen(false)}
+        >
+          <div
+            className="w-full max-w-lg overflow-hidden rounded-2xl border shadow-2xl"
+            style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b px-6 py-4" style={{ borderColor: "var(--border-primary)" }}>
+              <div>
+                <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Select Active Chart</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Choose a saved chart to load its Dasha, Yogas &amp; Transits</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPickerOpen(false)}
+                className="text-slate-400 hover:text-slate-100 text-xl leading-none"
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="p-4 border-b" style={{ borderColor: "var(--border-subtle)" }}>
+              <SearchInput
+                value={pickerSearch}
+                onChange={setPickerSearch}
+                placeholder="Search by name, place, lagna…"
+                shortcut=""
+              />
+            </div>
+
+            <div className="max-h-80 overflow-y-auto p-4 space-y-2">
+              {filteredPickerCharts.length === 0 ? (
+                <div className="text-center py-6 text-sm text-slate-400">
+                  No charts found matching your search.
+                </div>
+              ) : (
+                filteredPickerCharts.map((chart) => {
+                  const color = paletteFor(chart.id);
+                  return (
+                    <div
+                      key={chart.id}
+                      onClick={() => {
+                        onSelectChart?.(chart);
+                        setIsPickerOpen(false);
+                      }}
+                      className="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-amber-500/60 hover:bg-amber-500/5 transition cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-sm"
+                          style={{ backgroundColor: color.fg }}
+                        >
+                          {initialsOf(chart.subject_name)}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-sm truncate" style={{ color: "var(--text-primary)" }}>
+                              {chart.subject_name}
+                            </span>
+                            {chart.is_default && <Badge tone="success">Default</Badge>}
+                          </div>
+                          <p className="text-xs text-slate-400 truncate mt-0.5">
+                            {formatDate(chart.birth_datetime_utc)}
+                            {chart.place_name ? ` · ${chart.place_name}` : ""}
+                            {chart.lagna_rashi ? ` · Lagna: ${chart.lagna_rashi}` : ""}
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="obsidian-btn-primary text-xs ml-3 whitespace-nowrap"
+                      >
+                        Load →
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="flex items-center justify-between border-t px-6 py-3 bg-slate-50 dark:bg-slate-900/80" style={{ borderColor: "var(--border-primary)" }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsPickerOpen(false);
+                  onStartNewChart();
+                }}
+                className="text-xs font-semibold text-cyan-500 hover:underline"
+              >
+                + Create New Chart instead
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPickerOpen(false)}
+                className="obsidian-btn-secondary text-xs"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

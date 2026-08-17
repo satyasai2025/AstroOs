@@ -59,11 +59,46 @@ export default function ChartHistoryPage() {
   const [defaultError, setDefaultError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortMode>("recent");
+  const [activeFilter, setActiveFilter] = useState<"all" | "research" | "recent">("all");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [batchSuccessMessage, setBatchSuccessMessage] = useState<string | null>(null);
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === visibleCharts.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(visibleCharts.map((c) => c.id)));
+    }
+  };
+
+  const toggleSelectOne = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleAddSelectedToDataset = () => {
+    if (selectedIds.size === 0) return;
+    try {
+      const existing: string[] = JSON.parse(localStorage.getItem("astroos_research_dataset_charts") || "[]");
+      const combined = Array.from(new Set([...existing, ...Array.from(selectedIds)]));
+      localStorage.setItem("astroos_research_dataset_charts", JSON.stringify(combined));
+      setBatchSuccessMessage(`Added ${selectedIds.size} chart(s) to Research Dataset!`);
+      setSelectedIds(new Set());
+      setTimeout(() => setBatchSuccessMessage(null), 3000);
+    } catch {
+      setBatchSuccessMessage("Failed to save to research dataset.");
+    }
+  };
 
   const visibleCharts = useMemo(() => {
     const charts = data?.charts ?? [];
     const q = search.trim().toLowerCase();
-    const filtered = q
+    let filtered = q
       ? charts.filter(
           (c) =>
             c.subject_name.toLowerCase().includes(q) ||
@@ -71,12 +106,24 @@ export default function ChartHistoryPage() {
             (c.lagna_rashi ?? "").toLowerCase().includes(q),
         )
       : charts;
+
+    if (activeFilter === "research") {
+      try {
+        const researchIds: string[] = JSON.parse(localStorage.getItem("astroos_research_dataset_charts") || "[]");
+        filtered = filtered.filter((c) => researchIds.includes(c.id));
+      } catch {
+        // ignore
+      }
+    } else if (activeFilter === "recent") {
+      filtered = filtered.slice(0, 10);
+    }
+
     const sorted = [...filtered];
     if (sort === "name") sorted.sort((a, b) => a.subject_name.localeCompare(b.subject_name));
     else if (sort === "oldest") sorted.sort((a, b) => a.created_at.localeCompare(b.created_at));
     else sorted.sort((a, b) => b.created_at.localeCompare(a.created_at));
     return sorted;
-  }, [data, search, sort]);
+  }, [data, search, sort, activeFilter]);
 
   const errorMessage =
     error instanceof ApiError
@@ -115,6 +162,20 @@ export default function ChartHistoryPage() {
   };
 
   const columns: TableColumn<BirthChartSummary>[] = [
+    {
+      key: "select",
+      label: "",
+      render: (c) => (
+        <input
+          type="checkbox"
+          checked={selectedIds.has(c.id)}
+          onClick={(e) => toggleSelectOne(c.id, e)}
+          onChange={() => {}}
+          className="h-4 w-4 rounded cursor-pointer"
+          aria-label={`Select ${c.subject_name}`}
+        />
+      ),
+    },
     {
       key: "subject_name",
       label: "Native",
@@ -173,7 +234,28 @@ export default function ChartHistoryPage() {
       label: "",
       align: "right",
       render: (c) => (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+          <Link
+            href={`/ai/explain`}
+            className="rounded px-2 py-1 text-[11px] font-medium border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20"
+            title="Ask AI questions about this chart"
+          >
+            AI Explain
+          </Link>
+          <Link
+            href={`/charts/transit?chart_id=${c.id}`}
+            className="rounded px-2 py-1 text-[11px] font-medium border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20"
+            title="View transits for this chart"
+          >
+            Transits
+          </Link>
+          <Link
+            href={`/charts/compare`}
+            className="rounded px-2 py-1 text-[11px] font-medium border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
+            title="Compare with another chart"
+          >
+            Compare
+          </Link>
           {!c.is_default && (
             <Button
               variant="ghost"
@@ -182,7 +264,7 @@ export default function ChartHistoryPage() {
               disabled={settingDefaultId === c.id}
               title="Use this chart as your default"
             >
-              {settingDefaultId === c.id ? "Setting…" : "Set as Default"}
+              {settingDefaultId === c.id ? "Setting…" : "Set Default"}
             </Button>
           )}
           <Button
@@ -221,10 +303,6 @@ export default function ChartHistoryPage() {
         <button
           type="button"
           onClick={() => {
-            // Dashboard shows the last analysis result (from the shared
-            // store) instead of the blank form if one exists — clear it
-            // first so "Create Chart" always lands on a fresh form,
-            // consistent with AnalysisResults' own onReset behavior.
             clearWorkflowResult();
             router.push("/dashboard");
           }}
@@ -233,6 +311,12 @@ export default function ChartHistoryPage() {
           + Create Chart
         </button>
       </div>
+
+      {batchSuccessMessage && (
+        <div className="mb-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-xs font-semibold text-emerald-400">
+          ✓ {batchSuccessMessage}
+        </div>
+      )}
 
       {deleteError && (
         <Card style={{ marginBottom: "1rem", padding: "0.75rem 1rem" }}>
@@ -274,20 +358,63 @@ export default function ChartHistoryPage() {
 
       {data && data.charts.length > 0 && (
         <div className="space-y-4">
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-end" }}>
-            <div style={{ flex: 1, maxWidth: 340 }}>
-              <SearchInput value={search} onChange={setSearch} placeholder="Search by name, place, lagna…" shortcut="" />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveFilter("all")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
+                  activeFilter === "all"
+                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
+                }`}
+              >
+                All Charts
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveFilter("research")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
+                  activeFilter === "research"
+                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
+                }`}
+              >
+                Research Cases
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveFilter("recent")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
+                  activeFilter === "recent"
+                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
+                }`}
+              >
+                Recently Saved
+              </button>
+              {selectedIds.size > 0 && (
+                <Button variant="gold" size="sm" onClick={handleAddSelectedToDataset}>
+                  + Add Selected ({selectedIds.size}) to Research Dataset
+                </Button>
+              )}
             </div>
-            <div style={{ width: 200 }}>
-              <Select
-                value={sort}
-                onChange={(v) => setSort(v as SortMode)}
-                options={[
-                  { label: "Most recent", value: "recent" },
-                  { label: "Name (A–Z)", value: "name" },
-                  { label: "Oldest first", value: "oldest" },
-                ]}
-              />
+
+            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+              <div style={{ width: 220 }}>
+                <SearchInput value={search} onChange={setSearch} placeholder="Search name, place…" shortcut="" />
+              </div>
+              <div style={{ width: 160 }}>
+                <Select
+                  value={sort}
+                  onChange={(v) => setSort(v as SortMode)}
+                  options={[
+                    { label: "Most recent", value: "recent" },
+                    { label: "Name (A–Z)", value: "name" },
+                    { label: "Oldest first", value: "oldest" },
+                  ]}
+                />
+              </div>
             </div>
           </div>
 

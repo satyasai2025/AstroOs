@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "crawl": "node scripts/crawl-site.js"
   },
   "dependencies": {
     "@tanstack/react-query": "catalog:",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
+    "@playwright/test": "^1.62.1",
     "@types/d3": "^7.4.3",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "catalog:",

@@ -5,8 +5,6 @@ __pycache__/
 .coverage
 .coverage.*
 htmlcov/
-*.egg-info/
-
 # Node / frontend
 node_modules/
 .next/
@@ -14,6 +12,7 @@ node_modules/
 dist/
 build/
 package-lock.json
+apps/web/crawler-reports/
 
 # Environment / secrets
 .env

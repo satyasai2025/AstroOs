@@ -534,7 +534,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Subject Name</label>
+                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Subject Name</label>
                   <input
                     type="text"
                     value={subjectName}
@@ -546,8 +546,8 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Gender</label>
-                  <div className="flex gap-4 text-xs text-slate-300">
+                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Gender</label>
+                  <div className="flex gap-4 text-xs text-slate-700 dark:text-slate-300">
                     {["Male", "Female", "Other"].map((g) => (
                       <label key={g} className="flex items-center gap-1.5 cursor-pointer">
                         <input
@@ -565,30 +565,30 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Birth Date</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Birth Date</label>
                     <input
                       type="date"
                       required
                       value={birthDate}
                       onChange={(e) => setBirthDate(e.target.value)}
-                      className="obsidian-input w-full [color-scheme:dark]"
+                      className="obsidian-input w-full"
                       disabled={isPending}
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Birth Time</label>
+                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Birth Time</label>
                     <input
                       type="time"
                       step="1"
                       required
                       value={birthTime}
                       onChange={(e) => setBirthTime(e.target.value)}
-                      className="obsidian-input w-full [color-scheme:dark]"
+                      className="obsidian-input w-full"
                       disabled={isPending}
                     />
                   </div>
                 </div>
-                <p className="-mt-2 text-[11px]" style={{ color: "var(--text-muted)" }}>
+                <p className="-mt-2 text-[11px] text-slate-500 dark:text-slate-400">
                   Local date and time at the birth place — not UTC. The birth place below determines the conversion.
                 </p>
 
