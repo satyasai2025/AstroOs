@@ -95,24 +95,26 @@ export function KPRulingPlanets({ rulingPlanets, houseSignificators }: Props) {
         {fruitful.length === 0 ? (
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>No ruling planet also signifies these houses.</p>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                <th className="py-2 pr-4">Planet</th>
-                <th className="py-2 pr-4">RP Source</th>
-                <th className="py-2">Houses Signified</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fruitful.map((f) => (
-                <tr key={f.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                  <td className="py-2 pr-4 font-medium">{f.planet}</td>
-                  <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>{f.rpSource}</td>
-                  <td className="py-2" style={{ color: "var(--text-secondary)" }}>{f.housesSignified.join(", ")}</td>
+          <div className="w-full overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                  <th className="py-2 pr-4">Planet</th>
+                  <th className="py-2 pr-4">RP Source</th>
+                  <th className="py-2">Houses Signified</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {fruitful.map((f) => (
+                  <tr key={f.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
+                    <td className="py-2 pr-4 font-medium">{f.planet}</td>
+                    <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>{f.rpSource}</td>
+                    <td className="py-2" style={{ color: "var(--text-secondary)" }}>{f.housesSignified.join(", ")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

@@ -288,28 +288,28 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Event Date</label>
+                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Event Date</label>
                   <input
                     type="date"
                     required
                     value={eventDate}
                     onChange={(e) => setEventDate(e.target.value)}
-                    className="obsidian-input w-full [color-scheme:dark]"
+                    className="obsidian-input w-full"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Event Time</label>
+                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Event Time</label>
                   <input
                     type="time"
                     step="1"
                     required
                     value={eventTime}
                     onChange={(e) => setEventTime(e.target.value)}
-                    className="obsidian-input w-full [color-scheme:dark]"
+                    className="obsidian-input w-full"
                   />
                 </div>
               </div>
-              <p className="-mt-2 text-[11px]" style={{ color: "var(--text-muted)" }}>
+              <p className="-mt-2 text-[11px] text-slate-500 dark:text-slate-400">
                 Local date and time at the event's location — not UTC. The location below determines the conversion.
               </p>
 

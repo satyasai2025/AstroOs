@@ -13,6 +13,7 @@ type CompareChartsModalProps = {
   onClose: () => void;
   onCompare: (selectedChartIds: string[]) => void;
   availableCharts: ChartOption[];
+  initialSelectedIds?: string[];
 };
 
 export const CompareChartsModal: React.FC<CompareChartsModalProps> = ({
@@ -20,9 +21,16 @@ export const CompareChartsModal: React.FC<CompareChartsModalProps> = ({
   onClose,
   onCompare,
   availableCharts,
+  initialSelectedIds = [],
 }) => {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(initialSelectedIds));
   const MAX_SELECTION = 4;
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setSelectedIds(new Set(initialSelectedIds));
+    }
+  }, [isOpen, initialSelectedIds]);
 
   const toggleChart = useCallback((chartId: string) => {
     setSelectedIds((prev) => {
@@ -43,7 +51,6 @@ export const CompareChartsModal: React.FC<CompareChartsModalProps> = ({
   }, [selectedIds, onCompare]);
 
   const handleCancel = useCallback(() => {
-    setSelectedIds(new Set());
     onClose();
   }, [onClose]);
 

@@ -169,13 +169,13 @@ export default function ResearchProjectDetailPage() {
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    className="w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2 text-lg font-bold text-gray-100 outline-none transition-colors focus:border-cyan-400"
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-lg font-bold text-slate-900 dark:text-slate-100 outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   <textarea
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     rows={3}
-                    className="w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2 text-sm text-gray-100 outline-none transition-colors focus:border-cyan-400"
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   <div className="flex gap-2">
                     <button
@@ -188,71 +188,64 @@ export default function ResearchProjectDetailPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setEditing(false)}
-                      className="rounded-lg border border-gray-700 px-4 py-1.5 text-xs text-gray-400"
+                      onClick={() => {
+                        setEditTitle(project.title);
+                        setEditDescription(project.description || "");
+                        setEditing(false);
+                      }}
+                      className="rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-4 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
               ) : (
-                <>
-                  <h1 className="text-3xl font-bold">{project.title}</h1>
-                  <div className="mt-2 flex items-center gap-3">
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs uppercase tracking-wide ${
-                        project.status === "active" ? "bg-emerald-500/15 text-emerald-400" : "bg-gray-500/15 text-gray-400"
-                      }`}
-                    >
-                      {project.status}
-                    </span>
-                    {project.description && <p className="text-sm text-gray-400">{project.description}</p>}
-                  </div>
-                </>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{project.title}</h1>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    {project.description || "No description provided."}
+                  </p>
+                </div>
               )}
             </div>
 
-            <div className="ml-4 flex flex-shrink-0 items-center gap-2">
+            <div className="flex items-center gap-2">
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                  project.status === "active" ? "bg-emerald-500/20 text-emerald-400" : "bg-slate-500/20 text-slate-400"
+                }`}
+              >
+                {project.status.replace("_", " ")}
+              </span>
               {!editing && (
                 <button
                   type="button"
                   onClick={() => setEditing(true)}
-                  className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400"
+                  className="rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                 >
                   Edit
                 </button>
               )}
-              <button
-                type="button"
-                onClick={() => handleExport("csv")}
-                className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400"
-              >
-                Export CSV
-              </button>
-              <button
-                type="button"
-                onClick={() => handleExport("json")}
-                className="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400"
-              >
-                Export JSON
-              </button>
             </div>
           </div>
 
-          {/* Snapshot Comparison */}
-          <div className="rounded-xl border border-gray-700 bg-white/5 p-4">
-            <h2 className="mb-3 text-sm font-semibold text-gray-100">Snapshot Comparison</h2>
+          {/* Snapshot Comparator */}
+          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-4 shadow-sm">
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">Compare Snapshots</h2>
+            <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">
+              Select two snapshots to compare dataset size and hypothesis statuses.
+            </p>
 
-            <div className="flex flex-wrap items-end gap-4">
+            <div className="mt-3 flex flex-wrap items-end gap-3">
               <div className="min-w-[200px] flex-1">
-                <label htmlFor="compare-a" className="mb-1 block text-xs text-gray-400">
+                <label htmlFor="compare-a" className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                   Snapshot A
                 </label>
                 <select
                   id="compare-a"
                   value={compareA}
                   onChange={(e) => setCompareA(e.target.value)}
-                  className="w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2 text-xs text-gray-100 outline-none"
+                  className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Select a snapshot...</option>
                   {snapshots.map((s) => (
@@ -264,14 +257,14 @@ export default function ResearchProjectDetailPage() {
               </div>
 
               <div className="min-w-[200px] flex-1">
-                <label htmlFor="compare-b" className="mb-1 block text-xs text-gray-400">
+                <label htmlFor="compare-b" className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">
                   Snapshot B
                 </label>
                 <select
                   id="compare-b"
                   value={compareB}
                   onChange={(e) => setCompareB(e.target.value)}
-                  className="w-full rounded-lg border border-gray-700 bg-black/40 px-3 py-2 text-xs text-gray-100 outline-none"
+                  className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Select a snapshot...</option>
                   {snapshots.map((s) => (

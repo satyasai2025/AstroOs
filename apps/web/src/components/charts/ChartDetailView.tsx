@@ -1,17 +1,43 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
+import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { ChartDetailPanel } from "@/components/charts/ChartDetailPanel";
+import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
+import { DashaTransitSummaryCard } from "@/components/charts/DashaTransitSummaryCard";
+import { DivisionalChartSelector } from "@/components/charts/DivisionalChartSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
+import { LifeEventsTree } from "@/components/charts/LifeEventsTree";
 import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
 import { PlanetaryPositionsTable } from "@/components/charts/PlanetaryPositionsTable";
+import { ShareButton } from "@/components/ui";
+import { useChartEvents } from "@/lib/events";
+import { useWorkflowStore } from "@/lib/store";
+import { VARGA_DIVISORS } from "@/lib/astro";
 import type {
   DashaPeriodResponse,
   WorkflowAnalysisRequest,
   WorkflowAnalysisResponse,
 } from "@/lib/types";
+
+const PLANET_SIGNIFICATIONS: Record<string, string> = {
+  Sun: "leadership, authority, vitality, and self-realization",
+  Moon: "mind, emotional growth, intuition, and public connection",
+  Mars: "courage, action, drive, and technical or strategic pursuits",
+  Mercury: "intellect, analytical skill, communication, and commercial enterprise",
+  Jupiter: "expansion, learning, wisdom, prosperity, and spiritual growth",
+  Venus: "harmony, creativity, relationships, and refinement",
+  Saturn: "discipline, structure, perseverance, and long-term stability",
+  Rahu: "transformation, material ambition, innovation, and intense evolution",
+  Ketu: "spiritual insight, detachment, research, and deep introspection",
+};
+
+function getPlanetSignification(planet: string): string {
+  const p = planet.charAt(0).toUpperCase() + planet.slice(1).toLowerCase();
+  return PLANET_SIGNIFICATIONS[p] || "development and transformative life learning";
+}
 
 function formatDate(iso: string): string {
   try {
@@ -58,11 +84,17 @@ interface Props {
 export function ChartDetailView({ result, request, onEditDetails }: Props) {
   const { chart, dasha, yogas } = result;
   const current = findCurrentDasha(dasha.mahadashas, new Date());
+  const chartId = result.chart_id || "";
+  const { data: chartEventsData } = useChartEvents(chartId);
+  const [datasetAdded, setDatasetAdded] = useState(false);
 
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
   const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(null);
   const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
   const [pinnedHouse, setPinnedHouse] = useState<number | null>(null);
+  const [selectedVarga, setSelectedVarga] = useState<string>("D1");
+  const chartStyle = useWorkflowStore((s) => s.chartStyle);
+  const setChartStyle = useWorkflowStore((s) => s.setChartStyle);
 
   const activePlanet = hoveredPlanet ?? pinnedPlanet;
   const activeHouse = hoveredHouse ?? pinnedHouse;
@@ -76,6 +108,22 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
     setPinnedPlanet(null);
   };
 
+  const handleAddToDataset = () => {
+    try {
+      const stored = localStorage.getItem("astroos_research_dataset_charts");
+      const list = stored ? JSON.parse(stored) : [];
+      if (!list.includes(chartId)) {
+        list.push(chartId);
+        localStorage.setItem("astroos_research_dataset_charts", JSON.stringify(list));
+      }
+      setDatasetAdded(true);
+      setTimeout(() => setDatasetAdded(false), 3000);
+    } catch {
+      setDatasetAdded(true);
+      setTimeout(() => setDatasetAdded(false), 3000);
+    }
+  };
+
   const sunSign = chart.planets.find((p) => p.planet.toLowerCase() === "sun")?.rashi ?? "—";
   const moonSign = chart.planets.find((p) => p.planet.toLowerCase() === "moon")?.rashi ?? "—";
   const sunDegree = chart.planets.find((p) => p.planet.toLowerCase() === "sun")?.rashi_degree ?? 0;
@@ -85,254 +133,282 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
   const currentYoga = chart.panchanga.yoga.name;
   const currentKarana = chart.panchanga.karana.name;
 
-  const activeYogas = yogas?.results?.filter((y) => y.is_present) ?? [];
-
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
           <div
-            className="flex h-11 w-11 items-center justify-center rounded-lg"
+            className="flex h-9 w-9 items-center justify-center rounded-lg"
             style={{ backgroundColor: "var(--obsidian-accent-tertiary-soft)", color: "var(--obsidian-accent-tertiary)" }}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="m12 3 2.6 6.2L21 10l-5 4.3L17.4 21 12 17.5 6.6 21 8 14.3 3 10l6.4-.8L12 3Z" />
             </svg>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
+              <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                 {request.subject_name} Birth Chart
               </h1>
               <span
-                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase"
-                style={{ border: "1px solid var(--border-primary)", color: "var(--text-secondary)" }}
+                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
               >
                 D1 Chart
               </span>
             </div>
-            <p className="mt-0.5 text-sm" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Born {formatDate(request.birth_datetime_utc)}
               {request.place_name ? `, ${request.place_name}` : ""}
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center shrink-0 gap-1.5">
+          <button
+            type="button"
+            onClick={handleAddToDataset}
+            className="obsidian-btn-secondary text-xs flex items-center gap-1.5 py-1 px-2.5"
+            title="Add to AstroOS Global Research Dataset"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>{datasetAdded ? "Added!" : "+ Dataset"}</span>
+          </button>
           {onEditDetails && (
-            <button type="button" onClick={onEditDetails} className="obsidian-btn-secondary text-sm">
-              Edit Details
+            <button type="button" onClick={onEditDetails} className="obsidian-btn-secondary text-xs py-1 px-2.5">
+              Edit
             </button>
           )}
-          <button type="button" className="obsidian-btn-secondary text-sm">Share</button>
+          <ShareButton />
         </div>
       </div>
 
       {/* Quick Stat Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Lagna</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{chart.ascendant.rashi}</p>
-          <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>{formatDegree(chart.ascendant.rashi_degree)}</p>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8">
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Lagna</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{chart.ascendant.rashi}</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400">{formatDegree(chart.ascendant.rashi_degree)}</p>
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Sun Sign</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{sunSign}</p>
-          <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>{formatDegree(sunDegree)}</p>
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sun Sign</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{sunSign}</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400">{formatDegree(sunDegree)}</p>
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Moon Sign</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{moonSign}</p>
-          <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>{formatDegree(moonDegree)}</p>
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Moon Sign</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{moonSign}</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400">{formatDegree(moonDegree)}</p>
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Nakshatra</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{moonNakshatra}</p>
-          <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>Pada {moonPada}</p>
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Nakshatra</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{moonNakshatra}</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400">Pada {moonPada}</p>
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Yoga</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{currentYoga}</p>
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Yoga</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{currentYoga}</p>
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Karana</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{currentKarana}</p>
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Karana</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{currentKarana}</p>
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Current Dasha</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>
-            {current ? `${current.mahadasha.lord}${current.antardasha ? ` / ${current.antardasha.lord}` : ""}` : "—"}
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Dasha</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">
+            {current ? `${current.mahadasha.lord}/${current.antardasha?.lord ?? ""}` : "—"}
           </p>
           {current && (
-            <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>
-              {current.yearsLeft}y {current.monthsLeft}m left
+            <p className="text-[10px] text-slate-600 dark:text-slate-400">
+              {current.yearsLeft}y {current.monthsLeft}m
             </p>
           )}
         </div>
-        <div className="rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-          <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>Dasha Rate</p>
-          <p className="mt-1 text-sm font-bold" style={{ color: "var(--text-primary)" }}>{current ? `${current.percentElapsed}%` : "—"}</p>
-          <p className="text-[11px]" style={{ color: "var(--text-secondary)" }}>
-            {current ? `of ${current.mahadasha.lord} MD` : ""}
+        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Dasha Rate</p>
+          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{current ? `${current.percentElapsed}%` : "—"}</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400">
+            {current ? `${current.mahadasha.lord} MD` : ""}
           </p>
         </div>
       </div>
 
+      {/* Main 3-Column Dense Above-the-Fold Grid */}
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 items-stretch">
+        {/* Left Column (lg:col-span-4): Chart Canvas */}
+        <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm flex flex-col justify-between">
+          <div>
+            <div className="mb-2 flex flex-col gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between gap-1.5">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                  {selectedVarga} {VARGA_DIVISORS[selectedVarga]?.label ? `· ${VARGA_DIVISORS[selectedVarga].label}` : ""}
+                </span>
+                <div className="flex items-center rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <button
+                    type="button"
+                    onClick={() => setChartStyle("north")}
+                    className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                      chartStyle === "north"
+                        ? "bg-cyan-500 text-white shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                    }`}
+                    aria-pressed={chartStyle === "north"}
+                  >
+                    North
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChartStyle("south")}
+                    className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                      chartStyle === "south"
+                        ? "bg-cyan-500 text-white shadow-sm"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                    }`}
+                    aria-pressed={chartStyle === "south"}
+                  >
+                    South
+                  </button>
+                </div>
+              </div>
+
+              {/* Full Set Varga Selector (D1 through D60) */}
+              <DivisionalChartSelector
+                selectedVarga={selectedVarga}
+                onSelectVarga={setSelectedVarga}
+                availableVargas={["D1", ...Object.keys(result.vargas?.charts ?? {})]}
+              />
+            </div>
+
+            <div className="py-1 flex items-center justify-center min-h-[300px] max-h-[340px] overflow-hidden">
+              {chartStyle === "south" ? (
+                <SouthIndianChart
+                  title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+                  ascendant={
+                    selectedVarga === "D1"
+                      ? chart.ascendant
+                      : result.vargas?.charts[selectedVarga]
+                        ? {
+                            rashi: result.vargas.charts[selectedVarga].ascendant.varga_rashi,
+                            rashi_degree: result.vargas.charts[selectedVarga].ascendant.varga_rashi_degree,
+                          }
+                        : chart.ascendant
+                  }
+                  planets={
+                    selectedVarga === "D1"
+                      ? chart.planets
+                      : result.vargas?.charts[selectedVarga]?.planet_positions.map((p) => ({
+                          planet: p.planet,
+                          rashi: p.varga_rashi,
+                          house_number: p.varga_house_number,
+                          is_retrograde: p.is_retrograde,
+                          rashi_degree: p.varga_rashi_degree,
+                        })) ?? chart.planets
+                  }
+                  size={330}
+                  isVarga={selectedVarga !== "D1"}
+                  vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                  onPlanetHover={setHoveredPlanet}
+                  onPlanetClick={handlePlanetClick}
+                  activePlanet={activePlanet}
+                  onHouseHover={setHoveredHouse}
+                  onHouseClick={handleHouseClick}
+                  activeHouse={activeHouse}
+                />
+              ) : (
+                <NorthIndianChart
+                  title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+                  ascendant={
+                    selectedVarga === "D1"
+                      ? chart.ascendant
+                      : result.vargas?.charts[selectedVarga]
+                        ? {
+                            rashi: result.vargas.charts[selectedVarga].ascendant.varga_rashi,
+                            rashi_degree: result.vargas.charts[selectedVarga].ascendant.varga_rashi_degree,
+                          }
+                        : chart.ascendant
+                  }
+                  planets={
+                    selectedVarga === "D1"
+                      ? chart.planets
+                      : result.vargas?.charts[selectedVarga]?.planet_positions.map((p) => ({
+                          planet: p.planet,
+                          rashi: p.varga_rashi,
+                          house_number: p.varga_house_number,
+                          is_retrograde: p.is_retrograde,
+                          rashi_degree: p.varga_rashi_degree,
+                        })) ?? chart.planets
+                  }
+                  aspects={chart.aspects}
+                  size={330}
+                  isVarga={selectedVarga !== "D1"}
+                  vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                  onPlanetHover={setHoveredPlanet}
+                  onPlanetClick={handlePlanetClick}
+                  activePlanet={activePlanet}
+                  onHouseHover={setHoveredHouse}
+                  onHouseClick={handleHouseClick}
+                  activeHouse={activeHouse}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="mt-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 px-2.5 py-1.5 flex items-center justify-between text-xs">
+            <span className="font-semibold text-slate-900 dark:text-slate-100">
+              Lagna: <span className="text-cyan-600 dark:text-cyan-400">{chart.ascendant.rashi}</span> {chart.ascendant.rashi_degree.toFixed(2)}°
+            </span>
+            <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+              {chart.ascendant.nakshatra} ({chart.ascendant.pada})
+            </span>
+          </div>
+        </div>
+
+        {/* Middle Column (lg:col-span-5): Tabbed High-Density Sub-Panels */}
+        <div className="lg:col-span-5 flex flex-col">
+          <ChartPanel
+            chart={chart}
+            result={result}
+            activePlanet={activePlanet}
+            onPlanetClick={handlePlanetClick}
+          />
+        </div>
+
+        {/* Right Column (lg:col-span-3): Dasha & Transit Summary */}
+        <div className="lg:col-span-3 flex flex-col">
+          <DashaTransitSummaryCard result={result} request={request} />
+        </div>
+      </div>
+
       {/* Chart KPI Scorecards */}
-      <div className="mb-6">
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
+      <div className="pt-2">
+        <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
           Chart KPI Scorecards
         </h3>
         <KpiScorecards result={result} />
       </div>
 
-      {/* Main content */}
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(300px,1.2fr)_1fr_320px]">
-        {/* Chart */}
-        <div className="obsidian-card p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Lagna Chart (North Indian)</h2>
-            <Link href="/charts" className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>View Full Chart</Link>
-          </div>
-          <div className="mx-auto max-w-xl">
-            <NorthIndianChart
-              ascendant={chart.ascendant}
-              planets={chart.planets}
-              aspects={chart.aspects}
-              size={480}
-              onPlanetHover={setHoveredPlanet}
-              onPlanetClick={handlePlanetClick}
-              activePlanet={activePlanet}
-              onHouseHover={setHoveredHouse}
-              onHouseClick={handleHouseClick}
-              activeHouse={activeHouse}
-            />
-          </div>
+      {/* Dasha Timeline Section */}
+      <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm">
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Vimshottari Dasha Timeline</h2>
+          <Link href="/charts?view=dasha" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">View Full Explorer →</Link>
         </div>
-
-        {/* Planetary Positions + Dasha */}
-        <div className="space-y-5">
-          <PlanetaryPositionsTable
-            ascendant={chart.ascendant}
-            planets={chart.planets}
-            href="/charts"
-          />
-
-          <div className="obsidian-card p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Dasha Timeline</h2>
-              <Link href="/charts?view=dasha" className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>View Details</Link>
-            </div>
-            <DashaTimeline dasha={dasha} height={120} />
-          </div>
-        </div>
-
-        {/* Right sidebar: Insights + Recent Analyses + Quick Actions */}
-        <div className="space-y-5">
-          {/* AI Insights */}
-          <div className="obsidian-card p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>AI Insights</h3>
-              <Link href="/ai/explain" className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>View Analysis</Link>
-            </div>
-            {current && (
-              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                {current.mahadasha.lord} Mahadasha is a favorable period for growth, learning, and expansion.
-                The ongoing Jupiter/Saturn Antardasha indicates disciplined progress, potential gains through hard work, and long-term stability.
-              </p>
-            )}
-          </div>
-
-          {/* Recent Analyses */}
-          <div className="obsidian-card p-5">
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>Recent Analyses</h3>
-              <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>View All</span>
-            </div>
-            <div className="space-y-2.5">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--text-muted)" }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  <span className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Career Prospects Analysis</span>
-                </div>
-                <span className="text-[10px]" style={{ color: "var(--success-400)" }}>Completed</span>
-              </div>
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--text-muted)" }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  <span className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Marriage Timing Analysis</span>
-                </div>
-                <span className="text-[10px]" style={{ color: "var(--success-400)" }}>Completed</span>
-              </div>
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--text-muted)" }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  <span className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Financial Growth Analysis</span>
-                </div>
-                <span className="text-[10px]" style={{ color: "var(--success-400)" }}>Completed</span>
-              </div>
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--text-muted)" }}>
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                  </svg>
-                  <span className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>Health & Longevity Analysis</span>
-                </div>
-                <span className="text-[10px]" style={{ color: "var(--success-400)" }}>Completed</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="obsidian-card p-5">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>Quick Actions</h3>
-            <div className="space-y-2">
-              <Link href="/reports/pdf" className="flex items-center gap-2.5 rounded-lg border p-2.5 text-xs transition-colors" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                </svg>
-                <div>
-                  <div className="font-medium">Generate Full Report</div>
-                  <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>PDF report with all analysis</div>
-                </div>
-              </Link>
-              <Link href="/charts/compare" className="flex items-center gap-2.5 rounded-lg border p-2.5 text-xs transition-colors" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 13 9 5 9-5" />
-                </svg>
-                <div>
-                  <div className="font-medium">Compare With Chart</div>
-                  <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>Compare with another chart</div>
-                </div>
-              </Link>
-              <Link href="/charts?view=timeline" className="flex items-center gap-2.5 rounded-lg border p-2.5 text-xs transition-colors" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="2.5" /><ellipse cx="12" cy="12" rx="9" ry="4" />
-                </svg>
-                <div>
-                  <div className="font-medium">Transit Now</div>
-                  <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>See current transits</div>
-                </div>
-              </Link>
-              <Link href="/charts?view=dasha" className="flex items-center gap-2.5 rounded-lg border p-2.5 text-xs transition-colors" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" />
-                </svg>
-                <div>
-                  <div className="font-medium">Dasha Calendar</div>
-                  <div className="text-[10px]" style={{ color: "var(--text-muted)" }}>View full dasha timeline</div>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
+        <DashaTimeline
+          dasha={dasha}
+          height={110}
+          birthDate={request.birth_datetime_utc}
+          activeDasha={current}
+          events={chartEventsData?.events}
+        />
       </div>
+
+      {/* Life Events Tree Section */}
+      {chartId && (
+        <div className="pt-1">
+          <LifeEventsTree chartId={chartId} />
+        </div>
+      )}
     </div>
   );
 }

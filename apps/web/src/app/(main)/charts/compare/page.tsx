@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
+import { useWorkflowStore } from "@/lib/store";
 import { ApiError } from "@/lib/api";
 import type { WorkflowAnalysisRequest, WorkflowAnalysisResponse } from "@/lib/types";
 import { CompareChartsModal } from "./components/CompareChartsModal";
 import { ComparisonWorkspace, type ComparedChart } from "./components/ComparisonWorkspace";
 import { useSavedComparisons } from "./hooks/useSavedComparisons";
+import { Badge, ShareButton } from "@/components/ui";
 
 function formatDate(iso: string): string {
   try {
@@ -25,6 +27,8 @@ function formatDate(iso: string): string {
  * comparison sets for quick re-opening.
  */
 export default function ChartComparePage() {
+  const storeRequest = useWorkflowStore((s) => s.request);
+  const storeResult = useWorkflowStore((s) => s.result);
   const { data: chartsData, isLoading: chartsLoading, isError: chartsErrored } = useMyCharts();
   const analyze = useAnalyzeWorkflow();
   const {
@@ -127,36 +131,63 @@ export default function ChartComparePage() {
     void runComparison(chartIds);
   };
 
-  // Consumes a shared comparison link (?ids=a,b,c,d) — only works for
-  // charts the signed-in account itself owns, since saved charts are
-  // per-user; sharing across accounts isn't meaningful here.
+  // Consumes a shared comparison link (?ids=a,b,c,d) or defaults Position 1 to active session chart
   const searchParams = useSearchParams();
   const sharedIdsLoaded = useRef(false);
+
   useEffect(() => {
     if (sharedIdsLoaded.current || chartsLoading || !chartsData) return;
     const idsParam = searchParams.get("ids");
-    if (!idsParam) return;
-    sharedIdsLoaded.current = true;
-    const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
-    if (ids.length < 2) {
-      setCompareError("This link doesn't include enough charts to compare.");
+    if (idsParam) {
+      sharedIdsLoaded.current = true;
+      const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+      if (ids.length < 2) {
+        setCompareError("This link doesn't include enough charts to compare.");
+        return;
+      }
+      const allExist = ids.every((id) => chartsData.charts.some((c) => c.id === id));
+      if (!allExist) {
+        setCompareError("One or more charts in this shared link aren't available on this account.");
+        return;
+      }
+      void runComparison(ids);
       return;
     }
-    const allExist = ids.every((id) => chartsData.charts.some((c) => c.id === id));
-    if (!allExist) {
-      setCompareError("One or more charts in this shared link aren't available on this account.");
-      return;
+
+    // No explicit ?ids= link -> Auto-default Position 1 to active session chart
+    if (activeChartIds.length === 0 && chartsData.charts.length > 0) {
+      let activeChartId: string | null = null;
+      if (storeRequest?.chart_id) {
+        activeChartId = storeRequest.chart_id;
+      } else if (storeRequest) {
+        const match = chartsData.charts.find(
+          (c) =>
+            c.subject_name === storeRequest.subject_name ||
+            c.birth_datetime_utc === storeRequest.birth_datetime_utc,
+        );
+        if (match) activeChartId = match.id;
+      }
+
+      if (!activeChartId) {
+        const defaultChart = chartsData.charts.find((c) => c.is_default) || chartsData.charts[0];
+        activeChartId = defaultChart?.id ?? null;
+      }
+
+      if (activeChartId) {
+        setActiveChartIds([activeChartId]);
+        if (storeResult && storeRequest?.chart_id === activeChartId) {
+          resultCache.current.set(activeChartId, storeResult);
+        }
+      }
     }
-    void runComparison(ids);
-    // runComparison intentionally omitted: it's redefined every render but
-    // reads current chartsData/resultCache via closure, and this effect
-    // should only ever fire once per page load (guarded by sharedIdsLoaded).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartsLoading, chartsData, searchParams]);
+  }, [chartsLoading, chartsData, searchParams, storeRequest, storeResult]);
+
+  const pos1Chart = chartsData?.charts.find((c) => c.id === activeChartIds[0]);
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex w-full max-w-full flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
             Compare Charts
@@ -165,9 +196,12 @@ export default function ChartComparePage() {
             Pick 2-4 saved charts to compare planets, houses, dasha, and yogas side by side.
           </p>
         </div>
-        <button type="button" onClick={() => setIsModalOpen(true)} className="obsidian-btn-primary text-sm">
-          + Choose Charts
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <ShareButton />
+          <button type="button" onClick={() => setIsModalOpen(true)} className="obsidian-btn-primary text-sm">
+            {activeChartIds.length >= 1 ? "+ Add/Change Charts" : "+ Choose Charts"}
+          </button>
+        </div>
       </div>
 
       {compareError && (
@@ -221,8 +255,31 @@ export default function ChartComparePage() {
           )}
 
           {!chartsLoading && !chartsErrored && availableCharts.length >= 2 && (
-            <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
-              Choose 2-4 charts above to see them compared side by side.
+            <div className="obsidian-card p-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-amber-500">Position 1 (Active Subject):</span>
+                    {pos1Chart ? (
+                      <Badge tone="success">{pos1Chart.subject_name}</Badge>
+                    ) : (
+                      <span className="text-xs text-slate-400">None selected</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-slate-300">
+                    {pos1Chart
+                      ? `${pos1Chart.subject_name} is set as Subject A. Select 1 or more additional charts to start side-by-side comparison.`
+                      : "Choose 2-4 charts to see their planetary positions, houses, dasha, and synastry compared side by side."}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
+                  className="obsidian-btn-primary text-sm whitespace-nowrap"
+                >
+                  {pos1Chart ? "+ Select Chart 2 to Compare →" : "+ Choose Charts"}
+                </button>
+              </div>
             </div>
           )}
 
@@ -284,6 +341,7 @@ export default function ChartComparePage() {
         onClose={() => setIsModalOpen(false)}
         onCompare={handleCompare}
         availableCharts={availableCharts}
+        initialSelectedIds={activeChartIds}
       />
     </>
   );

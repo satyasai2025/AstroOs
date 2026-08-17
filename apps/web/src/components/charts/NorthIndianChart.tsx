@@ -359,7 +359,7 @@ export function NorthIndianChart({
 
   return (
     <div
-      className="flex flex-col items-center gap-2"
+      className="flex w-full min-w-0 flex-col items-center gap-2"
       role="img"
       aria-label={`${chartTitle} chart showing ${ascendant.rashi} ascendant with ${planets.length} planets`}
     >
@@ -373,10 +373,8 @@ export function NorthIndianChart({
       )}
       <svg
         ref={svgRef}
-        width={size}
-        height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className="h-auto w-full"
+        className="w-full h-auto max-w-full max-h-[350px] mx-auto block"
         role="img"
         aria-label={`North Indian square chart: ${chartTitle}`}
       />

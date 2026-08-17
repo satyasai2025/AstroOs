@@ -1,0 +1,374 @@
+Agent Task: Fix Dasha State Sync, Timeline Logic & Sidebar Scroll (No Style Changes)
+
+1. Dasha Calculation State Synchronization:
+   - In the Birth Chart view (`/charts/[id]`), resolve the data mismatch between the top card summary (showing Saturn/Saturn) and the Vimshottari Dasha Timeline component (showing Rahu/Rahu).
+   - Pass the same calculated active dasha object down to both components from the primary planetary calculation hook.
+
+2. Sidebar Navigation Technical Fix:
+   - Add `overflow-y-auto` to the main sidebar wrapper so lower navigation links (Researcher Dashboard, Datasets, Settings) do not clip off-screen.
+
+3. Dasha Jump-to Controls:
+   - Add functional quick-jump buttons `[Birth Date]` and `[Today]` next to the Dasha timeline date picker to automatically focus the timeline view to specific timestamps.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ Fix AI Insights Calculation State Sync & Text Generator Logic
+
+1. Dynamic Dasha State Binding:
+   - In `/charts/[id]`, update the AI Insights component so its subtext dynamically formats using the exact same calculation output as the top Dasha card (`activeMahadasha`, `activeAntardasha`).
+   - Replace static string mocks with template literals:
+     `"${mahadasha} Mahadasha is a period of ${mahadashaSignification}. The ongoing ${antardasha} Antardasha indicates..."`
+
+2. Correct Planetary Keyword Dictionary:
+   - Ensure the interpretation generator uses correct planetary significators (e.g., Jupiter = expansion/learning; Saturn = discipline/structure/perseverance; Rahu = transformation/ambition).
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Agent Task: Wire All Inactive Links & Handlers in Quick Action Dropdown
+
+1. Quick Action Dropdown Event Wiring:
+   - In the sidebar `+ Quick Action` dropdown component, review all menu items (e.g., "New Chart", "Compare Charts", "Import Chart", "Transit Analysis", "Dasha Explorer", etc.).
+   - Ensure EVERY item has a functional click handler wired:
+     - "New Chart": calls `openCreateModal("natal")`
+     - "Compare Charts": navigates to `/charts/compare` or calls `openCreateModal("compare")`
+     - "Import Chart": calls `openImportModal()` or navigates to `/charts/import`
+     - "Transit Analysis": calls `openCreateModal("transit")` or navigates to `/transits`
+     - (And wire any remaining dropdown items to their respective route or modal trigger).
+
+2. Event Handling & State Cleanup:
+   - Add `e.preventDefault()` and close the dropdown menu state (`setIsQuickActionOpen(false)`) upon clicking any menu option so the UI responds immediately.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Agent Task: Fix AI Explain Response Duplication & Query Router
+
+1. Fix Duplicate Text Render Bug:
+   - In `/ai/explain` (Ask Astro section), inspect the response renderer component.
+   - Remove duplicate array mappings or nested paragraph renders (`message.text` rendering twice for a single API response payload).
+
+2. Fix Rigid Intent Classifier Fallback:
+   - Update the intent parser in the AI query handler (`/api/ai/ask` or `useAskAstro`).
+   - When users ask about transits, monetary gain, career, or wealth, pass the computed chart context (e.g., House 2 positions, House 11, planetary transits) to the prompt engine rather than instantly triggering the hardcoded scope rejection string.
+
+3. Clean Fallback Response Handling:
+   - If a query cannot be parsed, return a single clean guidance string with example questions without duplicating paragraphs.Agent Task: Inject Full Computation Payload into Ask Astro LLM Engine & Remove Hardcoded Classifier
+
+1. Pass Full Computation Payload to AI Router:
+   - In `/api/ai/ask` (or the `useAskAstro` handler), construct a complete context payload derived from the active chart state:
+     - Ascendant & Graha Positions (Houses 1 through 12)
+     - Active Mahadasha / Antardasha / Pratyantardasha
+     - Current Transit Positions & Planetary Aspects (Houses 2, 6, 10, 11 for monetary/career queries)
+     - Fired Classical Rules & Yogas
+
+2. Remove Hardcoded Rule Classifier / Fallback Gate:
+   - Remove the rigid string matcher that restricts queries strictly to "ascendant, Sun, Moon, Jupiter, retrograde".
+   - Route all natural language user questions directly to the LLM system prompt, grounded with the dynamic computation payload built in Step 1.
+
+3. System Prompt Grounding Rule:
+   - Instruct the LLM prompt: *"Answer user queries using ONLY the computed astrological facts, house lords, transits, and dasha payload provided in the context."*
+
+4. Fix Frontend Duplicate Render:
+   - In `AI Explain` (`/ai/explain`), fix the message mapping component to ensure `response.text` is rendered only once per answer payload.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agent Task: Improve Rule ID Input Discoverability & UX in AI Explain
+
+1. Convert Rule ID Input to Autocomplete Search:
+   - In `/ai/explain` (Explain a Rule section), replace the plain text input for "Rule ID" with a searchable combobox/autocomplete component.
+   - Match input against both Rule IDs (e.g., `EYE-001`) and Rule Descriptions (e.g., "Eye Sight / Vision Combination").
+
+2. Add Fired Rules Shortcuts (Chips):
+   - Render a list of clickable badges/chips directly under the Rule ID field showing rules that currently apply or fired for the active chart.
+   - Clicking a chip should automatically populate the input field and trigger the `[Explain]` action.
+
+3. Add Browse Rules Action:
+   - Add a `[Browse Rules]` button next to the input field that opens a reference modal listing available classical rule IDs by category (Transits, Yogas, Houses, Health).
+Agent Task: Enhance AI Explain UI with Prompt Chips, Rule Autocomplete & Response Actions
+
+1. Add Quick Prompt Chips:
+   - In `/ai/explain`, render clickable prompt chips above the "Ask a Question" input box:
+     `["Analyze Monetary Gains", "Explain Current Transits", "Career Impact in Active Dasha", "Health & Vitality Overview"]`
+   - Clicking a chip populates the input field and triggers `Ask Astro`.
+
+2. Add Fired Rules Chips & Rule Autocomplete:
+   - Below the "Rule ID" field, display clickable chips for rules that fired on the current chart (e.g., `[EYE-001]`, `[TRN-SJ-001]`).
+   - Convert the plain Rule ID text field into a searchable select component.
+
+3. Structured AI Output Component:
+   - Update the response display component to render formatted sections:
+     - **Direct Summary**
+     - **Contributing Houses & Planets**
+     - **Active Dasha & Transit Impact**
+   - Add a `[Copy]` and `[Save Note]` action button at the bottom of the response card.
+Agent Task: Wire All Chart Summary Style Options to Dynamic LLM/Template Engine
+
+1. Wire Style Dropdown Event Handler:
+   - In `/ai/explain` (Chart Summary component), update the `Style` select menu so switching between options (e.g., Technical, Executive, Detailed/Research) changes the active `summaryStyle` state.
+
+2. Implement Dynamic Prompt Templates per Style:
+   - Update the `[Summarize Chart]` click handler to generate context based on the selected style:
+     - **Technical:** Full house, planet degrees, retrograde status, and raw astrological factors (current output).
+     - **Executive:** High-level narrative summary focusing on primary strengths, ascendant lord status, and key life focus areas.
+     - **Detailed / Research:** Deep breakdown including divisional impact, active yoga triggers, and planetary dignity interactions.
+
+3. Fix API Payload & Re-render:
+   - Pass `summaryStyle` parameter to `/api/ai/summarize` (or state generator).
+   - Ensure clicking `[Summarize Chart]` re-executes the engine and updates the `Chart Summary:` view dynamically without keeping non-technical options dead.
+
+-----------------------------------------------------------------------------------------------------------------------------
+Agent Task: Fix AI Explain Context Inheritance & Build Life Events Tree Module
+
+1. AI Explain Context Auto-Inheritance:
+   - In `/ai/explain`, automatically inject the active chart profile (e.g., Rajesh's computed Grahas, Cusps, Dashas) into the ask/explain hook.
+   - Remove redundant manual input steps when a chart is already active in the session.
+
+2. Implement Life Events Tree & Editor:
+   - Create a interactive Event Tree component inside `/charts/[id]` and `/research/cases/[id]`.
+   - Allow users to log dated life events (Event Category: Marriage, Job Change, Promotion, Surgery, etc.; Event Date; Description).
+   - Render these events visually on the Vimshottari Dasha timeline as event markers/nodes.
+
+3. Sync Individual Events to Global Research Dataset:
+   - Ensure events logged under an individual chart automatically sync to `AstroOS Global Set` (`Cases` + `Events` count), populating the input data required for `/research/patterns/combinations`.
+=--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agent Task: Connect Active Chart State to Research Pattern Sub-Tabs & Enable Single-Chart Mode
+
+1. Global Chart Context Inheritance:
+   - Update `/research/patterns/[subtab]` (Yogas, Dashas, Transits, Houses, Nakshatras, Explore) to check for an active single-chart session (`activeBirthChart`).
+   - If `activeDataset` is empty/zero cases, switch the view into "Single Chart Context Mode" using `activeBirthChart` payload.
+
+2. Populate Yogas, Transits & Houses from Active Chart:
+   - **Yogas Tab:** Compute and list all active natal yogas (e.g., Raja Yoga, Gajakesari Yoga, Neecha Bhanga) specifically present in the loaded chart.
+   - **Transits & Dashas Tab:** Display current transit vectors and Vimshottari period influences calculated for the active chart.
+   - **Houses & Nakshatras Tab:** Fetch exact degree placements and nakshatra lords from the active chart's planetary payload.
+
+3. Cross-Navigation State Preservation:
+   - Ensure navigating between AI Ask (`/ai/explain`) and Patterns tabs (`/research/patterns/*`) preserves `activeChartId` in the query params or store so facts aren't lost.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Agent Task: Fix Dynamic Compatibility Calculation Engine & Form State Persistence
+
+1. Implement Dynamic Compatibility Math:
+   - In `/api/compatibility/report` (or the computation hook):
+     - Replace static hardcoded return values (e.g., fixed 88% score) with dynamic Ashta Kuta / Synastry calculation logic based on the query parameters (`birth_datetime_utc_a`, `birth_datetime_utc_b`, `relationship_type`).
+     - Ensure scores reflect actual planetary placements, moon nakshatras, and relationship context.
+
+2. Preserve Subject Form State & Pre-fill Controls:
+   - When clicking "Check Another Compatibility":
+     - Pass the active subject parameters via query params or state router (e.g., `/compatibility/new?prefill_a=Rajesh&prefill_b=Kunal`).
+     - Pre-populate input fields with the last entered data so users can edit one field (e.g., change Subject B) without re-typing all coordinates/dates.
+   - Add a "Select Saved Chart" quick-picker dropdown to easily select from recent profiles ([Rajesh](http://localhost:3000/charts/history), [Kunal](http://localhost:3000/charts/history)) instead of entering manual UTC strings.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agent Task: Auto-Bind Active Chart to Transit View & Fix Selection Modal Workflow
+
+1. Skip Modal if Chart Already Active:
+   - In the "Transit Chart" card click handler, check if `activeBirthChart` is already set in the global context/store.
+   - If active, navigate directly to `/transits?chart_id=${activeBirthChart.id}` without opening the select popup.
+
+2. Pre-Select Active Chart in Modal:
+   - If the "Select Birth Chart" popup opens, highlight the currently loaded chart (e.g., Rajesh) at the top of the list as the default selection.
+
+3. Persist State on Selection:
+   - Ensure clicking a chart inside the modal sets `activeBirthChart` in global state before redirecting to the Transit Analysis screen.
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Agent Task: Auto-Bind Active Chart to Transit View & Fix Selection Modal Workflow
+
+1. Skip Modal if Chart Already Active:
+   - In the "Transit Chart" card click handler, check if `activeBirthChart` is already set in the global context/store.
+   - If active, navigate directly to `/transits?chart_id=${activeBirthChart.id}` without opening the select popup.
+
+2. Pre-Select Active Chart in Modal:
+   - If the "Select Birth Chart" popup opens, highlight the currently loaded chart (e.g., Rajesh) at the top of the list as the default selection.
+
+3. Persist State on Selection:
+   - Ensure clicking a chart inside the modal sets `activeBirthChart` in global state before redirecting to the Transit Analysis screen.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agent Task: Fix Compare Charts Calculation Engine, State Sync & Modal Contrast
+
+1. Implement Dynamic Comparison Calculation:
+   - In `/charts/compare` (and `/api/charts/compare`), calculate dynamic comparison output based on the two selected chart payloads:
+     - Ashta Kuta Score (36 points breakdown: Varna, Vashya, Tara, Yoni, Maitri, Gana, Bhakoot, Nadi)
+     - Mutual Planetary Aspects & House Overlaps
+     - Dasha Timing Overlay
+
+2. Fix Selector State & Active Chart Pre-fill:
+   - Automatically default "Subject A" to the currently active chart in session (`activeBirthChart`).
+   - Ensure updating "Subject B" does not reset or wipe "Subject A"'s state.
+
+3. Fix Text Contrast & Modal Readability:
+   - In chart selection modals/dropdowns on `/charts/compare`, update text color classes (`text-slate-100`, `text-white`) and card borders (`border-slate-700`) for clear readability against dark backgrounds.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agent Task: Fix Chart Import File Parsers, UI Contrast, and Dataset Sync
+
+1. Fix Contrast & Dropzone UX:
+   - In the Import Charts screen/modal, update the drag-and-drop file container styling.
+   - Set high-contrast text styles (`text-slate-100`, `text-amber-400` for file limits) and clear hover/drag border states (`border-dashed border-slate-600 hover:border-amber-500`).
+
+2. Implement Robust File Parsers:
+   - Ensure `.csv` parser validates required headers: `name, birth_date, birth_time, lat, lng, timezone`.
+   - Add/verify the `.jhd` parser decoder to extract birth datetime, latitude, longitude, and DST offset correctly without returning null/NaN values.
+
+3. Sync Bulk Import to Active Dataset & Case Library:
+   - Upon successful import, save records to the user's saved charts (`/charts/history`).
+   - Automatically append imported records into `AstroOS Global Set` so research datasets (`/research/patterns`) reflect the newly added cases immediately.
+
+4. Provide Batch Import Preview Table:
+   - After selecting a file, show a preview table listing parsed records (Name, Date, Location) with `[Confirm Import]` and `[Cancel]` buttons before persisting to database state.
+
+------------------------------------------------------------------------
+Agent Task: Fix Chart View State Binding, Add Event Logging & Persist Session Context
+
+1. Sync AI Insights Card to Active Dasha State:
+   - In `/charts/[id]`, bind the AI Insights text generator directly to `activeMahadasha` and `activeAntardasha` calculated for chart `51ea486f-a9dd-4bfe-a2f6-3344066ca353`.
+   - Ensure planet significations (e.g. Saturn = discipline/structure) match the computed planet.
+
+2. Add "Save to Research Dataset" & Life Events Tree:
+   - Add a action button `[+ Add to Research Dataset]` on the top action bar of `/charts/[id]`.
+   - Add a "Life Events" tab/card allowing users to add dated events (Category, Date, Description) to this profile and render them on the Dasha timeline.
+
+3. Persist Active Chart ID Across App Navigation:
+   - When navigating from `/charts/[id]` to `/ai/explain`, `/transits`, or `/research/patterns/*`, preserve `activeChartId` in context so research modules auto-load this subject's calculated data.
+
+-----------------------------------------------------------------------------
+Agent Task: Enhance Saved Charts Page (`/charts`) with Bulk Dataset Sync, Fixed Filters & High Contrast UI
+
+1. Add Batch Actions & Sync to Research Dataset:
+   - In `/charts`, add multi-select checkboxes to each chart card/row.
+   - Add a top toolbar action: `[+ Add Selected to Research Dataset]` to push chosen charts and their tagged events into `AstroOS Global Set`.
+
+2. Fix Search & Filter Mechanics:
+   - Ensure the search bar filters the chart list in real-time by subject name, city, or date.
+   - Add quick-filter chips: `[All Charts]`, `[Research Cases]`, `[Recently Viewed]`.
+
+3. Fix Card UI Contrast:
+   - Update chart card styling to use high-contrast text (`text-slate-100`, `text-slate-300`) and clear border outlines (`border-slate-700 hover:border-amber-500`) in dark mode.
+
+4. Quick Action Shortcuts with Context:
+   - On each chart card, update action buttons (`[AI Explain]`, `[Transits]`, `[Compare]`) so clicking them immediately sets `activeChartId` in state and navigates directly with pre-loaded chart data.
+
+Agent Task: Fix Broken Light/Dark Theme Toggle Button
+
+1. Check Theme Provider Wrapper:
+   - In `src/app/layout.tsx` (or `AppShell.tsx`), verify that `ThemeProvider` (e.g., from `next-themes`) wraps the entire app.
+   - Ensure props `attribute="class"` and `defaultTheme="system"` (or `"dark"`) are properly configured.
+
+2. Verify Toggle Button Component:
+   - Locate the Theme Toggle button component.
+   - Ensure it imports `useTheme` correctly and invokes `setTheme(theme === 'dark' ? 'light' : 'dark')` on click.
+   - Prevent SSR hydration mismatch issues using a `mounted` state check before rendering the icon.
+
+3. Verify Tailwind Class Mode:
+   - Check `tailwind.config.js` or CSS configuration to ensure `darkMode: 'class'` (or CSS variables strategy) is active so switching themes properly updates background and text utility classes.
+
+Agent Task: Implement Global Universal Share Button with Clipboard Fallback
+
+1. Create Reusable `ShareButton` Component:
+   - Build a standalone component `src/components/ui/ShareButton.tsx` that accepts optional props: `{ title?: string, text?: string, url?: string }`.
+   - If `url` is not provided, dynamically default to `window.location.href`.
+
+2. Add Native Share + Toast Clipboard Fallback:
+   - Use `navigator.share()` if available (mobile browsers / supported desktop).
+   - If `navigator.share` is unavailable or fails, fall back to copying the active URL to clipboard via `navigator.clipboard.writeText(shareUrl)`.
+   - Trigger a brief toast/notification (`"Link copied to clipboard!"`) upon successful copy.
+
+3. Mount Universally in Layout & Toolbars:
+   - Add `<ShareButton />` to the global header (`AppShell` / top bar) so it is accessible from every page (`/charts`, `/transits`, `/ai/explain`, `/compatibility/report`, `/research/patterns/*`).
+   - Ensure it captures active context params (e.g., active `chart_id` or query parameters) in the generated share URL.
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Agent Task: Restore Dual Theme System (Light/Dark Toggle Support)
+
+1. Re-enable Dynamic Theme Provider:
+   - Ensure `next-themes` (or root `.dark` class state engine) controls background/text colors dynamically across all screens.
+   - Remove hardcoded dark background overrides (`#0F172A`/`#090D16`) from root `globals.css` body styles.
+
+2. Tailwind Theme Utilities & Contrast Mapping:
+   - Refactor hardcoded slate colors to use conditional theme classes:
+     - Backgrounds: `bg-slate-50 dark:bg-slate-950`
+     - Cards: `bg-white dark:bg-slate-900/90`
+     - Card Borders: `border-slate-200 dark:border-slate-800`
+     - Primary Text: `text-slate-900 dark:text-slate-100`
+     - Secondary Text: `text-slate-600 dark:text-slate-400`
+     - Highlights: `text-amber-600 dark:text-amber-400`
+
+3. Restore Header Theme Toggle Button:
+   - Fix the broken theme toggle button in `AppShell` / top navbar.
+   - Ensure clicking it instantly switches the root HTML class between Light and Dark mode without breaking active chart context or state.
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+Agent Task: Fix "Load Active Chart" Navigation & Prevent Transit Card Dashboard Redirection Loop
+
+1. Fix "Load Active Chart" Routing:
+   - In the "Load Active Chart" button click handler, check if `activeChartId` (or `activeBirthChart`) exists in session/global store.
+   - If present, navigate directly to `/charts/${activeChartId}`.
+   - If NO active chart is selected, open a chart-selection drawer/modal instead of redirecting to the blank creation form `/charts/new`.
+
+2. Fix Transit Card Navigation Loop:
+   - In the "Select Birth Chart" modal triggered by the Transit Card:
+     - After the user selects a profile (e.g., Rajesh), update `activeBirthChart` in the global state/store.
+     - Change the post-selection router redirect target from `/` (Dashboard) to `/transits?chart_id=${selectedChart.id}`.
+   - Ensure `/transits/page.tsx` correctly reads the `chart_id` query parameter and auto-renders the transit chart view.
+
+---------------------------------------------------------------------------
+Agent Task: Fix PDF Report Page (`/reports/pdf`) Layout, Context Binding, and Print CSS
+
+1. Auto-Bind Active Chart Session State:
+   - In `/reports/pdf/page.tsx`, check for `activeBirthChart` in context or accept `?chart_id=` in query parameters.
+   - Automatically populate subject details, calculated planetary positions, Vimshottari dasha tables, and SVG birth charts for the active subject.
+
+2. Enforce Light Print Theme (`@media print` rules):
+   - In `globals.css` (or module print styles), add clean `@media print` rules:
+     - Force background to `#ffffff` and text colors to `#000000` (overriding dark mode classes during print).
+     - Hide all application chrome: sidebars, headers, floating action buttons, and control panels (`display: none !important`).
+     - Set page size to A4 with appropriate margins: `@page { size: A4; margin: 15mm; }`.
+
+3. Prevent Table & Chart Page Breaks:
+   - Apply `page-break-inside: avoid;` (or `break-inside: avoid;`) to chart containers, planetary tables, and dasha summary cards so elements stay intact across multi-page PDF generation.
+Agent Task: Fix PDF Report Page (`/reports/pdf`) Layout, Context Binding, and Print CSS
+
+1. Auto-Bind Active Chart Session State:
+   - In `/reports/pdf/page.tsx`, check for `activeBirthChart` in context or accept `?chart_id=` in query parameters.
+   - Automatically populate subject details, calculated planetary positions, Vimshottari dasha tables, and SVG birth charts for the active subject.
+
+2. Enforce Light Print Theme (`@media print` rules):
+   - In `globals.css` (or module print styles), add clean `@media print` rules:
+     - Force background to `#ffffff` and text colors to `#000000` (overriding dark mode classes during print).
+     - Hide all application chrome: sidebars, headers, floating action buttons, and control panels (`display: none !important`).
+     - Set page size to A4 with appropriate margins: `@page { size: A4; margin: 15mm; }`.
+
+3. Prevent Table & Chart Page Breaks:
+   - Apply `page-break-inside: avoid;` (or `break-inside: avoid;`) to chart containers, planetary tables, and dasha summary cards so elements stay intact across multi-page PDF generation.
+
+
+Agent Task: Fix Dynamic Dasha Calculation, Card Layout & Filter Sync on `/charts?view=dasha`
+
+1. Dynamic Real-Time Dasha Calculation:
+   - In `/charts?view=dasha` (or the `DashaView` component), ensure each saved chart dynamically computes its current Mahadasha, Antardasha, and end date based on `Moon Nakshatra` and the active system date.
+   - Replace any hardcoded/static dasha text with computed calculations.
+
+2. Preserve Query State Across View Switches:
+   - Ensure switching between view modes (`?view=dasha`, `?view=grid`, `?view=table`) retains active search inputs, sorting options, and tag filters in the URL params.
+
+3. Enhance Card UI & Progress Bar Visibility:
+   - Wrap dasha timeline cards in clean, high-contrast borders (`border-slate-200 dark:border-slate-800`).
+   - Use clear progress bar styling (`bg-amber-500` for completed portion, `bg-slate-200 dark:bg-slate-700` for remaining) to clearly visualize dasha progression.
+
+4. Deep-Link Navigation:
+   - Update timeline card click handlers to navigate directly to `/charts/${chart.id}?tab=dasha` so the user lands on the detailed Dasha breakdown view.
+
+Agent Task: Fix Cutoff/Cropping Issues in Interactive Kundli & SVG Chart Canvas
+
+1. Fix SVG Responsive Scaling & ViewBox Settings:
+   - In the interactive Kundli component (Rasi, Navamsha, and Transit chart renderers on `/charts/birth`), inspect the main SVG container.
+   - Ensure the `<svg>` tag has proper `viewBox="0 0 500 500"` attributes (or appropriate original dimensions) and uses flexible classes (`w-full h-auto max-w-full max-h-[500px] mx-auto`).
+   - Remove hardcoded fixed pixel widths/heights (e.g. `width="650px"` or `height="650px"`) directly on the SVG or canvas wrapper.
+
+2. Adjust Parent Container Bounds & Aspect Ratio:
+   - Ensure the parent wrapper div uses aspect ratio utilities (`aspect-square` or `min-h-[350px] md:min-h-[450px]`).
+   - Remove restrictive `overflow-hidden` classes on parent containers if planet labels, house numbers, or outer border lines are clipping at the edges. Add padding (`p-2` or `p-4`) around the canvas frame.
+
+3. Planetary Badge & Label Clipping Prevention:
+   - Ensure planetary degree text overlays and house zodiac symbols inside SVG nodes retain responsive font sizes (`text-xs` / `text-sm`) with `text-anchor="middle"` so text tags do not overflow outside house borders.

@@ -49,37 +49,33 @@ export function PlanetaryPositionsTable({
   ];
 
   const table = (
-    <div className="overflow-x-auto">
+    <div className="w-full overflow-x-auto">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr
-            className="border-b text-xs uppercase"
-            style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}
-          >
-            <th className="py-2 pr-3">Body</th>
-            <th className="py-2 pr-3">Longitude</th>
-            <th className="py-2 pr-3">Nakshatra</th>
-            <th className="py-2 pr-3">Pada</th>
-            <th className="py-2 pr-3">Rasi</th>
-            <th className="py-2 pr-3">Navamsa</th>
+          <tr className="border-b border-slate-200 dark:border-slate-800 text-xs uppercase tracking-wide text-slate-700 dark:text-slate-300 font-semibold bg-slate-50/50 dark:bg-slate-800/40">
+            <th className="py-2.5 px-3">Body</th>
+            <th className="py-2.5 px-3">Longitude</th>
+            <th className="py-2.5 px-3">Nakshatra</th>
+            <th className="py-2.5 px-3">Pada</th>
+            <th className="py-2.5 px-3">Rasi</th>
+            <th className="py-2.5 px-3">Navamsa</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
           {rows.map((r) => (
             <tr
               key={r.key}
-              className="border-b"
-              style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}
+              className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition"
             >
-              <td className="py-2 pr-3 font-medium capitalize">
+              <td className="py-2 px-3 font-semibold text-slate-900 dark:text-slate-100 capitalize">
                 {r.body}
-                {r.retro ? <span className="ml-1 text-xs" style={{ color: "var(--text-muted)" }}>(R)</span> : null}
+                {r.retro ? <span className="ml-1 text-xs text-rose-500 font-bold">(R)</span> : null}
               </td>
-              <td className="py-2 pr-3 font-mono whitespace-nowrap">{r.longitude}</td>
-              <td className="py-2 pr-3 capitalize">{r.nakshatra}</td>
-              <td className="py-2 pr-3">{r.pada}</td>
-              <td className="py-2 pr-3">{r.rashi}</td>
-              <td className="py-2 pr-3">{r.navamsa}</td>
+              <td className="py-2 px-3 font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">{r.longitude}</td>
+              <td className="py-2 px-3 text-slate-700 dark:text-slate-300 capitalize">{r.nakshatra}</td>
+              <td className="py-2 px-3 text-slate-800 dark:text-slate-200">{r.pada}</td>
+              <td className="py-2 px-3 font-medium text-slate-800 dark:text-slate-200">{r.rashi}</td>
+              <td className="py-2 px-3 text-slate-700 dark:text-slate-300">{r.navamsa}</td>
             </tr>
           ))}
         </tbody>
@@ -90,13 +86,13 @@ export function PlanetaryPositionsTable({
   if (standalone) return table;
 
   return (
-    <div className="obsidian-card p-5">
+    <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm overflow-hidden">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+        <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
           Planetary Positions
         </h2>
         {href && (
-          <a href={href} className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>
+          <a href={href} className="text-[11px] underline text-slate-500 dark:text-slate-400 hover:text-cyan-500">
             View All
           </a>
         )}

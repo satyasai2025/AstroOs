@@ -6,14 +6,15 @@ import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
 import { AnimatedTransitIntegration } from "@/app/(main)/charts/AnimatedTransitIntegration";
 import { SplitWorkspaceLayout } from "@/components/layout/SplitWorkspaceLayout";
 import { AppShell } from "@/components/layout/AppShell";
-import { Badge, Button, Card, DonutChart, KpiCard, Table, Tabs, Timeline, type TableColumn, type TimelineEvent } from "@/components/ui";
+import { Badge, Button, Card, DonutChart, KpiCard, Table, Tabs, Timeline, type TableColumn, type TimelineEvent, ShareButton } from "@/components/ui";
 import { PLANET_SYMBOLS, nakshatraFromLongitude } from "@/lib/astro";
 import { formatPosition } from "@/lib/formatAstro";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import { useWorkflowStore } from "@/lib/store";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
+import { useMyCharts } from "@/lib/charts";
 import { useLiveTransit, useTransitPatterns } from "@/lib/transitPatterns";
-import type { TransitPatternsRequest, TransitPlanetResponse, TransitRequest, WorkflowAnalysisRequest } from "@/lib/types";
+import type { BirthChartSummary, TransitPatternsRequest, TransitPlanetResponse, TransitRequest, WorkflowAnalysisRequest } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -74,52 +75,84 @@ export default function TransitAnalysisPage() {
   const transitChart = useWorkflowStore((s) => s.transitChart);
   const setResult = useWorkflowStore((s) => s.setResult);
   const analyze = useAnalyzeWorkflow();
+  const myCharts = useMyCharts();
   const [autoLoadStarted, setAutoLoadStarted] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "sky_motion">("overview");
 
   const [houseReference, setHouseReference] = useState<"moon" | "ascendant">("moon");
-  /** Local <input type="datetime-local"> value. Empty = "now" (the
-   * backend default when transit_datetime_utc is omitted) — lets this
-   * page look at past or future transits, not just the live moment.
-   * Seeded from ?date=&time= query params if the Create Transit modal
-   * handed off a specific moment (CreateTransitModal.tsx's
-   * handleViewReport). */
   const [transitDateTime, setTransitDateTime] = useState(() => {
     const date = searchParams.get("date");
     const time = searchParams.get("time");
     return date && time ? `${date}T${time}` : "";
   });
 
-  // No active chart in the store, but the Create Transit modal set
-  // `transitChart` (a saved chart, not yet a full analysis) — load the
-  // full analysis for it once, same pattern as
-  // apps/web/src/app/charts/[chartId]/page.tsx's auto-recompute effect.
-  // Only worth doing when `result` doesn't already match, so re-visiting
-  // with the same chart already loaded doesn't refire.
-  const hasMatchingResult = result?.chart_id === transitChart?.id;
-  useEffect(() => {
-    if (!transitChart || hasMatchingResult || autoLoadStarted) return;
+  const queryChartId = searchParams.get("chart_id");
+
+  // Auto-resolve chart to load: queryParam -> store transitChart -> store request -> localStorage last viewed -> default chart -> first saved chart
+  const chartToLoad = useMemo(() => {
+    const charts = myCharts.data?.charts ?? [];
+    if (queryChartId) {
+      const found = charts.find((c) => c.id === queryChartId);
+      if (found) return found;
+    }
+    if (transitChart) return transitChart;
+    if (request?.chart_id) {
+      const found = charts.find((c) => c.id === request.chart_id);
+      if (found) return found;
+    }
+    if (typeof window !== "undefined") {
+      try {
+        const lastViewedId = localStorage.getItem("astroos_last_viewed_chart_id");
+        if (lastViewedId) {
+          const found = charts.find((c) => c.id === lastViewedId);
+          if (found) return found;
+        }
+      } catch {
+        // ignore
+      }
+    }
+    const defaultChart = charts.find((c) => c.is_default) || charts[0];
+    return defaultChart || null;
+  }, [queryChartId, myCharts.data?.charts, transitChart, request?.chart_id]);
+
+  const hasMatchingResult = Boolean(
+    result &&
+    request &&
+    (chartToLoad ? (result.chart_id === chartToLoad.id || request.subject_name === chartToLoad.subject_name) : true)
+  );
+
+  const loadChart = (target: BirthChartSummary) => {
     setAutoLoadStarted(true);
     const analyzeRequest: WorkflowAnalysisRequest = {
-      birth_datetime_utc: transitChart.birth_datetime_utc,
-      latitude: transitChart.birth_latitude,
-      longitude: transitChart.birth_longitude,
-      ayanamsa: transitChart.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-      house_system: transitChart.house_system as WorkflowAnalysisRequest["house_system"],
+      birth_datetime_utc: target.birth_datetime_utc,
+      latitude: target.birth_latitude,
+      longitude: target.birth_longitude,
+      ayanamsa: target.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+      house_system: target.house_system as WorkflowAnalysisRequest["house_system"],
       dasha_system: "vimshottari",
       include_vargas: true,
-      subject_name: transitChart.subject_name,
-      place_name: transitChart.place_name,
+      subject_name: target.subject_name,
+      place_name: target.place_name,
       persist: false,
-      chart_id: transitChart.id,
+      chart_id: target.id,
     };
     analyze.mutate(analyzeRequest, {
-      onSuccess: (data) => setResult(data, analyzeRequest),
+      onSuccess: (data) => {
+        setResult(data, analyzeRequest);
+        try {
+          localStorage.setItem("astroos_last_viewed_chart_id", target.id);
+        } catch {
+          // ignore
+        }
+      },
     });
-    // Only fire once per transitChart id — analyze/setResult are stable
-    // references from useMutation/zustand, safe to omit.
+  };
+
+  useEffect(() => {
+    if (!chartToLoad || hasMatchingResult || autoLoadStarted) return;
+    loadChart(chartToLoad);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transitChart, hasMatchingResult, autoLoadStarted]);
+  }, [chartToLoad, hasMatchingResult, autoLoadStarted]);
 
   const transitDatetimeUtc = transitDateTime ? new Date(transitDateTime).toISOString() : undefined;
 
@@ -277,15 +310,34 @@ export default function TransitAnalysisPage() {
       key: "planet",
       label: "Planet",
       render: (p) => (
-        <span style={{ fontWeight: "var(--weight-semibold)" }}>
-          {PLANET_SYMBOLS[p.planet] ?? ""} {p.planet}
+        <span className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+          <span className="text-amber-500 dark:text-amber-400 font-bold">{PLANET_SYMBOLS[p.planet] ?? ""}</span> {p.planet}
         </span>
       ),
     },
-    { key: "transit_rashi", label: "Sign", render: (p) => <span style={{ textTransform: "capitalize" }}>{p.transit_rashi}</span> },
-    { key: "transit_rashi_degree", label: "Degree", mono: true, render: (p) => formatPosition(p.transit_rashi, p.transit_rashi_degree) },
-    { key: "transit_nakshatra", label: "Nakshatra" },
-    { key: "transit_pada", label: "Pada", align: "right", mono: true },
+    {
+      key: "transit_rashi",
+      label: "Sign",
+      render: (p) => <span className="capitalize font-medium text-slate-800 dark:text-slate-200">{p.transit_rashi}</span>,
+    },
+    {
+      key: "transit_rashi_degree",
+      label: "Degree",
+      mono: true,
+      render: (p) => <span className="font-mono text-slate-700 dark:text-slate-300 font-medium">{formatPosition(p.transit_rashi, p.transit_rashi_degree)}</span>,
+    },
+    {
+      key: "transit_nakshatra",
+      label: "Nakshatra",
+      render: (p) => <span className="text-slate-700 dark:text-slate-300">{p.transit_nakshatra}</span>,
+    },
+    {
+      key: "transit_pada",
+      label: "Pada",
+      align: "right",
+      mono: true,
+      render: (p) => <span className="font-mono text-slate-600 dark:text-slate-400 font-medium">{p.transit_pada}</span>,
+    },
     {
       key: "is_retrograde",
       label: "Status",
@@ -306,12 +358,10 @@ export default function TransitAnalysisPage() {
     },
   ];
 
+  const [selectedFallbackChartId, setSelectedFallbackChartId] = useState<string>("");
+
   if (!result) {
-    // A chart was handed off from Create Transit (transitChart) and its
-    // full analysis is still loading — show a loading state, not the
-    // "no chart" empty state, which would otherwise flash briefly on every
-    // hand-off before the analysis finishes.
-    if (transitChart && !hasMatchingResult) {
+    if (analyze.isPending) {
       return (
         <div className="flex flex-col items-center justify-center gap-3 py-20" role="status">
           <span
@@ -319,31 +369,74 @@ export default function TransitAnalysisPage() {
             style={{ borderColor: "var(--accent)", borderTopColor: "transparent" }}
           />
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            Loading {transitChart.subject_name}&rsquo;s chart…
+            Loading chart &amp; calculating planetary transits…
           </p>
-          {analyze.isError && (
-            <p className="text-sm" style={{ color: "var(--status-danger)" }}>
-              Could not load this chart. Please try again from Dashboard.
-            </p>
-          )}
         </div>
       );
     }
 
+    const availableCharts = myCharts.data?.charts ?? [];
+
     return (
-      <div className="flex flex-col items-center justify-center gap-4 py-20" role="status">
-        <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem", padding: "2rem", textAlign: "center" }}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" style={{ color: "var(--text-muted)" }}>
-            <circle cx="12" cy="12" r="2.5" />
-            <ellipse cx="12" cy="12" rx="9" ry="4" />
-          </svg>
-          <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
-            No Chart Data Available
-          </h2>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            Run an analysis on the Dashboard first to see its current transit snapshot.
-          </p>
-          <Button href="/dashboard">Go to Dashboard</Button>
+      <div className="flex flex-col items-center justify-center gap-4 py-16 px-4" role="status">
+        <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem", padding: "2.5rem", textAlign: "center", maxWidth: "520px", width: "100%" }}>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <circle cx="12" cy="12" r="9" />
+              <path d="m15 9-2 6-6 2 2-6 6-2Z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+              Select Chart for Transit Analysis
+            </h2>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
+              Choose a saved profile to compute Gochara, Ashtama Shani, and real-time planetary aspects.
+            </p>
+          </div>
+
+          {availableCharts.length > 0 ? (
+            <div className="w-full space-y-3 pt-2">
+              <select
+                value={selectedFallbackChartId || (chartToLoad?.id ?? availableCharts[0]?.id ?? "")}
+                onChange={(e) => setSelectedFallbackChartId(e.target.value)}
+                className="w-full rounded-lg border px-3 py-2 text-sm shadow-sm transition"
+                style={{
+                  backgroundColor: "var(--bg-card)",
+                  borderColor: "var(--border-primary)",
+                  color: "var(--text-primary)",
+                }}
+              >
+                {availableCharts.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.subject_name} ({new Date(c.birth_datetime_utc).toLocaleDateString()}{c.place_name ? ` · ${c.place_name}` : ""})
+                  </option>
+                ))}
+              </select>
+
+              <div className="flex gap-2 justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const targetId = selectedFallbackChartId || chartToLoad?.id || availableCharts[0]?.id;
+                    const target = availableCharts.find((c) => c.id === targetId);
+                    if (target) loadChart(target);
+                  }}
+                  className="obsidian-btn-primary text-sm px-4 py-2"
+                >
+                  Load Chart &amp; Calculate Transits →
+                </button>
+                <Button href="/dashboard" variant="ghost" size="sm">
+                  + Create New
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3 pt-2">
+              <p className="text-xs text-slate-400">No saved charts found. Create a birth chart to begin transit exploration.</p>
+              <Button href="/dashboard">Create First Chart</Button>
+            </div>
+          )}
         </Card>
       </div>
     );
@@ -379,11 +472,6 @@ export default function TransitAnalysisPage() {
       }
       return;
     }
-    // navigator.clipboard.writeText() throws NotAllowedError if the
-    // document doesn't currently have focus (a real, expected condition —
-    // e.g. devtools/another window focused) — not just a network/API
-    // failure, so it needs its own catch rather than being left to throw
-    // uncaught into Next.js's error overlay.
     try {
       await navigator.clipboard.writeText(url);
       alert("Link copied to clipboard!");
@@ -394,22 +482,44 @@ export default function TransitAnalysisPage() {
 
   return (
     <SplitWorkspaceLayout>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-3 flex w-full max-w-full flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
             Transit Analysis
           </h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-            Real-time planetary movements and their impact on the natal chart.
+          <p className="text-xs text-slate-600 dark:text-slate-400">
+            Real-time planetary movements &amp; natal impacts.
             {request && (
               <>
                 {" "}
-                Subject: <span className="font-medium">{request.subject_name}</span>
+                Subject: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span>
               </>
             )}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {myCharts.data?.charts && myCharts.data.charts.length > 1 && (
+            <select
+              value={request?.chart_id || ""}
+              onChange={(e) => {
+                const target = myCharts.data?.charts.find((c) => c.id === e.target.value);
+                if (target) loadChart(target);
+              }}
+              className="rounded-lg border px-2 py-1 text-xs shadow-sm font-medium"
+              style={{
+                backgroundColor: "var(--bg-card)",
+                borderColor: "var(--border-primary)",
+                color: "var(--text-primary)",
+              }}
+              aria-label="Switch Subject Chart"
+            >
+              {myCharts.data.charts.map((c) => (
+                <option key={c.id} value={c.id}>
+                  👤 {c.subject_name}
+                </option>
+              ))}
+            </select>
+          )}
           <Button href="/charts" variant="ghost" size="sm" aria-label="Back to charts">
             ← Back
           </Button>
@@ -419,13 +529,11 @@ export default function TransitAnalysisPage() {
           <Button variant="ghost" size="sm" onClick={handlePrint} aria-label="Print chart">
             Print
           </Button>
-          <Button variant="ghost" size="sm" onClick={handleShare} aria-label="Share chart">
-            Share
-          </Button>
+          <ShareButton />
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-3">
         <Tabs
           tabs={[
             { key: "overview", label: "Overview" },
@@ -443,22 +551,18 @@ export default function TransitAnalysisPage() {
       {activeTab === "overview" && (
         <>
       {/* Controls row: transit date stepper + Moon/Ascendant reference point */}
-      <div className="mb-6 flex flex-wrap items-end gap-4">
+      <div className="mb-3 flex flex-wrap items-center gap-3">
         <div>
-          <div className="mb-1.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
-            Transit Date
-          </div>
           <div
-            className="flex items-center gap-2 rounded-lg px-2.5 py-2"
-            style={{ backgroundColor: "var(--bg-surface-800)", border: "1px solid var(--border-default)" }}
+            className="flex items-center gap-1.5 rounded-lg px-2 py-1 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm"
           >
-            <button type="button" onClick={() => stepDay(-1)} className="px-1 text-base font-bold" style={{ color: "var(--cyan-400)" }} aria-label="Previous day">
+            <button type="button" onClick={() => stepDay(-1)} className="px-1 text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:opacity-80 transition" aria-label="Previous day">
               ‹
             </button>
-            <span className="min-w-[120px] text-center font-mono text-sm" style={{ color: "var(--text-primary)" }}>
+            <span className="min-w-[100px] text-center font-mono text-xs text-slate-900 dark:text-slate-100 font-semibold">
               {dateLabel}
             </span>
-            <button type="button" onClick={() => stepDay(1)} className="px-1 text-base font-bold" style={{ color: "var(--cyan-400)" }} aria-label="Next day">
+            <button type="button" onClick={() => stepDay(1)} className="px-1 text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:opacity-80 transition" aria-label="Next day">
               ›
             </button>
             <Button variant="secondary" size="sm" onClick={() => setTransitDateTime("")}>
@@ -468,58 +572,55 @@ export default function TransitAnalysisPage() {
         </div>
 
         <div>
-          <div className="mb-1.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
-            Reference Point
-          </div>
-          <div className="flex gap-1 rounded-lg p-0.5" style={{ backgroundColor: "var(--bg-surface-800)", border: "1px solid var(--border-default)" }}>
+          <div className="flex gap-0.5 rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 shadow-sm">
             {(["moon", "ascendant"] as const).map((ref) => (
               <button
                 key={ref}
                 type="button"
                 onClick={() => setHouseReference(ref)}
-                className="rounded-md px-3.5 py-1.5 text-xs font-semibold transition"
-                style={{
-                  backgroundColor: houseReference === ref ? "var(--accent)" : "transparent",
-                  color: houseReference === ref ? "var(--accent-text)" : "var(--text-secondary)",
-                }}
+                className={`rounded-md px-2.5 py-1 text-xs font-semibold transition ${
+                  houseReference === ref
+                    ? "bg-cyan-500 text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                }`}
                 aria-pressed={houseReference === ref}
               >
-                {ref === "moon" ? "Moon" : "Ascendant"}
+                From {ref === "moon" ? "Moon" : "Ascendant"}
               </button>
             ))}
           </div>
         </div>
 
         <Button variant="secondary" size="sm" onClick={handleRecalculate} disabled={isRecalculating}>
-          {isRecalculating ? "Loading…" : "Recalculate Transits"}
+          {isRecalculating ? "Loading…" : "Recalculate"}
         </Button>
       </div>
 
       {/* KPI row */}
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <KpiCard label="Active Transits" value={String(kpis.active.length)} accent="cyan" caveat="Planets with any notable flag right now." />
-        <KpiCard label="Benefic Transits" value={String(kpis.benefic.length)} accent="cyan" caveat="Positive influence" />
-        <KpiCard label="Challenging Transits" value={String(kpis.challenging.length)} accent="gold" caveat="Need attention" />
+      <div className="mb-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+        <KpiCard label="Active Transits" value={String(kpis.active.length)} accent="cyan" caveat="Planets with notable flag." />
+        <KpiCard label="Benefic" value={String(kpis.benefic.length)} accent="cyan" caveat="Positive influence" />
+        <KpiCard label="Challenging" value={String(kpis.challenging.length)} accent="gold" caveat="Need attention" />
         <KpiCard
-          label="Retrograde Planets"
+          label="Retrograde"
           value={String(kpis.retrograde.length)}
           accent="violet"
-          caveat={kpis.retrograde.length > 0 ? kpis.retrograde.map((p) => p.planet).join(", ") : "None currently"}
+          caveat={kpis.retrograde.length > 0 ? kpis.retrograde.map((p) => p.planet).join(", ") : "None"}
         />
-        <KpiCard label="Eclipses" value="—" accent="cyan" caveat="Not computed by this backend yet." />
+        <KpiCard label="Eclipses" value="—" accent="cyan" caveat="Not computed" />
         <KpiCard
-          label="Overall Transit Score"
+          label="Transit Score"
           value={kpis.score === null ? "—" : `${kpis.score}%`}
           accent="gold"
-          caveat="Heuristic: favorable-house ratio, penalized for active Sade Sati/Ashtama Shani."
+          caveat="Favorable-house ratio"
         />
       </div>
 
       {/* Chart / Positions / Impact Summary */}
-      <div className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(300px,1fr)_1.2fr_1fr]">
+      <div className="mb-3 grid grid-cols-1 gap-3 xl:grid-cols-[minmax(280px,1fr)_1.2fr_1fr]">
         <Card>
-          <div className="mb-3 flex items-center justify-between">
-            <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
               Transit Chart (D1)
             </span>
           </div>
@@ -527,21 +628,21 @@ export default function TransitAnalysisPage() {
         </Card>
 
         <Card padding="0">
-          <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
-            <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
+          <div className="px-3 py-2 border-b border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
               Transit Positions
             </span>
           </div>
-          <div style={{ padding: "10px 18px 18px", maxHeight: 400, overflowY: "auto" }}>
+          <div className="p-2 max-h-[380px] overflow-y-auto">
             <Table<TransitPlanetResponse> columns={columns} rows={transits.planets} />
           </div>
         </Card>
 
         <Card>
-          <div className="mb-3 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+          <div className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
             Transit Impact Summary
           </div>
-          <div className="mb-3.5 flex items-center gap-4">
+          <div className="mb-3.5 flex items-center gap-4 p-2">
             <DonutChart
               segments={[
                 { value: impactSummary.veryBenefic || 0.0001, color: "var(--success-400)" },
@@ -552,7 +653,7 @@ export default function TransitAnalysisPage() {
               ]}
               size={110}
             />
-            <div className="flex flex-col gap-1.5 text-xs" style={{ color: "var(--text-secondary)" }}>
+            <div className="flex flex-col gap-1.5 text-xs text-slate-700 dark:text-slate-300">
               <span>● Very Benefic ({impactSummary.veryBenefic})</span>
               <span>● Benefic ({impactSummary.benefic})</span>
               <span>● Neutral ({impactSummary.neutral})</span>
@@ -561,17 +662,17 @@ export default function TransitAnalysisPage() {
             </div>
           </div>
 
-          <div className="mb-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+          <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
             Top Influencing Transits
           </div>
           {topAspects.length === 0 ? (
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {patternsQuery.isLoading ? "Loading…" : "No notable transit-to-natal aspects detected right now."}
             </p>
           ) : (
             topAspects.map((a, i) => (
               <div key={i} className="flex justify-between py-1.5 text-xs">
-                <span style={{ color: "var(--text-secondary)" }}>
+                <span className="text-slate-700 dark:text-slate-300">
                   {a.transiting_planet} {aspectTypeLabel(a.aspect_type)} to natal {a.natal_planet}
                 </span>
                 <span style={{ color: a.pct >= 0 ? "var(--success-400)" : "var(--danger-400)", fontWeight: 600 }}>
@@ -585,28 +686,30 @@ export default function TransitAnalysisPage() {
       </div>
 
       {/* House Activation / Planetary Returns / Alerts */}
-      <div className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-[1fr_1.2fr_0.9fr]">
+      <div className="mb-3 grid grid-cols-1 gap-3 xl:grid-cols-[1fr_1.2fr_0.9fr]">
         <Card>
-          <div className="mb-3.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+          <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
             House Activation (from {houseReference === "moon" ? "Moon" : "Ascendant"})
           </div>
-          <div className="flex items-center gap-4">
-            <DonutChart
-              size={130}
-              segments={[
-                { value: houseActivation["Highly Activated"].length || 0.0001, color: "var(--success-400)" },
-                { value: houseActivation["Activated"].length || 0.0001, color: "var(--cyan-400)" },
-                { value: houseActivation["Moderate"].length || 0.0001, color: "var(--gold-400)" },
-                { value: houseActivation["Low"].length || 0.0001, color: "var(--text-tertiary)" },
-                { value: houseActivation["Challenged"].length || 0.0001, color: "var(--danger-400)" },
-                { value: houseActivation["Heavily Challenged"].length || 0.0001, color: "#7f1d1d" },
-              ]}
-            />
-            <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col sm:flex-row items-center gap-3 p-1">
+            <div className="flex-shrink-0 p-1">
+              <DonutChart
+                size={110}
+                segments={[
+                  { value: houseActivation["Highly Activated"].length || 0.0001, color: "var(--success-400)" },
+                  { value: houseActivation["Activated"].length || 0.0001, color: "var(--cyan-400)" },
+                  { value: houseActivation["Moderate"].length || 0.0001, color: "var(--gold-400)" },
+                  { value: houseActivation["Low"].length || 0.0001, color: "var(--text-tertiary)" },
+                  { value: houseActivation["Challenged"].length || 0.0001, color: "var(--danger-400)" },
+                  { value: houseActivation["Heavily Challenged"].length || 0.0001, color: "#7f1d1d" },
+                ]}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full min-w-0">
               {(["Highly Activated", "Activated", "Moderate", "Low", "Challenged", "Heavily Challenged"] as const).map((label) => (
-                <div key={label} className="flex items-center gap-2 text-xs">
-                  <span style={{ color: "var(--text-secondary)" }}>{label}</span>
-                  <span className="ml-auto" style={{ color: "var(--text-tertiary)" }}>
+                <div key={label} className="flex items-center gap-1.5 text-xs">
+                  <span className="text-slate-700 dark:text-slate-300">{label}</span>
+                  <span className="ml-auto text-slate-500 dark:text-slate-400 font-mono text-[11px] truncate">
                     {houseActivation[label].join(", ") || "—"}
                   </span>
                 </div>
@@ -616,16 +719,14 @@ export default function TransitAnalysisPage() {
         </Card>
 
         <Card>
-          <div className="mb-3.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+          <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400">
             Planetary Returns
           </div>
-          <p className="mb-3 text-xs" style={{ color: "var(--text-tertiary)" }}>
-            Mockup slot: "Transit Timeline (Next 90 Days)" — the backend doesn't forecast forward in
-            time, so this shows each planet's real return status (how close it is right now to its
-            own natal degree) instead.
+          <p className="mb-2 text-xs text-slate-600 dark:text-slate-400">
+            Current planet return status against natal degree coordinates.
           </p>
           {!returnEvents ? (
-            <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Loading return-period data…
             </p>
           ) : (
@@ -636,27 +737,24 @@ export default function TransitAnalysisPage() {
         <TransitAlerts transits={transits} patterns={patternsQuery.data} />
       </div>
 
-      {/* Vedha Analysis — Active/Dasha-Transit/Nakshatra (Sarvatobhadra
-          Chakra)/All Rules, built from the same real transit fields the
-          Transit Positions table's flat "Vedha: Yes/No" column already
-          uses, just broken out with real reasoning instead of a badge. */}
-      <div className="mb-6">
+      {/* Vedha Analysis */}
+      <div className="mb-3">
         <Card>
           <VedhaAnalysisPanel transits={transits} dashaChain={dashaChain} />
         </Card>
       </div>
 
       {/* Detailed Transit Analysis / Settings */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1.6fr_1fr]">
         <Card padding="0">
-          <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
-            <span style={{ fontSize: "var(--text-sm)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
+          <div className="px-4 py-3.5 border-b border-slate-200 dark:border-slate-800">
+            <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               Detailed Transit Analysis
             </span>
           </div>
-          <div style={{ padding: "10px 18px 18px" }}>
+          <div className="p-4">
             {(patternsQuery.data?.aspects.length ?? 0) === 0 ? (
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {patternsQuery.isLoading ? "Loading…" : "No transit-to-natal aspects detected right now."}
               </p>
             ) : (
@@ -667,22 +765,22 @@ export default function TransitAnalysisPage() {
                     key: "aspect_type",
                     label: "Aspect Type",
                     render: (a) => (
-                      <span style={{ textTransform: "capitalize" }}>
+                      <span className="capitalize font-medium text-slate-800 dark:text-slate-200">
                         {a.aspect_type === "special_graha" ? "Special Aspect" : a.aspect_type}
                       </span>
                     ),
                   },
-                  { key: "natal_planet", label: "To Natal" },
-                  { key: "orb", label: "Orb", align: "right", mono: true, render: (a) => `${a.orb.toFixed(1)}°` },
+                  { key: "natal_planet", label: "Natal Target" },
+                  {
+                    key: "orb",
+                    label: "Orb",
+                    mono: true,
+                    render: (a) => <span className="font-mono text-slate-700 dark:text-slate-300 font-medium">{a.orb.toFixed(2)}°</span>,
+                  },
                   {
                     key: "nature",
                     label: "Nature",
                     render: (a) => {
-                      // Vedic graha drishti (see aspect_engine.py): trine is
-                      // the classical harmonious aspect; opposition/square
-                      // are classically tense. "special_graha" covers Mars/
-                      // Saturn's malefic special aspects AND Jupiter's
-                      // benefic ones under one label — shown Neutral rather
                       // than guessing which planet cast it from this field
                       // alone.
                       const harmonious = a.aspect_type === "trine";

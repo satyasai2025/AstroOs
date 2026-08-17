@@ -55,31 +55,33 @@ export default function AdminOverviewPage() {
               </div>
             </div>
 
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="text-xs uppercase tracking-wide text-slate-600">
-                  <th className="px-4 py-2 font-medium">Module</th>
-                  <th className="px-4 py-2 font-medium">Status</th>
-                  <th className="px-4 py-2 font-medium">Version</th>
-                  <th className="px-4 py-2 font-medium">Message</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(statusQuery.data.modules).map(([name, m]) => (
-                  <tr key={name} className="border-t border-slate-800/60">
-                    <td className="px-4 py-2 text-slate-300">{m.module_name || name}</td>
-                    <td className="px-4 py-2">
-                      <span className="inline-flex items-center gap-1.5 text-slate-300">
-                        <StatusDot status={m.status} />
-                        {m.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-slate-500">{m.version}</td>
-                    <td className="px-4 py-2 text-slate-500">{m.message || "—"}</td>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="text-xs uppercase tracking-wide text-slate-600">
+                    <th className="px-4 py-2 font-medium">Module</th>
+                    <th className="px-4 py-2 font-medium">Status</th>
+                    <th className="px-4 py-2 font-medium">Version</th>
+                    <th className="px-4 py-2 font-medium">Message</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {Object.entries(statusQuery.data.modules).map(([name, m]) => (
+                    <tr key={name} className="border-t border-slate-800/60">
+                      <td className="px-4 py-2 text-slate-300">{m.module_name || name}</td>
+                      <td className="px-4 py-2">
+                        <span className="inline-flex items-center gap-1.5 text-slate-300">
+                          <StatusDot status={m.status} />
+                          {m.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-slate-500">{m.version}</td>
+                      <td className="px-4 py-2 text-slate-500">{m.message || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </section>

@@ -31,32 +31,24 @@ export function Select({ label, options = [], value, onChange, placeholder = "Se
   const current = options.find((o) => o.value === value);
 
   return (
-    <div ref={ref} style={{ position: "relative", fontFamily: "var(--font-body)", width: "100%" }}>
+    <div ref={ref} className="relative w-full">
       {label && (
-        <div style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", fontWeight: "var(--weight-medium)", marginBottom: 6 }}>
+        <div className="text-slate-700 dark:text-slate-300 font-medium text-xs mb-1.5">
           {label}
         </div>
       )}
       <button
         type="button"
         onClick={() => !disabled && setOpen((o) => !o)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
-          height: 40,
-          padding: "0 12px",
-          borderRadius: "var(--radius-md)",
-          background: "var(--bg-surface-800)",
-          border: `1px solid ${open ? "var(--border-focus)" : "var(--border-default)"}`,
-          color: current ? "var(--text-primary)" : "var(--text-tertiary)",
-          fontSize: "var(--text-base)",
-          cursor: disabled ? "not-allowed" : "pointer",
-          opacity: disabled ? 0.5 : 1,
-        }}
+        className={`flex items-center justify-between w-full h-10 px-3 rounded-lg bg-white dark:bg-slate-900 border transition shadow-sm text-sm ${
+          open
+            ? "border-indigo-500 ring-2 ring-indigo-500"
+            : "border-slate-300 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700"
+        } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       >
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
+        <span className={`overflow-hidden text-ellipsis whitespace-nowrap min-w-0 ${
+          current ? "text-slate-900 dark:text-slate-100 font-medium" : "text-slate-400 dark:text-slate-500"
+        }`}>
           {current ? current.label : placeholder}
         </span>
         <svg
@@ -64,29 +56,15 @@ export function Select({ label, options = [], value, onChange, placeholder = "Se
           height="14"
           viewBox="0 0 24 24"
           fill="none"
-          style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform var(--duration-fast)" }}
+          className={`shrink-0 ml-1 text-slate-500 dark:text-slate-400 transition-transform duration-150 ${
+            open ? "rotate-180" : ""
+          }`}
         >
           <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(100% + 6px)",
-            left: 0,
-            right: 0,
-            zIndex: 20,
-            background: "var(--bg-surface-700)",
-            border: "1px solid var(--border-default)",
-            borderRadius: "var(--radius-md)",
-            boxShadow: "var(--shadow-lg)",
-            padding: 6,
-            maxHeight: 240,
-            overflowY: "auto",
-            backdropFilter: "var(--blur-glass)",
-          }}
-        >
+        <div className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl p-1.5 max-h-60 overflow-y-auto">
           {options.map((o) => (
             <div
               key={o.value}
@@ -94,20 +72,11 @@ export function Select({ label, options = [], value, onChange, placeholder = "Se
                 onChange && onChange(o.value);
                 setOpen(false);
               }}
-              style={{
-                padding: "8px 10px",
-                borderRadius: "var(--radius-sm)",
-                fontSize: "var(--text-base)",
-                color: o.value === value ? "var(--cyan-300)" : "var(--text-primary)",
-                background: o.value === value ? "var(--cyan-glow-soft)" : "transparent",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                if (o.value !== value) e.currentTarget.style.background = "var(--surface-glass-strong)";
-              }}
-              onMouseLeave={(e) => {
-                if (o.value !== value) e.currentTarget.style.background = "transparent";
-              }}
+              className={`px-2.5 py-1.5 rounded-md text-xs cursor-pointer transition ${
+                o.value === value
+                  ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold"
+                  : "text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80"
+              }`}
             >
               {o.label}
             </div>

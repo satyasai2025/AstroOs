@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
+import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
 import { StrengthAnalysisCenter } from "@/components/charts/StrengthAnalysisCenter";
@@ -20,6 +21,8 @@ import { DashaOverviewCard } from "@/components/charts/DashaOverviewCard";
 import { DashaTreeExplorer } from "@/components/charts/DashaTreeExplorer";
 import { DashaExportPanel } from "@/components/charts/DashaExportPanel";
 import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
+import { DashaTransitSummaryCard } from "@/components/charts/DashaTransitSummaryCard";
+import { DivisionalChartSelector } from "@/components/charts/DivisionalChartSelector";
 import InteractiveKundliView from "@/components/charts/InteractiveKundliView";
 import { YogaIntelligenceDashboard } from "@/components/charts/YogaIntelligenceDashboard";
 import AshtakavargaPanel from "@/components/charts/AshtakavargaPanel";
@@ -139,6 +142,8 @@ export default function ChartsPage() {
   const [activePlanet, setActivePlanet] = useState<string | null>(null);
   const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(null);
   const setResult = useWorkflowStore((s) => s.setResult);
+  const chartStyle = useWorkflowStore((s) => s.chartStyle);
+  const setChartStyle = useWorkflowStore((s) => s.setChartStyle);
 
   const handlePlanetHover = (planet: string | null) => {
     if (pinnedPlanet) return;
@@ -253,18 +258,18 @@ export default function ChartsPage() {
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>Chart Visualization</h1>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-            D1 Rashi and divisional charts rendered as North Indian diamond charts.
-            {request && (<><span> Subject: <span className="font-medium">{request.subject_name}</span> {" "}· Ayanamsa: {request.ayanamsa}</span></>)}
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Chart Visualization</h1>
+          <p className="text-xs text-slate-600 dark:text-slate-400">
+            D1 Rashi &amp; divisional varga charts.
+            {request && (<><span> Subject: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span> · Ayanamsa: {request.ayanamsa}</span></>)}
           </p>
         </div>
-        <Link href="/charts/compare" className="btn-ghost text-xs px-3 py-1.5" aria-label="Compare charts side by side">Compare D1 + D9</Link>
+        <Link href="/charts/compare" className="btn-ghost text-xs px-2.5 py-1" aria-label="Compare charts side by side">Compare D1 + D9</Link>
       </div>
 
-      <div className="mb-6 flex gap-1 border-b pb-2" style={{ borderColor: "var(--border-primary)" }} role="tablist" aria-label="Chart view options">
+      <div className="mb-3 flex gap-1 border-b border-slate-200 dark:border-slate-800 pb-1.5 overflow-x-auto" role="tablist" aria-label="Chart view options">
         {([
           { key: "kundli" as ViewMode, label: "Interactive Kundli" },
           { key: "chart" as ViewMode, label: "Chart View" },
@@ -289,11 +294,11 @@ export default function ChartsPage() {
             aria-selected={view === tab.key}
             aria-controls={`panel-${tab.key}`}
             onClick={() => setView(tab.key)}
-            className="rounded-lg px-3 py-1.5 text-xs font-medium transition"
-            style={{
-              backgroundColor: view === tab.key ? "var(--accent)" : "transparent",
-              color: view === tab.key ? "var(--accent-text)" : "var(--text-secondary)",
-            }}
+            className={`rounded-lg px-2.5 py-1 text-xs font-semibold whitespace-nowrap transition ${
+              view === tab.key
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700"
+            }`}
           >
             {tab.label}
           </button>
@@ -301,102 +306,141 @@ export default function ChartsPage() {
       </div>
 
       {view === "kundli" && (
-        <div id="panel-kundli" role="tabpanel" aria-label="Interactive Kundli panel" className="space-y-5">
+        <div id="panel-kundli" role="tabpanel" aria-label="Interactive Kundli panel" className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <Link href="/dashboard" className="btn-ghost text-xs px-3 py-1.5">Edit Chart</Link>
-            <Link href="/dashboard" className="btn-ghost text-xs px-3 py-1.5">New Chart</Link>
-            <Link href="/charts/history" className="btn-ghost text-xs px-3 py-1.5 ml-auto">View All</Link>
+            <Link href="/dashboard" className="btn-ghost text-xs px-2.5 py-1">Edit Chart</Link>
+            <Link href="/dashboard" className="btn-ghost text-xs px-2.5 py-1">New Chart</Link>
+            <Link href="/charts/history" className="btn-ghost text-xs px-2.5 py-1 ml-auto">View All</Link>
           </div>
-          <div className="glass-card h-[600px] overflow-hidden p-0"><InteractiveKundliView chart={chart} vargas={vargas} shadbala={result.shadbala} request={request} /></div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <button type="button" onClick={() => setView("dasha")} className="glass-card p-4 text-left transition hover:opacity-90">
-              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Dasha Timeline</h4>
-              <p className="text-sm" style={{ color: "var(--text-primary)" }}>{currentDasha(result)}</p>
-              <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>Currently active period · view full timeline</p>
+          <div className="glass-card h-[540px] overflow-hidden p-0"><InteractiveKundliView chart={chart} vargas={vargas} shadbala={result.shadbala} request={request} /></div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <button type="button" onClick={() => setView("dasha")} className="glass-card p-3 text-left transition hover:opacity-90">
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">Dasha Timeline</h4>
+              <p className="text-xs font-bold text-slate-900 dark:text-slate-100">{currentDasha(result)}</p>
+              <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">Currently active period</p>
             </button>
-            <button type="button" onClick={() => setView("timeline")} className="glass-card p-4 text-left transition hover:opacity-90">
-              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Transit Timeline</h4>
-              <p className="text-sm" style={{ color: "var(--text-primary)" }}>{currentTransitSummary(result)}</p>
-              <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>Today's transits from natal Moon</p>
+            <button type="button" onClick={() => setView("timeline")} className="glass-card p-3 text-left transition hover:opacity-90">
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">Transit Timeline</h4>
+              <p className="text-xs font-bold text-slate-900 dark:text-slate-100">{currentTransitSummary(result)}</p>
+              <p className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400">Transits from natal Moon</p>
             </button>
-            <div className="glass-card p-4">
-              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Status</h4>
-              <dl className="space-y-0.5 text-xs" style={{ color: "var(--text-secondary)" }}>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Ayanamsa</dt><dd>{chart.ayanamsa_system}</dd></div>
-                <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>House System</dt><dd>{chart.house_system}</dd></div>
-                {result.verification && (<div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Verification Confidence</dt><dd>{(result.verification.confidence_score * 100).toFixed(0)}%</dd></div>)}
+            <div className="glass-card p-3">
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">Status</h4>
+              <dl className="space-y-0.5 text-[11px] text-slate-600 dark:text-slate-400">
+                <div className="flex justify-between"><dt>Ayanamsa</dt><dd className="font-semibold text-slate-800 dark:text-slate-200">{chart.ayanamsa_system}</dd></div>
+                <div className="flex justify-between"><dt>House System</dt><dd className="font-semibold text-slate-800 dark:text-slate-200">{chart.house_system}</dd></div>
               </dl>
             </div>
-            <div className="glass-card p-4">
-              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>AI Notifications</h4>
-              <p className="text-sm" style={{ color: "var(--text-muted)" }}>No notifications yet — proactive AI alerts are a planned feature.</p>
+            <div className="glass-card p-3">
+              <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">AI Alerts</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400">No critical planetary alerts detected.</p>
             </div>
           </div>
         </div>
       )}
 
       {view === "chart" && (
-        <div id="panel-chart" role="tabpanel" aria-label="Chart visualization panel" className="space-y-5">
-          <div className="glass-card overflow-hidden" style={{ borderColor: "var(--border-primary)" }}>
-            <ResizablePanels defaultSizes={[0.3, 0.4, 0.3]} minSize={0.15}>
-              <div className="p-4">
-                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Chart Details</h3>
-                <dl className="space-y-1 text-xs" style={{ color: "var(--text-secondary)" }}>
-                  {request && (<div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Name</dt><dd style={{ color: "var(--text-primary)" }}>{request.subject_name}</dd></div>)}
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Ayanamsa</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ayanamsa_system}</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>House System</dt><dd style={{ color: "var(--text-primary)" }}>{chart.house_system}</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna</dt><dd style={{ color: "var(--text-primary)" }}>{chart.ascendant.rashi} {chart.ascendant.rashi_degree.toFixed(2)}°</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Lagna Lord</dt><dd style={{ color: "var(--text-primary)" }}>{rashiLordFromApiName(chart.ascendant.rashi) ?? "—"}</dd></div>
-                </dl>
-              </div>
-              <PlanetDetailPanel bare planet={activePlanet} result={result} pinned={pinnedPlanet === activePlanet && activePlanet !== null} onUnpin={() => { setPinnedPlanet(null); setActivePlanet(null); }} />
-              <div className="p-4">
-                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Quick View</h3>
-                <dl className="space-y-1 text-xs" style={{ color: "var(--text-secondary)" }}>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Sun Sign</dt><dd style={{ color: "var(--text-primary)" }}>{chart.planets.find((p) => p.planet === "Sun")?.rashi ?? "—"}</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Moon Sign</dt><dd style={{ color: "var(--text-primary)" }}>{chart.planets.find((p) => p.planet === "Moon")?.rashi ?? "—"}</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Nakshatra (Moon)</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.nakshatra.nakshatra}</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Tithi</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.tithi.name} ({chart.panchanga.tithi.paksha})</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Yoga</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.yoga.name}</dd></div>
-                  <div className="flex justify-between"><dt style={{ color: "var(--text-muted)" }}>Karana</dt><dd style={{ color: "var(--text-primary)" }}>{chart.panchanga.karana.name}</dd></div>
-                </dl>
-              </div>
-            </ResizablePanels>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5 xl:grid-cols-[220px_1fr_1.1fr] xl:items-start">
-            <div className="glass-card p-4">
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Divisional Chart</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {vargaKeys.map((vk) => {
-                  const vd = VARGA_DIVISORS[vk];
-                  return (
-                    <button key={vk} type="button" onClick={() => setSelectedVarga(vk)} className="rounded-full px-2.5 py-1 text-xs font-semibold transition" style={{ backgroundColor: selectedVarga === vk ? "var(--accent)" : "var(--bg-card)", color: selectedVarga === vk ? "var(--accent-text)" : "var(--text-secondary)", border: `1px solid ${selectedVarga === vk ? "var(--accent)" : "var(--border-primary)"}` }} aria-pressed={selectedVarga === vk} aria-label={`Show ${vd?.label ?? vk} chart`}>
-                      {vd?.label ?? vk}
+        <div id="panel-chart" role="tabpanel" aria-label="Chart visualization panel" className="space-y-3">
+          {/* Main 3-Column Dense Above-the-Fold Grid */}
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 items-stretch">
+            {/* Left Column (lg:col-span-4): Chart Canvas & Style/Varga Switcher */}
+            <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm flex flex-col justify-between">
+              {/* Top Controls Toolbar */}
+              <div className="flex flex-col gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between gap-1.5">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                    {selectedVarga} {VARGA_DIVISORS[selectedVarga]?.label ? `· ${VARGA_DIVISORS[selectedVarga].label}` : ""}
+                  </span>
+                  <div className="flex items-center rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                    <button
+                      type="button"
+                      onClick={() => setChartStyle("north")}
+                      className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                        chartStyle === "north"
+                          ? "bg-cyan-500 text-white shadow-sm"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                      }`}
+                      aria-pressed={chartStyle === "north"}
+                    >
+                      North
                     </button>
-                  );
-                })}
+                    <button
+                      type="button"
+                      onClick={() => setChartStyle("south")}
+                      className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                        chartStyle === "south"
+                          ? "bg-cyan-500 text-white shadow-sm"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                      }`}
+                      aria-pressed={chartStyle === "south"}
+                    >
+                      South
+                    </button>
+                  </div>
+                </div>
+
+                {/* Full Set Varga Selector (D1 through D60) */}
+                <DivisionalChartSelector
+                  selectedVarga={selectedVarga}
+                  onSelectVarga={setSelectedVarga}
+                  availableVargas={vargaKeys}
+                />
+              </div>
+
+              {/* Compact SVG Chart Canvas */}
+              <div className="py-2 flex items-center justify-center">
+                {chartStyle === "south" ? (
+                  <SouthIndianChart
+                    title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+                    ascendant={currentAscendant}
+                    planets={currentVargaPlanets}
+                    size={330}
+                    isVarga={selectedVarga !== "D1"}
+                    vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                    activePlanet={activePlanet}
+                    onPlanetHover={handlePlanetHover}
+                    onPlanetClick={handlePlanetClick}
+                  />
+                ) : (
+                  <NorthIndianChart
+                    title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
+                    ascendant={currentAscendant}
+                    planets={currentVargaPlanets}
+                    size={330}
+                    isVarga={selectedVarga !== "D1"}
+                    vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                    activePlanet={activePlanet}
+                    onPlanetHover={handlePlanetHover}
+                    onPlanetClick={handlePlanetClick}
+                  />
+                )}
+              </div>
+
+              {/* Bottom Lagna Summary */}
+              <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 px-2.5 py-1.5 flex items-center justify-between text-xs">
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
+                  Lagna: <span className="text-cyan-600 dark:text-cyan-400">{currentAscendant.rashi}</span> {currentAscendant.rashi_degree?.toFixed(2)}°
+                </span>
+                <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+                  Lord: {rashiLordFromApiName(currentAscendant.rashi) ?? "—"}
+                </span>
               </div>
             </div>
-            <div className="glass-card flex flex-col items-center p-6">
-              <NorthIndianChart
-                title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
-                ascendant={currentAscendant}
-                planets={currentVargaPlanets}
-                size={380}
-                isVarga={selectedVarga !== "D1"}
-                vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+
+            {/* Middle Column (lg:col-span-5): High-Density Tabbed Sub-Panels */}
+            <div className="lg:col-span-5 flex flex-col">
+              <ChartPanel
+                chart={chart}
+                result={result}
                 activePlanet={activePlanet}
-                onPlanetHover={handlePlanetHover}
                 onPlanetClick={handlePlanetClick}
               />
-              <div className="mt-4 w-full rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
-                <p className="text-xs" style={{ color: "var(--text-muted)" }}>Ascendant</p>
-                <p className="font-semibold" style={{ color: "var(--accent)" }}>{currentAscendant.rashi} <span className="font-normal" style={{ color: "var(--text-secondary)" }}>{currentAscendant.rashi_degree?.toFixed(2)}°</span></p>
-                <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>Lord: {rashiLordFromApiName(currentAscendant.rashi) ?? "—"}</p>
-              </div>
             </div>
-            <div className="min-w-0"><ChartPanel chart={chart} /></div>
+
+            {/* Right Column (lg:col-span-3): Dasha & Transit Summary */}
+            <div className="lg:col-span-3 flex flex-col">
+              <DashaTransitSummaryCard result={result} request={request} />
+            </div>
           </div>
         </div>
       )}

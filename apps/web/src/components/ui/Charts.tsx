@@ -127,13 +127,20 @@ interface DonutChartProps {
 
 export function DonutChart({ segments = [], size = 140, thickness = 18 }: DonutChartProps) {
   const total = segments.reduce((s, x) => s + x.value, 0) || 1;
-  const r = (size - thickness) / 2;
+  const pad = 3;
+  const effectiveSize = size - pad * 2;
+  const r = (effectiveSize - thickness) / 2;
   const c = 2 * Math.PI * r;
   let offset = 0;
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className="overflow-visible flex-shrink-0"
+    >
       <g transform={`rotate(-90 ${size / 2} ${size / 2})`}>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border-subtle)" strokeWidth={thickness} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--border-subtle, rgba(148, 163, 184, 0.15))" strokeWidth={thickness} />
         {segments.map((s, i) => {
           const len = (s.value / total) * c;
           const el = (

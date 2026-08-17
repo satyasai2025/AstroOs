@@ -104,76 +104,78 @@ export function KPSignificatorExplorer({ result }: KPSignificatorExplorerProps) 
           Houses read for {eventResult.label}: {eventResult.houses.join(", ")}
         </p>
 
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-              <th className="py-2 pr-4">Planet</th>
-              <th className="py-2 pr-4">Houses Signified</th>
-              <th className="py-2 pr-4">Strongest Grade</th>
-              <th className="py-2 pr-4">Sub Lord</th>
-              <th className="py-2 pr-4">Sub Sub Lord</th>
-              <th className="py-2 pr-4">Dasha Now</th>
-              <th className="py-2">Caution</th>
-            </tr>
-          </thead>
-          <tbody>
-            {eventResult.planets.length === 0 && (
-              <tr>
-                <td colSpan={7} className="py-4 text-center text-xs" style={{ color: "var(--text-muted)" }}>
-                  No planets signify these houses in this chart.
-                </td>
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b text-xs uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                <th className="py-2 pr-4">Planet</th>
+                <th className="py-2 pr-4">Houses Signified</th>
+                <th className="py-2 pr-4">Strongest Grade</th>
+                <th className="py-2 pr-4">Sub Lord</th>
+                <th className="py-2 pr-4">Sub Sub Lord</th>
+                <th className="py-2 pr-4">Dasha Now</th>
+                <th className="py-2">Caution</th>
               </tr>
-            )}
-            {eventResult.planets.map((ps) => {
-              const caution = subLordDusthanaCheck(chart, ps.planet, allHouseSigs);
-              const planetData = chart.planets.find((p) => p.planet === ps.planet);
-              const activeDashaLevel = activeDashaLevelByPlanet.get(ps.planet);
-              return (
-                <tr key={ps.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
-                  <td className="py-2 pr-4 font-medium">{ps.planet}</td>
-                  <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>
-                    {ps.housesSignified.join(", ")} of {eventResult.houses.join(", ")}
-                  </td>
-                  <td className="py-2 pr-4">
-                    <GradeBadge grade={ps.strongestGrade} />
-                  </td>
-                  <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>
-                    {caution?.subLord ?? "—"}
-                  </td>
-                  <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>
-                    {planetData?.sub_sub_lord || "—"}
-                  </td>
-                  <td className="py-2 pr-4">
-                    {activeDashaLevel ? (
-                      <span
-                        className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                        style={{ backgroundColor: "rgba(52,211,153,0.15)", color: "#34d399" }}
-                        title={`${ps.planet}'s own ${activeDashaLevel} is running right now — classically when this significator is most likely to fructify`}
-                      >
-                        {activeDashaLevel}
-                      </span>
-                    ) : (
-                      <span style={{ color: "var(--text-muted)" }}>—</span>
-                    )}
-                  </td>
-                  <td className="py-2">
-                    {caution?.cautionFlag ? (
-                      <span
-                        className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                        style={{ backgroundColor: "rgba(248,113,113,0.15)", color: "#f87171" }}
-                        title={`Sub Lord also signifies house(s) ${caution.dusthanaHousesSignified.join(", ")} (dusthana)`}
-                      >
-                        Sub Lord ties to dusthana
-                      </span>
-                    ) : (
-                      <span style={{ color: "var(--text-muted)" }}>—</span>
-                    )}
+            </thead>
+            <tbody>
+              {eventResult.planets.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="py-4 text-center text-xs" style={{ color: "var(--text-muted)" }}>
+                    No planets signify these houses in this chart.
                   </td>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              )}
+              {eventResult.planets.map((ps) => {
+                const caution = subLordDusthanaCheck(chart, ps.planet, allHouseSigs);
+                const planetData = chart.planets.find((p) => p.planet === ps.planet);
+                const activeDashaLevel = activeDashaLevelByPlanet.get(ps.planet);
+                return (
+                  <tr key={ps.planet} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
+                    <td className="py-2 pr-4 font-medium">{ps.planet}</td>
+                    <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>
+                      {ps.housesSignified.join(", ")} of {eventResult.houses.join(", ")}
+                    </td>
+                    <td className="py-2 pr-4">
+                      <GradeBadge grade={ps.strongestGrade} />
+                    </td>
+                    <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>
+                      {caution?.subLord ?? "—"}
+                    </td>
+                    <td className="py-2 pr-4" style={{ color: "var(--text-secondary)" }}>
+                      {planetData?.sub_sub_lord || "—"}
+                    </td>
+                    <td className="py-2 pr-4">
+                      {activeDashaLevel ? (
+                        <span
+                          className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                          style={{ backgroundColor: "rgba(52,211,153,0.15)", color: "#34d399" }}
+                          title={`${ps.planet}'s own ${activeDashaLevel} is running right now — classically when this significator is most likely to fructify`}
+                        >
+                          {activeDashaLevel}
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--text-muted)" }}>—</span>
+                      )}
+                    </td>
+                    <td className="py-2">
+                      {caution?.cautionFlag ? (
+                        <span
+                          className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                          style={{ backgroundColor: "rgba(248,113,113,0.15)", color: "#f87171" }}
+                          title={`Sub Lord also signifies house(s) ${caution.dusthanaHousesSignified.join(", ")} (dusthana)`}
+                        >
+                          Sub Lord ties to dusthana
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--text-muted)" }}>—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="glass-card p-5">

@@ -164,18 +164,18 @@ function ChartSearchResults({
   if (!visible || query.trim() === "") return null;
 
   const { border, hover } = ACCENT[accent];
-  const shell = `absolute left-0 right-0 top-full z-20 mt-1 max-h-48 overflow-y-auto rounded-lg border ${border} bg-slate-900 p-1 shadow-2xl`;
-  const note = (text: string, tone = "text-slate-400") => (
+  const shell = `absolute left-0 right-0 top-full z-20 mt-1 max-h-48 overflow-y-auto rounded-lg border ${border} bg-white dark:bg-slate-900 p-1 shadow-2xl`;
+  const note = (text: string, tone = "text-slate-500 dark:text-slate-400") => (
     <div className={shell}>
       <p className={`px-2 py-1.5 text-[11px] ${tone}`}>{text}</p>
     </div>
   );
 
-  if (isLoading) return note("Loading your saved charts…", "text-slate-500");
+  if (isLoading) return note("Loading your saved charts…", "text-slate-500 dark:text-slate-400");
   if (error) {
     return note(
       error instanceof ApiError ? error.detail : "Could not load your saved charts.",
-      "text-red-400",
+      "text-rose-500",
     );
   }
   if (totalSaved === 0) return note("You have no saved charts yet — enter birth details below instead.");
@@ -189,8 +189,8 @@ function ChartSearchResults({
           onClick={() => onSelect(c)}
           className={`cursor-pointer rounded-md p-2 ${hover} transition text-xs`}
         >
-          <p className="font-bold text-white">{c.subject_name}</p>
-          <p className="text-[10px] text-slate-400">
+          <p className="font-bold text-slate-900 dark:text-slate-100">{c.subject_name}</p>
+          <p className="text-[10px] text-slate-600 dark:text-slate-400">
             {c.birth_datetime_utc.split("T")[0]}
             {c.place_name ? ` · ${c.place_name}` : ""}
           </p>
@@ -377,7 +377,7 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                     value={searchQueryA}
                     onFocus={() => setShowSearchResultsA(true)}
                     onChange={(e) => { setSearchQueryA(e.target.value); setShowSearchResultsA(true); }}
-                    className="w-full rounded-lg border border-purple-500/40 bg-black/60 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-purple-400 focus:outline-none"
+                    className="w-full rounded-lg border border-purple-500/40 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none"
                   />
 
                   <ChartSearchResults
@@ -393,34 +393,34 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                 </div>
 
                 <div className="relative flex items-center justify-center py-1">
-                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
-                  <span className="relative bg-[#0d101a] px-2 text-[10px] text-slate-500">OR ENTER DETAILS</span>
+                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200 dark:border-slate-800" /></div>
+                  <span className="relative bg-slate-50 dark:bg-slate-900 px-2 text-[10px] font-semibold tracking-wider text-slate-500 dark:text-slate-400">OR ENTER DETAILS</span>
                 </div>
 
                 <div className="space-y-3 text-xs">
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Full Name</label>
-                    <input type="text" value={personA.name} onChange={(e) => { setFoundChartA(null); setPersonA({ ...personA, name: e.target.value }); }} className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-white" />
+                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                    <input type="text" value={personA.name} onChange={(e) => { setFoundChartA(null); setPersonA({ ...personA, name: e.target.value }); }} className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none" />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">Date of Birth</label>
-                      <input type="date" value={personA.birthDate} onChange={(e) => setPersonA({ ...personA, birthDate: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-xs text-white [color-scheme:dark]" />
+                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Date of Birth</label>
+                      <input type="date" value={personA.birthDate} onChange={(e) => setPersonA({ ...personA, birthDate: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none" />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">Time of Birth</label>
-                      <input type="time" step="1" value={personA.birthTime} onChange={(e) => setPersonA({ ...personA, birthTime: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-xs text-white [color-scheme:dark]" />
+                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Time of Birth</label>
+                      <input type="time" step="1" value={personA.birthTime} onChange={(e) => setPersonA({ ...personA, birthTime: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Place of Birth</label>
+                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Place of Birth</label>
                     <BirthPlaceSearch value={personA.placeSearchText} onChange={(text) => setPersonA({ ...personA, placeSearchText: text, resolvedPlace: null, sourceUtc: null })} onSelect={(place) => setPersonA({ ...personA, resolvedPlace: place, placeSearchText: place.display_name, sourceUtc: null })} />
                   </div>
                   {!foundChartA && (
                     <>
                       <div>
-                        <label className="block text-[11px] text-slate-400 mb-1">Gender</label>
-                        <div className="flex gap-4 text-xs text-slate-300">
+                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Gender</label>
+                        <div className="flex gap-4 text-xs text-slate-700 dark:text-slate-300">
                           {(["Male", "Female", "Other"] as const).map((g) => (
                             <label key={g} className="flex items-center gap-1.5 cursor-pointer">
                               <input type="radio" name="genderA" checked={personA.gender === g} onChange={() => setPersonA({ ...personA, gender: g })} className="text-purple-500 focus:ring-purple-400" />
@@ -429,8 +429,8 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                           ))}
                         </div>
                       </div>
-                      <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
-                        <input type="checkbox" checked={personA.saveToMyCharts} onChange={(e) => setPersonA({ ...personA, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-purple-500" />
+                      <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 pt-1 cursor-pointer">
+                        <input type="checkbox" checked={personA.saveToMyCharts} onChange={(e) => setPersonA({ ...personA, saveToMyCharts: e.target.checked })} className="rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-purple-500" />
                         Save Person A to My Charts
                       </label>
                     </>
@@ -441,7 +441,7 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
               {/* Person B Section */}
               <div className="rounded-xl border border-blue-500/30 bg-blue-950/10 p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-bold text-blue-400">
+                  <div className="flex items-center gap-2 text-xs font-bold text-blue-500 dark:text-blue-400">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
                     Person B
                   </div>
@@ -449,14 +449,14 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                 </div>
 
                 <div className="relative">
-                  <label className="block text-[11px] font-medium text-slate-400 mb-1">🔍 Search Existing Chart</label>
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">🔍 Search Existing Chart</label>
                   <input
                     type="text"
                     placeholder="Search saved charts by name or place..."
                     value={searchQueryB}
                     onFocus={() => setShowSearchResultsB(true)}
                     onChange={(e) => { setSearchQueryB(e.target.value); setShowSearchResultsB(true); }}
-                    className="w-full rounded-lg border border-blue-500/40 bg-black/60 px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-400 focus:outline-none"
+                    className="w-full rounded-lg border border-blue-500/40 bg-white dark:bg-slate-900 px-3 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                   />
 
                   <ChartSearchResults
@@ -472,37 +472,37 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                 </div>
 
                 <div className="relative flex items-center justify-center py-1">
-                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-white/10" /></div>
-                  <span className="relative bg-[#0d101a] px-2 text-[10px] text-slate-500">OR ENTER DETAILS</span>
+                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200 dark:border-slate-800" /></div>
+                  <span className="relative bg-slate-50 dark:bg-slate-900 px-2 text-[10px] font-semibold tracking-wider text-slate-500 dark:text-slate-400">OR ENTER DETAILS</span>
                 </div>
 
                 <div className="space-y-3 text-xs">
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Full Name</label>
-                    <input type="text" value={personB.name} onChange={(e) => { setFoundChartB(null); setPersonB({ ...personB, name: e.target.value }); }} className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-1.5 text-xs text-white" />
+                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                    <input type="text" value={personB.name} onChange={(e) => { setFoundChartB(null); setPersonB({ ...personB, name: e.target.value }); }} className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-indigo-500 outline-none" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">Date of Birth</label>
-                      <input type="date" value={personB.birthDate} onChange={(e) => setPersonB({ ...personB, birthDate: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-xs text-white [color-scheme:dark]" />
+                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Date of Birth</label>
+                      <input type="date" value={personB.birthDate} onChange={(e) => setPersonB({ ...personB, birthDate: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none" />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">Time of Birth</label>
-                      <input type="time" step="1" value={personB.birthTime} onChange={(e) => setPersonB({ ...personB, birthTime: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-xs text-white [color-scheme:dark]" />
+                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Time of Birth</label>
+                      <input type="time" step="1" value={personB.birthTime} onChange={(e) => setPersonB({ ...personB, birthTime: e.target.value, sourceUtc: null })} className="w-full rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Place of Birth</label>
+                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Place of Birth</label>
                     <BirthPlaceSearch value={personB.placeSearchText} onChange={(text) => setPersonB({ ...personB, placeSearchText: text, resolvedPlace: null, sourceUtc: null })} onSelect={(place) => setPersonB({ ...personB, resolvedPlace: place, placeSearchText: place.display_name, sourceUtc: null })} />
                   </div>
 
                   {!foundChartB && (
                     <>
                       <div>
-                        <label className="block text-[11px] text-slate-400 mb-1">Gender</label>
-                        <div className="flex gap-4 text-xs text-slate-300">
+                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Gender</label>
+                        <div className="flex gap-4 text-xs text-slate-700 dark:text-slate-300">
                           {(["Male", "Female", "Other"] as const).map((g) => (
                             <label key={g} className="flex items-center gap-1.5 cursor-pointer">
                               <input type="radio" name="genderB" checked={personB.gender === g} onChange={() => setPersonB({ ...personB, gender: g })} className="text-blue-500 focus:ring-blue-400" />
@@ -512,8 +512,8 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
                         </div>
                       </div>
 
-                      <label className="flex items-center gap-2 text-xs text-slate-300 pt-1 cursor-pointer">
-                        <input type="checkbox" checked={personB.saveToMyCharts} onChange={(e) => setPersonB({ ...personB, saveToMyCharts: e.target.checked })} className="rounded border-white/20 bg-black/40 text-blue-500" />
+                      <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 pt-1 cursor-pointer">
+                        <input type="checkbox" checked={personB.saveToMyCharts} onChange={(e) => setPersonB({ ...personB, saveToMyCharts: e.target.checked })} className="rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-blue-500" />
                         Save Person B to My Charts
                       </label>
                     </>
@@ -523,10 +523,10 @@ export function CreateCompatibilityModal({ open, onClose }: Props) {
             </div>
 
             {/* Context Selector & Action Bar */}
-            <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+            <div className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-4">
               <div className="flex items-center gap-3">
-                <label className="text-xs font-bold text-slate-300">Relationship Type:</label>
-                <select value={relationshipType} onChange={(e) => { setRelationshipType(e.target.value as any); setResult(null); }} className="rounded-lg border border-white/10 bg-black/60 px-3 py-1.5 text-xs text-white focus:outline-none">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Relationship Type:</label>
+                <select value={relationshipType} onChange={(e) => { setRelationshipType(e.target.value as any); setResult(null); }} className="rounded-lg border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                   <option value="marriage">Marriage / Matrimonial</option>
                   <option value="business">Business / Partnership</option>
                   <option value="friendship">Friendship / Social</option>

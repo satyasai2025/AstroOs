@@ -5,10 +5,29 @@ import * as d3 from "d3";
 import { PLANET_ABBREV, PLANET_SYMBOLS } from "@/lib/astro";
 import type { DashaTreeResponse, DashaPeriodResponse } from "@/lib/types";
 
+export interface TimelineEventMarker {
+  id: string;
+  title: string;
+  event_date: string;
+  category?: string | null;
+}
+
 interface DashaTimelineProps {
   dasha: DashaTreeResponse;
   /** Height in pixels for the main chart area. */
   height?: number;
+  /** Native birth date string for quick jump */
+  birthDate?: string;
+  /** Active Dasha summary object */
+  activeDasha?: {
+    mahadasha: DashaPeriodResponse;
+    antardasha: DashaPeriodResponse | null;
+    percentElapsed: number;
+    yearsLeft: number;
+    monthsLeft: number;
+  } | null;
+  /** Optional dated life event markers to display on timeline */
+  events?: TimelineEventMarker[];
 }
 
 const LEVEL_COLORS: Record<number, string> = {
@@ -141,7 +160,13 @@ function findNextPeriod(
  * with nested antardasha blocks, highlighting the current period and showing
  * a countdown to the next period.
  */
-export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
+export function DashaTimeline({
+  dasha,
+  height = 180,
+  birthDate,
+  activeDasha,
+  events = [],
+}: DashaTimelineProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(700);
@@ -427,6 +452,26 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
       }
     });
 
+    // ── Life Events Markers ──
+    events.forEach((ev) => {
+      const evDate = new Date(ev.event_date);
+      const evX = xScale(evDate);
+      if (evX >= 0 && evX <= innerWidth) {
+        const evG = g.append("g")
+          .attr("transform", `translate(${evX},${innerHeight * 0.72})`)
+          .style("cursor", "pointer");
+
+        evG.append("polygon")
+          .attr("points", "0,-6 6,0 0,6 -6,0")
+          .attr("fill", "#f59e0b")
+          .attr("stroke", "#0f172a")
+          .attr("stroke-width", 1.5);
+
+        evG.append("title")
+          .text(`${ev.title} (${formatDate(ev.event_date)})`);
+      }
+    });
+
     // ── Current time indicator line ──
     const nowX = xScale(now);
     if (nowX >= 0 && nowX <= innerWidth) {
@@ -467,7 +512,7 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
     g.selectAll(".domain").style("stroke", "var(--border-primary)");
     g.selectAll(".tick line").style("stroke", "var(--border-primary)");
 
-  }, [dasha, containerWidth, height, currentPeriod, currentTime, now, zoomTransform]);
+  }, [dasha, containerWidth, height, currentPeriod, currentTime, now, zoomTransform, events]);
 
   // ── Date-jump navigation ── centers the timeline on an arbitrary date
   // (not just "now") and selects whatever period was active then.
@@ -522,11 +567,11 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
 
   return (
     <div
-      className="glass-card p-5 space-y-4"
+      className="glass-card overflow-hidden p-5 space-y-4"
       role="region"
       aria-label={`Dasha timeline for ${dasha.system} system`}
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3
             className="text-sm font-semibold uppercase tracking-wide"
@@ -539,7 +584,33 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
             {dasha.total_cycle_years} year cycle
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              const bDate = birthDate ? birthDate.split("T")[0] : dasha.mahadashas[0]?.start_date?.split("T")[0];
+              if (bDate) {
+                setJumpDate(bDate);
+                jumpToDate(bDate);
+              }
+            }}
+            className="btn-ghost px-2 py-1 text-xs"
+            title="Focus timeline on birth date"
+          >
+            Birth Date
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const today = new Date().toISOString().split("T")[0];
+              setJumpDate(today);
+              jumpToDate(today);
+            }}
+            className="btn-ghost px-2 py-1 text-xs"
+            title="Focus timeline on today"
+          >
+            Today
+          </button>
           <label htmlFor="dasha-jump-date" className="sr-only">
             Jump to date
           </label>
@@ -568,8 +639,7 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
 
       <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
         Click any period for details · scroll/pinch on the timeline to zoom, drag to pan · orange
-        hatching marks Dasha Sandhi (junction) windows — an approximate transition zone, not an
-        exact classical figure (see tooltip).
+        hatching marks Dasha Sandhi (junction) windows.
       </p>
 
       {/* Legend */}
@@ -590,6 +660,16 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
             </span>
           </span>
         ))}
+        {events.length > 0 && (
+          <span className="flex items-center gap-1" role="listitem">
+            <span
+              className="inline-block h-2.5 w-2.5 rotate-45 rounded-xs"
+              style={{ backgroundColor: "#f59e0b" }}
+              aria-hidden="true"
+            />
+            <span style={{ color: "var(--text-secondary)" }}>Life Event</span>
+          </span>
+        )}
         <span className="flex items-center gap-1" role="listitem">
           <span
             className="inline-block h-0.5 w-4 border-l-2 border-dashed"
@@ -612,7 +692,7 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
       </div>
 
       {/* Current period + countdown */}
-      {currentPeriod && (
+      {(activeDasha || currentPeriod) && (
         <div
           className="rounded-lg border p-4"
           style={{
@@ -621,23 +701,42 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
           }}
           role="status"
           aria-live="polite"
-          aria-label={`Current dasha period: ${currentPeriod.lord}, ending ${formatDate(currentPeriod.end_date)}`}
+          aria-label={`Current dasha period`}
         >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
-                Current Period
+                Current Active Dasha
               </p>
               <p
                 className="mt-1 text-lg font-bold"
                 style={{ color: "var(--accent)" }}
               >
-                {PLANET_SYMBOLS[currentPeriod.lord] ?? ""}{" "}
-                {currentPeriod.lord}
+                {activeDasha ? (
+                  <>
+                    {PLANET_SYMBOLS[activeDasha.mahadasha.lord] ?? ""}{" "}
+                    {activeDasha.mahadasha.lord}
+                    {activeDasha.antardasha && ` / ${activeDasha.antardasha.lord}`}
+                  </>
+                ) : (
+                  <>
+                    {PLANET_SYMBOLS[currentPeriod!.lord] ?? ""}{" "}
+                    {currentPeriod!.lord}
+                  </>
+                )}
               </p>
               <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                {formatDate(currentPeriod.start_date)} —{" "}
-                {formatDate(currentPeriod.end_date)}
+                {activeDasha ? (
+                  <>
+                    {formatDate(activeDasha.mahadasha.start_date)} —{" "}
+                    {formatDate(activeDasha.mahadasha.end_date)} ({activeDasha.yearsLeft}y {activeDasha.monthsLeft}m left)
+                  </>
+                ) : (
+                  <>
+                    {formatDate(currentPeriod!.start_date)} —{" "}
+                    {formatDate(currentPeriod!.end_date)}
+                  </>
+                )}
               </p>
             </div>
             <div className="text-right">
@@ -648,7 +747,7 @@ export function DashaTimeline({ dasha, height = 180 }: DashaTimelineProps) {
                 className="mt-1 text-2xl font-bold tabular-nums"
                 style={{ color: "var(--text-primary)" }}
               >
-                {computeCountdown(currentPeriod.end_date)}
+                {computeCountdown(activeDasha ? activeDasha.mahadasha.end_date : currentPeriod!.end_date)}
               </p>
             </div>
           </div>

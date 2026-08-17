@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button, Card, Input, Select, type SelectOption } from "@/components/ui";
 import { api, tokenStore } from "@/lib/api";
 import { ResearchPatternsShell } from "@/components/research/ResearchPatternsShell";
+import { useWorkflowStore } from "@/lib/store";
 import type { AyanamsaCode, HouseSystemCode } from "@/lib/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
@@ -26,6 +27,8 @@ const HOUSE_SYSTEM_OPTIONS: SelectOption[] = [
 ];
 
 export default function ReportsPdfPage() {
+  const storeRequest = useWorkflowStore((s) => s.request);
+
   // ── Form fields ──────────────────────────────────────────────────────────
   const [selectedChartId, setSelectedChartId] = useState<string>("");
   const [subjectName, setSubjectName] = useState("");
@@ -46,6 +49,19 @@ export default function ReportsPdfPage() {
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (storeRequest) {
+      setSubjectName(storeRequest.subject_name || "");
+      const birthDt = new Date(storeRequest.birth_datetime_utc);
+      setBirthDate(birthDt.toISOString().split("T")[0]);
+      setBirthTime(birthDt.toISOString().split("T")[1]?.slice(0, 5) || "12:00");
+      setLatitude(storeRequest.latitude?.toString() || "");
+      setLongitude(storeRequest.longitude?.toString() || "");
+      setAyanamsa((storeRequest.ayanamsa as AyanamsaCode) || "lahiri");
+      setHouseSystem((storeRequest.house_system as HouseSystemCode) || "W");
+    }
+  }, [storeRequest]);
 
   // Load available report templates on mount (GET /api/v1/report/templates)
   const loadTemplates = useCallback(async () => {
@@ -71,19 +87,17 @@ export default function ReportsPdfPage() {
       setLoadingCharts(true);
       const data = await api.get<{ charts: any[]; total: number }>("/api/v1/horoscope/my-charts?limit=50&offset=0");
       setSavedCharts(data.charts || []);
-      // Auto-select first chart if available
-      if (data.charts && data.charts.length > 0) {
+      if (!storeRequest && data.charts && data.charts.length > 0) {
         const firstChart = data.charts[0];
         setSelectedChartId(firstChart.id);
         populateFromChart(firstChart);
       }
-    } catch (err) {
-      // User might not be logged in - that's okay
+    } catch {
       setSavedCharts([]);
     } finally {
       setLoadingCharts(false);
     }
-  }, []);
+  }, [storeRequest]);
 
   useEffect(() => {
     void loadSavedCharts();

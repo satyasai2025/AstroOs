@@ -293,41 +293,78 @@ export default function ImportChartPage() {
         </button>
       </div>
 
-      <div className="obsidian-card p-5">
-        <label className="mb-2 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
-          Choose a .csv, .json, or .jhd file
+      <div className="obsidian-card p-6">
+        <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-amber-500">
+          Upload Chart File (.csv, .json, .jhd)
         </label>
-        <input
-          type="file"
-          accept=".csv,.json,.jhd"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
+        
+        <div
+          className="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-amber-500/80 bg-slate-50/50 dark:bg-slate-900/40 p-8 text-center transition cursor-pointer"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files?.[0];
             if (file) void handleFile(file);
           }}
-          className="obsidian-input text-sm"
-        />
-        <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
-          Required columns: subject_name, birth_datetime_utc (ISO, UTC), latitude, longitude. Optional: place_name, ayanamsa, house_system.
-          {" "}Also accepts a single Jagannatha Hora (.jhd) birth file — creates one chart directly, no bulk row table.
+        >
+          <input
+            type="file"
+            accept=".csv,.json,.jhd"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void handleFile(file);
+            }}
+            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+            aria-label="Upload chart file"
+          />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10 text-amber-500 mb-3">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+          </div>
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+            Click to upload or drag and drop
+          </p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+            CSV, JSON or Jagannatha Hora (.jhd) charts
+          </p>
+        </div>
+
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          Required columns: <code className="text-amber-500 font-mono">subject_name</code>, <code className="text-amber-500 font-mono">birth_datetime_utc</code> (ISO, UTC), <code className="text-amber-500 font-mono">latitude</code>, <code className="text-amber-500 font-mono">longitude</code>. Optional: place_name, ayanamsa, house_system.
         </p>
 
         {parseError && (
-          <p className="mt-3 text-sm" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
+          <p className="mt-3 text-sm font-medium" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
             {parseError}
           </p>
         )}
 
         {fileName && parsedRows.length > 0 && (
-          <div className="mt-4">
-            <p className="mb-2 text-sm" style={{ color: "var(--text-primary)" }}>
-              {fileName}: <span style={{ color: "#4ade80" }}>{validRows.length} valid</span>
-              {invalidCount > 0 && (
-                <>
-                  {" · "}
-                  <span style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>{invalidCount} invalid</span>
-                </>
-              )}
-            </p>
+          <div className="mt-6 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                {fileName}: <span style={{ color: "#4ade80" }}>{validRows.length} valid</span>
+                {invalidCount > 0 && (
+                  <>
+                    {" · "}
+                    <span style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>{invalidCount} invalid</span>
+                  </>
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setFileName(null);
+                  setParsedRows([]);
+                }}
+                className="text-xs text-slate-400 hover:text-slate-200"
+              >
+                Clear
+              </button>
+            </div>
 
             <div className="max-h-80 overflow-y-auto overflow-x-auto rounded-lg border" style={{ borderColor: "var(--border-primary)" }}>
               <table className="w-full text-left text-xs">
@@ -345,13 +382,13 @@ export default function ImportChartPage() {
                   {parsedRows.map((r, i) => (
                     <tr key={i} className="border-b" style={{ borderColor: "var(--border-primary)", color: "var(--text-primary)" }}>
                       <td className="p-2">{i + 1}</td>
-                      <td className="p-2">{r.raw.subject_name || "—"}</td>
-                      <td className="p-2">{r.raw.birth_datetime_utc || "—"}</td>
+                      <td className="p-2 font-medium">{r.raw.subject_name || "—"}</td>
+                      <td className="p-2 font-mono">{r.raw.birth_datetime_utc || "—"}</td>
                       <td className="p-2">{r.raw.latitude || "—"}</td>
                       <td className="p-2">{r.raw.longitude || "—"}</td>
                       <td className="p-2">
                         {r.row ? (
-                          <span style={{ color: "#4ade80" }}>Valid</span>
+                          <span style={{ color: "#4ade80" }}>✓ Valid</span>
                         ) : (
                           <span style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>{r.error}</span>
                         )}
@@ -369,19 +406,30 @@ export default function ImportChartPage() {
                 onChange={(e) => setForceNewBulk(e.target.checked)}
                 className="h-4 w-4 rounded"
               />
-              Always save as a new chart, even if a row&apos;s birth data matches an existing saved chart
-              (two different people can share an exact birth moment and place).
+              Always save as a new chart, even if a row&apos;s birth data matches an existing saved chart.
             </label>
 
-            <button
-              type="button"
-              onClick={handleImport}
-              disabled={validRows.length === 0 || bulkImport.isPending}
-              title="Bulk imports are limited to 5 uploads per hour, up to 100 rows each."
-              className="obsidian-btn-primary mt-3 text-sm disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {bulkImport.isPending ? "Importing…" : `Import ${validRows.length} Chart${validRows.length === 1 ? "" : "s"}`}
-            </button>
+            <div className="mt-4 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleImport}
+                disabled={validRows.length === 0 || bulkImport.isPending}
+                title="Bulk imports are limited to 5 uploads per hour, up to 100 rows each."
+                className="obsidian-btn-primary text-sm disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {bulkImport.isPending ? "Importing…" : `Confirm & Import ${validRows.length} Chart${validRows.length === 1 ? "" : "s"}`}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFileName(null);
+                  setParsedRows([]);
+                }}
+                className="obsidian-btn-secondary text-sm"
+              >
+                Cancel
+              </button>
+            </div>
             <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
               Limited to 5 bulk imports per hour, up to 100 rows each.
             </p>

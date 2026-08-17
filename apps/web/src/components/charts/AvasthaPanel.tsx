@@ -69,42 +69,44 @@ export function AvasthaPanel({ request }: AvasthaPanelProps) {
         Baladi (age-state, by degree) and Deeptadi (dignity-state). Jagradadi Avastha isn't shown —
         classical sources vary too much on its exact derivation to compute honestly here.
       </p>
-      <table className="w-full text-left text-sm">
-        <thead>
-          <tr className="text-xs uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
-            <th className="pb-2 pr-2">Planet</th>
-            <th className="pb-2 pr-2">Baladi</th>
-            <th className="pb-2">Deeptadi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.avasthas.map((a) => (
-            <tr key={a.planet} className="border-t" style={{ borderColor: "var(--border-primary)" }}>
-              <td className="py-1.5 pr-2 font-medium" style={{ color: "var(--text-primary)" }}>
-                {PLANET_SYMBOLS[a.planet] ?? ""} {PLANET_ABBREV[a.planet] ?? a.planet.slice(0, 2)}
-              </td>
-              <td className="py-1.5 pr-2">
-                <span
-                  className="rounded-full px-2 py-0.5 text-xs font-medium"
-                  style={{ backgroundColor: `${BALADI_COLOR[a.baladi_avastha] ?? "var(--text-muted)"}26`, color: BALADI_COLOR[a.baladi_avastha] ?? "var(--text-muted)" }}
-                  title={a.baladi_trace.join(" ")}
-                >
-                  {a.baladi_avastha}
-                </span>
-              </td>
-              <td className="py-1.5">
-                <span
-                  className="rounded-full px-2 py-0.5 text-xs font-medium"
-                  style={{ backgroundColor: `${DEEPTADI_COLOR[a.deeptadi_avastha] ?? "var(--text-muted)"}26`, color: DEEPTADI_COLOR[a.deeptadi_avastha] ?? "var(--text-muted)" }}
-                  title={a.deeptadi_trace.join(" ")}
-                >
-                  {a.deeptadi_avastha}
-                </span>
-              </td>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="text-xs uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+              <th className="pb-2 pr-2">Planet</th>
+              <th className="pb-2 pr-2">Baladi</th>
+              <th className="pb-2">Deeptadi</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.avasthas.map((a) => (
+              <tr key={a.planet} className="border-t" style={{ borderColor: "var(--border-primary)" }}>
+                <td className="py-1.5 pr-2 font-medium" style={{ color: "var(--text-primary)" }}>
+                  {PLANET_SYMBOLS[a.planet] ?? ""} {PLANET_ABBREV[a.planet] ?? a.planet.slice(0, 2)}
+                </td>
+                <td className="py-1.5 pr-2">
+                  <span
+                    className="rounded-full px-2 py-0.5 text-xs font-medium"
+                    style={{ backgroundColor: `${BALADI_COLOR[a.baladi_avastha] ?? "var(--text-muted)"}26`, color: BALADI_COLOR[a.baladi_avastha] ?? "var(--text-muted)" }}
+                    title={a.baladi_trace.join(" ")}
+                  >
+                    {a.baladi_avastha}
+                  </span>
+                </td>
+                <td className="py-1.5">
+                  <span
+                    className="rounded-full px-2 py-0.5 text-xs font-medium"
+                    style={{ backgroundColor: `${DEEPTADI_COLOR[a.deeptadi_avastha] ?? "var(--text-muted)"}26`, color: DEEPTADI_COLOR[a.deeptadi_avastha] ?? "var(--text-muted)" }}
+                    title={a.deeptadi_trace.join(" ")}
+                  >
+                    {a.deeptadi_avastha}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -36,36 +36,23 @@ export function Input({
   required,
   step,
 }: InputProps) {
-  const height = size === "sm" ? 34 : size === "lg" ? 48 : 40;
+  const heightClass = size === "sm" ? "h-8.5" : size === "lg" ? "h-12" : "h-10";
   return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 6, fontFamily: "var(--font-body)", width: "100%", ...style }}>
+    <label style={style} className="flex flex-col gap-1.5 w-full">
       {label && (
-        <span style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", fontWeight: "var(--weight-medium)" }}>
+        <span className="text-slate-700 dark:text-slate-300 font-medium text-xs">
           {label}
+          {required && <span className="text-rose-500 ml-0.5">*</span>}
         </span>
       )}
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          height,
-          padding: "0 12px",
-          borderRadius: "var(--radius-md)",
-          background: "var(--bg-surface-800)",
-          border: `1px solid ${error ? "var(--danger-500)" : "var(--border-default)"}`,
-          transition: "border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out)",
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = "var(--border-focus)";
-          e.currentTarget.style.boxShadow = "0 0 0 3px var(--cyan-glow-soft)";
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = error ? "var(--danger-500)" : "var(--border-default)";
-          e.currentTarget.style.boxShadow = "none";
-        }}
+        className={`flex items-center gap-2 px-3 rounded-lg transition shadow-sm ${heightClass} ${
+          error
+            ? "border border-rose-500 focus-within:ring-2 focus-within:ring-rose-500 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+            : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500"
+        } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
-        {icon && <span style={{ color: "var(--text-tertiary)", display: "flex" }}>{icon}</span>}
+        {icon && <span className="text-slate-400 dark:text-slate-500 flex shrink-0">{icon}</span>}
         <input
           type={type}
           step={step}
@@ -75,17 +62,11 @@ export function Input({
           value={value}
           disabled={disabled}
           onChange={(e) => onChange && onChange(e.target.value)}
-          style={{
-            all: "unset",
-            flex: 1,
-            color: "var(--text-primary)",
-            fontSize: "var(--text-base)",
-            opacity: disabled ? 0.5 : 1,
-          }}
+          className="w-full bg-transparent text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none text-sm"
         />
       </div>
       {(error || hint) && (
-        <span style={{ fontSize: "var(--text-xs)", color: error ? "var(--danger-400)" : "var(--text-tertiary)" }}>
+        <span className={`text-xs ${error ? "text-rose-500 font-medium" : "text-slate-500 dark:text-slate-400"}`}>
           {error || hint}
         </span>
       )}

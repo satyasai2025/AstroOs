@@ -45,30 +45,32 @@ function CharaKarakaTable({ bundle }: { bundle: JaiminiBundleResponse }) {
         title={`Chara Karakas (${bundle.chara_karaka.scheme === "ashta_karaka" ? "8" : "7"} karakas)`}
         subtitle={`Atmakaraka: ${bundle.chara_karaka.atmakaraka.planet} · Darakaraka: ${bundle.chara_karaka.darakaraka.planet}`}
       />
-      <table className="w-full text-xs">
-        <thead>
-          <tr style={{ color: "var(--text-muted)" }}>
-            <th className="pb-1 text-left">Rank</th>
-            <th className="pb-1 text-left">Karaka</th>
-            <th className="pb-1 text-left">Planet</th>
-            <th className="pb-1 text-left">Rashi</th>
-            <th className="pb-1 text-right">Karaka °</th>
-            <th className="pb-1 text-left">Tiebreak</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bundle.chara_karaka.karakas.map((k) => (
-            <tr key={k.rank} style={{ borderTop: "1px solid var(--border-primary)" }}>
-              <td className="py-1" style={{ color: "var(--text-muted)" }}>{k.rank}</td>
-              <td className="py-1 font-medium" style={{ color: "var(--text-primary)" }}>{k.karaka_name}</td>
-              <td className="py-1">{k.planet}{k.is_retrograde ? " (R)" : ""}</td>
-              <td className="py-1">{k.rashi}</td>
-              <td className="py-1 text-right">{k.karaka_degree.toFixed(2)}°</td>
-              <td className="py-1" style={{ color: "var(--text-muted)" }}>{k.tiebreak_rule ?? "—"}</td>
+      <div className="w-full overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr style={{ color: "var(--text-muted)" }}>
+              <th className="pb-1 text-left">Rank</th>
+              <th className="pb-1 text-left">Karaka</th>
+              <th className="pb-1 text-left">Planet</th>
+              <th className="pb-1 text-left">Rashi</th>
+              <th className="pb-1 text-right">Karaka °</th>
+              <th className="pb-1 text-left">Tiebreak</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {bundle.chara_karaka.karakas.map((k) => (
+              <tr key={k.rank} style={{ borderTop: "1px solid var(--border-primary)" }}>
+                <td className="py-1" style={{ color: "var(--text-muted)" }}>{k.rank}</td>
+                <td className="py-1 font-medium" style={{ color: "var(--text-primary)" }}>{k.karaka_name}</td>
+                <td className="py-1">{k.planet}{k.is_retrograde ? " (R)" : ""}</td>
+                <td className="py-1">{k.rashi}</td>
+                <td className="py-1 text-right">{k.karaka_degree.toFixed(2)}°</td>
+                <td className="py-1" style={{ color: "var(--text-muted)" }}>{k.tiebreak_rule ?? "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -156,24 +156,26 @@ export function TarabalaPanel() {
             <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
               Special Points (28-scheme)
             </h4>
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                  <th className="py-1 pr-3">Nakshatra</th>
-                  <th className="py-1 pr-3">From Moon</th>
-                  <th className="py-1">From Lagna</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.special_points.map((sp) => (
-                  <tr key={sp.name} className="border-b" style={{ borderColor: "var(--border-primary)" }}>
-                    <td className="py-1 pr-3 capitalize" style={{ color: "var(--text-primary)" }}>{sp.name}</td>
-                    <td className="py-1 pr-3" style={{ color: "var(--text-secondary)" }}>{sp.from_moon}</td>
-                    <td className="py-1" style={{ color: "var(--text-secondary)" }}>{sp.from_lagna ?? "—"}</td>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                    <th className="py-1 pr-3">Nakshatra</th>
+                    <th className="py-1 pr-3">From Moon</th>
+                    <th className="py-1">From Lagna</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.special_points.map((sp) => (
+                    <tr key={sp.name} className="border-b" style={{ borderColor: "var(--border-primary)" }}>
+                      <td className="py-1 pr-3 capitalize" style={{ color: "var(--text-primary)" }}>{sp.name}</td>
+                      <td className="py-1 pr-3" style={{ color: "var(--text-secondary)" }}>{sp.from_moon}</td>
+                      <td className="py-1" style={{ color: "var(--text-secondary)" }}>{sp.from_lagna ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p className="mt-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
               A separate 28-nakshatra (Abhijit-inclusive) named-point scheme, distinct from the 9-cycle
               Tarabala tables below — see packages/shared/tarabala.py for sourcing.
@@ -204,38 +206,42 @@ export function TarabalaPanel() {
             <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
               Natal Tarabala
             </h4>
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                  <th className="py-1 pr-3">Planet</th>
-                  <th className="py-1 pr-3">Natal Nakshatra</th>
-                  <th className="py-1 pr-3">Tara</th>
-                  <th className="py-1">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.natal_tarabala.map((p) => <TaraRow key={p.planet} p={p} />)}
-              </tbody>
-            </table>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                    <th className="py-1 pr-3">Planet</th>
+                    <th className="py-1 pr-3">Natal Nakshatra</th>
+                    <th className="py-1 pr-3">Tara</th>
+                    <th className="py-1">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.natal_tarabala.map((p) => <TaraRow key={p.planet} p={p} />)}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div>
             <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-secondary)" }}>
               Transit Tarabala
             </h4>
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
-                  <th className="py-1 pr-3">Planet</th>
-                  <th className="py-1 pr-3">Current Nakshatra</th>
-                  <th className="py-1 pr-3">Tara</th>
-                  <th className="py-1">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.transit_tarabala.map((p) => <TaraRow key={p.planet} p={p} />)}
-              </tbody>
-            </table>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                    <th className="py-1 pr-3">Planet</th>
+                    <th className="py-1 pr-3">Current Nakshatra</th>
+                    <th className="py-1 pr-3">Tara</th>
+                    <th className="py-1">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.transit_tarabala.map((p) => <TaraRow key={p.planet} p={p} />)}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

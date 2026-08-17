@@ -119,21 +119,61 @@
   --space-10: var(--space-5);
   --space-12: var(--space-6);
 
-  /* ── Border Radius: no re-declare needed, radius.css import already
-     defines --radius-sm/-md/-lg/-xl (plus new --radius-xs/-2xl/-full) ── */
-
   /* ── Transitions (aliased to kit durations) ── */
   --transition-fast: var(--duration-fast) var(--ease-out);
   --transition-base: var(--duration-base) var(--ease-out);
   --transition-slow: var(--duration-slow) var(--ease-out);
 }
 
+:root.light,
+html.light {
+  /* ── Canvas / Background (Light Mode) ── */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-input: #ffffff;
 
+  /* ── Surface (Light Mode) ── */
+  --obsidian-canvas: #f8fafc;
+  --obsidian-surface: #ffffff;
+  --obsidian-surface-elevated: #f1f5f9;
+  --obsidian-surface-hover: #e2e8f0;
 
-/* ── Base Typography ── */
+  /* ── Borders (Light Mode) ── */
+  --border-primary: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --obsidian-border: #e2e8f0;
+  --obsidian-border-strong: #cbd5e1;
+
+  /* ── Text (Light Mode) ── */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-tertiary: #64748b;
+  --obsidian-text-primary: #0f172a;
+  --obsidian-text-secondary: #475569;
+  --obsidian-text-muted: #64748b;
+
+  /* ── Chart colors (Light Mode) ── */
+  --chart-bg: #ffffff;
+  --chart-border: rgba(249, 115, 22, 0.6);
+  --chart-text: #ea580c;
+  --chart-planet: #c2410c;
+  --chart-ascendant: #ef4444;
+
+  /* ── Accents Soft (Light Mode) ── */
+  --obsidian-accent-primary-soft: rgba(6, 182, 212, 0.12);
+  --obsidian-accent-secondary-soft: rgba(245, 158, 11, 0.12);
+  --obsidian-accent-tertiary-soft: rgba(139, 92, 246, 0.12);
+}
+
+/* ── Base Typography & Form Inputs ── */
 @layer base {
-  body {
+  html, body {
     @apply antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
     font-family: var(--font-inter);
     background-color: var(--bg-primary);
     color: var(--text-primary);
@@ -145,6 +185,16 @@
 
   code, pre, kbd, samp {
     font-family: var(--font-mono);
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+  select,
+  textarea {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-800 rounded-lg placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors;
+  }
+
+  label {
+    @apply text-slate-700 dark:text-slate-300 font-medium;
   }
 }
 
@@ -174,10 +224,7 @@
   }
 
   .obsidian-input {
-    @apply w-full rounded-lg px-3 py-2 text-sm transition-all outline-none;
-    background: var(--bg-card);
-    color: var(--text-primary);
-    border: 1px solid var(--border-primary);
+    @apply w-full rounded-lg px-3 py-2 text-sm transition-all outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500;
   }
   .obsidian-input:focus {
     border-color: var(--accent);
@@ -188,18 +235,14 @@
   }
 
   .obsidian-card {
-    @apply rounded-xl transition-all;
-    background: var(--bg-card);
-    border: 1px solid var(--border-primary);
+    @apply rounded-xl transition-all bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800;
   }
   .obsidian-card:hover {
     border-color: var(--border-hover);
   }
 
   .obsidian-card-glow {
-    @apply rounded-xl transition-all;
-    background: var(--bg-card);
-    border: 1px solid var(--border-primary);
+    @apply rounded-xl transition-all bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800;
   }
   .obsidian-card-glow:hover {
     border-color: var(--accent);
@@ -248,20 +291,12 @@
     box-shadow: var(--obsidian-glow-violet);
   }
 
-  /* ── Legacy aliases ──────────────────────────────────────────────────
-   * These class names are referenced across ~40 components (login,
-   * register, the birth-details/recompute forms, most chart panels) but
-   * were never actually defined anywhere in this stylesheet — every one
-   * of those elements was silently falling back to unstyled browser
-   * defaults (a plain white input/select, no card background, etc.)
-   * this whole time. Aliasing them to the real obsidian-* classes fixes
-   * every call site at once without touching ~40 files individually. */
+  /* ── Legacy aliases ── */
   .field-input {
     @apply obsidian-input;
   }
   .field-label {
-    @apply mb-1 block text-xs font-medium;
-    color: var(--text-secondary);
+    @apply mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300;
   }
   .glass-card {
     @apply obsidian-card;
@@ -276,21 +311,13 @@
     color: var(--status-danger);
   }
 
-  /* Native <select> dropdown lists are OS/browser-rendered and mostly
-   * unstyleable, but Chromium-based browsers do respect the select
-   * element's own background/color for the popup list — setting them
-   * here (rather than relying only on .obsidian-input/.field-input)
-   * is what actually fixes the white-background dropdown, not just the
-   * closed control. */
   select.obsidian-input,
   select.field-input {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-800;
   }
   select.obsidian-input option,
   select.field-input option {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100;
   }
 
   .obsidian-icon-bg {
