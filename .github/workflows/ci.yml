@@ -19,26 +19,25 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
       - name: Verify TypeScript Types
-        run: npm run typecheck --workspace=apps/web
+        run: pnpm --filter @workspace/web typecheck
 
       - name: Build Web Application
-        run: npm run build --workspace=apps/web
+        run: pnpm --filter @workspace/web build
 
-      - name: Start Production Web Server
-        run: npm run start --workspace=apps/web &
-
-      - name: Wait for Web Server
-        run: npx wait-on http://localhost:3000 --timeout 60000
-
-      - name: Run Playwright Site Health Crawler
-        run: node apps/web/scripts/crawl-site.js
+      - name: Run Playwright Health Crawler with Server Wait
+        run: npx start-server-and-test "pnpm --filter @workspace/web start" http://localhost:3000 "node apps/web/scripts/crawl-site.js"
 
       - name: Upload Crawler Reports & Screenshots
         if: always()
