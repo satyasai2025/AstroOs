@@ -29,7 +29,7 @@ jobs:
         run: pnpm --filter @workspace/web run typecheck
 
       - name: Install Playwright Browsers
-        run: npx playwright install chromium --with-deps
+        run: npx -y playwright install --with-deps chromium
         working-directory: apps/web
 
       - name: Build Web Application
@@ -40,7 +40,7 @@ jobs:
       - name: Start Next.js Server & Run Health Crawler
         run: |
           pnpm --filter @workspace/web run start &
-          npx wait-on http://127.0.0.1:3000 --timeout 60000
+          node -e "const http = require('http'); let tries = 0; function ping() { http.get('http://127.0.0.1:3000', (res) => { console.log('Next.js Server Ready!'); process.exit(0); }).on('error', (err) => { if (++tries > 45) { console.error('Server timeout'); process.exit(1); } setTimeout(ping, 1000); }); } ping();"
           pnpm --filter @workspace/web run crawl
         env:
           BASE_URL: http://127.0.0.1:3000
