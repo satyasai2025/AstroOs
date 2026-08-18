@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PredictionStepList } from "@/components/charts/predictions/PredictionStepList";
@@ -11,6 +11,9 @@ import { PredictionRelatedRules } from "@/components/charts/predictions/Predicti
 import { PredictionFactorsPanel } from "@/components/charts/predictions/PredictionFactorsPanel";
 import { PredictionChainGraph } from "@/components/charts/predictions/PredictionChainGraph";
 import { FormulaInspectorPanel } from "@/components/charts/predictions/FormulaInspectorPanel";
+import { TechniquesPanel } from "@/components/charts/predictions/TechniquesPanel";
+import { PredictionTimeline } from "@/components/charts/predictions/PredictionTimeline";
+import { BenchmarkLab } from "@/components/charts/predictions/BenchmarkLab";
 import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
@@ -35,19 +38,21 @@ function isLifeArea(v: string | null): v is LifeArea {
   return !!v && (AREA_KEYS as string[]).includes(v);
 }
 
-type TabId = "overview" | "formula" | "timeline" | "yogas" | "sources" | "ai" | "insights";
+type TabId = "overview" | "techniques" | "formula" | "timeline" | "benchmark_lab" | "yogas" | "sources" | "ai" | "insights";
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "overview", label: "Overview" },
+  { id: "techniques", label: "Techniques" },
   { id: "formula", label: "Formula Inspector" },
   { id: "timeline", label: "Timeline" },
+  { id: "benchmark_lab", label: "Research Lab" },
   { id: "insights", label: "Heatmap / Radar" },
   { id: "yogas", label: "Yogas" },
   { id: "sources", label: "Sources" },
   { id: "ai", label: "AI Explain" },
 ];
 
-export default function PredictionsPage() {
+function PredictionsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -280,6 +285,10 @@ export default function PredictionsPage() {
               </div>
             )}
 
+            {activeTab === "techniques" && (
+              <TechniquesPanel workflowResult={storeResult} />
+            )}
+
             {activeTab === "formula" && (
               <div className="grid grid-cols-1 gap-5 lg:grid-cols-[280px_1fr]">
                 <PredictionStepList nodes={graph.nodes} selectedId={selectedNodeId} onSelect={setSelectedNodeId} />
@@ -288,11 +297,20 @@ export default function PredictionsPage() {
             )}
 
             {activeTab === "timeline" && (
-              <div className="glass-card p-6">
-                <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
-                  Dasha Timeline
-                </h3>
-                <PredictionDashaTimeline entries={graph.dashaTimeline} />
+              <div className="space-y-6">
+                <PredictionTimeline workflowResult={storeResult} />
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)" }}>
+                    Classical Dasha Hierarchy
+                  </h3>
+                  <PredictionDashaTimeline entries={graph.dashaTimeline} />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "benchmark_lab" && (
+              <div className="flex flex-col gap-5">
+                <BenchmarkLab />
               </div>
             )}
 
@@ -386,5 +404,13 @@ export default function PredictionsPage() {
         )}
       </div>
     </>
+  );
+}
+
+export default function PredictionsPage() {
+  return (
+    <Suspense fallback={null}>
+      <PredictionsPageContent />
+    </Suspense>
   );
 }

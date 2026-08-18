@@ -99,10 +99,35 @@ export function SettingsLayout({ children, title, description }: SettingsLayoutP
 
   return (
     <AppShell>
-      <div className="flex min-h-[calc(100vh-73px)]">
-        {/* Settings Sidebar */}
+      <div className="flex flex-col md:flex-row min-h-[calc(100vh-73px)]">
+        {/* Mobile Settings Tab Bar */}
+        <div
+          className="flex md:hidden overflow-x-auto border-b p-2 gap-1.5 scrollbar-none"
+          style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+        >
+          {SETTINGS_NAV.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap transition-all"
+                style={{
+                  backgroundColor: isActive ? "var(--obsidian-accent-primary-soft)" : "transparent",
+                  color: isActive ? "var(--accent)" : "var(--text-secondary)",
+                  border: isActive ? "1px solid var(--accent)" : "1px solid transparent",
+                }}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Desktop Settings Sidebar */}
         <aside
-          className="w-64 flex-shrink-0 border-r"
+          className="hidden md:block w-64 flex-shrink-0 border-r"
           style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
         >
           <nav className="sticky top-0 p-4">
@@ -118,8 +143,9 @@ export function SettingsLayout({ children, title, description }: SettingsLayoutP
                     href={item.href}
                     className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all"
                     style={{
-                      backgroundColor: isActive ? "var(--border-primary)" : "transparent",
+                      backgroundColor: isActive ? "var(--obsidian-accent-primary-soft)" : "transparent",
                       color: isActive ? "var(--accent)" : "var(--text-secondary)",
+                      border: isActive ? "1px solid var(--border-primary)" : "1px solid transparent",
                     }}
                   >
                     {item.icon}
@@ -133,17 +159,17 @@ export function SettingsLayout({ children, title, description }: SettingsLayoutP
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto">
-          <div className="mx-auto max-w-5xl px-6 py-8">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8">
             {/* Header */}
             <div className="mb-8">
               <h1
-                className="text-3xl font-bold"
+                className="text-2xl sm:text-3xl font-bold"
                 style={{ color: "var(--text-primary)", fontFamily: "var(--font-outfit)" }}
               >
                 {title}
               </h1>
               {description && (
-                <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+                <p className="mt-1 text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
                   {description}
                 </p>
               )}

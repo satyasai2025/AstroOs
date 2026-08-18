@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
@@ -118,7 +118,7 @@ const DASHA_SUBVIEW_HELP: Record<DashaSubView, string> = {
     "Exports the currently-displayed dasha tree as a CSV (one row per period, opens directly in Excel/Sheets) — a raw data snapshot, not a formatted narrative report.",
 };
 
-export default function ChartsPage() {
+function ChartsPageContent() {
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
   const searchParams = useSearchParams();
@@ -666,5 +666,13 @@ export default function ChartsPage() {
         <div id="panel-divisional" role="tabpanel" aria-label="Divisional charts panel"><VargaExplorer chart={chart} vargas={vargas} transits={result.transits} selectedVarga={selectedVarga} setSelectedVarga={setSelectedVarga} /></div>
       )}
     </>
+  );
+}
+
+export default function ChartsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ChartsPageContent />
+    </Suspense>
   );
 }

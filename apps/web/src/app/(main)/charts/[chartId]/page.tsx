@@ -27,10 +27,35 @@ import type { BirthChartSummary, WorkflowAnalysisRequest } from "@/lib/types";
  *     chart's own id, so the recompute never writes a duplicate
  *     birth_charts row — see WorkflowAnalysisRequest.persist.
  */
+const KNOWN_VIEW_REDIRECTS: Record<string, string> = {
+  houses: "houses",
+  relationships: "relationships-v2",
+  "relationships-v2": "relationships-v2",
+  dasha: "dasha",
+  yogas: "yogas",
+  ashtakavarga: "ashtakavarga",
+  strength: "strength",
+  kp: "kp",
+  jaimini: "jaimini",
+  planets: "planets",
+  divisional: "divisional",
+  kundli: "kundli",
+  birth: "chart",
+  chart: "chart",
+  timeline: "timeline",
+  predictions: "predictions",
+};
+
 export default function ChartDetailPage() {
   const params = useParams<{ chartId: string }>();
   const router = useRouter();
   const chartId = params.chartId;
+
+  useEffect(() => {
+    if (chartId && KNOWN_VIEW_REDIRECTS[chartId]) {
+      router.replace(`/charts?view=${KNOWN_VIEW_REDIRECTS[chartId]}`);
+    }
+  }, [chartId, router]);
 
   const storeResult = useWorkflowStore((s) => s.result);
   const storeRequest = useWorkflowStore((s) => s.request);
@@ -46,6 +71,7 @@ export default function ChartDetailPage() {
   const [autoRecomputeStarted, setAutoRecomputeStarted] = useState(false);
 
   useEffect(() => {
+    if (chartId && KNOWN_VIEW_REDIRECTS[chartId]) return;
     if (hasMatchingResult || autoRecomputeStarted || !summary) return;
     setAutoRecomputeStarted(true);
     const request: WorkflowAnalysisRequest = {

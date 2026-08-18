@@ -16,7 +16,7 @@ import { useMyCharts } from "@/lib/charts";
 import { useLiveTransit, useTransitPatterns } from "@/lib/transitPatterns";
 import type { BirthChartSummary, TransitPatternsRequest, TransitPlanetResponse, TransitRequest, WorkflowAnalysisRequest } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 /**
  * /charts/transit — Transit Analysis console, rebuilt to match the
@@ -68,7 +68,7 @@ function aspectTypeLabel(aspectType: string): string {
   return aspectType === "special_graha" ? "special aspect" : aspectType;
 }
 
-export default function TransitAnalysisPage() {
+function TransitAnalysisPageContent() {
   const searchParams = useSearchParams();
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
@@ -867,5 +867,13 @@ export default function TransitAnalysisPage() {
         </>
       )}
     </SplitWorkspaceLayout>
+  );
+}
+
+export default function TransitAnalysisPage() {
+  return (
+    <Suspense fallback={null}>
+      <TransitAnalysisPageContent />
+    </Suspense>
   );
 }

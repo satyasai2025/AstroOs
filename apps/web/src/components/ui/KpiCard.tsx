@@ -65,6 +65,7 @@ export function KpiCard({ label, value, delta, deltaDirection = "up", accent = "
         {icon && <span style={{ color: a.text }}>{icon}</span>}
       </div>
       <div
+        suppressHydrationWarning
         className={`${typeof value === "string" && value.length > 4 ? "text-xl" : "text-3xl"} font-bold text-slate-900 dark:text-slate-100`}
         style={{
           fontFamily: "var(--font-display)",

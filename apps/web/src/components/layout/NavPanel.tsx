@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { useWorkflowStore } from "@/lib/store";
 
 import { NAV_CONFIG as NAV_GROUPS, SHOW_BETA_FEATURES, isRouteActive, type NavItem, type NavModule, type NavGroup } from "@/config/navConfig";
@@ -188,7 +188,7 @@ interface NavPanelProps {
   collapsed?: boolean;
 }
 
-export default function NavPanel({
+function NavPanelInner({
   className = "",
   onNavigate,
   currentView = "",
@@ -603,5 +603,13 @@ export default function NavPanel({
         )}
       </div>
     </aside>
+  );
+}
+
+export default function NavPanel(props: NavPanelProps) {
+  return (
+    <Suspense fallback={null}>
+      <NavPanelInner {...props} />
+    </Suspense>
   );
 }

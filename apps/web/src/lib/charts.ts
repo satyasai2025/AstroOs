@@ -53,3 +53,62 @@ export function useSetDefaultChart() {
     },
   });
 }
+
+import { useCallback, useMemo } from "react";
+import { useWorkflowStore } from "./store";
+import { useAnalyzeWorkflow } from "./workflow";
+import type { BirthChartSummary, WorkflowAnalysisRequest } from "./types";
+
+/**
+ * Global Active Chart Hook.
+ * Synchronizes with useWorkflowStore and useMyCharts to provide the active
+ * chart result, request, summary, and a selectChart() function.
+ */
+export function useActiveChart() {
+  const { result, request, setResult } = useWorkflowStore();
+  const { data: myCharts, isLoading: isLoadingCharts } = useMyCharts();
+  const analyze = useAnalyzeWorkflow();
+
+  const selectChart = useCallback(
+    async (chart: BirthChartSummary) => {
+      const req: WorkflowAnalysisRequest = {
+        birth_datetime_utc: chart.birth_datetime_utc,
+        latitude: chart.birth_latitude,
+        longitude: chart.birth_longitude,
+        ayanamsa: (chart.ayanamsa || "lahiri") as WorkflowAnalysisRequest["ayanamsa"],
+        house_system: (chart.house_system || "placidus") as WorkflowAnalysisRequest["house_system"],
+        dasha_system: "vimshottari",
+        include_vargas: true,
+        subject_name: chart.subject_name,
+        place_name: chart.place_name,
+        persist: false,
+        chart_id: chart.id,
+      };
+      const data = await analyze.mutateAsync(req);
+      setResult(data, req);
+      return data;
+    },
+    [analyze, setResult]
+  );
+
+  const activeSummary = useMemo(() => {
+    if (!myCharts?.charts?.length) return null;
+    if (request?.chart_id) {
+      return myCharts.charts.find((c) => c.id === request.chart_id) || null;
+    }
+    if (request?.subject_name) {
+      return myCharts.charts.find((c) => c.subject_name === request.subject_name) || null;
+    }
+    return myCharts.charts.find((c) => c.is_default) || myCharts.charts[0] || null;
+  }, [myCharts, request]);
+
+  return {
+    result,
+    request,
+    activeSummary,
+    myCharts: myCharts?.charts || [],
+    isLoading: isLoadingCharts || analyze.isPending,
+    selectChart,
+  };
+}
+

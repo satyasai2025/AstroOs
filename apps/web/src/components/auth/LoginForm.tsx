@@ -108,8 +108,7 @@ export function LoginForm() {
       <div className="text-center pt-0.5">
         <Link
           href="/forgot-password"
-          className="text-xs transition hover:underline"
-          style={{ color: "var(--accent)" }}
+          className="text-xs transition hover:underline font-medium text-cyan-700 dark:text-cyan-400"
         >
           Forgot password?
         </Link>

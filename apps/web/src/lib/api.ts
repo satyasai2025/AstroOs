@@ -292,6 +292,17 @@ async function _fetch<T>(
 
   // Attempt token refresh on first 401
   if (res.status === 401 && _retry) {
+    if (path.includes("/auth/login") || path.includes("/auth/register") || path.includes("/auth/refresh")) {
+      let detail = "Invalid email or password.";
+      try {
+        const body = await res.json();
+        detail = _normaliseErrorDetail(body.detail) ?? detail;
+      } catch {
+        // ignore JSON parse errors
+      }
+      throw new ApiError(401, detail);
+    }
+
     const refreshed = await _tryRefresh();
     if (refreshed) {
       return _fetch<T>(path, init, false);

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { GuruResearchLayer } from "../research/GuruResearchLayer";
 
 /* ------------------------------------------------------------------ */
 /*  Types & Mock Data                                                 */
@@ -464,6 +465,9 @@ export default function ResearchDashboard() {
 
       {/* ── Quick Actions ── */}
       <QuickActions />
+
+      {/* ── Guru Research Layer (Teacher Research Slices) ── */}
+      <GuruResearchLayer />
 
       {/* ── Main Content Grid (Datasets + Showcase) ── */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

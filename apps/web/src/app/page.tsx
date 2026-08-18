@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="flex min-h-dvh flex-col justify-between bg-slate-50 dark:bg-[#0b0f17] text-slate-900 dark:text-slate-100 px-4 py-6 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-200">
       {/* Background ambient lighting */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[700px] rounded-full bg-cyan-500/10 dark:bg-cyan-500/5 blur-[120px]" />
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[350px] w-[500px] rounded-full bg-amber-500/10 dark:bg-amber-500/5 blur-[100px]" />
       </div>

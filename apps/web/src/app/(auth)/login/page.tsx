@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Sign In" };
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-12" style={{ backgroundColor: "var(--bg-primary)" }}>
+    <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-12" style={{ backgroundColor: "var(--bg-primary)" }}>
       <div className="w-full max-w-sm animate-slide-up">
         {/* Header */}
         <div className="mb-6 text-center">
@@ -18,7 +18,7 @@ export default function LoginPage() {
               ॐ
             </span>
             <span className="text-2xl font-bold tracking-wide" style={{ color: "var(--text-primary)" }}>
-              ASTRO<span style={{ color: "var(--accent)" }}>OS</span>
+              ASTRO<span className="text-cyan-700 dark:text-cyan-400 font-bold">OS</span>
             </span>
           </Link>
           <h1 className="text-xl font-bold" style={{ color: "var(--text-primary)" }}>
@@ -40,7 +40,7 @@ export default function LoginPage() {
           <LoginForm />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

@@ -331,3 +331,16 @@ class UserRepository:
         )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none() is not None
+
+    async def soft_delete(self, user_id: UserId) -> bool:
+        """Soft delete a user account and mark status as suspended."""
+        now = datetime.now(timezone.utc)
+        stmt = (
+            update(UserModel)
+            .where(UserModel.id == user_id.value, UserModel.deleted_at.is_(None))
+            .values(deleted_at=now, status=UserStatus.SUSPENDED)
+            .returning(UserModel.id)
+        )
+        result = await self._session.execute(stmt)
+        return result.scalar_one_or_none() is not None
+

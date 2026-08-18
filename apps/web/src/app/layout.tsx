@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { Suspense } from "react";
 
 // Google Fonts: Outfit (headings), Inter (body UI), JetBrains Mono (code), Noto Serif Devanagari (Sanskrit)
 const fontHeadings = "https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap";
@@ -11,7 +12,7 @@ const fontVedic = "https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagar
 
 export const metadata: Metadata = {
   title: {
-    default: "AstroOS — Vedic Astrology Research Platform",
+    default: "AstroOS - Vedic Astrology Research Platform",
     template: "%s | AstroOS",
   },
   description:
@@ -20,8 +21,6 @@ export const metadata: Metadata = {
   authors: [{ name: "AstroOS" }],
   robots: "noindex, nofollow", // Private research platform
 };
-
-import { Suspense } from "react";
 
 export default function RootLayout({
   children,

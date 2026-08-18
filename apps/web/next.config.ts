@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: path.join(__dirname, "..", ".."),
   // ── Rewrites ────────────────────────────────────────────────────────────────
   // beforeFiles aliases run before file-system routes.
   // afterFiles keeps the existing /api/* → FastAPI proxy unchanged.

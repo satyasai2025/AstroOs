@@ -124,3 +124,22 @@ export function useChangePassword() {
     },
   });
 }
+
+// ── Delete Account ────────────────────────────────────────────────────────────
+
+export function useDeleteAccount() {
+  const queryClient = useQueryClient();
+
+  return useMutation<MessageResponse, Error, void>({
+    mutationFn: () => api.delete<MessageResponse>("/api/v1/auth/me"),
+    onSuccess: () => {
+      tokenStore.clear();
+      queryClient.clear();
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+        window.location.href = "/auth/login";
+      }
+    },
+  });
+}
+

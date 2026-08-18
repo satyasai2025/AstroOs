@@ -522,9 +522,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           loaded this session; no placeholder/demo chart is substituted. */}
       {activeResult && (
         <div className="mb-3">
-          <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
+          <h2 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
             Chart KPI Scorecards
-          </h3>
+          </h2>
           <KpiScorecards result={activeResult} />
         </div>
       )}
@@ -533,9 +533,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           loaded this session; no placeholder/demo chart is substituted. */}
       <div className="mb-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
         <Card>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-cyan-700 dark:text-cyan-400">
             Current Dasha &amp; Transit
-          </h3>
+          </h2>
           {activeResult ? (
             <div className="space-y-2 text-xs">
               {activeSubjectName && (
@@ -598,9 +598,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
         </Card>
 
         <Card>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
             Active Yogas
-          </h3>
+          </h2>
           {activeResult ? (
             topYogas.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -643,9 +643,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
         <Card>
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-charts)" }}>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-cyan-700 dark:text-cyan-400">
               Recent Charts
-            </h3>
+            </h2>
             <Link href="/charts/history" className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>
               View all
             </Link>
@@ -667,9 +667,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
 
         <Card>
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-research)" }}>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-400">
               Research Activity
-            </h3>
+            </h2>
             {hasSession && (
               <Link href="/research/projects" className="text-[11px] underline" style={{ color: "var(--text-muted)" }}>
                 View all
@@ -690,9 +690,9 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
         </Card>
 
         <Card>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--section-ai)" }}>
+          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-indigo-700 dark:text-indigo-400">
             Quick Actions
-          </h3>
+          </h2>
           <div className="grid grid-cols-1 gap-2">
             <QuickAction
               onClick={onStartNewChart}

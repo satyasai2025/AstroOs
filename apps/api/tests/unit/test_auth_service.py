@@ -25,7 +25,7 @@ from apps.api.services.auth_service import (
     RegistrationError,
 )
 from apps.api.services.dtos import AuthResultDTO, AuthTokensDTO
-from tests.conftest import make_user
+from apps.api.tests.conftest import make_user
 
 # ── Shared mock tokens ────────────────────────────────────────────────────────
 

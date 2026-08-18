@@ -174,3 +174,31 @@ def test_benefic_malefic_same_nakshatra_zeroes_entire_total():
     assert result.zeroed_by_malefic_conjunction is True
     assert result.total_score == 0.0
     assert result.hits[0].score > 0  # per-hit score is untouched; only the total is zeroed
+
+
+# ── Dual Benefic & Malefic Vedha Evaluation ─────────────────────────────────
+
+def test_evaluate_full_dual_benefic_and_malefic_vedhas():
+    engine = SBCVedhaEngine()
+    jupiter = _planet("jupiter", "dhanishtha", speed=0.08)  # front -> Vishakha (cellnum 72)
+    saturn = _planet("saturn", "shatabhisha", retrograde=True)  # right -> Abhijit (cellnum 75)
+
+    sensitive_points = [
+        {"key": "janma", "name": "Janma", "nakshatra_token": "vishakha", "nakshatra_name": "Vishakha", "nakshatra_number": 16, "cellnum": 72},
+        {"key": "vainashika", "name": "Vainashika", "nakshatra_token": "abhijit", "nakshatra_name": "Abhijit", "nakshatra_number": 28, "cellnum": 75},
+    ]
+
+    analysis = engine.evaluate_full(sensitive_points, [jupiter, saturn], janma_nakshatra="vishakha")
+
+    assert len(analysis.benefic_vedhas) >= 1
+    assert any(b.planet == "jupiter" and "Janma" in b.target_points for b in analysis.benefic_vedhas)
+
+    assert len(analysis.malefic_vedhas) >= 1
+    assert any(m.planet == "saturn" and "Vainashika" in m.target_points for m in analysis.malefic_vedhas)
+
+    janma_pt = next(p for p in analysis.sensitive_points if p.key == "janma")
+    assert janma_pt.status == "activated"
+
+    vainashika_pt = next(p for p in analysis.sensitive_points if p.key == "vainashika")
+    assert vainashika_pt.status == "afflicted"
+

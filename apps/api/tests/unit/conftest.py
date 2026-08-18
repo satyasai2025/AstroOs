@@ -14,7 +14,7 @@ import sys
 
 import pytest
 
-from tests.conftest import require_test_db  # noqa: F401
+from apps.api.tests.conftest import require_test_db  # noqa: F401
 
 from apps.api.domain.dasha import DashaPeriod, DashaTree
 from apps.api.domain.events import EventRecord

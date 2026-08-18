@@ -118,20 +118,22 @@ def _dict_to_condition(d: dict[str, Any]) -> Condition | ConditionGroup:
 
 
 def rule_from_dict(d: dict[str, Any]) -> RuleDefinition:
-    for required in ("rule_id", "rule_name"):
-        if not d.get(required):
-            raise RuleSerializationError(f"rule missing required field {required!r}")
+    rule_id = d.get("rule_id")
+    rule_name = d.get("rule_name") or d.get("name")
+    if not rule_id or not rule_name:
+        raise RuleSerializationError("rule missing required field 'rule_id' or 'rule_name'")
     conclusion_data = d.get("conclusion") or {}
+    derived_facts = conclusion_data.get("derived_facts") or d.get("derived_facts", {})
     return RuleDefinition(
-        rule_id=d["rule_id"],
+        rule_id=rule_id,
         rule_version=str(d.get("rule_version", "1.0")),
-        rule_name=d["rule_name"],
+        rule_name=rule_name,
         source_text=d.get("source_text", ""),
         priority=int(d.get("priority", 1)),
         category=d.get("category", "imported"),
         conditions=tuple(_dict_to_condition(c) for c in d.get("conditions", ())),
         conclusion=Conclusion(
-            derived_facts=dict(conclusion_data.get("derived_facts", {})),
+            derived_facts=dict(derived_facts),
             description=conclusion_data.get("description", ""),
         ),
         explanation=d.get("explanation", ""),

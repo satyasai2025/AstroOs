@@ -21,7 +21,9 @@ TOTAL_DEGREES: Final[float] = 360.0
 TOTAL_NAKSHATRAS: Final[int] = 27
 DEGREES_PER_NAKSHATRA: Final[float] = 360.0 / 27  # 13°20'
 PADAS_PER_NAKSHATRA: Final[int] = 4
+DEGREES_PER_PADA: Final[float] = DEGREES_PER_NAKSHATRA / 4  # 3°20'
 TOTAL_PADAS: Final[int] = TOTAL_NAKSHATRAS * PADAS_PER_NAKSHATRA  # 108
+
 
 # ── Vimshottari Dasha ─────────────────────────────────────────────────────────
 #
