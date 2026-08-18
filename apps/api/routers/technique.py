@@ -42,6 +42,9 @@ from apps.api.schemas.technique import (
     InputAvailabilitySchema,
     RuleRefSchema,
     TechniqueDetail,
+    TechniqueEvaluateChartRequest,
+    TechniqueEvaluateChartResponse,
+    TechniqueEvaluationItem,
     TechniqueExecuteRequest,
     TechniqueExecuteResponse,
     TechniqueImportRequest,
@@ -52,8 +55,10 @@ from apps.api.schemas.technique import (
     ValidationCaseSchema,
 )
 from apps.api.services import technique_registry
+from apps.api.services.ai_engine import AIEngine
 from apps.api.services.fact_registry import FactRegistry
 from apps.api.services.technique_engine import TechniqueEngine, to_prediction_evidence
+from apps.api.services.technique_resolver import TechniqueResolver
 from apps.api.services.technique_import_pipeline import (
     TechniqueImportPipeline,
     ValidationSample,
@@ -238,6 +243,63 @@ async def execute_technique(
         evidence=list(result.evidence),
         unresolved_inconsistencies=list(result.unresolved_inconsistencies),
         prediction=_prediction_schema(technique, result),
+    )
+
+
+@router.post("/evaluate-chart", response_model=TechniqueEvaluateChartResponse)
+async def evaluate_chart(
+    body: TechniqueEvaluateChartRequest,
+) -> TechniqueEvaluateChartResponse:
+    """Evaluate all applicable techniques against supplied facts (from an active chart)."""
+    facts = _facts_from_dict(body.facts)
+    resolver = TechniqueResolver()
+    techniques = resolver.resolve_applicable(facts, objective=body.objective)
+    engine = TechniqueEngine()
+
+    evaluations: list[TechniqueEvaluationItem] = []
+    for tech in techniques:
+        result = engine.execute(tech, facts)
+        prediction = to_prediction_evidence(tech, result)
+        ai_resp = AIEngine.explain_technique(tech, result)
+
+        evaluations.append(
+            TechniqueEvaluationItem(
+                technique_id=tech.technique_id,
+                technique_name=tech.name,
+                tradition=tech.tradition,
+                objective=tech.objective,
+                version=tech.version,
+                confidence=result.confidence,
+                confidence_basis=result.confidence_basis,
+                is_matched=prediction.is_matched,
+                triggers=[
+                    TriggerSchema(
+                        rule_id=t.rule_id,
+                        rule_name=t.rule_name,
+                        role=t.role.value,
+                        status=t.status.value,
+                        provenance=t.provenance.value,
+                        matched_conditions=list(t.matched_conditions),
+                        failed_conditions=list(t.failed_conditions),
+                        missing_facts=list(t.missing_facts),
+                        explanation=t.explanation,
+                    )
+                    for t in result.triggers
+                ],
+                evidence=list(result.evidence),
+                ai_explanation={
+                    "title": ai_resp.title,
+                    "summary": ai_resp.summary,
+                    "body": ai_resp.body,
+                },
+            )
+        )
+
+    evaluations.sort(key=lambda e: (e.is_matched, e.confidence), reverse=True)
+
+    return TechniqueEvaluateChartResponse(
+        evaluations=evaluations,
+        total_evaluated=len(evaluations),
     )
 
 

@@ -11,6 +11,7 @@
 
 "use client";
 
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api";
 
 // ── Types (mirror of backend schemas) ────────────────────────────────────────
@@ -570,3 +571,28 @@ export const exportApi = {
     });
   },
 };
+
+// ── React Query Hooks ────────────────────────────────────────────────────────
+
+export function useResearchProjects(userId?: string) {
+  return useQuery({
+    queryKey: ["research", "projects", userId],
+    queryFn: () => (userId ? researchProjectsApi.list(userId) : Promise.resolve({ projects: [], total: 0 })),
+    enabled: !!userId,
+  });
+}
+
+export function useQueryLogs(limit = 10) {
+  return useQuery({
+    queryKey: ["research", "logs", limit],
+    queryFn: () => researchModeApi.listLogs({ limit }),
+  });
+}
+
+export function useHypotheses(projectId?: string) {
+  return useQuery({
+    queryKey: ["research", "hypotheses", projectId],
+    queryFn: () => hypothesisValidationApi.list({ project_id: projectId }),
+  });
+}
+

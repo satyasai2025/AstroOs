@@ -141,3 +141,27 @@ class TechniqueExecuteResponse(BaseModel):
         "contract — the shape Jaimini yogas already return — for callers that "
         "want one prediction/evidence type across engines."
     )
+
+
+class TechniqueEvaluationItem(BaseModel):
+    technique_id: str
+    technique_name: str
+    tradition: str
+    objective: str
+    version: int
+    confidence: int
+    confidence_basis: str
+    is_matched: bool
+    triggers: list[TriggerSchema]
+    evidence: list[str]
+    ai_explanation: Optional[dict[str, Any]] = None
+
+
+class TechniqueEvaluateChartRequest(BaseModel):
+    facts: dict[str, Any] = Field(default_factory=dict)
+    objective: Optional[str] = None
+
+
+class TechniqueEvaluateChartResponse(BaseModel):
+    evaluations: list[TechniqueEvaluationItem]
+    total_evaluated: int

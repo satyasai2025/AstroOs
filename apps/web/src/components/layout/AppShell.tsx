@@ -8,9 +8,11 @@ import { useCurrentUser, useLogout } from "@/lib/auth";
 import { useWorkflowStore } from "@/lib/store";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 import { CommandPalette } from "./CommandPalette";
+import { ActiveChartSelectorModal } from "./ActiveChartSelectorModal";
+
 
 import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
 import { ShareButton } from "@/components/ui";
@@ -222,7 +224,7 @@ export function NavIcon({ name }: { name: string }) {
   }
 }
 
-export function AppShell({
+function AppShellInner({
   children,
   sectionColor,
 }: {
@@ -243,6 +245,8 @@ export function AppShell({
   useEffect(() => setMounted(true), []);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [quickActionOpen, setQuickActionOpen] = useState(false);
+  const [chartSelectorOpen, setChartSelectorOpen] = useState(false);
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -598,19 +602,27 @@ export function AppShell({
                 className="flex items-center gap-2 rounded-lg border px-2.5 py-1 text-xs transition"
                 style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}
               >
-                <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--accent)" }} />
-                <span className="font-semibold max-w-[140px] truncate" style={{ color: "var(--text-primary)" }}>
-                  {request.subject_name || "Active Chart"}
-                </span>
-                {request.place_name && (
-                  <span className="text-[10px] hidden lg:inline max-w-[100px] truncate" style={{ color: "var(--text-muted)" }}>
-                    · {request.place_name}
+                <button
+                  type="button"
+                  onClick={() => setChartSelectorOpen(true)}
+                  className="flex items-center gap-1.5 hover:opacity-80 transition cursor-pointer text-left"
+                  title="Click to switch active chart"
+                >
+                  <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--accent)" }} />
+                  <span className="font-semibold max-w-[140px] truncate" style={{ color: "var(--text-primary)" }}>
+                    {request.subject_name || "Active Chart"}
                   </span>
-                )}
+                  {request.place_name && (
+                    <span className="text-[10px] hidden lg:inline max-w-[100px] truncate" style={{ color: "var(--text-muted)" }}>
+                      · {request.place_name}
+                    </span>
+                  )}
+                  <span className="text-[10px] text-muted-foreground ml-0.5">▾</span>
+                </button>
                 <button
                   type="button"
                   onClick={() => router.push("/charts/birth")}
-                  className="ml-1 text-[11px] font-semibold hover:underline"
+                  className="ml-1 text-[11px] font-semibold hover:underline cursor-pointer"
                   style={{ color: "var(--accent)" }}
                   title="View active birth chart"
                 >
@@ -620,14 +632,15 @@ export function AppShell({
             ) : (
               <button
                 type="button"
-                onClick={() => openCreateModal()}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition shadow-sm"
+                onClick={() => setChartSelectorOpen(true)}
+                className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition shadow-sm cursor-pointer"
               >
                 <NavIcon name="plus" />
                 <span>Select Chart</span>
               </button>
             )}
           </div>
+
 
           <div className="flex items-center gap-3">
             {sidebarCollapsed && (
@@ -810,7 +823,7 @@ export function AppShell({
 
 
         <main
-          className="mx-auto w-full max-w-7xl flex-1 min-w-0 overflow-x-hidden p-3 md:p-4"
+          className="mx-auto w-full max-w-[1800px] flex-1 min-w-0 overflow-x-hidden px-3 sm:px-4 lg:px-6 xl:px-8 py-3 md:py-4"
           style={
             sectionColor
               ? ({
@@ -824,7 +837,20 @@ export function AppShell({
         </main>
         
         <CommandPalette />
+        <ActiveChartSelectorModal isOpen={chartSelectorOpen} onClose={() => setChartSelectorOpen(false)} />
       </div>
     </div>
+  );
+}
+
+
+export function AppShell(props: {
+  children: React.ReactNode;
+  sectionColor?: string;
+}) {
+  return (
+    <Suspense fallback={null}>
+      <AppShellInner {...props} />
+    </Suspense>
   );
 }

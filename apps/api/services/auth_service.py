@@ -382,3 +382,13 @@ class AuthService:
             raise AuthError("User not found.")
 
         return user
+
+    async def delete_account(self, user: User) -> None:
+        """
+        Soft delete the user and revoke all active sessions.
+        """
+        await self._user_repo.revoke_all_sessions(user.id)
+        deleted = await self._user_repo.soft_delete(user.id)
+        if not deleted:
+            raise AuthError("User not found or already deleted.", status_code=404)
+

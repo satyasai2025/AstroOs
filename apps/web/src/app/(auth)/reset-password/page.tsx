@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Reset Password" };
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
+    <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm animate-slide-up">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -36,6 +36,6 @@ export default function ResetPasswordPage() {
           </Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

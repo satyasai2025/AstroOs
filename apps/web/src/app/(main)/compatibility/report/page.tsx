@@ -14,7 +14,7 @@ import {
 } from "@/lib/research";
 import { useWorkflowStore } from "@/lib/store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 type RelationshipType = "marriage" | "business" | "friendship" | "parent_child";
 
@@ -103,7 +103,7 @@ const TABS: { key: TabKey; label: string }[] = [
 
 import { ShareButton } from "@/components/ui";
 
-export default function CompatibilityReportPage() {
+function CompatibilityReportPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
@@ -1218,5 +1218,13 @@ export default function CompatibilityReportPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CompatibilityReportPage() {
+  return (
+    <Suspense fallback={null}>
+      <CompatibilityReportPageContent />
+    </Suspense>
   );
 }

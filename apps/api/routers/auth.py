@@ -266,3 +266,20 @@ async def change_password(
     return MessageResponse(
         message="Password updated. Please sign in again with your new password."
     )
+
+
+@router.delete(
+    "/me",
+    response_model=MessageResponse,
+    summary="Delete the authenticated user's account.",
+)
+async def delete_me(
+    current_user: User = Depends(get_current_user_from_bearer),
+    auth_service: AuthService = Depends(get_auth_service),
+) -> MessageResponse:
+    try:
+        await auth_service.delete_account(current_user)
+    except AuthError as exc:
+        raise _handle_auth_error(exc) from exc
+    return MessageResponse(message="Account deleted successfully.")
+

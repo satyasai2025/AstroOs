@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { Suspense, useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Badge, Card, KpiCard, Select, Table, Tabs } from "@/components/ui";
 import {
@@ -1390,7 +1390,7 @@ function CombinedTab({ selectedNak }: { selectedNak: NakshatraDef | null }) {
 
 // ── Main Page ──────────────────────────────────────────────────────────────────
 
-export default function NakshatraPage() {
+function NakshatraPageContent() {
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState<TabId>("overview");
@@ -1436,5 +1436,13 @@ export default function NakshatraPage() {
         {activeTab === "combined" && <CombinedTab selectedNak={selectedNak} />}
       </div>
     </>
+  );
+}
+
+export default function NakshatraPage() {
+  return (
+    <Suspense fallback={null}>
+      <NakshatraPageContent />
+    </Suspense>
   );
 }

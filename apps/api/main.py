@@ -35,6 +35,7 @@ from apps.api.routers import auth
 from apps.api.routers import batch as batch_router
 from apps.api.routers import benchmark as benchmark_router
 from apps.api.routers import calendar as calendar_router
+from apps.api.routers import continuous_monitoring as continuous_monitoring_router
 from apps.api.routers import dasha as dasha_router
 from apps.api.routers import dataset_import as dataset_import_router
 from apps.api.routers import datasets as datasets_router
@@ -44,7 +45,10 @@ from apps.api.routers import events as events_router
 from apps.api.routers import event_analysis as event_analysis_router
 from apps.api.routers import export as export_router
 from apps.api.routers import geocoding as geocoding_router
+from apps.api.routers import governance as governance_router
+from apps.api.routers import guru_research as guru_research_router
 from apps.api.routers import horoscope as horoscope_router
+from apps.api.routers import intelligence as intelligence_router
 from apps.api.routers import jaimini as jaimini_router
 from apps.api.routers import jobs as jobs_router
 from apps.api.routers import knowledge as knowledge_router
@@ -64,6 +68,9 @@ from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
 from apps.api.routers import tarabala as tarabala_router
 from apps.api.routers import technique as technique_router
+from apps.api.routers import benchmark as benchmark_router
+from apps.api.routers import prediction_orchestration as prediction_orchestration_router
+from apps.api.routers import research_calibration as research_calibration_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
 # Imported for its side effect: registers the /patterns route onto
@@ -335,6 +342,9 @@ def create_app() -> FastAPI:
         technique_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
+        prediction_orchestration_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         timeline_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
@@ -364,6 +374,15 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         benchmark_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        governance_router.router, dependencies=_authenticated
+    )
+    app.include_router(
+        continuous_monitoring_router.router, dependencies=_authenticated
+    )
+    app.include_router(
+        intelligence_router.router, dependencies=_authenticated
     )
     app.include_router(
         geocoding_router.router, prefix="/api/v1", dependencies=_authenticated
@@ -398,10 +417,19 @@ def create_app() -> FastAPI:
         research_router.router, prefix="/api/v1", dependencies=_researcher
     )
     app.include_router(
+        research_calibration_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        benchmark_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         digital_twin_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         research_tools_router.router, prefix="/api/v1", dependencies=_researcher
+    )
+    app.include_router(
+        guru_research_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         statistics_router.router, prefix="/api/v1", dependencies=_researcher

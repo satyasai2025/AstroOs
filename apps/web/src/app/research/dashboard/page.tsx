@@ -4,41 +4,59 @@ import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, KpiCard } from "@/components/ui";
 import { useCurrentUser } from "@/lib/auth";
-import { researchProjectsApi, type ResearchProject } from "@/lib/research";
-
-/**
- * Illustrative counts matching the "Researcher Dashboard" mockup — this app
- * has no dataset/query-result backend yet (see app/research/query-builder,
- * app/research/datasets), so these are explicit placeholders, not live
- * figures. "Recent Research Projects" below is real data from the existing
- * /api/v1/research/projects endpoint (same source as /research/projects).
- */
-const PLACEHOLDER_KPIS = [
-  { label: "Active Datasets", value: "6", accent: "cyan" as const },
-  { label: "Total Charts Indexed", value: "52,431", accent: "gold" as const },
-  { label: "Queries Run (30d)", value: "184", accent: "violet" as const },
-  { label: "Rules Pending Review", value: "23", accent: "success" as const },
-];
+import { useMyCharts } from "@/lib/charts";
+import {
+  useResearchProjects,
+  useQueryLogs,
+  useHypotheses,
+  type ResearchProject,
+} from "@/lib/research";
 
 const TOP_COMBINATIONS = [
-  { name: "Jupiter in Kendra from Moon", matches: 1243, tone: "success" as const },
-  { name: "10th Lord in 11th House", matches: 998, tone: "cyan" as const },
+  { name: "Jupiter in Kendra from Moon (Gajakesari)", matches: 1243, tone: "success" as const },
+  { name: "10th Lord in 11th House (Dhana)", matches: 998, tone: "cyan" as const },
   { name: "Saturn Sade Sati (natal Moon)", matches: 1102, tone: "gold" as const },
 ];
 
 export default function ResearcherDashboardPage() {
   const { data: user } = useCurrentUser();
-  const [projects, setProjects] = useState<ResearchProject[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: projectsData, isLoading: projectsLoading } = useResearchProjects(user?.id);
+  const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
+  const { data: queryLogs, isLoading: logsLoading } = useQueryLogs(10);
+  const { data: hypothesesData, isLoading: hypothesesLoading } = useHypotheses();
 
-  useEffect(() => {
-    if (!user) return;
-    researchProjectsApi
-      .list(user.id)
-      .then((data) => setProjects(data.projects.slice(0, 5)))
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
-  }, [user]);
+  const projects = projectsData?.projects ?? [];
+  const activeProjectsCount = projects.filter((p) => p.status === "active").length;
+  const totalCharts = chartsData?.total ?? 0;
+  const totalLogs = queryLogs?.total ?? 0;
+  const totalHypotheses = hypothesesData?.total ?? 0;
+
+  const realKpis = [
+    {
+      label: "Active Projects",
+      value: projectsLoading ? "…" : String(activeProjectsCount),
+      accent: "cyan" as const,
+      href: "/research/projects",
+    },
+    {
+      label: "Total Charts Saved",
+      value: chartsLoading ? "…" : String(totalCharts),
+      accent: "gold" as const,
+      href: "/charts/history",
+    },
+    {
+      label: "Research Queries Logged",
+      value: logsLoading ? "…" : String(totalLogs),
+      accent: "violet" as const,
+      href: "/research/projects",
+    },
+    {
+      label: "Hypotheses for Review",
+      value: hypothesesLoading ? "…" : String(totalHypotheses),
+      accent: "success" as const,
+      href: "/research/hypotheses",
+    },
+  ];
 
   return (
     <AppShell sectionColor="--section-research">
@@ -62,8 +80,8 @@ export default function ResearcherDashboardPage() {
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {PLACEHOLDER_KPIS.map((k) => (
-          <KpiCard key={k.label} label={k.label} value={k.value} accent={k.accent} />
+        {realKpis.map((k) => (
+          <KpiCard key={k.label} label={k.label} value={k.value} accent={k.accent} href={k.href} />
         ))}
       </div>
 
@@ -86,7 +104,7 @@ export default function ResearcherDashboardPage() {
             </a>
           </div>
           <div>
-            {loading ? (
+            {projectsLoading ? (
               <p className="p-4 text-sm" style={{ color: "var(--text-muted)" }}>
                 Loading projects…
               </p>

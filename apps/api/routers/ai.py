@@ -26,6 +26,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.dependencies import get_db_session, get_ephemeris_wrapper
 from apps.api.schemas.ai import (
+    AISBCAnalysisRequest,
+    AISBCAnalysisResponse,
     AIResponseSchema,
     ChartSummaryRequest,
     CitationResponse,
@@ -38,6 +40,8 @@ from apps.api.schemas.ai import (
 )
 from apps.api.schemas.explanation import ExplanationResponse
 from apps.api.services.ai_engine import AIEngine
+from apps.api.services.sbc_ai_analyzer import SBCAIAnalyzer
+
 from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.dasha_lookup import find_active_dasha_chain
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
@@ -274,3 +278,22 @@ async def explain_rule(
         confidence=explanation.confidence,
         explanation_text=explanation.explanation_text,
     )
+
+
+@router.post("/sbc-analysis", response_model=AISBCAnalysisResponse)
+async def sbc_event_analysis(
+    body: AISBCAnalysisRequest,
+) -> AISBCAnalysisResponse:
+    """
+    Generate event-driven AI astrological insights from active Sarvatobhadra Chakra
+    Vedhas and 10 Sangyas (Markets, Major Life Events, Muhurta/Protection).
+    """
+    try:
+        return await asyncio.to_thread(SBCAIAnalyzer.analyze, body)
+    except Exception as exc:
+        logger.exception("Error analyzing SBC events: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate SBC event analysis: {exc}",
+        )
+

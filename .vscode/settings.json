@@ -21,6 +21,8 @@
   },
   "python.terminal.activateEnvironment": true,
   "python.terminal.activateEnvInCurrentTerminal": true,
+  "python.terminal.useEnvFile": true,
+  "python.envFile": "${workspaceFolder}/.env",
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.cwd": "${workspaceFolder}",
@@ -28,6 +30,7 @@
   "pylance.disableConfigurationWarning": true,
 
   // TypeScript / JavaScript
+  "npm.packageManager": "pnpm",
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true

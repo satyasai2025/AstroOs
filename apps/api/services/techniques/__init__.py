@@ -16,3 +16,8 @@ from __future__ import annotations
 
 from apps.api.services.techniques import eye_health as _eye_health  # noqa: F401
 from apps.api.services.techniques import event_timing_migrated as _event_timing_migrated  # noqa: F401
+from apps.api.services.techniques import gajakesari_yoga as _gajakesari_yoga  # noqa: F401
+from apps.api.services.techniques import panch_mahapurusha as _panch_mahapurusha  # noqa: F401
+from apps.api.services.techniques import marriage_timing as _marriage_timing  # noqa: F401
+from apps.api.services.techniques import wealth_dhana as _wealth_dhana  # noqa: F401
+from apps.api.services.techniques import timing_events as _timing_events  # noqa: F401

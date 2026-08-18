@@ -53,6 +53,7 @@ from apps.api.domain.events import EventRecord
 from apps.api.domain.timeline import Timeline
 from apps.api.domain.verification import VerificationFindings
 from apps.api.domain.statistics import AggregateReport
+from apps.api.domain.technique import TechniqueDefinition, TechniqueExecutionResult
 
 from packages.shared.enums import Rashi
 
@@ -169,6 +170,85 @@ class YogaExplainer:
             citations=citations,
             sources=("yoga_engine", "knowledge_engine"),
             recommendations=yoga.satisfied if yoga.satisfied else (),
+            version=_ENGINE_VERSION,
+        )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Technique Explainer
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TechniqueExplainer:
+    """Natural language explanation of a TechniqueExecutionResult."""
+
+    @staticmethod
+    def generate(
+        technique: TechniqueDefinition,
+        result: TechniqueExecutionResult,
+        citations: tuple[Citation, ...] = (),
+    ) -> AIResponse:
+        title = f"{technique.name} (v{technique.version}) — {result.confidence}% Confidence"
+
+        triggered_primary = list(result.primary)
+        triggered_supporting = list(result.supporting)
+        triggered_opposing = list(result.contradicting) + list(result.cancellations)
+        insufficient = [t for t in result.triggers if t.status.value == "insufficient_data"]
+
+        lines = [
+            f"Technique: {technique.name} ({technique.technique_id}, v{technique.version}).",
+            f"Tradition: {technique.tradition or 'Vedic'}. Objective: {technique.objective or 'General'}.",
+            f"Overall Confidence: {result.confidence}/100. Basis: {result.confidence_basis}",
+        ]
+
+        if triggered_primary:
+            lines.append("\nTriggered Primary Indications:")
+            for t in triggered_primary:
+                lines.append(f"  • [{t.rule_id}] {t.rule_name}: {t.explanation}")
+                if t.matched_conditions:
+                    lines.append(f"    Conditions satisfied: {', '.join(t.matched_conditions)}")
+        else:
+            lines.append("\nNo primary indications were triggered.")
+
+        if triggered_supporting:
+            lines.append("\nSupporting Indications:")
+            for t in triggered_supporting:
+                lines.append(f"  • [{t.rule_id}] {t.rule_name}: {t.explanation}")
+
+        if triggered_opposing:
+            lines.append("\nOpposing / Contradicting Factors:")
+            for t in triggered_opposing:
+                lines.append(f"  • [{t.rule_id}] {t.rule_name}: {t.explanation}")
+
+        if insufficient:
+            lines.append("\nInsufficient Data Rules (missing facts):")
+            for t in insufficient:
+                missing_str = ", ".join(t.missing_facts) if t.missing_facts else "unregistered rule"
+                lines.append(f"  • [{t.rule_id}] {t.rule_name}: missing [{missing_str}]")
+
+        if technique.unresolved_inconsistencies:
+            lines.append("\nPreserved Source Inconsistencies:")
+            for inc in technique.unresolved_inconsistencies:
+                lines.append(f"  • {inc}")
+
+        body = "\n".join(lines)
+        summary = (
+            f"{technique.name} evaluated with {result.confidence}% confidence. "
+            f"{len(triggered_primary)} primary indication{'s' if len(triggered_primary) != 1 else ''} triggered."
+        )
+
+        all_citations = citations or tuple(
+            Citation(source="classical_text", reference=ref, text=ref) for ref in technique.source_references
+        )
+
+        return AIResponse(
+            response_type="technique_explanation",
+            title=title,
+            summary=summary,
+            body=body,
+            citations=all_citations,
+            sources=("technique_engine", "rule_engine"),
+            recommendations=tuple(result.evidence),
             version=_ENGINE_VERSION,
         )
 
@@ -875,6 +955,16 @@ class AIEngine:
                 RecommendationEngine.generate(timeline, verification, tuple(transits))
             )
 
+        elif topic == "technique_explanation":
+            technique = data.get("technique")
+            result = data.get("result")
+            if not technique or not result:
+                return _missing_data("technique and result")
+            citations = data.get("citations", ())
+            return AIEngine._maybe_enrich(
+                TechniqueExplainer.generate(technique, result, citations)
+            )
+
         elif topic == "qa":
             question = data.get("question", "")
             chart = data.get("chart")
@@ -886,9 +976,9 @@ class AIEngine:
                 title="Unknown Topic",
                 summary=f"No generator for topic: {topic}",
                 body=f"The topic '{topic}' is not recognized. Supported topics: "
-                     f"chart_summary, yoga_explanation, dasha_interpretation, "
-                     f"transit_reading, verification_report, research_insight, "
-                     f"recommendation, qa.",
+                     f"chart_summary, yoga_explanation, technique_explanation, "
+                     f"dasha_interpretation, transit_reading, verification_report, "
+                     f"research_insight, recommendation, qa.",
                 version=_ENGINE_VERSION,
             )
 
@@ -940,6 +1030,14 @@ class AIEngine:
         transits: tuple[TransitPlanetResult, ...] = (),
     ) -> AIResponse:
         return AIEngine._maybe_enrich(RecommendationEngine.generate(timeline, verification, transits))
+
+    @staticmethod
+    def explain_technique(
+        technique: TechniqueDefinition,
+        result: TechniqueExecutionResult,
+        citations: tuple[Citation, ...] = (),
+    ) -> AIResponse:
+        return AIEngine._maybe_enrich(TechniqueExplainer.generate(technique, result, citations))
 
     @staticmethod
     def answer_question(

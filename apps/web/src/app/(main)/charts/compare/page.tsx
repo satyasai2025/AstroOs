@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMyCharts } from "@/lib/charts";
@@ -26,7 +26,7 @@ function formatDate(iso: string): string {
  * houses, dasha, yogas, summary), with CSV/PDF export and locally saved
  * comparison sets for quick re-opening.
  */
-export default function ChartComparePage() {
+function ChartComparePageContent() {
   const storeRequest = useWorkflowStore((s) => s.request);
   const storeResult = useWorkflowStore((s) => s.result);
   const { data: chartsData, isLoading: chartsLoading, isError: chartsErrored } = useMyCharts();
@@ -344,5 +344,13 @@ export default function ChartComparePage() {
         initialSelectedIds={activeChartIds}
       />
     </>
+  );
+}
+
+export default function ChartComparePage() {
+  return (
+    <Suspense fallback={null}>
+      <ChartComparePageContent />
+    </Suspense>
   );
 }

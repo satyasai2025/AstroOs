@@ -47,25 +47,11 @@ export default function AboutSettingsPage() {
           </h3>
 
           <div className="space-y-3">
-            <a href="#" className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:border-[var(--border-hover)]" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--obsidian-accent-primary-soft)", color: "var(--accent)" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                    <polyline points="14 2 14 8 20 8" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>License</p>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>View license terms</p>
-                </div>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--text-muted)" }}>
-                <path d="M7 17l9.2-9.2M17 17V7H7" />
-              </svg>
-            </a>
-
-            <a href="#" className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:border-[var(--border-hover)]" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}>
+            <a
+              href="/knowledge"
+              className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:border-[var(--accent)]"
+              style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}
+            >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--obsidian-accent-primary-soft)", color: "var(--accent)" }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -74,8 +60,8 @@ export default function AboutSettingsPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Documentation</p>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>Read the docs</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Documentation &amp; Knowledge Base</p>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>Explore classical references, texts, and user guides</p>
                 </div>
               </div>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--text-muted)" }}>
@@ -83,24 +69,13 @@ export default function AboutSettingsPage() {
               </svg>
             </a>
 
-            <a href="#" className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:border-[var(--border-hover)]" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--obsidian-accent-primary-soft)", color: "var(--accent)" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Support</p>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>Get help from the team</p>
-                </div>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--text-muted)" }}>
-                <path d="M7 17l9.2-9.2M17 17V7H7" />
-              </svg>
-            </a>
-
-            <a href="#" className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:border-[var(--border-hover)]" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:border-[var(--accent)]"
+              style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}
+            >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--obsidian-accent-primary-soft)", color: "var(--accent)" }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -108,14 +83,32 @@ export default function AboutSettingsPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>GitHub</p>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>View source code</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>GitHub Repository</p>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>View open source code and contribution guidelines</p>
                 </div>
               </div>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--text-muted)" }}>
                 <path d="M7 17l9.2-9.2M17 17V7H7" />
               </svg>
             </a>
+
+            <div
+              className="flex items-center justify-between rounded-lg border p-4"
+              style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: "var(--obsidian-accent-primary-soft)", color: "var(--accent)" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Software License</p>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>MIT License • All rights reserved</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
