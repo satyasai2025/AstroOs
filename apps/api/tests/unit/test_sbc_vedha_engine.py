@@ -158,12 +158,16 @@ def test_combust_planet_scores_zero_but_still_registers_as_a_hit():
     assert result.total_score == 0.0
 
 
-def test_retrograde_doubles_the_dignity_score():
+def test_retrograde_and_dignity_strength_factors():
     engine = SBCVedhaEngine()
-    # Venus exalted in Pisces (dignity multiplier 3) at Shatabhisha -> right -> Abhijit.
+    # Venus exalted in Pisces at Shatabhisha -> right -> Abhijit.
     venus = _planet("venus", "shatabhisha", rashi="pisces", rashi_degree=25.0, retrograde=True)
     result = engine.check("abhijit", [venus])
-    assert result.total_score == 5.0 * 3.0 * 2.0
+    assert len(result.hits) == 1
+    hit = result.hits[0]
+    assert hit.strength_factors["is_retrograde"] is True
+    assert hit.strength_factors["dignity"] == "exalted"
+    assert result.total_score == 1.0
 
 
 def test_benefic_malefic_same_nakshatra_zeroes_entire_total():
