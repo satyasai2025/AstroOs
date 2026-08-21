@@ -20,9 +20,23 @@ not a disguised deterministic generator).
 Only ever invoked from POST /research/cases/patterns/{pattern_id}/explain
 (single) or the bulk regenerate-all endpoint — never from a GET, so viewing
 a pattern's detail never has a side effect or an external-network cost.
+
+Post-generation fact check: the model is free-form generative (per the
+"real LLM call" direction above — this deliberately does NOT constrain it
+to rewriting a pre-built deterministic string), so a weak or poorly-
+instruction-following BYOK model could still invent a number. Rather than
+caging the model, _validate_numbers() checks every percentage/decimal the
+model's response actually contains against the numbers present in the
+source pattern (with rounding tolerance) after the call returns. A number
+that matches nothing in the input is treated as fabricated and raises
+PatternValidationError — loud failure, same "never silently substitute"
+philosophy as the rest of this module, just applied to the output instead
+of only to missing config.
 """
 
 from __future__ import annotations
+
+import re
 
 import httpx
 
@@ -40,9 +54,49 @@ _SYSTEM_PROMPT = (
     "causation; this is a correlational finding."
 )
 
+_NUMBER_TOLERANCE = 0.15  # absolute; covers rounding drift (e.g. model writing 42% for 41.95%)
+
 
 class PatternExplanationError(RuntimeError):
     """Raised when an explanation cannot be generated (missing key, API failure)."""
+
+
+class PatternValidationError(RuntimeError):
+    """Raised when the model's response contains a number not present in the source pattern."""
+
+    def __init__(self, bad_numbers: list[float], response: str) -> None:
+        self.bad_numbers = bad_numbers
+        self.response = response
+        super().__init__(
+            f"Response contains number(s) not present in source data: {bad_numbers}"
+        )
+
+
+def _extract_numbers(text: str) -> list[float]:
+    """Every percentage/decimal figure literally written in the response."""
+    return [float(m) for m in re.findall(r"-?\d+\.?\d*(?=%|\b)", text) if m not in ("", "-", ".")]
+
+
+def _allowed_numbers(pattern: DiscoveredPattern) -> set[float]:
+    allowed: set[float] = {
+        round(pattern.confidence_score * 100, 1), round(pattern.confidence_score, 2),
+        float(pattern.sample_size),
+    }
+    for d in pattern.dimensions:
+        allowed.add(round(d.frequency * 100, 1))
+        allowed.add(round(d.expected_by_chance * 100, 1))
+        allowed.add(round(d.significance, 2))
+    return allowed
+
+
+def _validate_numbers(response: str, pattern: DiscoveredPattern) -> None:
+    allowed = _allowed_numbers(pattern)
+    bad = [
+        n for n in _extract_numbers(response)
+        if not any(abs(n - a) <= _NUMBER_TOLERANCE for a in allowed)
+    ]
+    if bad:
+        raise PatternValidationError(bad, response)
 
 
 class PatternExplainer:
@@ -68,6 +122,9 @@ class PatternExplainer:
         )
 
         try:
-            return await call_chat_completion(self._client, self._resolved, _SYSTEM_PROMPT, user_prompt)
+            response = await call_chat_completion(self._client, self._resolved, _SYSTEM_PROMPT, user_prompt)
         except AIProviderError as exc:
             raise PatternExplanationError(str(exc)) from exc
+
+        _validate_numbers(response, pattern)
+        return response

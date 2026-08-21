@@ -104,10 +104,18 @@ from apps.api.services.dataset_validation import DatasetValidationService
 from apps.api.services.feature_extraction import FeatureExtractionService, summarize
 from apps.api.services.import_service import ResearchCaseImportService, SnapshotComputer
 from apps.api.services.pattern_discovery import PatternDiscoveryService
-from apps.api.services.pattern_explainer import PatternExplainer, PatternExplanationError
+from apps.api.services.pattern_explainer import (
+    PatternExplainer,
+    PatternExplanationError,
+    PatternValidationError as PatternExplainerValidationError,
+)
 from apps.api.services.pattern_graph import PatternGraphInput, build_network_graph, infer_category
 from apps.api.services.pattern_persistence import PatternPersistenceService, dimensions_from_json
-from apps.api.services.pattern_query_assistant import PatternQueryAssistant, PatternQueryError
+from apps.api.services.pattern_query_assistant import (
+    PatternQueryAssistant,
+    PatternQueryError,
+    PatternValidationError as PatternQueryValidationError,
+)
 from apps.api.services.publication_pipeline import PublicationError, generate_publication
 from apps.api.services.research_engine import ResearchEngine
 from apps.api.services.research_validation import validate_research_case_batch
@@ -769,6 +777,11 @@ async def ask_about_patterns(
         )
     except PatternQueryError as exc:
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc))
+    except PatternQueryValidationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"AI response failed validation against source data: {exc}",
+        )
 
     execution_time_ms = int((time.perf_counter() - start) * 1000)
     return PatternQuestionResponseSchema(
@@ -1349,6 +1362,11 @@ async def explain_pattern(
         explanation = await _explain_one(request, row, current_user.id, session)
     except PatternExplanationError as exc:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
+    except PatternExplainerValidationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"AI response failed validation against source data: {exc}",
+        ) from exc
 
     return PatternExplainResponseSchema(
         pattern_id=pattern_id,
@@ -1377,6 +1395,8 @@ async def regenerate_all_explanations(
             succeeded += 1
         except PatternExplanationError as exc:
             errors.append(f"{row.pattern_id}: {exc}")
+        except PatternExplainerValidationError as exc:
+            errors.append(f"{row.pattern_id}: AI response failed validation against source data: {exc}")
 
     return PatternExplainAllResponseSchema(
         total_patterns=len(rows),
