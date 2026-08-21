@@ -25,15 +25,60 @@ finding:
 
 Only ever invoked from POST /research/cases/patterns/ask — a read-only
 endpoint. It never runs discovery and never persists anything.
+
+Stage 2 is still free-form generation (not a rewrite-only cage — see
+pattern_explainer.py's module docstring for why), so a weak/custom BYOK
+model can still ignore the "quote only these numbers" instruction.
+_validate_numbers() checks every percentage/decimal literally present in
+the model's answer against the numbers in the patterns it was actually
+given, after the call returns; an unmatched number raises
+PatternValidationError rather than being silently shown to the user.
 """
 
 from __future__ import annotations
 
 import json
+import re
 
 import httpx
 
 from apps.api.services.ai_provider import AIProviderError, ResolvedAIProvider, call_chat_completion
+
+_NUMBER_TOLERANCE = 0.15  # absolute; covers rounding drift
+
+
+class PatternValidationError(RuntimeError):
+    """Raised when the model's answer contains a number not present in the source patterns."""
+
+    def __init__(self, bad_numbers: list[float], response: str) -> None:
+        self.bad_numbers = bad_numbers
+        self.response = response
+        super().__init__(
+            f"Response contains number(s) not present in source data: {bad_numbers}"
+        )
+
+
+def _extract_numbers(text: str) -> list[float]:
+    return [float(m) for m in re.findall(r"-?\d+\.?\d*(?=%|\b)", text) if m not in ("", "-", ".")]
+
+
+def _allowed_numbers(patterns: list[dict]) -> set[float]:
+    allowed: set[float] = set()
+    for p in patterns:
+        allowed.add(round(p["confidence_score"] * 100, 1))
+        allowed.add(round(p["confidence_score"], 2))
+        allowed.add(float(p["sample_size"]))
+    return allowed
+
+
+def _validate_numbers(response: str, patterns: list[dict]) -> None:
+    allowed = _allowed_numbers(patterns)
+    bad = [
+        n for n in _extract_numbers(response)
+        if not any(abs(n - a) <= _NUMBER_TOLERANCE for a in allowed)
+    ]
+    if bad:
+        raise PatternValidationError(bad, response)
 
 _PARSE_SYSTEM_PROMPT_TEMPLATE = (
     "You extract which life-event type a researcher's question is about, "
@@ -117,4 +162,6 @@ class PatternQueryAssistant:
             for p in patterns
         )
         user_prompt = f"Question: {question}\n\nPatterns found:\n{patterns_text}"
-        return await self._chat(_SUMMARIZE_SYSTEM_PROMPT, user_prompt)
+        response = await self._chat(_SUMMARIZE_SYSTEM_PROMPT, user_prompt)
+        _validate_numbers(response, patterns)
+        return response
