@@ -155,8 +155,37 @@ class ValidationSummary:
     holdout_sample_size_n: int
     holdout_brier_score: float  # Mean((p - y)^2) on holdout
     holdout_hit_rate: float     # TP / Holdout N
-    mean_peak_offset_days: float
+    mean_peak_offset_days: float = 0.0
+    holdout_log_loss: float = 0.0
+    diagnostic_f1: float = 0.0
+    diagnostic_roc_auc: float = 0.0
     evaluated_at: datetime = field(default_factory=lambda: datetime.now())
+
+
+@dataclass(frozen=True)
+class CandidateWeightProfile:
+    """Candidate or active calibrated weighting profile with provenance."""
+
+    profile_id: str
+    name: str
+    description: str
+    dataset_id: str
+    technique_weights: dict[str, float]
+    validation_summary: ValidationSummary
+    status: str = "DRAFT_CANDIDATE"  # DRAFT_CANDIDATE, ACTIVE, ARCHIVED
+    created_at: datetime = field(default_factory=lambda: datetime.now())
+    activated_at: Optional[datetime] = None
+
+
+@dataclass(frozen=True)
+class CalibrationAuditLog:
+    """Immutable audit trail entry for calibration actions."""
+
+    log_id: str
+    candidate_profile_id: str
+    action: str  # CANDIDATE_PROFILE_CREATED, PROFILE_ACTIVATED, etc.
+    timestamp: datetime = field(default_factory=lambda: datetime.now())
+    details: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

@@ -261,6 +261,13 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
     return <CreateTransitModal open={open} onClose={onClose} />;
   }
 
+  // ── Redirect to dedicated Prashna (Horary) Workspace ─────────────────────
+  if (chartType === "horary_chart" && step > 1) {
+    router.push("/charts/prashna");
+    onClose();
+    return null;
+  }
+
   // ── Redirect to dedicated Event Analysis modal ────────────────────────────
   // The Event Analysis tile must NEVER fall through to the generic
   // birth-details flow — it opens its own modal (select saved chart → add

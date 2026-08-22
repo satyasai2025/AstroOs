@@ -20,10 +20,12 @@ from apps.api.domain.prediction_orchestration import PredictionWindowCandidate
 from apps.api.domain.research_calibration import (
     BacktestOutcome,
     CalibratedPrediction,
+    CalibrationAuditLog,
     CalibrationModel,
     CalibrationModelType,
     CalibrationPoolInterval,
     CalibrationProvenance,
+    CandidateWeightProfile,
     PlattParameters,
     TemporalMatchStatus,
     ValidationSummary,
@@ -42,6 +44,53 @@ def _compute_wilson_ci(p: float, n: int, z: float = 1.96) -> tuple[float, float]
     return (lower, upper)
 
 
+def _compute_log_loss(y_true: Sequence[int], y_prob: Sequence[float], eps: float = 1e-15) -> float:
+    """Computes binary logarithmic loss."""
+    if not y_true or len(y_true) != len(y_prob):
+        return 0.0
+    total = 0.0
+    for y, p in zip(y_true, y_prob):
+        p_clipped = max(eps, min(1.0 - eps, p))
+        total += -(y * math.log(p_clipped) + (1 - y) * math.log(1.0 - p_clipped))
+    return round(total / len(y_true), 4)
+
+
+def _compute_f1_score(y_true: Sequence[int], y_prob: Sequence[float], threshold: float = 0.5) -> float:
+    """Computes F1-score given truth labels and predicted probabilities."""
+    tp = sum(1 for y, p in zip(y_true, y_prob) if y == 1 and p >= threshold)
+    fp = sum(1 for y, p in zip(y_true, y_prob) if y == 0 and p >= threshold)
+    fn = sum(1 for y, p in zip(y_true, y_prob) if y == 1 and p < threshold)
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+    if precision + recall == 0.0:
+        return 0.0
+    return round(2 * (precision * recall) / (precision + recall), 4)
+
+
+def _compute_conditional_roc_auc(y_true: Sequence[int], y_prob: Sequence[float]) -> tuple[float | None, str]:
+    """Computes ROC-AUC or flags degenerate single-class / insufficient conditions."""
+    if not y_true or not y_prob or len(y_true) != len(y_prob):
+        return (None, "INSUFFICIENT_DATA")
+    pos_count = sum(1 for y in y_true if y == 1)
+    neg_count = len(y_true) - pos_count
+    if pos_count == 0 or neg_count == 0:
+        return (None, "DEGENERATE_SINGLE_CLASS")
+    pairs = sorted(zip(y_prob, y_true), key=lambda x: x[0], reverse=True)
+    tp, fp = 0, 0
+    tpr_list, fpr_list = [0.0], [0.0]
+    for p, y in pairs:
+        if y == 1:
+            tp += 1
+        else:
+            fp += 1
+        tpr_list.append(tp / pos_count)
+        fpr_list.append(fp / neg_count)
+    auc = 0.0
+    for i in range(1, len(fpr_list)):
+        auc += (fpr_list[i] - fpr_list[i - 1]) * (tpr_list[i] + tpr_list[i - 1]) / 2.0
+    return (round(auc, 4), "CALCULATED_VALID")
+
+
 class CalibrationEngine:
     """Independent statistical calibration service."""
 
@@ -53,6 +102,89 @@ class CalibrationEngine:
         (80, 89),
         (90, 100),
     )
+
+    _instance: Optional[CalibrationEngine] = None
+
+    def __init__(self) -> None:
+        self._candidate_profiles: dict[str, CandidateWeightProfile] = {}
+        self._active_profile: Optional[CandidateWeightProfile] = None
+        self._audit_trail: list[CalibrationAuditLog] = []
+
+    @classmethod
+    def get_instance(cls) -> CalibrationEngine:
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
+    def create_candidate_weight_profile(
+        self,
+        name: str,
+        description: str,
+        dataset_id: str,
+        technique_weights: dict[str, float],
+        validation_summary: ValidationSummary,
+    ) -> CandidateWeightProfile:
+        import uuid
+        profile_id = f"cand-{uuid.uuid4().hex[:8]}"
+        profile = CandidateWeightProfile(
+            profile_id=profile_id,
+            name=name,
+            description=description,
+            dataset_id=dataset_id,
+            technique_weights=technique_weights,
+            validation_summary=validation_summary,
+            status="DRAFT_CANDIDATE",
+        )
+        self._candidate_profiles[profile_id] = profile
+        self._audit_trail.append(
+            CalibrationAuditLog(
+                log_id=f"audit-{uuid.uuid4().hex[:8]}",
+                candidate_profile_id=profile_id,
+                action="CANDIDATE_PROFILE_CREATED",
+                details={"name": name, "weights": technique_weights},
+            )
+        )
+        return profile
+
+    def activate_candidate_profile(self, profile_id: str) -> Optional[CandidateWeightProfile]:
+        import uuid
+        profile = self._candidate_profiles.get(profile_id)
+        if not profile:
+            return None
+        activated = CandidateWeightProfile(
+            profile_id=profile.profile_id,
+            name=profile.name,
+            description=profile.description,
+            dataset_id=profile.dataset_id,
+            technique_weights=profile.technique_weights,
+            validation_summary=profile.validation_summary,
+            status="ACTIVE",
+            created_at=profile.created_at,
+            activated_at=datetime.now(),
+        )
+        self._candidate_profiles[profile_id] = activated
+        self._active_profile = activated
+        self._audit_trail.append(
+            CalibrationAuditLog(
+                log_id=f"audit-{uuid.uuid4().hex[:8]}",
+                candidate_profile_id=profile_id,
+                action="PROFILE_ACTIVATED",
+                details={"profile_id": profile_id, "status": "ACTIVE"},
+            )
+        )
+        return activated
+
+    def get_active_profile(self) -> Optional[CandidateWeightProfile]:
+        return self._active_profile
+
+    def get_candidate_profile(self, profile_id: str) -> Optional[CandidateWeightProfile]:
+        return self._candidate_profiles.get(profile_id)
+
+    def list_candidate_profiles(self) -> list[CandidateWeightProfile]:
+        return list(self._candidate_profiles.values())
+
+    def get_audit_trail(self) -> list[CalibrationAuditLog]:
+        return list(self._audit_trail)
 
     def fit_isotonic_calibration(
         self,
@@ -213,11 +345,20 @@ class CalibrationEngine:
         hit_rate = round(hits_count / n_holdout, 4)
         mean_offset = round(total_offset / n_holdout, 1)
 
+        y_true = [1 if o.match_status in (TemporalMatchStatus.WINDOW_EXACT_HIT, TemporalMatchStatus.WINDOW_TOLERANCE_HIT) else 0 for o in holdout_outcomes]
+        y_prob = [self.predict_probability_for_score(o.deterministic_score, calibration_model) for o in holdout_outcomes]
+        log_loss = _compute_log_loss(y_true, y_prob)
+        f1 = _compute_f1_score(y_true, y_prob)
+        roc_auc, _ = _compute_conditional_roc_auc(y_true, y_prob)
+
         return ValidationSummary(
             holdout_sample_size_n=n_holdout,
             holdout_brier_score=brier,
             holdout_hit_rate=hit_rate,
             mean_peak_offset_days=mean_offset,
+            holdout_log_loss=log_loss,
+            diagnostic_f1=f1,
+            diagnostic_roc_auc=roc_auc or 0.0,
         )
 
     def predict_probability_for_score(

@@ -141,11 +141,11 @@ function logStatusOk(log: QueryLogEntry): boolean {
  * used to give each stat card / chart avatar its own accent, purely for
  * visual variety — see the file-level doc-comment. */
 const PALETTE = [
-  { fg: "#14b8a6", bg: "rgba(20, 184, 166, 0.15)" }, // teal
-  { fg: "#6366f1", bg: "rgba(99, 102, 241, 0.15)" }, // indigo (spec: Accent Primary)
-  { fg: "#10b981", bg: "rgba(16, 185, 129, 0.15)" }, // green (spec: Success/Strong)
-  { fg: "#f97316", bg: "rgba(249, 115, 22, 0.15)" }, // orange
-  { fg: "#ec4899", bg: "rgba(236, 72, 153, 0.15)" }, // pink
+  { fg: "#ffffff", bg: "#0f766e" }, // teal-700 (WCAG AA 4.7:1)
+  { fg: "#ffffff", bg: "#4338ca" }, // indigo-700 (WCAG AA 5.8:1)
+  { fg: "#ffffff", bg: "#047857" }, // emerald-700 (WCAG AA 4.7:1)
+  { fg: "#ffffff", bg: "#c2410c" }, // orange-700 (WCAG AA 4.6:1)
+  { fg: "#ffffff", bg: "#be185d" }, // pink-700 (WCAG AA 4.9:1)
 ];
 
 export function paletteFor(seed: string) {
@@ -698,6 +698,12 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               onClick={onStartNewChart}
               label="New Chart"
               sublabel="Create a new birth chart"
+              color={PALETTE[0]}
+            />
+            <QuickAction
+              href="/charts/prashna"
+              label="Prashna (Horary)"
+              sublabel="KP Horary & Arabic Parts"
               color={PALETTE[0]}
             />
             <QuickAction

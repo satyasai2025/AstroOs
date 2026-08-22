@@ -28,6 +28,7 @@ import { KPTimingEngine } from "@/components/kp/KPTimingEngine";
 import { KPSpecialFactors } from "@/components/kp/KPSpecialFactors";
 import { KPReasoningChain } from "@/components/kp/KPReasoningChain";
 import { KPSnapshot } from "@/components/kp/KPSnapshot";
+import { KPPredictiveAIToolkit } from "@/components/kp/KPPredictiveAIToolkit";
 
 interface Props {
   /** The workflow-sourced birth data — the KP endpoint reuses its core fields. */
@@ -37,6 +38,7 @@ interface Props {
 
 type KPSection =
   | "snapshot"
+  | "predictive_ai"
   | "overview"
   | "cusps"
   | "planets"
@@ -49,6 +51,7 @@ type KPSection =
 
 const SECTIONS: { key: KPSection; label: string }[] = [
   { key: "snapshot", label: "Snapshot" },
+  { key: "predictive_ai", label: "✨ Predictive AI Suite" },
   { key: "overview", label: "Overview" },
   { key: "cusps", label: "Cusp Matrix" },
   { key: "planets", label: "Planet Portfolio" },
@@ -124,6 +127,7 @@ export function KPAnalysisCenter({ request, result }: Props) {
               timing={kp.data.timing}
             />
           )}
+          {section === "predictive_ai" && <KPPredictiveAIToolkit />}
           {section === "overview" && <KPOverview />}
           {section === "cusps" && <KPCuspMatrix cusps={kp.data.cusps} />}
           {section === "planets" && <KPPlanetPortfolio profiles={kp.data.planet_profiles} />}

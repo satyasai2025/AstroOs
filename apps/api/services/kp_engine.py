@@ -784,6 +784,8 @@ def _get_active_chain(mahadashas: tuple, now: date) -> list[dict[str, Any]]:
     period at every level (the running chain)."""
     chain: list[dict[str, Any]] = []
     candidates = mahadashas
+    level_idx = 0
+    level_names = ["Mahadasha", "Antardasha", "Pratyantardasha", "Sookshmadasha", "Pranadasha"]
     while candidates:
         active = next(
             (p for p in candidates if p.start_date <= now <= p.end_date),
@@ -791,13 +793,16 @@ def _get_active_chain(mahadashas: tuple, now: date) -> list[dict[str, Any]]:
         )
         if not active:
             break
+        level_name = level_names[level_idx] if level_idx < len(level_names) else f"Level {level_idx + 1}"
         chain.append({
             "lord": active.lord,
+            "level": level_name,
             "start_date": active.start_date,
             "end_date": active.end_date,
             "sub_periods": active.sub_periods,
         })
         candidates = active.sub_periods
+        level_idx += 1
     return chain
 
 

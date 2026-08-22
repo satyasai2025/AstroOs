@@ -304,3 +304,52 @@ async def calibrate_dataset(body: CalibrateRequest) -> CalibrationResponse:
         platt_slope_a=platt_a,
         platt_intercept_b=platt_b,
     )
+
+
+@router.get("/calibration/profiles")
+def list_calibration_profiles():
+    engine = CalibrationEngine.get_instance()
+    profiles = engine.list_candidate_profiles()
+    return [
+        {
+            "profile_id": p.profile_id,
+            "name": p.name,
+            "description": p.description,
+            "dataset_id": p.dataset_id,
+            "technique_weights": p.technique_weights,
+            "status": p.status,
+            "created_at": p.created_at.isoformat(),
+            "activated_at": p.activated_at.isoformat() if p.activated_at else None,
+        }
+        for p in profiles
+    ]
+
+
+@router.post("/calibration/profiles/{profile_id}/activate")
+def activate_calibration_profile(profile_id: str):
+    engine = CalibrationEngine.get_instance()
+    activated = engine.activate_candidate_profile(profile_id)
+    if not activated:
+        raise HTTPException(status_code=404, detail=f"Profile '{profile_id}' not found.")
+    return {
+        "profile_id": activated.profile_id,
+        "name": activated.name,
+        "status": activated.status,
+        "activated_at": activated.activated_at.isoformat() if activated.activated_at else None,
+    }
+
+
+@router.get("/calibration/audit-trail")
+def get_calibration_audit_trail():
+    engine = CalibrationEngine.get_instance()
+    logs = engine.get_audit_trail()
+    return [
+        {
+            "log_id": l.log_id,
+            "candidate_profile_id": l.candidate_profile_id,
+            "action": l.action,
+            "timestamp": l.timestamp.isoformat(),
+            "details": l.details,
+        }
+        for l in logs
+    ]

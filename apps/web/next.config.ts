@@ -8,40 +8,9 @@ const nextConfig: NextConfig = {
   // afterFiles keeps the existing /api/* → FastAPI proxy unchanged.
   async rewrites() {
     const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-    return {
-      beforeFiles: [
-        // ── Chart view clean-URL aliases ──────────────────────────────────
-        // Each maps a semantic slug → the existing ?view= param so that
-        // charts/page.tsx ViewMode switch and all calculation hooks are
-        // untouched. The browser sees the clean URL; Next.js serves the
-        // query-param route internally.
-        { source: "/charts/birth",         destination: "/charts?view=chart" },
-        { source: "/charts/kundli",        destination: "/charts?view=kundli" },
-        { source: "/charts/divisional",    destination: "/charts?view=divisional" },
-        { source: "/charts/houses",        destination: "/charts?view=houses" },
-        { source: "/charts/relationships", destination: "/charts?view=relationships-v2" },
-        { source: "/charts/dasha",         destination: "/charts?view=dasha" },
-        { source: "/charts/timeline",      destination: "/charts?view=timeline" },
-        { source: "/charts/strength",      destination: "/charts?view=strength" },
-        { source: "/charts/kp",            destination: "/charts?view=kp" },
-        { source: "/charts/yogas",         destination: "/charts?view=yogas" },
-        { source: "/charts/ashtakavarga",  destination: "/charts?view=ashtakavarga" },
-        { source: "/charts/jaimini",       destination: "/charts?view=jaimini" },
-        { source: "/charts/planets",       destination: "/charts?view=planets" },
-        { source: "/charts/nakshatra",     destination: "/charts?view=nakshatra" },
-        { source: "/charts/predictions",   destination: "/charts?view=predictions" },
-
-        // ── Research view aliases ─────────────────────────────────────────
-        // Snapshot Manager was a nav duplicate of /research/projects.
-        // Both slugs now map to projects with a tab hint for future sub-tabs.
-        { source: "/research/snapshot",         destination: "/research/projects?tab=snapshot" },
-        { source: "/research/snapshot-manager", destination: "/research/projects?tab=snapshot" },
-      ],
-      afterFiles: [
-        // ── API proxy (unchanged) ─────────────────────────────────────────
-        { source: "/api/:path*", destination: `${apiBase}/api/:path*` },
-      ],
-    };
+    return [
+      { source: "/api/:path*", destination: `${apiBase}/api/:path*` },
+    ];
   },
 
   // Strict React mode

@@ -358,57 +358,73 @@ export function NorthIndianChart({
       : "D1 — Rashi Chart");
 
   return (
-    <div
-      className="flex w-full min-w-0 flex-col items-center gap-2"
-      role="img"
-      aria-label={`${chartTitle} chart showing ${ascendant.rashi} ascendant with ${planets.length} planets`}
-    >
+    <div className="flex w-full min-w-0 flex-col items-center gap-2">
       {title && (
-        <h4
-          className="text-sm font-semibold uppercase tracking-wide"
-          style={{ color: "var(--accent)" }}
-        >
+        <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-800 dark:text-cyan-300">
           {chartTitle}
-        </h4>
+        </h3>
       )}
       <svg
         ref={svgRef}
         viewBox={`0 0 ${size} ${size}`}
         className="w-full h-auto max-w-full max-h-[350px] mx-auto block"
         role="img"
-        aria-label={`North Indian square chart: ${chartTitle}`}
+        aria-label={`North Indian square chart: ${chartTitle} showing ${ascendant.rashi} ascendant with ${planets.length} planets`}
       />
       {/* Legend */}
       {showFullNames && (
         <div
-          className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs"
-          style={{ color: "var(--text-secondary)" }}
+          className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs text-slate-800 dark:text-slate-200"
           aria-label="Planet legend"
         >
           {planets.map((p) => {
             const abbrev = PLANET_ABBREV[p.planet] ?? p.planet.slice(0, 2);
             const full = p.planet;
             const isActive = activePlanet === p.planet;
+            const isClickable = Boolean(onPlanetHover || onPlanetClick);
+
+            const Content = (
+              <>
+                <span className={isActive ? "text-white dark:text-slate-900 font-bold" : "text-cyan-800 dark:text-cyan-300 font-bold"}>
+                  {abbrev}
+                </span>
+                <span className="font-medium text-slate-800 dark:text-slate-200">{full}</span>
+                {p.is_retrograde && (
+                  <span className="text-rose-800 dark:text-rose-300 font-bold">(R)</span>
+                )}
+              </>
+            );
+
+            if (isClickable) {
+              return (
+                <button
+                  key={p.planet}
+                  type="button"
+                  className="flex items-center gap-1 rounded px-1 transition"
+                  style={{
+                    backgroundColor: isActive ? "var(--accent)" : "transparent",
+                    color: isActive ? "var(--accent-text)" : undefined,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={() => onPlanetHover?.(p.planet)}
+                  onMouseLeave={() => onPlanetHover?.(null)}
+                  onClick={() => onPlanetClick?.(p.planet)}
+                >
+                  {Content}
+                </button>
+              );
+            }
+
             return (
-              <button
+              <div
                 key={p.planet}
-                type="button"
-                className="flex items-center gap-1 rounded px-1 transition"
+                className="flex items-center gap-1 rounded px-1"
                 style={{
                   backgroundColor: isActive ? "var(--accent)" : "transparent",
-                  color: isActive ? "var(--accent-text)" : undefined,
-                  cursor: onPlanetHover || onPlanetClick ? "pointer" : "default",
                 }}
-                onMouseEnter={() => onPlanetHover?.(p.planet)}
-                onMouseLeave={() => onPlanetHover?.(null)}
-                onClick={() => onPlanetClick?.(p.planet)}
               >
-                <span style={{ color: isActive ? "inherit" : "var(--accent)" }}>{abbrev}</span>
-                <span>{full}</span>
-                {p.is_retrograde && (
-                  <span style={{ color: isActive ? "inherit" : "var(--chart-ascendant)" }}>(R)</span>
-                )}
-              </button>
+                {Content}
+              </div>
             );
           })}
         </div>

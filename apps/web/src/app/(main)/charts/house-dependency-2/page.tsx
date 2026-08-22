@@ -274,7 +274,7 @@ export default function HouseDependency2Page() {
                       Career, Status, Authority
                     </p>
                   </div>
-                  <button className="text-gray-400 hover:text-white transition">
+                  <button className="text-gray-400 hover:text-white transition" aria-label="Action button">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M18 6L6 18M6 6l12 12" />
                     </svg>
