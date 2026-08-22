@@ -1,0 +1,43 @@
+{
+  "scanDate": "2026-08-20T14:02:25.814Z",
+  "startUrl": "http://localhost:3000/",
+  "pagesScanned": 4,
+  "summary": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0,
+    "minor": 0
+  },
+  "totalIssues": 0,
+  "ruleSummary": [],
+  "pages": [
+    {
+      "url": "http://localhost:3000/",
+      "title": "AstroOS - Vedic Astrology Research Platform",
+      "violationsCount": 0,
+      "passesCount": 32,
+      "violations": []
+    },
+    {
+      "url": "http://localhost:3000/login",
+      "title": "Sign In | AstroOS",
+      "violationsCount": 0,
+      "passesCount": 35,
+      "violations": []
+    },
+    {
+      "url": "http://localhost:3000/register",
+      "title": "Create Account | AstroOS",
+      "violationsCount": 0,
+      "passesCount": 35,
+      "violations": []
+    },
+    {
+      "url": "http://localhost:3000/forgot-password",
+      "title": "Forgot Password | AstroOS",
+      "violationsCount": 0,
+      "passesCount": 35,
+      "violations": []
+    }
+  ]
+}

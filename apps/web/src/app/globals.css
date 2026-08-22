@@ -149,11 +149,11 @@ html.light {
   /* ── Text (Light Mode) ── */
   --text-primary: #0f172a;
   --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-tertiary: #64748b;
+  --text-muted: #475569;
+  --text-tertiary: #475569;
   --obsidian-text-primary: #0f172a;
   --obsidian-text-secondary: #475569;
-  --obsidian-text-muted: #64748b;
+  --obsidian-text-muted: #475569;
 
   /* ── Chart colors (Light Mode) ── */
   --chart-bg: #ffffff;

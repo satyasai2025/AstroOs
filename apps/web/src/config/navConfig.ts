@@ -196,6 +196,8 @@ export const NAV_CONFIG: NavGroup[] = [
         color: "--section-analysis",
         items: [
           { href: "/charts?view=kp", label: "KP Analysis", subtitle: "Krishnamurti Paddhati", icon: "target", viewId: "analysis-kp" },
+          { href: "/charts/prashna", label: "Prashna (Horary)", subtitle: "KP Horary · Arabic Parts", icon: "sparkle", viewId: "analysis-prashna" },
+          { href: "/events", label: "Events Explorer", subtitle: "300+ Life Events & Formulas", icon: "calendar", viewId: "analysis-events" },
           { href: "/charts?view=jaimini", label: "Jaimini", icon: "book" },
           { href: "/predictions", label: "Prediction Chain Explorer", icon: "sparkle" },
         ],
@@ -383,6 +385,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid" },
       { href: "/charts?view=strength", label: "Shadbala", icon: "bar" },
       { href: "/charts?view=kp", label: "KP Analysis", icon: "target" },
+      { href: "/charts/prashna", label: "Prashna (Horary)", icon: "sparkle" },
       { href: "/charts?view=jaimini", label: "Jaimini Analysis", icon: "book" },
       { href: "/predictions", label: "Prediction Chain Explorer", icon: "sparkle" },
     ],

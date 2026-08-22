@@ -1,51 +1,33 @@
 """
 AstroOS — Prashna (Horary) domain models.
 
-Two independent techniques, both classical KP/Horary tools:
-
-  Prashna Arudha (seed-number lookup)
-    The querent picks a number 1-249. That number indexes a fixed partition
-    of the zodiac into 249 unequal arcs — the same "KP Horary Number" table
-    used by Krishnamurti Paddhati horary practice, giving each number a
-    rashi, nakshatra, sign lord, star lord and sub lord without any
-    ephemeris calculation at all (the seed number IS the chart).
-
-  The six Sphutas (Trisphuta / Chatursphuta / Panchasphuta / Pranasphuta /
-  Dehasphuta / Mrityusphuta)
-    Sensitive points obtained by summing multiples of the Lagna, Moon, Sun,
-    Rahu and Gulika longitudes, in the fixed sequence found in every
-    classical Prashna Marga-derived table. Each depends on the actual chart
-    (birth or query moment + location), unlike the Arudha above.
-
-Both the 249-entry table and the six sphuta formulas were taken verbatim
-from PyJHora (github.com/naturalstupid/PyJHora, `jhora/const.py`'s
-`prasna_kp_249_dict` and `jhora/horoscope/chart/sphuta.py`'s
-`tri_sphuta`/`chatur_sphuta`/`pancha_sphuta`/`prana_sphuta`/`deha_sphuta`/
-`mrityu_sphuta`) rather than re-derived from a secondary description, per
-the project's rule of checking astrology formulas against a real reference
-implementation before trusting them. Spot-checked: table row 1 (Ashwini,
-0°-0°46'40") assigns sign lord Mars (rules Aries), star lord Ketu and sub
-lord Ketu — correct, since the first KP sub of any nakshatra is always its
-own lord.
-
-Pure Python dataclasses, no ORM/Pydantic dependency — same convention as
-domain/upagraha.py and domain/muhurta.py.
+Comprehensive domain definitions covering:
+1. KP Horary Arudha (1-249 and 1-2193 seed lookups)
+2. Prashna Sphutas (Trisphuta, Chatursphuta, Panchasphuta, Pranasphuta, Dehasphuta, Mrityusphuta)
+3. Ruling Planets (CT / RT snapshots)
+4. Arabic Parts / Sahams / Event Combinations with KP Sub-Lord mappings
+5. Prashna Judgement, Evidence scoring, Timing, and Contradictions
 """
 
 from __future__ import annotations
+from dataclasses import dataclass, field
+from typing import Literal
 
-from dataclasses import dataclass
-
-# Planet index → AstroOS's lowercase Graha name, matching the sign_lord/
-# star_lord/sub_lord columns of PRASNA_KP_249_TABLE (0=Sun … 8=Ketu, same
-# order PyJHora's const.py uses for SUN_ID..KETU_ID).
+# Planet index → AstroOS's lowercase Graha name (0=Sun … 8=Ketu)
 PRASHNA_PLANET_NAMES: tuple[str, ...] = (
     "sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu",
 )
 
-# (rashi_index, nakshatra_index, start_degree_in_rashi, end_degree_in_rashi,
-#  sign_lord_index, star_lord_index, sub_lord_index) for horary numbers 1-249,
-# in order. Index 0 of this tuple is horary number 1.
+VIMSHOTTARI_LORDS_ORDER: tuple[str, ...] = (
+    "ketu", "venus", "sun", "moon", "mars", "rahu", "jupiter", "saturn", "mercury"
+)
+
+VIMSHOTTARI_YEARS: dict[str, float] = {
+    "ketu": 7.0, "venus": 20.0, "sun": 6.0, "moon": 10.0, "mars": 7.0,
+    "rahu": 18.0, "jupiter": 16.0, "saturn": 19.0, "mercury": 17.0,
+}
+TOTAL_VIMSHOTTARI_YEARS = 120.0
+
 PRASNA_KP_249_TABLE: tuple[tuple[int, int, float, float, int, int, int], ...] = (
     (0,0,0.0000000000,0.7777777778,2,8,8),
     (0,0,0.7777777778,3.0000000000,2,8,5),
@@ -121,8 +103,8 @@ PRASNA_KP_249_TABLE: tuple[tuple[int, int, float, float, int, int, int], ...] = 
     (3,7,12.1111111111,12.8888888889,1,6,2),
     (3,7,12.8888888889,14.8888888889,1,6,7),
     (3,7,14.8888888889,16.6666666667,1,6,4),
-    (3,8,16.6666666667,18.5558333333,1,3,3),
-    (3,8,18.5558333333,19.3333333333,1,3,8),
+    (3,8,16.6666666667,18.5555555556,1,3,3),
+    (3,8,18.5555555556,19.3333333333,1,3,8),
     (3,8,19.3333333333,21.5555555556,1,3,5),
     (3,8,21.5555555556,22.2222222222,1,3,0),
     (3,8,22.2222222222,23.3333333333,1,3,1),
@@ -217,8 +199,8 @@ PRASNA_KP_249_TABLE: tuple[tuple[int, int, float, float, int, int, int], ...] = 
     (8,18,0.7777777778,3.0000000000,4,8,5),
     (8,18,3.0000000000,3.6666666667,4,8,0),
     (8,18,3.6666666667,4.7777777778,4,8,1),
-    (8,18,4.7777777778,5.8888888889,4,8,2),
-    (8,18,5.8888888889,7.5555555556,4,8,7),
+    (8,18,4.7777777778,5.5555555556,4,8,2),
+    (8,18,5.5555555556,7.5555555556,4,8,7),
     (8,18,7.5555555556,9.3333333333,4,8,4),
     (8,18,9.3333333333,11.4444444444,4,8,6),
     (8,18,11.4444444444,13.3333333333,4,8,3),
@@ -247,8 +229,8 @@ PRASNA_KP_249_TABLE: tuple[tuple[int, int, float, float, int, int, int], ...] = 
     (9,21,13.8888888889,15.6666666667,6,1,4),
     (9,21,15.6666666667,17.7777777778,6,1,6),
     (9,21,17.7777777778,19.6666666667,6,1,3),
-    (9,21,19.6666666667,20.7777777778,6,1,8),
-    (9,21,20.7777777778,22.6666666667,6,1,5),
+    (9,21,19.6666666667,20.4444444444,6,1,8),
+    (9,21,20.4444444444,22.6666666667,6,1,5),
     (9,21,22.6666666667,23.3333333333,6,1,0),
     (9,22,23.3333333333,24.1111111111,6,2,2),
     (9,22,24.1111111111,26.1111111111,6,2,7),
@@ -258,8 +240,8 @@ PRASNA_KP_249_TABLE: tuple[tuple[int, int, float, float, int, int, int], ...] = 
     (10,22,1.8888888889,2.6666666667,6,2,8),
     (10,22,2.6666666667,4.8888888889,6,2,5),
     (10,22,4.8888888889,5.5555555556,6,2,0),
-    (10,22,5.5555555556,6.6722222222,6,2,1),
-    (10,23,6.6722222222,8.6666666667,6,7,7),
+    (10,22,5.5555555556,6.6666666667,6,2,1),
+    (10,23,6.6666666667,8.6666666667,6,7,7),
     (10,23,8.6666666667,10.4444444444,6,7,4),
     (10,23,10.4444444444,12.5555555556,6,7,6),
     (10,23,12.5555555556,14.4444444444,6,7,3),
@@ -301,24 +283,24 @@ PRASNA_KP_249_TABLE: tuple[tuple[int, int, float, float, int, int, int], ...] = 
 
 @dataclass(frozen=True)
 class PrashnaArudhaResult:
-    """Chart-free lookup result for one Prashna (horary) seed number."""
-
-    seed_number: int              # 1-249, as given by the querent
-    sidereal_longitude: float     # midpoint of the number's zodiacal arc
+    """Chart-free lookup result for one Prashna seed number (1-249 or 1-2193)."""
+    seed_number: int
+    system: Literal["kp_249", "kp_2193"]
+    sidereal_longitude: float
     rashi: str
-    rashi_degree: float           # position within the rashi, at the midpoint
+    rashi_degree: float
     nakshatra: str
     sign_lord: str
     star_lord: str
     sub_lord: str
-    arc_start_degree: float       # start of this number's arc, within its rashi
-    arc_end_degree: float         # end of this number's arc, within its rashi
+    sub_sub_lord: str
+    arc_start_degree: float
+    arc_end_degree: float
 
 
 @dataclass(frozen=True)
 class SphutaPosition:
     """One computed Sphuta (Trisphuta, Chatursphuta, ...)."""
-
     name: str
     sidereal_longitude: float
     rashi: str
@@ -331,8 +313,98 @@ class SphutaPosition:
 
 @dataclass(frozen=True)
 class PrashnaSphutaResult:
-    """All six Sphutas for one chart (birth or query moment + location)."""
-
+    """All six Sphutas for one chart."""
     sphutas: tuple[SphutaPosition, ...]
     ascendant_longitude: float
     gulika_longitude: float
+
+
+@dataclass(frozen=True)
+class RulingPlanetEntry:
+    point_name: str  # "Ascendant", "Moon", "Rahu", "Ketu", "Day Lord", "Hora Lord"
+    sign_lord: str
+    star_lord: str
+    sub_lord: str
+    sub_sub_lord: str
+    as_aspecting: str = ""
+    is_conjunction: str = ""
+
+
+@dataclass(frozen=True)
+class RulingPlanetsSnapshot:
+    casting_time: str
+    hora_lord: str
+    day_lord: str
+    entries: tuple[RulingPlanetEntry, ...]
+
+
+@dataclass(frozen=True)
+class ArabicPartComputed:
+    name: str
+    category: str
+    formula_used: str
+    is_day_formula: bool
+    sidereal_longitude: float
+    rashi: str
+    rashi_degree_str: str
+    sign_lord: str
+    star_lord: str
+    sub_lord: str
+    sub_sub_lord: str
+    description: str
+
+
+@dataclass(frozen=True)
+class KeyEvidenceItem:
+    factor: str
+    indication: Literal["Positive", "Very Positive", "Neutral", "Slight Negative", "Negative"]
+    explanation: str
+    weight: int  # e.g. +18, +20, -5
+
+
+@dataclass(frozen=True)
+class RelevantHouseItem:
+    house: int
+    sign: str
+    lord: str
+    strength: Literal["Strong", "Average", "Weak"]
+    note: str
+
+
+@dataclass(frozen=True)
+class TimingIndication:
+    likely_window: str
+    dasha_mahadasha: str
+    antardasha: str
+    transit_support: str
+    moon_cycle: str
+
+
+@dataclass(frozen=True)
+class RuleTriggeredItem:
+    rule_id: str
+    rule_principle: str
+    reference: str
+    triggered: Literal["Yes", "Partially", "No"]
+    weight: int
+
+
+@dataclass(frozen=True)
+class ContradictionItem:
+    title: str
+    description: str
+    advice: str
+
+
+@dataclass(frozen=True)
+class PrashnaJudgement:
+    verdict: Literal["YES", "NO", "MIXED"]
+    confidence_percentage: int
+    strength_label: str
+    summary: str
+    key_evidences: tuple[KeyEvidenceItem, ...]
+    relevant_houses: tuple[RelevantHouseItem, ...]
+    timing: TimingIndication
+    conclusions: tuple[str, ...]
+    supporting_rules: tuple[RuleTriggeredItem, ...]
+    contradictions: tuple[ContradictionItem, ...]

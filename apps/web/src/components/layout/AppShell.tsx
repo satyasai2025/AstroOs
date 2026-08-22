@@ -329,7 +329,7 @@ function AppShellInner({
             {!sidebarCollapsed && (
               <span className="leading-tight">
                 <span className="block text-sm font-bold tracking-wide" style={{ color: "var(--text-primary)" }}>
-                  ASTRO<span style={{ color: "var(--accent)" }}>OS</span>
+                  ASTRO<span className="text-cyan-700 dark:text-cyan-400 font-bold">OS</span>
                 </span>
                 <span className="block text-[10px]" style={{ color: "var(--text-muted)" }}>
                   Vedic Research Platform
@@ -357,13 +357,12 @@ function AppShellInner({
           <button
             type="button"
             onClick={() => setQuickActionOpen((v) => !v)}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-cyan-500/20 transition"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-700 hover:bg-cyan-800 py-2.5 text-xs font-bold text-white shadow-md transition"
             title="Quick Action"
           >
             <NavIcon name="plus" />
             {!sidebarCollapsed && <span>Quick Action</span>}
           </button>
-
 
           {quickActionOpen && (
             <div
@@ -476,46 +475,41 @@ function AppShellInner({
               (item) => (!item.adminOnly || user.role === "admin") && !item.disabled && !item.beta
             );
             if (items.length === 0) return null;
-            const sectionColor = `var(${section.color})`;
             return (
               <div key={section.title}>
                 <p
-                  className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest"
-                  style={{ color: sectionColor }}
+                  className="mb-1.5 px-2 text-[10px] font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300"
                 >
                   {section.title}
                 </p>
                 <div className="flex flex-col gap-0.5">
-                  {items.map((item) => (
-                    <Link
-                      key={item.label + item.href}
-                      href={item.href}
-                      className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition"
-                      style={{
-                        backgroundColor: isActive(item.href) ? "var(--border-primary)" : "transparent",
-                        color: isActive(item.href) ? sectionColor : "var(--text-secondary)",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive(item.href)) e.currentTarget.style.color = sectionColor;
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive(item.href)) e.currentTarget.style.color = "var(--text-secondary)";
-                      }}
-                      onClick={
-                        item.href === "/dashboard" && item.label === "New Chart"
-                          ? () => {
-                              clearWorkflowResult();
-                              openCreateModal();
-                            }
-                          : undefined
-                      }
-                      aria-current={isActive(item.href) ? "page" : undefined}
-                      title={sidebarCollapsed ? item.label : undefined}
-                    >
-                      <NavIcon name={item.icon} />
-                      {!sidebarCollapsed && item.label}
-                    </Link>
-                  ))}
+                  {items.map((item) => {
+                    const active = isActive(item.href);
+                    return (
+                      <Link
+                        key={item.label + item.href}
+                        href={item.href}
+                        className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition ${
+                          active
+                            ? "bg-slate-200 dark:bg-slate-800 text-cyan-900 dark:text-cyan-300 font-bold"
+                            : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-850"
+                        }`}
+                        onClick={
+                          item.href === "/dashboard" && item.label === "New Chart"
+                            ? () => {
+                                clearWorkflowResult();
+                                openCreateModal();
+                              }
+                            : undefined
+                        }
+                        aria-current={active ? "page" : undefined}
+                        title={sidebarCollapsed ? item.label : undefined}
+                      >
+                        <NavIcon name={item.icon} />
+                        {!sidebarCollapsed && item.label}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             );

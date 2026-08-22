@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Badge, Button, Card, Input, Select, type SelectOption } from "@/components/ui";
+import { BTRMethodologyGuide } from "@/components/research/BTRMethodologyGuide";
 import { api } from "@/lib/api";
 import type { AyanamsaCode } from "@/lib/types";
 
@@ -272,6 +273,8 @@ export default function RectifyPage() {
             upagrahas and special lagnas derived from the sunrise/sunset frame.
           </p>
         </div>
+
+        <BTRMethodologyGuide />
 
         {error && (
           <Card glow="gold">

@@ -68,9 +68,16 @@ from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
 from apps.api.routers import tarabala as tarabala_router
 from apps.api.routers import technique as technique_router
+from apps.api.routers import custom_techniques as custom_techniques_router
 from apps.api.routers import benchmark as benchmark_router
 from apps.api.routers import prediction_orchestration as prediction_orchestration_router
 from apps.api.routers import research_calibration as research_calibration_router
+from apps.api.routers import research_reproducibility as research_reproducibility_router
+from apps.api.routers import decision_synthesis as decision_synthesis_router
+from apps.api.routers import research_knowledge_graph as research_knowledge_graph_router
+from apps.api.routers import decision_action as decision_action_router
+from apps.api.routers import portfolio_planner as portfolio_planner_router
+from apps.api.routers import longitudinal_tracking as longitudinal_tracking_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
 # Imported for its side effect: registers the /patterns route onto
@@ -342,6 +349,9 @@ def create_app() -> FastAPI:
         technique_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
+        custom_techniques_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         prediction_orchestration_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
@@ -391,7 +401,7 @@ def create_app() -> FastAPI:
         muhurta_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
-        prashna_router.router, prefix="/api/v1", dependencies=_authenticated
+        prashna_router.router, prefix="/api/v1"
     )
     app.include_router(
         calendar_router.router, prefix="/api/v1", dependencies=_authenticated
@@ -419,6 +429,12 @@ def create_app() -> FastAPI:
     app.include_router(
         research_calibration_router.router, prefix="/api/v1", dependencies=_authenticated
     )
+    app.include_router(research_reproducibility_router.router)
+    app.include_router(decision_synthesis_router.router)
+    app.include_router(research_knowledge_graph_router.router)
+    app.include_router(decision_action_router.router)
+    app.include_router(portfolio_planner_router.router)
+    app.include_router(longitudinal_tracking_router.router)
     app.include_router(
         benchmark_router.router, prefix="/api/v1", dependencies=_authenticated
     )

@@ -1,0 +1,209 @@
+[
+  {
+    "stepName": "01. Homepage",
+    "url": "http://localhost:3000/",
+    "timestamp": "2026-08-22T09:24:35.620Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "02. Dashboard Overview",
+    "url": "http://localhost:3000/dashboard",
+    "timestamp": "2026-08-22T09:24:37.040Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: ॐ (/dashboard)",
+    "url": "http://localhost:3000/dashboard",
+    "timestamp": "2026-08-22T09:24:38.976Z",
+    "status": "failed",
+    "violationCount": 1,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+        "affectedNodes": 4,
+        "nodes": [
+          {
+            "html": "<span style=\"color: var(--accent);\">OS</span>",
+            "target": [
+              ".tracking-wide.text-sm.font-bold > span"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-charts);\">Core Charts</p>",
+            "target": [
+              "div:nth-child(1) > .mb-1\\.5.tracking-widest"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-analysis);\">Predictive &amp; Technical</p>",
+            "target": [
+              "div:nth-child(2) > .mb-1\\.5.tracking-widest"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-research);\">Research</p>",
+            "target": [
+              "div:nth-child(3) > .mb-1\\.5.tracking-widest"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "stepName": "Tab: My Charts (/charts/history)",
+    "url": "http://localhost:3000/charts/history",
+    "timestamp": "2026-08-22T09:24:40.399Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: Compare Charts (/charts/compare)",
+    "url": "http://localhost:3000/charts/compare",
+    "timestamp": "2026-08-22T09:24:41.956Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: Import Chart (/charts/import)",
+    "url": "http://localhost:3000/charts/import",
+    "timestamp": "2026-08-22T09:24:43.399Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: Birth Chart (/charts)",
+    "url": "http://localhost:3000/charts?view=chart",
+    "timestamp": "2026-08-22T09:24:45.022Z",
+    "status": "failed",
+    "violationCount": 1,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+        "affectedNodes": 5,
+        "nodes": [
+          {
+            "html": "<span style=\"color: var(--accent);\">OS</span>",
+            "target": [
+              ".tracking-wide > span"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-charts);\">Core Charts</p>",
+            "target": [
+              "div:nth-child(1) > .mb-1\\.5.font-semibold.uppercase"
+            ]
+          },
+          {
+            "html": "<a class=\"flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition\" aria-current=\"page\" href=\"/charts?view=chart\" style=\"background-color: var(--border-primary); color: var(--section-charts);\">",
+            "target": [
+              "a[aria-current=\"page\"]"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-analysis);\">Predictive &amp; Technical</p>",
+            "target": [
+              "div:nth-child(2) > .mb-1\\.5.font-semibold.uppercase"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-research);\">Research</p>",
+            "target": [
+              "div:nth-child(3) > .mb-1\\.5.font-semibold.uppercase"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "stepName": "Tab Index #9",
+    "url": "http://localhost:3000/charts?view=chart",
+    "timestamp": "2026-08-22T09:24:46.826Z",
+    "status": "error",
+    "errorMessage": "page.goto: net::ERR_ABORTED at http://localhost:3000/nakshatra\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/nakshatra\", waiting until \"load\"\u001b[22m\n",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "03. Astrology Calculation Form (Inputs)",
+    "url": "http://localhost:3000/charts?view=chart",
+    "timestamp": "2026-08-22T09:24:52.332Z",
+    "status": "failed",
+    "violationCount": 1,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+        "affectedNodes": 5,
+        "nodes": [
+          {
+            "html": "<span style=\"color: var(--accent);\">OS</span>",
+            "target": [
+              ".tracking-wide.text-sm.font-bold > span"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-charts);\">Core Charts</p>",
+            "target": [
+              "div:nth-child(1) > .mb-1\\.5.tracking-widest"
+            ]
+          },
+          {
+            "html": "<a class=\"flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition\" href=\"/charts?view=chart\" style=\"background-color: transparent; color: var(--section-charts);\">",
+            "target": [
+              "a[href=\"/charts?view=chart\"]"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-analysis);\">Predictive &amp; Technical</p>",
+            "target": [
+              "div:nth-child(2) > .mb-1\\.5.tracking-widest"
+            ]
+          },
+          {
+            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-research);\">Research</p>",
+            "target": [
+              "div:nth-child(3) > .mb-1\\.5.tracking-widest"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "stepName": "04. Calculation Results & Chart Output",
+    "url": "http://localhost:3000/login",
+    "timestamp": "2026-08-22T09:25:21.296Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Astrology Calculation Form Verification",
+    "url": "http://localhost:3000/login",
+    "timestamp": "2026-08-22T09:25:21.322Z",
+    "status": "error",
+    "errorMessage": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+    "violationCount": 0,
+    "violations": []
+  }
+]

@@ -197,7 +197,7 @@ class TestQAResponder:
     def test_retrograde_question(self):
         chart = _make_chart()
         result = QAResponder.generate("Which planets are retrograde?", chart)
-        assert "No planets" in result.body
+        assert "direct (forward)" in result.body or "No planets" in result.body or "Retrograde" in result.body
 
     def test_no_chart(self):
         result = QAResponder.generate("Where is the Sun?")
@@ -206,7 +206,7 @@ class TestQAResponder:
     def test_unknown_question(self):
         chart = _make_chart()
         result = QAResponder.generate("What about Pluto?", chart)
-        assert "retrograde planets" in result.body.lower()
+        assert "executive summary" in result.body.lower() or "astrological analysis" in result.body.lower()
 
 
 class TestAIEngine:

@@ -154,7 +154,7 @@ export default function AppearanceSettingsPage() {
                   boxShadow: selectedAccent === accent.color ? `0 0 0 3px ${accent.color}88` : "none",
                 }}
                 title={accent.name}
-              />
+              ></button>
             ))}
           </div>
         </div>

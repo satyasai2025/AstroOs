@@ -273,8 +273,8 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
                 onClick={() => setSelected(event)}
                 aria-label={`View details for ${event.event_type} on ${formatDate(event.event_date)}`}
                 style={{
-                  width: 16,
-                  height: 16,
+                  width: 24,
+                  height: 24,
                   borderRadius: "50%",
                   background: TONE_HEX[tone],
                   boxShadow: `0 0 10px ${TONE_HEX[tone]}`,
@@ -285,7 +285,7 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-              />
+              ></button>
 
               {!isTop && (
                 <button
