@@ -814,19 +814,26 @@ export function SBCChakraGrid() {
                   ) : (
                     <div className="space-y-2.5">
                       {data.synthesis.high_risk_areas.map((item, idx) => (
-                        <div key={idx} className="p-3 rounded-xl border border-rose-500/30 bg-slate-900/90 text-xs space-y-1.5 shadow-sm">
+                        <div
+                          key={idx}
+                          className="p-3 rounded-xl border border-rose-500/30 text-xs space-y-1.5 shadow-sm"
+                          style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}
+                        >
                           <div className="flex flex-wrap items-center justify-between gap-2">
-                            <span className="font-bold text-slate-100 text-sm">
-                              {item.sangya_name} <span className="text-xs font-medium text-slate-400">({item.sangya_offset}th · {item.nakshatra_name})</span>
+                            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
+                              {item.sangya_name} <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">({item.sangya_offset}th · {item.nakshatra_name})</span>
                             </span>
                             <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-900 border border-rose-600/40 dark:bg-rose-950/60 dark:text-rose-300">
                               {item.transiting_planet} ({item.transiting_nakshatra}) · {item.aspect_ray} Ray
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-300 font-medium">
-                            <strong className="text-rose-400 font-bold">Domain Hit:</strong> {item.domain}
+                          <div className="text-[11px] text-slate-800 dark:text-slate-200 font-semibold">
+                            <strong className="text-rose-500 dark:text-rose-400 font-bold">Domain Hit:</strong> {item.domain}
                           </div>
-                          <div className="text-xs font-semibold text-rose-300 dark:text-rose-200 leading-relaxed bg-rose-950/40 p-2 rounded-lg border border-rose-500/20">
+                          <div
+                            className="text-xs font-semibold text-rose-950 dark:text-rose-200 leading-relaxed p-2.5 rounded-xl border border-rose-500/30"
+                            style={{ backgroundColor: "var(--bg-secondary)" }}
+                          >
                             {item.impact}
                           </div>
                         </div>
@@ -854,19 +861,26 @@ export function SBCChakraGrid() {
                   ) : (
                     <div className="space-y-2.5">
                       {data.synthesis.protective_shields.map((item, idx) => (
-                        <div key={idx} className="p-3 rounded-xl border border-emerald-500/30 bg-slate-900/90 text-xs space-y-1.5 shadow-sm">
+                        <div
+                          key={idx}
+                          className="p-3 rounded-xl border border-emerald-500/30 text-xs space-y-1.5 shadow-sm"
+                          style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}
+                        >
                           <div className="flex flex-wrap items-center justify-between gap-2">
-                            <span className="font-bold text-slate-100 text-sm">
-                              {item.sangya_name} <span className="text-xs font-medium text-slate-400">({item.sangya_offset}th · {item.nakshatra_name})</span>
+                            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
+                              {item.sangya_name} <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">({item.sangya_offset}th · {item.nakshatra_name})</span>
                             </span>
                             <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/60 dark:text-emerald-300">
                               {item.transiting_planet} ({item.transiting_nakshatra}) · {item.aspect_ray} Ray
                             </span>
                           </div>
-                          <div className="text-[11px] text-slate-300 font-medium">
-                            <strong className="text-emerald-400 font-bold">Domain Shielded:</strong> {item.domain}
+                          <div className="text-[11px] text-slate-800 dark:text-slate-200 font-semibold">
+                            <strong className="text-emerald-500 dark:text-emerald-400 font-bold">Domain Shielded:</strong> {item.domain}
                           </div>
-                          <div className="text-xs font-semibold text-emerald-300 dark:text-emerald-200 leading-relaxed bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/20">
+                          <div
+                            className="text-xs font-semibold text-emerald-950 dark:text-emerald-200 leading-relaxed p-2.5 rounded-xl border border-emerald-500/30"
+                            style={{ backgroundColor: "var(--bg-secondary)" }}
+                          >
                             {item.impact}
                           </div>
                         </div>
@@ -879,16 +893,16 @@ export function SBCChakraGrid() {
               {/* 2. Executive Synthesis & Practical Interpretation */}
               <div className="p-4 rounded-2xl border border-amber-500/30 bg-amber-950/20 space-y-3 backdrop-blur-sm">
                 <div className="font-extrabold text-amber-400 dark:text-amber-300 uppercase tracking-wide text-xs">
-                  Final Synthesis & Practical Interpretation
+                  Final Synthesis &amp; Practical Interpretation
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl border border-rose-500/30 bg-slate-900/90 space-y-1">
-                    <span className="font-bold text-rose-400 dark:text-rose-300 block text-xs">High Risk Caution:</span>
-                    <span className="text-slate-200 font-medium leading-relaxed block">{data.synthesis.executive_summary}</span>
+                  <div className="p-3 rounded-xl border border-rose-500/30 space-y-1" style={{ backgroundColor: "var(--bg-card)" }}>
+                    <span className="font-bold text-rose-500 dark:text-rose-300 block text-xs">High Risk Caution:</span>
+                    <span className="text-slate-900 dark:text-slate-100 font-medium leading-relaxed block">{data.synthesis.executive_summary}</span>
                   </div>
-                  <div className="p-3 rounded-xl border border-emerald-500/30 bg-slate-900/90 space-y-1">
-                    <span className="font-bold text-emerald-400 dark:text-emerald-300 block text-xs">Saving Grace:</span>
-                    <span className="text-slate-200 font-medium leading-relaxed block">{data.synthesis.saving_grace}</span>
+                  <div className="p-3 rounded-xl border border-emerald-500/30 space-y-1" style={{ backgroundColor: "var(--bg-card)" }}>
+                    <span className="font-bold text-emerald-500 dark:text-emerald-300 block text-xs">Saving Grace:</span>
+                    <span className="text-slate-900 dark:text-slate-100 font-medium leading-relaxed block">{data.synthesis.saving_grace}</span>
                   </div>
                 </div>
 

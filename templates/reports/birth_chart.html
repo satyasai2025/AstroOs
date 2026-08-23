@@ -474,6 +474,7 @@
                                 <th>Karaka</th>
                                 <th>Dignity</th>
                                 <th>Retro</th>
+                                <th>Combust</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -516,6 +517,13 @@
                                 <td>
                                     {% if p.is_retrograde %}
                                         <span class="badge-retro">℞</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if p.is_combust %}
+                                        <span class="badge-retro">Combust</span>
                                     {% else %}
                                         —
                                     {% endif %}

@@ -917,32 +917,32 @@ export function HouseDependencyNetwork({
         {activeInfo ? (
           <>
             {/* Header */}
-            <div className="flex items-start justify-between border-b border-gray-800 pb-4">
+            <div className="flex items-start justify-between border-b pb-4" style={{ borderColor: "var(--border-primary)" }}>
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-cyan-900/40 text-cyan-300 border border-cyan-600/40">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-cyan-100 text-cyan-900 border border-cyan-600/40 dark:bg-cyan-950/60 dark:text-cyan-300">
                     {ordinal(activeInfo.houseNumber)} House
                   </span>
                   {activeInfo.weak ? (
-                    <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-red-900/40 text-red-300 border border-red-600/40">
+                    <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-rose-100 text-rose-900 border border-rose-600/40 dark:bg-rose-950/60 dark:text-rose-300">
                       Weak
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-emerald-900/40 text-emerald-300 border border-emerald-600/40">
+                    <span className="px-2 py-0.5 text-xs font-bold rounded-md bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/60 dark:text-emerald-300">
                       Strong
                     </span>
                   )}
                 </div>
-                <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                   {HOUSE_BHAVA[activeInfo.houseNumber]?.name || `House ${activeInfo.houseNumber}`}
                 </h2>
-                <div className="text-xs text-gray-400 font-mono mt-1">
+                <div className="text-xs text-slate-700 dark:text-slate-300 font-mono font-semibold mt-1">
                   {activeInfo.rashi} • Lord: {activeInfo.lord || "—"}
                 </div>
               </div>
               <button
                 onClick={() => setSelected(null)}
-                className="text-gray-400 hover:text-white transition"
+                className="text-xs font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:text-white cursor-pointer"
               >
                 ✕
               </button>

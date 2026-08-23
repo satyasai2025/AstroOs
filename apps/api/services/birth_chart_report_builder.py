@@ -73,6 +73,14 @@ DASHA_YEARS = {
 
 DASHA_ORDER = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"]
 
+# This report's "Time of Birth"/"Timezone"/sunrise/sunset fields are all
+# labeled IST — consistent with the report's implicit India/New-Delhi-only
+# scope (default place_name, fixed "IST (UTC +05:30)" timezone field).
+# `birth_dt` itself is always UTC (the `birth_datetime_utc` param), so
+# display-only fields need this offset applied; the underlying chart
+# calculation is untouched — it already operates in UTC/JD throughout.
+IST_OFFSET = timedelta(hours=5, minutes=30)
+
 
 def format_dms(deg_float: float) -> str:
     """Format decimal degrees into DD° MM' SS.SS\""""
@@ -183,6 +191,7 @@ class BirthChartReportBuilder:
             "dignity": "—",
             "is_retrograde": False,
             "retro_symbol": "",
+            "is_combust": False,
         })
         d1_house_planets[1].append("As")
         d9_house_planets[1].append("As")
@@ -239,6 +248,7 @@ class BirthChartReportBuilder:
                 "dignity": dignity_val,
                 "is_retrograde": getattr(p, "is_retrograde", False),
                 "retro_symbol": "℞" if getattr(p, "is_retrograde", False) else "—",
+                "is_combust": getattr(p, "is_combust", False),
             })
 
         # ── 2. Panchanga Calculations ─────────────────────────────────────────
@@ -269,8 +279,8 @@ class BirthChartReportBuilder:
         ayanamsa_deg = self._wrapper.get_ayanamsa(birth_jd)
         ayanamsa_value_str = format_dms(ayanamsa_deg)
         sunrise_jd, sunset_jd = self._wrapper.get_sunrise_sunset(birth_jd, latitude, longitude)
-        sunrise_str = jd_to_datetime(sunrise_jd).strftime("%H:%M:%S") if sunrise_jd else "N/A"
-        sunset_str = jd_to_datetime(sunset_jd).strftime("%H:%M:%S") if sunset_jd else "N/A"
+        sunrise_str = (jd_to_datetime(sunrise_jd) + IST_OFFSET).strftime("%H:%M:%S") if sunrise_jd else "N/A"
+        sunset_str = (jd_to_datetime(sunset_jd) + IST_OFFSET).strftime("%H:%M:%S") if sunset_jd else "N/A"
 
         # ── 3. North Indian SVG Kundalis (Dimensions: 215 x 215) ──────────────
         d1_svg = render_north_indian_svg(
@@ -436,7 +446,7 @@ class BirthChartReportBuilder:
             "subject_name": subject_name,
             "gender": gender,
             "birth_date": birth_dt.strftime("%d %b %Y"),
-            "birth_time": birth_dt.strftime("%H:%M:%S (IST)"),
+            "birth_time": (birth_dt + IST_OFFSET).strftime("%H:%M:%S (IST)"),
             "place": place_name,
             "birth_datetime_utc": birth_dt.strftime("%Y-%m-%d %H:%M:%S UTC"),
             "latitude": f"{latitude:.4f}° {'N' if latitude >= 0 else 'S'}",

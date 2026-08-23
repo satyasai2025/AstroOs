@@ -324,8 +324,8 @@ export function AiSbcAnalyzerCard({
                           <span className="mt-0.5 text-xs">🛑</span>
                           <span>{w.headline}</span>
                         </div>
-                        <p className="text-xs text-slate-700 dark:text-slate-300">
-                          <strong>Avoid:</strong> {w.what_not_to_do}
+                        <p className="text-xs text-slate-900 dark:text-slate-100 font-medium">
+                          <strong className="text-rose-500 font-bold">Avoid:</strong> {w.what_not_to_do}
                         </p>
                         <div className="text-[10px] text-muted-foreground">
                           <strong>Area:</strong> {w.affected_area}
