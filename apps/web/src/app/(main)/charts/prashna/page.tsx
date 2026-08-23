@@ -632,11 +632,13 @@ export default function PrashnaPage() {
               </div>
             )}
           </div>
+        </div>
+      </div>
 
-          {/* Sub-Tabs: Bas / Sig / Asp / Arb */}
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-              <div className="flex items-center space-x-1.5">
+      {/* ── Sub-Tabs Full Width Workspace Panel: Bas / Sig / Asp / Arb ── */}
+      <div className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-5 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div className="flex items-center space-x-1.5">
                 {(["Bas", "Sig", "Asp", "Arb"] as const).map((tab) => (
                   <button
                     key={tab}
@@ -969,8 +971,6 @@ export default function PrashnaPage() {
               </div>
             )}
           </div>
-        </div>
-      </div>
 
       {/* ── Ruling Planets (RP) Dual Tables (CT & RT) ── */}
       <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-5 shadow-sm space-y-4">
