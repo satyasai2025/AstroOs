@@ -125,8 +125,9 @@ export function SouthIndianChart({
   return (
     <div className="relative w-full select-none flex justify-center">
       <svg
-        viewBox={`0 0 ${size} ${size}`}
-        className="w-full h-auto max-w-full max-h-[350px] mx-auto block rounded-xl shadow-sm border border-slate-200 dark:border-slate-800"
+        viewBox={`-20 -20 ${size + 40} ${size + 40}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="w-full h-auto max-w-[400px] mx-auto block shrink-0 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800"
         style={{
           backgroundColor: "var(--chart-bg, #ffffff)",
           fontFamily: "var(--font-inter, sans-serif)",
@@ -134,10 +135,10 @@ export function SouthIndianChart({
       >
         {/* Background */}
         <rect
-          x={0}
-          y={0}
-          width={size}
-          height={size}
+          x={-20}
+          y={-20}
+          width={size + 40}
+          height={size + 40}
           className="fill-white dark:fill-slate-900"
         />
 
@@ -270,9 +271,9 @@ export function SouthIndianChart({
 
                       {/* Planet Symbol */}
                       <text
-                        x={2}
+                        x={3}
                         y={10}
-                        fontSize="11px"
+                        fontSize="10px"
                         fontWeight="bold"
                         fill={pColor}
                       >
@@ -281,17 +282,16 @@ export function SouthIndianChart({
 
                       {/* Planet Name */}
                       <text
-                        x={16}
+                        x={15}
                         y={10}
-                        fontSize="10px"
+                        fontSize="9.5px"
                         fontWeight={isPlanetActive ? "700" : "600"}
                         className="fill-slate-800 dark:fill-slate-100"
                       >
                         {p.planet.slice(0, 3)}
                         {p.is_retrograde && (
-                          <tspan fill="#ef4444" fontWeight="bold">
-                            {" "}
-                            ℞
+                          <tspan fill="#ef4444" fontWeight="800" fontSize="8.5px" dx="2">
+                            R
                           </tspan>
                         )}
                       </text>
@@ -299,12 +299,12 @@ export function SouthIndianChart({
                       {/* Planet Degree if available */}
                       {typeof p.rashi_degree === "number" && (
                         <text
-                          x={cellSize - 16}
+                          x={cellSize - 4}
                           y={10}
                           textAnchor="end"
-                          fontSize="9px"
+                          fontSize="8.5px"
                           fontFamily="monospace"
-                          className="fill-slate-500 dark:fill-slate-400"
+                          className="fill-slate-500 dark:fill-slate-400 font-semibold"
                         >
                           {Math.floor(p.rashi_degree)}°{Math.floor((p.rashi_degree % 1) * 60)}′
                         </text>

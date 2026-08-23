@@ -130,7 +130,7 @@ export function NorthIndianChart({
 
     // Padding around the square leaves room for house-number labels
     // just outside the border, matching how a hand-drawn Kundli reads.
-    const pad = size * 0.08;
+    const pad = size * 0.10;
     const squareSize = size - pad * 2;
     const toPoint = ([ux, uy]: [number, number]): [number, number] => [
       pad + (ux / 100) * squareSize,
@@ -140,8 +140,10 @@ export function NorthIndianChart({
     // ── Background ─────────────────────────────────────────────────────────
     svg
       .append("rect")
-      .attr("width", size)
-      .attr("height", size)
+      .attr("x", -20)
+      .attr("y", -20)
+      .attr("width", size + 40)
+      .attr("height", size + 40)
       .attr("rx", 12)
       .style("fill", "var(--chart-bg)");
 
@@ -393,8 +395,9 @@ export function NorthIndianChart({
       )}
       <svg
         ref={svgRef}
-        viewBox={`0 0 ${size} ${size}`}
-        className="w-full h-auto max-w-full max-h-[350px] mx-auto block"
+        viewBox={`-20 -20 ${size + 40} ${size + 40}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="w-full h-auto max-w-[400px] mx-auto block shrink-0"
         role="img"
         aria-label={`North Indian square chart: ${chartTitle} showing ${ascendant.rashi} ascendant with ${planets.length} planets`}
       />

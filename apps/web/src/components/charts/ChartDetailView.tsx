@@ -280,7 +280,7 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
               />
             </div>
 
-            <div className="py-1 flex items-center justify-center min-h-[300px] max-h-[340px] overflow-hidden">
+            <div className="py-2 flex items-center justify-center w-full min-h-[320px]">
               {chartStyle === "south" ? (
                 <SouthIndianChart
                   title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}

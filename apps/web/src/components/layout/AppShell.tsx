@@ -12,6 +12,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 import { CommandPalette } from "./CommandPalette";
 import { ActiveChartSelectorModal } from "./ActiveChartSelectorModal";
+import { ResizableAIDrawer } from "@/components/layout/ResizableAIDrawer";
 
 
 import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
@@ -257,6 +258,44 @@ function AppShellInner({
     }
   });
 
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    if (typeof window === "undefined") return 256;
+    try {
+      const stored = localStorage.getItem("sidebar:width");
+      const parsed = stored ? parseInt(stored, 10) : 256;
+      return isNaN(parsed) ? 256 : Math.max(160, Math.min(480, parsed));
+    } catch {
+      return 256;
+    }
+  });
+
+  const [isDraggingSidebar, setIsDraggingSidebar] = useState(false);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setIsDraggingSidebar(true);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingSidebar) return;
+    const newWidth = e.clientX;
+    if (newWidth >= 160 && newWidth <= 480) {
+      setSidebarWidth(newWidth);
+      if (sidebarCollapsed) setSidebarCollapsed(false);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDraggingSidebar) {
+      setIsDraggingSidebar(false);
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+        localStorage.setItem("sidebar:width", String(sidebarWidth));
+      } catch {}
+    }
+  };
+
   const hasToken = typeof window !== "undefined" && !!tokenStore.getAccess();
 
   useEffect(() => {
@@ -306,10 +345,14 @@ function AppShellInner({
     <div className="flex min-h-dvh" style={{ backgroundColor: "var(--bg-primary)" }}>
       {/* ── Sidebar (desktop) ── */}
       <aside
-        className={`sticky top-0 hidden h-dvh flex-shrink-0 flex-col overflow-y-auto border-r px-3 py-5 lg:flex transition-all duration-200 ${
-          sidebarCollapsed ? "w-16" : "w-64"
+        className={`sticky top-0 hidden h-dvh flex-shrink-0 flex-col overflow-y-auto border-r px-3 py-5 lg:flex transition-none ${
+          sidebarCollapsed ? "w-16" : ""
         }`}
-        style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+        style={{
+          width: sidebarCollapsed ? "64px" : `${sidebarWidth}px`,
+          borderColor: "var(--border-primary)",
+          backgroundColor: "var(--bg-card)",
+        }}
         aria-label="Main navigation"
         aria-expanded={!sidebarCollapsed}
       >
@@ -563,6 +606,25 @@ function AppShellInner({
           </button>
         </div>
       </aside>
+
+      {/* ── Global Resizable Sidebar Drag Handle ── */}
+      <div
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onDoubleClick={() => {
+          setSidebarWidth(256);
+          localStorage.setItem("sidebar:width", "256");
+        }}
+        className={`hidden lg:flex w-1.5 relative z-30 cursor-col-resize flex-none items-center justify-center transition-colors select-none ${
+          isDraggingSidebar
+            ? "bg-cyan-500 shadow-[0_0_12px_rgba(6,182,212,0.6)]"
+            : "bg-transparent hover:bg-cyan-500/40 border-r border-slate-200 dark:border-slate-800"
+        }`}
+        title="Drag horizontally to resize left navigation sidebar (Double-click to reset)"
+      >
+        <div className="w-0.5 h-8 bg-slate-400/40 rounded-full" />
+      </div>
 
       {/* ── Main column ── */}
       <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
@@ -831,6 +893,7 @@ function AppShellInner({
         
         <CommandPalette />
         <ActiveChartSelectorModal isOpen={chartSelectorOpen} onClose={() => setChartSelectorOpen(false)} />
+        <ResizableAIDrawer />
       </div>
     </div>
   );
