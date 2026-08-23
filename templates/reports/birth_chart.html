@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AstroOS — Birth Chart Foundation Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap');
+
+        @page {
+            size: A4 portrait;
+            margin: 8mm;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 6.8pt;
+            line-height: 1.25;
+            color: #0f172a;
+            background: #475569; /* Slate canvas for print preview in browser */
+            padding: 12px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ── Physical A4 Paper Page Canvas (210 x 297 mm, 8mm margins -> 194 x 281 mm) ── */
+        .page {
+            width: 194mm;
+            height: 281mm;
+            max-height: 281mm;
+            min-height: 281mm;
+            background: #ffffff;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+            margin: 0 auto 10mm auto;
+            padding: 6mm 7mm;
+            overflow: hidden;
+            page-break-after: always;
+            break-after: page;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .page:last-child {
+            margin-bottom: 0;
+            page-break-after: auto;
+            break-after: auto;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                width: 194mm;
+                height: 281mm;
+                max-height: 281mm;
+                padding: 6mm 7mm;
+            }
+        }
+
+        /* ── Top Header ── */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-bottom: 5px;
+        }
+        .brand-col {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .brand-logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f59e0b;
+            font-size: 11pt;
+            font-weight: bold;
+        }
+        .brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13pt;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.3px;
+            line-height: 1;
+        }
+        .brand-title span {
+            color: #d97706;
+        }
+        .brand-sub {
+            font-size: 5.5pt;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 1px;
+        }
+        .title-center {
+            text-align: center;
+        }
+        .report-main-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11pt;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .report-sub-title {
+            font-size: 6pt;
+            font-weight: 700;
+            color: #b45309;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 1px;
+        }
+        .page-badge {
+            background: #0f172a;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 6.5pt;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 3px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ── Section Card Box ── */
+        .info-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            background: #ffffff;
+            padding: 4px 6px;
+        }
+        .info-card-hdr {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 6.8pt;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 2px;
+            margin-bottom: 3px;
+        }
+        .info-card-hdr .icon {
+            font-size: 7.5pt;
+            color: #d97706;
+        }
+
+        /* ── Top 3-Box Metadata Grid ── */
+        .top-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        .meta-kv {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1px 4px;
+            font-size: 6.5pt;
+        }
+        .meta-kv .k {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .meta-kv .v {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* ── Middle Row (D1 + D9 + Planetary Table) ── */
+        .middle-grid {
+            display: grid;
+            grid-template-columns: 58mm 58mm 1fr;
+            gap: 5px;
+            margin-bottom: 5px;
+            align-items: stretch;
+        }
+        .chart-box-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            background: #ffffff;
+            padding: 3px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .chart-hdr-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 6.2pt;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 2px;
+        }
+
+        /* ── Data Tables ── */
+        table.astro-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 6.4pt;
+            border: 1px solid #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        table.astro-table th {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 5.8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 2px 3px;
+            border: 1px solid #1e293b;
+            text-align: left;
+        }
+        table.astro-table td {
+            padding: 1.8px 3px;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+        }
+        table.astro-table tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            display: inline-block;
+            font-size: 5.8pt;
+            font-weight: 700;
+            padding: 0.5px 2.5px;
+            border-radius: 2px;
+            line-height: 1.1;
+        }
+        .badge-ak { background: #dbeafe; color: #1d4ed8; }
+        .badge-amk { background: #ede9fe; color: #6d28d9; }
+        .badge-karaka { background: #f1f5f9; color: #475569; font-weight: 600; }
+        .badge-retro { color: #dc2626; font-weight: 800; }
+        .badge-dignity-own { background: #dcfce7; color: #15803d; font-weight: 600; }
+        .badge-dignity-exalted { background: #fef08a; color: #854d0e; font-weight: 700; }
+        .badge-dignity-friendly { background: #e0f2fe; color: #0369a1; }
+        .badge-dignity-neutral { background: #f1f5f9; color: #475569; }
+        .badge-dignity-mool { background: #fef3c7; color: #b45309; font-weight: 700; }
+
+        /* ── Bottom Vimshottari Dasha Section ── */
+        .dasha-full-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 4px 6px;
+            background: #ffffff;
+            margin-top: 2px;
+        }
+        .dasha-full-hdr {
+            font-family: 'Outfit', sans-serif;
+            font-size: 6.8pt;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 2px;
+            margin-bottom: 3px;
+        }
+        .dasha-sub-grid {
+            display: grid;
+            grid-template-columns: 68mm 1fr;
+            gap: 6px;
+            align-items: start;
+        }
+        .antardasha-card-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 3px;
+            padding: 3px;
+            background: #f8fafc;
+        }
+        .antardasha-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 6pt;
+            font-weight: 700;
+            color: #b45309;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+        .antardasha-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 5.8pt;
+            text-align: center;
+        }
+        .antardasha-table th {
+            background: #0f172a;
+            color: #ffffff;
+            padding: 1.5px;
+            font-size: 5.5pt;
+        }
+        .antardasha-table td {
+            padding: 1.5px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+
+        /* ── Page 2: 3-Column Grid ── */
+        .page2-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 5px;
+            align-items: start;
+        }
+
+        .sav-table th, .sav-table td {
+            text-align: center;
+            padding: 1.8px 2px;
+            font-size: 6.2pt;
+        }
+        .sav-high { background-color: #dcfce7 !important; color: #166534; font-weight: bold; }
+        .sav-low { background-color: #fee2e2 !important; color: #991b1b; font-weight: bold; }
+        .sav-mid { background-color: #f8fafc !important; color: #334155; }
+        .sav-total-cell { background-color: #fef3c7 !important; color: #92400e; font-weight: 800; }
+
+        /* ── Bottom Page Footer ── */
+        .page-footer {
+            border-top: 1.5px solid #e2e8f0;
+            padding-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 6pt;
+            color: #64748b;
+        }
+        .qr-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 5.8pt;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--                       PHYSICAL PAGE 1                      -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="page">
+        <div>
+            <!-- Header Bar -->
+            <div class="header-bar">
+                <div class="brand-col">
+                    <div class="brand-logo-icon">★</div>
+                    <div>
+                        <div class="brand-title">ASTRO<span>OS</span></div>
+                        <div class="brand-sub">Vedic Research Platform</div>
+                    </div>
+                </div>
+                <div class="title-center">
+                    <div class="report-main-title">Birth Chart Foundation Report</div>
+                    <div class="report-sub-title">A Deterministic Reference Sheet</div>
+                </div>
+                <div>
+                    <span class="page-badge">Page 1 of 2</span>
+                </div>
+            </div>
+
+            <!-- Top 3-Box Metadata Grid -->
+            <div class="top-meta-grid">
+                <!-- Box 1: Native Details -->
+                <div class="info-card">
+                    <div class="info-card-hdr">
+                        <span class="icon">👤</span> Native Details
+                    </div>
+                    <div class="meta-kv">
+                        <span class="k">Name:</span> <span class="v">{{ report.subject_name }}</span>
+                        <span class="k">Gender:</span> <span class="v">{{ report.gender }}</span>
+                        <span class="k">Date of Birth:</span> <span class="v">{{ report.birth_date }}</span>
+                        <span class="k">Time of Birth:</span> <span class="v">{{ report.birth_time }}</span>
+                        <span class="k">Place:</span> <span class="v">{{ report.place }}</span>
+                        <span class="k">Latitude:</span> <span class="v">{{ report.latitude }}</span>
+                        <span class="k">Longitude:</span> <span class="v">{{ report.longitude }}</span>
+                        <span class="k">Timezone:</span> <span class="v">{{ report.timezone }}</span>
+                    </div>
+                </div>
+
+                <!-- Box 2: Panchanga (At Birth) -->
+                <div class="info-card">
+                    <div class="info-card-hdr">
+                        <span class="icon">📅</span> Panchanga (At Birth)
+                    </div>
+                    <div class="meta-kv">
+                        <span class="k">Tithi:</span> <span class="v">{{ report.panchanga.tithi }}</span>
+                        <span class="k">Nakshatra:</span> <span class="v">{{ report.panchanga.nakshatra }}</span>
+                        <span class="k">Yoga:</span> <span class="v">{{ report.panchanga.yoga }}</span>
+                        <span class="k">Karana:</span> <span class="v">{{ report.panchanga.karana }}</span>
+                        <span class="k">Vaara (Day):</span> <span class="v">{{ report.panchanga.vaara }}</span>
+                        <span class="k">Hora:</span> <span class="v">{{ report.panchanga.hora }}</span>
+                        <span class="k">Sunrise:</span> <span class="v">{{ report.panchanga.sunrise }}</span>
+                        <span class="k">Sunset:</span> <span class="v">{{ report.panchanga.sunset }}</span>
+                    </div>
+                </div>
+
+                <!-- Box 3: Calculation Details -->
+                <div class="info-card">
+                    <div class="info-card-hdr">
+                        <span class="icon">⚙️</span> Calculation Details
+                    </div>
+                    <div class="meta-kv">
+                        <span class="k">Ayanamsha:</span> <span class="v">{{ report.ayanamsa }}</span>
+                        <span class="k">Ayanamsha Val:</span> <span class="v">{{ report.ayanamsa_value }}</span>
+                        <span class="k">House System:</span> <span class="v">{{ report.house_system }}</span>
+                        <span class="k">Calendar:</span> <span class="v">{{ report.calendar }}</span>
+                        <span class="k">Dasa System:</span> <span class="v">Vimshottari</span>
+                        <span class="k">Ephemeris:</span> <span class="v">{{ report.ephemeris_version }}</span>
+                        <span class="k">Coordinate:</span> <span class="v">{{ report.coordinate_system }}</span>
+                        <span class="k">Chart Type:</span> <span class="v">{{ report.chart_type }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Row (D1 + D9 + Planetary Table) -->
+            <div class="middle-grid">
+                <!-- D1 Chart -->
+                <div class="chart-box-card">
+                    <div class="chart-hdr-title">D-1 Rasi Chart (North Indian)</div>
+                    {{ report.d1_svg | safe }}
+                </div>
+
+                <!-- D9 Chart -->
+                <div class="chart-box-card">
+                    <div class="chart-hdr-title">D-9 Navamsha Chart (North Indian)</div>
+                    {{ report.d9_svg | safe }}
+                </div>
+
+                <!-- Planetary Positions Table -->
+                <div class="info-card">
+                    <div class="info-card-hdr">
+                        <span class="icon">🪐</span> Planetary Positions &amp; Karakas
+                    </div>
+                    <table class="astro-table">
+                        <thead>
+                            <tr>
+                                <th>Planet</th>
+                                <th>Longitude DMS</th>
+                                <th>Nakshatra (Pada)</th>
+                                <th>Rasi</th>
+                                <th>D9 Navamsha</th>
+                                <th>Karaka</th>
+                                <th>Dignity</th>
+                                <th>Retro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in report.planets %}
+                            <tr>
+                                <td>
+                                    <strong>{{ p.symbol }} {{ p.name }}</strong>
+                                </td>
+                                <td style="font-family: monospace; font-size: 6pt;">{{ p.degree_dms }}</td>
+                                <td>{{ p.nakshatra }} ({{ p.pada }})</td>
+                                <td>{{ p.rashi_name }}</td>
+                                <td>{{ p.navamsa_rashi }}</td>
+                                <td>
+                                    {% if p.karaka == 'AK' %}
+                                        <span class="badge badge-ak">AK</span>
+                                    {% elif p.karaka == 'AmK' %}
+                                        <span class="badge badge-amk">AmK</span>
+                                    {% elif p.karaka != '—' %}
+                                        <span class="badge badge-karaka">{{ p.karaka }}</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% set dig = p.dignity | lower %}
+                                    {% if 'own' in dig %}
+                                        <span class="badge badge-dignity-own">Own</span>
+                                    {% elif 'exalt' in dig %}
+                                        <span class="badge badge-dignity-exalted">Exalted</span>
+                                    {% elif 'mool' in dig %}
+                                        <span class="badge badge-dignity-mool">Mool</span>
+                                    {% elif 'friend' in dig %}
+                                        <span class="badge badge-dignity-friendly">Friend</span>
+                                    {% elif 'neutral' in dig %}
+                                        <span class="badge badge-dignity-neutral">Neutral</span>
+                                    {% else %}
+                                        {{ p.dignity }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if p.is_retrograde %}
+                                        <span class="badge-retro">℞</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bottom Vimshottari Dasha Section -->
+            <div class="dasha-full-container">
+                <div class="dasha-full-hdr">
+                    Vimshottari Dasha Lifecycle (Mahadasha &rarr; Antardasha)
+                </div>
+                <div class="dasha-sub-grid">
+                    <!-- Left: Mahadashas Schedule -->
+                    <table class="astro-table">
+                        <thead>
+                            <tr>
+                                <th>Mahadasha</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for md in report.dasha_timeline %}
+                            <tr>
+                                <td><strong>{{ md.mahadasha }}</strong></td>
+                                <td>{{ md.start }}</td>
+                                <td>{{ md.end }}</td>
+                                <td>{{ md.duration }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <!-- Right: Current/Active Mahadasha Sub-periods -->
+                    <div class="antardasha-card-box">
+                        <div class="antardasha-title">
+                            Antardasha within Current Mahadasha ({{ report.active_md_lord }} MD: {{ report.active_md_range }})
+                        </div>
+                        <table class="antardasha-table">
+                            <thead>
+                                <tr>
+                                    {% for ad in report.active_antardashas %}
+                                    <th>{{ ad.lord }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% for ad in report.active_antardashas %}
+                                    <td style="font-size: 5pt; line-height: 1.1;">
+                                        {{ ad.start }}<br>&darr;<br>{{ ad.end }}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                <tr>
+                                    {% for ad in report.active_antardashas %}
+                                    <td style="font-weight: 700; color: #d97706; font-size: 5pt;">
+                                        {{ ad.duration }}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 1 Footer -->
+        <div class="page-footer">
+            <div class="qr-box">
+                <span>🛡️ Scan to verify this report:</span>
+                <strong>astroos.com/verify</strong>
+            </div>
+            <div>AstroOS – Vedic Intelligence, Engineered for Accuracy</div>
+            <div>www.astroos.com • support@astroos.com</div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!--                       PHYSICAL PAGE 2                      -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div class="page">
+        <div>
+            <!-- Header Bar -->
+            <div class="header-bar">
+                <div class="brand-col">
+                    <div class="brand-logo-icon">★</div>
+                    <div>
+                        <div class="brand-title">ASTRO<span>OS</span></div>
+                        <div class="brand-sub">Vedic Research Platform</div>
+                    </div>
+                </div>
+                <div class="title-center">
+                    <div class="report-main-title">Birth Chart Foundation Report</div>
+                    <div class="report-sub-title">Strengths, Ashtakavarga &amp; Avasthas</div>
+                </div>
+                <div>
+                    <span class="page-badge">Page 2 of 2</span>
+                </div>
+            </div>
+
+            <!-- Page 2: 3-Column Grid -->
+            <div class="page2-grid">
+                <!-- Column 1: Sarvashtakavarga Matrix -->
+                <div>
+                    <div class="info-card" style="margin-bottom: 5px;">
+                        <div class="info-card-hdr">
+                            <span class="icon">📊</span> Sarvashtakavarga (SAV) Bindu Distribution
+                        </div>
+                        <table class="astro-table sav-table">
+                            <thead>
+                                <tr>
+                                    <th>Sign</th>
+                                    <th>Su</th><th>Mo</th><th>Ma</th><th>Me</th><th>Ju</th><th>Ve</th><th>Sa</th>
+                                    <th style="background: #b45309;">SAV</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in report.sav_rows %}
+                                <tr>
+                                    <td style="text-align: left;"><strong>{{ row.sign }}</strong></td>
+                                    {% for b in row.bindus %}
+                                    <td>{{ b }}</td>
+                                    {% endfor %}
+                                    <td class="{% if row.total >= 30 %}sav-high{% elif row.total < 25 %}sav-low{% else %}sav-mid{% endif %}">
+                                        {{ row.total }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr style="background: #f1f5f9; font-weight: bold;">
+                                    <td style="text-align: left;"><strong>Total</strong></td>
+                                    {% for t in report.sav_planet_totals %}
+                                    <td>{{ t }}</td>
+                                    {% endfor %}
+                                    <td class="sav-total-cell">{{ report.sav_grand_total }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- SAV & Pinda Summaries Side by Side -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+                        <div class="info-card">
+                            <div class="info-card-hdr">SAV Summary</div>
+                            <div class="meta-kv">
+                                <span class="k">Total Bindu:</span> <span class="v">{{ report.sav_summary.total_bindu }}</span>
+                                <span class="k">Average / Sign:</span> <span class="v">{{ report.sav_summary.average_per_sign }}</span>
+                                <span class="k">Maximum:</span> <span class="v">{{ report.sav_summary.maximum }}</span>
+                                <span class="k">Minimum:</span> <span class="v">{{ report.sav_summary.minimum }}</span>
+                            </div>
+                            <div style="font-size: 5.5pt; color: #64748b; margin-top: 3px; border-top: 1px solid #f1f5f9; padding-top: 2px;">
+                                <span style="color: #166534; font-weight: bold;">Green (&ge;30)</span> Elevated<br>
+                                <span style="color: #991b1b; font-weight: bold;">Red (&le;25)</span> Sensitive
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-card-hdr">Pinda Summary</div>
+                            {% if report.pindas %}
+                            <div class="meta-kv">
+                                {% for p in report.pindas %}
+                                <span class="k">{{ p.category }}:</span> <span class="v">{{ p.pinda }}</span>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p style="font-size: 5.8pt; color: #94a3b8; font-style: italic;">Not yet available — no Pinda calculator implemented.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Shadbala & Vimsopaka -->
+                <div>
+                    <div class="info-card" style="margin-bottom: 5px;">
+                        <div class="info-card-hdr">
+                            <span class="icon">💪</span> Shadbala (Planetary Strengths)
+                        </div>
+                        {% if report.shadbala %}
+                        <table class="astro-table" style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Planet</th>
+                                    <th>Rupas (%)</th>
+                                    <th>Sthana (%)</th>
+                                    <th>Dig (%)</th>
+                                    <th>Kala (%)</th>
+                                    <th>Chesta (%)</th>
+                                    <th>Naisargika (%)</th>
+                                    <th>Total (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for s in report.shadbala %}
+                                <tr>
+                                    <td style="text-align: left;"><strong>{{ s.planet }}</strong></td>
+                                    <td><strong>{{ s.rupas }}</strong></td>
+                                    <td>{{ s.sthana }}</td>
+                                    <td>{{ s.dig }}</td>
+                                    <td>{{ s.kala }}</td>
+                                    <td>{{ s.chesta }}</td>
+                                    <td>{{ s.naisargika }}</td>
+                                    <td><strong>{{ s.total }}</strong></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p style="font-size: 5.8pt; color: #94a3b8; font-style: italic;">Not yet available — Shadbala engine's Kala Bala component (Varsha/Masa lord) is incomplete, so no combined Rupas total is shown until it's finished.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Vimsopaka Bala Table -->
+                    <div class="info-card">
+                        <div class="info-card-hdr">
+                            Vimsopaka Bala (Shadvarga Scheme)
+                        </div>
+                        <table class="astro-table">
+                            <thead>
+                                <tr>
+                                    <th>Planet</th>
+                                    <th>Score (out of 20)</th>
+                                    <th>Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for v in report.vimsopaka %}
+                                <tr>
+                                    <td><strong>{{ v.planet }}</strong></td>
+                                    <td><strong>{{ v.score }}</strong></td>
+                                    <td>{{ v.category }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Column 3: Planetary Avasthas, Standard & Notes -->
+                <div>
+                    <div class="info-card" style="margin-bottom: 5px;">
+                        <div class="info-card-hdr">
+                            <span class="icon">🎭</span> Planetary Avasthas
+                        </div>
+                        <table class="astro-table">
+                            <thead>
+                                <tr>
+                                    <th>Planet</th>
+                                    <th>Baladi Avastha (Age)</th>
+                                    <th>Deeptadi Avastha (Mood)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for av in report.avasthas %}
+                                <tr>
+                                    <td><strong>{{ av.planet }}</strong></td>
+                                    <td>{{ av.baladi }}</td>
+                                    <td>{{ av.deeptadi }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Calculation Standard -->
+                    <div class="info-card" style="margin-bottom: 5px;">
+                        <div class="info-card-hdr">Calculation Standard</div>
+                        <div class="meta-kv">
+                            <span class="k">Ephemeris:</span> <span class="v">{{ report.ephemeris_version }}</span>
+                            <span class="k">Coordinate:</span> <span class="v">{{ report.coordinate_system }}</span>
+                            <span class="k">Ayanamsha:</span> <span class="v">{{ report.ayanamsa }}</span>
+                            <span class="k">House System:</span> <span class="v">{{ report.house_system }}</span>
+                            <span class="k">Dasa System:</span> <span class="v">Vimshottari</span>
+                            <span class="k">Report Version:</span> <span class="v">1.0.0</span>
+                            <span class="k">Generated By:</span> <span class="v">AstroOS v2.4</span>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="info-card" style="background: #fffbeb; border-color: #fde68a;">
+                        <div class="info-card-hdr" style="color: #92400e; border-bottom-color: #fef3c7;">
+                            Notes &amp; Provenance
+                        </div>
+                        <ul style="font-size: 5.8pt; color: #78350f; padding-left: 10px; line-height: 1.3;">
+                            <li>Mathematical reference foundation sheet only.</li>
+                            <li>For predictive analysis (Marriage, Career, Transit), use domain reports.</li>
+                            <li>All calculations are deterministic and based on BPHS.</li>
+                            <li>Retrograde planets are marked with ℞.</li>
+                            <li>All timestamps are in 24-hour format.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2 Footer -->
+        <div class="page-footer">
+            <div class="qr-box">
+                <span>🛡️ Scan to verify this report:</span>
+                <strong>astroos.com/verify</strong>
+            </div>
+            <div>AstroOS – Vedic Intelligence, Engineered for Accuracy • Building the world's most advanced Vedic research platform.</div>
+            <div>www.astroos.com • support@astroos.com</div>
+        </div>
+    </div>
+
+</body>
+</html>

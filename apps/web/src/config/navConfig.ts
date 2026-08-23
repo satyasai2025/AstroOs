@@ -336,7 +336,6 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/settings/appearance", label: "Appearance", icon: "palette", viewId: "settings-appearance" },
           { href: "/settings/security", label: "Security", icon: "shield", viewId: "settings-security" },
           { href: "/settings/data", label: "Data", icon: "database", viewId: "settings-data" },
-          { href: "/settings/about", label: "About", icon: "info", viewId: "settings-about" },
         ],
       },
       {

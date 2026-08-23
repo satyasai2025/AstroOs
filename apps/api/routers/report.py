@@ -55,15 +55,50 @@ from apps.api.schemas.report import (
     TimelineSummaryInput,
     VerificationSummaryInput,
 )
+from apps.api.services.dasha_engine import DashaEngine
+from apps.api.services.dasha_lookup import find_active_dasha_chain
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.report_engine import ReportEngine
+from apps.api.services.yoga_engine import YogaEngine
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/report", tags=["Report"])
 
 _PLACEHOLDER_CHART_ID = uuid.UUID(int=0)
+
+
+def _compute_dasha_and_yogas(
+    wrapper: EphemerisWrapper,
+    chart,
+    body: ChartReportRequest,
+):
+    """
+    Optional Vimshottari dasha + yoga sections for a chart report.
+    Both are independent, already-existing engines (DashaEngine,
+    YogaEngine) — this just runs them and finds the dasha chain active
+    as of "today" (report generation time), same pattern as
+    prediction_orchestration.py / timeline.py already use elsewhere.
+    """
+    dasha_tree = None
+    active_chain: tuple = ()
+    if body.include_dasha:
+        dasha_engine = DashaEngine(wrapper)
+        dasha_tree = dasha_engine.compute_vimshottari(
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+        active_chain = find_active_dasha_chain(dasha_tree, date.today())
+
+    yoga_results = None
+    if body.include_yogas:
+        yoga_results = YogaEngine().evaluate_with_strength(chart)
+
+    return dasha_tree, active_chain, yoga_results
 
 
 def _metadata_response(m) -> ReportMetadataResponse:
@@ -287,11 +322,15 @@ async def generate_chart_pdf(
         ayanamsa=body.ayanamsa,
         house_system=body.house_system,
     )
+    dasha_tree, active_dasha_chain, yoga_results = _compute_dasha_and_yogas(wrapper, chart, body)
     report = ReportEngine.build_chart_report(
         chart,
         timeline=_build_timeline(body.timeline),
         verification=_build_verification(body.verification),
         stats=_build_statistics(body.statistics),
+        dasha_tree=dasha_tree,
+        active_dasha_chain=active_dasha_chain,
+        yoga_results=yoga_results,
         title=body.title,
         subject_name=body.subject_name,
         generated_by=body.generated_by,
@@ -334,11 +373,15 @@ async def generate_chart_html(
         ayanamsa=body.ayanamsa,
         house_system=body.house_system,
     )
+    dasha_tree, active_dasha_chain, yoga_results = _compute_dasha_and_yogas(wrapper, chart, body)
     report = ReportEngine.build_chart_report(
         chart,
         timeline=_build_timeline(body.timeline),
         verification=_build_verification(body.verification),
         stats=_build_statistics(body.statistics),
+        dasha_tree=dasha_tree,
+        active_dasha_chain=active_dasha_chain,
+        yoga_results=yoga_results,
         title=body.title,
         subject_name=body.subject_name,
         generated_by=body.generated_by,
@@ -384,17 +427,55 @@ async def generate_chart_csv(
         subject_name=body.subject_name,
         generated_by=body.generated_by,
     )
-    # Convert domain dataclass → Pydantic model before calling .model_dump()
-    # (AMP-009 fix: ChartReport is a plain @dataclass, not a BaseModel)
-    resp = ChartReportResponse(
-        metadata=_metadata_response(report.metadata),
-        title=report.title,
-        subject_name=report.subject_name or "",
-        sections=_sections_response(report.sections),
+@router.post("/foundation/birth-chart", summary="Generate JHora-grade Birth Chart Foundation Reference Sheet")
+async def generate_foundation_birth_chart(
+    body: ChartReportRequest,
+    export_format: str = "html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    """Generate JHora-grade 2-page A4 Birth Chart Foundation Reference Sheet."""
+    from apps.api.services.birth_chart_report_builder import BirthChartReportBuilder
+    from apps.api.services.report_template_engine import ReportTemplateEngine
+
+    horoscope_engine = HoroscopeEngine(wrapper)
+    chart = await asyncio.to_thread(
+        horoscope_engine.generate_d1,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
     )
-    csv_content = ReportTemplateEngine.render_csv(resp.model_dump())
-    return Response(
-        content=csv_content,
-        media_type="text/csv",
-        headers={"Content-Disposition": f'attachment; filename="{body.title or "report"}.csv"'},
+    
+    builder = BirthChartReportBuilder(wrapper)
+    report_data = builder.build_report_data(
+        chart=chart,
+        subject_name=body.subject_name or "Subject",
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa_name=body.ayanamsa.capitalize() if body.ayanamsa else "Lahiri",
+        house_system_code=body.house_system,
     )
+
+    if export_format.lower() == "json":
+        import json
+        return Response(
+            content=json.dumps(report_data, indent=2, default=str),
+            media_type="application/json",
+            headers={"Content-Disposition": f'attachment; filename="{body.subject_name or "chart"}_foundation.json"'},
+        )
+    elif export_format.lower() == "pdf":
+        pdf_bytes = ReportTemplateEngine.render_pdf(report_data, template_name="birth_chart.html")
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{body.subject_name or "chart"}_foundation.pdf"'},
+        )
+    else:
+        html_content = ReportTemplateEngine.render_html(report_data, template_name="birth_chart.html")
+        return Response(
+            content=html_content,
+            media_type="text/html",
+            headers={"Content-Disposition": f'inline; filename="{body.subject_name or "chart"}_foundation.html"'},
+        )

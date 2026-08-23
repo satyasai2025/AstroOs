@@ -14,7 +14,7 @@ const ACCOUNT_MENU_ITEMS = [
   { href: "/settings/appearance", label: "Appearance", icon: "palette" },
   { href: "/settings/security", label: "Security", icon: "lock" },
   { href: "/settings/data", label: "Data", icon: "database" },
-  { href: "/settings/about", label: "About", icon: "info" },
+  { href: "/help", label: "Help & Guide", icon: "book" },
 ];
 
 export function AccountMenu({ user }: { user: User }) {

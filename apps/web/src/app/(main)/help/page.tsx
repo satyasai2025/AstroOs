@@ -473,6 +473,29 @@ const FEATURE_GUIDES: FeatureGuide[] = [
       "Visualizes multi-hop dispositor chains and how energy flows between different house rulers in a horoscope.",
     ],
   },
+  {
+    id: "pdf-reports",
+    title: "Printable PDF Reports & Report Templates Directory",
+    category: "research",
+    categoryLabel: "Vedic Research & Reports",
+    route: "/reports/pdf",
+    icon: "document",
+    tagline: "Publication-ready PDF & HTML report generation with active backend Jinja2 templates directory.",
+    whatIsIt:
+      "Generates publication-grade PDF and HTML horoscope reports complete with multi-varga matrices, Gajakesari & Raja Yogas, Vimshottari Dasha sequences, and Sarvatobhadra Chakra (SBC) Vedha analysis. Also displays the active backend report templates directory (horoscope.html, base.html).",
+    howToUse: [
+      "Navigate to Reports → PDF Reports (/reports/pdf) from the main menu.",
+      "Select a saved chart from your library or click '✨ Auto-fill Demo Sample Chart' for instant testing.",
+      "Customize Subject Name, Report Title, Ayanamsha (Lahiri, KP, Raman), and House System (Placidus, Whole Sign).",
+      "Click 'Download Printable PDF Report' to generate and download a standalone high-resolution PDF document.",
+      "Inspect the 'Active Report Templates Directory' section to view active report templates loaded on the server.",
+    ],
+    keyInputs: ["Saved Chart or Birth Date/Time, Coordinates, Ayanamsha, House System"],
+    howToInterpret: [
+      "Produces a print-ready document with birth chart graphics, planetary dignity tables, active yoga strength scores, dasha periods, and SBC protective/malefic ray breakdowns.",
+    ],
+    proTip: "Developers can add custom HTML/CSS Jinja2 report templates to apps/api/templates/reports/ which will automatically appear as 'Active ✓' in the Report Templates Directory.",
+  },
 ];
 
 const CATEGORIES = [

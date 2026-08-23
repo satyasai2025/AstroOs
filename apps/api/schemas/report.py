@@ -108,6 +108,8 @@ class ChartReportRequest(BirthDataInput):
     timeline: Optional[TimelineSummaryInput] = None
     verification: Optional[VerificationSummaryInput] = None
     statistics: Optional[StatisticsSummaryInput] = None
+    include_dasha: bool = True
+    include_yogas: bool = True
 
 
 class ResearchReportRequest(BaseModel):

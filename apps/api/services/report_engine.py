@@ -14,6 +14,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Optional
 
+from apps.api.domain.dasha import DashaPeriod, DashaTree
 from apps.api.domain.event_analysis import EventAnalysisRecord
 from apps.api.domain.events import NatalSnapshot
 from apps.api.domain.horoscope import D1Chart
@@ -22,6 +23,7 @@ from apps.api.domain.research import AstrologicalSnapshot
 from apps.api.domain.statistics import AggregateReport
 from apps.api.domain.timeline import Timeline
 from apps.api.domain.verification import VerificationFindings
+from apps.api.domain.yoga import YogaResult
 from apps.api.domain.report import (
     ChartReport,
     ComparisonReport,
@@ -159,6 +161,76 @@ def _extract_knowledge_citations(citations: tuple[KnowledgeSearchResult, ...]) -
     )
 
 
+def _extract_dasha_summary(
+    dasha_tree: DashaTree,
+    active_chain: tuple[DashaPeriod, ...],
+) -> ReportContent:
+    """
+    'active_chain' is the already-computed result of
+    dasha_lookup.find_active_dasha_chain(tree, as_of_date) — this
+    function only shapes it into the report, per this module's
+    "assembly only" contract. Level names follow the chain's own
+    depth (Mahadasha, Antardasha, Pratyantardasha, ...) rather than
+    assuming a fixed depth, since callers may build shallower trees.
+    """
+    _LEVEL_NAMES = ["Mahadasha", "Antardasha", "Pratyantardasha", "Sookshma", "Prana"]
+    active = [
+        {
+            "level": _LEVEL_NAMES[i] if i < len(_LEVEL_NAMES) else f"Level {i + 1}",
+            "lord": period.lord,
+            "start_date": period.start_date.isoformat(),
+            "end_date": period.end_date.isoformat(),
+        }
+        for i, period in enumerate(active_chain)
+    ]
+    upcoming = [
+        {
+            "lord": period.lord,
+            "start_date": period.start_date.isoformat(),
+            "end_date": period.end_date.isoformat(),
+        }
+        for period in dasha_tree.mahadashas
+    ]
+    return ReportContent(
+        section_type="dasha_summary",
+        data={
+            "system": dasha_tree.system,
+            "trigger_nakshatra": dasha_tree.trigger_nakshatra,
+            "active_periods": active,
+            "mahadasha_sequence": upcoming,
+        },
+    )
+
+
+def _extract_yogas_summary(yoga_results: list[YogaResult]) -> ReportContent:
+    """
+    'yoga_results' is the already-computed output of
+    YogaEngine.evaluate_all()/evaluate_with_strength() — assembly only,
+    per this module's contract. Only present yogas are listed (a full
+    research dump of every non-firing yoga belongs in the research
+    engine's output, not a subject-facing chart report).
+    """
+    present = [r for r in yoga_results if r.is_present]
+    return ReportContent(
+        section_type="yogas_summary",
+        data={
+            "count": len(present),
+            "yogas": [
+                {
+                    "name": r.name,
+                    "category": r.category,
+                    "source_text": r.source_text,
+                    "strength": r.strength,
+                    "strength_score": r.strength_score,
+                    "involved_planets": list(r.involved_planets),
+                    "satisfied": list(r.satisfied),
+                }
+                for r in present
+            ],
+        },
+    )
+
+
 def _extract_statistics_summary(stats: AggregateReport) -> ReportContent:
     dists = []
     for d in stats.distributions:
@@ -194,6 +266,9 @@ class ReportEngine:
         verification: VerificationFindings | None = None,
         stats: AggregateReport | None = None,
         citations: tuple[KnowledgeSearchResult, ...] | None = None,
+        dasha_tree: DashaTree | None = None,
+        active_dasha_chain: tuple[DashaPeriod, ...] | None = None,
+        yoga_results: list[YogaResult] | None = None,
         title: str = "Chart Analysis",
         subject_name: str = "Unnamed",
         generated_by: str | None = None,
@@ -214,6 +289,20 @@ class ReportEngine:
             _extract_planets(chart_ref), order=order,
         ))
         order += 1
+
+        if dasha_tree is not None:
+            sections.append(ReportSection(
+                "Vimshottari Dasha", "dasha_summary",
+                _extract_dasha_summary(dasha_tree, active_dasha_chain or ()), order=order,
+            ))
+            order += 1
+
+        if yoga_results is not None:
+            sections.append(ReportSection(
+                "Yogas & Combinations", "yogas_summary",
+                _extract_yogas_summary(yoga_results), order=order,
+            ))
+            order += 1
 
         if timeline:
             sections.append(ReportSection(

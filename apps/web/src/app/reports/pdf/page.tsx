@@ -1,25 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Button, Card, Input, Select, type SelectOption } from "@/components/ui";
 import { api, tokenStore } from "@/lib/api";
-import { ResearchPatternsShell } from "@/components/research/ResearchPatternsShell";
 import { useWorkflowStore } from "@/lib/store";
 import type { AyanamsaCode, HouseSystemCode } from "@/lib/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 
-const AYANAMSA_OPTIONS: SelectOption[] = [
+export const dynamic = "force-dynamic";
+
+const AYANAMSA_OPTIONS = [
   { value: "lahiri", label: "Lahiri (default)" },
   { value: "kp", label: "Krishnamitra (KP)" },
   { value: "raman", label: "Raman" },
   { value: "yukteshwar", label: "Yukteshwar" },
-  { value: "fagan_bradley", label: "Fagan/Bradley" },
+  { value: "fagan_bradley", label: "Fagan / Bradley" },
   { value: "true_chitra", label: "True Chitra" },
   { value: "true_pushya", label: "True Pushya" },
 ];
 
-const HOUSE_SYSTEM_OPTIONS: SelectOption[] = [
+const HOUSE_SYSTEM_OPTIONS = [
   { value: "W", label: "W — Whole Sign" },
   { value: "P", label: "P — Placidus" },
   { value: "K", label: "K — Koch" },
@@ -32,13 +32,13 @@ export default function ReportsPdfPage() {
   // ── Form fields ──────────────────────────────────────────────────────────
   const [selectedChartId, setSelectedChartId] = useState<string>("");
   const [subjectName, setSubjectName] = useState("");
-  const [title, setTitle] = useState("AstroOS Chart Report");
-  const [birthDate, setBirthDate] = useState("");
-  const [birthTime, setBirthTime] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
+  const [title, setTitle] = useState("AstroOS Chart Analysis Report");
+  const [birthDate, setBirthDate] = useState("1995-01-01");
+  const [birthTime, setBirthTime] = useState("12:00");
+  const [latitude, setLatitude] = useState("28.6139");
+  const [longitude, setLongitude] = useState("77.2090");
   const [ayanamsa, setAyanamsa] = useState<AyanamsaCode>("lahiri");
-  const [houseSystem, setHouseSystem] = useState<HouseSystemCode>("W");
+  const [houseSystem, setHouseSystem] = useState<HouseSystemCode>("P");
 
   // ── Saved charts state ──────────────────────────────────────────────────
   const [savedCharts, setSavedCharts] = useState<any[]>([]);
@@ -56,14 +56,14 @@ export default function ReportsPdfPage() {
       const birthDt = new Date(storeRequest.birth_datetime_utc);
       setBirthDate(birthDt.toISOString().split("T")[0]);
       setBirthTime(birthDt.toISOString().split("T")[1]?.slice(0, 5) || "12:00");
-      setLatitude(storeRequest.latitude?.toString() || "");
-      setLongitude(storeRequest.longitude?.toString() || "");
+      setLatitude(storeRequest.latitude?.toString() || "28.6139");
+      setLongitude(storeRequest.longitude?.toString() || "77.2090");
       setAyanamsa((storeRequest.ayanamsa as AyanamsaCode) || "lahiri");
-      setHouseSystem((storeRequest.house_system as HouseSystemCode) || "W");
+      setHouseSystem((storeRequest.house_system as HouseSystemCode) || "P");
     }
   }, [storeRequest]);
 
-  // Load available report templates on mount (GET /api/v1/report/templates)
+  // Load available report templates on mount
   const loadTemplates = useCallback(async () => {
     try {
       setLoadingTemplates(true);
@@ -109,25 +109,46 @@ export default function ReportsPdfPage() {
     const birthDt = new Date(chart.birth_datetime_utc);
     setBirthDate(birthDt.toISOString().split("T")[0]);
     setBirthTime(birthDt.toISOString().split("T")[1].slice(0, 5));
-    setLatitude(chart.birth_latitude?.toString() || "");
-    setLongitude(chart.birth_longitude?.toString() || "");
+    setLatitude(chart.birth_latitude?.toString() || "28.6139");
+    setLongitude(chart.birth_longitude?.toString() || "77.2090");
     setAyanamsa((chart.ayanamsa as AyanamsaCode) || "lahiri");
-    setHouseSystem((chart.house_system as HouseSystemCode) || "W");
+    setHouseSystem((chart.house_system as HouseSystemCode) || "P");
   };
 
   // Handle saved chart selection
   const handleChartSelect = useCallback((chartId: string) => {
     setSelectedChartId(chartId);
+    if (chartId === "demo") {
+      setSubjectName("Arjun Sharma (Demo Chart)");
+      setTitle("AstroOS Chart Analysis Report");
+      setBirthDate("1995-01-01");
+      setBirthTime("12:00");
+      setLatitude("28.6139");
+      setLongitude("77.2090");
+      setAyanamsa("lahiri");
+      setHouseSystem("P");
+      return;
+    }
     const chart = savedCharts.find((c) => c.id === chartId);
     if (chart) {
       populateFromChart(chart);
     }
   }, [savedCharts]);
 
-  // Submit: build the ChartReportRequest and POST to /api/v1/report/chart/pdf.
-  // The endpoint returns binary PDF (application/pdf), so we use a raw fetch
-  // with the bearer token from tokenStore rather than api.post (which
-  // JSON-parses the body).
+  // Fill sample chart values
+  const handleFillSample = () => {
+    setSelectedChartId("demo");
+    setSubjectName("Arjun Sharma (Demo Chart)");
+    setTitle("AstroOS Chart Analysis Report");
+    setBirthDate("1995-01-01");
+    setBirthTime("12:00");
+    setLatitude("28.6139");
+    setLongitude("77.2090");
+    setAyanamsa("lahiri");
+    setHouseSystem("P");
+  };
+
+  // Submit & POST to /api/v1/report/chart/pdf
   const handleGeneratePdf = useCallback(async () => {
     setError(null);
 
@@ -146,9 +167,6 @@ export default function ReportsPdfPage() {
       return;
     }
 
-    // The API field is birth_datetime_utc — we treat the entered local time
-    // as UTC (the user is responsible for offsetting beforehand). It must be
-    // timezone-aware, so we append the "Z" suffix.
     const birthDatetimeUtc = `${birthDate}T${birthTime}Z`;
 
     const body = {
@@ -188,7 +206,7 @@ export default function ReportsPdfPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${title || "report"}.pdf`;
+      a.download = `${title || "AstroOS_Report"}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
       setError(null);
@@ -200,142 +218,238 @@ export default function ReportsPdfPage() {
   }, [birthDate, birthTime, latitude, longitude, ayanamsa, houseSystem, title, subjectName]);
 
   return (
-    <ResearchPatternsShell
-      title="Reports"
-      subtitle="Generate printable chart reports as PDF."
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
-        {error && (
-          <Card glow="gold">
-            <p style={{ color: "var(--danger-400)", margin: 0 }}>{error}</p>
-          </Card>
-        )}
-
-        {/* ── Birth data form ────────────────────────────────────────────── */}
-        <Card padding="var(--space-4)">
-          <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", marginTop: 0 }}>
-            Birth Data
-          </h2>
-          <div style={{ marginBottom: "var(--space-4)" }}>
-            <label style={{ display: "block", fontSize: "var(--text-sm)", fontWeight: "var(--weight-medium)", marginBottom: "var(--space-2)", color: "var(--text-secondary)" }}>
-              Load from Saved Chart
-            </label>
-            {loadingCharts ? (
-              <span style={{ fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>Loading saved charts…</span>
-            ) : savedCharts.length > 0 ? (
-              <Select
-                value={selectedChartId}
-                onChange={handleChartSelect}
-                options={savedCharts.map((c) => ({
-                  value: c.id,
-                  label: `${c.subject_name} · ${new Date(c.birth_datetime_utc).toLocaleDateString()} · ${c.place_name || "Unknown place"}`,
-                }))}
-                placeholder="Select a saved chart…"
-              />
-            ) : (
-              <span style={{ fontSize: "var(--text-sm)", color: "var(--text-muted)" }}>
-                No saved charts found. Enter birth details manually below or save a chart first from the Dashboard.
-              </span>
-            )}
+    <div className="space-y-6">
+      {/* ── Page Header ─────────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4" style={{ borderColor: "var(--border-primary)" }}>
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 font-bold shadow-inner">
+            📄
           </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "var(--space-3)",
-            }}
-          >
-            <Input
-              label="Subject Name"
-              placeholder="e.g. Alex"
-              value={subjectName}
-              onChange={setSubjectName}
-            />
-            <Input
-              label="Report Title"
-              placeholder="e.g. Career Analysis"
-              value={title}
-              onChange={setTitle}
-            />
-            <Input
-              label="Birth Date"
-              type="date"
-              value={birthDate}
-              onChange={setBirthDate}
-              required
-            />
-            <Input
-              label="Birth Time (UTC)"
-              type="time"
-              value={birthTime}
-              onChange={setBirthTime}
-              required
-            />
-            <Input
-              label="Latitude"
-              type="number"
-              placeholder="e.g. 28.6139"
-              value={latitude}
-              onChange={setLatitude}
-              hint="Between -90 and 90"
-            />
-            <Input
-              label="Longitude"
-              type="number"
-              placeholder="e.g. 77.2090"
-              value={longitude}
-              onChange={setLongitude}
-              hint="Between -180 and 180"
-            />
-            <div style={{ width: "100%" }}>
-              <Select
-                label="Ayanamsa"
-                options={AYANAMSA_OPTIONS}
-                value={ayanamsa}
-                onChange={(v) => setAyanamsa(v as AyanamsaCode)}
-              />
-            </div>
-            <div style={{ width: "100%" }}>
-              <Select
-                label="House System"
-                options={HOUSE_SYSTEM_OPTIONS}
-                value={houseSystem}
-                onChange={(v) => setHouseSystem(v as HouseSystemCode)}
-              />
-            </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              Printable PDF Reports
+            </h1>
+            <p className="text-xs text-slate-700 dark:text-slate-300 font-medium mt-0.5">
+              Generate publication-grade PDF & HTML astrological reports with full Multi-Varga & Dasha breakdowns.
+            </p>
           </div>
-        </Card>
-
-        {/* ── Actions ─────────────────────────────────────────────────────── */}
-        <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center" }}>
-          <Button
-            variant="gold"
-            size="lg"
-            disabled={generating || loadingTemplates}
-            onClick={handleGeneratePdf}
-          >
-            {generating ? "Generating…" : "Download PDF Report"}
-          </Button>
         </div>
 
-        {/* ── Available templates (informational) ─────────────────────────── */}
-        <Card padding="var(--space-4)">
-          <h2 style={{ fontSize: "var(--text-lg)", fontWeight: "var(--weight-semibold)", marginTop: 0 }}>
-            Available Report Templates
-          </h2>
-          {loadingTemplates ? (
-            <p style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)" }}>Loading templates…</p>
-          ) : templates.length === 0 ? (
-            <p style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)" }}>No templates found.</p>
-          ) : (
-            <ul style={{ margin: 0, paddingLeft: 20, fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}>
-              {templates.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-          )}
-        </Card>
+        <button
+          type="button"
+          onClick={handleFillSample}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-cyan-950/40 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-900/50 transition-all cursor-pointer shadow-sm self-start sm:self-auto"
+        >
+          <span>✨</span> Auto-fill Demo Sample Chart
+        </button>
       </div>
-    </ResearchPatternsShell>
+
+      {/* ── Error Banner ────────────────────────────────────────────────────── */}
+      {error && (
+        <div className="p-4 rounded-xl border border-rose-500/40 bg-rose-950/30 text-rose-300 text-xs font-semibold flex items-center gap-2 shadow-sm">
+          <span>⚠️</span> {error}
+        </div>
+      )}
+
+      {/* ── Main Form Card ──────────────────────────────────────────────────── */}
+      <div className="rounded-2xl border p-5 sm:p-6 shadow-xl space-y-6 backdrop-blur-sm" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
+        <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: "var(--border-primary)" }}>
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span>⚙️</span> Report Configuration & Birth Input
+          </h2>
+          <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-900 border border-cyan-600/40 dark:bg-cyan-950/50 dark:text-cyan-300">
+            PDF & HTML Generator
+          </span>
+        </div>
+
+        {/* 1. Saved Chart Select */}
+        <div className="space-y-1.5">
+          <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+            Select Saved Chart (or enter details manually)
+          </label>
+          {loadingCharts ? (
+            <div className="text-xs text-slate-400 italic">Loading saved charts…</div>
+          ) : (
+            <select
+              value={selectedChartId}
+              onChange={(e) => handleChartSelect(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs font-medium outline-none transition-all"
+              style={{
+                borderColor: "var(--border-primary)",
+                background: "var(--bg-secondary)",
+                color: "var(--text-primary)",
+              }}
+            >
+              <option value="">-- Enter Birth Details Manually --</option>
+              <option value="demo">★ Demo Sample: Arjun Sharma (New Delhi, India)</option>
+              {savedCharts.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.subject_name} · {new Date(c.birth_datetime_utc).toLocaleDateString()} · {c.place_name || "Unknown place"}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
+        {/* 2. Grid Inputs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Subject Name
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Arjun Sharma"
+              value={subjectName}
+              onChange={(e) => setSubjectName(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Report Title
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Comprehensive Life Report"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Birth Date <span className="text-rose-400">*</span>
+            </label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Birth Time (UTC) <span className="text-rose-400">*</span>
+            </label>
+            <input
+              type="time"
+              value={birthTime}
+              onChange={(e) => setBirthTime(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Latitude (-90 to 90)
+            </label>
+            <input
+              type="number"
+              step="any"
+              placeholder="e.g. 28.6139"
+              value={latitude}
+              onChange={(e) => setLatitude(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Longitude (-180 to 180)
+            </label>
+            <input
+              type="number"
+              step="any"
+              placeholder="e.g. 77.2090"
+              value={longitude}
+              onChange={(e) => setLongitude(e.target.value)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Ayanamsa
+            </label>
+            <select
+              value={ayanamsa}
+              onChange={(e) => setAyanamsa(e.target.value as AyanamsaCode)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            >
+              {AYANAMSA_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              House System
+            </label>
+            <select
+              value={houseSystem}
+              onChange={(e) => setHouseSystem(e.target.value as HouseSystemCode)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            >
+              {HOUSE_SYSTEM_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* 3. Action Buttons */}
+        <div className="pt-3 flex flex-wrap items-center gap-3 border-t" style={{ borderColor: "var(--border-primary)" }}>
+          <button
+            type="button"
+            disabled={generating || loadingTemplates}
+            onClick={handleGeneratePdf}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-extrabold bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white shadow-lg hover:shadow-cyan-500/25 transition-all cursor-pointer disabled:opacity-50"
+          >
+            <span>📥</span>
+            {generating ? "Generating Printable PDF…" : "Download Printable PDF Report"}
+          </button>
+        </div>
+      </div>
+
+      {/* ── Available Templates Card ───────────────────────────────────────── */}
+      <div className="rounded-2xl border p-5 sm:p-6 shadow-md space-y-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <span>📚</span> Active Report Templates Directory
+        </h3>
+        {loadingTemplates ? (
+          <p className="text-xs text-slate-400 italic">Loading active template formats…</p>
+        ) : templates.length === 0 ? (
+          <p className="text-xs text-slate-400 italic">Default templates active (`horoscope.html`, `base.html`).</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {templates.map((t) => (
+              <div key={t} className="p-3 rounded-xl border border-slate-700/50 bg-slate-900/60 text-xs flex items-center justify-between">
+                <span className="font-semibold text-slate-200">{t}</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/50 dark:text-emerald-300">
+                  Active ✓
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

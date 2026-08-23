@@ -140,6 +140,53 @@
   </table>
 {%- endmacro %}
 
+{% macro render_dasha_summary(data) -%}
+  <table class="kv">
+    <tbody>
+      <tr><th>System</th><td>{{ data.system | capitalize }}</td></tr>
+      <tr><th>Trigger Nakshatra</th><td>{{ data.trigger_nakshatra | rashi }}</td></tr>
+    </tbody>
+  </table>
+  {% if data.active_periods %}
+  <table>
+    <thead><tr><th>Level</th><th>Lord</th><th>Start</th><th>End</th></tr></thead>
+    <tbody>
+      {% for p in data.active_periods %}
+      <tr>
+        <td>{{ p.level }}</td>
+        <td>{{ p.lord | planet }}</td>
+        <td>{{ p.start_date }}</td>
+        <td>{{ p.end_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p><em>No active period for the current date falls within this dasha tree.</em></p>
+  {% endif %}
+{%- endmacro %}
+
+{% macro render_yogas_summary(data) -%}
+  {% if data.yogas %}
+  <table>
+    <thead><tr><th>Yoga</th><th>Category</th><th>Strength</th><th>Involved Planets</th><th>Source</th></tr></thead>
+    <tbody>
+      {% for y in data.yogas %}
+      <tr>
+        <td>{{ y.name }}</td>
+        <td>{{ y.category }}</td>
+        <td>{{ y.strength | capitalize }}{% if y.strength_score is not none %} ({{ y.strength_score }}/100){% endif %}</td>
+        <td>{{ y.involved_planets | map('planet') | join(', ') }}</td>
+        <td>{{ y.source_text }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p><em>No classical yogas from the registered rule set are present in this chart.</em></p>
+  {% endif %}
+{%- endmacro %}
+
 {% macro render_snapshot_overview(data) -%}
   <table class="kv">
     <tbody>
@@ -168,6 +215,10 @@
     {{ render_planet_comparison(section.data) }}
   {% elif section.section_type == 'snapshot_overview' -%}
     {{ render_snapshot_overview(section.data) }}
+  {% elif section.section_type == 'dasha_summary' -%}
+    {{ render_dasha_summary(section.data) }}
+  {% elif section.section_type == 'yogas_summary' -%}
+    {{ render_yogas_summary(section.data) }}
   {% else -%}
     {{ render_fallback(section.data) }}
   {% endif -%}
