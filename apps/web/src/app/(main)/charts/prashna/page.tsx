@@ -94,6 +94,49 @@ interface ContradictionAlert {
   advice: string;
 }
 
+const CATALOG_ARABIC_PARTS = [
+  { name: "Spirit", category: "Classical Core", day_formula: "Asc + Sun - Moon", night_formula: "Asc + Moon - Sun", description: "Soul, intellect, conscious intention, and spiritual essence." },
+  { name: "Fortuna", category: "Classical Core", day_formula: "Asc + Moon - Sun", night_formula: "Asc + Sun - Moon", description: "Physical prosperity, material circumstances, health, and luck." },
+  { name: "Surgery", category: "Medical & Health", day_formula: "Asc + Saturn - Mars", night_formula: "Asc + Mars - Saturn", description: "Surgical procedures, incisions, and sharp medical interventions." },
+  { name: "Abundance in Home", category: "Domestic & Real Estate", day_formula: "Asc + Sun - Moon", night_formula: "Asc + Sun - Moon", description: "Domestic prosperity, comfort, peace, and household abundance." },
+  { name: "Accomplishment", category: "Career & Success", day_formula: "Asc + Sun - Jupiter", night_formula: "Asc + Jupiter - Sun", description: "Successful completion, mastery, and professional attainment." },
+  { name: "Activity", category: "Enterprise & Energy", day_formula: "Asc + Mars - Venus", night_formula: "Asc + Venus - Mars", description: "Energetic initiative, active pursuit, and physical enterprise." },
+  { name: "Administrators", category: "Governance & Power", day_formula: "Asc + Mars - Mercury", night_formula: "Asc + Mercury - Mars", description: "Administrative authority, managerial executives, and civil officers." },
+  { name: "Advancement", category: "Career & Success", day_formula: "Asc + Sun - Saturn", night_formula: "Asc + Saturn - Sun", description: "Promotion, status elevation, career rank rise, and social elevation." },
+  { name: "Agriculture", category: "Domestic & Real Estate", day_formula: "Asc + Saturn - Venus", night_formula: "Asc + Venus - Saturn", description: "Land cultivation, farming yield, harvest, and estate produce." },
+  { name: "Allegiance", category: "Social & Relations", day_formula: "Asc + Saturn - Sun", night_formula: "Asc + Sun - Saturn", description: "Loyalty, oaths, fidelity, trustworthy partnerships, and devotion." },
+  { name: "Aloofness", category: "Social & Relations", day_formula: "Asc + Moon - Mars", night_formula: "Asc + Mars - Moon", description: "Detachment, solitude, emotional reserve, and contemplative distance." },
+  { name: "Anareta I", category: "Medical & Health", day_formula: "Asc + Moon - Asc Lord", night_formula: "Asc + Asc Lord - Moon", description: "Severe vulnerability point, vital crisis, and critical health risk." },
+  { name: "Anareta II", category: "Medical & Health", day_formula: "Asc + Mars - Moon", night_formula: "Asc + Moon - Mars", description: "Secondary life-taking index, accidents, and sudden physical crises." },
+  { name: "Ancestors", category: "Lineage & Family", day_formula: "Asc + Mars - Saturn", night_formula: "Asc + Saturn - Mars", description: "Paternal ancestors, ancestral legacy, ancestral karma, and blessings." },
+  { name: "Ancestors & Kin", category: "Lineage & Family", day_formula: "Asc + Saturn - Jupiter", night_formula: "Asc + Jupiter - Saturn", description: "Extended kinship relations, family inheritance, and roots." },
+  { name: "Appreciation", category: "Social & Relations", day_formula: "Asc + Venus - Sun", night_formula: "Asc + Sun - Venus", description: "Public goodwill, recognition, esteem, gratitude, and affectionate regard." },
+  { name: "Aptness", category: "Intellect & Talent", day_formula: "Asc + Mercury - Jupiter", night_formula: "Asc + Jupiter - Mercury", description: "Inherent aptitude, sharp learning capacity, and skillful application." },
+  { name: "Acquaintances", category: "Social & Relations", day_formula: "Asc + Sun - Mercury", night_formula: "Asc + Mercury - Sun", description: "High-standing contacts, VIP associates, aristocratic patrons, and mentors." },
+  { name: "Armies & Police", category: "Governance & Power", day_formula: "Asc + Saturn - Mars", night_formula: "Asc + Mars - Saturn", description: "Armed forces, defense, law enforcement, policing, and security." },
+  { name: "Art", category: "Intellect & Talent", day_formula: "Asc + Venus - Mercury", night_formula: "Asc + Mercury - Venus", description: "Artistic creations, aesthetics, design, poetry, drama, and music." },
+  { name: "Astrology & Occult", category: "Intellect & Talent", day_formula: "Asc + Mercury - Rahu", night_formula: "Asc + Rahu - Mercury", description: "Astrological intuition, divination, esoteric science, and occult research." },
+  { name: "Boldness & Courage", category: "Enterprise & Energy", day_formula: "Asc + Moon - Mars", night_formula: "Asc + Mars - Moon", description: "Valor, fearlessness, enterprise in competition, and daring action." },
+  { name: "Business & Commerce", category: "Wealth & Finance", day_formula: "Asc + Mercury - Sun", night_formula: "Asc + Sun - Mercury", description: "Mercantile transactions, trading profit, business agreements, and retail." },
+  { name: "Career Success", category: "Career & Success", day_formula: "Asc + Moon - Saturn", night_formula: "Asc + Saturn - Moon", description: "Vocation, professional renown, occupational stability, and livelihood." },
+  { name: "Children", category: "Lineage & Family", day_formula: "Asc + Saturn - Jupiter", night_formula: "Asc + Jupiter - Saturn", description: "Progeny, conception, child-birth, relations with offspring, and succession." },
+  { name: "Chronic Illness", category: "Medical & Health", day_formula: "Asc + Mars - Saturn", night_formula: "Asc + Saturn - Mars", description: "Protracted ailments, constitutional weaknesses, and lingering disorders." },
+  { name: "Commerce & Goods", category: "Wealth & Finance", day_formula: "Asc + Sun - Mercury", night_formula: "Asc + Mercury - Sun", description: "Trading commodities, merchandise inventory, shipping, and exchange." },
+  { name: "Debt & Obligations", category: "Wealth & Finance", day_formula: "Asc + Saturn - Mercury", night_formula: "Asc + Mercury - Saturn", description: "Loans, credit agreements, debts, borrowing conditions, and repayment." },
+  { name: "Defeat & Loss", category: "Crisis & Conflict", day_formula: "Asc + Sun - Mars", night_formula: "Asc + Mars - Sun", description: "Adversity in contests, setbacks, courtroom losses, and competition hurdles." },
+  { name: "Fame & Celebrity", category: "Career & Success", day_formula: "Asc + Jupiter - Sun", night_formula: "Asc + Sun - Jupiter", description: "Public renown, high reputation, widespread honor, and standing." },
+  { name: "Father", category: "Lineage & Family", day_formula: "Asc + Sun - Saturn", night_formula: "Asc + Saturn - Sun", description: "Paternal fortune, father's longevity, paternal inheritance, and guidance." },
+  { name: "Mother", category: "Lineage & Family", day_formula: "Asc + Moon - Venus", night_formula: "Asc + Venus - Moon", description: "Maternal wellbeing, mother's longevity, nurturance, and affection." },
+  { name: "Marriage (Men)", category: "Marriage & Partnership", day_formula: "Asc + Venus - Saturn", night_formula: "Asc + Saturn - Venus", description: "Spouse attraction, wedding timing, partnership harmony, and bliss." },
+  { name: "Marriage (Women)", category: "Marriage & Partnership", day_formula: "Asc + Saturn - Venus", night_formula: "Asc + Venus - Saturn", description: "Nuptials, husband profile, marriage suitability, and partnership." },
+  { name: "Lawsuits & Disputes", category: "Crisis & Conflict", day_formula: "Asc + Mercury - Mars", night_formula: "Asc + Mars - Mercury", description: "Judicial hearings, disputes, courtroom advocacy, and settlements." },
+  { name: "Lost Property", category: "Crisis & Conflict", day_formula: "Asc + Mars - Moon", night_formula: "Asc + Moon - Mars", description: "Misplaced items, stolen goods, recovery potential, and directional clues." },
+  { name: "Travel & Relocation", category: "Travel & Exploration", day_formula: "Asc + Jupiter - Mercury", night_formula: "Asc + Mercury - Jupiter", description: "Long-distance travel, foreign relocation, pilgrimages, and overseas." },
+  { name: "Treasure & Windfall", category: "Wealth & Finance", day_formula: "Asc + Moon - Mars", night_formula: "Asc + Mars - Moon", description: "Windfalls, hidden treasures, unearned gains, and sudden assets." },
+  { name: "Victory & Triumph", category: "Crisis & Conflict", day_formula: "Asc + Jupiter - Mars", night_formula: "Asc + Mars - Jupiter", description: "Overcoming rivals, triumphant conclusion, negotiations, and conquest." },
+  { name: "Wisdom & Higher Ed", category: "Intellect & Talent", day_formula: "Asc + Sun - Saturn", night_formula: "Asc + Saturn - Sun", description: "Philosophical insights, university scholarship, and research intellect." },
+];
+
 export default function PrashnaPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [topChartTab, setTopChartTab] = useState<"Chart" | "Details" | "Panchanga" | "KP Snapshot" | "Aspects">("Chart");
@@ -115,7 +158,7 @@ export default function PrashnaPage() {
     question: "Will I get selected for this job?",
   });
 
-  // Arabic Parts Filters
+  // Arabic Parts Filters & Catalog State
   const [arbSearch, setArbSearch] = useState("");
   const [filterSgL, setFilterSgL] = useState("Show All");
   const [filterStL, setFilterStL] = useState("Show All");
@@ -126,6 +169,10 @@ export default function PrashnaPage() {
     Surgery: true,
     "Abundance in the Home": true,
   });
+
+  const [catalogSearch, setCatalogSearch] = useState("");
+  const [catalogCategory, setCatalogCategory] = useState("Show All");
+  const [showArbGuideModal, setShowArbGuideModal] = useState(false);
 
   // AI Drawer State
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
@@ -231,6 +278,22 @@ export default function PrashnaPage() {
       return true;
     });
   }, [arabicParts, arbSearch, filterSgL, filterStL, filterSL, filterSSL]);
+
+  // Filtered Catalog Arabic Parts (40 Sahams)
+  const filteredCatalogArabicParts = useMemo(() => {
+    return CATALOG_ARABIC_PARTS.filter((p) => {
+      const matchesSearch =
+        catalogSearch === "" ||
+        p.name.toLowerCase().includes(catalogSearch.toLowerCase()) ||
+        p.category.toLowerCase().includes(catalogSearch.toLowerCase()) ||
+        p.day_formula.toLowerCase().includes(catalogSearch.toLowerCase()) ||
+        p.night_formula.toLowerCase().includes(catalogSearch.toLowerCase()) ||
+        p.description.toLowerCase().includes(catalogSearch.toLowerCase());
+      const matchesCat =
+        catalogCategory === "Show All" || p.category === catalogCategory;
+      return matchesSearch && matchesCat;
+    });
+  }, [catalogSearch, catalogCategory]);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 md:p-6 space-y-6">
@@ -596,107 +659,235 @@ export default function PrashnaPage() {
 
             {/* TAB: ARB (Arabic Parts Explorer) */}
             {subTab === "Arb" && (
-              <div className="space-y-4">
-                {/* Search and Filters */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2 text-xs">
-                  <input
-                    type="text"
-                    aria-label="Search Sahams and Lots"
-                    placeholder="Search Sahams / Lots..."
-                    value={arbSearch}
-                    onChange={(e) => setArbSearch(e.target.value)}
-                    className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2.5 py-1.5 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-cyan-500 focus:outline-none"
-                  />
-                  <select
-                    aria-label="Filter by Sign Lord"
-                    value={filterSgL}
-                    onChange={(e) => setFilterSgL(e.target.value)}
-                    className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
-                  >
-                    <option>Show All SgL</option>
-                    {["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"].map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                  <select
-                    aria-label="Filter by Star Lord"
-                    value={filterStL}
-                    onChange={(e) => setFilterStL(e.target.value)}
-                    className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
-                  >
-                    <option>Show All StL</option>
-                    {["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"].map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                  <select
-                    aria-label="Filter by Sub Lord"
-                    value={filterSL}
-                    onChange={(e) => setFilterSL(e.target.value)}
-                    className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
-                  >
-                    <option>Show All SL</option>
-                    {["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"].map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                  <select
-                    aria-label="Filter by Sub-Sub Lord"
-                    value={filterSSL}
-                    onChange={(e) => setFilterSSL(e.target.value)}
-                    className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
-                  >
-                    <option>Show All SSL</option>
-                    {["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"].map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
+              <div className="space-y-5">
+                {/* Feature Summary Pills (Brought up to Top) */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center font-sans">
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Catalog Scope</span>
+                    <span className="font-extrabold text-cyan-800 dark:text-cyan-300 mt-0.5 block text-xs">✨ 40 Classical Sahams</span>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Formula Mode</span>
+                    <span className="font-extrabold text-amber-800 dark:text-amber-300 mt-0.5 block text-xs">☀️ Day / 🌙 Night Altitude</span>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">KP Precision</span>
+                    <span className="font-extrabold text-emerald-800 dark:text-emerald-300 mt-0.5 block text-xs">🪐 4-Tier Sub-Lord Subdivisions</span>
+                  </div>
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Horary Outcome</span>
+                    <span className="font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block text-xs">🎯 Objective Event Fructification</span>
+                  </div>
                 </div>
 
-                {/* Sahams / Lots Table */}
-                <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
-                  <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 dark:bg-slate-950/80 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 font-semibold">
-                      <tr>
-                        <th className="py-2.5 px-3">Name</th>
-                        <th className="py-2.5 px-3">Sgn</th>
-                        <th className="py-2.5 px-3">Deg</th>
-                        <th className="py-2.5 px-3">SgL</th>
-                        <th className="py-2.5 px-3">StL</th>
-                        <th className="py-2.5 px-3">SL</th>
-                        <th className="py-2.5 px-3">SSL</th>
-                        <th className="py-2.5 px-3">Formula</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200 font-mono">
-                      {filteredArabicParts.map((p) => (
-                        <tr key={p.name} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
-                          <td className="py-2.5 px-3 font-semibold text-slate-900 dark:text-slate-100 font-sans">
-                            <button
-                              type="button"
-                              onClick={() => togglePart(p.name)}
-                              className="text-left hover:text-cyan-800 dark:hover:text-cyan-300 flex items-center gap-1.5"
-                            >
-                              <span>{expandedParts[p.name] ? "▾" : "▸"}</span>
-                              <span>{p.name}</span>
-                            </button>
-                            {expandedParts[p.name] && (
-                              <p className="mt-1 text-[11px] text-slate-600 dark:text-slate-400 font-normal font-sans">
-                                {p.description}
-                              </p>
-                            )}
-                          </td>
-                          <td className="py-2.5 px-3 text-cyan-800 dark:text-cyan-300 font-bold">{p.rashi}</td>
-                          <td className="py-2.5 px-3">{p.rashi_degree_str}</td>
-                          <td className="py-2.5 px-3 text-slate-700 dark:text-slate-300">{p.sign_lord.slice(0, 2)}</td>
-                          <td className="py-2.5 px-3 text-amber-800 dark:text-amber-300 font-semibold">{p.star_lord.slice(0, 2)}</td>
-                          <td className="py-2.5 px-3 text-rose-800 dark:text-rose-300 font-bold">{p.sub_lord.slice(0, 2)}</td>
-                          <td className="py-2.5 px-3 text-emerald-800 dark:text-emerald-300 font-semibold">{p.sub_sub_lord.slice(0, 2)}</td>
-                          <td className="py-2.5 px-3 text-[11px] text-slate-600 dark:text-slate-400">{p.formula_used}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                {/* Main 2-Column Responsive Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                  {/* LEFT COLUMN (7 cols): Calculated Sahams in Chart */}
+                  <div className="lg:col-span-7 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>📊</span> Calculated Sahams (Current Chart)
+                      </h3>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                        {filteredArabicParts.length} / {arabicParts.length} Parts
+                      </span>
+                    </div>
+
+                    {/* Search and Filters */}
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-xs">
+                      <input
+                        type="text"
+                        aria-label="Search Sahams and Lots"
+                        placeholder="Search Saham..."
+                        value={arbSearch}
+                        onChange={(e) => setArbSearch(e.target.value)}
+                        className="col-span-2 sm:col-span-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2 py-1 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-cyan-500 focus:outline-none"
+                      />
+                      <select
+                        aria-label="Filter by Sign Lord"
+                        value={filterSgL}
+                        onChange={(e) => setFilterSgL(e.target.value)}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-1.5 py-1 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option value="Show All">All SgL</option>
+                        {["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"].map((p) => (
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                      <select
+                        aria-label="Filter by Star Lord"
+                        value={filterStL}
+                        onChange={(e) => setFilterStL(e.target.value)}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-1.5 py-1 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option value="Show All">All StL</option>
+                        {["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"].map((p) => (
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                      <select
+                        aria-label="Filter by Sub Lord"
+                        value={filterSL}
+                        onChange={(e) => setFilterSL(e.target.value)}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-1.5 py-1 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option value="Show All">All SL</option>
+                        {["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"].map((p) => (
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                      <select
+                        aria-label="Filter by Sub-Sub Lord"
+                        value={filterSSL}
+                        onChange={(e) => setFilterSSL(e.target.value)}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-1.5 py-1 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option value="Show All">All SSL</option>
+                        {["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"].map((p) => (
+                          <option key={p} value={p}>{p}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Computed Sahams Table */}
+                    <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 max-h-[460px]">
+                      <table className="w-full text-left text-xs">
+                        <thead className="sticky top-0 bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 font-semibold z-10">
+                          <tr>
+                            <th className="py-2 px-2.5">Name</th>
+                            <th className="py-2 px-2">Sgn</th>
+                            <th className="py-2 px-2">Deg</th>
+                            <th className="py-2 px-2">SgL</th>
+                            <th className="py-2 px-2">StL</th>
+                            <th className="py-2 px-2">SL</th>
+                            <th className="py-2 px-2">SSL</th>
+                            <th className="py-2 px-2">Formula</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200 font-mono text-[11px]">
+                          {filteredArabicParts.map((p) => (
+                            <tr key={p.name} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                              <td className="py-2 px-2.5 font-bold text-slate-900 dark:text-slate-100 font-sans">
+                                <button
+                                  type="button"
+                                  onClick={() => togglePart(p.name)}
+                                  className="text-left hover:text-cyan-800 dark:hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
+                                >
+                                  <span>{expandedParts[p.name] ? "▾" : "▸"}</span>
+                                  <span>{p.name}</span>
+                                </button>
+                                {expandedParts[p.name] && (
+                                  <p className="mt-0.5 text-[10px] text-slate-600 dark:text-slate-400 font-normal font-sans leading-tight">
+                                    {p.description}
+                                  </p>
+                                )}
+                              </td>
+                              <td className="py-2 px-2 text-cyan-800 dark:text-cyan-300 font-bold">{p.rashi}</td>
+                              <td className="py-2 px-2">{p.rashi_degree_str}</td>
+                              <td className="py-2 px-2 text-slate-700 dark:text-slate-300">{p.sign_lord.slice(0, 2)}</td>
+                              <td className="py-2 px-2 text-amber-800 dark:text-amber-300 font-semibold">{p.star_lord.slice(0, 2)}</td>
+                              <td className="py-2 px-2 text-rose-800 dark:text-rose-300 font-bold">{p.sub_lord.slice(0, 2)}</td>
+                              <td className="py-2 px-2 text-emerald-800 dark:text-emerald-300 font-semibold">{p.sub_sub_lord.slice(0, 2)}</td>
+                              <td className="py-2 px-2 text-[10px] text-slate-500 dark:text-slate-400 whitespace-nowrap">{p.formula_used}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Bottom-Left Info (i) Guide Button */}
+                    <div className="pt-1 flex items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={() => setShowArbGuideModal(true)}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-800 dark:text-cyan-300 text-xs font-bold hover:bg-cyan-500/20 transition cursor-pointer shadow-xs"
+                      >
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-400 text-xs font-black">i</span>
+                        <span>Arabic Parts Calculation &amp; KP Guide</span>
+                      </button>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        Click <strong className="text-cyan-400">i</strong> for Day/Night formulas &amp; KP rules
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* RIGHT COLUMN (5 cols): Available Arabic Parts Catalog (40 Sahams Reference Table) */}
+                  <div className="lg:col-span-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>📚</span> Available Arabic Parts Catalog (40 Sahams)
+                      </h3>
+                      <span className="text-xs font-bold text-cyan-800 dark:text-cyan-300">
+                        {filteredCatalogArabicParts.length} / 40 Registered
+                      </span>
+                    </div>
+
+                    {/* Catalog Search & Category Filter */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                      <input
+                        type="text"
+                        placeholder="Search 40 Saham formulas..."
+                        value={catalogSearch}
+                        onChange={(e) => setCatalogSearch(e.target.value)}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2.5 py-1 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:border-cyan-500 focus:outline-none"
+                      />
+                      <select
+                        value={catalogCategory}
+                        aria-label="Filter Catalog Category"
+                        onChange={(e) => setCatalogCategory(e.target.value)}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-2 py-1 text-xs text-slate-800 dark:text-slate-200 focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option value="Show All">All Categories</option>
+                        <option value="Classical Core">Classical Core</option>
+                        <option value="Career & Success">Career &amp; Success</option>
+                        <option value="Wealth & Finance">Wealth &amp; Finance</option>
+                        <option value="Medical & Health">Medical &amp; Health</option>
+                        <option value="Marriage & Partnership">Marriage &amp; Partnership</option>
+                        <option value="Lineage & Family">Lineage &amp; Family</option>
+                        <option value="Crisis & Conflict">Crisis &amp; Conflict</option>
+                        <option value="Intellect & Talent">Intellect &amp; Talent</option>
+                        <option value="Travel & Exploration">Travel &amp; Exploration</option>
+                        <option value="Domestic & Real Estate">Domestic &amp; Real Estate</option>
+                        <option value="Governance & Power">Governance &amp; Power</option>
+                        <option value="Social & Relations">Social &amp; Relations</option>
+                        <option value="Enterprise & Energy">Enterprise &amp; Energy</option>
+                      </select>
+                    </div>
+
+                    {/* 40 Classical Sahams Catalog Reference Table */}
+                    <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 max-h-[460px]">
+                      <table className="w-full text-left text-xs">
+                        <thead className="sticky top-0 bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 font-semibold z-10">
+                          <tr>
+                            <th className="py-2 px-2.5">Saham / Category</th>
+                            <th className="py-2 px-2">☀️ Day Formula</th>
+                            <th className="py-2 px-2">🌙 Night Formula</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
+                          {filteredCatalogArabicParts.map((item) => (
+                            <tr key={item.name} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                              <td className="py-2 px-2.5">
+                                <div className="font-extrabold text-slate-900 dark:text-slate-100">{item.name}</div>
+                                <span className="inline-block mt-0.5 px-1.5 py-0.2 text-[9px] font-bold rounded bg-cyan-100 text-cyan-900 border border-cyan-600/30 dark:bg-cyan-950/60 dark:text-cyan-300">
+                                  {item.category}
+                                </span>
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mt-0.5">
+                                  {item.description}
+                                </p>
+                              </td>
+                              <td className="py-2 px-2 font-mono text-[11px] font-bold text-amber-800 dark:text-amber-300 whitespace-nowrap">
+                                {item.day_formula}
+                              </td>
+                              <td className="py-2 px-2 font-mono text-[11px] font-bold text-cyan-800 dark:text-cyan-300 whitespace-nowrap">
+                                {item.night_formula}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -1112,6 +1303,80 @@ export default function PrashnaPage() {
             >
               Close Assistant
             </button>
+          </div>
+        </div>
+      )}
+      {/* ── Arabic Parts Calculation & KP Guide Modal ── */}
+      {showArbGuideModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl border border-slate-700/80 bg-slate-900 text-slate-100 shadow-2xl overflow-hidden font-sans">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-950/60">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-sm">i</span>
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-100">Arabic Parts (Sahams) &amp; KP Rules Guide</h3>
+                  <p className="text-[11px] text-slate-400 font-medium">Classical Hermetic / Tajika Formula Mechanics &amp; Event Promise</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowArbGuideModal(false)}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition cursor-pointer font-bold text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 p-5 overflow-y-auto space-y-4 text-xs text-slate-300 leading-relaxed">
+              <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-950/20 text-amber-200 space-y-1">
+                <h4 className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                  <span>☀️</span> Day vs 🌙 Night Formula Altitude Mechanics
+                </h4>
+                <p className="text-[11px] leading-relaxed">
+                  Arabic Parts (Lots / Sahams) calculate a sensitive longitudinal point by projecting the distance between two significators onto the Ascendant:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+                  <div className="p-2 rounded bg-slate-950 border border-slate-800">
+                    <strong className="text-amber-400 block font-sans text-xs">Day Birth (Sun above Horizon)</strong>
+                    <code>Formula: Asc + Planet_B - Planet_A</code>
+                  </div>
+                  <div className="p-2 rounded bg-slate-950 border border-slate-800">
+                    <strong className="text-cyan-400 block font-sans text-xs">Night Birth (Sun below Horizon)</strong>
+                    <code>Formula: Asc + Planet_A - Planet_B</code>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold text-slate-100">How to Interpret Arabic Parts in Prashna / Horary:</h4>
+                <ul className="list-disc pl-5 space-y-1.5 text-slate-300 text-[11px]">
+                  <li>
+                    <strong className="text-cyan-400">KP Sub-Lord Fructification</strong>: Check the Sub Lord (SL) of the calculated Saham. If its Star Lord signifies the primary query houses (e.g. 2, 6, 10, 11 for career), the Saham guarantees a successful outcome.
+                  </li>
+                  <li>
+                    <strong className="text-emerald-400">Benefic Aspects on Saham Point</strong>: Conjunctions or trine aspects from Jupiter or Venus onto the Saham longitude bring swift, un-obstructed resolution.
+                  </li>
+                  <li>
+                    <strong className="text-amber-400">Dasha Trigger Intersection</strong>: When the operating Antardasha lord transits over or rules the Saham&apos;s Star Lord, the event manifests within that transit window.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
+                <strong className="text-amber-400 font-bold block mb-0.5">📚 Classical Reference Sources:</strong>
+                Formulas derived from Al-Biruni&apos;s <em>Book of Instruction in the Elements of the Art of Astrology</em>, Neelakantha&apos;s <em>Tajika Neelakanthi (Sahamadhikara)</em>, and Prof. K.S. Krishnamurti&apos;s <em>KP Readers</em>.
+              </div>
+            </div>
+
+            <div className="flex justify-end px-5 py-3 border-t border-slate-800 bg-slate-950/60">
+              <button
+                type="button"
+                onClick={() => setShowArbGuideModal(false)}
+                className="px-4 py-1.5 rounded-xl text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition cursor-pointer"
+              >
+                Close Guide
+              </button>
+            </div>
           </div>
         </div>
       )}
