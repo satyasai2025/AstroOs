@@ -48,32 +48,138 @@ interface Props {
   setSelectedVarga: (v: string) => void;
 }
 
+const RASHI_NAMES_EN = [
+  "Aries", "Taurus", "Gemini", "Cancer",
+  "Leo", "Virgo", "Libra", "Scorpio",
+  "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+];
+
+function rashiIndexFromName(name: string): number {
+  if (!name) return 0;
+  const lower = name.toLowerCase();
+  const idx = RASHI_NAMES_EN.findIndex((r) => r.toLowerCase() === lower);
+  return idx >= 0 ? idx : 0;
+}
+
+/** Authentic Parashari Navamsha (D9) calculation */
+function calculateD9Placement(natalRashi: string, natalDegree: number = 0) {
+  const sIdx = rashiIndexFromName(natalRashi);
+  const navIdx = Math.floor((natalDegree % 30) / (30 / 9));
+  const modality = sIdx % 4; // 0=Fire, 1=Earth, 2=Air, 3=Water
+  let startSignIdx = 0;
+  if (modality === 0) startSignIdx = 0; // Aries
+  else if (modality === 1) startSignIdx = 9; // Capricorn
+  else if (modality === 2) startSignIdx = 6; // Libra
+  else if (modality === 3) startSignIdx = 3; // Cancer
+
+  const d9SignIdx = (startSignIdx + navIdx) % 12;
+  const d9Degree = (natalDegree % (30 / 9)) * 9;
+  return {
+    rashi: RASHI_NAMES_EN[d9SignIdx],
+    degree: parseFloat(d9Degree.toFixed(2)),
+  };
+}
+
+/** Authentic Parashari Dashamsha (D10) calculation */
+function calculateD10Placement(natalRashi: string, natalDegree: number = 0) {
+  const sIdx = rashiIndexFromName(natalRashi);
+  const d10Idx = Math.floor((natalDegree % 30) / 3);
+  const isOdd = sIdx % 2 === 0;
+  const startSignIdx = isOdd ? sIdx : (sIdx + 8) % 12;
+  const d10SignIdx = (startSignIdx + d10Idx) % 12;
+  return {
+    rashi: RASHI_NAMES_EN[d10SignIdx],
+    degree: parseFloat(((natalDegree % 3) * 10).toFixed(2)),
+  };
+}
+
+/** Authentic Parashari Drekkana (D3) calculation */
+function calculateD3Placement(natalRashi: string, natalDegree: number = 0) {
+  const sIdx = rashiIndexFromName(natalRashi);
+  const d3Idx = Math.floor((natalDegree % 30) / 10);
+  const offset = d3Idx === 0 ? 0 : d3Idx === 1 ? 4 : 8;
+  const d3SignIdx = (sIdx + offset) % 12;
+  return {
+    rashi: RASHI_NAMES_EN[d3SignIdx],
+    degree: parseFloat(((natalDegree % 10) * 3).toFixed(2)),
+  };
+}
+
+/** Fallback Parashari Varga Calculator for any Varga */
+function calculateVargaFallback(
+  chart: D1ChartResponse,
+  vargaKey: string
+): { planets: PlanetPlacement[]; ascendant: AscendantPlacement } {
+  const ascRes = vargaKey === "D9"
+    ? calculateD9Placement(chart.ascendant.rashi, chart.ascendant.rashi_degree)
+    : vargaKey === "D10"
+    ? calculateD10Placement(chart.ascendant.rashi, chart.ascendant.rashi_degree)
+    : vargaKey === "D3"
+    ? calculateD3Placement(chart.ascendant.rashi, chart.ascendant.rashi_degree)
+    : calculateD9Placement(chart.ascendant.rashi, chart.ascendant.rashi_degree);
+
+  const ascSignIdx = rashiIndexFromName(ascRes.rashi);
+
+  const planets: PlanetPlacement[] = chart.planets.map((p) => {
+    const res = vargaKey === "D9"
+      ? calculateD9Placement(p.rashi, p.rashi_degree)
+      : vargaKey === "D10"
+      ? calculateD10Placement(p.rashi, p.rashi_degree)
+      : vargaKey === "D3"
+      ? calculateD3Placement(p.rashi, p.rashi_degree)
+      : calculateD9Placement(p.rashi, p.rashi_degree);
+
+    const pSignIdx = rashiIndexFromName(res.rashi);
+    const houseNumber = ((pSignIdx - ascSignIdx + 12) % 12) + 1;
+
+    return {
+      planet: p.planet,
+      rashi: res.rashi,
+      house_number: houseNumber,
+      is_retrograde: p.is_retrograde,
+      rashi_degree: res.degree,
+    };
+  });
+
+  return {
+    ascendant: { rashi: ascRes.rashi, rashi_degree: ascRes.degree },
+    planets,
+  };
+}
+
 function getVargaPlanets(
   vargas: AllVargaChartsResponse | null,
   vargaKey: string,
+  chart?: D1ChartResponse
 ): PlanetPlacement[] | null {
   if (vargaKey === "D1") return null;
   const vc = vargas?.charts[vargaKey];
-  if (!vc) return null;
-  return vc.planet_positions.map((p) => ({
-    planet: p.planet,
-    rashi: p.varga_rashi,
-    house_number: p.varga_house_number,
-    is_retrograde: p.is_retrograde,
-    rashi_degree: p.varga_rashi_degree,
-  }));
+  if (vc) {
+    return vc.planet_positions.map((p) => ({
+      planet: p.planet,
+      rashi: p.varga_rashi,
+      house_number: p.varga_house_number,
+      is_retrograde: p.is_retrograde,
+      rashi_degree: p.varga_rashi_degree,
+    }));
+  }
+  if (chart) {
+    return calculateVargaFallback(chart, vargaKey).planets;
+  }
+  return null;
 }
 
 function getVargaAscendant(
   vargas: AllVargaChartsResponse | null,
   vargaKey: string,
   fallback: AscendantPlacement,
+  chart?: D1ChartResponse
 ): AscendantPlacement {
   if (vargaKey === "D1") return fallback;
   const ac = vargas?.charts[vargaKey]?.ascendant;
-  return ac
-    ? { rashi: ac.varga_rashi, rashi_degree: ac.varga_rashi_degree }
-    : fallback;
+  if (ac) return { rashi: ac.varga_rashi, rashi_degree: ac.varga_rashi_degree };
+  if (chart) return calculateVargaFallback(chart, vargaKey).ascendant;
+  return fallback;
 }
 
 function getTransitPlanets(transits: TransitResponse | null): PlanetPlacement[] | null {
@@ -128,14 +234,16 @@ function resolveChart(
     };
   }
 
-  const vPlanets = getVargaPlanets(vargas, ctx.varga);
+  const vPlanets = getVargaPlanets(vargas, ctx.varga, chart);
+  const vAsc = getVargaAscendant(vargas, ctx.varga, {
+    rashi: chart.ascendant.rashi,
+    rashi_degree: chart.ascendant.rashi_degree,
+  }, chart);
+
   if (!vPlanets) return null;
   return {
     title: `${ctx.varga} — ${label}`,
-    ascendant: getVargaAscendant(vargas, ctx.varga, {
-      rashi: chart.ascendant.rashi,
-      rashi_degree: chart.ascendant.rashi_degree,
-    }),
+    ascendant: vAsc,
     planets: vPlanets,
     isVarga: true,
     vargaDivisor: vd?.divisor,
@@ -187,7 +295,7 @@ export default function VargaExplorer({
         rashi_degree: p.rashi_degree,
       }));
     }
-    return getVargaPlanets(vargas, selectedVarga);
+    return getVargaPlanets(vargas, selectedVarga, chart);
   }, [chart, vargas, selectedVarga]);
 
   const singleAscendant = useMemo(
@@ -195,7 +303,7 @@ export default function VargaExplorer({
       getVargaAscendant(vargas, selectedVarga, {
         rashi: chart.ascendant.rashi,
         rashi_degree: chart.ascendant.rashi_degree,
-      }),
+      }, chart),
     [chart, vargas, selectedVarga],
   );
 

@@ -90,7 +90,23 @@ def test_unified_p1_to_p33_pipeline_continuous_execution():
         thresholds={"min_lift": 1.35, "min_sav": 30.0},
         author="UnifiedPipelineTester",
     )
-    prosp_eval = prospective.evaluate_prospective_cohort(pre_reg.registration_id, total_subjects=150)
+    from datetime import date as _date
+    _pos_i = 0
+    for _i in range(150):
+        if _i % 3 == 0 and _pos_i < 50:
+            _prob, _outcome = 0.9, True
+            _pos_i += 1
+        else:
+            _prob, _outcome = 0.1, False
+        prospective.log_blind_prediction(
+            registration_id=pre_reg.registration_id,
+            subject_id=f"subj-{_i:03d}",
+            predicted_probability=_prob,
+            prediction_window_start=_date(2026, 1, 1),
+            prediction_window_end=_date(2026, 6, 30),
+        )
+        prospective.record_subject_outcome(pre_reg.registration_id, f"subj-{_i:03d}", _outcome)
+    prosp_eval = prospective.evaluate_prospective_cohort(pre_reg.registration_id)
     print(f"[OK] [P20] Prospective Validation completed (ROC-AUC={prosp_eval.roc_auc:.3f})")
 
     # 4. P21/P22 Governance & Reproducibility

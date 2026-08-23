@@ -13,6 +13,10 @@ import { useTheme } from "./ThemeProvider";
 import { CommandPalette } from "./CommandPalette";
 import { ActiveChartSelectorModal } from "./ActiveChartSelectorModal";
 import { ResizableAIDrawer } from "@/components/layout/ResizableAIDrawer";
+import { GlobalTopBarPanchangaWidget } from "@/components/layout/GlobalTopBarPanchangaWidget";
+import { AyanamsaSelectorDropdown } from "@/components/layout/AyanamsaSelectorDropdown";
+import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
+import { useAnalyzeWorkflow } from "@/lib/workflow";
 
 
 import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
@@ -239,6 +243,11 @@ function AppShellInner({
   const logout = useLogout();
   const clearWorkflowResult = useWorkflowStore((s) => s.clear);
   const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
+  const createModalOpen = useWorkflowStore((s) => s.createModalOpen);
+  const createModalInitialType = useWorkflowStore((s) => s.createModalInitialType);
+  const closeCreateModal = useWorkflowStore((s) => s.closeCreateModal);
+  const setResult = useWorkflowStore((s) => s.setResult);
+  const analyze = useAnalyzeWorkflow();
   const request = useWorkflowStore((s) => s.request);
   const result = useWorkflowStore((s) => s.result);
   const { theme, toggle } = useTheme();
@@ -532,10 +541,10 @@ function AppShellInner({
                       <Link
                         key={item.label + item.href}
                         href={item.href}
-                        className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition ${
+                        className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs transition ${
                           active
-                            ? "bg-slate-200 dark:bg-slate-800 text-cyan-900 dark:text-cyan-300 font-bold"
-                            : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-850"
+                            ? "bg-cyan-500/15 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 font-extrabold border border-cyan-500/40 shadow-none"
+                            : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium"
                         }`}
                         onClick={
                           item.href === "/dashboard" && item.label === "New Chart"
@@ -629,56 +638,55 @@ function AppShellInner({
       {/* ── Main column ── */}
       <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
         <header
-          className="sticky top-0 z-10 flex w-full max-w-full flex-wrap items-center justify-between gap-3 border-b px-4 py-3 backdrop-blur-md"
+          className="sticky top-0 z-10 flex w-full max-w-full flex-nowrap items-center justify-between gap-2 border-b px-3 py-2 backdrop-blur-md"
           style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
         >
-          <div className="flex items-center gap-3 lg:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileNavOpen(true)}
-              className="theme-toggle"
-              aria-label="Toggle navigation menu"
-              aria-expanded={mobileNavOpen}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <Link href="/dashboard" className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
-              Astro<span style={{ color: "var(--accent)" }}>OS</span>
-            </Link>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2 lg:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen(true)}
+                className="theme-toggle"
+                aria-label="Toggle navigation menu"
+                aria-expanded={mobileNavOpen}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <Link href="/dashboard" className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                Astro<span style={{ color: "var(--accent)" }}>OS</span>
+              </Link>
+            </div>
+            <SearchBar />
+            <GlobalTopBarPanchangaWidget />
           </div>
 
-          <SearchBar />
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <AyanamsaSelectorDropdown />
 
-          {/* ── Active Chart Context Pill (Header) ── */}
-          <div className="hidden md:flex items-center">
+            {/* Active Chart Context Pill */}
             {request ? (
               <div
-                className="flex items-center gap-2 rounded-lg border px-2.5 py-1 text-xs transition"
+                className="flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs transition whitespace-nowrap"
                 style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}
               >
                 <button
                   type="button"
                   onClick={() => setChartSelectorOpen(true)}
-                  className="flex items-center gap-1.5 hover:opacity-80 transition cursor-pointer text-left"
+                  className="flex items-center gap-1 hover:opacity-80 transition cursor-pointer"
                   title="Click to switch active chart"
                 >
                   <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--accent)" }} />
-                  <span className="font-semibold max-w-[140px] truncate" style={{ color: "var(--text-primary)" }}>
+                  <span className="font-bold max-w-[90px] truncate text-[11px]" style={{ color: "var(--text-primary)" }}>
                     {request.subject_name || "Active Chart"}
                   </span>
-                  {request.place_name && (
-                    <span className="text-[10px] hidden lg:inline max-w-[100px] truncate" style={{ color: "var(--text-muted)" }}>
-                      · {request.place_name}
-                    </span>
-                  )}
-                  <span className="text-[10px] text-muted-foreground ml-0.5">▾</span>
+                  <span className="text-[10px] text-muted-foreground">▾</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push("/charts/birth")}
-                  className="ml-1 text-[11px] font-bold text-sky-700 dark:text-sky-400 hover:underline cursor-pointer"
+                  onClick={() => router.push(result?.chart_id ? `/charts/${result.chart_id}` : "/charts/birth")}
+                  className="ml-0.5 text-[10px] font-bold text-sky-400 hover:underline cursor-pointer"
                   title="View active birth chart"
                 >
                   View
@@ -688,83 +696,42 @@ function AppShellInner({
               <button
                 type="button"
                 onClick={() => setChartSelectorOpen(true)}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-1 text-xs text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition shadow-sm cursor-pointer"
+                className="flex items-center gap-1 rounded-md border border-slate-700 bg-slate-900 px-2 py-0.5 text-xs text-slate-200 hover:border-cyan-500 transition shadow-sm cursor-pointer whitespace-nowrap"
               >
                 <NavIcon name="plus" />
-                <span>Select Chart</span>
+                <span className="text-[11px]">Select Chart</span>
               </button>
             )}
-          </div>
 
-
-          <div className="flex items-center gap-3">
             {sidebarCollapsed && (
               <button
                 type="button"
                 onClick={toggleSidebar}
-                className="theme-toggle hidden h-8 w-8 items-center justify-center rounded transition-colors lg:flex"
+                className="theme-toggle hidden h-7 w-7 items-center justify-center rounded transition-colors lg:flex"
                 style={{ color: "var(--text-secondary)" }}
                 aria-label="Expand sidebar"
                 title="Expand sidebar"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M15 18l-6-6 6-6" />
                 </svg>
               </button>
             )}
 
             <ResearchModeToggle compact />
-
             <ShareButton />
-
             <button
               type="button"
               onClick={toggle}
               className="theme-toggle"
               aria-label={mounted ? `Switch to ${theme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
-              title={mounted ? `Switch to ${theme === "dark" ? "light" : "dark"} mode` : "Toggle theme"}
             >
               {mounted && theme === "light" ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
               ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="M12 2v2" />
-                  <path d="M12 20v2" />
-                  <path d="m4.93 4.93 1.41 1.41" />
-                  <path d="m17.66 17.66 1.41 1.41" />
-                  <path d="M2 12h2" />
-                  <path d="M20 12h2" />
-                  <path d="m6.34 17.66-1.41 1.41" />
-                  <path d="m19.07 4.93-1.41 1.41" />
-                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
               )}
             </button>
-
             <AccountMenu user={user} />
           </div>
         </header>
@@ -894,6 +861,21 @@ function AppShellInner({
         <CommandPalette />
         <ActiveChartSelectorModal isOpen={chartSelectorOpen} onClose={() => setChartSelectorOpen(false)} />
         <ResizableAIDrawer />
+        <CreateChartModal
+          open={createModalOpen}
+          onClose={closeCreateModal}
+          onSubmit={(req) => {
+            closeCreateModal();
+            analyze.mutate(req, {
+              onSuccess: (res) => {
+                setResult(res, req);
+                router.push("/charts/birth");
+              },
+            });
+          }}
+          isPending={analyze.isPending}
+          initialChartType={createModalInitialType as ChartTypeId | null}
+        />
       </div>
     </div>
   );

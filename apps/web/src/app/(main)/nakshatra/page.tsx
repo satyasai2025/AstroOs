@@ -3,6 +3,7 @@
 import { Suspense, useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Badge, Card, KpiCard, Select, Table, Tabs } from "@/components/ui";
+import { NakshatraArchitectureBanner } from "@/components/nakshatra/NakshatraArchitectureBanner";
 import {
   NAKSHATRAS,
   NAKSHATRA_LORD_ORDER,
@@ -47,18 +48,18 @@ type TabId =
   | "combined";
 
 const TABS: { key: TabId; label: string }[] = [
-  { key: "overview", label: "Overview" },
-  { key: "natal", label: "Natal" },
-  { key: "planetary", label: "Planetary" },
-  { key: "lagna-moon", label: "Lagna & Moon" },
-  { key: "pada", label: "Pada / Navamsha" },
-  { key: "tara", label: "Tara Bala" },
-  { key: "dasha", label: "Lords & Dasha" },
-  { key: "transit", label: "Transit" },
-  { key: "muhurta", label: "Muhurta" },
-  { key: "special", label: "Special Rules" },
-  { key: "namakshara", label: "Namakshara" },
-  { key: "combined", label: "Combined" },
+  { key: "overview", label: "01 Overview" },
+  { key: "natal", label: "02 Natal" },
+  { key: "planetary", label: "03 Planetary" },
+  { key: "lagna-moon", label: "04 Lagna & Moon" },
+  { key: "pada", label: "05 Pada / Navamsha" },
+  { key: "tara", label: "06 Tara Bala" },
+  { key: "dasha", label: "07 Lords & Dasha" },
+  { key: "transit", label: "08 Transit" },
+  { key: "muhurta", label: "09 Muhurta" },
+  { key: "special", label: "10 Special Rules" },
+  { key: "namakshara", label: "11 Namakshara" },
+  { key: "combined", label: "12 Combined Analysis" },
 ];
 
 // ── Helper Components ──────────────────────────────────────────────────────────
@@ -1406,14 +1407,16 @@ function NakshatraPageContent() {
 
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-          Nakshatra Module
+          Nakshatra Core Engine &amp; Analysis Module
         </h1>
         <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
           Foundational calculation layer — 27 nakshatras, 108 padas, 9 lords, Tara Bala, Dasha, Transit, and Muhurta analysis
         </p>
       </div>
+
+      <NakshatraArchitectureBanner />
 
       <div className="mb-6">
         <Tabs

@@ -3,6 +3,8 @@ AstroOS — Prospective Research Validation & Rule Lifecycle Router (Priority 20
 
 Endpoints:
   - POST /api/v1/research/prospective/pre-register
+  - POST /api/v1/research/prospective/log-prediction
+  - POST /api/v1/research/prospective/record-outcome
   - POST /api/v1/research/prospective/evaluate
   - GET  /api/v1/research/prospective/registrations
   - GET  /api/v1/research/prospective/evaluations/{evaluation_id}
@@ -16,9 +18,12 @@ from fastapi import APIRouter, HTTPException, Query, status
 from apps.api.schemas.prospective_validation import (
     DriftAnalysisResponse,
     EvaluateProspectiveCohortRequest,
+    LogBlindPredictionRequest,
     PreRegisterHypothesisRequest,
     PreRegistrationRecordResponse,
     ProspectiveEvaluationReportResponse,
+    ProspectiveSubjectPredictionResponse,
+    RecordProspectiveOutcomeRequest,
 )
 from apps.api.services.prospective_validation_engine import ProspectiveValidationEngine
 
@@ -37,6 +42,20 @@ def _map_registration(r) -> PreRegistrationRecordResponse:
         registered_at=r.registered_at,
         lineage_snapshot_id=r.lineage_snapshot_id,
         author=r.author,
+    )
+
+
+def _map_prediction(p) -> ProspectiveSubjectPredictionResponse:
+    return ProspectiveSubjectPredictionResponse(
+        prediction_id=p.prediction_id,
+        registration_id=p.registration_id,
+        subject_id=p.subject_id,
+        predicted_probability=p.predicted_probability,
+        prediction_window_start=p.prediction_window_start,
+        prediction_window_end=p.prediction_window_end,
+        predicted_at=p.predicted_at,
+        actual_outcome=p.actual_outcome,
+        outcome_recorded_at=p.outcome_recorded_at,
     )
 
 
@@ -81,15 +100,46 @@ def pre_register_hypothesis(req: PreRegisterHypothesisRequest) -> PreRegistratio
     return _map_registration(record)
 
 
+@router.post("/log-prediction", response_model=ProspectiveSubjectPredictionResponse, status_code=status.HTTP_200_OK)
+def log_blind_prediction(req: LogBlindPredictionRequest) -> ProspectiveSubjectPredictionResponse:
+    """Logs a real forward-only blind prediction for one subject, before the outcome is known."""
+    engine = ProspectiveValidationEngine.get_instance()
+    try:
+        record = engine.log_blind_prediction(
+            registration_id=req.registration_id,
+            subject_id=req.subject_id,
+            predicted_probability=req.predicted_probability,
+            prediction_window_start=req.prediction_window_start,
+            prediction_window_end=req.prediction_window_end,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    return _map_prediction(record)
+
+
+@router.post("/record-outcome", response_model=ProspectiveSubjectPredictionResponse, status_code=status.HTTP_200_OK)
+def record_prospective_outcome(req: RecordProspectiveOutcomeRequest) -> ProspectiveSubjectPredictionResponse:
+    """Records the real, unblinded outcome for a previously-logged blind prediction."""
+    engine = ProspectiveValidationEngine.get_instance()
+    try:
+        record = engine.record_subject_outcome(
+            registration_id=req.registration_id,
+            subject_id=req.subject_id,
+            actual_outcome=req.actual_outcome,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    return _map_prediction(record)
+
+
 @router.post("/evaluate", response_model=ProspectiveEvaluationReportResponse, status_code=status.HTTP_200_OK)
 def evaluate_prospective_cohort(req: EvaluateProspectiveCohortRequest) -> ProspectiveEvaluationReportResponse:
-    """Executes a blinded forward prospective evaluation against unblinded outcomes and assesses rule lifecycle."""
+    """Executes a blinded forward prospective evaluation against real, unblinded subject outcomes and assesses rule lifecycle."""
     engine = ProspectiveValidationEngine.get_instance()
-    report = engine.evaluate_prospective_cohort(
-        registration_id=req.registration_id,
-        total_subjects=req.total_subjects,
-        positive_prevalence=req.positive_prevalence,
-    )
+    try:
+        report = engine.evaluate_prospective_cohort(registration_id=req.registration_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
     return _map_report(report)
 
 

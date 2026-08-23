@@ -118,39 +118,218 @@ class ProspectiveValidationEngine:
         self._predictions[reg_id] = []
         return record
 
-    def evaluate_prospective_cohort(
+    def log_blind_prediction(
         self,
         registration_id: str,
-        total_subjects: int = 150,
-        positive_prevalence: float = 0.52,
-    ) -> ProspectiveEvaluationReport:
-        """Executes a blinded forward prospective evaluation against unblinded outcomes and assesses rule lifecycle."""
+        subject_id: str,
+        predicted_probability: float,
+        prediction_window_start: date,
+        prediction_window_end: date,
+    ) -> ProspectiveSubjectPrediction:
+        """
+        Logs a real forward-only blind prediction for one subject, BEFORE
+        the outcome is known. This is the real subject-level data
+        evaluate_prospective_cohort() computes its metrics from — without
+        calling this (and record_subject_outcome below) for real subjects,
+        there is nothing to evaluate.
+        """
+        if registration_id not in self._registrations:
+            raise ValueError(f"Unknown registration_id {registration_id!r} — pre_register_hypothesis() first.")
+
+        record = ProspectiveSubjectPrediction(
+            prediction_id=f"pred-{uuid.uuid4().hex[:8]}",
+            registration_id=registration_id,
+            subject_id=subject_id,
+            predicted_probability=round(predicted_probability, 4),
+            prediction_window_start=prediction_window_start,
+            prediction_window_end=prediction_window_end,
+            predicted_at=datetime.now(timezone.utc),
+        )
+        self._predictions.setdefault(registration_id, []).append(record)
+        return record
+
+    def record_subject_outcome(self, registration_id: str, subject_id: str, actual_outcome: bool) -> ProspectiveSubjectPrediction:
+        """Records the real, unblinded outcome for a previously-logged blind prediction."""
+        preds = self._predictions.get(registration_id, [])
+        # Most recent unresolved prediction for this subject — a subject
+        # can only have one outcome per registration.
+        for i in range(len(preds) - 1, -1, -1):
+            if preds[i].subject_id == subject_id and preds[i].actual_outcome is None:
+                updated = ProspectiveSubjectPrediction(
+                    prediction_id=preds[i].prediction_id,
+                    registration_id=preds[i].registration_id,
+                    subject_id=preds[i].subject_id,
+                    predicted_probability=preds[i].predicted_probability,
+                    prediction_window_start=preds[i].prediction_window_start,
+                    prediction_window_end=preds[i].prediction_window_end,
+                    predicted_at=preds[i].predicted_at,
+                    actual_outcome=actual_outcome,
+                    outcome_recorded_at=datetime.now(timezone.utc),
+                )
+                preds[i] = updated
+                return updated
+        raise ValueError(f"No unresolved blind prediction found for subject_id {subject_id!r} under registration {registration_id!r}.")
+
+    @staticmethod
+    def _roc_auc_and_ci(probs: List[float], outcomes: List[bool]) -> Tuple[float, Tuple[float, float]]:
+        """
+        Real rank-based (Mann-Whitney U) ROC-AUC with the Hanley-McNeil
+        (1982) normal-approximation standard error for the 95% CI —
+        standard, citable formulas, not a fabricated constant.
+        """
+        n_pos = sum(1 for o in outcomes if o)
+        n_neg = len(outcomes) - n_pos
+        if n_pos == 0 or n_neg == 0:
+            return 0.5, (0.5, 0.5)
+
+        order = sorted(range(len(probs)), key=lambda i: probs[i])
+        ranks = [0.0] * len(probs)
+        i = 0
+        while i < len(order):
+            j = i
+            while j + 1 < len(order) and probs[order[j + 1]] == probs[order[i]]:
+                j += 1
+            avg_rank = (i + j) / 2.0 + 1.0
+            for k in range(i, j + 1):
+                ranks[order[k]] = avg_rank
+            i = j + 1
+
+        rank_sum_pos = sum(ranks[idx] for idx, o in enumerate(outcomes) if o)
+        auc = (rank_sum_pos - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg)
+
+        q1 = auc / (2.0 - auc) if auc < 2.0 else 0.0
+        q2 = (2.0 * auc * auc) / (1.0 + auc) if auc > -1.0 else 0.0
+        var = (
+            auc * (1.0 - auc)
+            + (n_pos - 1) * (q1 - auc * auc)
+            + (n_neg - 1) * (q2 - auc * auc)
+        ) / (n_pos * n_neg)
+        se = math.sqrt(max(0.0, var))
+        lo = max(0.0, auc - 1.96 * se)
+        hi = min(1.0, auc + 1.96 * se)
+        return round(auc, 4), (round(lo, 4), round(hi, 4))
+
+    @staticmethod
+    def _pr_auc(probs: List[float], outcomes: List[bool]) -> float:
+        """Real trapezoidal precision-recall AUC over the actual predicted-probability ranking."""
+        n_pos = sum(1 for o in outcomes if o)
+        if n_pos == 0:
+            return 0.0
+        pairs = sorted(zip(probs, outcomes), key=lambda pair: pair[0], reverse=True)
+        tp = 0
+        fp = 0
+        points: List[Tuple[float, float]] = [(0.0, 1.0)]
+        for _, outcome in pairs:
+            if outcome:
+                tp += 1
+            else:
+                fp += 1
+            recall = tp / n_pos
+            precision = tp / (tp + fp) if (tp + fp) > 0 else 1.0
+            points.append((recall, precision))
+        area = 0.0
+        for (r0, p0), (r1, p1) in zip(points, points[1:]):
+            area += (r1 - r0) * (p1 + p0) / 2.0
+        return round(max(0.0, min(1.0, area)), 4)
+
+    def evaluate_prospective_cohort(self, registration_id: str) -> ProspectiveEvaluationReport:
+        """
+        Executes a blinded forward prospective evaluation against real,
+        unblinded subject outcomes logged via log_blind_prediction() +
+        record_subject_outcome(), and assesses rule lifecycle. No
+        fabricated metrics: with fewer than 2 resolved subjects (or no
+        subjects of one outcome class), the report honestly returns
+        PROSPECTIVE_INCONCLUSIVE with zeroed/undefined statistics rather
+        than a plausible-looking invented number.
+        """
         reg = self._registrations.get(registration_id)
         if not reg:
-            # Create default registration if evaluating directly
-            reg = self.pre_register_hypothesis(
-                hypothesis_id="hypo-default",
-                rule_name="Prospective 7th Lord Dasha + Jupiter Aspect Rule",
-                target_objective="marriage",
-                formula_expression='DASHA == "7th_Lord" AND TRANSIT_ASPECT("Jupiter", 7) AND SAV_SCORE >= 30',
-                thresholds={"min_lift": 1.35, "min_sav": 30.0},
-            )
+            raise ValueError(f"Unknown registration_id {registration_id!r} — pre_register_hypothesis() first.")
 
         eval_id = f"eval-prosp-{uuid.uuid4().hex[:8]}"
 
-        # Synthesize empirical prospective evaluation metrics
-        brier = 0.042
-        log_loss = 0.138
-        roc_auc = 0.895
-        pr_auc = 0.872
-        precision = 0.860
-        recall = 0.845
-        pos_count = int(total_subjects * positive_prevalence)
-        lift = round(precision / positive_prevalence, 2) if positive_prevalence > 0 else 1.45
+        resolved = [p for p in self._predictions.get(registration_id, []) if p.actual_outcome is not None]
+        total_subjects = len(resolved)
+        probs = [p.predicted_probability for p in resolved]
+        outcomes = [bool(p.actual_outcome) for p in resolved]
+        pos_count = sum(1 for o in outcomes if o)
 
-        # Compute Population Stability Index (PSI) Drift
-        # Expected baseline bin distribution vs prospective bin distribution
-        psi_drift = 0.048  # Low drift (< 0.10 indicates stable population)
+        if total_subjects < 2 or pos_count == 0 or pos_count == total_subjects:
+            # Not enough real data (or no class variation) to compute
+            # discriminative metrics honestly.
+            report = ProspectiveEvaluationReport(
+                evaluation_id=eval_id,
+                registration_id=reg.registration_id,
+                target_objective=reg.target_objective,
+                total_prospective_subjects=total_subjects,
+                positive_outcomes_count=pos_count,
+                brier_score=0.0,
+                log_loss=0.0,
+                roc_auc=0.5,
+                pr_auc=0.0,
+                precision=0.0,
+                recall=0.0,
+                statistical_lift=1.0,
+                confidence_interval_95_roc=(0.5, 0.5),
+                drift_analysis=DriftAnalysisResult(
+                    psi_drift_score=0.0, is_significant_drift=False, drift_diagnosis="INSUFFICIENT_DATA",
+                ),
+                final_lifecycle_status=ProspectiveRuleLifecycleStatus.PROSPECTIVE_INCONCLUSIVE,
+                epistemic_classification="INSUFFICIENT_REAL_PROSPECTIVE_DATA — log real blind predictions and outcomes before evaluating",
+                evaluated_at=datetime.now(timezone.utc),
+            )
+            self._reports[eval_id] = report
+            return report
+
+        # Real Brier score and log-loss over actual predicted probabilities vs actual outcomes.
+        brier = round(sum((p - (1.0 if o else 0.0)) ** 2 for p, o in zip(probs, outcomes)) / total_subjects, 4)
+        eps = 1e-9
+        log_loss = round(
+            -sum(
+                (1.0 if o else 0.0) * math.log(max(p, eps)) + (0.0 if o else 1.0) * math.log(max(1.0 - p, eps))
+                for p, o in zip(probs, outcomes)
+            ) / total_subjects,
+            4,
+        )
+
+        roc_auc, roc_ci = self._roc_auc_and_ci(probs, outcomes)
+        pr_auc = self._pr_auc(probs, outcomes)
+
+        # Precision/Recall at a fixed 0.5 decision threshold (standard
+        # default — no per-rule threshold is configured anywhere upstream).
+        predicted_positive = [(p, o) for p, o in zip(probs, outcomes) if p >= 0.5]
+        tp = sum(1 for p, o in predicted_positive if o)
+        fp = sum(1 for p, o in predicted_positive if not o)
+        fn = sum(1 for o in outcomes if o) - tp
+        precision = round(tp / (tp + fp), 4) if (tp + fp) > 0 else 0.0
+        recall = round(tp / (tp + fn), 4) if (tp + fn) > 0 else 0.0
+
+        observed_prevalence = pos_count / total_subjects
+        lift = round(precision / observed_prevalence, 4) if observed_prevalence > 0 and precision > 0 else 1.0
+
+        # Real temporal PSI: chronological first half vs second half of
+        # resolved predictions, 2-bin (hit-rate) population stability
+        # index — same standard formula used in longitudinal_tracking_engine.py.
+        ordered = sorted(resolved, key=lambda p: p.predicted_at)
+        mid = len(ordered) // 2
+        first_half, second_half = ordered[:mid], ordered[mid:]
+
+        def _hit_rate(chunk: List[ProspectiveSubjectPrediction]) -> Optional[float]:
+            if not chunk:
+                return None
+            return sum(1 for p in chunk if p.actual_outcome) / len(chunk)
+
+        rate_a, rate_b = _hit_rate(first_half), _hit_rate(second_half)
+        if rate_a is not None and rate_b is not None:
+            eps_psi = 1e-6
+            psi_drift = 0.0
+            for e, a in ((rate_a, rate_b), (1.0 - rate_a, 1.0 - rate_b)):
+                e_c, a_c = max(e, eps_psi), max(a, eps_psi)
+                psi_drift += (a_c - e_c) * math.log(a_c / e_c)
+            psi_drift = round(psi_drift, 4)
+        else:
+            psi_drift = 0.0
+
         is_drift = psi_drift >= 0.20
         drift_diag = "STABLE_DISTRIBUTION" if not is_drift else "SIGNIFICANT_COHORT_DRIFT"
         drift_result = DriftAnalysisResult(
@@ -184,7 +363,7 @@ class ProspectiveValidationEngine:
             precision=precision,
             recall=recall,
             statistical_lift=lift,
-            confidence_interval_95_roc=(0.845, 0.945),
+            confidence_interval_95_roc=roc_ci,
             drift_analysis=drift_result,
             final_lifecycle_status=lifecycle_status,
             epistemic_classification=epistemic_note,

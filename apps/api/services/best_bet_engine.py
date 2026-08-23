@@ -23,8 +23,6 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
-from packages.shared.rashi_offset import house_offset
-
 logger = logging.getLogger(__name__)
 
 # Which of the 3 groups count toward total_score/max_score/percentage per
@@ -167,18 +165,27 @@ class BestBetEngine:
         else:
             return 0.0, "Different Rajju group"
 
-    @staticmethod
-    def _calculate_nadi_score(nakshatra_a: int, nakshatra_b: int) -> tuple[float, str]:
+    # Real 3-group classical Nadi system (Aadi/Madhya/Antya), indexed 0-26
+    # in standard nakshatra order (Ashwini..Revati) — repeats [Aadi,
+    # Madhya, Antya, Antya, Madhya, Aadi] every 6 nakshatras. Sourced from
+    # the same classification already verified this session in
+    # synastry_engine.py's _NAKSHATRA_NADI.
+    _NADI_GROUP_BY_INDEX = (
+        0, 1, 2, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2, 2, 1, 0, 0, 1, 2,
+    )
+
+    @classmethod
+    def _calculate_nadi_score(cls, nakshatra_a: int, nakshatra_b: int) -> tuple[float, str]:
         """
         Nadi (Pulse/Health): Same nadi = 0/8, different = 8/8.
-        Nadi groups: (0,8,16,24), (1,9,17,25), (2,10,18,26), (3,11,19), (4,12,20), (5,13,21), (6,14,22), (7,15,23)
+        Real 3-group classical Nadi system (Aadi/Madhya/Antya) — see
+        _NADI_GROUP_BY_INDEX.
         """
         if nakshatra_a < 0 or nakshatra_b < 0:
             return 0.0, "Nakshatra data unavailable"
 
-        # 8 nadi groups based on nakshatra index mod 3 and other rules
-        nadi_a = (nakshatra_a % 3) * 2 + (nakshatra_a // 9)
-        nadi_b = (nakshatra_b % 3) * 2 + (nakshatra_b // 9)
+        nadi_a = cls._NADI_GROUP_BY_INDEX[nakshatra_a % 27]
+        nadi_b = cls._NADI_GROUP_BY_INDEX[nakshatra_b % 27]
 
         if nadi_a != nadi_b:
             return 8.0, "Different Nadi — health compatibility"
@@ -267,23 +274,30 @@ class BestBetEngine:
             return 2.0, "No Vedha"
 
     @staticmethod
-    def _calculate_mars_dosha_score(mars_house_a: int, moon_house_a: int, venus_house_a: int,
-                                     mars_house_b: int, moon_house_b: int, venus_house_b: int) -> tuple[float, str]:
+    def _calculate_mars_dosha_score(lagna_house_a: int, mars_house_a: int, moon_house_a: int, venus_house_a: int,
+                                     lagna_house_b: int, mars_house_b: int, moon_house_b: int, venus_house_b: int) -> tuple[float, str]:
         """
         Mars Dosha: Mars in 1, 2, 4, 7, 8, 12 from Asc/Moon/Venus = dosha.
         Compare severity between partners. Matching dosha levels cancel.
         """
         dosha_houses = {1, 2, 4, 7, 8, 12}
 
-        def count_dosha(mars_h: int, moon_h: int, venus_h: int) -> int:
+        def count_dosha(lagna_h: int, mars_h: int, moon_h: int, venus_h: int) -> int:
+            # lagna_h/mars_h/moon_h/venus_h are 1-indexed "house number from
+            # Ascendant" (matching PlanetPosition.house_number's convention,
+            # e.g. ai_phase_e.py's caller) — NOT 0-indexed rashi indices, so
+            # house_offset() (which expects 0-indexed input) would silently
+            # shift the result by one. Compute the 1-indexed house-from-
+            # reference directly instead.
             count = 0
-            for ref in [mars_h, moon_h, venus_h]:
-                if house_offset(ref, mars_h) in dosha_houses:
+            for ref in [lagna_h, moon_h, venus_h]:
+                offset = ((mars_h - ref) % 12) + 1
+                if offset in dosha_houses:
                     count += 1
             return count
 
-        dosha_a = count_dosha(mars_house_a, moon_house_a, venus_house_a)
-        dosha_b = count_dosha(mars_house_b, moon_house_b, venus_house_b)
+        dosha_a = count_dosha(lagna_house_a, mars_house_a, moon_house_a, venus_house_a)
+        dosha_b = count_dosha(lagna_house_b, mars_house_b, moon_house_b, venus_house_b)
 
         if dosha_a == 0 and dosha_b == 0:
             return 6.0, "No Mars Dosha — excellent"
@@ -362,9 +376,11 @@ class BestBetEngine:
         rashi_a: str,
         rashi_b: str,
         # House positions for Mars dosha
+        lagna_house_a: int,
         mars_house_a: int,
         moon_house_a: int,
         venus_house_a: int,
+        lagna_house_b: int,
         mars_house_b: int,
         moon_house_b: int,
         venus_house_b: int,
@@ -442,8 +458,8 @@ class BestBetEngine:
 
         # Group 2: Karmic Compatibility (12 points)
         mars_dosha_score, _ = cls._calculate_mars_dosha_score(
-            mars_house_a, moon_house_a, venus_house_a,
-            mars_house_b, moon_house_b, venus_house_b
+            lagna_house_a, mars_house_a, moon_house_a, venus_house_a,
+            lagna_house_b, mars_house_b, moon_house_b, venus_house_b
         )
         karmic_pattern_score, _ = cls._calculate_karmic_pattern_score(
             sun_dignity_a, moon_dignity_a, venus_dignity_a, saturn_dignity_a, lagna_dignity_a,

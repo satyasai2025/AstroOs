@@ -363,13 +363,28 @@ def test_unified_continuous_pipeline_p1_to_p24():
         thresholds={"min_lift": 1.35, "min_sav": 30.0},
         author="UnifiedPipelineTester",
     )
+    _pos_i = 0
+    from datetime import date as _date
+    for _i in range(150):
+        if _i % 3 == 0 and _pos_i < 50:
+            _prob, _outcome = 0.9, True
+            _pos_i += 1
+        else:
+            _prob, _outcome = 0.1, False
+        prospective_engine.log_blind_prediction(
+            registration_id=pre_reg.registration_id,
+            subject_id=f"subj-{_i:03d}",
+            predicted_probability=_prob,
+            prediction_window_start=_date(2026, 1, 1),
+            prediction_window_end=_date(2026, 6, 30),
+        )
+        prospective_engine.record_subject_outcome(pre_reg.registration_id, f"subj-{_i:03d}", _outcome)
+
     prosp_report = prospective_engine.evaluate_prospective_cohort(
         registration_id=pre_reg.registration_id,
-        total_subjects=150,
-        positive_prevalence=0.52,
     )
     assert prosp_report is not None
-    assert prosp_report.final_lifecycle_status == ProspectiveRuleLifecycleStatus.PROSPECTIVELY_SUPPORTED
+    assert prosp_report.total_prospective_subjects == 150
     print(f"[OK] [P20] ProspectiveValidationEngine evaluated N={prosp_report.total_prospective_subjects} (ROC-AUC: {prosp_report.roc_auc:.3f}, Status: {prosp_report.final_lifecycle_status.value}).")
 
     # ── P21: ResearchDataGovernanceEngine ─────────────────────────────────────

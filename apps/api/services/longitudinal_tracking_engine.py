@@ -56,50 +56,6 @@ class LongitudinalTrackingEngine:
             cls._instance = cls()
         return cls._instance
 
-    def _ensure_initialized(self, target_objective: str, rule_id: str) -> None:
-        key = f"{target_objective}:{rule_id}"
-        if key not in self._tracked_records or len(self._tracked_records[key]) == 0:
-            self._tracked_records[key] = []
-            for i in range(1, 26):
-                # 2026-Q1: 22 hits, 3 misses
-                status = OutcomeVerificationStatus.CONFIRMED_HIT if i <= 22 else OutcomeVerificationStatus.CONFIRMED_MISS
-                self._tracked_records[key].append(
-                    TrackedSubjectOutcomeRecord(
-                        subject_id=f"subj-long-q1-{i:03d}",
-                        target_objective=target_objective,
-                        rule_id=rule_id,
-                        predicted_window_start=date(2026, 1, 15),
-                        predicted_window_end=date(2026, 3, 31),
-                        actual_event_date=date(2026, 2, 14) if status == OutcomeVerificationStatus.CONFIRMED_HIT else None,
-                        predicted_probability=0.88,
-                        verification_status=status,
-                        verification_source="MUNICIPAL_MARRIAGE_REGISTRY",
-                        recorded_at=datetime(2026, 4, 1, 0, 0, tzinfo=timezone.utc),
-                    )
-                )
-            for i in range(26, 51):
-                # 2026-Q2: 21 hits, 3 misses, 1 ambiguous
-                if i <= 46:
-                    status = OutcomeVerificationStatus.CONFIRMED_HIT
-                elif i <= 49:
-                    status = OutcomeVerificationStatus.CONFIRMED_MISS
-                else:
-                    status = OutcomeVerificationStatus.AMBIGUOUS_UNVERIFIED
-                self._tracked_records[key].append(
-                    TrackedSubjectOutcomeRecord(
-                        subject_id=f"subj-long-q2-{i:03d}",
-                        target_objective=target_objective,
-                        rule_id=rule_id,
-                        predicted_window_start=date(2026, 4, 1),
-                        predicted_window_end=date(2026, 6, 30),
-                        actual_event_date=date(2026, 5, 20) if status == OutcomeVerificationStatus.CONFIRMED_HIT else None,
-                        predicted_probability=0.85,
-                        verification_status=status,
-                        verification_source="MUNICIPAL_MARRIAGE_REGISTRY",
-                        recorded_at=datetime(2026, 7, 1, 0, 0, tzinfo=timezone.utc),
-                    )
-                )
-
     def record_subject_outcome(
         self,
         subject_id: str,
@@ -111,17 +67,13 @@ class LongitudinalTrackingEngine:
         predicted_probability: float,
         verification_status: OutcomeVerificationStatus,
         verification_source: str = "OFFICIAL_MUNICIPAL_REGISTRY",
-        initialize_seed: bool = True,
     ) -> TrackedSubjectOutcomeRecord:
         """
         Ingests and records an individual prospective subject event outcome.
         """
-        if initialize_seed:
-            self._ensure_initialized(target_objective, rule_id)
-        else:
-            key = f"{target_objective}:{rule_id}"
-            if key not in self._tracked_records:
-                self._tracked_records[key] = []
+        key = f"{target_objective}:{rule_id}"
+        if key not in self._tracked_records:
+            self._tracked_records[key] = []
 
         record = TrackedSubjectOutcomeRecord(
             subject_id=subject_id,
@@ -153,23 +105,37 @@ class LongitudinalTrackingEngine:
 
         # ── 1. Query Upstream Engines Dynamically
         prosp_regs = [r for r in self._prospective_engine.list_registrations() if r.target_objective.lower() == target_objective.lower()]
+        # Only used to name/describe a genuinely untracked rule when the
+        # caller didn't supply rule_id — NEVER used to pick the baseline
+        # report below, which must match the actual effective_rule_id.
         effective_rule_id = rule_id or (prosp_regs[0].hypothesis_id if prosp_regs else "hyp-m1")
-        rule_name = prosp_regs[0].rule_name if prosp_regs else "Canonical Polymodal Timing Rule"
+        matching_reg = next((r for r in prosp_regs if r.hypothesis_id == effective_rule_id), None)
+        rule_name = matching_reg.rule_name if matching_reg else "Canonical Polymodal Timing Rule"
 
-        # Lookup baseline prospective performance
-        baseline_hit_rate = 0.82
-        baseline_sample_n = 150
-        for rep in self._prospective_engine._reports.values():
-            if rep.registration_id == (prosp_regs[0].registration_id if prosp_regs else ""):
-                baseline_hit_rate = rep.precision if getattr(rep, "precision", None) is not None else (rep.positive_outcomes_count / max(1, rep.total_prospective_subjects))
-                baseline_sample_n = rep.total_prospective_subjects
-                break
+        # Lookup baseline prospective performance from a real matching
+        # report for THIS SPECIFIC rule (by hypothesis_id, not just any
+        # registration sharing the target_objective — a previous version
+        # of this fix grabbed prosp_regs[0], the first "marriage"
+        # registration found anywhere, which silently borrowed an
+        # unrelated rule's baseline whenever multiple rules were
+        # registered for the same objective). No fabricated fallback: if
+        # no real baseline exists yet for this rule, the degradation test
+        # below is skipped rather than compared against an invented or
+        # unrelated baseline.
+        baseline_hit_rate: Optional[float] = None
+        baseline_sample_n: Optional[int] = None
+        if matching_reg is not None:
+            for rep in self._prospective_engine._reports.values():
+                if rep.registration_id == matching_reg.registration_id:
+                    baseline_hit_rate = rep.precision if getattr(rep, "precision", None) is not None else (rep.positive_outcomes_count / max(1, rep.total_prospective_subjects))
+                    baseline_sample_n = rep.total_prospective_subjects
+                    break
 
+        # No fabricated seed data: an untracked rule simply has zero
+        # recorded subjects until real outcomes are ingested via
+        # record_subject_outcome().
         key = f"{target_objective}:{effective_rule_id}"
-        if key not in self._tracked_records or len(self._tracked_records[key]) == 0:
-            self._ensure_initialized(target_objective, effective_rule_id)
-
-        records = self._tracked_records[key]
+        records = self._tracked_records.get(key, [])
         total_subjects = len(records)
         confirmed_hits = sum(1 for r in records if r.verification_status == OutcomeVerificationStatus.CONFIRMED_HIT)
         confirmed_misses = sum(1 for r in records if r.verification_status == OutcomeVerificationStatus.CONFIRMED_MISS)
@@ -186,7 +152,9 @@ class LongitudinalTrackingEngine:
                 sq_errors.append((r.predicted_probability - 1.0) ** 2)
             elif r.verification_status == OutcomeVerificationStatus.CONFIRMED_MISS:
                 sq_errors.append((r.predicted_probability - 0.0) ** 2)
-        cum_brier = round(sum(sq_errors) / len(sq_errors), 4) if sq_errors else 0.025
+        # No fabricated fallback: 0.0 with zero sample size honestly means
+        # "no evaluable outcomes recorded yet", not a fake stable score.
+        cum_brier = round(sum(sq_errors) / len(sq_errors), 4) if sq_errors else 0.0
 
         # ── 3. Time Series Quarterly Intervals
         q1_records = [r for r in records if r.predicted_window_start < date(2026, 4, 1)]
@@ -200,6 +168,42 @@ class LongitudinalTrackingEngine:
         q2_miss = sum(1 for r in q2_records if r.verification_status == OutcomeVerificationStatus.CONFIRMED_MISS)
         q2_hit_rate = round(q2_hits / max(1, q2_hits + q2_miss), 4)
 
+        def _interval_brier(interval_records: list) -> float:
+            errs = [
+                (r.predicted_probability - 1.0) ** 2 if r.verification_status == OutcomeVerificationStatus.CONFIRMED_HIT
+                else (r.predicted_probability - 0.0) ** 2
+                for r in interval_records
+                if r.verification_status in (OutcomeVerificationStatus.CONFIRMED_HIT, OutcomeVerificationStatus.CONFIRMED_MISS)
+            ]
+            return round(sum(errs) / len(errs), 4) if errs else 0.0
+
+        q1_brier = _interval_brier(q1_records)
+        q2_brier = _interval_brier(q2_records)
+
+        # ── 4. Population Stability Index (PSI): real 2-bin (hit/miss)
+        # distribution shift between Q1 (expected/baseline interval) and Q2
+        # (actual/current interval) — standard PSI formula, not a hardcoded
+        # constant. Undefined (0.0, STABLE by convention) when either
+        # interval has no evaluable outcomes, since PSI needs both
+        # distributions to compare.
+        _PSI_EPS = 1e-6
+
+        def _psi(expected_hit_rate: float, actual_hit_rate: float) -> float:
+            bins = ((expected_hit_rate, actual_hit_rate), (1.0 - expected_hit_rate, 1.0 - actual_hit_rate))
+            total = 0.0
+            for expected_pct, actual_pct in bins:
+                e = max(expected_pct, _PSI_EPS)
+                a = max(actual_pct, _PSI_EPS)
+                total += (a - e) * math.log(a / e)
+            return total
+
+        q1_evaluable = q1_hits + q1_miss
+        q2_evaluable = q2_hits + q2_miss
+        if q1_evaluable > 0 and q2_evaluable > 0:
+            psi_score = round(_psi(q1_hit_rate, q2_hit_rate), 4)
+        else:
+            psi_score = 0.0
+
         intervals = (
             LongitudinalTimeSeriesInterval(
                 interval_id="2026-Q1",
@@ -209,8 +213,8 @@ class LongitudinalTrackingEngine:
                 confirmed_hits=q1_hits,
                 confirmed_misses=q1_miss,
                 interval_hit_rate=q1_hit_rate,
-                rolling_brier_score=0.024,
-                interval_psi=0.032,
+                rolling_brier_score=q1_brier,
+                interval_psi=0.0,
                 distribution_drift_status=PopulationDistributionDriftStatus.STABLE_CONGRUENT,
             ),
             LongitudinalTimeSeriesInterval(
@@ -221,14 +225,13 @@ class LongitudinalTrackingEngine:
                 confirmed_hits=q2_hits,
                 confirmed_misses=q2_miss,
                 interval_hit_rate=q2_hit_rate,
-                rolling_brier_score=cum_brier,
-                interval_psi=0.041,
+                rolling_brier_score=q2_brier,
+                interval_psi=psi_score,
                 distribution_drift_status=PopulationDistributionDriftStatus.STABLE_CONGRUENT,
             ),
         )
 
-        # ── 4. Mechanism 1: Population Stability Index (PSI) Distribution Drift
-        psi_score = 0.041  # Stable population distribution
+        # ── 4b. Mechanism 1: Population Stability Index Drift Classification
         if psi_score < 0.10:
             drift_status = PopulationDistributionDriftStatus.STABLE_CONGRUENT
         elif psi_score < 0.25:
@@ -238,35 +241,46 @@ class LongitudinalTrackingEngine:
 
         # ── 5. Mechanism 2: Statistical Degradation Test (Two-Proportion Z-Test)
         # H0: p_longitudinal >= p_baseline  vs  H1: p_longitudinal < p_baseline
-        k_base = int(round(baseline_hit_rate * baseline_sample_n))
-        k_long = confirmed_hits
-        n_base = baseline_sample_n
-        n_long = max(1, evaluable_n)
-
-        p_pool = (k_base + k_long) / (n_base + n_long)
-        se = math.sqrt(p_pool * (1.0 - p_pool) * (1.0 / n_base + 1.0 / n_long))
-        delta_hit_rate = round(cum_hit_rate - baseline_hit_rate, 4)
-
-        if se > 0:
-            z_stat = (cum_hit_rate - baseline_hit_rate) / se
-            # One-tailed lower tail standard normal CDF approximation
-            # CDF(z) = 0.5 * (1 + erf(z / sqrt(2)))
-            degradation_p_val = round(0.5 * (1.0 + math.erf(z_stat / math.sqrt(2.0))), 5)
-        else:
+        # No fabricated baseline: if no real prospective report matched
+        # this rule, there is nothing to test against.
+        if baseline_hit_rate is None or baseline_sample_n is None or baseline_sample_n <= 0:
             z_stat = 0.0
             degradation_p_val = 1.0
-
-        is_stat_sig_degraded = bool(degradation_p_val < 0.05 and delta_hit_rate < 0.0)
-
-        if is_stat_sig_degraded:
-            test_rationale = f"CRITICAL_DEGRADATION: Longitudinal hit rate ({cum_hit_rate:.1%}) degraded significantly below baseline ({baseline_hit_rate:.1%}), p = {degradation_p_val:.5f} < 0.05."
-        elif delta_hit_rate >= 0:
-            test_rationale = f"NO_DEGRADATION: Longitudinal hit rate ({cum_hit_rate:.1%}) equals or exceeds baseline ({baseline_hit_rate:.1%}), Delta = +{delta_hit_rate * 100:.1f}%."
+            delta_hit_rate = 0.0
+            is_stat_sig_degraded = False
+            test_rationale = "NO_BASELINE: No matching prospective validation report found for this rule — degradation test skipped, not fabricated."
+            baseline_hit_rate_reported = 0.0
         else:
-            test_rationale = f"MILD_FLUCTUATION_NOT_SIGNIFICANT: Longitudinal hit rate ({cum_hit_rate:.1%}) exhibits minor negative delta ({delta_hit_rate * 100:.1f}%), but difference is not statistically significant (p = {degradation_p_val:.4f} >= 0.05)."
+            k_base = int(round(baseline_hit_rate * baseline_sample_n))
+            k_long = confirmed_hits
+            n_base = baseline_sample_n
+            n_long = max(1, evaluable_n)
+
+            p_pool = (k_base + k_long) / (n_base + n_long)
+            se = math.sqrt(p_pool * (1.0 - p_pool) * (1.0 / n_base + 1.0 / n_long))
+            delta_hit_rate = round(cum_hit_rate - baseline_hit_rate, 4)
+
+            if se > 0:
+                z_stat = (cum_hit_rate - baseline_hit_rate) / se
+                # One-tailed lower tail standard normal CDF approximation
+                # CDF(z) = 0.5 * (1 + erf(z / sqrt(2)))
+                degradation_p_val = round(0.5 * (1.0 + math.erf(z_stat / math.sqrt(2.0))), 5)
+            else:
+                z_stat = 0.0
+                degradation_p_val = 1.0
+
+            is_stat_sig_degraded = bool(degradation_p_val < 0.05 and delta_hit_rate < 0.0)
+            baseline_hit_rate_reported = baseline_hit_rate
+
+            if is_stat_sig_degraded:
+                test_rationale = f"CRITICAL_DEGRADATION: Longitudinal hit rate ({cum_hit_rate:.1%}) degraded significantly below baseline ({baseline_hit_rate:.1%}), p = {degradation_p_val:.5f} < 0.05."
+            elif delta_hit_rate >= 0:
+                test_rationale = f"NO_DEGRADATION: Longitudinal hit rate ({cum_hit_rate:.1%}) equals or exceeds baseline ({baseline_hit_rate:.1%}), Delta = +{delta_hit_rate * 100:.1f}%."
+            else:
+                test_rationale = f"MILD_FLUCTUATION_NOT_SIGNIFICANT: Longitudinal hit rate ({cum_hit_rate:.1%}) exhibits minor negative delta ({delta_hit_rate * 100:.1f}%), but difference is not statistically significant (p = {degradation_p_val:.4f} >= 0.05)."
 
         stat_test = StatisticalDegradationTest(
-            baseline_prospective_hit_rate=round(baseline_hit_rate, 4),
+            baseline_prospective_hit_rate=round(baseline_hit_rate_reported, 4),
             longitudinal_rolling_hit_rate=cum_hit_rate,
             delta_hit_rate=delta_hit_rate,
             sample_size_longitudinal=evaluable_n,

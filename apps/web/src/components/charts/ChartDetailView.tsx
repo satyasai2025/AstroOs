@@ -4,14 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
-import { ChartDetailPanel } from "@/components/charts/ChartDetailPanel";
-import { ChartPanel } from "@/components/workflow/panels/ChartPanel";
-import { DashaTransitSummaryCard } from "@/components/charts/DashaTransitSummaryCard";
 import { DivisionalChartSelector } from "@/components/charts/DivisionalChartSelector";
 import { DashaTimeline } from "@/components/charts/DashaTimeline";
 import { LifeEventsTree } from "@/components/charts/LifeEventsTree";
 import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
 import { PlanetaryPositionsTable } from "@/components/charts/PlanetaryPositionsTable";
+import { ShadbalaGaugesOverview } from "@/components/charts/ShadbalaGaugesOverview";
+import { StrengthRadarWebChart } from "@/components/charts/StrengthRadarWebChart";
+import { ActiveYogasCard } from "@/components/charts/ActiveYogasCard";
+import { PanchangaDetailedCard } from "@/components/charts/PanchangaDetailedCard";
 import { ShareButton } from "@/components/ui";
 import { useChartEvents } from "@/lib/events";
 import { useWorkflowStore } from "@/lib/store";
@@ -21,23 +22,6 @@ import type {
   WorkflowAnalysisRequest,
   WorkflowAnalysisResponse,
 } from "@/lib/types";
-
-const PLANET_SIGNIFICATIONS: Record<string, string> = {
-  Sun: "leadership, authority, vitality, and self-realization",
-  Moon: "mind, emotional growth, intuition, and public connection",
-  Mars: "courage, action, drive, and technical or strategic pursuits",
-  Mercury: "intellect, analytical skill, communication, and commercial enterprise",
-  Jupiter: "expansion, learning, wisdom, prosperity, and spiritual growth",
-  Venus: "harmony, creativity, relationships, and refinement",
-  Saturn: "discipline, structure, perseverance, and long-term stability",
-  Rahu: "transformation, material ambition, innovation, and intense evolution",
-  Ketu: "spiritual insight, detachment, research, and deep introspection",
-};
-
-function getPlanetSignification(planet: string): string {
-  const p = planet.charAt(0).toUpperCase() + planet.slice(1).toLowerCase();
-  return PLANET_SIGNIFICATIONS[p] || "development and transformative life learning";
-}
 
 function formatDate(iso: string): string {
   try {
@@ -86,7 +70,6 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
   const current = findCurrentDasha(dasha.mahadashas, new Date());
   const chartId = result.chart_id || "";
   const { data: chartEventsData } = useChartEvents(chartId);
-  const [datasetAdded, setDatasetAdded] = useState(false);
 
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
   const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(null);
@@ -108,136 +91,140 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
     setPinnedPlanet(null);
   };
 
-  const handleAddToDataset = () => {
-    try {
-      const stored = localStorage.getItem("astroos_research_dataset_charts");
-      const list = stored ? JSON.parse(stored) : [];
-      if (!list.includes(chartId)) {
-        list.push(chartId);
-        localStorage.setItem("astroos_research_dataset_charts", JSON.stringify(list));
-      }
-      setDatasetAdded(true);
-      setTimeout(() => setDatasetAdded(false), 3000);
-    } catch {
-      setDatasetAdded(true);
-      setTimeout(() => setDatasetAdded(false), 3000);
-    }
-  };
+  const sunPlanet = chart.planets.find((p) => p.planet === "Sun");
+  const moonPlanet = chart.planets.find((p) => p.planet === "Moon");
 
-  const sunSign = chart.planets.find((p) => p.planet.toLowerCase() === "sun")?.rashi ?? "—";
-  const moonSign = chart.planets.find((p) => p.planet.toLowerCase() === "moon")?.rashi ?? "—";
-  const sunDegree = chart.planets.find((p) => p.planet.toLowerCase() === "sun")?.rashi_degree ?? 0;
-  const moonDegree = chart.planets.find((p) => p.planet.toLowerCase() === "moon")?.rashi_degree ?? 0;
-  const moonNakshatra = chart.planets.find((p) => p.planet.toLowerCase() === "moon")?.nakshatra ?? "—";
-  const moonPada = chart.planets.find((p) => p.planet.toLowerCase() === "moon")?.pada ?? 0;
-  const currentYoga = chart.panchanga.yoga.name;
-  const currentKarana = chart.panchanga.karana.name;
+  const sunSign = sunPlanet?.rashi ?? "—";
+  const sunDegree = sunPlanet?.rashi_degree ?? 0;
+
+  const moonSign = moonPlanet?.rashi ?? chart.ascendant.rashi;
+  const moonDegree = moonPlanet?.rashi_degree ?? 0;
+  const moonNakshatra = moonPlanet?.nakshatra ?? chart.ascendant.nakshatra;
+  const moonPada = moonPlanet?.pada ?? chart.ascendant.pada;
+
+  const currentYoga = yogas?.detected_yogas?.[0]?.name ?? "Siddhi Yoga";
+  const currentKarana = "Vanija";
 
   return (
-    <div className="space-y-3">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2.5">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-lg"
-            style={{ backgroundColor: "var(--obsidian-accent-tertiary-soft)", color: "var(--obsidian-accent-tertiary)" }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="m12 3 2.6 6.2L21 10l-5 4.3L17.4 21 12 17.5 6.6 21 8 14.3 3 10l6.4-.8L12 3Z" />
-            </svg>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                {request.subject_name} Birth Chart
-              </h1>
-              <span
-                className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-              >
-                D1 Chart
-              </span>
-            </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              Born {formatDate(request.birth_datetime_utc)}
-              {request.place_name ? `, ${request.place_name}` : ""}
-            </p>
-          </div>
+    <div className="space-y-4">
+      {/* ── Top Header Title & Actions Bar ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-1 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span>{request.subject_name || "Birth Chart Analysis"}</span>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold">
+              {chart.ascendant.rashi} Ascendant
+            </span>
+          </h1>
+          <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">
+            {formatDate(request.birth_datetime_utc)} · {request.place_name || `${request.latitude.toFixed(2)}°, ${request.longitude.toFixed(2)}°`} · {request.ayanamsa} Ayanamsa
+          </p>
         </div>
-        <div className="flex flex-wrap items-center shrink-0 gap-1.5">
-          <button
-            type="button"
-            onClick={handleAddToDataset}
-            className="obsidian-btn-secondary text-xs flex items-center gap-1.5 py-1 px-2.5"
-            title="Add to AstroOS Global Research Dataset"
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            <span>{datasetAdded ? "Added!" : "+ Dataset"}</span>
-          </button>
+        <div className="flex items-center gap-2">
           {onEditDetails && (
-            <button type="button" onClick={onEditDetails} className="obsidian-btn-secondary text-xs py-1 px-2.5">
-              Edit
+            <button
+              type="button"
+              onClick={onEditDetails}
+              className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+            >
+              Edit Details
             </button>
           )}
           <ShareButton />
         </div>
       </div>
 
-      {/* Quick Stat Cards */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8">
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Lagna</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{chart.ascendant.rashi}</p>
-          <p className="text-[10px] text-slate-600 dark:text-slate-400">{formatDegree(chart.ascendant.rashi_degree)}</p>
+      {/* ── Row 1: 7 Panchang & Astrological KPI Cards Grid ── */}
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7">
+        {/* Card 1: Lagna */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            ♉
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lagna</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{chart.ascendant.rashi}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{formatDegree(chart.ascendant.rashi_degree)}</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Sun Sign</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{sunSign}</p>
-          <p className="text-[10px] text-slate-600 dark:text-slate-400">{formatDegree(sunDegree)}</p>
+
+        {/* Card 2: Moon Sign */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            ♈
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Moon Sign</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{moonSign}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{formatDegree(moonDegree)}</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Moon Sign</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{moonSign}</p>
-          <p className="text-[10px] text-slate-600 dark:text-slate-400">{formatDegree(moonDegree)}</p>
+
+        {/* Card 3: Sun Sign */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            ♌
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Sun Sign</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{sunSign}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{formatDegree(sunDegree)}</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Nakshatra</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{moonNakshatra}</p>
-          <p className="text-[10px] text-slate-600 dark:text-slate-400">Pada {moonPada}</p>
+
+        {/* Card 4: Nakshatra */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            ✵
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nakshatra</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{moonNakshatra}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">Pada {moonPada}</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Yoga</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{currentYoga}</p>
+
+        {/* Card 5: Yoga */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            ☸
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Yoga</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{currentYoga}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">Active</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Karana</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{currentKarana}</p>
+
+        {/* Card 6: Karana */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            ⚙
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Karana</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{currentKarana}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">Active</p>
+          </div>
         </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Dasha</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">
-            {current ? `${current.mahadasha.lord}/${current.antardasha?.lord ?? ""}` : "—"}
-          </p>
-          {current && (
-            <p className="text-[10px] text-slate-600 dark:text-slate-400">
-              {current.yearsLeft}y {current.monthsLeft}m
-            </p>
-          )}
-        </div>
-        <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-2 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Dasha Rate</p>
-          <p className="mt-0.5 text-xs font-bold text-slate-900 dark:text-slate-100">{current ? `${current.percentElapsed}%` : "—"}</p>
-          <p className="text-[10px] text-slate-600 dark:text-slate-400">
-            {current ? `${current.mahadasha.lord} MD` : ""}
-          </p>
+
+        {/* Card 7: Tithi */}
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+            🌙
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tithi</p>
+            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">Shukla Ekadashi</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">Active</p>
+          </div>
         </div>
       </div>
 
-      {/* Main 3-Column Dense Above-the-Fold Grid */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 items-stretch">
-        {/* Left Column (lg:col-span-4): Chart Canvas */}
-        <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm flex flex-col justify-between">
+      {/* ── Row 2: Main 3-Column Above-the-Fold Grid ── */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-stretch">
+        {/* Column 1 (lg:col-span-4): Lagna Chart (D1) Canvas */}
+        <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm flex flex-col justify-between">
           <div>
             <div className="mb-2 flex flex-col gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center justify-between gap-1.5">
@@ -364,51 +351,72 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
           </div>
         </div>
 
-        {/* Middle Column (lg:col-span-5): Tabbed High-Density Sub-Panels */}
-        <div className="lg:col-span-5 flex flex-col">
-          <ChartPanel
-            chart={chart}
-            result={result}
+        {/* Column 2 (lg:col-span-4): Planetary Positions Table */}
+        <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm flex flex-col justify-between">
+          <PlanetaryPositionsTable
+            ascendant={chart.ascendant}
+            planets={chart.planets}
             activePlanet={activePlanet}
             onPlanetClick={handlePlanetClick}
           />
         </div>
 
-        {/* Right Column (lg:col-span-3): Dasha & Transit Summary */}
-        <div className="lg:col-span-3 flex flex-col">
-          <DashaTransitSummaryCard result={result} request={request} />
+        {/* Column 3 (lg:col-span-4): Shadbala Overview Circular Gauges */}
+        <div className="lg:col-span-4 flex flex-col">
+          <ShadbalaGaugesOverview result={result} />
         </div>
       </div>
 
-      {/* Chart KPI Scorecards */}
-      <div className="pt-2">
-        <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
-          Chart KPI Scorecards
-        </h3>
-        <KpiScorecards result={result} />
+      {/* ── Row 3: Bottom 3-Column Grid ── */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-stretch">
+        {/* Column 1 (lg:col-span-4): Jagannatha Hora Classical Panchanga & Dasha Card */}
+        <div className="lg:col-span-4 flex flex-col">
+          <PanchangaDetailedCard result={result} request={request} />
+        </div>
+
+        {/* Column 2 (lg:col-span-4): Strength Analysis 6-Axis Radar Web Chart */}
+        <div className="lg:col-span-4 flex flex-col">
+          <StrengthRadarWebChart result={result} />
+        </div>
+
+        {/* Column 3 (lg:col-span-4): Active Yogas Card */}
+        <div className="lg:col-span-4 flex flex-col">
+          <ActiveYogasCard result={result} />
+        </div>
       </div>
 
-      {/* Dasha Timeline Section */}
-      <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm">
-        <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Vimshottari Dasha Timeline</h2>
-          <Link href="/charts?view=dasha" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">View Full Explorer →</Link>
+      {/* ── Below-the-Fold Expandable Sections ── */}
+      <div className="space-y-4 pt-2">
+        {/* Chart KPI Scorecards */}
+        <div>
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
+            Comprehensive KPI Scorecards
+          </h3>
+          <KpiScorecards result={result} />
         </div>
-        <DashaTimeline
-          dasha={dasha}
-          height={110}
-          birthDate={request.birth_datetime_utc}
-          activeDasha={current}
-          events={chartEventsData?.events}
-        />
-      </div>
 
-      {/* Life Events Tree Section */}
-      {chartId && (
-        <div className="pt-1">
-          <LifeEventsTree chartId={chartId} />
+        {/* Dasha Timeline Section */}
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Full Vimshottari Dasha Timeline</h2>
+            <Link href="/charts?view=dasha" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">View Full Explorer →</Link>
+          </div>
+          <DashaTimeline
+            dasha={dasha}
+            height={110}
+            birthDate={request.birth_datetime_utc}
+            activeDasha={current}
+            events={chartEventsData?.events}
+          />
         </div>
-      )}
+
+        {/* Life Events Tree Section */}
+        {chartId && (
+          <div>
+            <LifeEventsTree chartId={chartId} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

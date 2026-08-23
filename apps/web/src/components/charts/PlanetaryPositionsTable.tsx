@@ -26,16 +26,16 @@ export function PlanetaryPositionsTable({
   standalone,
 }: PlanetaryPositionsTableProps) {
   const rows = [
-    {
+    ...(ascendant ? [{
       key: "lagna",
       body: "Lagna",
-      longitude: formatLongitude(ascendant.sidereal_longitude),
-      nakshatra: nakshatraAbbrev(ascendant.nakshatra),
-      pada: ascendant.pada,
-      rashi: rashiAbbrev(ascendant.rashi),
-      navamsa: rashiAbbrev(ascendant.navamsa_rashi),
+      longitude: formatLongitude(ascendant.sidereal_longitude ?? ascendant.rashi_degree ?? 0),
+      nakshatra: nakshatraAbbrev(ascendant.nakshatra ?? ""),
+      pada: ascendant.pada ?? 1,
+      rashi: rashiAbbrev(ascendant.rashi ?? ""),
+      navamsa: rashiAbbrev(ascendant.navamsa_rashi ?? ""),
       retro: false,
-    },
+    }] : []),
     ...planets.map((p) => ({
       key: p.planet,
       body: p.planet.charAt(0).toUpperCase() + p.planet.slice(1),

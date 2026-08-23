@@ -179,7 +179,8 @@ export const NAV_CONFIG: NavGroup[] = [
         color: "--section-analysis",
         items: [
           { href: "/charts?view=dasha", label: "Dasha", subtitle: "Vimshottari periods", icon: "clock", viewId: "analysis-dasha" },
-          { href: "/charts?view=timeline", label: "Transit", subtitle: "Current planetary positions", icon: "orbit", viewId: "analysis-transit" },
+          { href: "/charts/transit", label: "Transit & Gochar", subtitle: "Live Gochar & Real-time Timeline", icon: "orbit", viewId: "analysis-gochar" },
+          { href: "/charts?view=timeline", label: "Transit (Timeline)", subtitle: "Current planetary positions", icon: "orbit", viewId: "analysis-transit" },
           { href: "/charts?view=yogas", label: "Yogas", icon: "star" },
           { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid" },
           { href: "/charts?view=strength", label: "Shadbala", subtitle: "Planet strength", icon: "bar", viewId: "analysis-shadbala" },
@@ -376,8 +377,8 @@ export const NAV_SECTIONS: NavSection[] = [
     title: "Predictive & Technical",
     color: "--section-analysis",
     items: [
+      { href: "/charts/transit", label: "Transit & Gochar", icon: "orbit" },
       { href: "/charts?view=dasha", label: "Dasha Analysis", icon: "clock" },
-      { href: "/charts?view=timeline", label: "Transit Analysis", icon: "orbit" },
       { href: "/charts/sbc", label: "Sarvatobhadra Chakra", icon: "grid" },
       { href: "/charts/tarabala", label: "Navatara / Tarabala", icon: "star" },
       { href: "/charts?view=yogas", label: "Yogas & Combinations", icon: "star" },

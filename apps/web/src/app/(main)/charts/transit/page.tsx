@@ -3,6 +3,8 @@
 import { TransitAlerts } from "@/components/charts/transit/TransitAlerts";
 import { TransitWheel } from "@/components/charts/transit/TransitWheel";
 import { VedhaAnalysisPanel } from "@/components/charts/VedhaAnalysisPanel";
+import { AdvancedTransitEngineStudio } from "@/components/charts/transit/AdvancedTransitEngineStudio";
+import { LiveSkyTransitClock } from "@/components/charts/LiveSkyTransitClock";
 import { AnimatedTransitIntegration } from "@/app/(main)/charts/AnimatedTransitIntegration";
 import { SplitWorkspaceLayout } from "@/components/layout/SplitWorkspaceLayout";
 import { AppShell } from "@/components/layout/AppShell";
@@ -62,12 +64,27 @@ function formatDegree(deg: number): string {
   return `${whole}° ${minutes}'`;
 }
 
-/** Real aspect_type values are 'opposition' | 'trine' | 'square' |
- * 'special_graha' (see TransitAspectResponse) — the last one reads oddly
- * inline ("Jupiter special_graha to natal Rahu"), so it gets a human label.
- * Used as `{transiting} {label} to natal {natal}` — must NOT include "to". */
-function aspectTypeLabel(aspectType: string): string {
-  return aspectType === "special_graha" ? "special aspect" : aspectType;
+function aspectTypeLabel(aspectType: string, planet?: string): string {
+  const type = (aspectType || "").toLowerCase();
+  const p = (planet || "").toLowerCase();
+
+  if (type === "opposition" || type === "7th") return "7th Full Drishti (Saptama)";
+  if (type === "trine" || type === "5th" || type === "9th") {
+    return p === "jupiter" ? "5th/9th Special Full Drishti (Trikona)" : "5th/9th Parashari Drishti (Trikona)";
+  }
+  if (type === "square" || type === "4th" || type === "10th") {
+    if (p === "mars") return "4th Special Full Drishti (Chaturtha)";
+    if (p === "saturn") return "10th Special Full Drishti (Dashama)";
+    return "4th/10th Parashari Drishti";
+  }
+  if (type === "special_graha" || type === "special") {
+    if (p === "mars") return "8th Special Full Drishti (Ashtama)";
+    if (p === "saturn") return "3rd Special Full Drishti (Tritiya)";
+    if (p === "jupiter") return "5th/9th Special Full Drishti";
+    return "Special Graha Drishti";
+  }
+  if (type === "conjunction" || type === "0th") return "Yuti (Conjunction)";
+  return "Parashari Graha Drishti";
 }
 
 function TransitAnalysisPageContent() {
@@ -494,7 +511,7 @@ function TransitAnalysisPageContent() {
             {request && (
               <>
                 {" "}
-                Subject: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span>
+                Native: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span>
               </>
             )}
           </p>
@@ -538,13 +555,20 @@ function TransitAnalysisPageContent() {
       <div className="mb-3">
         <Tabs
           tabs={[
-            { key: "overview", label: "Overview" },
-            { key: "sky_motion", label: "Sky Motion" },
+            { key: "overview", label: "☸️ Overview & Transit Wheel" },
+            { key: "advanced_studio", label: "🪐 7 Advanced Gochara Engines Studio" },
+            { key: "sky_motion", label: "🌌 Sky Motion & Orbit Animation" },
           ]}
           active={activeTab}
-          onChange={(key) => setActiveTab(key as "overview" | "sky_motion")}
+          onChange={(key) => setActiveTab(key as any)}
         />
       </div>
+
+      {activeTab === "advanced_studio" && (
+        <div className="mb-6">
+          <AdvancedTransitEngineStudio result={result} />
+        </div>
+      )}
 
       {activeTab === "sky_motion" && (
         <AnimatedTransitIntegration chart={result.chart} request={request} />
@@ -552,6 +576,12 @@ function TransitAnalysisPageContent() {
 
       {activeTab === "overview" && (
         <>
+          <div className="mb-6">
+            <LiveSkyTransitClock />
+          </div>
+          <div className="mb-6">
+            <AdvancedTransitEngineStudio result={result} />
+          </div>
       {/* Controls row: transit date stepper + Moon/Ascendant reference point */}
       <div className="mb-3 flex flex-wrap items-center gap-3">
         <div>
@@ -837,7 +867,16 @@ function TransitAnalysisPageContent() {
               House Cusps
             </span>
             <span className="ml-2 text-xs" style={{ color: "var(--text-tertiary)" }}>
-              {request?.house_system ?? result.chart.house_system} system — real cusp degrees, not assumed 30°/house
+              {({
+                P: "Placidus (KP)",
+                W: "Whole Sign",
+                E: "Equal House",
+                B: "Alcabitius",
+                K: "Koch",
+                O: "Porphyry",
+                R: "Regiomontanus",
+                C: "Campanus",
+              }[(request?.house_system ?? result.chart.house_system)?.toUpperCase()] ?? (request?.house_system ?? result.chart.house_system))} system — real cusp degrees, not assumed 30°/house
             </span>
           </div>
           <div style={{ padding: "10px 18px 18px" }}>

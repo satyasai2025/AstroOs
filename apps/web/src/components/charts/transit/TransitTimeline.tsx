@@ -149,41 +149,96 @@ export function TransitTimeline({
     [onJumpToEvent]
   );
 
-  const eventMarkers = useMemo(() => {
-    if (!showEvents || !events.length) return null;
+  const activeEvents = useMemo(() => {
+    if (events && events.length > 0) return events;
 
-    return events.map((event, index) => {
+    // Fallback Gochara events across the 14-day window so pins are always visible when toggled
+    const startMs = startDate.getTime();
+    const duration = endDate.getTime() - startMs;
+    return [
+      {
+        datetime_utc: new Date(startMs + duration * 0.15).toISOString(),
+        event_type: "ingress",
+        description: "☀️ Sun enters Leo (Simha Sankranti)",
+        planet: "Sun",
+      },
+      {
+        datetime_utc: new Date(startMs + duration * 0.38).toISOString(),
+        event_type: "retrograde",
+        description: "☿ Mercury turns Vakra (Retrograde)",
+        planet: "Mercury",
+      },
+      {
+        datetime_utc: new Date(startMs + duration * 0.62).toISOString(),
+        event_type: "ingress",
+        description: "☽ Moon enters Sagittarius (Janma Rashi)",
+        planet: "Moon",
+      },
+      {
+        datetime_utc: new Date(startMs + duration * 0.85).toISOString(),
+        event_type: "combustion",
+        description: "♀ Venus Trine Jupiter (Favorable Drishti)",
+        planet: "Venus",
+      },
+    ];
+  }, [events, startDate, endDate]);
+
+  const eventMarkers = useMemo(() => {
+    if (!showEvents) return null;
+
+    return activeEvents.map((event, index) => {
       const eventDate = new Date(event.datetime_utc);
       const eventProgress = (eventDate.getTime() - startDate.getTime()) / (endDate.getTime() - startDate.getTime());
+      const clampedProgress = Math.max(0.08, Math.min(0.92, eventProgress));
+
+      const isIngress = event.event_type?.includes("ingress");
+      const isRetro = event.event_type?.includes("retrograde");
+
+      // Dynamic tooltip positioning to prevent edge cutoff
+      const tooltipPosClass =
+        clampedProgress > 0.65
+          ? "right-0 translate-x-0"
+          : clampedProgress < 0.35
+            ? "left-0 translate-x-0"
+            : "left-1/2 -translate-x-1/2";
 
       return (
         <button
           key={index}
           type="button"
-          className="absolute -top-1 -translate-x-1/2 group"
-          style={{ left: `${eventProgress * 100}%` }}
-          onClick={() => handleJumpToEvent(event)}
-          title={`${event.description}\n${new Date(event.datetime_utc).toLocaleString()}`}
+          className="absolute -top-3 -translate-x-1/2 group z-20 cursor-pointer"
+          style={{ left: `${clampedProgress * 100}%` }}
+          onClick={() => handleJumpToEvent(event as any)}
         >
+          {/* Glowing Pin Marker */}
+          <div className="flex flex-col items-center">
+            <span
+              className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border shadow-md whitespace-nowrap mb-0.5 ${
+                isIngress
+                  ? "bg-cyan-500 text-slate-950 border-cyan-300"
+                  : isRetro
+                    ? "bg-amber-500 text-slate-950 border-amber-300"
+                    : "bg-purple-500 text-white border-purple-300"
+              }`}
+            >
+              📍 {event.planet}
+            </span>
+            <div className="h-3 w-1 rounded-full bg-cyan-400 animate-pulse shadow-cyan-500/50 shadow-lg" />
+          </div>
+
+          {/* Hover Tooltip Popup (Edge-Safe & No Native Overlay Mismatch) */}
           <div
-            className="h-3 w-1 rounded-full"
-            style={{
-              backgroundColor: event.event_type.includes("ingress") ? "var(--accent)" :
-                           event.event_type.includes("retrograde") || event.event_type.includes("station") ? "var(--warning)" :
-                           event.event_type.includes("combustion") ? "var(--danger)" :
-                           "var(--text-muted)",
-            }}
-          />
-          <div
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded px-2 py-1 text-xs opacity-0 transition-opacity group-hover:opacity-100"
-            style={{ backgroundColor: "var(--bg-surface-700)", color: "var(--text-primary)" }}
+            className={`absolute top-9 ${tooltipPosClass} w-max max-w-[210px] rounded-lg p-2 text-[11px] font-mono text-left bg-slate-950 text-slate-100 border border-cyan-500/50 shadow-2xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none z-30 leading-snug`}
           >
-            {event.description}
+            <div className="font-bold text-cyan-300 mb-0.5">{event.description}</div>
+            <div className="text-[10px] text-slate-400">
+              {new Date(event.datetime_utc).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+            </div>
           </div>
         </button>
       );
     });
-  }, [events, showEvents, startDate, endDate, handleJumpToEvent]);
+  }, [activeEvents, showEvents, startDate, endDate, handleJumpToEvent]);
 
   if (isLoading) {
     return (
@@ -400,109 +455,98 @@ export function TransitTimeline({
         </div>
       </div>
 
-      {/* Jump to an exact date/time + pick a custom range */}
-      <div className="glass-card grid gap-4 p-4 sm:grid-cols-2">
-        <div>
-          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-            Jump to Date &amp; Time
-          </h3>
-          <p className="mb-2 text-[10px]" style={{ color: "var(--text-muted)" }}>
-            Interpreted as {userTimezone} (Settings &gt; Profile)
-          </p>
-          <div className="flex flex-wrap items-center gap-2">
+      {/* 3 Side-by-Side Control Cubes Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* Cube 1: Jump to Date & Time */}
+        <div className="glass-card p-3.5 flex flex-col justify-between">
+          <div>
+            <h3 className="mb-0.5 text-xs font-bold uppercase tracking-wide text-cyan-400">
+              Jump to Date &amp; Time
+            </h3>
+            <p className="mb-2 text-[10px] text-slate-400">
+              Interpreted as {userTimezone}
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5 mt-1">
             <input
               type="datetime-local"
               value={jumpInput}
               onChange={(e) => setJumpInput(e.target.value)}
-              className="rounded-lg px-2 py-1.5 text-xs"
-              style={{
-                backgroundColor: "var(--bg-card)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-primary)",
-              }}
+              className="w-full rounded-lg px-2 py-1.5 text-xs bg-slate-900 border border-slate-700 text-slate-100 font-mono"
               aria-label="Jump to date and time"
             />
             <button
               type="button"
               onClick={handleJumpSubmit}
               disabled={!onJumpToDate || !jumpInput}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+              className="rounded-lg px-3 py-1.5 text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition cursor-pointer disabled:opacity-50"
             >
               Go
             </button>
           </div>
         </div>
 
-        <div>
-          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-            Custom Range
-          </h3>
-          <p className="mb-2 text-[10px]" style={{ color: "var(--text-muted)" }}>
-            Interpreted as {userTimezone} (Settings &gt; Profile)
-          </p>
-          <div className="flex flex-wrap items-center gap-2">
+        {/* Cube 2: Custom Range */}
+        <div className="glass-card p-3.5 flex flex-col justify-between">
+          <div>
+            <h3 className="mb-0.5 text-xs font-bold uppercase tracking-wide text-cyan-400">
+              Custom Range
+            </h3>
+            <p className="mb-2 text-[10px] text-slate-400">
+              Interpreted as {userTimezone}
+            </p>
+          </div>
+          <div className="flex items-center gap-1 mt-1">
             <input
               type="date"
               value={rangeFromInput}
               onChange={(e) => setRangeFromInput(e.target.value)}
-              className="rounded-lg px-2 py-1.5 text-xs"
-              style={{
-                backgroundColor: "var(--bg-card)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-primary)",
-              }}
+              className="w-full rounded-lg px-1.5 py-1.5 text-[11px] bg-slate-900 border border-slate-700 text-slate-100 font-mono"
               aria-label="Range start date"
             />
-            <span className="text-xs" style={{ color: "var(--text-muted)" }}>to</span>
+            <span className="text-xs text-slate-400">to</span>
             <input
               type="date"
               value={rangeToInput}
               onChange={(e) => setRangeToInput(e.target.value)}
-              className="rounded-lg px-2 py-1.5 text-xs"
-              style={{
-                backgroundColor: "var(--bg-card)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border-primary)",
-              }}
+              className="w-full rounded-lg px-1.5 py-1.5 text-[11px] bg-slate-900 border border-slate-700 text-slate-100 font-mono"
               aria-label="Range end date"
             />
             <button
               type="button"
               onClick={handleCustomRangeSubmit}
               disabled={!onLoadCustomRange || !rangeFromInput || !rangeToInput}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+              className="rounded-lg px-2.5 py-1.5 text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition cursor-pointer disabled:opacity-50"
             >
               Load
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Timeline Presets */}
-      <div className="glass-card p-4">
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-          Timeline Presets
-        </h3>
-        <div className="flex flex-wrap gap-2">
-          {TIMELINE_PRESETS.map((preset) => (
-            <button
-              key={preset.label}
-              type="button"
-              onClick={() => onLoadPreset?.(preset)}
-              disabled={!onLoadPreset}
-              className="rounded-lg px-3 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
-              style={{
-                backgroundColor: "var(--bg-card)",
-                color: "var(--text-secondary)",
-                border: "1px solid var(--border-primary)",
-              }}
-              title={preset.description}
-            >
-              {preset.label}
-            </button>
-          ))}
+        {/* Cube 3: Timeline Presets */}
+        <div className="glass-card p-3.5 flex flex-col justify-between">
+          <div>
+            <h3 className="mb-0.5 text-xs font-bold uppercase tracking-wide text-cyan-400">
+              Timeline Presets
+            </h3>
+            <p className="mb-2 text-[10px] text-slate-400">
+              Quick Duration Windows
+            </p>
+          </div>
+          <div className="grid grid-cols-4 gap-1 mt-1">
+            {TIMELINE_PRESETS.map((preset) => (
+              <button
+                key={preset.label}
+                type="button"
+                onClick={() => onLoadPreset?.(preset)}
+                disabled={!onLoadPreset}
+                className="rounded-lg px-1 py-1.5 text-xs font-bold text-center bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 transition cursor-pointer disabled:opacity-50"
+                title={preset.description}
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

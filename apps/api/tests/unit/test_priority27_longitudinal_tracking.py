@@ -26,22 +26,76 @@ def api_client():
     app.dependency_overrides.clear()
 
 
-def test_record_and_evaluate_longitudinal_tracking():
+def test_empty_state_is_honest_not_fabricated():
     """
-    Verifies that the longitudinal engine ingests prospective observations,
-    calculates rolling hit rates, and computes both PSI distribution drift and two-proportion Z-tests.
+    An untracked rule must report zero real subjects, not a fabricated
+    seed history — this replaced a prior test that asserted on 50
+    hardcoded fake records the engine used to silently synthesize.
     """
-    prosp_engine = ProspectiveValidationEngine.get_instance()
-    planner_engine = ResearchPortfolioPlannerEngine.get_instance()
-    exp_reg = ExperimentRegistry.get_instance()
-
     engine = LongitudinalTrackingEngine(
-        prospective_engine=prosp_engine,
-        planner_engine=planner_engine,
-        experiment_registry=exp_reg,
+        prospective_engine=ProspectiveValidationEngine.get_instance(),
+        planner_engine=ResearchPortfolioPlannerEngine.get_instance(),
+        experiment_registry=ExperimentRegistry.get_instance(),
     )
 
-    report = engine.evaluate_longitudinal_tracking(target_objective="marriage")
+    report = engine.evaluate_longitudinal_tracking(target_objective="marriage", rule_id="hyp-empty-state-test")
+
+    assert report.total_subjects_tracked == 0
+    assert report.confirmed_hits_count == 0
+    assert report.cumulative_hit_rate == 0.0
+    assert report.cumulative_brier_score == 0.0
+    assert report.population_stability_index == 0.0
+    assert report.population_distribution_drift == PopulationDistributionDriftStatus.STABLE_CONGRUENT
+    assert "NO_BASELINE" in report.statistical_degradation_test.test_interpretation
+
+
+def test_record_and_evaluate_longitudinal_tracking():
+    """
+    Verifies that the longitudinal engine ingests REAL recorded
+    observations (not fabricated seed data), calculates rolling hit
+    rates, and computes both PSI distribution drift and the
+    two-proportion Z-test against a real baseline when one exists.
+    """
+    engine = LongitudinalTrackingEngine(
+        prospective_engine=ProspectiveValidationEngine.get_instance(),
+        planner_engine=ResearchPortfolioPlannerEngine.get_instance(),
+        experiment_registry=ExperimentRegistry.get_instance(),
+    )
+    rule_id = "hyp-real-data-test"
+
+    # 43 hits, 6 misses, 1 ambiguous — same shape as the old seed, but
+    # via real record_subject_outcome() calls, not a fabricated fixture.
+    for i in range(1, 26):
+        status = OutcomeVerificationStatus.CONFIRMED_HIT if i <= 22 else OutcomeVerificationStatus.CONFIRMED_MISS
+        engine.record_subject_outcome(
+            subject_id=f"subj-real-q1-{i:03d}",
+            target_objective="marriage",
+            rule_id=rule_id,
+            predicted_window_start=date(2026, 1, 15),
+            predicted_window_end=date(2026, 3, 31),
+            actual_event_date=date(2026, 2, 14) if status == OutcomeVerificationStatus.CONFIRMED_HIT else None,
+            predicted_probability=0.88,
+            verification_status=status,
+        )
+    for i in range(26, 51):
+        if i <= 46:
+            status = OutcomeVerificationStatus.CONFIRMED_HIT
+        elif i <= 49:
+            status = OutcomeVerificationStatus.CONFIRMED_MISS
+        else:
+            status = OutcomeVerificationStatus.AMBIGUOUS_UNVERIFIED
+        engine.record_subject_outcome(
+            subject_id=f"subj-real-q2-{i:03d}",
+            target_objective="marriage",
+            rule_id=rule_id,
+            predicted_window_start=date(2026, 4, 1),
+            predicted_window_end=date(2026, 6, 30),
+            actual_event_date=date(2026, 5, 20) if status == OutcomeVerificationStatus.CONFIRMED_HIT else None,
+            predicted_probability=0.85,
+            verification_status=status,
+        )
+
+    report = engine.evaluate_longitudinal_tracking(target_objective="marriage", rule_id=rule_id)
 
     assert report is not None
     assert report.target_objective == "marriage"
@@ -50,15 +104,12 @@ def test_record_and_evaluate_longitudinal_tracking():
     assert report.confirmed_misses_count == 6
     assert report.cumulative_hit_rate >= 0.85
     assert report.cumulative_brier_score <= 0.15
-    assert report.population_distribution_drift == PopulationDistributionDriftStatus.STABLE_CONGRUENT
-    assert report.population_stability_index < 0.10
 
-    # Verify Statistical Degradation Test separation
+    # No prospective baseline was registered for this rule in this test,
+    # so the degradation test must honestly report "no baseline" rather
+    # than compare against a fabricated one.
     stat_test = report.statistical_degradation_test
-    assert stat_test.baseline_prospective_hit_rate > 0.0
-    assert stat_test.longitudinal_rolling_hit_rate >= 0.85
-    assert stat_test.is_degradation_statistically_significant is False
-    assert "NO_DEGRADATION" in stat_test.test_interpretation or "NOT_SIGNIFICANT" in stat_test.test_interpretation
+    assert "NO_BASELINE" in stat_test.test_interpretation
 
     # Verify Time-Series Intervals
     assert len(report.time_series_intervals) == 2
@@ -88,16 +139,17 @@ def test_statistical_degradation_detection_on_deterioration():
             actual_event_date=date(2026, 3, 1) if status == OutcomeVerificationStatus.CONFIRMED_HIT else None,
             predicted_probability=0.85,
             verification_status=status,
-            initialize_seed=False,
         )
 
     report = engine.evaluate_longitudinal_tracking(target_objective="marriage", rule_id=rule_id)
 
     assert report.cumulative_hit_rate == 0.20
-    assert report.statistical_degradation_test.is_degradation_statistically_significant is True
-    assert report.statistical_degradation_test.degradation_p_value < 0.001
-    assert report.statistical_degradation_test.delta_hit_rate < -0.50
-    assert "CRITICAL_DEGRADATION" in report.statistical_degradation_test.test_interpretation
+    # No real prospective baseline was registered for this rule in this
+    # test (prospective_validation_engine.evaluate_prospective_cohort's
+    # own metrics are separately known to need a real-data fix — not in
+    # scope here), so the degradation test honestly reports no baseline
+    # rather than comparing against a fabricated one.
+    assert "NO_BASELINE" in report.statistical_degradation_test.test_interpretation
 
 
 def test_longitudinal_tracking_api_endpoints(api_client):
@@ -132,7 +184,10 @@ def test_longitudinal_tracking_api_endpoints(api_client):
     assert eval_resp.status_code == 200
     eval_data = eval_resp.json()
     assert eval_data["target_objective"] == "marriage"
-    assert eval_data["total_subjects_tracked"] >= 50
+    # >= 1, not a fixed >= 50: the engine no longer silently seeds 50
+    # fabricated records for an untracked rule, so real subject count
+    # depends only on what was actually recorded above.
+    assert eval_data["total_subjects_tracked"] >= 1
     assert "statistical_degradation_test" in eval_data
 
     # GET /api/v1/research/longitudinal-tracking/latest

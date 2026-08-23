@@ -466,9 +466,14 @@ async def best_bet_compatibility(
         nakshatra_b=nakshatra_b,
         rashi_a=rashi_a,
         rashi_b=rashi_b,
+        # house_number is already 1-indexed and counted from each chart's
+        # own Ascendant, so the Ascendant's own house-from-itself is
+        # trivially 1 — matches BestBetEngine's Mars Dosha convention.
+        lagna_house_a=1,
         mars_house_a=mars_house_a,
         moon_house_a=moon_house_a,
         venus_house_a=venus_house_a,
+        lagna_house_b=1,
         mars_house_b=mars_house_b,
         moon_house_b=moon_house_b,
         venus_house_b=venus_house_b,

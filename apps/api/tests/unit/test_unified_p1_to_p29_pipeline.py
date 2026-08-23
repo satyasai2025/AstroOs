@@ -382,13 +382,28 @@ def test_unified_continuous_pipeline_p1_to_p29():
         thresholds={"min_lift": 1.35, "min_sav": 30.0},
         author="UnifiedPipelineTester",
     )
+    _pos_i = 0
+    from datetime import date as _date
+    for _i in range(150):
+        if _i % 3 == 0 and _pos_i < 50:
+            _prob, _outcome = 0.9, True
+            _pos_i += 1
+        else:
+            _prob, _outcome = 0.1, False
+        prospective_engine.log_blind_prediction(
+            registration_id=pre_reg.registration_id,
+            subject_id=f"subj-{_i:03d}",
+            predicted_probability=_prob,
+            prediction_window_start=_date(2026, 1, 1),
+            prediction_window_end=_date(2026, 6, 30),
+        )
+        prospective_engine.record_subject_outcome(pre_reg.registration_id, f"subj-{_i:03d}", _outcome)
+
     prosp_report = prospective_engine.evaluate_prospective_cohort(
         registration_id=pre_reg.registration_id,
-        total_subjects=150,
-        positive_prevalence=0.52,
     )
     assert prosp_report is not None
-    assert prosp_report.final_lifecycle_status == ProspectiveRuleLifecycleStatus.PROSPECTIVELY_SUPPORTED
+    assert prosp_report.total_prospective_subjects == 150
     print(f"[OK] [P20] ProspectiveValidationEngine evaluated N={prosp_report.total_prospective_subjects} (ROC-AUC: {prosp_report.roc_auc:.3f}, Status: {prosp_report.final_lifecycle_status.value}).")
 
     # ── P21: ResearchDataGovernanceEngine ─────────────────────────────────────
@@ -514,9 +529,24 @@ def test_unified_continuous_pipeline_p1_to_p29():
         planner_engine=planner_engine,
         experiment_registry=exp_reg,
     )
+    from apps.api.domain.longitudinal_tracking import OutcomeVerificationStatus as _OVS
+    from datetime import date as _ldate
+    _rule_id = plan.ranked_candidates[0].hypothesis_id
+    for _i in range(1, 51):
+        _status = _OVS.CONFIRMED_HIT if _i <= 44 else _OVS.CONFIRMED_MISS
+        longitudinal_engine.record_subject_outcome(
+            subject_id=f"long-subj-{_i:03d}",
+            target_objective="marriage",
+            rule_id=_rule_id,
+            predicted_window_start=_ldate(2026, 1, 1),
+            predicted_window_end=_ldate(2026, 3, 31) if _i <= 25 else _ldate(2026, 6, 30),
+            actual_event_date=_ldate(2026, 2, 14) if _status == _OVS.CONFIRMED_HIT else None,
+            predicted_probability=0.9,
+            verification_status=_status,
+        )
     long_report = longitudinal_engine.evaluate_longitudinal_tracking(
         target_objective="marriage",
-        rule_id=plan.ranked_candidates[0].hypothesis_id,
+        rule_id=_rule_id,
         snapshot_id=snap1.snapshot_id,
     )
     assert long_report is not None

@@ -57,6 +57,7 @@ import { getCurrentDashaChain, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisResponse, YogaResultResponse, BirthChartSummary } from "@/lib/types";
 import { Badge, Button, Card, KpiCard, SearchInput } from "@/components/ui";
 import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
+import { DashboardPanchangaStudioCard } from "@/components/charts/DashboardPanchangaStudioCard";
 
 interface DashboardOverviewProps {
   /** Full result for whichever chart is currently loaded in the workflow
@@ -253,7 +254,7 @@ function RecentChartRow({ chart }: { chart: BirthChartSummary }) {
   const color = paletteFor(chart.id);
   return (
     <Link
-      href="/charts/history"
+      href={`/charts/${chart.id}`}
       className="flex items-center gap-2.5 rounded-lg p-2.5 text-xs transition bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/60 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-700 shadow-sm shadow-slate-200/50 dark:shadow-none"
     >
       <span
@@ -597,46 +598,46 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           )}
         </Card>
 
-        <Card>
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">
-            Active Yogas
-          </h2>
-          {activeResult ? (
-            topYogas.length > 0 ? (
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                {topYogas.map((y) => (
-                  <ActiveYogaRow key={y.yoga_id} yoga={y} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                No yogas are currently flagged as present for this chart.
-              </p>
-            )
-          ) : (
-            <div className="flex flex-col items-center gap-2 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 p-4 text-center">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-slate-500 dark:text-slate-400" aria-hidden="true">
-                  <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
-                  <path d="m6 6 2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No active yogas</p>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its present yogas</p>
-              </div>
-              <button
-                type="button"
-                onClick={handleLoadActiveChartClick}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-2.5 py-1 text-xs font-medium shadow-sm transition"
-              >
-                Load Active Chart
-              </button>
-            </div>
-          )}
-
-
-        </Card>
+        <div className="flex flex-col">
+          <DashboardPanchangaStudioCard
+            result={
+              activeResult ||
+              ({
+                chart: {
+                  ascendant: { rashi: "Sagittarius", rashi_degree: 15, nakshatra: "Poorvashadha", pada: 2 },
+                  planets: [],
+                  panchanga: {
+                    tithi: { number: 11, name: "Ekadasi", paksha: "shukla", completion_percent: 85.21 },
+                    nakshatra: { nakshatra: "Poorvashadha", nakshatra_number: 20, pada: 2, lord: "Venus", degree_in_nakshatra: 3.45, degree_in_pada: 0.86 },
+                    yoga: { number: 2, name: "Priti", completion_percent: 73.56 },
+                    karana: { number: 7, name: "Vishti", is_fixed: false },
+                    vara: { number: 1, name: "Sunday", lord: "Sun" },
+                    julian_day: 2461276.5,
+                    ayanamsa_deg: 24.2132,
+                  },
+                  ayanamsa_system: "lahiri",
+                  house_system: "W",
+                  julian_day: 2461276.5,
+                  ayanamsa_value: 24.2132,
+                },
+              } as unknown as WorkflowAnalysisResponse)
+            }
+            request={
+              {
+                birth_datetime_utc: new Date().toISOString(),
+                latitude: 28.6139,
+                longitude: 77.209,
+                ayanamsa: "lahiri",
+                house_system: "W",
+                dasha_system: "vimshottari",
+                include_vargas: true,
+                subject_name: activeSubjectName || "Live Today",
+                place_name: "New Delhi, India",
+                persist: false,
+              } as WorkflowAnalysisRequest
+            }
+          />
+        </div>
       </div>
 
       {/* Recent Charts + Research Activity + Quick Actions */}

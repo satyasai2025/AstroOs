@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import math
 from datetime import datetime
-from typing import Sequence
+from typing import Optional, Sequence
 
 from apps.api.domain.prediction_orchestration import PredictionWindowCandidate
 from apps.api.domain.research_calibration import (
@@ -417,7 +417,7 @@ class CalibrationEngine:
                 deterministic_score=candidate.peak_score,
                 calibrated_probability=prob,
                 calibration_rate_ci_95=ci,
-                calibration_sample_size_n=calibration_model.provenance.split_train_ratio * 100,  # relative
+                calibration_sample_size_n=pool_n if pool_n is not None else 0,
                 holdout_sample_size_n=validation_summary.holdout_sample_size_n,
                 holdout_brier_score=validation_summary.holdout_brier_score,
                 calibration_model_type=model_type,

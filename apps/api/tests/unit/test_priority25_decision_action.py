@@ -80,7 +80,23 @@ def test_research_decision_action_evaluation():
         formula_expression='DASHA == "7th_Lord" AND TRANSIT("Jupiter", 7)',
         thresholds={"min_lift": 1.35},
     )
-    prospective_engine.evaluate_prospective_cohort(pre_reg.registration_id, total_subjects=150)
+    from datetime import date as _date
+    _pos_i = 0
+    for _i in range(150):
+        if _i % 3 == 0 and _pos_i < 50:
+            _prob, _outcome = 0.9, True
+            _pos_i += 1
+        else:
+            _prob, _outcome = 0.1, False
+        prospective_engine.log_blind_prediction(
+            registration_id=pre_reg.registration_id,
+            subject_id=f"subj-{_i:03d}",
+            predicted_probability=_prob,
+            prediction_window_start=_date(2026, 1, 1),
+            prediction_window_end=_date(2026, 6, 30),
+        )
+        prospective_engine.record_subject_outcome(pre_reg.registration_id, f"subj-{_i:03d}", _outcome)
+    prospective_engine.evaluate_prospective_cohort(pre_reg.registration_id)
 
     decision = action_engine.evaluate_research_action_decision(target_objective="marriage")
 

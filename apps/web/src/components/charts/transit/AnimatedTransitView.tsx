@@ -200,137 +200,182 @@ export function AnimatedTransitView({
         onLoadCustomRange={onLoadCustomRange}
       />
 
-      {/* Panchanga + Planet Intelligence — below the chart, side by side */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {/* Panchanga Panel */}
+      {/* Side-by-Side Row: Compact Panchanga (Left, 4 col) + Detailed Analysis (Right, 8 col) */}
+      <div className="grid gap-4 lg:grid-cols-12">
+        {/* Compact Panchanga Panel */}
         {currentPanchanga && (
-          <div className="glass-card p-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-              Panchanga
-            </h3>
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span style={{ color: "var(--text-muted)" }}>Tithi</span>
-                <span style={{ color: "var(--text-primary)" }}>
-                  {currentPanchanga.tithi.name} ({currentPanchanga.tithi.paksha})
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: "var(--text-muted)" }}>Nakshatra</span>
-                <span style={{ color: "var(--text-primary)" }}>
-                  {currentPanchanga.nakshatra.nakshatra} - Pad {currentPanchanga.nakshatra.pada}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: "var(--text-muted)" }}>Yoga</span>
-                <span style={{ color: "var(--text-primary)" }}>{currentPanchanga.yoga.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: "var(--text-muted)" }}>Karana</span>
-                <span style={{ color: "var(--text-primary)" }}>{currentPanchanga.karana.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span style={{ color: "var(--text-muted)" }}>Vara</span>
-                <span style={{ color: "var(--text-primary)" }}>{currentPanchanga.vara.name}</span>
+          <div className="glass-card p-3.5 lg:col-span-4 flex flex-col justify-between">
+            <div>
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-cyan-400">
+                📅 Live Panchanga
+              </h3>
+              <div className="space-y-1.5 text-xs font-mono">
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Tithi</span>
+                  <span className="font-bold text-white">
+                    {currentPanchanga.tithi.name} ({currentPanchanga.tithi.paksha})
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Nakshatra</span>
+                  <span className="font-bold text-amber-300">
+                    {currentPanchanga.nakshatra.nakshatra} (P{currentPanchanga.nakshatra.pada})
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Yoga</span>
+                  <span className="font-bold text-cyan-300">{currentPanchanga.yoga.name}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-800">
+                  <span className="text-slate-400">Karana</span>
+                  <span className="font-bold text-emerald-300">{currentPanchanga.karana.name}</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-slate-400">Vara</span>
+                  <span className="font-bold text-slate-200">{currentPanchanga.vara.name}</span>
+                </div>
               </div>
             </div>
+
+            {/* Planet Intelligence overlay inside Panchanga if planet selected */}
+            {selectedPlanet && (
+              <div className="mt-3 pt-2 border-t border-slate-800">
+                <PlanetIntelligencePanel
+                  planetName={selectedPlanet}
+                  currentTime={currentTime}
+                  natalChart={natalChart}
+                />
+              </div>
+            )}
           </div>
         )}
 
-        {/* Planet Intelligence Panel */}
-        {selectedPlanet && (
-          <PlanetIntelligencePanel
-            planetName={selectedPlanet}
-            currentTime={currentTime}
-            natalChart={natalChart}
-          />
-        )}
-      </div>
-
-      {/* Detailed Analysis — real transit-to-natal aspects + Sade Sati /
-          Ashtama Shani for the currently displayed moment, same underlying
-          data as the Overview tab's aspect table (not fabricated AI text). */}
-      <div className="glass-card p-4">
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-          Detailed Analysis
-        </h3>
-        {isPatternsLoading && !patterns ? (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-            Loading transit-to-natal aspects…
-          </p>
-        ) : !patterns ? (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-            No aspect data available for this moment.
-          </p>
-        ) : (
-          <div className="space-y-3 text-xs">
-            {(patterns.sade_sati.is_active || patterns.ashtama_shani.is_active) && (
-              <div className="flex flex-wrap gap-2">
-                {patterns.sade_sati.is_active && (
-                  <span
-                    className="rounded px-2 py-1 font-medium"
-                    style={{ background: "var(--status-danger-soft, rgba(239,68,68,.12))", color: "var(--status-danger)" }}
-                  >
-                    Sade Sati — {patterns.sade_sati.phase ?? "active"}
-                  </span>
+        {/* Detailed Analysis Panel */}
+        <div className="glass-card p-3.5 lg:col-span-8 flex flex-col justify-between">
+          <div>
+            <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-cyan-400">
+              🪐 Detailed Analysis — Parashari Aspects &amp; Gochara
+            </h3>
+            {isPatternsLoading && !patterns ? (
+              <p className="text-xs text-slate-400">Loading transit-to-natal aspects…</p>
+            ) : !patterns ? (
+              <p className="text-xs text-slate-400">No aspect data available for this moment.</p>
+            ) : (
+              <div className="space-y-2 text-xs">
+                {(patterns.sade_sati.is_active || patterns.ashtama_shani.is_active) && (
+                  <div className="flex flex-wrap gap-2 mb-1">
+                    {patterns.sade_sati.is_active && (
+                      <span className="rounded px-2 py-0.5 font-bold text-[11px] bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                        Sade Sati — {patterns.sade_sati.phase ?? "active"}
+                      </span>
+                    )}
+                    {patterns.ashtama_shani.is_active && (
+                      <span className="rounded px-2 py-0.5 font-bold text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        Ashtama Shani Active
+                      </span>
+                    )}
+                  </div>
                 )}
-                {patterns.ashtama_shani.is_active && (
-                  <span
-                    className="rounded px-2 py-1 font-medium"
-                    style={{ background: "var(--status-danger-soft, rgba(239,68,68,.12))", color: "var(--status-danger)" }}
-                  >
-                    Ashtama Shani active
-                  </span>
+
+                {patterns.aspects.length === 0 ? (
+                  <p className="text-slate-400 text-xs">No transit-to-natal aspects detected at this moment.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs font-mono">
+                      <thead>
+                        <tr className="border-b border-slate-800 text-[10px] uppercase text-slate-400">
+                          <th className="pb-1.5">Transit</th>
+                          <th className="pb-1.5">Vedic Graha Drishti</th>
+                          <th className="pb-1.5">To Natal</th>
+                          <th className="pb-1.5 text-right">Orb</th>
+                          <th className="pb-1.5 text-right">Nature</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800/60">
+                        {[...patterns.aspects]
+                          .sort((a, b) => a.orb - b.orb)
+                          .map((a, i) => {
+                            const p = (a.transiting_planet || "").toLowerCase();
+                            const type = (a.aspect_type || "").toLowerCase();
+
+                            let vedicLabel = "Graha Drishti";
+                            let natureLabel = "Neutral";
+                            let natureColor = "var(--text-secondary)";
+
+                            if (type === "opposition" || type === "7th") {
+                              vedicLabel = "7th Full Drishti (Saptama)";
+                              natureLabel = p === "jupiter" || p === "venus" || p === "mercury" || p === "moon" ? "Benefic" : "Challenging";
+                              natureColor = natureLabel === "Benefic" ? "var(--status-success, #22c55e)" : "var(--status-danger)";
+                            } else if (type === "trine" || type === "5th" || type === "9th") {
+                              if (p === "jupiter") {
+                                vedicLabel = "5th/9th Special Full Drishti";
+                                natureLabel = "Benefic";
+                                natureColor = "var(--status-success, #22c55e)";
+                              } else {
+                                vedicLabel = "5th/9th Parashari Drishti";
+                                natureLabel = p === "venus" || p === "mercury" || p === "moon" ? "Benefic" : "Neutral";
+                                natureColor = natureLabel === "Benefic" ? "var(--status-success, #22c55e)" : "var(--text-secondary)";
+                              }
+                            } else if (type === "square" || type === "4th" || type === "10th") {
+                              if (p === "mars") {
+                                vedicLabel = "4th Special Full Drishti";
+                                natureLabel = "Challenging";
+                                natureColor = "var(--status-danger)";
+                              } else if (p === "saturn") {
+                                vedicLabel = "10th Special Full Drishti";
+                                natureLabel = "Challenging";
+                                natureColor = "var(--status-danger)";
+                              } else {
+                                vedicLabel = "4th/10th Parashari Drishti";
+                                natureLabel = "Neutral";
+                                natureColor = "var(--text-secondary)";
+                              }
+                            } else if (type === "special_graha" || type === "special") {
+                              if (p === "mars") {
+                                vedicLabel = "8th Special Full Drishti";
+                                natureLabel = "Challenging";
+                                natureColor = "var(--status-danger)";
+                              } else if (p === "saturn") {
+                                vedicLabel = "3rd Special Full Drishti";
+                                natureLabel = "Challenging";
+                                natureColor = "var(--status-danger)";
+                              } else if (p === "jupiter") {
+                                vedicLabel = "5th/9th Special Full Drishti";
+                                natureLabel = "Benefic";
+                                natureColor = "var(--status-success, #22c55e)";
+                              } else {
+                                vedicLabel = "Special Graha Drishti";
+                                natureLabel = "Neutral";
+                                natureColor = "var(--text-secondary)";
+                              }
+                            } else if (type === "conjunction" || type === "0th") {
+                              vedicLabel = "Yuti (Conjunction)";
+                              natureLabel = p === "jupiter" || p === "venus" ? "Benefic" : "Neutral";
+                              natureColor = natureLabel === "Benefic" ? "var(--status-success, #22c55e)" : "var(--text-secondary)";
+                            } else {
+                              vedicLabel = "Parashari Graha Drishti";
+                            }
+
+                            return (
+                              <tr key={i} className="hover:bg-slate-900/50">
+                                <td className="py-1.5 font-bold text-slate-100">{a.transiting_planet}</td>
+                                <td className="py-1.5 font-semibold text-cyan-300">{vedicLabel}</td>
+                                <td className="py-1.5 text-slate-200">{a.natal_planet}</td>
+                                <td className="py-1.5 text-right text-slate-400">{a.orb.toFixed(1)}°</td>
+                                <td className="py-1.5 text-right font-extrabold" style={{ color: natureColor }}>
+                                  {natureLabel}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             )}
-
-            {patterns.aspects.length === 0 ? (
-              <p style={{ color: "var(--text-muted)" }}>No transit-to-natal aspects detected at this moment.</p>
-            ) : (
-              <table className="w-full">
-                <thead>
-                  <tr style={{ color: "var(--text-tertiary)" }}>
-                    <th className="pb-1 text-left font-medium">Transit</th>
-                    <th className="pb-1 text-left font-medium">Aspect</th>
-                    <th className="pb-1 text-left font-medium">To Natal</th>
-                    <th className="pb-1 text-right font-medium">Orb</th>
-                    <th className="pb-1 text-right font-medium">Nature</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...patterns.aspects]
-                    .sort((a, b) => a.orb - b.orb)
-                    .map((a, i) => {
-                      const harmonious = a.aspect_type === "trine";
-                      const tense = a.aspect_type === "square" || a.aspect_type === "opposition";
-                      const natureColor = harmonious
-                        ? "var(--status-success, #22c55e)"
-                        : tense
-                          ? "var(--status-danger)"
-                          : "var(--text-secondary)";
-                      const natureLabel = harmonious ? "Benefic" : tense ? "Challenging" : "Neutral";
-                      return (
-                        <tr key={i} style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                          <td className="py-1" style={{ color: "var(--text-primary)" }}>{a.transiting_planet}</td>
-                          <td className="py-1 capitalize" style={{ color: "var(--text-secondary)" }}>
-                            {a.aspect_type === "special_graha" ? "Special" : a.aspect_type}
-                          </td>
-                          <td className="py-1" style={{ color: "var(--text-primary)" }}>{a.natal_planet}</td>
-                          <td className="py-1 text-right font-mono" style={{ color: "var(--text-secondary)" }}>
-                            {a.orb.toFixed(1)}°
-                          </td>
-                          <td className="py-1 text-right font-medium" style={{ color: natureColor }}>
-                            {natureLabel}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

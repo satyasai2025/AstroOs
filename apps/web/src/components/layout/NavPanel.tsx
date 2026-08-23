@@ -504,23 +504,11 @@ function NavPanelInner({
                                     key={item.label + item.href}
                                     href={item.href}
                                     onClick={(e) => handleItemClick(e, item)}
-                                    className="relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition-colors"
-                                    style={{
-                                      backgroundColor: isActive(item) ? "var(--obsidian-accent-primary-soft)" : "transparent",
-                                      color: isActive(item) ? "var(--obsidian-accent-primary)" : "var(--obsidian-text-secondary)",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      if (!isActive(item)) {
-                                        e.currentTarget.style.backgroundColor = "var(--obsidian-surface-hover)";
-                                        e.currentTarget.style.color = "var(--obsidian-text-primary)";
-                                      }
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      if (!isActive(item)) {
-                                        e.currentTarget.style.backgroundColor = "transparent";
-                                        e.currentTarget.style.color = "var(--obsidian-text-secondary)";
-                                      }
-                                    }}
+                                    className={`relative flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[11px] transition-colors ${
+                                      isActive(item)
+                                        ? "bg-cyan-500/15 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 font-extrabold border border-cyan-500/40 shadow-none"
+                                        : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium"
+                                    }`}
                                     aria-current={isActive(item) ? "page" : undefined}
                                   >
                                     {/* Cyan dot for active item */}

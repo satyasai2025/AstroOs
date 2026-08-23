@@ -4,7 +4,7 @@ AstroOS — Prospective Research Validation & Rule Lifecycle Schemas (Priority 2
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 
@@ -33,8 +33,32 @@ class PreRegistrationRecordResponse(BaseModel):
 
 class EvaluateProspectiveCohortRequest(BaseModel):
     registration_id: str = Field(..., description="Pre-registration record ID")
-    total_subjects: int = Field(default=150, description="Total unseen prospective subjects")
-    positive_prevalence: float = Field(default=0.52, description="Observed event prevalence")
+
+
+class LogBlindPredictionRequest(BaseModel):
+    registration_id: str = Field(..., description="Pre-registration record ID")
+    subject_id: str = Field(..., description="Subject identifier")
+    predicted_probability: float = Field(..., ge=0.0, le=1.0, description="Blind predicted probability, logged before the outcome is known")
+    prediction_window_start: date
+    prediction_window_end: date
+
+
+class ProspectiveSubjectPredictionResponse(BaseModel):
+    prediction_id: str
+    registration_id: str
+    subject_id: str
+    predicted_probability: float
+    prediction_window_start: date
+    prediction_window_end: date
+    predicted_at: datetime
+    actual_outcome: Optional[bool] = None
+    outcome_recorded_at: Optional[datetime] = None
+
+
+class RecordProspectiveOutcomeRequest(BaseModel):
+    registration_id: str = Field(..., description="Pre-registration record ID")
+    subject_id: str = Field(..., description="Subject identifier")
+    actual_outcome: bool = Field(..., description="Real, unblinded outcome for this subject")
 
 
 class DriftAnalysisResponse(BaseModel):
