@@ -92,7 +92,18 @@ class SBCRayMatrixEngine:
             )
 
         # 3. Process Transit Grahas & Cast Motion-Based Vedha Rays
-        active_transits = transit_planets if transit_planets else self._get_default_transits()
+        if not transit_planets:
+            # Previously silently fell back to _get_default_transits(), a
+            # hardcoded fake transit set — this caused a real production
+            # bug earlier this session (prediction_confluence_engine.py
+            # forgot to pass real transit data and got fabricated SBC
+            # results with no error). Fail loud instead: any caller must
+            # supply real computed transit positions.
+            raise ValueError(
+                "compute_complete_sangya_matrix requires real transit_planets "
+                "— no fallback to fabricated default transit data is provided."
+            )
+        active_transits = transit_planets
         all_collisions: list[SBCRayCollision] = []
 
         for tp in active_transits:
@@ -297,15 +308,3 @@ class SBCRayMatrixEngine:
         idx = int((longitude_deg % 360.0) / (360.0 / 28.0))
         return SBC_28_NAKSHATRAS[idx % 28]
 
-    def _get_default_transits(self) -> list[dict[str, Any]]:
-        return [
-            {"planet": "Jupiter", "nakshatra": "Rohini", "is_retrograde": False, "speed_deg_day": 0.12},
-            {"planet": "Venus", "nakshatra": "Purva Phalguni", "is_retrograde": False, "speed_deg_day": 1.2},
-            {"planet": "Mercury", "nakshatra": "Hasta", "is_retrograde": False, "speed_deg_day": 1.3},
-            {"planet": "Moon", "nakshatra": "Shravana", "is_retrograde": False, "speed_deg_day": 13.2},
-            {"planet": "Sun", "nakshatra": "Magha", "is_retrograde": False, "speed_deg_day": 0.98},
-            {"planet": "Mars", "nakshatra": "Purva Ashadha", "is_retrograde": False, "speed_deg_day": 0.65},
-            {"planet": "Saturn", "nakshatra": "Purva Bhadrapada", "is_retrograde": True, "speed_deg_day": -0.04},
-            {"planet": "Rahu", "nakshatra": "Uttara Bhadrapada", "is_retrograde": True, "speed_deg_day": -0.05},
-            {"planet": "Ketu", "nakshatra": "Uttara Phalguni", "is_retrograde": True, "speed_deg_day": -0.05},
-        ]

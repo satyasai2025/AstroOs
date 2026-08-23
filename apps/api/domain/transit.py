@@ -60,3 +60,4 @@ class TransitPlanetResult:
     is_retrograde: bool = False
     speed_deg_per_day: float = 0.0
     gati: str = "sama"
+    house_from_natal_ascendant: int = 1  # 1-12, transit house counted from natal Lagna instead of Moon

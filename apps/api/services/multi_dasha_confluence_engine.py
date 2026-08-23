@@ -17,7 +17,32 @@ from apps.api.domain.multi_dasha_confluence import (
     YOGINI_DETAILS,
 )
 from apps.api.services.calibration_engine import CalibrationEngine
-from apps.api.services.dasha_engine import DashaEngine
+from apps.api.services.dasha_engine import (
+    DashaEngine,
+    _jaimini_sign_sequence,
+    _jaimini_sign_years,
+    _nakshatra_balance,
+)
+from apps.api.services.ephemeris_wrapper import jd_to_datetime, longitude_to_nakshatra
+from packages.shared.constants import (
+    SIGN_LORDS,
+    VIMSHOTTARI_DASHA_YEARS,
+    VIMSHOTTARI_SEQUENCE,
+    VIMSHOTTARI_TOTAL_YEARS,
+)
+
+# Classical natural benefic / malefic classification (Parashari), used only
+# as a simple, disclosed, real-but-crude promise_score signal for Vimshottari
+# and Chara periods below — NOT a substitute for a full Shadbala/Ishta-Kashta
+# scoring system. Mercury and the Moon are context-dependent classically
+# (Mercury by association, Moon by paksha/waxing-waning); here they are
+# treated as neutral rather than guessing an unverified refinement.
+_NATURAL_BENEFICS = frozenset({"jupiter", "venus"})
+_NATURAL_MALEFICS = frozenset({"saturn", "mars", "sun", "rahu", "ketu"})
+_RASHI_ORDER = [
+    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
+    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
+]
 
 
 class YoginiDashaEngine:
@@ -75,6 +100,12 @@ class MultiDashaConfluenceEngine:
 
     def __init__(self) -> None:
         self.yogini_engine = YoginiDashaEngine()
+        # _build_full_cycle / _build_sign_full_cycle are pure period-tree
+        # builders on DashaEngine that don't touch self._wrapper — no real
+        # ephemeris wrapper is needed here since this engine reuses the
+        # chart's already-computed sidereal positions instead of
+        # re-running ephemeris.
+        self._dasha_period_builder = DashaEngine(ephemeris_wrapper=None)
 
     def evaluate_confluence_matrix(
         self,
@@ -116,8 +147,10 @@ class MultiDashaConfluenceEngine:
         active_profile = CalibrationEngine.get_instance().get_active_profile()
         profile_name = active_profile.name if active_profile else "parashari_standard_default"
 
+        chart_id = self._resolve_chart_id(chart)
+
         return MultiDashaConfluenceMatrix(
-            chart_id="canonical-d1-chart",
+            chart_id=chart_id,
             target_start_date=target_start,
             target_end_date=target_end,
             objective=objective,
@@ -130,51 +163,109 @@ class MultiDashaConfluenceEngine:
     def _extract_vimshottari_intervals(
         self, chart: D1Chart, target_start: date, target_end: date
     ) -> list[DashaInterval]:
-        """Extract Vimshottari dasha intervals covering target range."""
-        return [
-            DashaInterval(
-                system_name="vimshottari",
-                lord_or_rashi="jupiter",
-                level="mahadasha",
-                start_date=target_start - timedelta(days=180),
-                end_date=target_end + timedelta(days=180),
-                houses_activated=(1, 4, 7),
-                promise_score=85.0,
-            ),
-            DashaInterval(
-                system_name="vimshottari",
-                lord_or_rashi="venus",
-                level="antardasha",
-                start_date=target_start,
-                end_date=target_start + timedelta(days=120),
-                houses_activated=(7, 11),
-                promise_score=90.0,
-            ),
-        ]
+        """
+        Extract real Vimshottari Mahadasha/Antardasha intervals overlapping
+        the target range, computed from the chart's own Moon sidereal
+        longitude and real birth date (derived from the chart's Julian Day —
+        no separate birth_datetime is stored on D1Chart, so the JD it was
+        already built from is the only honest source of the birth moment).
+
+        Reuses the same pure period-tree math DashaEngine.compute_vimshottari
+        uses internally (_nakshatra_balance / _build_full_cycle) rather than
+        re-deriving the dasha formula, without re-running ephemeris (chart
+        already carries the sidereal Moon position).
+        """
+        if chart is None:
+            return []
+
+        moon = self._find_planet(chart, "moon")
+        if moon is None:
+            return []
+
+        birth_date = self._chart_birth_date(chart)
+
+        first_lord, _balance, first_start = _nakshatra_balance(
+            moon.sidereal_longitude, VIMSHOTTARI_SEQUENCE, VIMSHOTTARI_DASHA_YEARS,
+            VIMSHOTTARI_TOTAL_YEARS, birth_date,
+        )
+        mahadashas = self._dasha_period_builder._build_full_cycle(
+            first_lord, first_start,
+            VIMSHOTTARI_SEQUENCE, VIMSHOTTARI_DASHA_YEARS,
+            VIMSHOTTARI_TOTAL_YEARS, max_depth=2,
+        )
+
+        out: list[DashaInterval] = []
+        for md in mahadashas:
+            self._collect_overlapping_periods(
+                md, "vimshottari", chart, target_start, target_end, out,
+            )
+        return out
 
     def _extract_chara_intervals(
         self, chart: D1Chart, target_start: date, target_end: date
     ) -> list[DashaInterval]:
-        """Extract Jaimini Chara dasha rashi intervals."""
-        return [
-            DashaInterval(
-                system_name="chara",
-                lord_or_rashi="libra",
-                level="rashi_dasha",
-                start_date=target_start - timedelta(days=90),
-                end_date=target_end + timedelta(days=90),
-                houses_activated=(7,),
-                promise_score=80.0,
+        """
+        Extract real Jaimini Chara Dasha rashi intervals overlapping the
+        target range, computed from the chart's own D1 planet placements and
+        Lagna rashi (Neelakantha's rule), reusing the same pure sign-period
+        math DashaEngine.compute_chara() uses internally.
+        """
+        if chart is None:
+            return []
+
+        planet_signs = {p.planet: p.rashi for p in chart.planets}
+        lagna_rashi = chart.ascendant.rashi
+        birth_date = self._chart_birth_date(chart)
+
+        sign_years = {s: _jaimini_sign_years(s, planet_signs) for s in _RASHI_ORDER}
+        total_years = sum(sign_years.values())
+        sign_sequence = _jaimini_sign_sequence(lagna_rashi)
+
+        mahadashas = self._dasha_period_builder._build_sign_full_cycle(
+            sign_sequence[0], birth_date, sign_sequence, sign_years, total_years, max_depth=1,
+        )
+
+        out: list[DashaInterval] = []
+        asc_rashi_idx = _RASHI_ORDER.index(lagna_rashi)
+        for md in mahadashas:
+            if md.end_date < target_start or md.start_date > target_end:
+                continue
+            rashi_idx = _RASHI_ORDER.index(md.lord)
+            house = ((rashi_idx - asc_rashi_idx) % 12) + 1
+            out.append(
+                DashaInterval(
+                    system_name="chara",
+                    lord_or_rashi=md.lord,
+                    level="rashi_dasha",
+                    start_date=md.start_date,
+                    end_date=md.end_date,
+                    houses_activated=(house,),
+                    promise_score=self._sign_lord_promise_score(md.lord),
+                )
             )
-        ]
+        return out
 
     def _extract_yogini_intervals(
         self, chart: D1Chart, target_start: date, target_end: date
     ) -> list[DashaInterval]:
-        """Extract Yogini dasha periods."""
+        """
+        Extract Yogini dasha periods using the chart's REAL Moon nakshatra
+        (derived from its real sidereal longitude) and REAL birth date,
+        instead of a fabricated Bharani / 25-years-ago placeholder.
+        """
+        if chart is None:
+            return []
+
+        moon = self._find_planet(chart, "moon")
+        if moon is None:
+            return []
+
+        nak_info = longitude_to_nakshatra(moon.sidereal_longitude)
+        birth_date = self._chart_birth_date(chart)
+
         y_periods = YoginiDashaEngine.compute_yogini_dasha(
-            moon_nakshatra_index=2,  # Bharani
-            birth_date=target_start - timedelta(days=365 * 25),
+            moon_nakshatra_index=nak_info.nakshatra_number,
+            birth_date=birth_date,
         )
         out: list[DashaInterval] = []
         for yp in y_periods:
@@ -187,7 +278,7 @@ class MultiDashaConfluenceEngine:
                         start_date=yp.start_date,
                         end_date=yp.end_date,
                         houses_activated=(yp.house_activated,),
-                        promise_score=75.0,
+                        promise_score=self._sign_lord_promise_score(yp.lord),
                     )
                 )
         return out
@@ -195,18 +286,115 @@ class MultiDashaConfluenceEngine:
     def _extract_kakshya_intervals(
         self, chart: D1Chart, target_start: date, target_end: date
     ) -> list[DashaInterval]:
-        """Extract Ashtakavarga Kakshya transit intervals."""
-        return [
-            DashaInterval(
-                system_name="ashtakavarga_kakshya",
-                lord_or_rashi="jupiter_kakshya",
-                level="transit_kakshya",
-                start_date=target_start + timedelta(days=15),
-                end_date=target_start + timedelta(days=45),
-                houses_activated=(7, 10),
-                promise_score=95.0,
+        """
+        Ashtakavarga Kakshya (the 8-planet unequal subdivision of each sign,
+        used for fine-grained transit timing) confluence is NOT YET
+        IMPLEMENTED anywhere in this codebase — a grep across
+        apps/api/services (including ashtakavarga_engine.py) found no real
+        Kakshya computation to wire in, only this engine's own prior
+        hardcoded placeholder. Rather than fabricate a Kakshya calculation
+        here, this system is disclosed-excluded from the confluence matrix
+        (returns an empty list) until a real Ashtakavarga Kakshya engine
+        exists. `evaluate_confluence_matrix` simply concatenates this list
+        into `all_intervals`, so an empty result here does not break the
+        rest of the matrix — it only means "ashtakavarga_kakshya" will never
+        appear as a contributing system in confluence_windows for now.
+        """
+        return []
+
+    @staticmethod
+    def _find_planet(chart: D1Chart, planet_name: str):
+        return next((p for p in chart.planets if p.planet.lower() == planet_name), None)
+
+    @staticmethod
+    def _chart_birth_date(chart: D1Chart) -> date:
+        """
+        Real birth date derived from the chart's own Julian Day (D1Chart
+        does not separately store birth_datetime_utc). This is the only
+        honest source of "when this chart was born" available on the
+        object — never a fabricated offset from the analysis window.
+        """
+        if chart.ephemeris is not None and chart.ephemeris.julian_day:
+            return jd_to_datetime(chart.ephemeris.julian_day).date()
+        # No ephemeris on chart (should not happen for a real D1Chart) —
+        # fail loudly rather than silently fabricating a birth date.
+        raise ValueError("Chart has no ephemeris.julian_day; cannot derive a real birth date.")
+
+    @staticmethod
+    def _sign_lord_promise_score(lord: str) -> float:
+        """
+        Simple, disclosed promise_score signal based on classical natural
+        benefic/malefic classification of the period lord — not a full
+        Shadbala/strength computation. Benefic lord periods score higher,
+        malefic lower, everything else neutral.
+        """
+        lord = lord.lower()
+        if lord in _NATURAL_BENEFICS:
+            return 65.0
+        if lord in _NATURAL_MALEFICS:
+            return 40.0
+        return 50.0
+
+    def _collect_overlapping_periods(
+        self,
+        period,
+        system_name: str,
+        chart: D1Chart,
+        target_start: date,
+        target_end: date,
+        out: list[DashaInterval],
+    ) -> None:
+        """Flatten a DashaPeriod tree (Mahadasha + Antardasha) into DashaIntervals overlapping the target window."""
+        level_name = "mahadasha" if period.level == 1 else "antardasha"
+        if period.end_date >= target_start and period.start_date <= target_end:
+            out.append(
+                DashaInterval(
+                    system_name=system_name,
+                    lord_or_rashi=period.lord,
+                    level=level_name,
+                    start_date=period.start_date,
+                    end_date=period.end_date,
+                    houses_activated=self._houses_activated_for_planet(chart, period.lord),
+                    promise_score=self._sign_lord_promise_score(period.lord),
+                )
             )
-        ]
+        for sub in period.sub_periods:
+            self._collect_overlapping_periods(sub, system_name, chart, target_start, target_end, out)
+
+    @staticmethod
+    def _houses_activated_for_planet(chart: D1Chart, planet: str) -> tuple[int, ...]:
+        """
+        Houses activated by a Vimshottari lord: houses it rules from the
+        real Lagna (sign lordship) plus the house it actually occupies in
+        the natal chart — same "ruled houses + occupied house" pattern
+        RectificationEngine._score_dasha_activation uses for dasha lord
+        activation, applied here to derive real houses_activated instead of
+        a fixed placeholder tuple.
+        """
+        asc_rashi_idx = _RASHI_ORDER.index(chart.ascendant.rashi)
+        ruled_houses = {
+            ((r_idx - asc_rashi_idx) % 12) + 1
+            for r_idx, r_name in enumerate(_RASHI_ORDER)
+            if SIGN_LORDS.get(r_name, "") == planet
+        }
+        occ = next((p for p in chart.planets if p.planet.lower() == planet), None)
+        if occ is not None:
+            ruled_houses.add(occ.house_number)
+        return tuple(sorted(ruled_houses)) if ruled_houses else ()
+
+    def _resolve_chart_id(self, chart: Optional[D1Chart]) -> str:
+        """
+        Real, deterministic chart identifier derived from the chart's own
+        Julian Day + Ascendant sidereal longitude (D1Chart carries no
+        explicit id/chart_id field), instead of the previous hardcoded
+        "canonical-d1-chart" placeholder. Falls back to a clearly-labeled
+        "no-chart-supplied" id only when no chart was passed at all.
+        """
+        if chart is None:
+            return "no-chart-supplied"
+        jd = chart.ephemeris.julian_day if chart.ephemeris is not None else 0.0
+        asc = chart.ascendant.sidereal_longitude if chart.ascendant is not None else 0.0
+        return f"d1-jd{jd:.6f}-asc{asc:.4f}"
 
     def _compute_interval_intersections(
         self,

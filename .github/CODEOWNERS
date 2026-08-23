@@ -1,0 +1,68 @@
+# AstroOS — Code Owners
+#
+# Frozen calculation modules (see FROZEN_MODULES.md) require the admin's
+# review before merge. GitHub enforces this automatically when branch
+# protection has "Require review from Code Owners" enabled for the
+# default branch — enable that in repo Settings > Branches if not
+# already on.
+
+FROZEN_MODULES.md @satyasai2025
+scripts/verify_frozen_modules.py @satyasai2025
+
+packages/shared/dignity.py @satyasai2025
+apps/api/services/ashtakavarga_engine.py @satyasai2025
+apps/api/services/ashtakavarga/shodhana_calculator.py @satyasai2025
+apps/api/services/pinda_engine.py @satyasai2025
+apps/api/services/shadbala_engine.py @satyasai2025
+apps/api/services/shadbala/uchcha_bala.py @satyasai2025
+apps/api/services/shadbala/saptavargaja_bala.py @satyasai2025
+apps/api/services/shadbala/ayana_bala.py @satyasai2025
+apps/api/services/shadbala/dig_bala.py @satyasai2025
+apps/api/services/shadbala/drik_bala.py @satyasai2025
+apps/api/services/shadbala/chesta_bala.py @satyasai2025
+apps/api/services/shadbala/dina_hora_bala.py @satyasai2025
+apps/api/services/shadbala/varsha_masa_bala.py @satyasai2025
+apps/api/services/divisional_engine.py @satyasai2025
+apps/api/services/dasha_engine.py @satyasai2025
+apps/api/services/jaimini_dasha_adapter.py @satyasai2025
+apps/api/services/muhurta_engine.py @satyasai2025
+apps/api/services/badhaka_maraka_engine.py @satyasai2025
+apps/api/services/yogas/arishta_yoga.py @satyasai2025
+apps/api/services/yogas/chandra_yoga.py @satyasai2025
+apps/api/services/prediction_confluence_engine.py @satyasai2025
+apps/api/schemas/kp.py @satyasai2025
+apps/api/services/ephemeris_wrapper.py @satyasai2025
+apps/api/services/horoscope_engine.py @satyasai2025
+apps/api/services/transit_engine.py @satyasai2025
+apps/api/services/transit_patterns.py @satyasai2025
+apps/api/services/transit_timeline_engine.py @satyasai2025
+apps/api/services/synastry_engine.py @satyasai2025
+apps/api/services/rectification_engine.py @satyasai2025
+apps/api/services/graha_engine.py @satyasai2025
+apps/api/services/house_engine.py @satyasai2025
+apps/api/services/aspect_engine.py @satyasai2025
+apps/api/services/sphuta_drishti_engine.py @satyasai2025
+apps/api/services/upagraha_engine.py @satyasai2025
+apps/api/services/sadhu_padhdhati_engine.py @satyasai2025
+apps/api/services/kp_engine.py @satyasai2025
+apps/api/services/kp_btr_engine.py @satyasai2025
+apps/api/services/kp_decision_tree_engine.py @satyasai2025
+apps/api/services/kp_rp_engine.py @satyasai2025
+apps/api/services/arudha_engine.py @satyasai2025
+apps/api/services/argala_engine.py @satyasai2025
+apps/api/services/karakamsa_engine.py @satyasai2025
+apps/api/services/rashi_aspect_engine.py @satyasai2025
+apps/api/services/event_engine.py @satyasai2025
+apps/api/services/event_analysis_engine.py @satyasai2025
+apps/api/services/unified_event_timing_engine.py @satyasai2025
+apps/api/services/multi_dasha_confluence_engine.py @satyasai2025
+apps/api/services/lagna_scan_engine.py @satyasai2025
+apps/api/services/sign_change_engine.py @satyasai2025
+apps/api/services/yoga_engine.py @satyasai2025
+apps/api/services/yoga_strength.py @satyasai2025
+apps/api/services/vimsopaka_engine.py @satyasai2025
+apps/api/services/ashtakoota_engine.py @satyasai2025
+apps/api/services/marriage_timing_engine.py @satyasai2025
+apps/api/services/sbc_vedha_engine.py @satyasai2025
+apps/api/services/sbc_ray_matrix_engine.py @satyasai2025
+apps/api/services/tarabala_report_service.py @satyasai2025

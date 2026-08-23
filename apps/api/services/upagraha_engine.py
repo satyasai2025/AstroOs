@@ -6,6 +6,13 @@ ephemeris work of its own beyond asking EphemerisWrapper for sunrise,
 sunset and the ascendant at a given instant — all sidereal conversion
 stays in the wrapper, same discipline as the other engines.
 
+SCOPE — only 2 of the 8 classical Upagrahas are implemented: Gulika and
+Maandi (the sunrise/sunset-eighth-part shadow points), plus the three
+Special Lagnas. Dhuma, Vyatipata, Parivesha, Indrachapa, Upaketu, and
+Kaala (the Sun-longitude-derived Upagrahas) are NOT implemented anywhere
+in AstroOS — this is a real, disclosed feature gap, not a bug in what
+exists.
+
 ──────────────────────────────────────────────────────────────────────────
 SUNRISE DEFINITION — deliberate, and it matters
 

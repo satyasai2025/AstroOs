@@ -7,11 +7,62 @@ import pytest
 from fastapi.testclient import TestClient
 
 from apps.api.dependencies import require_authenticated
+from apps.api.domain.ephemeris import (
+    Ascendant,
+    EphemerisResult,
+    HouseCusp,
+    KaranaInfo,
+    NakshatraInfo,
+    PanchangaResult,
+    SiderealPosition,
+    TithiInfo,
+    VaraInfo,
+    YogaInfo,
+)
+from apps.api.domain.horoscope import D1Chart
 from apps.api.main import app
 from apps.api.services.multi_dasha_confluence_engine import (
     MultiDashaConfluenceEngine,
     YoginiDashaEngine,
 )
+
+
+def _build_sample_chart() -> D1Chart:
+    """Real (if minimal) D1Chart fixture — Moon in Aries/Bharani, Lagna Aries — used to
+    exercise the now-real chart-driven Vimshottari/Chara/Yogini extraction."""
+    asc = Ascendant(10.0, 10.0, "aries", 10.0, "ashwini", 1)
+    rashis = ["aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"]
+    planets = [
+        SiderealPosition("sun", 30.0, "taurus", 0.0, 2, "krittika", 2, False, False, None, None),
+        SiderealPosition("moon", 15.0, "aries", 15.0, 1, "bharani", 1, False, False, None, None),
+        SiderealPosition("mars", 60.0, "gemini", 0.0, 3, "mrigashira", 3, False, False, None, None),
+        SiderealPosition("mercury", 90.0, "cancer", 0.0, 4, "punarvasu", 4, False, False, None, None),
+        SiderealPosition("jupiter", 105.0, "cancer", 15.0, 4, "pushya", 2, False, False, None, "exalted"),
+        SiderealPosition("venus", 120.0, "leo", 0.0, 5, "magha", 1, False, False, None, None),
+        SiderealPosition("saturn", 275.0, "capricorn", 5.0, 10, "uttara_phalguni", 2, False, False, None, None),
+        SiderealPosition("rahu", 180.0, "libra", 0.0, 7, "chitra", 3, True, False, None, None),
+        SiderealPosition("ketu", 0.0, "aries", 0.0, 1, "ashwini", 1, True, False, None, None),
+    ]
+    houses = [HouseCusp(n, float((n - 1) * 30), float((n - 1) * 30), rashis[n - 1]) for n in range(1, 13)]
+    panchanga = PanchangaResult(
+        tithi=TithiInfo(1, "shukla_pratipada", "shukla", 50.0),
+        nakshatra=NakshatraInfo("bharani", 2, 1, "venus", 0.0, 0.0),
+        yoga=YogaInfo(1, "vishkambha", 50.0),
+        karana=KaranaInfo(1, "bava", False),
+        vara=VaraInfo(6, "saturday", "saturn"),
+        julian_day=2451545.0,
+        ayanamsa_deg=23.85,
+    )
+    ephemeris = EphemerisResult(
+        julian_day=2451545.0,
+        ayanamsa_value=23.85,
+        ayanamsa_system="lahiri",
+        ascendant=asc,
+        house_cusps=houses,
+        planet_positions=planets,
+        panchanga=panchanga,
+    )
+    return D1Chart(ephemeris, asc, houses, planets, [], [], panchanga, "lahiri", "W")
 
 
 @pytest.fixture
@@ -45,14 +96,16 @@ def test_yogini_dasha_calculation():
 
 def test_multi_dasha_confluence_evaluation():
     engine = MultiDashaConfluenceEngine()
+    chart = _build_sample_chart()
     matrix = engine.evaluate_confluence_matrix(
-        chart=None,  # Uses internal canonical D1 chart
+        chart=chart,
         target_start=date(2025, 1, 1),
-        target_end=date(2025, 12, 31),
+        target_end=date(2035, 12, 31),
         objective="marriage",
     )
 
     assert matrix.objective == "marriage"
+    assert matrix.chart_id != "canonical-d1-chart"  # no longer a hardcoded placeholder
     assert len(matrix.all_intervals) >= 4
     assert len(matrix.confluence_windows) >= 1
 
@@ -63,6 +116,21 @@ def test_multi_dasha_confluence_evaluation():
 
     assert matrix.peak_confluence_window is not None
     assert matrix.peak_confluence_window.confluence_density_score > 0.0
+
+
+def test_multi_dasha_confluence_no_chart_returns_no_intervals():
+    """With no chart supplied, real-data extraction has nothing to compute
+    from and honestly returns empty intervals rather than fabricated ones."""
+    engine = MultiDashaConfluenceEngine()
+    matrix = engine.evaluate_confluence_matrix(
+        chart=None,
+        target_start=date(2025, 1, 1),
+        target_end=date(2025, 12, 31),
+        objective="marriage",
+    )
+    assert matrix.chart_id == "no-chart-supplied"
+    assert matrix.all_intervals == ()
+    assert matrix.confluence_windows == ()
 
 
 def test_multi_dasha_confluence_api_endpoints(api_client):

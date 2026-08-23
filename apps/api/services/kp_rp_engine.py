@@ -99,12 +99,19 @@ class KPRulingPlanetsEngine:
             house_system=house_system,
         )
 
-        # 1. Day Lord
-        weekday_idx = query_datetime_utc.weekday()
-        # In Python weekday(): Monday is 0, Sunday is 6. Convert to Sunday=0
-        astro_day_idx = (weekday_idx + 1) % 7
-        default_vara = chart.panchanga.vara.lord if (chart.panchanga and chart.panchanga.vara and chart.panchanga.vara.lord) else "sun"
-        day_lord = VARA_LORDS.get(astro_day_idx, default_vara.lower())
+        # 1. Day Lord — use the real sunrise-to-sunrise Vedic Vara already
+        # computed in chart.panchanga (correctly accounts for local time
+        # zone and the classical rule that the day starts at sunrise, not
+        # midnight UTC). Previously this was discarded in favor of a plain
+        # UTC calendar weekday(), which is wrong near midnight UTC or near
+        # sunrise in non-UTC zones.
+        if chart.panchanga and chart.panchanga.vara and chart.panchanga.vara.lord:
+            day_lord = chart.panchanga.vara.lord.lower()
+        else:
+            weekday_idx = query_datetime_utc.weekday()
+            # In Python weekday(): Monday is 0, Sunday is 6. Convert to Sunday=0
+            astro_day_idx = (weekday_idx + 1) % 7
+            day_lord = VARA_LORDS.get(astro_day_idx, "sun")
 
         # 2. Ascendant Lords
         asc_house = chart.houses[0]

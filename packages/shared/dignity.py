@@ -42,7 +42,9 @@ _RASHI_LIST = [
 
 # Degree ranges within which Moolatrikona applies (outside these ranges,
 # the planet's own-sign placement in that same rashi still applies via
-# OWN_SIGNS, just not at Moolatrikona strength).
+# OWN_SIGNS, just not at Moolatrikona strength). Standard BPHS convention
+# — verified exact match against PyJHora's moola_trikona_range_of_planets
+# (jhora/const.py) for all 7 classical grahas.
 MOOLATRIKONA_RANGES: dict[str, tuple[float, float]] = {
     "sun":     (0.0, 20.0),     # Leo 0-20°
     "moon":    (3.0, 30.0),     # Taurus 3-30°
@@ -52,6 +54,21 @@ MOOLATRIKONA_RANGES: dict[str, tuple[float, float]] = {
     "venus":   (0.0, 15.0),     # Libra 0-15°
     "saturn":  (0.0, 20.0),     # Aquarius 0-20°
 }
+
+# Alternate Moolatrikona convention (user-supplied research, not the
+# standard BPHS/PyJHora ranges above — an explicitly opt-in alternate
+# tradition, never the default). Differs from MOOLATRIKONA_RANGES in
+# exactly two entries: Moon's Taurus range ends at 20° instead of 30°,
+# and Venus's Libra range ends at 12° instead of 15° (mirroring Mars's
+# 12° Aries boundary in the opposite sign). Every other planet/rashi
+# matches the standard convention exactly.
+MOOLATRIKONA_RANGES_ALT_RESEARCH: dict[str, tuple[float, float]] = {
+    **MOOLATRIKONA_RANGES,
+    "moon":  (3.0, 20.0),
+    "venus": (0.0, 12.0),
+}
+
+MoolatrikonaConvention = str  # "classical" (default) or "alt_research"
 
 # Simplified natural friend/enemy relationships (Naisargika Maitri).
 FRIENDS: dict[str, list[str]] = {
@@ -74,7 +91,12 @@ ENEMIES: dict[str, list[str]] = {
 }
 
 
-def compute_dignity_value(planet: str, rashi: str, rashi_degree: float) -> Optional[str]:
+def compute_dignity_value(
+    planet: str,
+    rashi: str,
+    rashi_degree: float,
+    moolatrikona_convention: MoolatrikonaConvention = "classical",
+) -> Optional[str]:
     """
     Compute classical Vedic dignity for a planet in a sign, at a given
     degree within that sign. Works identically for a D1 chart's own
@@ -85,6 +107,11 @@ def compute_dignity_value(planet: str, rashi: str, rashi_degree: float) -> Optio
     Order of precedence: exalted -> debilitated -> moolatrikona -> own
     -> friendly -> enemy -> neutral.
 
+    moolatrikona_convention: "classical" (default, matches PyJHora/BPHS
+    exactly) or "alt_research" (an explicitly opt-in alternate Moon/Venus
+    Moolatrikona boundary set — see MOOLATRIKONA_RANGES_ALT_RESEARCH's
+    docstring). Never changes the default behavior of existing callers.
+
     Returns a plain string matching DignityType's enum values (e.g.
     "exalted"), or None for Rahu/Ketu (dignity not classically assigned
     in this schema) — callers wrap the string into DignityType
@@ -93,6 +120,11 @@ def compute_dignity_value(planet: str, rashi: str, rashi_degree: float) -> Optio
     """
     if planet in ("rahu", "ketu"):
         return None
+
+    active_moolatrikona_ranges = (
+        MOOLATRIKONA_RANGES_ALT_RESEARCH if moolatrikona_convention == "alt_research"
+        else MOOLATRIKONA_RANGES
+    )
 
     if planet in EXALTATION_DEGREES:
         ex_rashi, _ = EXALTATION_DEGREES[planet]
@@ -105,7 +137,7 @@ def compute_dignity_value(planet: str, rashi: str, rashi_degree: float) -> Optio
 
     if planet in MOOLATRIKONA_RASHIS:
         if rashi == MOOLATRIKONA_RASHIS[planet]:
-            start, end = MOOLATRIKONA_RANGES.get(planet, (0.0, 30.0))
+            start, end = active_moolatrikona_ranges.get(planet, (0.0, 30.0))
             if start <= rashi_degree < end:
                 return "moolatrikona"
 

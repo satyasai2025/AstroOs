@@ -43,8 +43,13 @@ RF is a softer case: the workbook's "Benefic HP?" and "Special Benefic"
 columns have no formula definition at all (they're free-form judgment
 cells), so RF here is a documented, principled *approximation* — count of
 natural benefics supporting the key reference points — not a 1:1 port.
-Treat EF, the lookup tables, and the final arithmetic as faithful; treat
-RF (and therefore the exact year, which depends on it) as an estimate in
+Treat EF, the lookup tables, and the final arithmetic as faithful, WITH
+ONE EXCEPTION: the "+3" badhaka bonus applied when Sun sits in the 3rd
+from Lagna/Moon (see _escalation_factor) has no workbook cell citation
+like every other EF constant does — it is carried over from an earlier
+pass at this port without a confirmed source cell and should be treated
+as unverified until traced back to a specific workbook cell. Treat RF
+(and therefore the exact year, which depends on it) as an estimate in
 the same spirit as the source method, not an exact reproduction of one
 astrologer's manual entries.
 """
@@ -287,6 +292,9 @@ def _escalation_factor(pos: ChartPositions) -> tuple[int, list[LevelBreakdown]]:
     astral = _evaluate_level(_rebase_to_moon(pos), "Astral (from Moon)")
     general = _general_level_yes(pos)
 
+    # NOTE: the "+3" badhaka weight below is unsourced (no workbook cell
+    # citation found) — see module docstring's "Automation boundary"
+    # section. Treat as an unverified estimate, not a confirmed port.
     ef = (
         general + physical.yes_count + (3 if physical.badhaka else 0)
         + astral.yes_count + (3 if astral.badhaka else 0)
@@ -333,8 +341,16 @@ def _reducing_factor(pos: ChartPositions) -> int:
 # ── Base age table / navamsa lookups ────────────────────────────────────────
 
 def get_base_age(birth_year: int, gender: str) -> int:
-    for year_from, year_to, male_base, female_base in BASE_AGE_TABLE:
-        if year_from <= birth_year <= year_to:
+    # Brackets are [year_from, year_to) except the last, which is inclusive
+    # of year_to — BASE_AGE_TABLE's boundary years (1900, 1930, 1970, 1990)
+    # are each listed as both one bracket's year_to and the next bracket's
+    # year_from, so a strict "<=" on both ends would silently resolve every
+    # boundary year to the earlier (lower-base-age) bracket.
+    is_last = len(BASE_AGE_TABLE) - 1
+    for idx, (year_from, year_to, male_base, female_base) in enumerate(BASE_AGE_TABLE):
+        upper_inclusive = idx == is_last
+        in_bracket = year_from <= birth_year <= year_to if upper_inclusive else year_from <= birth_year < year_to
+        if in_bracket:
             return male_base if gender == "male" else female_base
     # Outside the tabulated range — fall back to the nearest bracket rather
     # than raising, since AstroOS accepts a much wider date range than the

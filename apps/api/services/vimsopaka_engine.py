@@ -232,14 +232,26 @@ class VimsopakaEngine:
         total_weighted_points = 0.0
 
         for varga, weight in weights.items():
-            if varga in placements:
-                rashi, degree = placements[varga]
-                dignity_str = compute_dignity_value(planet, rashi, degree) or "neutral"
-            else:
-                rashi = "unknown"
-                dignity_str = "neutral"
+            if varga not in placements:
+                # Every varga in this scheme's weight table must have been
+                # computed by DivisionalEngine before this method is called
+                # — a missing one is an upstream bug, not a legitimate
+                # "neutral" chart state. Previously this silently injected
+                # a fabricated "unknown"/"neutral" placement and scored it
+                # as if it were real, fabricating part of the total.
+                raise ValueError(
+                    f"Vimsopaka {scheme_name}: varga {varga!r} missing from "
+                    f"computed placements for {planet!r} — cannot score."
+                )
+            rashi, degree = placements[varga]
+            dignity_str = compute_dignity_value(planet, rashi, degree)
+            if dignity_str is None:
+                raise ValueError(
+                    f"Vimsopaka {scheme_name}: dignity computation failed for "
+                    f"{planet!r} in {rashi!r} (varga {varga!r})."
+                )
 
-            base_points = DIGNITY_BASE_POINTS.get(dignity_str, 7.0)
+            base_points = DIGNITY_BASE_POINTS[dignity_str]
             weighted_points = (base_points / 20.0) * weight
             total_weighted_points += weighted_points
 

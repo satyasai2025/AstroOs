@@ -87,15 +87,46 @@ _NAKSHATRA_YONI: dict[str, str] = {
     "dhanishta": "Lion", "purva_bhadrapada": "Lion",
 }
 
-_ENEMY_YONI_PAIRS: set[frozenset[str]] = {
-    frozenset({"Horse", "Buffalo"}),
-    frozenset({"Elephant", "Lion"}),
-    frozenset({"Sheep", "Monkey"}),
-    frozenset({"Serpent", "Mongoose"}),
-    frozenset({"Dog", "Deer"}),
-    frozenset({"Cat", "Rat"}),
-    frozenset({"Cow", "Tiger"}),
-}
+_YONI_ORDER: tuple[str, ...] = (
+    "Horse", "Elephant", "Sheep", "Serpent", "Dog", "Cat", "Rat",
+    "Cow", "Buffalo", "Tiger", "Deer", "Monkey", "Mongoose", "Lion",
+)
+
+# Full 14x14 graded Yoni compatibility matrix (0=Worse,1=Bad,2=Neutral,
+# 3=Good,4=Perfect), sourced from PyJHora's YoniArray
+# (jhora/horoscope/match/compatibility.py) — verified exact match.
+_YONI_COMPATIBILITY_MATRIX: tuple[tuple[int, ...], ...] = (
+    (4, 2, 2, 3, 2, 2, 2, 1, 0, 1, 1, 3, 2, 1),
+    (2, 4, 3, 3, 2, 2, 2, 2, 3, 1, 2, 3, 2, 0),
+    (2, 3, 4, 2, 1, 2, 1, 3, 3, 1, 2, 0, 3, 1),
+    (3, 3, 2, 4, 2, 1, 1, 1, 1, 2, 2, 2, 0, 2),
+    (2, 2, 1, 2, 4, 2, 1, 2, 2, 1, 0, 2, 1, 1),
+    (2, 2, 2, 1, 2, 4, 0, 2, 2, 1, 3, 3, 2, 1),
+    (2, 2, 1, 1, 1, 0, 4, 2, 2, 2, 2, 2, 1, 2),
+    (1, 2, 3, 1, 2, 2, 2, 4, 3, 0, 3, 2, 2, 1),
+    (0, 3, 3, 1, 2, 2, 2, 3, 4, 1, 2, 2, 2, 1),
+    (1, 1, 1, 2, 1, 1, 2, 0, 1, 4, 1, 1, 2, 1),
+    (1, 2, 2, 2, 0, 3, 2, 3, 2, 1, 4, 2, 2, 1),
+    (3, 3, 0, 2, 2, 3, 2, 2, 2, 1, 2, 4, 3, 2),
+    (2, 2, 3, 0, 1, 2, 1, 2, 2, 2, 2, 3, 4, 2),
+    (1, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 2, 4),
+)
+
+_YONI_RESULT_LABELS: dict[int, str] = {0: "Worse", 1: "Bad", 2: "Neutral", 3: "Good", 4: "Perfect"}
+
+# Full girl-x-boy Gana compatibility matrix, sourced from PyJHora's
+# gana_array (jhora/horoscope/match/compatibility.py), rows=girl's Gana,
+# cols=boy's Gana, order (Deva, Manushya, Rakshasa) — direction-dependent
+# per classical convention, NOT symmetric. chart_a is treated as the
+# girl/bride side and chart_b as the boy/groom side (this engine has no
+# explicit gender field; this is the standard synastry-scoring convention).
+_GANA_ORDER: tuple[str, ...] = ("Deva", "Manushya", "Rakshasa")
+_GANA_COMPATIBILITY_MATRIX: tuple[tuple[int, ...], ...] = (
+    (6, 6, 0),
+    (5, 6, 0),
+    (1, 0, 6),
+)
+_GANA_RESULT_LABELS: dict[int, str] = {0: "Very Bad", 1: "Bad", 3: "Average", 5: "Good", 6: "Perfect"}
 
 # Gana classification: Deva, Manushya, Rakshasa
 _NAKSHATRA_GANA: dict[str, str] = {
@@ -245,19 +276,14 @@ class AshtaKutaEngine:
             classical_source="Brihat Parashara Hora Shastra, Ch. 73, Sloka 10-14",
         ))
 
-        # 4. Yoni Kuta (Max 4 pts)
+        # 4. Yoni Kuta (Max 4 pts) — full graded 14x14 matrix, not a 3-bucket approximation
         yoni_a = _NAKSHATRA_YONI.get(n_a, "Horse")
         yoni_b = _NAKSHATRA_YONI.get(n_b, "Horse")
-        is_enemy_yoni = frozenset({yoni_a, yoni_b}) in _ENEMY_YONI_PAIRS
-        if yoni_a == yoni_b:
-            yoni_pts = 4.0
-            yoni_rel = "Identical Yoni animal archetype"
-        elif is_enemy_yoni:
-            yoni_pts = 0.0
-            yoni_rel = f"Sworn enemy Yonis ({yoni_a} vs {yoni_b})"
-        else:
-            yoni_pts = 2.0
-            yoni_rel = f"Neutral/Compatible Yonis ({yoni_a} & {yoni_b})"
+        yoni_idx_a = _YONI_ORDER.index(yoni_a)
+        yoni_idx_b = _YONI_ORDER.index(yoni_b)
+        yoni_pts = float(_YONI_COMPATIBILITY_MATRIX[yoni_idx_a][yoni_idx_b])
+        yoni_label = _YONI_RESULT_LABELS[int(yoni_pts)]
+        yoni_rel = f"{yoni_label} Yoni match ({yoni_a} & {yoni_b})"
         evaluations.append(KutaEvaluation(
             kuta=KutaName.YONI,
             label="Yoni Kuta",
@@ -297,6 +323,9 @@ class AshtaKutaEngine:
             elif (a_to_b == "friend" and b_to_a == "enemy") or (b_to_a == "friend" and a_to_b == "enemy"):
                 maitri_pts = 1.0
                 maitri_rel = f"One-sided Enemy ({lord_a.capitalize()} / {lord_b.capitalize()})"
+            elif (a_to_b == "neutral" and b_to_a == "enemy") or (b_to_a == "neutral" and a_to_b == "enemy"):
+                maitri_pts = 0.5
+                maitri_rel = f"Neutral & Enemy ({lord_a.capitalize()} / {lord_b.capitalize()})"
             else:
                 maitri_pts = 0.0
                 maitri_rel = f"Mutual Enemies ({lord_a.capitalize()} & {lord_b.capitalize()})"
@@ -315,31 +344,30 @@ class AshtaKutaEngine:
             classical_source="Brihat Parashara Hora Shastra, Ch. 73, Sloka 18-21",
         ))
 
-        # 6. Gana Kuta (Max 6 pts)
+        # 6. Gana Kuta (Max 6 pts) — full girl-x-boy directional matrix, not a symmetric 3-bucket approximation
         gana_a = _NAKSHATRA_GANA.get(n_a, "Manushya")
         gana_b = _NAKSHATRA_GANA.get(n_b, "Manushya")
-        has_gana_dosha = False
+        gana_idx_a = _GANA_ORDER.index(gana_a)
+        gana_idx_b = _GANA_ORDER.index(gana_b)
+        raw_gana_pts = _GANA_COMPATIBILITY_MATRIX[gana_idx_a][gana_idx_b]
+        gana_label = _GANA_RESULT_LABELS[raw_gana_pts]
+        has_gana_dosha = raw_gana_pts <= 1
         gana_cancelled = False
         gana_cancel_reason = None
 
-        if gana_a == gana_b:
-            gana_pts = 6.0
-            gana_rel = f"Same Gana ({gana_a})"
-        elif (gana_a == "Deva" and gana_b == "Manushya") or (gana_a == "Manushya" and gana_b == "Deva"):
-            gana_pts = 5.0
-            gana_rel = "Deva-Manushya harmonic pairing"
-        else:
-            # Rakshasa involvement
-            has_gana_dosha = True
+        if has_gana_dosha:
             # Classical Gana Dosha Cancellation: If Rashi lords are mutual friends or same, or Navamsha lords are friends
             if lord_a == lord_b or lord_b in _PLANETARY_FRIENDS.get(lord_a, set()):
                 gana_pts = 6.0
                 gana_cancelled = True
                 gana_cancel_reason = f"Cancelled via Gana Parihara: Rashi lords ({lord_a.capitalize()}/{lord_b.capitalize()}) are friends or identical."
-                gana_rel = "Rakshasa pairing (Cancelled by Graha Maitri)"
+                gana_rel = f"{gana_label} Gana pairing ({gana_a} girl / {gana_b} boy) — Cancelled by Graha Maitri"
             else:
-                gana_pts = 0.0
-                gana_rel = f"Incompatible Gana ({gana_a} vs {gana_b})"
+                gana_pts = float(raw_gana_pts)
+                gana_rel = f"{gana_label} Gana pairing ({gana_a} girl / {gana_b} boy)"
+        else:
+            gana_pts = float(raw_gana_pts)
+            gana_rel = f"{gana_label} Gana pairing ({gana_a} girl / {gana_b} boy)"
 
         pariharas.append(DoshaParihara(
             dosha_name="Gana Dosha",
@@ -741,19 +769,12 @@ class SynastryEngine:
                     objective=objective,
                     synthesis_notes="Single-chart timing projection.",
                 ))
-        else:
-            # Fallback simulated joint window for demonstration
-            joint_windows.append(JointConfluenceWindow(
-                start_date=target_start,
-                end_date=target_end,
-                chart_a_density_score=75.0,
-                chart_b_density_score=80.0,
-                joint_confluence_density=77.46,
-                chart_a_active_systems=("vimshottari", "yogini", "ashtakavarga_kakshya"),
-                chart_b_active_systems=("vimshottari", "chara", "ashtakavarga_kakshya"),
-                objective=objective,
-                synthesis_notes="Synthesized peak joint timing window for relationship objective.",
-            ))
+        # else: neither chart produced any real confluence window (e.g. no
+        # dasha tree available for either chart) — no window is reported
+        # rather than fabricating one. Previously this branch returned a
+        # hardcoded fake JointConfluenceWindow (75.0/80.0/77.46, invented
+        # active_systems) labeled as a "synthesized" result indistinguishable
+        # from a real computation; that fake-fallback anti-pattern was removed.
 
         # Sort by joint density score descending
         joint_windows.sort(key=lambda w: w.joint_confluence_density, reverse=True)

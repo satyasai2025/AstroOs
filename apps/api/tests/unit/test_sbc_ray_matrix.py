@@ -20,7 +20,11 @@ class TestSBCRayMatrixEngine:
 
     def test_complete_10_sangyas_generation(self, sample_natal_chart):
         engine = SBCRayMatrixEngine()
-        report = engine.compute_complete_sangya_matrix(sample_natal_chart)
+        sample_transits = [
+            {"planet": "Jupiter", "nakshatra": "Rohini", "is_retrograde": False, "speed_deg_day": 0.12},
+            {"planet": "Saturn", "nakshatra": "Purva Bhadrapada", "is_retrograde": True, "speed_deg_day": -0.04},
+        ]
+        report = engine.compute_complete_sangya_matrix(sample_natal_chart, transit_planets=sample_transits)
 
         assert report.natal_moon_nakshatra == "Rohini"
         assert len(report.sangya_statuses) == 10
@@ -42,6 +46,13 @@ class TestSBCRayMatrixEngine:
         assert janma.natal_nakshatra == "Rohini"
         assert 0 <= janma.grid_coord.row <= 8
         assert 0 <= janma.grid_coord.col <= 8
+
+    def test_missing_transit_planets_raises(self, sample_natal_chart):
+        # No fabricated-data fallback: omitting real transit_planets must
+        # fail loud, not silently substitute a hardcoded fake transit set.
+        engine = SBCRayMatrixEngine()
+        with pytest.raises(ValueError):
+            engine.compute_complete_sangya_matrix(sample_natal_chart)
 
     def test_vedha_ray_casting_and_confluence(self, sample_natal_chart):
         engine = SBCRayMatrixEngine()

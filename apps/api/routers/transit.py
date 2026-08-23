@@ -329,7 +329,7 @@ async def get_exact_position(
             combustion_orb=getattr(result, 'combustion_orb', None),
             dignity=getattr(result, 'dignity', None),
             house_from_natal_moon=result.house_from_natal_moon,
-            house_from_natal_ascendant=result.house_from_natal_moon,
+            house_from_natal_ascendant=result.house_from_natal_ascendant,
             aspects=[],
         )
 

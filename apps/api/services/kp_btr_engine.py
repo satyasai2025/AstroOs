@@ -1,11 +1,28 @@
 """
 AstroOS — KP Birth Time Rectification (BTR) Engine
 
-Classical Krishnamurti Paddhati (KP) Birth Time Rectification principles:
-1. Lagna CSL (1st Cuspal Sub-Lord) Connection to Moon's Star Lord / Ruling Planets.
-2. Gender Polarity Verification (Male/Odd vs Female/Even sign and star lord alignments).
-3. Parental Cusp Verification: 4th Cusp (Mother) / 9th Cusp (Father) sub-lord linkage.
-4. Precision Window Scanner: Evaluates candidates within +/- N minutes with step-level audit scoring.
+Actually implemented (scored) rules — corrected to match the code below,
+which previously drifted from an earlier draft of this docstring:
+1. Lagna CSL (1st Cuspal Sub-Lord) Connection to Moon's Star Lord (40 pts
+   direct CSL match, 25 pts Lagna Star Lord match).
+2. Gender Polarity Verification — checks only whether the Lagna CSL/Star
+   Lord falls in the classical male/female/neuter planet sets (no
+   odd/even sign parity check, despite an earlier docstring draft
+   claiming one).
+3. Ruling Planets Agreement — Lagna CSL/Star Lord/Sign Lord overlap with
+   the RulingPlanets set (day lord, Lagna/Moon sign+star lords).
+   NOT "Parental Cusp Verification" (4th/9th cusp linkage) — an earlier
+   docstring draft claimed this technique was implemented; it never was,
+   and still isn't. If you need mother/father-cusp verification, it must
+   be added as a genuinely new rule, not assumed present.
+Plus: a Precision Window Scanner evaluating candidates within +/- N
+minutes with step-level audit scoring (not a scored rule itself, just
+the search mechanism).
+
+This engine does NOT implement the classical event-date/dasha
+correlation technique that is normally the most decisive part of KP
+birth time rectification — see RectificationEngine for a different
+(non-KP) event-based approach with its own disclosed limitations.
 """
 
 from __future__ import annotations
@@ -179,6 +196,9 @@ class KPBtrEngine:
                         score += 10.0
                         audit_trail.append(f"Neutral gender alignment with Lagna CSL/NL ({asc_csl}/{asc_nl}) (+10 pts).")
                 else:
+                    # No gender supplied: uniform +20 applied to every
+                    # candidate, so it does not bias ranking — not a real
+                    # gender-alignment verdict, just a neutral no-op score.
                     score += 20.0
                     rule_2_match = True
 

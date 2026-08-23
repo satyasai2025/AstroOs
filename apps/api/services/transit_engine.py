@@ -8,11 +8,14 @@ EphemerisWrapper, since it computes a second, independent set of
 planetary positions rather than only reading from an already-built
 chart.
 
-Deliberately does NOT compute a "transit lagna" or transit houses —
-Gochara (transit) analysis is conventionally read from the natal Moon's
-rashi, not from a new ascendant, so no latitude/longitude is needed for
-the transit moment itself (only for the natal chart, already baked into
-the natal_chart argument).
+Deliberately does NOT compute a "transit lagna" (a fresh ascendant for
+the transit moment) — Gochara is conventionally read from the natal
+Moon or natal Lagna, not a moment-of-transit ascendant, so no
+latitude/longitude is needed for the transit moment itself (only for
+the natal chart, already baked into the natal_chart argument).
+house_from_natal_ascendant is the transiting planet's house counted
+from the NATAL Lagna (an alternate classical reference point to Moon,
+not a new chart).
 
 Not wired into any router or persistence layer — same scope discipline
 as every engine before it.
@@ -118,6 +121,7 @@ class TransitEngine:
         """
         natal_moon = next(p for p in natal_chart.planets if p.planet == "moon")
         natal_moon_rashi = natal_moon.rashi
+        natal_ascendant_rashi = natal_chart.ascendant.rashi
 
         jd = datetime_to_jd(transit_datetime_utc)
 
@@ -129,6 +133,7 @@ class TransitEngine:
         # Pass 1: transiting rashi, house-from-Moon, SBC nakshatra and
         # retrograde state for all 9 planets.
         houses_from_moon: dict[str, int] = {}
+        houses_from_ascendant: dict[str, int] = {}
         transit_rashis: dict[str, str] = {}
         transit_rashi_degrees: dict[str, float] = {}
         transit_nakshatras_sbc: dict[str, str] = {}
@@ -142,6 +147,7 @@ class TransitEngine:
             _, rashi_degree = longitude_to_rashi(sidereal_lon)
             transit_rashi_degrees[planet] = rashi_degree
             houses_from_moon[planet] = _house_from_reference(natal_moon_rashi, transit_rashi)
+            houses_from_ascendant[planet] = _house_from_reference(natal_ascendant_rashi, transit_rashi)
             transit_nakshatras_sbc[planet] = longitude_to_sbc_nakshatra(sidereal_lon)
             nak_info = longitude_to_nakshatra(sidereal_lon)
             transit_nakshatras[planet] = nak_info.nakshatra
@@ -183,6 +189,7 @@ class TransitEngine:
                 planet=planet,
                 transit_rashi=transit_rashi,
                 house_from_natal_moon=house_from_moon,
+                house_from_natal_ascendant=houses_from_ascendant[planet],
                 ashtakavarga_bindus=bindus,
                 is_sade_sati=is_sade_sati,
                 is_ashtama_shani=is_ashtama_shani,

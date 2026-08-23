@@ -304,20 +304,22 @@ class AshtakootaEngine:
             description=f"Mental affinity and friendship between Rashi lords ({lord_a} & {lord_b})."
         )
 
+    # Girl-x-boy Gana compatibility matrix (rows=girl's Gana, cols=boy's
+    # Gana, order Deva/Manushya/Rakshasa), sourced from PyJHora's
+    # gana_array — direction-dependent per classical convention, NOT
+    # symmetric. `nakshatra_a_idx` is treated as the girl/bride side and
+    # `nakshatra_b_idx` as the boy/groom side (this engine has no explicit
+    # gender field; matches the same convention used in synastry_engine.py
+    # after its own Gana-symmetry bug fix this session).
+    _GANA_MATRIX = ((6, 6, 0), (5, 6, 0), (1, 0, 6))
+
     @staticmethod
     def calculate_gana(nakshatra_a_idx: int, nakshatra_b_idx: int) -> KootaScore:
         g_a = GANA_MAP[nakshatra_a_idx % 27]
         g_b = GANA_MAP[nakshatra_b_idx % 27]
 
         # Deva(0), Manushya(1), Rakshasa(2)
-        if g_a == g_b:
-            score = 6.0
-        elif (g_a == 0 and g_b == 1) or (g_a == 1 and g_b == 0):
-            score = 5.0
-        elif (g_a == 0 and g_b == 2) or (g_a == 2 and g_b == 0):
-            score = 1.0
-        else:
-            score = 0.0
+        score = float(AshtakootaEngine._GANA_MATRIX[g_a][g_b])
 
         status = "Excellent" if score >= 5.0 else "Good" if score >= 3.0 else "Poor"
         return KootaScore(
@@ -337,6 +339,19 @@ class AshtakootaEngine:
         # Bad positions: 2/12 (Dwirdwadasa), 6/8 (Shadashtaka), 5/9 (Navapanchama - conditioned)
         if diff in (1, 7, 3, 4, 10, 11):
             score = 7.0
+        elif diff in (5, 9):
+            # Navapanchama exception: cancelled when the two rashi lords
+            # are the same or mutually friendly — previously this was
+            # commented as "conditioned" but always scored as a flat
+            # dosha, silently dropping the classical exception.
+            lord_a = RASHI_LORDS.get(rashi_a, "Moon")
+            lord_b = RASHI_LORDS.get(rashi_b, "Moon")
+            f_a_b = PLANET_FRIENDSHIP.get(lord_a, {}).get(lord_b, 4)
+            f_b_a = PLANET_FRIENDSHIP.get(lord_b, {}).get(lord_a, 4)
+            if lord_a == lord_b or (f_a_b == 5 and f_b_a == 5):
+                score = 7.0
+            else:
+                score = 0.0
         else:
             score = 0.0  # Bhakoot Dosha present
 

@@ -4,8 +4,10 @@ AstroOS — Inverse Natal Profiling & Evolutionary Chart Rectification Engine (P
 Implements:
   1. Window-based discretization of candidate birth moments
   2. Multi-event Dasha lord governance and house activation likelihood scoring
-  3. Retroactive transit aspect verification (Jupiter/Saturn double transit)
-  4. Classical Tattva & Kunda Shodhana validation
+  3. Retroactive transit aspect verification (real Jupiter/Saturn double transit,
+     computed from ephemeris — not simulated)
+  4. Low-weight ascendant-pada proxy (disclosed simplification, not a verified
+     classical Tattva Shodhana formula)
   5. Bayesian posterior probability normalization
 """
 
@@ -27,6 +29,7 @@ from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.divisional_engine import compute_varga_sign
 from apps.api.services.ephemeris_wrapper import (
     EphemerisWrapper,
+    datetime_to_jd,
     longitude_to_nakshatra,
     longitude_to_rashi,
 )
@@ -152,7 +155,8 @@ class RectificationEngine:
 
         methodology = (
             "Bayesian Inverse Profiling: Multi-event Vimshottari Mahadasha/Antardasha lord house governance, "
-            "Jupiter-Saturn double transit house activation, Navamsha D9 lagna harmony, and Tattva Shodhana."
+            "real Jupiter-Saturn double transit house activation, Navamsha D9 lagna harmony, and a low-weight "
+            "disclosed ascendant-pada proxy (not verified classical Tattva Shodhana)."
         )
 
         return RectificationResult(
@@ -210,8 +214,10 @@ class RectificationEngine:
             # Dasha activation score: Check if dasha lord rules or occupies target houses
             dasha_score, dasha_notes = self._score_dasha_activation(chart, active_lords, target_houses)
 
-            # Transit score: Simulated Jupiter/Saturn aspect on event houses
-            transit_score, active_transits, transit_notes = self._score_transit_activation(chart, evt.event_date, target_houses)
+            # Transit score: real Jupiter/Saturn double-transit house activation
+            transit_score, active_transits, transit_notes = self._score_transit_activation(
+                chart, evt.event_date, target_houses, ayanamsa,
+            )
 
             # House relevance score
             house_score = 85.0 if any(h in (1, 5, 7, 9, 10, 11) for h in target_houses) else 70.0
@@ -245,7 +251,12 @@ class RectificationEngine:
         avg_dasha = total_dasha_score / len(events) if events else 50.0
         avg_transit = total_transit_score / len(events) if events else 50.0
 
-        # Classical Tattva Shodhana Test (Score based on Nakshatra elemental resonance)
+        # NOTE: not a full classical Tattva Shodhana (elemental purification)
+        # test — no verified classical formula for this technique could be
+        # confirmed against a reference implementation, so this is only a
+        # weak, disclosed proxy (odd vs. even ascendant pada) contributing
+        # just 10% of the composite score. Treat tattva_shodhana_score as
+        # low-confidence, not as genuine Tattva Shodhana evidence.
         tattva_score = 80.0 if asc_pada in (1, 3) else 75.0
 
         # Unnormalized log-likelihood composite score
@@ -278,7 +289,7 @@ class RectificationEngine:
         """Finds active Mahadasha and Antardasha lords at the event date."""
         active: list[str] = []
         if not dasha_tree or not hasattr(dasha_tree, "periods"):
-            return ["jupiter", "venus"]
+            return active
 
         for md in dasha_tree.periods:
             if md.start_date <= target_date <= md.end_date:
@@ -289,7 +300,7 @@ class RectificationEngine:
                         break
                 break
 
-        return active or ["jupiter", "venus"]
+        return active
 
     def _score_dasha_activation(
         self,
@@ -330,9 +341,38 @@ class RectificationEngine:
         chart: Any,
         event_date: date,
         target_houses: tuple[int, ...],
+        ayanamsa: str,
     ) -> tuple[float, list[str], str]:
-        """Scores transit activation on target houses (Jupiter/Saturn double transit principle)."""
-        score = 60.0
-        active_planets = ["jupiter", "saturn"]
-        notes = f"Double transit activation verifying houses {target_houses} on {event_date}"
-        return score, active_planets, notes
+        """
+        Scores real Jupiter/Saturn transit activation on target houses at
+        event_date noon UTC (Jupiter/Saturn double-transit principle: a
+        life event is more likely when both slow-movers are transiting one
+        of the event's governing houses, whole-sign-counted from the
+        candidate's natal ascendant).
+        """
+        if not chart.ascendant:
+            return 40.0, [], "No ascendant available for transit check"
+
+        asc_rashi_idx = _RASHI_ORDER.index(chart.ascendant.rashi)
+        event_jd = datetime_to_jd(datetime(event_date.year, event_date.month, event_date.day, 12, 0, tzinfo=timezone.utc))
+        ayanamsa_val = self._wrapper.get_ayanamsa(event_jd)
+
+        score = 40.0
+        active_planets: list[str] = []
+        notes: list[str] = []
+
+        for planet in ("jupiter", "saturn"):
+            tropical_pos = self._wrapper.get_planet_position(planet, event_jd)
+            sidereal_lon = self._wrapper.to_sidereal(tropical_pos.longitude, ayanamsa_val)
+            rashi, _ = longitude_to_rashi(sidereal_lon)
+            rashi_idx = _RASHI_ORDER.index(rashi)
+            house = ((rashi_idx - asc_rashi_idx) % 12) + 1
+
+            if house in target_houses:
+                score += 30.0
+                active_planets.append(planet)
+                notes.append(f"{planet.capitalize()} transiting house {house}")
+
+        final_score = min(100.0, score)
+        notes_str = ", ".join(notes) if notes else f"No Jupiter/Saturn activation of houses {target_houses}"
+        return final_score, active_planets, notes_str

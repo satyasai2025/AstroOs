@@ -40,6 +40,7 @@ from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.ephemeris_wrapper import (
     EphemerisWrapper,
     datetime_to_jd,
+    jd_to_datetime,
     longitude_to_nakshatra,
     longitude_to_rashi,
     longitude_to_sub_lord,
@@ -65,6 +66,14 @@ _WEEKDAY_LORDS = ("sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"
 # 24 Hora Lords sequence (Chaldean order: Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon)
 _CHALDEAN_ORDER = ("saturn", "jupiter", "mars", "sun", "venus", "mercury", "moon")
 
+# Hora-lord cycle position lookup, indexed by (civil weekday + elapsed
+# hours-since-sunrise) mod 7 — same verified formula as
+# shadbala/dina_hora_bala.py's _hora_lord() (ported from PyJHora's
+# _hora_bala(); deliberately NOT the naive "24 Chaldean hours from
+# midnight" method, which does not match the classical sunrise-anchored
+# convention).
+_HORA_ORDER = ("saturn", "sun", "moon", "mars", "mercury", "jupiter", "venus")
+
 
 def _deg_to_dms(deg_val: float) -> str:
     """Format float degrees to DD° MM' SS"."""
@@ -88,6 +97,38 @@ class PrashnaEngine:
         self._wrapper = wrapper
         self._upagraha = UpagrahaEngine(wrapper)
         self._dasha = DashaEngine(wrapper)
+
+    def _day_and_hora_lord(
+        self, jd: float, dt: datetime, lat: float, lon: float,
+    ) -> tuple[str, str]:
+        """
+        Real sunrise-anchored Day Lord and Hora Lord — same verified
+        formula as shadbala/dina_hora_bala.py's _hora_lord(): civil
+        weekday of the LOCAL civil date, offset by elapsed local hours
+        since local sunrise, indexed into a fixed 7-position lord cycle.
+        Falls back to plain UTC weekday/Chaldean-from-midnight only if
+        sunrise is not computable at this latitude (e.g. polar).
+        """
+        sunrise_jd, _ = self._wrapper.get_sunrise_sunset(jd, lat, lon)
+        weekday_idx = (dt.weekday() + 1) % 7  # 0=Sunday
+        day_lord = _WEEKDAY_LORDS[weekday_idx]
+
+        if sunrise_jd is None:
+            hora_idx = dt.hour % 7
+            return day_lord, _CHALDEAN_ORDER[hora_idx]
+
+        sunrise_dt = jd_to_datetime(sunrise_jd)
+        civil_hour = dt.hour + dt.minute / 60.0 + dt.second / 3600.0
+        sunrise_hour = sunrise_dt.hour + sunrise_dt.minute / 60.0 + sunrise_dt.second / 3600.0
+
+        day = weekday_idx
+        tobh = civil_hour
+        if tobh < sunrise_hour:
+            day = (day - 1) % 7
+            tobh += 24.0
+
+        hora = (int(tobh - sunrise_hour) + day + 1) % 7
+        return day_lord, _HORA_ORDER[hora]
 
     # ── 1. KP Arudha (1-249 and 1-2193) ──────────────────────────────────────
 
@@ -239,14 +280,11 @@ class PrashnaEngine:
         rahu_lon = self._sidereal_planet("rahu", jd, ayanamsa)
         ketu_lon = self._sidereal_planet("ketu", jd, ayanamsa)
 
-        # Vedic weekday runs sunrise→sunrise.
-        # swe.day_of_week returns 0=Monday; convert to 0=Sunday convention
-        weekday_idx = (dt.weekday() + 1) % 7
-        day_lord = _WEEKDAY_LORDS[weekday_idx]
-
-        # Hora Lord: standard Chaldean hour progression
-        hora_idx = (dt.hour) % 7
-        hora_lord = _CHALDEAN_ORDER[hora_idx]
+        # Day Lord and Hora Lord — real sunrise-anchored computation (same
+        # verified formula as shadbala/dina_hora_bala.py's _hora_lord()),
+        # NOT plain UTC-midnight weekday / clock-hour indexing, which is
+        # wrong for queries cast before local sunrise or on non-UTC dates.
+        day_lord, hora_lord = self._day_and_hora_lord(jd, dt, lat, lon)
 
         points = (
             ("Ascendant", asc_lon),
@@ -550,15 +588,35 @@ class PrashnaEngine:
         final_confidence = min(max(score, 45), 92)
         verdict: Literal["YES", "NO", "MIXED"] = "YES" if final_confidence >= 65 else ("MIXED" if final_confidence >= 50 else "NO")
 
-        # Relevant Houses & Lords
-        relevant_houses = (
-            RelevantHouseItem(house=1, sign=asc_rashi.capitalize(), lord=asc_lords["sign_lord"].capitalize(), strength="Strong", note=f"Lagna in {asc_rashi.capitalize()}"),
-            RelevantHouseItem(house=2, sign="Leo", lord="Sun", strength="Average", note="Financial gain and family support"),
-            RelevantHouseItem(house=4, sign="Libra", lord="Venus", strength="Average", note="Domestic environment & comfort"),
-            RelevantHouseItem(house=6, sign="Sagittarius", lord="Jupiter", strength="Strong", note="Competition, service, overcome hurdles"),
-            RelevantHouseItem(house=7, sign="Capricorn", lord="Saturn", strength="Strong", note="Public dealing and partnerships"),
-            RelevantHouseItem(house=10, sign="Aries", lord="Mars", strength="Average", note="Career, authority, and status in world"),
-            RelevantHouseItem(house=11, sign="Taurus", lord="Venus", strength="Strong", note="Fulfillment of desires & victory"),
+        # Relevant Houses & Lords — real whole-sign rashi/lord per house,
+        # counted from the actual computed Ascendant. Previously houses
+        # 2/4/6/7/10/11 were hardcoded to fixed signs/lords regardless of
+        # the real Lagna (only house 1 used the real value) — fabricated
+        # data for every chart except the one specific Lagna those
+        # constants happened to match.
+        _RELEVANT_HOUSE_NOTES = {
+            1: f"Lagna in {asc_rashi.capitalize()}",
+            2: "Financial gain and family support",
+            4: "Domestic environment & comfort",
+            6: "Competition, service, overcome hurdles",
+            7: "Public dealing and partnerships",
+            10: "Career, authority, and status in world",
+            11: "Fulfillment of desires & victory",
+        }
+        _RELEVANT_HOUSE_STRENGTH = {
+            1: "Strong", 2: "Average", 4: "Average", 6: "Strong",
+            7: "Strong", 10: "Average", 11: "Strong",
+        }
+        asc_rashi_idx = _RASHI_NAMES.index(asc_rashi)
+        relevant_houses = tuple(
+            RelevantHouseItem(
+                house=h,
+                sign=_RASHI_NAMES[(asc_rashi_idx + h - 1) % 12].capitalize(),
+                lord=_SIGN_LORDS[(asc_rashi_idx + h - 1) % 12].capitalize(),
+                strength=_RELEVANT_HOUSE_STRENGTH[h],
+                note=_RELEVANT_HOUSE_NOTES[h],
+            )
+            for h in (1, 2, 4, 6, 7, 10, 11)
         )
 
         # Dynamic Timing Calculation
@@ -581,12 +639,34 @@ class PrashnaEngine:
         end_window_dt = dt + timedelta(days=90)
         window_str = f"{dt.strftime('%b %Y')} – {end_window_dt.strftime('%b %Y')}"
 
+        # Real Jupiter transit house from the horary Lagna (whole-sign,
+        # Jupiter aspects 1st/5th/7th/9th from itself) and real Moon
+        # paksha from the actual Sun-Moon angular separation — previously
+        # both were hardcoded strings claiming a fixed, always-supportive
+        # configuration regardless of the actual computed longitudes.
+        jupiter_rashi_idx = int(jupiter_lon // 30.0)
+        jupiter_house = house_offset(asc_rashi_idx, jupiter_rashi_idx)
+        jupiter_aspects_lagna = jupiter_house in (1, 5, 7, 9)
+        transit_support = (
+            f"Jupiter transiting house {jupiter_house} from horary Lagna — "
+            + ("aspects/occupies Lagna, supportive of fruition" if jupiter_aspects_lagna
+               else "no direct aspect on Lagna from current position")
+        )
+
+        moon_sun_separation = (moon_lon - sun_lon) % 360.0
+        is_waxing = moon_sun_separation < 180.0
+        moon_cycle = (
+            f"{'Waxing' if is_waxing else 'Waning'} Moon "
+            f"({'Shukla' if is_waxing else 'Krishna'} Paksha) — "
+            + ("supportive" if is_waxing else "less supportive, classically")
+        )
+
         timing = TimingIndication(
             likely_window=window_str,
             dasha_mahadasha=f"{dasha_maha} Mahadasha",
             antardasha=f"{antardasha_lord} Antardasha",
-            transit_support="Jupiter transit over natal/horary Lagna supportive of fruition",
-            moon_cycle="Waxing Moon (Shukla Paksha) — supportive",
+            transit_support=transit_support,
+            moon_cycle=moon_cycle,
         )
 
         conclusions = (

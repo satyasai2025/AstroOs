@@ -449,34 +449,64 @@ class TestCharaDasha:
 
 
 class TestNarayanaDasha:
-    def test_returns_12_mahadashas(self):
+    """
+    Narayana Dasha's classical structure is a TWO-CYCLE walk (each of
+    12 progression signs runs once for its computed duration, then
+    again for the 12-minus-that complement) — 24 Mahadasha periods
+    total, not 12, and total_cycle_years is always EXACTLY 144
+    (12 signs x 12 years max) regardless of the chart, since each
+    sign's two durations always sum to 12. See compute_narayana()'s
+    own docstring for the full rule set (replaced a prior, incorrect
+    "Chara Dasha rerun on D9" implementation).
+    """
+
+    def test_returns_24_mahadashas_two_cycles(self):
         tree = ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON)
-        assert len(tree.mahadashas) == 12
+        assert len(tree.mahadashas) == 24
 
     def test_system_name(self):
         assert ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON).system == "narayana"
 
-    def test_all_signs_present(self):
+    def test_all_signs_present_each_cycle(self):
         tree = ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON)
         assert len({m.lord for m in tree.mahadashas}) == 12
+        # Same 12-sign order repeats for cycle 2
+        assert [m.lord for m in tree.mahadashas[:12]] == [m.lord for m in tree.mahadashas[12:]]
 
-    def test_total_years_in_valid_range(self):
+    def test_total_years_always_144(self):
         tree = ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON)
-        assert 12 <= tree.total_cycle_years <= 144
+        assert tree.total_cycle_years == pytest.approx(144.0)
+
+    def test_each_signs_two_cycle_durations_sum_to_12(self):
+        tree = ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON)
+        for md1, md2 in zip(tree.mahadashas[:12], tree.mahadashas[12:]):
+            years1 = md1.duration_days / DAYS_PER_JULIAN_YEAR
+            years2 = md2.duration_days / DAYS_PER_JULIAN_YEAR
+            assert years1 + years2 == pytest.approx(12.0, abs=0.01)
 
     def test_tree_structure_depth_2(self):
+        """
+        NOT assert_tree_valid() — that helper assumes every Mahadasha has
+        strictly positive duration, which doesn't hold for Narayana: a
+        sign whose cycle-1 duration is exactly 12 years gets a legitimate
+        ZERO-duration cycle-2 complement (12 - 12 = 0), which PyJHora's
+        own reference implementation explicitly documents emitting
+        rather than skipping.
+        """
         tree = ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON, max_depth=2)
-        assert_tree_valid(tree, 12)
+        assert len(tree.mahadashas) == 24
+        for md in tree.mahadashas:
+            assert md.duration_days >= 0
+            if md.duration_days > 0:
+                assert len(md.sub_periods) == 12  # equal 12-way antardasha split
 
     def test_narayana_differs_from_chara(self):
         chara = ENGINE.compute_chara(REF_DT, REF_LAT, REF_LON)
         narayana = ENGINE.compute_narayana(REF_DT, REF_LAT, REF_LON)
-        # Different systems may yield different starting signs or durations
-        chara_lords = [m.lord for m in chara.mahadashas]
-        narayana_lords = [m.lord for m in narayana.mahadashas]
-        # Both must have 12 signs; they may or may not be identical
-        assert len(chara_lords) == 12
-        assert len(narayana_lords) == 12
+        assert len(chara.mahadashas) == 12
+        assert len(narayana.mahadashas) == 24
+        assert chara.total_cycle_years != narayana.total_cycle_years or \
+            [m.lord for m in chara.mahadashas] != [m.lord for m in narayana.mahadashas[:12]]
 
 
 # ── Cross-system consistency ───────────────────────────────────────────────────

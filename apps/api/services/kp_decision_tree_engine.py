@@ -11,12 +11,20 @@ Pure mathematical implementation of:
 from __future__ import annotations
 
 from typing import Any, Optional
+
+from packages.shared.enums import Rashi
+
+_RASHI_ORDER = [r.value.capitalize() for r in Rashi]
 from apps.api.domain.kp_decision_tree import (
     KPDecisionVerdict,
     KPEventDomain,
     KPEventDecisionTreeResult,
     KPCuspalSubLordDecisionNode,
     KPTierSignificators,
+)
+from apps.api.services.ephemeris_wrapper import (
+    longitude_to_sub_lord,
+    longitude_to_sub_sub_lord,
 )
 
 # Standard Vimshottari / KP Lordship mapping
@@ -101,6 +109,10 @@ class KPDecisionTreeEngine:
                 house_occupants[h_num].append(p_name)
 
         # 2. House Sign Lords
+        lagna_h = next((h for h in houses if int(h.get("house_number", 0)) == 1), None)
+        lagna_rashi = lagna_h.get("rashi") if lagna_h else None
+        lagna_rashi_idx = _RASHI_ORDER.index(lagna_rashi) if lagna_rashi in _RASHI_ORDER else None
+
         house_sign_lords: dict[int, str] = {}
         for h_idx in range(1, 13):
             # Check if explicit in houses list
@@ -109,9 +121,16 @@ class KPDecisionTreeEngine:
                 house_sign_lords[h_idx] = matched_h["sign_lord"]
             elif matched_h and matched_h.get("rashi"):
                 house_sign_lords[h_idx] = RASHI_SIGN_LORDS.get(matched_h["rashi"], "Mars")
+            elif lagna_rashi_idx is not None:
+                # Whole-sign house rashi, counted forward from the real Lagna rashi
+                rashi = _RASHI_ORDER[(lagna_rashi_idx + h_idx - 1) % 12]
+                house_sign_lords[h_idx] = RASHI_SIGN_LORDS.get(rashi, "Mars")
             else:
-                # Default fallback based on Lagna rashi
-                house_sign_lords[h_idx] = "Jupiter"
+                # No Lagna data available either — cannot derive a real sign
+                # lord. Previously this silently defaulted to "Jupiter" for
+                # every unmatched house, fabricating a plausible-looking
+                # verdict; None makes the gap visible to callers instead.
+                house_sign_lords[h_idx] = None
 
         matrix: list[KPTierSignificators] = []
 
@@ -175,8 +194,12 @@ class KPDecisionTreeEngine:
             cusp_rashi = matched_h.get("rashi", "Aries")
             sign_lord = matched_h.get("sign_lord") or RASHI_SIGN_LORDS.get(cusp_rashi, "Mars")
             star_lord = matched_h.get("star_lord") or self._guess_star_lord(cusp_deg)
-            sub_lord = matched_h.get("sub_lord") or "Venus"
-            sub_sub_lord = matched_h.get("sub_sub_lord") or "Jupiter"
+            # Real 249-division KP Sub-Lord / Sub-Sub-Lord, computed from the
+            # cusp's own sidereal longitude rather than a hardcoded fallback
+            # planet — the verdict below hinges entirely on sub_lord, so a
+            # fabricated value here would silently fabricate the verdict too.
+            sub_lord = matched_h.get("sub_lord") or longitude_to_sub_lord(cusp_deg).capitalize()
+            sub_sub_lord = matched_h.get("sub_sub_lord") or longitude_to_sub_sub_lord(cusp_deg).capitalize()
             sub_star = planet_star_lords.get(sub_lord, "Mercury")
 
             # Calculate houses signified by the Sub-Lord
@@ -277,8 +300,12 @@ class KPDecisionTreeEngine:
                     supp_significators.extend(tier_item.tier_a_planets + tier_item.tier_b_planets)
             supp_significators = sorted(list(set(supp_significators)))
 
-            # Ruling planets agreement (Ascendant Lord, Moon Sign/Star Lord)
-            ruling_planets = ["Jupiter", "Venus", "Moon"]
+            # Ruling planets agreement: real Ascendant sign/star lord + Moon
+            # sign/star lord, derived from this chart's own data. Day Lord
+            # is classically the 5th RP but is omitted here — chart_data
+            # passed into this engine carries no datetime/weekday field to
+            # derive it from, so it is left out rather than guessed.
+            ruling_planets = self._compute_ruling_planets(chart_data, node_map)
 
             calc_steps: list[str] = [
                 f"Step 1 (Root Cusp): Inspected Cusp {primary_c} ({rule['label']}).",
@@ -337,6 +364,32 @@ class KPDecisionTreeEngine:
             ):
                 signified.append(item.house_number)
         return sorted(list(set(signified)))
+
+    def _compute_ruling_planets(
+        self,
+        chart_data: dict[str, Any],
+        node_map: dict[int, KPCuspalSubLordDecisionNode],
+    ) -> list[str]:
+        """Real Ascendant sign/star lord + Moon sign/star lord, deduplicated. See caller's comment on Day Lord's omission."""
+        ruling: list[str] = []
+
+        lagna_node = node_map.get(1)
+        if lagna_node:
+            ruling.append(lagna_node.sign_lord)
+            ruling.append(lagna_node.star_lord)
+
+        moon = next(
+            (p for p in chart_data.get("planets", []) if p.get("planet", "").lower() == "moon"),
+            None,
+        )
+        if moon:
+            moon_lon = float(moon.get("sidereal_longitude", 0.0))
+            moon_rashi = moon.get("rashi") or _RASHI_ORDER[int((moon_lon % 360.0) // 30.0)]
+            ruling.append(RASHI_SIGN_LORDS.get(moon_rashi, "Mars"))
+            moon_star_lord = moon.get("nakshatra_lord") or moon.get("star_lord") or self._guess_star_lord(moon_lon)
+            ruling.append(moon_star_lord)
+
+        return sorted({r for r in ruling if r})
 
     def _guess_star_lord(self, longitude_deg: float) -> str:
         # 360 / 27 = 13.3333 degrees per nakshatra

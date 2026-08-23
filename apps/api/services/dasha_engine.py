@@ -8,7 +8,11 @@ Computes six Dasha systems from a birth moment:
   3. Ashtottari   — 108-year nakshatra-based cycle (BPHS Ch.46)
   4. Kalachakra   — 100-year navamsha-sign cycle   (BPHS Ch.47)
   5. Chara        — Jaimini sign-based cycle        (Jaimini Sutras Ch.2)
-  6. Narayana     — Jaimini sign-based D9 cycle     (Jaimini Sutras Ch.2)
+  6. Narayana     — Jaimini sign-based D1 cycle, own seed/progression/
+                    duration rules (Jaimini Sutras Ch.2) — NOT the same
+                    rule as Chara, and computed on D1 (Rasi), not D9;
+                    see compute_narayana()'s own docstring for the fix
+                    history of a previous, incorrect implementation.
 
 All six systems return a DashaTree with nested DashaPeriods up to
 the requested depth (1=Mahadasha … 5=Prana).
@@ -404,7 +408,7 @@ def _lord_degree_in_sign(planets_by_sign: dict[int, list[tuple[str, str, float]]
     return 0.0
 
 
-def _narayana_seed_sign(planets_by_sign: dict[int, list[tuple[str, str]]], asc_sign_idx: int) -> int:
+def _narayana_seed_sign(planets_by_sign: dict[int, list[tuple[str, str, float]]], asc_sign_idx: int) -> int:
     seventh_idx = (asc_sign_idx + 6) % 12
     return _stronger_rasi(planets_by_sign, asc_sign_idx, seventh_idx)
 
@@ -421,7 +425,7 @@ def _narayana_progression(planets_by_sign: dict[int, list[tuple[str, str, float]
     return NARAYANA_PROGRESSION_NORMAL[seed_idx]
 
 
-def _narayana_antardhasa_order(planets_by_sign: dict[int, list[tuple[str, str]]], dhasa_rasi_idx: int) -> tuple[int, ...]:
+def _narayana_antardhasa_order(planets_by_sign: dict[int, list[tuple[str, str, float]]], dhasa_rasi_idx: int) -> tuple[int, ...]:
     """
     Antardasha order within one Narayana Mahadasha sign — its own seed
     (stronger of the dasha-lord's sign and the 7th-lord's sign) and its
@@ -750,7 +754,9 @@ class DashaEngine:
         Chara Dasha (Jaimini) — sign-based cycle using D1 planet positions.
 
         Duration of each sign's dasha = count of signs from the sign to its
-        lord's D1 placement (Neelakantha's rule; shorter of forward/backward).
+        lord's D1 placement (Neelakantha's rule: direction fixed by the
+        starting sign's own odd/even parity — odd counts forward, even
+        counts backward — not "whichever direction is shorter").
         Total cycle: sum of all 12 sign durations (varies by chart).
         """
         max_depth = min(max(max_depth, 1), MAX_SUPPORTED_DEPTH)
@@ -807,10 +813,32 @@ class DashaEngine:
         max_depth: int = 3,
     ) -> DashaTree:
         """
-        Narayana Dasha (Jaimini) — sign-based cycle using D9 (Navamsha) positions.
+        Narayana Dasha (Jaimini) — computed on the D1 (Rasi) chart.
 
-        Duration of each sign = count of signs from the sign to its lord's
-        D9 sign placement (same Neelakantha rule as Chara, but applied to D9).
+        REPLACES an earlier implementation that was mislabeled: it ran
+        Chara Dasha's own math against D9 positions and called that
+        "Narayana Dasha," which is not the classical system of that
+        name. Confirmed via a PyJHora jhora.horoscope.dhasa.raasi.
+        narayana cross-check. Real Narayana Dasha (this implementation):
+          - Seed sign = the CLASSICALLY STRONGER of the Lagna sign and
+            the 7th-from-Lagna sign (see _narayana_seed_sign /
+            _stronger_rasi — Rule-2, aspect-based tie-break, is a
+            disclosed simplification; see _stronger_rasi's docstring).
+          - Sign order = a fixed 12-sign progression table keyed by seed
+            sign (NARAYANA_PROGRESSION_NORMAL), with alternate tables if
+            Ketu or Saturn occupies the seed sign — not a simple
+            forward/backward walk from the seed.
+          - Duration = Narayana's OWN formula (_narayana_dhasa_duration),
+            not Chara's — even-footed-sign-dependent count direction,
+            plus +1 year if the sign's lord is exalted / -1 if debilitated.
+          - Two-cycle structure: each of the 12 progression signs runs
+            once for its computed duration, then again for the
+            12-minus-that complement, in the same order — NOT a single
+            walk around the zodiac like Chara/Kalachakra.
+          - Antardasha (and deeper levels): each Mahadasha's own 12-sign
+            order (_narayana_antardhasa_order, its own seed/direction
+            rule) split into 12 EQUAL parts — not duration-weighted
+            like Chara/Kalachakra's sub-periods.
         """
         max_depth = min(max(max_depth, 1), MAX_SUPPORTED_DEPTH)
         result = self._wrapper.calculate(
@@ -819,39 +847,85 @@ class DashaEngine:
         )
         birth_dt_date = birth_datetime_utc.date() if hasattr(birth_datetime_utc, 'date') else birth_datetime_utc
 
-        # Planet D9 sign placements
-        planet_d9_signs: dict[str, str] = {}
+        planets_by_sign: dict[int, list[tuple[str, str, float]]] = {i: [] for i in range(12)}
         for p in result.planet_positions:
-            d9_rashi, _ = compute_varga_sign("D9", p.sidereal_longitude)
-            planet_d9_signs[p.planet] = d9_rashi
+            idx = _RASHI_LIST.index(p.rashi)
+            dignity = p.dignity.value if p.dignity else None
+            planets_by_sign[idx].append((p.planet, dignity, p.rashi_degree))
 
-        # Lagna D9 sign
-        asc_sid = result.ascendant.sidereal_longitude
-        lagna_d9_rashi, _ = compute_varga_sign("D9", asc_sid)
+        asc_sign_idx = _RASHI_LIST.index(longitude_to_rashi(result.ascendant.sidereal_longitude)[0])
+        seed_idx = _narayana_seed_sign(planets_by_sign, asc_sign_idx)
+        progression = _narayana_progression(planets_by_sign, seed_idx)
 
-        sign_years = {s: _jaimini_sign_years(s, planet_d9_signs) for s in _RASHI_LIST}
-        total_years = sum(sign_years.values())
+        cycle1_years = [_narayana_dhasa_duration(planets_by_sign, idx) for idx in progression]
+        cycle2_years = [max(0.0, 12.0 - y) for y in cycle1_years]
+        total_years = sum(cycle1_years) + sum(cycle2_years)
 
-        sign_sequence = _jaimini_sign_sequence(lagna_d9_rashi)
-        first_sign = sign_sequence[0]
-
-        mahadashas = self._build_sign_full_cycle(
-            first_sign, birth_dt_date,
-            sign_sequence, sign_years,
-            total_years, max_depth,
-        )
+        mahadashas: list[DashaPeriod] = []
+        current_start = birth_dt_date
+        for cycle_years in (cycle1_years, cycle2_years):
+            for sign_idx, years in zip(progression, cycle_years):
+                sign_days = round(years * DAYS_PER_JULIAN_YEAR)
+                current_end = current_start + timedelta(days=sign_days)
+                sub = self._narayana_sub_periods(
+                    planets_by_sign, sign_idx, current_start, current_end, 2, max_depth,
+                )
+                mahadashas.append(DashaPeriod(
+                    lord=_RASHI_LIST[sign_idx],
+                    start_date=current_start,
+                    end_date=current_end,
+                    duration_days=sign_days,
+                    level=1,
+                    sub_periods=sub,
+                ))
+                current_start = current_end
 
         nak_info = longitude_to_nakshatra(self._moon_sidereal(result))
         return DashaTree(
             system="narayana",
             birth_date=birth_dt_date,
-            trigger_planet=lagna_d9_rashi,
+            trigger_planet=_RASHI_LIST[seed_idx],
             trigger_nakshatra=nak_info.nakshatra,
             trigger_nakshatra_number=nak_info.nakshatra_number,
-            mahadashas=mahadashas,
+            mahadashas=tuple(mahadashas),
             max_depth=max_depth,
             total_cycle_years=total_years,
         )
+
+    def _narayana_sub_periods(
+        self,
+        planets_by_sign: dict[int, list[tuple[str, str, float]]],
+        parent_sign_idx: int,
+        start_date: date,
+        end_date: date,
+        level: int,
+        max_depth: int,
+    ) -> tuple[DashaPeriod, ...]:
+        """Equal 12-way split per level, each level's own antardasha order — see compute_narayana()'s docstring."""
+        if level > max_depth:
+            return ()
+        parent_days = (end_date - start_date).days
+        if parent_days <= 0:
+            return ()
+
+        order = _narayana_antardhasa_order(planets_by_sign, parent_sign_idx)
+        child_days = parent_days / 12.0
+        periods: list[DashaPeriod] = []
+        cursor = start_date
+        for i, child_idx in enumerate(order):
+            c_end = end_date if i == 11 else start_date + timedelta(days=round(child_days * (i + 1)))
+            sub = self._narayana_sub_periods(planets_by_sign, child_idx, cursor, c_end, level + 1, max_depth)
+            periods.append(DashaPeriod(
+                lord=_RASHI_LIST[child_idx],
+                start_date=cursor,
+                end_date=c_end,
+                duration_days=max((c_end - cursor).days, 0),
+                level=level,
+                sub_periods=sub,
+            ))
+            cursor = c_end
+
+        return tuple(periods)
 
     # ── Internal helpers ───────────────────────────────────────────────────────
 

@@ -7,7 +7,18 @@ from __future__ import annotations
 from typing import Any, List
 from fastapi import APIRouter, status
 
-from apps.api.domain.ephemeris import Ascendant, HouseCusp, SiderealPosition
+from apps.api.domain.ephemeris import (
+    Ascendant,
+    EphemerisResult,
+    HouseCusp,
+    KaranaInfo,
+    NakshatraInfo,
+    PanchangaResult,
+    SiderealPosition,
+    TithiInfo,
+    VaraInfo,
+    YogaInfo,
+)
 from apps.api.domain.horoscope import D1Chart
 from apps.api.schemas.multi_dasha_confluence import (
     ConfluenceEvaluateRequest,
@@ -34,7 +45,29 @@ def _build_test_chart() -> D1Chart:
         SiderealPosition("ketu", 0.0, "aries", 0.0, 1, "ashwini", 1, True, False, None, None),
     ]
     houses = [HouseCusp(n, float((n - 1) * 30), float((n - 1) * 30), rashis[n - 1]) for n in range(1, 13)]
-    return D1Chart(None, asc, houses, planets, [], [], None, "lahiri", "W")
+    # Real Julian Day (2000-01-01 12:00 UTC) so downstream real-data
+    # consumers (MultiDashaConfluenceEngine) have a real birth date/chart_id
+    # anchor instead of a fabricated one — this demo chart's positions are
+    # synthetic, but its timestamp is a real, valid JD, not invented data.
+    panchanga = PanchangaResult(
+        tithi=TithiInfo(1, "shukla_pratipada", "shukla", 50.0),
+        nakshatra=NakshatraInfo("ashwini", 1, 1, "ketu", 0.0, 0.0),
+        yoga=YogaInfo(1, "vishkambha", 50.0),
+        karana=KaranaInfo(1, "bava", False),
+        vara=VaraInfo(6, "saturday", "saturn"),
+        julian_day=2451545.0,
+        ayanamsa_deg=23.85,
+    )
+    ephemeris = EphemerisResult(
+        julian_day=2451545.0,
+        ayanamsa_value=23.85,
+        ayanamsa_system="lahiri",
+        ascendant=asc,
+        house_cusps=houses,
+        planet_positions=planets,
+        panchanga=panchanga,
+    )
+    return D1Chart(ephemeris, asc, houses, planets, [], [], panchanga, "lahiri", "W")
 
 
 @router.post("/evaluate", response_model=ConfluenceMatrixResponse, status_code=status.HTTP_200_OK)

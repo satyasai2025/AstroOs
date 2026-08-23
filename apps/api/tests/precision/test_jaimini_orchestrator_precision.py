@@ -90,10 +90,15 @@ class TestJaiminiDasha:
         assert len(bundle.chara_dasha.periods) == 12
 
     def test_narayana_dasha(self, bundle):
+        # Narayana Dasha was rewritten this session (previously ran Chara
+        # Dasha's math on D9 positions, mislabeled as Narayana — see
+        # DashaEngine.compute_narayana's docstring). Real Narayana is a
+        # two-cycle (24-period), fixed-144-year system computed on D1,
+        # with its own seed/progression/duration rules.
         assert bundle.narayana_dasha.system == "narayana"
-        assert bundle.narayana_dasha.lagna_rashi == "cancer"
-        assert bundle.narayana_dasha.total_cycle_years == 77
-        assert len(bundle.narayana_dasha.periods) == 12
+        assert bundle.narayana_dasha.lagna_rashi == "pisces"  # the dasha's seed sign, not D1 Lagna — see field docstring
+        assert bundle.narayana_dasha.total_cycle_years == 144
+        assert len(bundle.narayana_dasha.periods) == 24
 
 
 class TestJaiminiYogas:

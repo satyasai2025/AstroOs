@@ -58,9 +58,11 @@ _AVG_DAILY_MOTION: dict[str, float] = {
     "jupiter": 0.083,
     "venus":   1.603,
     "saturn":  0.033,
-    "rahu":    0.053,   # mean motion, treated as forward for magnitude
+    "rahu":    0.053,   # mean motion magnitude — nodes always move BACKWARD (decreasing longitude)
     "ketu":    0.053,
 }
+
+_ALWAYS_RETROGRADE_PLANETS = frozenset({"rahu", "ketu"})
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
@@ -362,8 +364,13 @@ class TransitPatternDetector:
             est: Optional[date] = None
             daily = _AVG_DAILY_MOTION.get(planet)
             if daily:
-                # Degrees ahead (in the direction of motion) to reach natal
-                delta = (natal_lon - transit_lon) % 360.0
+                # Degrees ahead (in the direction of motion) to reach natal.
+                # Rahu/Ketu (mean nodes) always move backward (decreasing
+                # longitude), unlike every other graha here.
+                if planet in _ALWAYS_RETROGRADE_PLANETS:
+                    delta = (transit_lon - natal_lon) % 360.0
+                else:
+                    delta = (natal_lon - transit_lon) % 360.0
                 days = delta / daily
                 est = _jd_to_datetime(jd + days).date()
 

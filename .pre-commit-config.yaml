@@ -101,6 +101,19 @@ repos:
         types: [python]
         stages: [pre-commit]
 
+  # ── Frozen calculation modules — see FROZEN_MODULES.md ──────────────────
+  - repo: local
+    hooks:
+      - id: verify-frozen-modules
+        name: verify-frozen-modules
+        alias: verify-frozen-modules
+        entry: python scripts/verify_frozen_modules.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+        verbose: true
+
   # ── Test: fast check for modified files ────────────────────────────────
   - repo: local
     hooks:

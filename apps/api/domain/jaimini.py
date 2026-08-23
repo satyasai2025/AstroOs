@@ -272,7 +272,7 @@ class JaiminiDashaPeriod:
 @dataclass(frozen=True)
 class JaiminiDashaResult:
     system: Literal["chara", "narayana"]
-    lagna_rashi: str  # DashaTree.trigger_planet, renamed — for these two systems it holds the Lagna sign, not a planet
+    lagna_rashi: str  # DashaTree.trigger_planet, renamed. Chara: the Lagna sign. Narayana: the dasha's seed sign (NOT necessarily Lagna) — see jaimini_dasha_adapter.py's module docstring.
     periods: tuple[JaiminiDashaPeriod, ...]  # DashaTree.mahadashas, renamed
     max_depth: int
     total_cycle_years: int

@@ -10,9 +10,15 @@ This module only re-shapes its DashaTree output into the same
 result-object conventions the other Jaimini engines use, for frontend
 consistency:
   - DashaPeriod.lord (a rashi name, for these two systems) -> rashi.
-  - DashaTree.trigger_planet (the Lagna sign, for these two systems,
-    despite the generic field name inherited from the nakshatra-based
-    systems that share DashaTree) -> lagna_rashi.
+  - DashaTree.trigger_planet -> lagna_rashi (field name inherited from
+    the nakshatra-based systems that share DashaTree). For Chara this
+    IS the Lagna sign. For Narayana it is NOT the Lagna sign — it's the
+    dasha's SEED sign (the classically stronger of Lagna and the
+    7th-from-Lagna; see DashaEngine.compute_narayana's own docstring).
+    The field name "lagna_rashi" is kept for frontend/API consistency
+    across both systems rather than introducing a Narayana-only field,
+    but callers should read it as "starting sign" for Narayana, not
+    literally the ascendant.
   - The nakshatra-trigger fields (trigger_nakshatra,
     trigger_nakshatra_number), meaningless for sign-based systems (blank
     string / 0 per DashaTree's own docstring), are dropped rather than

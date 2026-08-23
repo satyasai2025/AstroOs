@@ -92,7 +92,7 @@ class TransitTimelineEngine:
                     "combustion_orb": combustion_orb if include_combustion else None,
                     "dignity": getattr(result, 'dignity', None) if include_dignity else None,
                     "house_from_natal_moon": result.house_from_natal_moon,
-                    "house_from_natal_ascendant": result.house_from_natal_moon,
+                    "house_from_natal_ascendant": result.house_from_natal_ascendant,
                     "aspects": [],
                 }
                 kf_planets.append(planet_data)

@@ -45,19 +45,29 @@ _DIGNITY_SCORES = {
     "debilitated":  0,
 }
 
-# House placement contribution (0–15 scale)
-_HOUSE_SCORES = {
-    # Kendra (1/4/7/10) and Trikona (1/5/9) — highest for yoga placement
-    1: 15, 4: 13, 7: 14, 10: 13,   # kendra
-    5: 14, 9: 15,                    # trikona (1 is also kendra, handled above)
-    # Upachaya (3/6/10/11) — growth houses
-    3: 10, 6: 8, 11: 10,
-    # Neutral houses (2/7 — 7 is also kendra)
-    2: 9,
-    # Dusthana (6/8/12) — inauspicious
-    8: 4, 12: 3,
-    # Maraka (2/7 — 2 handled above, 7 is kendra)
-}
+# House placement contribution (0–15 scale). Derived from GrahaEngine's
+# canonical KENDRA_HOUSES/TRIKONA_HOUSES/DUSTHANA_HOUSES sets (single
+# source of truth — a previous version hardcoded its own duplicate table
+# that gave house 7 an unexplained higher score than 4/10 despite all
+# four being kendras of equal classical strength; fixed to score every
+# kendra house identically).
+_KENDRA_SCORE = 14
+_TRIKONA_ONLY_SCORE = 15  # 5, 9 (1 is kendra+trikona, scored as kendra)
+_UPACHAYA_ONLY_SCORE = 10  # 3, 11 (6, 10 are also upachaya, scored via their own category)
+_DUSTHANA_SCORE = {6: 8, 8: 4, 12: 3}  # 6 doubles as upachaya, so scored higher than 8/12
+_NEUTRAL_HOUSE_SCORE = 9  # 2
+
+_HOUSE_SCORES: dict[int, int] = {}
+for _h in KENDRA_HOUSES:
+    _HOUSE_SCORES[_h] = _KENDRA_SCORE
+for _h in TRIKONA_HOUSES:
+    _HOUSE_SCORES.setdefault(_h, _TRIKONA_ONLY_SCORE)
+for _h in DUSTHANA_HOUSES:
+    _HOUSE_SCORES[_h] = _DUSTHANA_SCORE[_h]
+_HOUSE_SCORES.setdefault(3, _UPACHAYA_ONLY_SCORE)
+_HOUSE_SCORES.setdefault(11, _UPACHAYA_ONLY_SCORE)
+_HOUSE_SCORES.setdefault(2, _NEUTRAL_HOUSE_SCORE)
+del _h
 
 # Aspect modifiers per planet (positive = benefic aspect adds, negative = malefic subtracts)
 _ASPECT_BONUS_BENEFIC = 4    # per benefic aspect on an involved planet

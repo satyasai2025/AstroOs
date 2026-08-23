@@ -170,3 +170,50 @@ def test_boundary_neighborhoods(engine):
     res_sat_601 = engine.compute("saturn", 0.0, 60.1)
     assert abs(res_sat_599.virupa_strength - 60.0) < 1.0
     assert abs(res_sat_601.virupa_strength - 60.0) < 1.0
+
+
+# ── Piecewise Boundary Continuity (regression: bonus-zone discontinuity fix) ──
+#
+# These pin the exact boundary values for Saturn/Mars/Jupiter's special
+# segments after fixing internal discontinuities discovered when hand-
+# checking every shared breakpoint (no independent standalone-capped Sputa
+# Drishti source exists in PyJHora to arbitrate zone placement -- only
+# self-consistency bugs were fixed; see sphuta_drishti_engine.py docstrings).
+
+def test_saturn_boundary_continuity_at_90(engine):
+    """Saturn's merged 60<D<=120 segment (90-D/2) must be continuous at D=90."""
+    just_below = engine.compute("saturn", 0.0, 89.99)
+    at_90 = engine.compute("saturn", 0.0, 90.0)
+    just_above = engine.compute("saturn", 0.0, 90.01)
+    assert at_90.virupa_strength == pytest.approx(45.0)
+    assert abs(just_below.virupa_strength - just_above.virupa_strength) < 0.1
+
+
+def test_mars_boundary_continuity_at_210_plateau(engine):
+    """Mars must be exactly 60 across the whole 180<D<=210 plateau (7th/8th peaks)."""
+    res_180 = engine.compute("mars", 0.0, 180.0)
+    res_195 = engine.compute("mars", 0.0, 195.0)
+    res_210 = engine.compute("mars", 0.0, 210.0)
+    res_210_01 = engine.compute("mars", 0.0, 210.01)
+    assert res_180.virupa_strength == pytest.approx(60.0)
+    assert res_195.virupa_strength == pytest.approx(60.0)
+    assert res_210.virupa_strength == pytest.approx(60.0)
+    assert abs(res_210_01.virupa_strength - 60.0) < 0.1
+
+
+def test_jupiter_boundary_continuity_at_150(engine):
+    """Jupiter's 120<D<=150 segment must fall to 0 at D=150, matching 150<D<=180."""
+    at_150 = engine.compute("jupiter", 0.0, 150.0)
+    just_above = engine.compute("jupiter", 0.0, 150.01)
+    assert at_150.virupa_strength == pytest.approx(0.0)
+    assert just_above.virupa_strength < 0.1
+
+
+def test_jupiter_boundary_continuity_at_240(engine):
+    """Jupiter must be exactly 60 (not 90) at D=240, and continuous with D=270 taper."""
+    at_240 = engine.compute("jupiter", 0.0, 240.0)
+    at_270 = engine.compute("jupiter", 0.0, 270.0)
+    just_above_240 = engine.compute("jupiter", 0.0, 240.01)
+    assert at_240.virupa_strength == pytest.approx(60.0)
+    assert abs(just_above_240.virupa_strength - 60.0) < 0.1
+    assert at_270.virupa_strength == pytest.approx(15.0)
