@@ -68,7 +68,7 @@ attached_assets/
 replit.nix
 
 # Local Claude configuration
-.claude/settings.json
+.claude/
 
 # Local archive files
 apps.7z
