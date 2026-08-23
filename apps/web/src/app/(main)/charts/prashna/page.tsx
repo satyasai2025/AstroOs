@@ -1309,70 +1309,73 @@ export default function PrashnaPage() {
       {/* ── Arabic Parts Calculation & KP Guide Modal ── */}
       {showArbGuideModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="relative w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl border border-slate-700/80 bg-slate-900 text-slate-100 shadow-2xl overflow-hidden font-sans">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-950/60">
+          <div
+            className="relative w-full max-w-3xl max-h-[85vh] flex flex-col rounded-2xl border shadow-2xl overflow-hidden font-sans backdrop-blur-md"
+            style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
               <div className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-sm">i</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-100 text-cyan-900 border border-cyan-600/40 dark:bg-cyan-950/60 dark:text-cyan-300 font-bold text-sm">i</span>
                 <div>
-                  <h3 className="text-sm font-extrabold text-slate-100">Arabic Parts (Sahams) &amp; KP Rules Guide</h3>
-                  <p className="text-[11px] text-slate-400 font-medium">Classical Hermetic / Tajika Formula Mechanics &amp; Event Promise</p>
+                  <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">Arabic Parts (Sahams) &amp; KP Rules Guide</h3>
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 font-medium">Classical Hermetic / Tajika Formula Mechanics &amp; Event Promise</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowArbGuideModal(false)}
-                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition cursor-pointer font-bold text-xs"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer font-bold text-xs"
               >
                 ✕
               </button>
             </div>
 
-            <div className="flex-1 p-5 overflow-y-auto space-y-4 text-xs text-slate-300 leading-relaxed">
-              <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-950/20 text-amber-200 space-y-1">
-                <h4 className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+            <div className="flex-1 p-5 overflow-y-auto space-y-4 text-xs leading-relaxed">
+              <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200 space-y-1">
+                <h4 className="text-xs font-bold text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
                   <span>☀️</span> Day vs 🌙 Night Formula Altitude Mechanics
                 </h4>
-                <p className="text-[11px] leading-relaxed">
+                <p className="text-[11px] font-semibold leading-relaxed text-slate-800 dark:text-slate-200">
                   Arabic Parts (Lots / Sahams) calculate a sensitive longitudinal point by projecting the distance between two significators onto the Ascendant:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-                  <div className="p-2 rounded bg-slate-950 border border-slate-800">
-                    <strong className="text-amber-400 block font-sans text-xs">Day Birth (Sun above Horizon)</strong>
-                    <code>Formula: Asc + Planet_B - Planet_A</code>
+                  <div className="p-2 rounded-lg border" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
+                    <strong className="text-amber-600 dark:text-amber-400 block font-sans text-xs font-extrabold">Day Birth (Sun above Horizon)</strong>
+                    <code className="text-slate-900 dark:text-slate-100 font-bold">Formula: Asc + Planet_B - Planet_A</code>
                   </div>
-                  <div className="p-2 rounded bg-slate-950 border border-slate-800">
-                    <strong className="text-cyan-400 block font-sans text-xs">Night Birth (Sun below Horizon)</strong>
-                    <code>Formula: Asc + Planet_A - Planet_B</code>
+                  <div className="p-2 rounded-lg border" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
+                    <strong className="text-cyan-600 dark:text-cyan-400 block font-sans text-xs font-extrabold">Night Birth (Sun below Horizon)</strong>
+                    <code className="text-slate-900 dark:text-slate-100 font-bold">Formula: Asc + Planet_A - Planet_B</code>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-xs font-bold text-slate-100">How to Interpret Arabic Parts in Prashna / Horary:</h4>
-                <ul className="list-disc pl-5 space-y-1.5 text-slate-300 text-[11px]">
+                <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">How to Interpret Arabic Parts in Prashna / Horary:</h4>
+                <ul className="list-disc pl-5 space-y-1.5 text-slate-800 dark:text-slate-200 text-[11px] font-semibold">
                   <li>
-                    <strong className="text-cyan-400">KP Sub-Lord Fructification</strong>: Check the Sub Lord (SL) of the calculated Saham. If its Star Lord signifies the primary query houses (e.g. 2, 6, 10, 11 for career), the Saham guarantees a successful outcome.
+                    <strong className="text-cyan-600 dark:text-cyan-400">KP Sub-Lord Fructification</strong>: Check the Sub Lord (SL) of the calculated Saham. If its Star Lord signifies the primary query houses (e.g. 2, 6, 10, 11 for career), the Saham guarantees a successful outcome.
                   </li>
                   <li>
-                    <strong className="text-emerald-400">Benefic Aspects on Saham Point</strong>: Conjunctions or trine aspects from Jupiter or Venus onto the Saham longitude bring swift, un-obstructed resolution.
+                    <strong className="text-emerald-600 dark:text-emerald-400">Benefic Aspects on Saham Point</strong>: Conjunctions or trine aspects from Jupiter or Venus onto the Saham longitude bring swift, un-obstructed resolution.
                   </li>
                   <li>
-                    <strong className="text-amber-400">Dasha Trigger Intersection</strong>: When the operating Antardasha lord transits over or rules the Saham&apos;s Star Lord, the event manifests within that transit window.
+                    <strong className="text-amber-600 dark:text-amber-400">Dasha Trigger Intersection</strong>: When the operating Antardasha lord transits over or rules the Saham&apos;s Star Lord, the event manifests within that transit window.
                   </li>
                 </ul>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-400">
-                <strong className="text-amber-400 font-bold block mb-0.5">📚 Classical Reference Sources:</strong>
+              <div className="p-3 rounded-xl border text-[11px] text-slate-700 dark:text-slate-300 font-semibold" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
+                <strong className="text-amber-600 dark:text-amber-400 font-bold block mb-0.5">📚 Classical Reference Sources:</strong>
                 Formulas derived from Al-Biruni&apos;s <em>Book of Instruction in the Elements of the Art of Astrology</em>, Neelakantha&apos;s <em>Tajika Neelakanthi (Sahamadhikara)</em>, and Prof. K.S. Krishnamurti&apos;s <em>KP Readers</em>.
               </div>
             </div>
 
-            <div className="flex justify-end px-5 py-3 border-t border-slate-800 bg-slate-950/60">
+            <div className="flex justify-end px-5 py-3 border-t" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
               <button
                 type="button"
                 onClick={() => setShowArbGuideModal(false)}
-                className="px-4 py-1.5 rounded-xl text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition cursor-pointer"
+                className="px-4 py-1.5 rounded-xl text-xs font-bold bg-cyan-700 hover:bg-cyan-600 text-white transition cursor-pointer shadow-xs"
               >
                 Close Guide
               </button>
