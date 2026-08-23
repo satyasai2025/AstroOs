@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = { title: "Reset Password" };
 
 export default function ResetPasswordPage() {

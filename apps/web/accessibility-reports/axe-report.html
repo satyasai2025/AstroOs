@@ -32,13 +32,13 @@
 <body>
   <div class="container">
     <h1>🪐 AstroOS — Accessibility & Flow Audit Report</h1>
-    <p style="color: #94a3b8;">Generated on 8/22/2026, 2:55:21 PM</p>
+    <p style="color: #94a3b8;">Generated on 8/22/2026, 5:11:51 PM</p>
 
     <div class="summary-cards">
-      <div class="card"><div class="label">Total Scanned Steps</div><div class="val">11</div></div>
+      <div class="card"><div class="label">Total Scanned Steps</div><div class="val">9</div></div>
       <div class="card pass"><div class="label">Clean / Passed</div><div class="val">6</div></div>
       <div class="card fail"><div class="label">Steps with Violations</div><div class="val">3</div></div>
-      <div class="card err"><div class="label">Errors / Crashes</div><div class="val">2</div></div>
+      <div class="card err"><div class="label">Errors / Crashes</div><div class="val">0</div></div>
       <div class="card"><div class="label">Total A11y Violations</div><div class="val">3</div></div>
     </div>
 
@@ -50,10 +50,21 @@
                 <strong>01. Homepage</strong>
                 <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/</span>
               </div>
-              <span class="badge badge-passed">passed</span>
+              <span class="badge badge-failed">failed</span>
             </div>
             <div class="step-body">
-              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+              
+                <div class="violation">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
+                    <span class="badge badge-impact-serious">serious</span>
+                  </div>
+                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
+                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (1):</p>
+                  <pre>Target: .hover\:underline
+HTML: &lt;a class=&quot;text-xs font-extrabold px-3 py-1.5 rounded-lg text-black dark:text-white hover:underline transition&quot; href=&quot;/login&quot;&gt;Sign In&lt;/a&gt;</pre>
+                </div>
+              
             </div>
           </div>
         
@@ -75,26 +86,13 @@
           <div class="step-card">
             <div class="step-header">
               <div>
-                <strong>Tab: ॐ (/dashboard)</strong>
+                <strong>Tab: Dashboard (/dashboard)</strong>
                 <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
               </div>
-              <span class="badge badge-failed">failed</span>
+              <span class="badge badge-passed">passed</span>
             </div>
             <div class="step-body">
-              
-                <div class="violation">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
-                    <span class="badge badge-impact-serious">serious</span>
-                  </div>
-                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
-                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (4):</p>
-                  <pre>Target: .tracking-wide.text-sm.font-bold > span
-HTML: &lt;span style=&quot;color: var(--accent);&quot;&gt;OS&lt;/span&gt;</pre><pre>Target: div:nth-child(1) > .mb-1\.5.tracking-widest
-HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest&quot; style=&quot;color: var(--section-charts);&quot;&gt;Core Charts&lt;/p&gt;</pre><pre>Target: div:nth-child(2) > .mb-1\.5.tracking-widest
-HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest&quot; style=&quot;color: var(--section-analysis);&quot;&gt;Predictive &amp;amp; Technical&lt;/p&gt;</pre>
-                </div>
-              
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
             </div>
           </div>
         
@@ -133,10 +131,23 @@ HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking
                 <strong>Tab: Import Chart (/charts/import)</strong>
                 <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts/import</span>
               </div>
-              <span class="badge badge-passed">passed</span>
+              <span class="badge badge-failed">failed</span>
             </div>
             <div class="step-body">
-              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+              
+                <div class="violation">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
+                    <span class="badge badge-impact-serious">serious</span>
+                  </div>
+                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
+                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (4):</p>
+                  <pre>Target: code:nth-child(1)
+HTML: &lt;code class=&quot;text-amber-600 dark:text-amber-400 font-mono&quot;&gt;subject_name&lt;/code&gt;</pre><pre>Target: code:nth-child(2)
+HTML: &lt;code class=&quot;text-amber-600 dark:text-amber-400 font-mono&quot;&gt;birth_datetime_utc&lt;/code&gt;</pre><pre>Target: code:nth-child(3)
+HTML: &lt;code class=&quot;text-amber-600 dark:text-amber-400 font-mono&quot;&gt;latitude&lt;/code&gt;</pre>
+                </div>
+              
             </div>
           </div>
         
@@ -144,8 +155,8 @@ HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking
           <div class="step-card">
             <div class="step-header">
               <div>
-                <strong>Tab: Birth Chart (/charts)</strong>
-                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts?view=chart</span>
+                <strong>Tab: Nakshatra Module (/nakshatra)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/nakshatra</span>
               </div>
               <span class="badge badge-failed">failed</span>
             </div>
@@ -157,11 +168,11 @@ HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking
                     <span class="badge badge-impact-serious">serious</span>
                   </div>
                   <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
-                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (5):</p>
-                  <pre>Target: .tracking-wide > span
-HTML: &lt;span style=&quot;color: var(--accent);&quot;&gt;OS&lt;/span&gt;</pre><pre>Target: div:nth-child(1) > .mb-1\.5.font-semibold.uppercase
-HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest&quot; style=&quot;color: var(--section-charts);&quot;&gt;Core Charts&lt;/p&gt;</pre><pre>Target: a[aria-current="page"]
-HTML: &lt;a class=&quot;flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition&quot; aria-current=&quot;page&quot; href=&quot;/charts?view=chart&quot; style=&quot;background-color: var(--border-primary); color: var(--section-charts);&quot;&gt;</pre>
+                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (225):</p>
+                  <pre>Target: .mb-4:nth-child(1) > .mt-1
+HTML: &lt;p class=&quot;mt-1 text-sm&quot; style=&quot;color: var(--text-secondary);&quot;&gt;Complete reference of all 27 lunar mansions with lords, deities, classifications, and padas&lt;/p&gt;</pre><pre>Target: .text-slate-900.dark\:text-slate-100.shadow-slate-200\/50:nth-child(1) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\:text-slate-400
+HTML: &lt;span class=&quot;text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase&quot;&gt;Total Nakshatras&lt;/span&gt;</pre><pre>Target: .text-slate-900.dark\:text-slate-100.shadow-slate-200\/50:nth-child(2) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\:text-slate-400
+HTML: &lt;span class=&quot;text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase&quot;&gt;Total Padas&lt;/span&gt;</pre>
                 </div>
               
             </div>
@@ -171,52 +182,8 @@ HTML: &lt;a class=&quot;flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs f
           <div class="step-card">
             <div class="step-header">
               <div>
-                <strong>Tab Index #9</strong>
-                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts?view=chart</span>
-              </div>
-              <span class="badge badge-error">error</span>
-            </div>
-            <div class="step-body">
-              <p style="color: #ef4444;"><strong>Execution Error:</strong> page.goto: net::ERR_ABORTED at http://localhost:3000/nakshatra
-Call log:
-[2m  - navigating to "http://localhost:3000/nakshatra", waiting until "load"[22m
-</p>
-            </div>
-          </div>
-        
-
-          <div class="step-card">
-            <div class="step-header">
-              <div>
-                <strong>03. Astrology Calculation Form (Inputs)</strong>
-                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts?view=chart</span>
-              </div>
-              <span class="badge badge-failed">failed</span>
-            </div>
-            <div class="step-body">
-              
-                <div class="violation">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
-                    <span class="badge badge-impact-serious">serious</span>
-                  </div>
-                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
-                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (5):</p>
-                  <pre>Target: .tracking-wide.text-sm.font-bold > span
-HTML: &lt;span style=&quot;color: var(--accent);&quot;&gt;OS&lt;/span&gt;</pre><pre>Target: div:nth-child(1) > .mb-1\.5.tracking-widest
-HTML: &lt;p class=&quot;mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest&quot; style=&quot;color: var(--section-charts);&quot;&gt;Core Charts&lt;/p&gt;</pre><pre>Target: a[href="/charts?view=chart"]
-HTML: &lt;a class=&quot;flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition&quot; href=&quot;/charts?view=chart&quot; style=&quot;background-color: transparent; color: var(--section-charts);&quot;&gt;</pre>
-                </div>
-              
-            </div>
-          </div>
-        
-
-          <div class="step-card">
-            <div class="step-header">
-              <div>
-                <strong>04. Calculation Results &amp; Chart Output</strong>
-                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/login</span>
+                <strong>08. Astrology Calculation Form (Inputs)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
               </div>
               <span class="badge badge-passed">passed</span>
             </div>
@@ -229,15 +196,13 @@ HTML: &lt;a class=&quot;flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs f
           <div class="step-card">
             <div class="step-header">
               <div>
-                <strong>Astrology Calculation Form Verification</strong>
-                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/login</span>
+                <strong>09. Calculation Results &amp; Chart Output</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
               </div>
-              <span class="badge badge-error">error</span>
+              <span class="badge badge-passed">passed</span>
             </div>
             <div class="step-body">
-              <p style="color: #ef4444;"><strong>Execution Error:</strong> [2mexpect([22m[31mreceived[39m[2m).[22mtoBeTruthy[2m()[22m
-
-Received: [31mfalse[39m</p>
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
             </div>
           </div>
         

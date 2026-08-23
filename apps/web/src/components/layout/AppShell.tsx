@@ -616,8 +616,7 @@ function AppShellInner({
                 <button
                   type="button"
                   onClick={() => router.push("/charts/birth")}
-                  className="ml-1 text-[11px] font-semibold hover:underline cursor-pointer"
-                  style={{ color: "var(--accent)" }}
+                  className="ml-1 text-[11px] font-bold text-sky-700 dark:text-sky-400 hover:underline cursor-pointer"
                   title="View active birth chart"
                 >
                   View

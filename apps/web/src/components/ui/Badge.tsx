@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 type BadgeTone = "cyan" | "gold" | "violet" | "success" | "danger" | "neutral";
 
 const TONE: Record<BadgeTone, { bg: string; fg: string; border: string }> = {
-  cyan: { bg: "rgba(34,211,238,0.12)", fg: "var(--cyan-300)", border: "rgba(34,211,238,0.3)" },
-  gold: { bg: "rgba(240,192,90,0.12)", fg: "var(--gold-300)", border: "rgba(240,192,90,0.3)" },
-  violet: { bg: "rgba(139,92,246,0.12)", fg: "var(--violet-300)", border: "rgba(139,92,246,0.3)" },
-  success: { bg: "rgba(52,211,153,0.12)", fg: "var(--success-400)", border: "rgba(52,211,153,0.3)" },
-  danger: { bg: "rgba(244,63,94,0.12)", fg: "var(--danger-400)", border: "rgba(244,63,94,0.3)" },
+  cyan: { bg: "var(--badge-cyan-bg)", fg: "var(--badge-cyan-fg)", border: "var(--badge-cyan-border)" },
+  gold: { bg: "var(--badge-gold-bg)", fg: "var(--badge-gold-fg)", border: "var(--badge-gold-border)" },
+  violet: { bg: "var(--badge-violet-bg)", fg: "var(--badge-violet-fg)", border: "var(--badge-violet-border)" },
+  success: { bg: "var(--badge-success-bg)", fg: "var(--badge-success-fg)", border: "var(--badge-success-border)" },
+  danger: { bg: "var(--badge-danger-bg)", fg: "var(--badge-danger-fg)", border: "var(--badge-danger-border)" },
   neutral: { bg: "var(--surface-glass-strong)", fg: "var(--text-secondary)", border: "var(--border-default)" },
 };
 

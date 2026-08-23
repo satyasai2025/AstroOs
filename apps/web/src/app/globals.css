@@ -65,7 +65,7 @@
   --obsidian-accent-secondary-soft: var(--gold-glow-soft);
 
   /* ── Tertiary Accent: Violet (Figma tertiary) ── */
-  --obsidian-accent-tertiary: var(--violet-400);
+  --obsidian-accent-tertiary: #a78bfa;
   --obsidian-accent-tertiary-soft: var(--violet-glow-soft);
 
   /* ── Chart colors ── */
@@ -90,6 +90,27 @@
   --obsidian-status-error-bg: rgba(244, 63, 94, 0.10);
   --obsidian-status-info: var(--cyan-400);
   --obsidian-status-info-bg: var(--cyan-glow-soft);
+
+  /* ── Badge High-Contrast Tokens (Dark Mode) ── */
+  --badge-violet-fg: #ddd6fe;
+  --badge-violet-bg: rgba(139, 92, 246, 0.25);
+  --badge-violet-border: rgba(167, 139, 250, 0.5);
+
+  --badge-success-fg: #6ee7b7;
+  --badge-success-bg: rgba(6, 78, 59, 0.4);
+  --badge-success-border: rgba(5, 150, 105, 0.4);
+
+  --badge-cyan-fg: #67e8f9;
+  --badge-cyan-bg: rgba(8, 81, 98, 0.4);
+  --badge-cyan-border: rgba(8, 145, 178, 0.4);
+
+  --badge-gold-fg: #fcd34d;
+  --badge-gold-bg: rgba(69, 26, 3, 0.4);
+  --badge-gold-border: rgba(217, 119, 6, 0.4);
+
+  --badge-danger-fg: #fda4af;
+  --badge-danger-bg: rgba(76, 5, 25, 0.4);
+  --badge-danger-border: rgba(225, 29, 72, 0.4);
 
   /* ── Per-section accents ── */
   --section-charts: var(--cyan-400);
@@ -165,7 +186,29 @@ html.light {
   /* ── Accents Soft (Light Mode) ── */
   --obsidian-accent-primary-soft: rgba(6, 182, 212, 0.12);
   --obsidian-accent-secondary-soft: rgba(245, 158, 11, 0.12);
+  --obsidian-accent-tertiary: #6d28d9;
   --obsidian-accent-tertiary-soft: rgba(139, 92, 246, 0.12);
+
+  /* ── Badge High-Contrast Tokens (Light Mode) ── */
+  --badge-violet-fg: #4c1d95;
+  --badge-violet-bg: #ede9fe;
+  --badge-violet-border: rgba(109, 40, 217, 0.4);
+
+  --badge-success-fg: #064e3b;
+  --badge-success-bg: #d1fae5;
+  --badge-success-border: rgba(5, 150, 105, 0.4);
+
+  --badge-cyan-fg: #0c4a6e;
+  --badge-cyan-bg: #cffaff;
+  --badge-cyan-border: rgba(8, 145, 178, 0.4);
+
+  --badge-gold-fg: #451a03;
+  --badge-gold-bg: #fef3c7;
+  --badge-gold-border: rgba(217, 119, 6, 0.4);
+
+  --badge-danger-fg: #4c0519;
+  --badge-danger-bg: #ffe4e6;
+  --badge-danger-border: rgba(225, 29, 72, 0.4);
 }
 
 /* ── Base Typography & Form Inputs ── */

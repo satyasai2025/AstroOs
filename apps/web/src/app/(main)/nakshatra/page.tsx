@@ -30,6 +30,8 @@ import {
   type NakshatraDef,
 } from "@/lib/nakshatra";
 
+export const dynamic = "force-dynamic";
+
 type TabId =
   | "overview"
   | "natal"
@@ -426,7 +428,7 @@ function PlanetaryTab() {
             </div>
 
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="text-xs" style={{ color: "var(--text-muted)" }}>Tara Bala:</span>
+              <span className="text-xs font-semibold tracking-wider text-slate-800 dark:text-slate-200 uppercase">Total Nakshatras</span>
               <Badge tone={p.tara_bala.favorable ? "success" : "danger"}>
                 {p.tara_bala.category} {p.tara_bala.favorable ? "✓" : "✗"}
               </Badge>

@@ -18,6 +18,8 @@ import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { VARGA_DIVISORS } from "@/lib/astro";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 function formatDate(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleDateString("en-US", {
@@ -67,31 +69,44 @@ export default function BirthChartPage() {
 
   // Auto-hydrate if no active chart in store
   useEffect(() => {
-    if (result || analyze.isPending || !myChartsData?.charts?.length) return;
-    const activeId = localStorage.getItem("astroos_active_chart_id");
+    if (result || analyze.isPending || loadingCharts) return;
+    const activeId = typeof window !== "undefined" ? localStorage.getItem("astroos_active_chart_id") : null;
     const target =
-      (activeId ? myChartsData.charts.find((c) => c.id === activeId) : null) ??
-      myChartsData.charts[0];
+      (activeId ? myChartsData?.charts?.find((c) => c.id === activeId) : null) ??
+      myChartsData?.charts?.find((c) => c.is_default) ??
+      myChartsData?.charts?.[0];
 
-    if (target) {
-      const req: WorkflowAnalysisRequest = {
-        birth_datetime_utc: target.birth_datetime_utc,
-        latitude: target.birth_latitude,
-        longitude: target.birth_longitude,
-        ayanamsa: target.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-        house_system: target.house_system as WorkflowAnalysisRequest["house_system"],
-        dasha_system: "vimshottari",
-        include_vargas: true,
-        subject_name: target.subject_name,
-        place_name: target.place_name,
-        persist: false,
-        chart_id: target.id,
-      };
-      analyze.mutate(req, {
-        onSuccess: (data) => setResult(data, req),
-      });
-    }
-  }, [result, myChartsData, analyze, setResult]);
+    const req: WorkflowAnalysisRequest = target
+      ? {
+          birth_datetime_utc: target.birth_datetime_utc,
+          latitude: target.birth_latitude,
+          longitude: target.birth_longitude,
+          ayanamsa: target.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+          house_system: target.house_system as WorkflowAnalysisRequest["house_system"],
+          dasha_system: "vimshottari",
+          include_vargas: true,
+          subject_name: target.subject_name,
+          place_name: target.place_name,
+          persist: false,
+          chart_id: target.id,
+        }
+      : {
+          birth_datetime_utc: "1995-01-01T12:00:00Z",
+          latitude: 28.6139,
+          longitude: 77.2090,
+          ayanamsa: "lahiri",
+          house_system: "P",
+          dasha_system: "vimshottari",
+          include_vargas: true,
+          subject_name: "Default Sample Chart",
+          place_name: "New Delhi, India",
+          persist: false,
+        };
+
+    analyze.mutate(req, {
+      onSuccess: (data) => setResult(data, req),
+    });
+  }, [result, myChartsData, loadingCharts, analyze, setResult]);
 
   if (!result || !request) {
     return (

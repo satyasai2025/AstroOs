@@ -206,6 +206,7 @@ export function SBCChakraGrid() {
           {/* Fallback Janma Nakshatra if no chart */}
           {!activeChart && (
             <select
+              aria-label="Janma Nakshatra Preset"
               value={manualJanma}
               onChange={(e) => setManualJanma(e.target.value)}
               className="rounded border px-2.5 py-1.5 font-medium"
@@ -225,9 +226,10 @@ export function SBCChakraGrid() {
 
           {/* Transit Date / Time selector */}
           <div className="flex items-center gap-1 rounded border px-2 py-1" style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)" }}>
-            <span style={{ color: "var(--text-muted)" }}>Transit:</span>
+            <span className="text-slate-700 dark:text-slate-300 font-semibold">Transit:</span>
             <input
               type="datetime-local"
+              aria-label="Transit Date and Time"
               value={transitLocal}
               onChange={(e) => setTransitLocal(e.target.value)}
               className="bg-transparent text-xs outline-none"
@@ -294,22 +296,16 @@ export function SBCChakraGrid() {
                   const isAfflicted = pt.status === "afflicted";
                   const isActivated = pt.status === "activated";
 
-                  let badgeBg = "rgba(255, 255, 255, 0.05)";
-                  let borderCol = "var(--border-primary)";
-                  let textCol = "var(--text-secondary)";
+                  let badgeClass = "bg-slate-800 text-slate-200 border border-slate-700 font-semibold";
 
-                  if (isJanma) {
-                    badgeBg = "rgba(250, 204, 21, 0.15)";
-                    borderCol = "#facc15";
-                    textCol = "#facc15";
+                  if (isSelected) {
+                    badgeClass = "bg-cyan-100 text-cyan-900 border border-cyan-600/40 dark:bg-cyan-950/40 dark:text-cyan-300 dark:border-cyan-600/40 font-bold shadow-sm";
+                  } else if (isJanma) {
+                    badgeClass = "bg-amber-100 text-amber-900 border border-amber-600/40 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-600/40 font-bold";
                   } else if (isAfflicted) {
-                    badgeBg = "rgba(248, 113, 113, 0.15)";
-                    borderCol = "#f87171";
-                    textCol = "#f87171";
+                    badgeClass = "bg-rose-100 text-rose-900 border border-rose-600/40 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-600/40 font-bold";
                   } else if (isActivated) {
-                    badgeBg = "rgba(52, 211, 153, 0.15)";
-                    borderCol = "#34d399";
-                    textCol = "#34d399";
+                    badgeClass = "bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40 font-bold";
                   }
 
                   return (
@@ -320,12 +316,7 @@ export function SBCChakraGrid() {
                         setSelectedPointKey(pt.key);
                         setRayFrom(pt.nakshatra_token);
                       }}
-                      className="px-2 py-0.5 rounded text-[11px] font-medium transition-all"
-                      style={{
-                        background: isSelected ? "rgba(56, 189, 248, 0.25)" : badgeBg,
-                        border: `1px solid ${isSelected ? "#38bdf8" : borderCol}`,
-                        color: isSelected ? "#38bdf8" : textCol,
-                      }}
+                      className={`px-2 py-0.5 rounded text-[11px] transition-all ${badgeClass}`}
                     >
                       {isJanma && "★ "}
                       {isAfflicted && "✖ "}
@@ -805,32 +796,37 @@ export function SBCChakraGrid() {
               {/* 1. Malefic vs Benefic Breakdown Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Malefic Afflictions */}
-                <div className="p-3 rounded-lg border space-y-2.5" style={{ background: "rgba(248, 113, 113, 0.03)", borderColor: "rgba(248, 113, 113, 0.25)" }}>
-                  <div className="flex items-center justify-between text-xs font-bold" style={{ color: "#f87171" }}>
-                    <span>1. Malefic Vedha Breakdown (Afflictions)</span>
-                    <span>{data.synthesis.high_risk_areas.length} Active Hit{data.synthesis.high_risk_areas.length === 1 ? "" : "s"}</span>
+                <div className="p-4 rounded-2xl border border-rose-500/30 bg-rose-950/20 space-y-3 shadow-md backdrop-blur-sm">
+                  <div className="flex items-center justify-between text-xs font-extrabold text-rose-400 dark:text-rose-300">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
+                      1. Malefic Vedha Breakdown (Afflictions)
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-900 border border-rose-600/40 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-600/40">
+                      {data.synthesis.high_risk_areas.length} Active Hit{data.synthesis.high_risk_areas.length === 1 ? "" : "s"}
+                    </span>
                   </div>
 
                   {data.synthesis.high_risk_areas.length === 0 ? (
-                    <div className="text-xs text-muted-foreground italic py-2">
+                    <div className="text-xs text-slate-400 italic py-2">
                       No malefic Vedha afflictions on the 10 Sangyas at this moment.
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       {data.synthesis.high_risk_areas.map((item, idx) => (
-                        <div key={idx} className="p-2 rounded border text-xs space-y-1" style={{ background: "rgba(0, 0, 0, 0.2)", borderColor: "rgba(248, 113, 113, 0.2)" }}>
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-red-400">
-                              {item.sangya_name} ({item.sangya_offset}th - {item.nakshatra_name})
+                        <div key={idx} className="p-3 rounded-xl border border-rose-500/30 bg-slate-900/90 text-xs space-y-1.5 shadow-sm">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="font-bold text-slate-100 text-sm">
+                              {item.sangya_name} <span className="text-xs font-medium text-slate-400">({item.sangya_offset}th · {item.nakshatra_name})</span>
                             </span>
-                            <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded text-red-300" style={{ background: "rgba(248, 113, 113, 0.15)" }}>
-                              {item.transiting_planet} ({item.transiting_nakshatra}) • {item.aspect_ray} Ray
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-900 border border-rose-600/40 dark:bg-rose-950/60 dark:text-rose-300">
+                              {item.transiting_planet} ({item.transiting_nakshatra}) · {item.aspect_ray} Ray
                             </span>
                           </div>
-                          <div className="text-[11px] text-muted-foreground">
-                            <strong>Domain Hit:</strong> {item.domain}
+                          <div className="text-[11px] text-slate-300 font-medium">
+                            <strong className="text-rose-400 font-bold">Domain Hit:</strong> {item.domain}
                           </div>
-                          <div className="text-[11px] font-medium text-red-200">
+                          <div className="text-xs font-semibold text-rose-300 dark:text-rose-200 leading-relaxed bg-rose-950/40 p-2 rounded-lg border border-rose-500/20">
                             {item.impact}
                           </div>
                         </div>
@@ -840,32 +836,37 @@ export function SBCChakraGrid() {
                 </div>
 
                 {/* Benefic Protections */}
-                <div className="p-3 rounded-lg border space-y-2.5" style={{ background: "rgba(52, 211, 153, 0.03)", borderColor: "rgba(52, 211, 153, 0.25)" }}>
-                  <div className="flex items-center justify-between text-xs font-bold" style={{ color: "#34d399" }}>
-                    <span>2. Benefic Vedha Breakdown (Protection / Shields)</span>
-                    <span>{data.synthesis.protective_shields.length} Active Shield{data.synthesis.protective_shields.length === 1 ? "" : "s"}</span>
+                <div className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 space-y-3 shadow-md backdrop-blur-sm">
+                  <div className="flex items-center justify-between text-xs font-extrabold text-emerald-400 dark:text-emerald-300">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                      2. Benefic Vedha Breakdown (Protection / Shields)
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-600/40">
+                      {data.synthesis.protective_shields.length} Active Shield{data.synthesis.protective_shields.length === 1 ? "" : "s"}
+                    </span>
                   </div>
 
                   {data.synthesis.protective_shields.length === 0 ? (
-                    <div className="text-xs text-muted-foreground italic py-2">
+                    <div className="text-xs text-slate-400 italic py-2">
                       No direct benefic Vedha shields on the 10 Sangyas at this moment.
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       {data.synthesis.protective_shields.map((item, idx) => (
-                        <div key={idx} className="p-2 rounded border text-xs space-y-1" style={{ background: "rgba(0, 0, 0, 0.2)", borderColor: "rgba(52, 211, 153, 0.2)" }}>
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-emerald-400">
-                              {item.sangya_name} ({item.sangya_offset}th - {item.nakshatra_name})
+                        <div key={idx} className="p-3 rounded-xl border border-emerald-500/30 bg-slate-900/90 text-xs space-y-1.5 shadow-sm">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="font-bold text-slate-100 text-sm">
+                              {item.sangya_name} <span className="text-xs font-medium text-slate-400">({item.sangya_offset}th · {item.nakshatra_name})</span>
                             </span>
-                            <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded text-emerald-300" style={{ background: "rgba(52, 211, 153, 0.15)" }}>
-                              {item.transiting_planet} ({item.transiting_nakshatra}) • {item.aspect_ray} Ray
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/60 dark:text-emerald-300">
+                              {item.transiting_planet} ({item.transiting_nakshatra}) · {item.aspect_ray} Ray
                             </span>
                           </div>
-                          <div className="text-[11px] text-muted-foreground">
-                            <strong>Domain Shielded:</strong> {item.domain}
+                          <div className="text-[11px] text-slate-300 font-medium">
+                            <strong className="text-emerald-400 font-bold">Domain Shielded:</strong> {item.domain}
                           </div>
-                          <div className="text-[11px] font-medium text-emerald-200">
+                          <div className="text-xs font-semibold text-emerald-300 dark:text-emerald-200 leading-relaxed bg-emerald-950/40 p-2 rounded-lg border border-emerald-500/20">
                             {item.impact}
                           </div>
                         </div>
@@ -876,25 +877,25 @@ export function SBCChakraGrid() {
               </div>
 
               {/* 2. Executive Synthesis & Practical Interpretation */}
-              <div className="p-3 rounded-lg border space-y-2 text-xs" style={{ background: "rgba(250, 204, 21, 0.03)", borderColor: "rgba(250, 204, 21, 0.2)" }}>
-                <div className="font-bold text-amber-400 uppercase tracking-wide text-[11px]">
+              <div className="p-4 rounded-2xl border border-amber-500/30 bg-amber-950/20 space-y-3 backdrop-blur-sm">
+                <div className="font-extrabold text-amber-400 dark:text-amber-300 uppercase tracking-wide text-xs">
                   Final Synthesis & Practical Interpretation
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                  <div className="p-2 rounded border" style={{ background: "rgba(248, 113, 113, 0.05)", borderColor: "rgba(248, 113, 113, 0.2)" }}>
-                    <span className="font-semibold text-red-400">High Risk Caution: </span>
-                    <span className="text-muted-foreground">{data.synthesis.executive_summary}</span>
+                  <div className="p-3 rounded-xl border border-rose-500/30 bg-slate-900/90 space-y-1">
+                    <span className="font-bold text-rose-400 dark:text-rose-300 block text-xs">High Risk Caution:</span>
+                    <span className="text-slate-200 font-medium leading-relaxed block">{data.synthesis.executive_summary}</span>
                   </div>
-                  <div className="p-2 rounded border" style={{ background: "rgba(52, 211, 153, 0.05)", borderColor: "rgba(52, 211, 153, 0.2)" }}>
-                    <span className="font-semibold text-emerald-400">Saving Grace: </span>
-                    <span className="text-muted-foreground">{data.synthesis.saving_grace}</span>
+                  <div className="p-3 rounded-xl border border-emerald-500/30 bg-slate-900/90 space-y-1">
+                    <span className="font-bold text-emerald-400 dark:text-emerald-300 block text-xs">Saving Grace:</span>
+                    <span className="text-slate-200 font-medium leading-relaxed block">{data.synthesis.saving_grace}</span>
                   </div>
                 </div>
 
                 {data.synthesis.practical_advice.length > 0 && (
-                  <div className="pt-1">
-                    <div className="text-[11px] font-semibold text-amber-300 mb-1">Actionable Recommendations:</div>
-                    <ul className="list-disc list-inside space-y-0.5 text-muted-foreground text-[11px]">
+                  <div className="pt-2 border-t border-amber-500/20">
+                    <div className="text-xs font-bold text-amber-300 mb-1.5">Actionable Recommendations:</div>
+                    <ul className="list-disc list-inside space-y-1 text-slate-200 text-xs font-medium leading-relaxed">
                       {data.synthesis.practical_advice.map((adv, aIdx) => (
                         <li key={aIdx}>{adv}</li>
                       ))}

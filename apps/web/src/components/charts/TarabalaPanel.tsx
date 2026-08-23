@@ -193,12 +193,12 @@ export function TarabalaPanel() {
                   {request?.subject_name || activeSummary?.subject_name || "Guest Chart Profile"}
                 </h2>
                 {activeSummary?.is_default && (
-                  <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+                  <span className="rounded-full bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 px-2 py-0.5 text-[10px] font-bold">
                     Default
                   </span>
                 )}
-                <span className="rounded-full bg-cyan-500/15 border border-cyan-500/30 px-2 py-0.5 text-[10px] font-bold text-cyan-400 flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="rounded-full bg-cyan-100 text-cyan-900 border border-cyan-600/40 dark:bg-cyan-950/40 dark:text-cyan-300 px-2 py-0.5 text-[10px] font-bold flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
                   Live Sync
                 </span>
               </div>
@@ -369,15 +369,21 @@ export function TarabalaPanel() {
       {data && (
         <div className="space-y-6">
           {/* Dual Best Stars Banner (Moon ∩ Lagna) */}
-          {data.best_stars && data.best_stars.length > 0 && (
-            <div className="rounded-2xl border p-4 bg-emerald-500/10 border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {data?.best_stars && data.best_stars.length > 0 && (
+            <div
+              className="rounded-2xl border p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+              style={{
+                backgroundColor: "var(--bg-secondary)",
+                borderColor: "var(--border-primary)",
+              }}
+            >
               <div className="flex items-center gap-2.5">
                 <span className="text-xl">🌟</span>
                 <div>
-                  <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                  <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--accent)" }}>
                     Best Stars Intersection (Moon ∩ Lagna)
                   </h4>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
+                  <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>
                     These Nakshatras are simultaneously auspicious from both your Moon and Ascendant.
                   </p>
                 </div>
@@ -386,7 +392,12 @@ export function TarabalaPanel() {
                 {data.best_stars.map((star) => (
                   <span
                     key={star}
-                    className="rounded-lg bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-1 text-xs font-bold text-emerald-300 capitalize"
+                    className="rounded-lg px-2.5 py-1 text-xs font-bold capitalize transition"
+                    style={{
+                      backgroundColor: "var(--bg-card)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-primary)",
+                    }}
                   >
                     {star.replace("_", " ")}
                   </span>
@@ -396,21 +407,27 @@ export function TarabalaPanel() {
           )}
 
           {/* Dasha Hierarchy Convergence Alert */}
-          {data.total_active_levels > 0 && (
-            <div className="rounded-2xl border p-4 sm:p-5 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border-indigo-500/30 space-y-3">
+          {data?.total_active_levels && data.total_active_levels > 0 ? (
+            <div
+              className="rounded-2xl border p-4 sm:p-5 space-y-3"
+              style={{
+                backgroundColor: "var(--bg-secondary)",
+                borderColor: "var(--border-primary)",
+              }}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">⏳</span>
-                  <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
+                  <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
                     Dasha-Hierarchy Lordship Convergence
                   </h4>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-indigo-400">
+                  <span className="text-xs font-bold" style={{ color: "var(--accent)" }}>
                     {data.favorable_level_count} / {data.total_active_levels} Levels Favorable
                   </span>
                   {data.all_levels_favorable && (
-                    <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                    <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40">
                       All Favorable ✓
                     </span>
                   )}
@@ -418,20 +435,20 @@ export function TarabalaPanel() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                {data.lordship_tarabala.map((l) => (
+                {data.lordship_tarabala?.map((l) => (
                   <div
                     key={l.dasha_level}
-                    className={`rounded-xl p-3 border text-xs flex items-center justify-between ${
+                    className={`rounded-xl p-3 border text-xs flex items-center justify-between font-bold ${
                       l.is_favorable
-                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                        : "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                        ? "bg-emerald-100 text-emerald-900 border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40"
+                        : "bg-rose-100 text-rose-900 border-rose-600/40 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-600/40"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span className="font-bold">
                         Level {l.dasha_level} ({PLANET_GLYPHS[l.lord] ?? l.lord})
                       </span>
-                      <span className="text-[11px] text-muted-foreground capitalize">
+                      <span className="text-[11px] opacity-90 capitalize font-medium">
                         → {l.position_name}
                       </span>
                     </div>
@@ -442,15 +459,15 @@ export function TarabalaPanel() {
                 ))}
               </div>
             </div>
-          )}
+          ) : null}
 
           {/* 9-Tara Navatara Visual Matrix Grid */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
+              <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
                 Classical 9-Tara Navatara Matrix (3 Cycles)
               </h3>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>
                 Counted from Janma Nakshatra ({janmaNakshatra})
               </span>
             </div>
@@ -462,46 +479,56 @@ export function TarabalaPanel() {
                 return (
                   <div
                     key={tara.key}
-                    className={`rounded-2xl border p-4 space-y-3 transition-all ${
-                      tara.is_favorable
-                        ? "bg-emerald-500/5 border-emerald-500/25 hover:border-emerald-500/40"
+                    className="rounded-2xl border p-4 space-y-3 transition-all"
+                    style={{
+                      backgroundColor: "var(--bg-card)",
+                      borderColor: tara.is_favorable
+                        ? "var(--status-success, #10b981)"
                         : tara.key === "janma"
-                        ? "bg-sky-500/5 border-sky-500/25 hover:border-sky-500/40"
-                        : "bg-rose-500/5 border-rose-500/25 hover:border-rose-500/40"
-                    }`}
+                        ? "var(--accent)"
+                        : "var(--status-danger, #f43f5e)",
+                    }}
                   >
                     {/* Tara Header */}
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-foreground">
+                      <span className="font-bold text-xs" style={{ color: "var(--text-primary)" }}>
                         {tara.label}
                       </span>
                       <span
                         className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${
                           tara.is_favorable
-                            ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                            ? "bg-emerald-100 text-emerald-900 border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40"
                             : tara.key === "janma"
-                            ? "bg-sky-500/20 text-sky-400 border-sky-500/30"
-                            : "bg-rose-500/20 text-rose-400 border-rose-500/30"
+                            ? "bg-amber-100 text-amber-900 border-amber-600/40 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-600/40"
+                            : "bg-rose-100 text-rose-900 border-rose-600/40 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-600/40"
                         }`}
                       >
                         {tara.badge}
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-muted-foreground font-medium">
+                    <p className="text-[11px] font-medium" style={{ color: "var(--text-secondary)" }}>
                       {tara.meaning}
                     </p>
 
                     {/* 3 Cycle Stars */}
-                    <div className="rounded-xl bg-background/60 border border-border/60 p-2.5 space-y-1">
-                      <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
+                    <div
+                      className="rounded-xl border p-2.5 space-y-1"
+                      style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}
+                    >
+                      <span className="text-[9px] font-bold uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
                         3 Paryaya Stars
                       </span>
                       <div className="flex flex-wrap gap-1">
                         {tara.nakshatras.map((nak, i) => (
                           <span
                             key={nak}
-                            className="rounded-md bg-muted/60 px-1.5 py-0.5 text-[10px] font-medium text-foreground capitalize"
+                            className="rounded-md border px-1.5 py-0.5 text-[10px] font-medium capitalize"
+                            style={{
+                              backgroundColor: "var(--bg-card)",
+                              color: "var(--text-primary)",
+                              borderColor: "var(--border-primary)",
+                            }}
                           >
                             {i + 1}st: {nak.replace("_", " ")}
                           </span>
@@ -511,9 +538,9 @@ export function TarabalaPanel() {
 
                     {/* Active Occupants */}
                     {(hasTransit || hasNatal) && (
-                      <div className="space-y-1 pt-1 border-t border-border/50 text-[10px]">
+                      <div className="space-y-1 pt-1 border-t text-[10px]" style={{ borderColor: "var(--border-primary)" }}>
                         {hasTransit && (
-                          <div className="flex items-center gap-1.5 text-cyan-400 font-medium">
+                          <div className="flex items-center gap-1.5 font-medium" style={{ color: "var(--accent)" }}>
                             <span>🛰️ Transit:</span>
                             <span>
                               {tara.transitPlanets.map((p) => `${PLANET_GLYPHS[p.planet] ?? p.planet} (${p.nakshatra})`).join(", ")}
@@ -521,7 +548,7 @@ export function TarabalaPanel() {
                           </div>
                         )}
                         {hasNatal && (
-                          <div className="flex items-center gap-1.5 text-muted-foreground">
+                          <div className="flex items-center gap-1.5" style={{ color: "var(--text-secondary)" }}>
                             <span>🪐 Natal:</span>
                             <span>
                               {tara.natalPlanets.map((p) => `${PLANET_GLYPHS[p.planet] ?? p.planet}`).join(", ")}
@@ -539,14 +566,14 @@ export function TarabalaPanel() {
           {/* Natal & Transit Side-by-Side Tables */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Natal Tarabala */}
-            <div className="rounded-2xl border p-4 space-y-3 bg-background/40" style={{ borderColor: "var(--border-primary)" }}>
-              <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
+            <div className="rounded-2xl border p-4 space-y-3" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}>
+              <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
                 Natal Grahas Tarabala
               </h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b text-[10px] uppercase tracking-wide text-muted-foreground" style={{ borderColor: "var(--border-primary)" }}>
+                    <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
                       <th className="py-1.5 pr-2">Graha</th>
                       <th className="py-1.5 pr-2">Birth Nakshatra</th>
                       <th className="py-1.5 pr-2">Tara</th>
@@ -554,23 +581,23 @@ export function TarabalaPanel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.natal_tarabala.map((p) => (
-                      <tr key={p.planet} className="border-b border-border/40">
-                        <td className="py-1.5 pr-2 font-bold text-foreground">
+                    {data?.natal_tarabala?.map((p) => (
+                      <tr key={p.planet} className="border-b" style={{ borderColor: "var(--border-primary)" }}>
+                        <td className="py-1.5 pr-2 font-bold" style={{ color: "var(--text-primary)" }}>
                           {PLANET_GLYPHS[p.planet] ?? p.planet}
                         </td>
-                        <td className="py-1.5 pr-2 text-muted-foreground capitalize">
+                        <td className="py-1.5 pr-2 capitalize" style={{ color: "var(--text-secondary)" }}>
                           {p.nakshatra.replace("_", " ")}
                         </td>
-                        <td className="py-1.5 pr-2 font-medium capitalize text-foreground">
+                        <td className="py-1.5 pr-2 font-medium capitalize" style={{ color: "var(--text-primary)" }}>
                           {p.name}
                         </td>
                         <td className="py-1.5">
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${
+                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${
                               p.is_favorable
-                                ? "bg-emerald-500/20 text-emerald-400"
-                                : "bg-rose-500/20 text-rose-400"
+                                ? "bg-emerald-100 text-emerald-900 border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40"
+                                : "bg-rose-100 text-rose-900 border-rose-600/40 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-600/40"
                             }`}
                           >
                             {p.is_favorable ? "Favorable" : "Unfavorable"}
@@ -584,14 +611,14 @@ export function TarabalaPanel() {
             </div>
 
             {/* Transit Tarabala */}
-            <div className="rounded-2xl border p-4 space-y-3 bg-background/40" style={{ borderColor: "var(--border-primary)" }}>
-              <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
+            <div className="rounded-2xl border p-4 space-y-3" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}>
+              <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
                 Current Transit Grahas Tarabala
               </h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b text-[10px] uppercase tracking-wide text-muted-foreground" style={{ borderColor: "var(--border-primary)" }}>
+                    <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
                       <th className="py-1.5 pr-2">Graha</th>
                       <th className="py-1.5 pr-2">Current Nakshatra</th>
                       <th className="py-1.5 pr-2">Tara</th>
@@ -599,23 +626,23 @@ export function TarabalaPanel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.transit_tarabala.map((p) => (
-                      <tr key={p.planet} className="border-b border-border/40">
-                        <td className="py-1.5 pr-2 font-bold text-foreground">
+                    {data?.transit_tarabala?.map((p) => (
+                      <tr key={p.planet} className="border-b" style={{ borderColor: "var(--border-primary)" }}>
+                        <td className="py-1.5 pr-2 font-bold" style={{ color: "var(--text-primary)" }}>
                           {PLANET_GLYPHS[p.planet] ?? p.planet}
                         </td>
-                        <td className="py-1.5 pr-2 text-muted-foreground capitalize">
+                        <td className="py-1.5 pr-2 capitalize" style={{ color: "var(--text-secondary)" }}>
                           {p.nakshatra.replace("_", " ")}
                         </td>
-                        <td className="py-1.5 pr-2 font-medium capitalize text-foreground">
+                        <td className="py-1.5 pr-2 font-medium capitalize" style={{ color: "var(--text-primary)" }}>
                           {p.name}
                         </td>
                         <td className="py-1.5">
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${
+                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${
                               p.is_favorable
-                                ? "bg-emerald-500/20 text-emerald-400"
-                                : "bg-rose-500/20 text-rose-400"
+                                ? "bg-emerald-100 text-emerald-900 border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40"
+                                : "bg-rose-100 text-rose-900 border-rose-600/40 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-600/40"
                             }`}
                           >
                             {p.is_favorable ? "Favorable" : "Unfavorable"}
@@ -630,36 +657,38 @@ export function TarabalaPanel() {
           </div>
 
           {/* Special Points (28-Scheme Abhijit-inclusive) */}
-          <div className="rounded-2xl border p-4 space-y-3 bg-background/40" style={{ borderColor: "var(--border-primary)" }}>
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">
-                Special Points (28-Nakshatra Abhijit Scheme)
-              </h4>
-              <span className="text-[10px] text-muted-foreground">
-                Canonical sensitive points derived from Moon & Lagna
-              </span>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b text-[10px] uppercase tracking-wide text-muted-foreground" style={{ borderColor: "var(--border-primary)" }}>
-                    <th className="py-1.5 pr-3">Sensitive Point Name</th>
-                    <th className="py-1.5 pr-3">From Moon Anchor</th>
-                    <th className="py-1.5">From Lagna Anchor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.special_points.map((sp) => (
-                    <tr key={sp.name} className="border-b border-border/40">
-                      <td className="py-1.5 pr-3 font-bold capitalize text-foreground">{sp.name}</td>
-                      <td className="py-1.5 pr-3 text-muted-foreground capitalize">{sp.from_moon.replace("_", " ")}</td>
-                      <td className="py-1.5 text-muted-foreground capitalize">{sp.from_lagna ? sp.from_lagna.replace("_", " ") : "—"}</td>
+          {data?.special_points && data.special_points.length > 0 ? (
+            <div className="rounded-2xl border p-4 space-y-3" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}>
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
+                  Special Points (28-Nakshatra Abhijit Scheme)
+                </h4>
+                <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                  Canonical sensitive points derived from Moon & Lagna
+                </span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b text-[10px] uppercase tracking-wide" style={{ borderColor: "var(--border-primary)", color: "var(--text-muted)" }}>
+                      <th className="py-1.5 pr-3">Sensitive Point Name</th>
+                      <th className="py-1.5 pr-3">From Moon Anchor</th>
+                      <th className="py-1.5">From Lagna Anchor</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.special_points.map((sp) => (
+                      <tr key={sp.name} className="border-b" style={{ borderColor: "var(--border-primary)" }}>
+                        <td className="py-1.5 pr-3 font-bold capitalize" style={{ color: "var(--text-primary)" }}>{sp.name}</td>
+                        <td className="py-1.5 pr-3 capitalize" style={{ color: "var(--text-secondary)" }}>{sp.from_moon.replace("_", " ")}</td>
+                        <td className="py-1.5 capitalize" style={{ color: "var(--text-secondary)" }}>{sp.from_lagna ? sp.from_lagna.replace("_", " ") : "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       )}
     </div>

@@ -13,6 +13,7 @@ import {
 import { PlanetStrengthRadar } from "./PlanetStrengthRadar";
 import { IshtaKashtaBalaPanel } from "./IshtaKashtaBalaPanel";
 import { AvasthaPanel } from "./AvasthaPanel";
+import { VimsopakaBalaPanel } from "./VimsopakaBalaPanel";
 import { SaravaliShadbalaSuite } from "./SaravaliShadbalaSuite";
 import type { PlanetStrengthSchema, ShadbalaTotalResponse, WorkflowAnalysisRequest } from "@/lib/types";
 
@@ -242,12 +243,7 @@ export function StrengthAnalysisCenter({
             {tab === "ishtakashta" && <IshtaKashtaBalaPanel request={request} />}
             {tab === "avastha" && <AvasthaPanel request={request} />}
 
-            {tab === "vimsopaka" && (
-              <div className="glass-card p-4 text-xs" style={{ color: "var(--text-muted)" }}>
-                <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Vimsopaka Bala</h3>
-                <p>Not implemented — there is no Vimsopaka Bala field, engine, or endpoint in the backend today.</p>
-              </div>
-            )}
+            {tab === "vimsopaka" && <VimsopakaBalaPanel request={request} />}
 
             {tab === "matrix" && (
               <div className="glass-card overflow-x-auto p-4">

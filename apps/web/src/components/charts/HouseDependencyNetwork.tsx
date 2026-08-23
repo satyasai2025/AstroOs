@@ -640,9 +640,9 @@ export function HouseDependencyNetwork({
       <div className="flex flex-1 flex-col gap-3">
         {/* Top: filter toolbar */}
         <div className="flex w-full items-center justify-between gap-2">
-          <h3 className="text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+          <h2 className="text-sm font-bold uppercase tracking-wide text-amber-700 dark:text-amber-400">
             House Dependency Network
-          </h3>
+          </h2>
           {selected && (
             <button
               type="button"
@@ -666,8 +666,8 @@ export function HouseDependencyNetwork({
             }}
             className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-all ${
               activeKinds.size === Object.keys(EDGE_KIND_LABEL).length
-                ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
-                : "bg-transparent border-var(--border-primary) text-gray-400 hover:border-gray-500"
+                ? "bg-cyan-100 border-cyan-600 text-cyan-900 dark:bg-cyan-950/80 dark:border-cyan-400 dark:text-cyan-200 font-bold shadow-sm"
+                : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400"
             }`}
           >
             All Relationships
@@ -683,8 +683,8 @@ export function HouseDependencyNetwork({
                 disabled={count === 0}
                 className={`px-2.5 py-1 text-xs font-medium rounded-full border transition-all ${
                   active
-                    ? "bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
-                    : "bg-transparent border-var(--border-primary) text-gray-400 hover:border-gray-500"
+                    ? "bg-cyan-100 border-cyan-600 text-cyan-900 dark:bg-cyan-950/80 dark:border-cyan-400 dark:text-cyan-200 font-bold shadow-sm"
+                    : "bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400"
                 }`}
               >
                 {EDGE_KIND_LABEL[kind]} ({count})
@@ -884,25 +884,26 @@ export function HouseDependencyNetwork({
         </div>
 
         {/* Bottom timeline */}
-        <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-800 bg-[var(--bg-card)] px-4 py-3">
-          <span className="text-[10px] font-mono uppercase text-gray-500">Dasha / Transit Timeline</span>
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-slate-300 dark:border-slate-800 bg-[var(--bg-card)] px-4 py-3">
+          <span className="text-[10px] font-mono uppercase text-slate-700 dark:text-slate-300 font-semibold">Dasha / Transit Timeline</span>
           <div className="flex-1 mx-6 flex items-center gap-4">
-            <span className="text-[10px] font-mono text-gray-500">2020</span>
+            <span className="text-[10px] font-mono text-slate-700 dark:text-slate-300 font-semibold">2020</span>
             <input
               type="range"
+              aria-label="Timeline Year"
               min="2020"
               max="2035"
               defaultValue="2026"
               step="1"
-              className="flex-1 accent-cyan-400 h-2 cursor-pointer appearance-none bg-gray-800 rounded-full"
+              className="flex-1 accent-cyan-400 h-2 cursor-pointer appearance-none bg-slate-700 rounded-full"
               style={{
                 backgroundSize: "50% 100%",
                 background: "linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, #334155 50%, #334155 100%)",
               }}
             />
-            <span className="text-[10px] font-mono text-gray-500">2035</span>
+            <span className="text-[10px] font-mono text-slate-700 dark:text-slate-300 font-semibold">2035</span>
           </div>
-          <span className="text-xs font-bold font-mono" style={{ color: "var(--accent)" }}>
+          <span className="text-xs font-bold font-mono text-cyan-800 dark:text-cyan-300">
             2026
           </span>
         </div>

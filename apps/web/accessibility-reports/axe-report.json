@@ -2,23 +2,64 @@
   {
     "stepName": "01. Homepage",
     "url": "http://localhost:3000/",
-    "timestamp": "2026-08-22T09:24:35.620Z",
-    "status": "passed",
-    "violationCount": 0,
-    "violations": []
+    "timestamp": "2026-08-22T11:41:33.876Z",
+    "status": "failed",
+    "violationCount": 1,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+        "affectedNodes": 1,
+        "nodes": [
+          {
+            "html": "<a class=\"text-xs font-extrabold px-3 py-1.5 rounded-lg text-black dark:text-white hover:underline transition\" href=\"/login\">Sign In</a>",
+            "target": [
+              ".hover\\:underline"
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     "stepName": "02. Dashboard Overview",
     "url": "http://localhost:3000/dashboard",
-    "timestamp": "2026-08-22T09:24:37.040Z",
+    "timestamp": "2026-08-22T11:41:36.680Z",
     "status": "passed",
     "violationCount": 0,
     "violations": []
   },
   {
-    "stepName": "Tab: ॐ (/dashboard)",
+    "stepName": "Tab: Dashboard (/dashboard)",
     "url": "http://localhost:3000/dashboard",
-    "timestamp": "2026-08-22T09:24:38.976Z",
+    "timestamp": "2026-08-22T11:41:37.782Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: My Charts (/charts/history)",
+    "url": "http://localhost:3000/charts/history",
+    "timestamp": "2026-08-22T11:41:39.819Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: Compare Charts (/charts/compare)",
+    "url": "http://localhost:3000/charts/compare",
+    "timestamp": "2026-08-22T11:41:41.614Z",
+    "status": "passed",
+    "violationCount": 0,
+    "violations": []
+  },
+  {
+    "stepName": "Tab: Import Chart (/charts/import)",
+    "url": "http://localhost:3000/charts/import",
+    "timestamp": "2026-08-22T11:41:43.471Z",
     "status": "failed",
     "violationCount": 1,
     "violations": [
@@ -31,27 +72,27 @@
         "affectedNodes": 4,
         "nodes": [
           {
-            "html": "<span style=\"color: var(--accent);\">OS</span>",
+            "html": "<code class=\"text-amber-600 dark:text-amber-400 font-mono\">subject_name</code>",
             "target": [
-              ".tracking-wide.text-sm.font-bold > span"
+              "code:nth-child(1)"
             ]
           },
           {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-charts);\">Core Charts</p>",
+            "html": "<code class=\"text-amber-600 dark:text-amber-400 font-mono\">birth_datetime_utc</code>",
             "target": [
-              "div:nth-child(1) > .mb-1\\.5.tracking-widest"
+              "code:nth-child(2)"
             ]
           },
           {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-analysis);\">Predictive &amp; Technical</p>",
+            "html": "<code class=\"text-amber-600 dark:text-amber-400 font-mono\">latitude</code>",
             "target": [
-              "div:nth-child(2) > .mb-1\\.5.tracking-widest"
+              "code:nth-child(3)"
             ]
           },
           {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-research);\">Research</p>",
+            "html": "<code class=\"text-amber-600 dark:text-amber-400 font-mono\">longitude</code>",
             "target": [
-              "div:nth-child(3) > .mb-1\\.5.tracking-widest"
+              "code:nth-child(4)"
             ]
           }
         ]
@@ -59,33 +100,9 @@
     ]
   },
   {
-    "stepName": "Tab: My Charts (/charts/history)",
-    "url": "http://localhost:3000/charts/history",
-    "timestamp": "2026-08-22T09:24:40.399Z",
-    "status": "passed",
-    "violationCount": 0,
-    "violations": []
-  },
-  {
-    "stepName": "Tab: Compare Charts (/charts/compare)",
-    "url": "http://localhost:3000/charts/compare",
-    "timestamp": "2026-08-22T09:24:41.956Z",
-    "status": "passed",
-    "violationCount": 0,
-    "violations": []
-  },
-  {
-    "stepName": "Tab: Import Chart (/charts/import)",
-    "url": "http://localhost:3000/charts/import",
-    "timestamp": "2026-08-22T09:24:43.399Z",
-    "status": "passed",
-    "violationCount": 0,
-    "violations": []
-  },
-  {
-    "stepName": "Tab: Birth Chart (/charts)",
-    "url": "http://localhost:3000/charts?view=chart",
-    "timestamp": "2026-08-22T09:24:45.022Z",
+    "stepName": "Tab: Nakshatra Module (/nakshatra)",
+    "url": "http://localhost:3000/nakshatra",
+    "timestamp": "2026-08-22T11:41:45.966Z",
     "status": "failed",
     "violationCount": 1,
     "violations": [
@@ -95,36 +112,1356 @@
         "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
         "help": "Elements must meet minimum color contrast ratio thresholds",
         "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
-        "affectedNodes": 5,
+        "affectedNodes": 225,
         "nodes": [
           {
-            "html": "<span style=\"color: var(--accent);\">OS</span>",
+            "html": "<p class=\"mt-1 text-sm\" style=\"color: var(--text-secondary);\">Complete reference of all 27 lunar mansions with lords, deities, classifications, and padas</p>",
             "target": [
-              ".tracking-wide > span"
+              ".mb-4:nth-child(1) > .mt-1"
             ]
           },
           {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-charts);\">Core Charts</p>",
+            "html": "<span class=\"text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase\">Total Nakshatras</span>",
             "target": [
-              "div:nth-child(1) > .mb-1\\.5.font-semibold.uppercase"
+              ".text-slate-900.dark\\:text-slate-100.shadow-slate-200\\/50:nth-child(1) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\\:text-slate-400"
             ]
           },
           {
-            "html": "<a class=\"flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition\" aria-current=\"page\" href=\"/charts?view=chart\" style=\"background-color: var(--border-primary); color: var(--section-charts);\">",
+            "html": "<span class=\"text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase\">Total Padas</span>",
             "target": [
-              "a[aria-current=\"page\"]"
+              ".text-slate-900.dark\\:text-slate-100.shadow-slate-200\\/50:nth-child(2) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\\:text-slate-400"
             ]
           },
           {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-analysis);\">Predictive &amp; Technical</p>",
+            "html": "<span class=\"text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase\">Nakshatra Lords</span>",
             "target": [
-              "div:nth-child(2) > .mb-1\\.5.font-semibold.uppercase"
+              ".text-slate-900.dark\\:text-slate-100.shadow-slate-200\\/50:nth-child(3) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\\:text-slate-400"
             ]
           },
           {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-research);\">Research</p>",
+            "html": "<span class=\"text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase\">Gandanta</span>",
             "target": [
-              "div:nth-child(3) > .mb-1\\.5.font-semibold.uppercase"
+              ".text-slate-900.dark\\:text-slate-100.shadow-slate-200\\/50:nth-child(4) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\\:text-slate-400"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">अश्विनी</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The horsewomen; the winners</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(4)"
+            ]
+          },
+          {
+            "html": "<span>0.0° – 13.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Ashwini Kumaras</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(1) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">भरणी</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The bearer; the one who carries</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(4)"
+            ]
+          },
+          {
+            "html": "<span>13.3° – 26.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Yama</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(2) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">कृत्तिका</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The cutters; the Pleiades</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>26.7° – 40.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Agni</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(3) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">रोहिणी</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The red one; the rising</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>40.0° – 53.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Brahma</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(4) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">मृगशिरा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The deer's head</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>53.3° – 66.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Soma</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(5) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">आर्द्रा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The moist one; the teardrop</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>66.7° – 80.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Rudra</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(6) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">पुनर्वसु</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The return of light</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>80.0° – 93.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Aditi</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(7) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">पुष्य</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The nourisher; the best</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>93.3° – 106.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Brihaspati</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(8) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">आश्लेषा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The embrace; the entwined</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>106.7° – 120.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Nagas</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(9) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">मघा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The mighty one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>120.0° – 133.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Pitris</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(10) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">पूर्व फाल्गुनी</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The former reddish one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>133.3° – 146.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Bhaga</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(11) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">उत्तर फाल्गुनी</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The latter reddish one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>146.7° – 160.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Aryaman</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(12) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">हस्त</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The hand</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>160.0° – 173.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Savitar</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(13) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">चित्रा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The bright one; the brilliant</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>173.3° – 186.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Tvashtar</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(14) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">स्वाती</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The independent one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>186.7° – 200.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Vayu</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(15) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">विशाखा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The forked one; the branched</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>200.0° – 213.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Indra &amp; Agni</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(16) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">अनुराधा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The following one; the devoted</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>213.3° – 226.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Mitra</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(17) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">ज्येष्ठा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The eldest; the senior</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>226.7° – 240.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Indra</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(18) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">मूल</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The root</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(4)"
+            ]
+          },
+          {
+            "html": "<span>240.0° – 253.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Nirriti</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(19) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">पूर्व आषाढ़ा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The former invincible one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(4)"
+            ]
+          },
+          {
+            "html": "<span>253.3° – 266.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Apas</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(20) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">उत्तर आषाढ़ा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The latter invincible one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(4)"
+            ]
+          },
+          {
+            "html": "<span>266.7° – 280.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Vishvadevas</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(21) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">श्रवण</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The hearing; the listener</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>280.0° – 293.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Vishnu</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(22) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">धनिष्ठा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The most wealthy</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>293.3° – 306.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Vasus</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(23) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">शतभिषा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The hundred healers</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>306.7° – 320.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Varuna</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(24) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">पूर्व भाद्रपदा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The former blessed feet</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>320.0° – 333.3°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Aja Ekapada</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(25) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">उत्तर भाद्रपदा</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The latter blessed feet</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>333.3° – 346.7°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Ahir Budhnya</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(26) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span class=\"text-xs\" style=\"color: var(--text-muted);\">रेवती</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .gap-2.items-center.flex > .text-xs"
+            ]
+          },
+          {
+            "html": "<p class=\"mt-0.5 text-xs italic\" style=\"color: var(--text-secondary);\">The prosperous one</p>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > div > .mt-0\\.5.italic"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .items-start.justify-between.gap-2 > span"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(2)"
+            ]
+          },
+          {
+            "html": "<span style=\"display: inline-flex...\">",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .gap-1.flex-wrap.flex > span:nth-child(3)"
+            ]
+          },
+          {
+            "html": "<span>346.7° – 360.0°</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(1)"
+            ]
+          },
+          {
+            "html": "<span>Pushan</span>",
+            "target": [
+              ".hover\\:-translate-y-0\\.5.cursor-pointer.transition-all:nth-child(27) > .shadow-slate-200\\/50.dark\\:shadow-none.dark\\:bg-slate-900\\/90 > .justify-between.items-center.text-xs > span:nth-child(2)"
             ]
           }
         ]
@@ -132,77 +1469,18 @@
     ]
   },
   {
-    "stepName": "Tab Index #9",
-    "url": "http://localhost:3000/charts?view=chart",
-    "timestamp": "2026-08-22T09:24:46.826Z",
-    "status": "error",
-    "errorMessage": "page.goto: net::ERR_ABORTED at http://localhost:3000/nakshatra\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/nakshatra\", waiting until \"load\"\u001b[22m\n",
-    "violationCount": 0,
-    "violations": []
-  },
-  {
-    "stepName": "03. Astrology Calculation Form (Inputs)",
-    "url": "http://localhost:3000/charts?view=chart",
-    "timestamp": "2026-08-22T09:24:52.332Z",
-    "status": "failed",
-    "violationCount": 1,
-    "violations": [
-      {
-        "id": "color-contrast",
-        "impact": "serious",
-        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-        "help": "Elements must meet minimum color contrast ratio thresholds",
-        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
-        "affectedNodes": 5,
-        "nodes": [
-          {
-            "html": "<span style=\"color: var(--accent);\">OS</span>",
-            "target": [
-              ".tracking-wide.text-sm.font-bold > span"
-            ]
-          },
-          {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-charts);\">Core Charts</p>",
-            "target": [
-              "div:nth-child(1) > .mb-1\\.5.tracking-widest"
-            ]
-          },
-          {
-            "html": "<a class=\"flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-medium transition\" href=\"/charts?view=chart\" style=\"background-color: transparent; color: var(--section-charts);\">",
-            "target": [
-              "a[href=\"/charts?view=chart\"]"
-            ]
-          },
-          {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-analysis);\">Predictive &amp; Technical</p>",
-            "target": [
-              "div:nth-child(2) > .mb-1\\.5.tracking-widest"
-            ]
-          },
-          {
-            "html": "<p class=\"mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest\" style=\"color: var(--section-research);\">Research</p>",
-            "target": [
-              "div:nth-child(3) > .mb-1\\.5.tracking-widest"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "stepName": "04. Calculation Results & Chart Output",
-    "url": "http://localhost:3000/login",
-    "timestamp": "2026-08-22T09:25:21.296Z",
+    "stepName": "08. Astrology Calculation Form (Inputs)",
+    "url": "http://localhost:3000/dashboard",
+    "timestamp": "2026-08-22T11:41:47.649Z",
     "status": "passed",
     "violationCount": 0,
     "violations": []
   },
   {
-    "stepName": "Astrology Calculation Form Verification",
-    "url": "http://localhost:3000/login",
-    "timestamp": "2026-08-22T09:25:21.322Z",
-    "status": "error",
-    "errorMessage": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
+    "stepName": "09. Calculation Results & Chart Output",
+    "url": "http://localhost:3000/dashboard",
+    "timestamp": "2026-08-22T11:41:51.084Z",
+    "status": "passed",
     "violationCount": 0,
     "violations": []
   }

@@ -32,6 +32,8 @@ import {
   type AreaGraphEntry,
 } from "@/components/charts/predictions/PredictionInsights";
 
+export const dynamic = "force-dynamic";
+
 const AREA_KEYS = Object.keys(AREA_LABELS) as LifeArea[];
 
 function isLifeArea(v: string | null): v is LifeArea {

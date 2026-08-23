@@ -365,7 +365,7 @@ export default function ChartHistoryPage() {
                 onClick={() => setActiveFilter("all")}
                 className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
                   activeFilter === "all"
-                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                    ? "border-amber-600 bg-amber-100 text-amber-900 dark:border-amber-500 dark:bg-amber-500/20 dark:text-amber-300 font-bold"
                     : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
                 }`}
               >
@@ -376,7 +376,7 @@ export default function ChartHistoryPage() {
                 onClick={() => setActiveFilter("research")}
                 className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
                   activeFilter === "research"
-                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                    ? "border-amber-600 bg-amber-100 text-amber-900 dark:border-amber-500 dark:bg-amber-500/20 dark:text-amber-300 font-bold"
                     : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
                 }`}
               >
@@ -387,7 +387,7 @@ export default function ChartHistoryPage() {
                 onClick={() => setActiveFilter("recent")}
                 className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
                   activeFilter === "recent"
-                    ? "border-amber-500 bg-amber-500/10 text-amber-400"
+                    ? "border-amber-600 bg-amber-100 text-amber-900 dark:border-amber-500 dark:bg-amber-500/20 dark:text-amber-300 font-bold"
                     : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
                 }`}
               >

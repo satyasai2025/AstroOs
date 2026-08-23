@@ -32,11 +32,11 @@ import VargaExplorer from "@/components/charts/VargaExplorer";
 import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
-import { ResizablePanels } from "@/components/ui";
-import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
-import { formatPosition } from "@/lib/formatAstro";
-import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
+import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
+import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
+
+export const dynamic = "force-dynamic";
 
 type HousesMode = "standard" | "advanced";
 
@@ -165,50 +165,142 @@ function ChartsPageContent() {
   // chart in place — same pattern as /predictions — so the requested
   // `?view=` is preserved instead of being dropped by a redirect to the
   // separate /charts/[chartId] detail page.
-  const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
+  const { data: chartsData, isLoading: chartsLoading, isError: chartsError, refetch: refetchCharts } = useMyCharts();
   const analyze = useAnalyzeWorkflow();
   const [autoRecomputeStarted, setAutoRecomputeStarted] = useState(false);
+  const [loadTimedOut, setLoadTimedOut] = useState(false);
+
+  const DEFAULT_DEMO_CHART_REQUEST: WorkflowAnalysisRequest = {
+    birth_datetime_utc: "1995-01-01T12:00:00Z",
+    latitude: 28.6139,
+    longitude: 77.2090,
+    ayanamsa: "lahiri",
+    house_system: "P",
+    dasha_system: "vimshottari",
+    include_vargas: true,
+    subject_name: "Default Sample Chart",
+    place_name: "New Delhi, India",
+    persist: false,
+  };
 
   const targetSummary = chartsData
     ? (chartsData.charts.find((c) => c.is_default) ?? chartsData.charts[0] ?? null)
     : null;
 
   useEffect(() => {
-    if (result || autoRecomputeStarted || !targetSummary) return;
+    if (result || autoRecomputeStarted || chartsLoading) return;
     setAutoRecomputeStarted(true);
-    const req: WorkflowAnalysisRequest = {
-      birth_datetime_utc: targetSummary.birth_datetime_utc,
-      latitude: targetSummary.birth_latitude,
-      longitude: targetSummary.birth_longitude,
-      ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-      house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
-      dasha_system: "vimshottari",
-      include_vargas: true,
-      subject_name: targetSummary.subject_name,
-      place_name: targetSummary.place_name,
-      persist: false,
-      chart_id: targetSummary.id,
-    };
-    analyze.mutate(req, { onSuccess: (data) => setResult(data, req) });
-    // Fire once per targetSummary — analyze/setResult are stable references.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [result, autoRecomputeStarted, targetSummary]);
+    setLoadTimedOut(false);
+
+    const timeoutTimer = setTimeout(() => {
+      setLoadTimedOut(true);
+    }, 15000);
+
+    const req: WorkflowAnalysisRequest = targetSummary
+      ? {
+          birth_datetime_utc: targetSummary.birth_datetime_utc,
+          latitude: targetSummary.birth_latitude,
+          longitude: targetSummary.birth_longitude,
+          ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+          house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
+          dasha_system: "vimshottari",
+          include_vargas: true,
+          subject_name: targetSummary.subject_name,
+          place_name: targetSummary.place_name,
+          persist: false,
+          chart_id: targetSummary.id,
+        }
+      : DEFAULT_DEMO_CHART_REQUEST;
+
+    analyze.mutate(req, {
+      onSuccess: (data) => {
+        clearTimeout(timeoutTimer);
+        setResult(data, req);
+      },
+      onError: () => {
+        clearTimeout(timeoutTimer);
+      },
+    });
+
+    return () => clearTimeout(timeoutTimer);
+  }, [result, autoRecomputeStarted, targetSummary, chartsLoading]);
 
   if (!result) {
+    const isFetching = (chartsLoading || analyze.isPending) && !loadTimedOut;
+    const hasError = analyze.isError || chartsError || loadTimedOut;
+    const noChartSelected = !chartsLoading && !targetSummary;
+
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-20" role="status">
-        <div className="glass-card flex flex-col items-center gap-4 p-8 text-center">
-          {chartsLoading || analyze.isPending ? (
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Loading chart data…</p>
+        <div className="glass-card flex flex-col items-center gap-4 p-8 text-center max-w-md">
+          {isFetching ? (
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Loading chart data…</p>
+            </div>
+          ) : hasError ? (
+            <>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-rose-500">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Chart Loading Error</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                An error occurred while calculating chart and yoga data.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setAutoRecomputeStarted(false);
+                  setLoadTimedOut(false);
+                  analyze.reset();
+                  if (targetSummary) {
+                    const req: WorkflowAnalysisRequest = {
+                      birth_datetime_utc: targetSummary.birth_datetime_utc,
+                      latitude: targetSummary.birth_latitude,
+                      longitude: targetSummary.birth_longitude,
+                      ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
+                      house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
+                      dasha_system: "vimshottari",
+                      include_vargas: true,
+                      subject_name: targetSummary.subject_name,
+                      place_name: targetSummary.place_name,
+                      persist: false,
+                      chart_id: targetSummary.id,
+                    };
+                    analyze.mutate(req, { onSuccess: (data) => setResult(data, req) });
+                  } else {
+                    refetchCharts();
+                  }
+                }}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition"
+              >
+                Retry
+              </button>
+            </>
+          ) : noChartSelected ? (
+            <>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-amber-500">
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">No Chart Selected</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                No Chart Selected. Please click &apos;+ Select Chart&apos; above to view Yogas.
+              </p>
+              <Link href="/dashboard" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
+                + Select Chart
+              </Link>
+            </>
           ) : (
             <>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" style={{ color: "var(--text-muted)" }}>
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 6v6l4 2" />
-          </svg>
-          <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>No Chart Data Available</h2>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Run an analysis on the Dashboard first to populate chart data.</p>
-          <Link href="/dashboard" className="btn-primary">Go to Dashboard</Link>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-slate-400">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">No Chart Data Available</h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Run an analysis on the Dashboard first to populate chart data.</p>
+              <Link href="/dashboard" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">+ Select Chart</Link>
             </>
           )}
         </div>
@@ -266,7 +358,14 @@ function ChartsPageContent() {
             {request && (<><span> Subject: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span> · Ayanamsa: {request.ayanamsa}</span></>)}
           </p>
         </div>
-        <Link href="/charts/compare" className="btn-ghost text-xs px-2.5 py-1" aria-label="Compare charts side by side">Compare D1 + D9</Link>
+        <div className="flex items-center gap-2">
+          <Link href="/dashboard" className="btn-ghost text-xs px-2.5 py-1" aria-label="Select another chart">
+            + Select Chart
+          </Link>
+          <Link href="/charts/compare" className="btn-ghost text-xs px-2.5 py-1" aria-label="Compare charts side by side">
+            Compare D1 + D9
+          </Link>
+        </div>
       </div>
 
       <div className="mb-3 flex gap-1 border-b border-slate-200 dark:border-slate-800 pb-1.5 overflow-x-auto" role="tablist" aria-label="Chart view options">

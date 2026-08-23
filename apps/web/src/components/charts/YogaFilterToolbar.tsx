@@ -61,7 +61,7 @@ export function YogaFilterToolbar({
       <div className="flex items-center gap-3">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -69,12 +69,12 @@ export function YogaFilterToolbar({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search yogas, planets, houses..."
-            className="w-full pl-10 pr-8 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50"
+            className="w-full pl-10 pr-8 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
           />
           {searchQuery && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -87,28 +87,28 @@ export function YogaFilterToolbar({
         <div className="relative">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-sm text-gray-300 hover:bg-gray-800 transition"
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
             <span>Filters</span>
             {hasActiveFilters && (
-              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
             )}
           </button>
 
           {/* Filters Dropdown */}
           {showFilters && (
-            <div className="absolute top-full mt-2 right-0 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-4 z-50">
+            <div className="absolute top-full mt-2 right-0 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl p-4 z-50 text-slate-900 dark:text-slate-100">
               <div className="space-y-4">
                 {/* Active Only */}
                 <div className="flex items-center justify-between">
-                  <label className="text-sm text-gray-300">Active Only</label>
+                  <label className="text-sm font-semibold">Active Only</label>
                   <button
                     onClick={() => onActiveOnlyChange(!activeOnly)}
                     className={`w-12 h-6 rounded-full transition ${
-                      activeOnly ? 'bg-purple-600' : 'bg-gray-700'
+                      activeOnly ? 'bg-cyan-600' : 'bg-slate-300 dark:bg-slate-700'
                     }`}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
@@ -119,11 +119,11 @@ export function YogaFilterToolbar({
 
                 {/* Benefic Only */}
                 <div className="flex items-center justify-between">
-                  <label className="text-sm text-gray-300">Benefic Only</label>
+                  <label className="text-sm font-semibold">Benefic Only</label>
                   <button
                     onClick={() => onBeneficOnlyChange(!beneficOnly)}
                     className={`w-12 h-6 rounded-full transition ${
-                      beneficOnly ? 'bg-purple-600' : 'bg-gray-700'
+                      beneficOnly ? 'bg-emerald-600' : 'bg-slate-300 dark:bg-slate-700'
                     }`}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
@@ -134,11 +134,11 @@ export function YogaFilterToolbar({
 
                 {/* Malefic Only */}
                 <div className="flex items-center justify-between">
-                  <label className="text-sm text-gray-300">Malefic Only</label>
+                  <label className="text-sm font-semibold">Malefic Only</label>
                   <button
                     onClick={() => onMaleficOnlyChange(!maleficOnly)}
                     className={`w-12 h-6 rounded-full transition ${
-                      maleficOnly ? 'bg-purple-600' : 'bg-gray-700'
+                      maleficOnly ? 'bg-rose-600' : 'bg-slate-300 dark:bg-slate-700'
                     }`}
                   >
                     <div className={`w-4 h-4 bg-white rounded-full transition-transform ${
@@ -149,11 +149,11 @@ export function YogaFilterToolbar({
 
                 {/* Minimum Strength */}
                 <div>
-                  <label className="text-sm text-gray-300 block mb-2">Minimum Strength</label>
+                  <label className="text-sm font-semibold block mb-2">Minimum Strength</label>
                   <select
                     value={minStrength ?? ''}
                     onChange={(e) => onMinStrengthChange(e.target.value ? parseInt(e.target.value) : null)}
-                    className="w-full px-3 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg text-sm text-gray-300 focus:outline-none focus:border-purple-500/50"
+                    className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-cyan-500"
                   >
                     <option value="">Any</option>
                     <option value="80">80%+ (Strong)</option>
@@ -166,7 +166,7 @@ export function YogaFilterToolbar({
                 {hasActiveFilters && (
                   <button
                     onClick={onClearFilters}
-                    className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm transition"
+                    className="w-full py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-lg text-sm transition"
                   >
                     Clear All Filters
                   </button>
@@ -178,13 +178,13 @@ export function YogaFilterToolbar({
 
         {/* Sort By */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-400">Sort by:</span>
+          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Sort by:</span>
           <select
             value={sortBy}
             onChange={(e) => onSortByChange(e.target.value)}
-            className="px-3 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg text-sm text-gray-300 focus:outline-none focus:border-purple-500/50"
+            className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:border-cyan-500"
           >
-            <option value="strength_desc">Strength</option>
+            <option value="strength_desc">Strength (High to Low)</option>
             <option value="strength_asc">Strength (Low to High)</option>
             <option value="name_asc">Name (A-Z)</option>
             <option value="name_desc">Name (Z-A)</option>
@@ -195,7 +195,7 @@ export function YogaFilterToolbar({
         <div className="flex items-center gap-2 ml-auto">
           <button
             onClick={onExport}
-            className="p-2 text-gray-400 hover:text-gray-300 transition"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
             title="Export yogas"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,7 +204,7 @@ export function YogaFilterToolbar({
           </button>
           <button
             onClick={onDuplicate}
-            className="p-2 text-gray-400 hover:text-gray-300 transition"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
             title="Duplicate view"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -213,28 +213,27 @@ export function YogaFilterToolbar({
           </button>
           <button
             onClick={onHelp}
-            className="p-2 text-gray-400 hover:text-gray-300 transition"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-400 transition"
             title="Help"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 ml-2"></div>
         </div>
       </div>
 
       {/* Category Tabs */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => onCategoryChange('all')}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+          className={`px-4 py-1.5 rounded-full text-sm font-bold transition border ${
             categoryFilter === 'all'
-              ? 'bg-purple-500/20 text-purple-400 border border-purple-500/50'
-              : 'text-gray-400 hover:text-gray-300'
+              ? 'bg-cyan-600 text-white border-cyan-500 shadow-sm shadow-cyan-500/20'
+              : 'bg-slate-100 text-slate-800 dark:bg-slate-800/80 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700'
           }`}
         >
-          All <span className="ml-1 text-xs opacity-75">{categoryCounts['all'] || totalCount}</span>
+          All <span className="ml-1 text-xs opacity-90">{categoryCounts['all'] || totalCount}</span>
         </button>
         {categories.slice(0, 5).map((category) => {
           const count = categoryCounts[category] || Math.floor(totalCount / (categories.length || 1));
@@ -242,47 +241,58 @@ export function YogaFilterToolbar({
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+              className={`px-4 py-1.5 rounded-full text-sm font-bold transition border ${
                 categoryFilter === category
-                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/50'
-                  : 'text-gray-400 hover:text-gray-300'
+                  ? 'bg-cyan-600 text-white border-cyan-500 shadow-sm shadow-cyan-500/20'
+                  : 'bg-slate-100 text-slate-800 dark:bg-slate-800/80 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
               {category}
-              <span className="ml-1 text-xs opacity-75">{count}</span>
+              <span className="ml-1 text-xs opacity-90">{count}</span>
             </button>
           );
         })}
-        <button className="text-gray-400 hover:text-gray-300 text-sm ml-2">Others</button>
+        {categories.length > 5 && (
+          <button
+            onClick={() => onCategoryChange(categories[5])}
+            className={`px-4 py-1.5 rounded-full text-sm font-bold transition border ${
+              categoryFilter === categories[5]
+                ? 'bg-cyan-600 text-white border-cyan-500 shadow-sm shadow-cyan-500/20'
+                : 'bg-slate-100 text-slate-800 dark:bg-slate-800/80 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            Others
+          </button>
+        )}
       </div>
 
       {/* Secondary Filters Row */}
       {hasActiveFilters && (
         <div className="flex items-center gap-3 text-xs">
-          <span className="text-gray-400">Active filters:</span>
+          <span className="text-slate-500 dark:text-slate-400 font-semibold">Active filters:</span>
           {activeOnly && (
-            <span className="px-2 py-1 bg-purple-900/30 text-purple-300 rounded border border-purple-800/30">
+            <span className="px-2 py-1 bg-cyan-100 text-cyan-900 dark:bg-cyan-950/50 dark:text-cyan-300 rounded border border-cyan-600/40 font-bold">
               Active Only
             </span>
           )}
           {beneficOnly && (
-            <span className="px-2 py-1 bg-green-900/30 text-green-300 rounded border border-green-800/30">
+            <span className="px-2 py-1 bg-emerald-100 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300 rounded border border-emerald-600/40 font-bold">
               Benefic
             </span>
           )}
           {maleficOnly && (
-            <span className="px-2 py-1 bg-red-900/30 text-red-300 rounded border border-red-800/30">
+            <span className="px-2 py-1 bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-300 rounded border border-rose-600/40 font-bold">
               Malefic
             </span>
           )}
           {minStrength !== null && (
-            <span className="px-2 py-1 bg-yellow-900/30 text-yellow-300 rounded border border-yellow-800/30">
+            <span className="px-2 py-1 bg-amber-100 text-amber-900 dark:bg-amber-950/50 dark:text-amber-300 rounded border border-amber-600/40 font-bold">
               Strength ≥ {minStrength}
             </span>
           )}
           <button
             onClick={onClearFilters}
-            className="text-purple-400 hover:text-purple-300 ml-auto"
+            className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline ml-auto"
           >
             Clear all
           </button>

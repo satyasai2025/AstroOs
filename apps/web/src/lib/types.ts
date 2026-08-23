@@ -17,6 +17,7 @@ export interface User {
   created_at: string;
   last_login_at: string | null;
   timezone: string;
+  phone_number?: string | null;
 }
 
 export interface TokenPair {
@@ -59,6 +60,7 @@ export interface UpdateProfilePayload {
   display_name?: string;
   email?: string;
   timezone?: string;
+  phone_number?: string;
 }
 
 export interface ChangePasswordPayload {

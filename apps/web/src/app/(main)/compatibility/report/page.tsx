@@ -16,6 +16,8 @@ import { useWorkflowStore } from "@/lib/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
+export const dynamic = "force-dynamic";
+
 type RelationshipType = "marriage" | "business" | "friendship" | "parent_child";
 
 const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {

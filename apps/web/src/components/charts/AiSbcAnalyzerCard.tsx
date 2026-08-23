@@ -105,29 +105,29 @@ export function AiSbcAnalyzerCard({
     switch (badge) {
       case "high_risk":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/20 px-3 py-1 text-xs font-bold text-rose-400 border border-rose-500/40 shadow-xs">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100 text-rose-900 border border-rose-600/40 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-600/40 font-bold px-3 py-1 text-xs shadow-xs">
             <span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" />
             HIGH RISK / PROCEED WITH CAUTION
           </span>
         );
       case "caution":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 px-3 py-1 text-xs font-bold text-amber-300 border border-amber-500/40 shadow-xs">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-600/40 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-600/40 font-bold px-3 py-1 text-xs shadow-xs">
             <span className="h-2 w-2 rounded-full bg-amber-400" />
             MODERATE / WAIT & WATCH
           </span>
         );
       case "auspicious":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300 border border-emerald-500/40 shadow-xs">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-600/40 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-600/40 font-bold px-3 py-1 text-xs shadow-xs">
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
             HIGHLY AUSPICIOUS / GREEN LIGHT
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/20 px-3 py-1 text-xs font-bold text-sky-300 border border-sky-500/40 shadow-xs">
-            <span className="h-2 w-2 rounded-full bg-sky-400" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-100 text-cyan-900 border border-cyan-600/40 dark:bg-cyan-950/40 dark:text-cyan-300 dark:border-cyan-600/40 font-bold px-3 py-1 text-xs shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-cyan-400" />
             STABLE / NEUTRAL CONDITIONS
           </span>
         );

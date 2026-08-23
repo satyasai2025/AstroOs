@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Badge, Card, Select } from "@/components/ui";
 import { KARAKATVA_GRAHAS, useKarakatvaSearch } from "@/lib/karakatva";
 
+export const dynamic = "force-dynamic";
+
 type EntityType = "planets" | "signs" | "houses" | "nakshatras" | "yogas" | "karakatvas" | "texts" | "rules";
 
 const ENTITY_TYPES: { value: EntityType; label: string }[] = [

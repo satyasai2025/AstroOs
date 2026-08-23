@@ -294,7 +294,7 @@ export default function ImportChartPage() {
       </div>
 
       <div className="obsidian-card p-6">
-        <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-amber-500">
+        <label className="mb-3 block text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
           Upload Chart File (.csv, .json, .jhd)
         </label>
         
@@ -327,13 +327,13 @@ export default function ImportChartPage() {
           <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
             Click to upload or drag and drop
           </p>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-xs text-slate-700 dark:text-slate-200">
             CSV, JSON or Jagannatha Hora (.jhd) charts
           </p>
         </div>
 
-        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-          Required columns: <code className="text-amber-500 font-mono">subject_name</code>, <code className="text-amber-500 font-mono">birth_datetime_utc</code> (ISO, UTC), <code className="text-amber-500 font-mono">latitude</code>, <code className="text-amber-500 font-mono">longitude</code>. Optional: place_name, ayanamsa, house_system.
+        <p className="mt-3 text-xs text-slate-700 dark:text-slate-200">
+          Required columns: <code className="text-amber-800 dark:text-amber-300 font-bold font-mono">subject_name</code>, <code className="text-amber-800 dark:text-amber-300 font-bold font-mono">birth_datetime_utc</code> (ISO, UTC), <code className="text-amber-800 dark:text-amber-300 font-bold font-mono">latitude</code>, <code className="text-amber-800 dark:text-amber-300 font-bold font-mono">longitude</code>. Optional: place_name, ayanamsa, house_system.
         </p>
 
         {parseError && (

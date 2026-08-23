@@ -160,12 +160,11 @@ export default function VargaExplorer({
   ]);
 
   const vargaKeys = useMemo(
-    () =>
-      ["D1", ...Object.keys(vargas?.charts ?? {})].filter(
-        (k, i, arr) => arr.indexOf(k) === i && !!VARGA_DIVISORS[k],
-      ),
-    [vargas],
+    () => Object.keys(VARGA_DIVISORS),
+    [],
   );
+
+  const compareTargetVarga = selectedVarga === "D1" ? "D9" : selectedVarga;
 
   const hasTransit = !!transits;
   const sourceOptions = [
@@ -351,9 +350,42 @@ export default function VargaExplorer({
     },
   ];
 
+  const categorizedVargas = useMemo(() => {
+    const VARGA_CATEGORIES = [
+      { id: "core", label: "Core", vargas: ["D1", "D9"] },
+      { id: "life", label: "Life & Focus", vargas: ["D2", "D3", "D7", "D10", "D12"] },
+      { id: "destiny", label: "Subtle & Destiny", vargas: ["D16", "D20", "D24", "D27", "D30"] },
+      { id: "higher", label: "Higher & Karma", vargas: ["D40", "D45", "D60"] },
+    ];
+    const assigned = new Set<string>();
+    const result = VARGA_CATEGORIES.map((cat) => {
+      const match = cat.vargas.filter((vk) => vargaKeys.includes(vk));
+      match.forEach((vk) => assigned.add(vk));
+      return { ...cat, vargas: match };
+    }).filter((cat) => cat.vargas.length > 0);
+
+    const remaining = vargaKeys.filter((vk) => !assigned.has(vk));
+    if (remaining.length > 0) {
+      result.push({ id: "other", label: "Other Vargas", vargas: remaining });
+    }
+    return result;
+  }, [vargaKeys]);
+
+  const handleVargaSelect = (vk: string) => {
+    setSelectedVarga(vk);
+    setChartB((prev) => ({ ...prev, varga: vk }));
+  };
+
+  const handleCompareD1WithTarget = (targetVarga: string = compareTargetVarga) => {
+    setSelectedVarga(targetVarga);
+    setChartA({ source: "natal", varga: "D1" });
+    setChartB({ source: "natal", varga: targetVarga });
+    setMode("mixed");
+  };
+
   const modeTabs: { key: ExplorerMode; label: string; help: string }[] = [
     { key: "single", label: "Single Varga", help: "Explore one divisional chart at a time with its guide and planetary positions." },
-    { key: "mixed", label: "Mixed 2", help: "Compare two chart contexts side by side — any varga, natal or transit, independently." },
+    { key: "mixed", label: "Mixed 2", help: "Compare two chart contexts side by side — D1 vs Target Varga or custom charts." },
     { key: "grid", label: "Grid", help: "View up to four chart contexts in a research grid." },
   ];
   const activeModeHelp = modeTabs.find((t) => t.key === mode)?.help ?? "";
@@ -376,46 +408,173 @@ export default function VargaExplorer({
 
   return (
     <div className="space-y-4">
-      {/* Mode selector */}
-      <div className="glass-card p-4">
+      {/* Streamlined Grouped Horizontal Varga Selection & Controls Bar */}
+      <div className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-            Varga Explorer
-          </h3>
-          <div className="flex gap-1" role="tablist" aria-label="Varga Explorer view modes">
-            {modeTabs.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                role="tab"
-                aria-selected={mode === tab.key}
-                aria-controls={`varga-panel-${tab.key}`}
-                onClick={() => setMode(tab.key)}
-                className="rounded-lg px-3 py-1.5 text-xs font-medium transition"
-                style={{
-                  backgroundColor: mode === tab.key ? "var(--accent)" : "transparent",
-                  color: mode === tab.key ? "var(--accent-text)" : "var(--text-secondary)",
-                  border: `1px solid ${mode === tab.key ? "var(--accent)" : "var(--border-primary)"}`,
-                }}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="flex items-center gap-2">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-amber-700 dark:text-amber-400">
+              Varga Explorer
+            </h2>
+            <span className="rounded bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
+              {selectedVarga} — {VARGA_DIVISORS[selectedVarga]?.label ?? selectedVarga}
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* View mode switcher */}
+            <div className="flex gap-1" role="tablist" aria-label="Varga Explorer view modes">
+              {modeTabs.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={mode === tab.key}
+                  aria-controls={`varga-panel-${tab.key}`}
+                  onClick={() => setMode(tab.key)}
+                  className="rounded-lg px-3 py-1.5 text-xs font-medium transition"
+                  style={{
+                    backgroundColor: mode === tab.key ? "var(--accent)" : "transparent",
+                    color: mode === tab.key ? "var(--accent-text)" : "var(--text-secondary)",
+                    border: `1px solid ${mode === tab.key ? "var(--accent)" : "var(--border-primary)"}`,
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Quick action button for D1 vs Selected Varga comparison */}
+            <button
+              type="button"
+              onClick={() => handleCompareD1WithTarget(compareTargetVarga)}
+              className="rounded-lg px-3 py-1.5 text-xs font-semibold transition flex items-center gap-1.5"
+              style={{
+                backgroundColor:
+                  mode === "mixed" && chartA.varga === "D1" && chartB.varga === compareTargetVarga
+                    ? "var(--accent)"
+                    : "var(--bg-card)",
+                color:
+                  mode === "mixed" && chartA.varga === "D1" && chartB.varga === compareTargetVarga
+                    ? "var(--accent-text)"
+                    : "var(--accent)",
+                border: "1px solid var(--accent)",
+              }}
+              title={`Compare D1 vs ${compareTargetVarga} side-by-side`}
+            >
+              <span>⇄ D1 vs {compareTargetVarga}</span>
+            </button>
           </div>
         </div>
-        <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>{activeModeHelp}</p>
+
+        {/* Grouped Horizontal Varga Filter Bar */}
+        <div className="space-y-2.5">
+          <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-4">
+            {categorizedVargas.filter(c => c.id !== "other").map((cat) => (
+              <div
+                key={cat.id}
+                className="rounded-lg border p-2.5 flex flex-col gap-1.5"
+                style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+              >
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  {cat.label}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {cat.vargas.map((vk) => {
+                    const vd = VARGA_DIVISORS[vk];
+                    const isActive = selectedVarga === vk;
+                    return (
+                      <button
+                        key={vk}
+                        type="button"
+                        onClick={() => handleVargaSelect(vk)}
+                        className="rounded-md px-2 py-1 text-xs font-semibold transition flex items-center gap-1 hover:border-[var(--border-hover)]"
+                        style={{
+                          backgroundColor: isActive ? "var(--accent)" : "transparent",
+                          color: isActive ? "var(--accent-text)" : "var(--text-secondary)",
+                          border: `1px solid ${isActive ? "var(--accent)" : "var(--border-primary)"}`,
+                        }}
+                        aria-pressed={isActive}
+                        aria-label={`Select ${vd?.label ?? vk} chart`}
+                        title={vd?.label ?? vk}
+                      >
+                        <span>{vk}</span>
+                        {vd?.label && (
+                          <span className="text-[10px] opacity-75 font-normal">
+                            ({vd.label.split(" ")[0]})
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Other Vargas full-width horizontal strip if available */}
+          {categorizedVargas.find(c => c.id === "other") && (
+            <div
+              className="rounded-lg border p-2.5 flex flex-wrap items-center gap-2"
+              style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+            >
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-1">
+                Other Vargas:
+              </span>
+              <div className="flex flex-wrap gap-1">
+                {categorizedVargas.find(c => c.id === "other")!.vargas.map((vk) => {
+                  const vd = VARGA_DIVISORS[vk];
+                  const isActive = selectedVarga === vk;
+                  return (
+                    <button
+                      key={vk}
+                      type="button"
+                      onClick={() => handleVargaSelect(vk)}
+                      className="rounded-md px-2 py-1 text-xs font-semibold transition flex items-center gap-1 hover:border-[var(--border-hover)]"
+                      style={{
+                        backgroundColor: isActive ? "var(--accent)" : "transparent",
+                        color: isActive ? "var(--accent-text)" : "var(--text-secondary)",
+                        border: `1px solid ${isActive ? "var(--accent)" : "var(--border-primary)"}`,
+                      }}
+                      aria-pressed={isActive}
+                      aria-label={`Select ${vd?.label ?? vk} chart`}
+                      title={vd?.label ?? vk}
+                    >
+                      <span>{vk}</span>
+                      {vd?.label && (
+                        <span className="text-[10px] opacity-75 font-normal">
+                          ({vd.label.split(" ")[0]})
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400">{activeModeHelp}</p>
       </div>
 
-      {/* Single Varga */}
+      {/* Single Varga View */}
       {mode === "single" && (
-        <div id="varga-panel-single" role="tabpanel" aria-label="Single Varga panel" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="glass-card flex flex-col items-center p-6">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
-              {selectedVarga} — {VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}
-            </h2>
+        <div id="varga-panel-single" role="tabpanel" aria-label="Single Varga panel" className="grid gap-4 lg:grid-cols-12">
+          {/* Main Chart Card - takes full width proportion */}
+          <div className="glass-card flex flex-col items-center p-6 lg:col-span-6 xl:col-span-5">
+            <div className="flex w-full items-center justify-between mb-4">
+              <h2 className="text-sm font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+                {selectedVarga} — {VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}
+              </h2>
+              <button
+                type="button"
+                onClick={() => handleCompareD1WithTarget(compareTargetVarga)}
+                className="text-xs font-semibold px-2.5 py-1 rounded border transition hover:opacity-85"
+                style={{ borderColor: "var(--accent)", color: "var(--accent)" }}
+              >
+                Compare with D1 ⇄
+              </button>
+            </div>
             {singlePlanets ? (
               <NorthIndianChart
-                title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
                 ascendant={singleAscendant}
                 planets={singlePlanets}
                 size={380}
@@ -441,37 +600,14 @@ export default function VargaExplorer({
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="glass-card p-4">
-              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Varga</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {vargaKeys.map((vk) => {
-                  const vd = VARGA_DIVISORS[vk];
-                  const isActive = selectedVarga === vk;
-                  return (
-                    <button
-                      key={vk}
-                      type="button"
-                      onClick={() => setSelectedVarga(vk)}
-                      className="rounded-full px-2.5 py-1 text-xs font-semibold transition"
-                      style={{
-                        backgroundColor: isActive ? "var(--accent)" : "var(--bg-card)",
-                        color: isActive ? "var(--accent-text)" : "var(--text-secondary)",
-                        border: `1px solid ${isActive ? "var(--accent)" : "var(--border-primary)"}`,
-                      }}
-                      aria-pressed={isActive}
-                      aria-label={`Show ${vd?.label ?? vk} chart`}
-                    >
-                      {vd?.label ?? vk}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+          {/* Varga Guide & Planet Positions Table */}
+          <div className="space-y-4 lg:col-span-6 xl:col-span-7">
             <VargaGuideCard code={selectedVarga} />
             {singlePlanets && (
               <div className="glass-card p-4">
-                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>Planet Positions</h3>
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--accent)" }}>
+                  {selectedVarga} Planet Positions
+                </h3>
                 <Table columns={singleColumns} rows={singlePlanets} />
               </div>
             )}
@@ -479,7 +615,7 @@ export default function VargaExplorer({
         </div>
       )}
 
-      {/* Mixed 2 */}
+      {/* Mixed 2 View */}
       {mode === "mixed" && (
         <div id="varga-panel-mixed" role="tabpanel" aria-label="Mixed 2 Varga panel" className="space-y-4">
           <div className="glass-card p-4">
@@ -525,7 +661,7 @@ export default function VargaExplorer({
         </div>
       )}
 
-      {/* Grid */}
+      {/* Grid View */}
       {mode === "grid" && (
         <div id="varga-panel-grid" role="tabpanel" aria-label="Varga Grid panel" className="space-y-4">
           <div className="glass-card p-4">

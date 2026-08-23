@@ -58,7 +58,7 @@ export function VargaGuideCard({ code, variant = "card" }: VargaGuideCardProps) 
             key={g}
             className="rounded-full px-2.5 py-0.5 text-xs font-medium"
             style={{
-              backgroundColor: "var(--bg-surface-700)",
+              backgroundColor: "var(--bg-secondary)",
               color: "var(--text-primary)",
               border: "1px solid var(--border-primary)",
             }}
@@ -68,7 +68,7 @@ export function VargaGuideCard({ code, variant = "card" }: VargaGuideCardProps) 
         ))}
       </div>
 
-      <div className="space-y-1 rounded-lg border p-3" style={{ borderColor: "var(--border-primary)" }}>
+      <div className="space-y-1 rounded-lg border p-3" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
         <p className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
           Mechanics
         </p>
@@ -85,7 +85,7 @@ export function VargaGuideCard({ code, variant = "card" }: VargaGuideCardProps) 
         ))}
       </ol>
 
-      <div className="rounded-lg p-3" style={{ backgroundColor: "var(--bg-surface-700)" }}>
+      <div className="rounded-lg border p-3" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
         <p className="text-xs leading-snug" style={{ color: "var(--text-primary)" }}>
           <span className="font-semibold" style={{ color: "var(--accent)" }}>
             Summary:{" "}

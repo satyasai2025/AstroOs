@@ -164,6 +164,17 @@ export function YogaIntelligenceDashboard({ result, request }: YogaIntelligenceD
     return filtered;
   }, [enrichedYogas, searchQuery, categoryFilter, activeOnly, beneficOnly, maleficOnly, minStrength, sortBy, definitionsById]);
 
+  // Auto-select first active yoga item on initial load
+  React.useEffect(() => {
+    if (!selectedYoga && filteredYogas.length > 0) {
+      const firstActive = filteredYogas.find((y) => y.is_present) ?? filteredYogas[0];
+      if (firstActive) {
+        setSelectedYoga(firstActive);
+        setSelectedDefinition(definitionsById.get(firstActive.yoga_id) ?? null);
+      }
+    }
+  }, [filteredYogas, selectedYoga, definitionsById]);
+
   const handleYogaSelect = (yoga: YogaResultResponse) => {
     setSelectedYoga(yoga);
     setSelectedDefinition(definitionsById.get(yoga.yoga_id) ?? null);
@@ -250,8 +261,8 @@ Houses: ${selectedYoga.involved_houses.join(', ')}`;
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="border-b border-gray-800 bg-gray-900/50 p-4">
+    <div className="h-full flex flex-col rounded-2xl border overflow-hidden" style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}>
+      <div className="border-b p-4" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
         <YogaFilterToolbar
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -280,24 +291,24 @@ Houses: ${selectedYoga.involved_houses.join(', ')}`;
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        <div className="w-96 border-r border-gray-800 overflow-y-auto bg-gray-900/30">
+        <div className="w-96 border-r overflow-y-auto" style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-primary)" }}>
           {catalogLoading && enrichedYogas.length === 0 ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500" />
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400" />
             </div>
           ) : !hasYogaData ? (
             <div className="flex items-center justify-center h-64 p-6 text-center">
               <div>
-                <p className="text-sm text-gray-400">No yoga analysis available</p>
-                <p className="text-xs text-gray-500 mt-2">Run a chart analysis to detect yogas</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No yoga analysis available</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Run a chart analysis to detect yogas</p>
               </div>
             </div>
           ) : filteredYogas.length === 0 ? (
             <div className="flex items-center justify-center h-64 p-6 text-center">
               <div>
-                <p className="text-sm text-gray-400">No yogas match your filters</p>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No yogas match your filters</p>
                 {hasActiveFilters && (
-                  <button onClick={clearFilters} className="mt-3 text-xs text-purple-400 hover:text-purple-300">
+                  <button onClick={clearFilters} className="mt-3 text-xs text-cyan-600 dark:text-cyan-400 font-bold hover:underline">
                     Clear filters
                   </button>
                 )}
@@ -318,7 +329,7 @@ Houses: ${selectedYoga.involved_houses.join(', ')}`;
           )}
         </div>
 
-        <div className="flex-1 overflow-hidden bg-gray-950">
+        <div className="flex-1 overflow-y-auto" style={{ backgroundColor: "var(--bg-card)" }}>
           {selectedYoga ? (
             <YogaDetailPanel
               yoga={selectedYoga}
@@ -328,10 +339,10 @@ Houses: ${selectedYoga.involved_houses.join(', ')}`;
               dashaSystem={timelineData?.dasha_system}
             />
           ) : (
-            <div className="h-full flex items-center justify-center text-gray-400">
+            <div className="h-full flex items-center justify-center text-slate-700 dark:text-slate-300">
               <div className="text-center p-8">
-                <p className="text-lg mb-2">Yoga Intelligence Dashboard</p>
-                <p className="text-sm opacity-75 max-w-md">
+                <p className="text-lg font-bold mb-2 text-slate-900 dark:text-slate-100">Yoga Intelligence Dashboard</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md">
                   Select a yoga from the list to view detailed analysis including strength breakdown,
                   formation rules, planet positions, and Dasha activation timeline.
                 </p>

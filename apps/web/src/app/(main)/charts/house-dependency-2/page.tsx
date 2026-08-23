@@ -5,6 +5,8 @@ import { HouseDependencyNetwork, type EdgeKind } from "@/components/charts/House
 import { Card } from "@/components/ui";
 import type { WorkflowAnalysisResponse, HouseCuspSchema, PlanetPositionSchema, PlanetStrengthSchema } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 export default function HouseDependency2Page() {
   // In a real app, this would come from the workflow store or a selected chart
   const [selectedHouse, setSelectedHouse] = useState<number | null>(10); // Default to 10th house

@@ -18,6 +18,8 @@ import type { BirthChartSummary, TransitPatternsRequest, TransitPlanetResponse, 
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 
+export const dynamic = "force-dynamic";
+
 /**
  * /charts/transit — Transit Analysis console, rebuilt to match the
  * "AstroOS Transit Analysis v2" reference design pixel-for-pixel in

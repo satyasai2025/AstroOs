@@ -209,16 +209,42 @@ export function NorthIndianChart({
         .text(rashiNumber);
     }
 
+    // ── Helper to calculate clean planet positions within house centroids ─────
+    const getPlanetOffset = (i: number, count: number, isHouse1: boolean) => {
+      const yShift = isHouse1 ? 6 : 0;
+      if (count <= 1) {
+        return { offsetX: 0, offsetY: yShift };
+      }
+      if (count === 2) {
+        return { offsetX: 0, offsetY: (i === 0 ? -14 : 14) + yShift };
+      }
+      // 3+ planets: 2-column balanced grid
+      const col = i % 2 === 0 ? 0 : 1;
+      const rowIndex = Math.floor(i / 2);
+      const itemsInCol = Math.ceil(count / 2) - (col === 1 && count % 2 !== 0 ? 1 : 0);
+      const colSpacing = count >= 5 ? 26 : 24;
+      const offsetX = col === 0 ? -colSpacing : colSpacing;
+
+      let offsetY = 0;
+      if (itemsInCol === 1) {
+        offsetY = 0;
+      } else if (itemsInCol === 2) {
+        offsetY = rowIndex === 0 ? -16 : 16;
+      } else {
+        offsetY = (rowIndex - 1) * 28;
+      }
+      return { offsetX, offsetY: offsetY + yShift };
+    };
+
     // ── Compute each planet's rendered position ──────────────────────────
     const planetPositions: Record<string, [number, number]> = {};
     for (const [houseStr, ps] of Object.entries(housePlanets)) {
       const house = Number(houseStr);
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
       const count = ps.length;
-      const lineHeight = count >= 5 ? 18 : count >= 3 ? 17 : 16;
       ps.forEach((planet, i) => {
-        const offsetY = (i - (ps.length - 1) / 2) * lineHeight;
-        planetPositions[planet.planet] = [px, py + offsetY];
+        const { offsetX, offsetY } = getPlanetOffset(i, count, house === 1);
+        planetPositions[planet.planet] = [px + offsetX, py + offsetY];
       });
     }
 
@@ -247,7 +273,7 @@ export function NorthIndianChart({
       const house = Number(houseStr);
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
       const houseCount = ps.length;
-      const dense = houseCount >= 4;
+      const dense = houseCount >= 3;
 
       ps.forEach((planet, i) => {
         const abbrev = PLANET_ABBREV[planet.planet] ?? planet.planet.slice(0, 2);
@@ -256,11 +282,12 @@ export function NorthIndianChart({
         const isActive = activePlanet === planet.planet;
         const ascColor = "var(--chart-ascendant)";
 
-        const lineHeight = houseCount >= 5 ? 18 : houseCount >= 3 ? 17 : 16;
-        const offsetY = (i - (ps.length - 1) / 2) * lineHeight;
+        const { offsetX, offsetY } = getPlanetOffset(i, houseCount, house === 1);
+        const itemX = px + offsetX;
+        const itemY = py + offsetY;
 
         const g = svg.append("g")
-          .attr("transform", `translate(${px}, ${py + offsetY})`)
+          .attr("transform", `translate(${itemX}, ${itemY})`)
           .style("cursor", onPlanetHover || onPlanetClick ? "pointer" : "default")
           .on("mouseenter", () => onPlanetHover?.(planet.planet))
           .on("mouseleave", () => onPlanetHover?.(null))
@@ -278,49 +305,49 @@ export function NorthIndianChart({
             .style("opacity", 0.22);
         }
 
-        const labelFontSize = dense ? 10.5 : 12.5;
-        const symbolX = dense ? -14 : -16;
-        const abbrevX = dense ? 3 : 5;
-        g.append("text")
-          .attr("x", symbolX)
-          .attr("y", 0)
-          .attr("text-anchor", "middle")
-          .attr("dominant-baseline", "central")
-          .style("font-size", dense ? "9.5px" : "11px")
-          .style("font-weight", "800")
-          .style("fill", isAsc ? ascColor : "var(--text-primary, #0f172a)")
-          .text(symbol);
+        const labelFontSize = dense ? 9.5 : 11.5;
+        const symbolFontSize = dense ? 8.5 : 10;
+        const degreeY = dense ? 10 : 12;
+        const degreeFontSize = dense ? 7.5 : 8;
 
-        g.append("text")
-          .attr("x", abbrevX)
+        // Render symbol, abbreviation, and retrograde marker inside a single text node with tspans
+        const textNode = g.append("text")
+          .attr("x", 0)
           .attr("y", 0)
           .attr("text-anchor", "middle")
-          .attr("dominant-baseline", "central")
+          .attr("dominant-baseline", "central");
+
+        if (symbol) {
+          textNode.append("tspan")
+            .style("font-size", `${symbolFontSize}px`)
+            .style("font-weight", "800")
+            .style("fill", isAsc ? ascColor : "var(--text-primary)")
+            .text(`${symbol} `);
+        }
+
+        textNode.append("tspan")
           .style("font-size", `${labelFontSize}px`)
           .style("font-weight", "800")
-          .style("fill", isAsc ? ascColor : "var(--text-primary, #0f172a)")
+          .style("fill", isAsc ? ascColor : "var(--text-primary)")
           .text(abbrev);
 
         if (planet.is_retrograde) {
-          g.append("text")
-            .attr("x", abbrevX + (dense ? 16 : 19))
-            .attr("y", 0)
-            .attr("text-anchor", "start")
-            .attr("dominant-baseline", "central")
-            .style("font-size", "8.5px")
+          textNode.append("tspan")
+            .attr("dx", "3")
+            .style("font-size", "8px")
             .style("font-weight", "800")
             .style("fill", "var(--danger-400, #f87171)")
             .text("R");
         }
 
-        if (planet.rashi_degree !== undefined && houseCount < 3) {
+        if (planet.rashi_degree !== undefined) {
           g.append("text")
-            .attr("x", 2)
-            .attr("y", 13)
+            .attr("x", 0)
+            .attr("y", degreeY)
             .attr("text-anchor", "middle")
-            .style("font-size", "8px")
+            .style("font-size", `${degreeFontSize}px`)
             .style("font-weight", "600")
-            .style("fill", "var(--text-secondary, #475569)")
+            .style("fill", "var(--text-secondary)")
             .style("opacity", 0.9)
             .text(`${planet.rashi_degree.toFixed(1)}°`);
         }
@@ -331,7 +358,7 @@ export function NorthIndianChart({
     const [ascX, ascY] = toPoint(HOUSE_CENTROIDS[1]);
     svg.append("text")
       .attr("x", ascX)
-      .attr("y", ascY - 22)
+      .attr("y", ascY - 24)
       .attr("text-anchor", "middle")
       .style("font-size", "9.5px")
       .style("font-weight", "800")
@@ -374,7 +401,7 @@ export function NorthIndianChart({
       {/* Legend */}
       {showFullNames && (
         <div
-          className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs text-slate-800 dark:text-slate-200"
+          className="flex flex-wrap justify-center gap-1.5 pt-1 text-xs"
           aria-label="Planet legend"
         >
           {planets.map((p) => {
@@ -385,27 +412,33 @@ export function NorthIndianChart({
 
             const Content = (
               <>
-                <span className={isActive ? "text-white dark:text-slate-900 font-bold" : "text-cyan-800 dark:text-cyan-300 font-bold"}>
+                <span className="font-bold" style={{ color: isActive ? "var(--accent-text)" : "var(--accent)" }}>
                   {abbrev}
                 </span>
-                <span className="font-medium text-slate-800 dark:text-slate-200">{full}</span>
+                <span className="font-medium" style={{ color: isActive ? "var(--accent-text)" : "var(--text-primary)" }}>
+                  {full}
+                </span>
                 {p.is_retrograde && (
-                  <span className="text-rose-800 dark:text-rose-300 font-bold">(R)</span>
+                  <span className="font-bold" style={{ color: isActive ? "var(--accent-text)" : "var(--danger-400, #f87171)" }}>
+                    (R)
+                  </span>
                 )}
               </>
             );
+
+            const buttonStyle = {
+              backgroundColor: isActive ? "var(--accent)" : "var(--bg-card)",
+              color: isActive ? "var(--accent-text)" : "var(--text-primary)",
+              border: `1px solid ${isActive ? "var(--accent)" : "var(--border-primary)"}`,
+            };
 
             if (isClickable) {
               return (
                 <button
                   key={p.planet}
                   type="button"
-                  className="flex items-center gap-1 rounded px-1 transition"
-                  style={{
-                    backgroundColor: isActive ? "var(--accent)" : "transparent",
-                    color: isActive ? "var(--accent-text)" : undefined,
-                    cursor: "pointer",
-                  }}
+                  className="flex items-center gap-1 rounded-md px-2 py-0.5 text-xs transition hover:border-[var(--border-hover)]"
+                  style={buttonStyle}
                   onMouseEnter={() => onPlanetHover?.(p.planet)}
                   onMouseLeave={() => onPlanetHover?.(null)}
                   onClick={() => onPlanetClick?.(p.planet)}
@@ -418,10 +451,8 @@ export function NorthIndianChart({
             return (
               <div
                 key={p.planet}
-                className="flex items-center gap-1 rounded px-1"
-                style={{
-                  backgroundColor: isActive ? "var(--accent)" : "transparent",
-                }}
+                className="flex items-center gap-1 rounded-md px-2 py-0.5 text-xs border"
+                style={buttonStyle}
               >
                 {Content}
               </div>

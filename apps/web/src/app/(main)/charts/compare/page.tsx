@@ -13,6 +13,8 @@ import { ComparisonWorkspace, type ComparedChart } from "./components/Comparison
 import { useSavedComparisons } from "./hooks/useSavedComparisons";
 import { Badge, ShareButton } from "@/components/ui";
 
+export const dynamic = "force-dynamic";
+
 function formatDate(iso: string): string {
   try {
     return new Date(iso).toLocaleDateString(undefined, { dateStyle: "medium" });
@@ -259,14 +261,14 @@ function ChartComparePageContent() {
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-amber-500">Position 1 (Active Subject):</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">Position 1 (Active Subject):</span>
                     {pos1Chart ? (
                       <Badge tone="success">{pos1Chart.subject_name}</Badge>
                     ) : (
-                      <span className="text-xs text-slate-400">None selected</span>
+                      <span className="text-xs text-slate-600 dark:text-slate-400">None selected</span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-300">
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
                     {pos1Chart
                       ? `${pos1Chart.subject_name} is set as Subject A. Select 1 or more additional charts to start side-by-side comparison.`
                       : "Choose 2-4 charts to see their planetary positions, houses, dasha, and synastry compared side by side."}

@@ -62,6 +62,7 @@ from apps.api.routers import research as research_router
 from apps.api.routers import search as search_router
 from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import avastha as avastha_router
+from apps.api.routers import vimsopaka as vimsopaka_router
 from apps.api.routers import collab as collab_router
 from apps.api.routers import sbc as sbc_router
 from apps.api.routers import shadbala as shadbala_router
@@ -78,6 +79,15 @@ from apps.api.routers import research_knowledge_graph as research_knowledge_grap
 from apps.api.routers import decision_action as decision_action_router
 from apps.api.routers import portfolio_planner as portfolio_planner_router
 from apps.api.routers import longitudinal_tracking as longitudinal_tracking_router
+from apps.api.routers import adaptive_research as adaptive_research_router
+from apps.api.routers import benchmark_expansion as benchmark_expansion_router
+from apps.api.routers import research_publication as research_publication_router
+from apps.api.routers import research_forensics as research_forensics_router
+from apps.api.routers import research_evidence_registry as research_evidence_registry_router
+from apps.api.routers import research_validity as research_validity_router
+from apps.api.routers import research_replication as research_replication_router
+from apps.api.routers import research_generalization as research_generalization_router
+from apps.api.routers import research_knowledge_state as research_knowledge_state_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
 # Imported for its side effect: registers the /patterns route onto
@@ -330,6 +340,9 @@ def create_app() -> FastAPI:
         avastha_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
+        vimsopaka_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
         yoga_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     # transit_patterns_router registers its /patterns route onto
@@ -435,6 +448,15 @@ def create_app() -> FastAPI:
     app.include_router(decision_action_router.router)
     app.include_router(portfolio_planner_router.router)
     app.include_router(longitudinal_tracking_router.router)
+    app.include_router(adaptive_research_router.router)
+    app.include_router(benchmark_expansion_router.router)
+    app.include_router(research_publication_router.router)
+    app.include_router(research_forensics_router.router)
+    app.include_router(research_evidence_registry_router.router)
+    app.include_router(research_validity_router.router)
+    app.include_router(research_replication_router.router)
+    app.include_router(research_generalization_router.router)
+    app.include_router(research_knowledge_state_router.router)
     app.include_router(
         benchmark_router.router, prefix="/api/v1", dependencies=_authenticated
     )

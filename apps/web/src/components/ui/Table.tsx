@@ -31,7 +31,7 @@ export function Table<Row extends object>({ columns = [], rows = [], onRowClick 
                     textAlign: c.align || "left",
                   }}
                 >
-                  {c.label}
+                  {c.label || <span className="sr-only">{c.key}</span>}
                 </th>
               ))}
             </tr>
