@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { HoraryDataEntryModal, type HoraryFormData } from "@/components/prashna/HoraryDataEntryModal";
+import { PanelFocusToggle, type PanelSizingMode } from "@/components/common/PanelFocusToggle";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { api } from "@/lib/api";
 
@@ -173,6 +174,7 @@ export default function PrashnaPage() {
   const [catalogSearch, setCatalogSearch] = useState("");
   const [catalogCategory, setCatalogCategory] = useState("Show All");
   const [showArbGuideModal, setShowArbGuideModal] = useState(false);
+  const [arbPanelMode, setArbPanelMode] = useState<PanelSizingMode>("normal");
 
   // AI Drawer State
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
@@ -636,56 +638,72 @@ export default function PrashnaPage() {
       </div>
 
       {/* ── Sub-Tabs Full Width Workspace Panel: Bas / Sig / Asp / Arb ── */}
-      <div className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-5 shadow-sm space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className={`w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-5 shadow-sm space-y-4 ${
+        arbPanelMode === "fullscreen" ? "fixed inset-2 z-50 overflow-y-auto bg-slate-950/95 backdrop-blur-md p-6 max-h-[98vh]" : ""
+      }`}>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
           <div className="flex items-center space-x-1.5">
-                {(["Bas", "Sig", "Asp", "Arb"] as const).map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => setSubTab(tab)}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
-                      subTab === tab
-                        ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
-                    }`}
-                  >
-                    {tab === "Arb" ? "Arb (Arabic Parts)" : tab}
-                  </button>
-                ))}
+            {(["Bas", "Sig", "Asp", "Arb"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setSubTab(tab)}
+                className={`px-3 py-1 rounded-lg text-xs font-bold transition ${
+                  subTab === tab
+                    ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
+                }`}
+              >
+                {tab === "Arb" ? "Arb (Arabic Parts)" : tab}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-mono hidden sm:inline">
+              {arabicParts.length} Parts Loaded
+            </span>
+            <PanelFocusToggle
+              mode={arbPanelMode}
+              onModeChange={setArbPanelMode}
+              title="Workspace Size"
+            />
+          </div>
+        </div>
+
+        {/* TAB: ARB (Arabic Parts Explorer) */}
+        {subTab === "Arb" && (
+          <div className="space-y-5">
+            {/* Feature Summary Pills (Brought up to Top) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center font-sans">
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Catalog Scope</span>
+                <span className="font-extrabold text-cyan-800 dark:text-cyan-300 mt-0.5 block text-xs">✨ 40 Classical Sahams</span>
               </div>
-              <span className="text-xs text-slate-600 dark:text-slate-400 font-mono">
-                {arabicParts.length} Parts Loaded
-              </span>
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Formula Mode</span>
+                <span className="font-extrabold text-amber-800 dark:text-amber-300 mt-0.5 block text-xs">☀️ Day / 🌙 Night Altitude</span>
+              </div>
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">KP Precision</span>
+                <span className="font-extrabold text-emerald-800 dark:text-emerald-300 mt-0.5 block text-xs">🪐 4-Tier Sub-Lord Subdivisions</span>
+              </div>
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Horary Outcome</span>
+                <span className="font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block text-xs">🎯 Objective Event Fructification</span>
+              </div>
             </div>
 
-            {/* TAB: ARB (Arabic Parts Explorer) */}
-            {subTab === "Arb" && (
-              <div className="space-y-5">
-                {/* Feature Summary Pills (Brought up to Top) */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center font-sans">
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Catalog Scope</span>
-                    <span className="font-extrabold text-cyan-800 dark:text-cyan-300 mt-0.5 block text-xs">✨ 40 Classical Sahams</span>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Formula Mode</span>
-                    <span className="font-extrabold text-amber-800 dark:text-amber-300 mt-0.5 block text-xs">☀️ Day / 🌙 Night Altitude</span>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">KP Precision</span>
-                    <span className="font-extrabold text-emerald-800 dark:text-emerald-300 mt-0.5 block text-xs">🪐 4-Tier Sub-Lord Subdivisions</span>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-2.5 shadow-2xs">
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase font-bold">Horary Outcome</span>
-                    <span className="font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block text-xs">🎯 Objective Event Fructification</span>
-                  </div>
-                </div>
-
-                {/* Main 2-Column Responsive Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-                  {/* LEFT COLUMN (7 cols): Calculated Sahams in Chart */}
-                  <div className="lg:col-span-7 space-y-3">
+            {/* Main 2-Column Dynamic Resizable Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              {/* LEFT COLUMN: Calculated Sahams in Chart */}
+              <div className={`space-y-3 transition-all duration-300 ${
+                arbPanelMode === "narrow"
+                  ? "lg:col-span-8"
+                  : arbPanelMode === "wide"
+                  ? "lg:col-span-5"
+                  : "lg:col-span-7"
+              }`}>
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                         <span>📊</span> Calculated Sahams (Current Chart)
@@ -813,8 +831,14 @@ export default function PrashnaPage() {
                     </div>
                   </div>
 
-                  {/* RIGHT COLUMN (5 cols): Available Arabic Parts Catalog (40 Sahams Reference Table) */}
-                  <div className="lg:col-span-5 space-y-3">
+                  {/* RIGHT COLUMN: Available Arabic Parts Catalog (40 Sahams Reference Table) */}
+                  <div className={`space-y-3 transition-all duration-300 ${
+                    arbPanelMode === "narrow"
+                      ? "lg:col-span-4"
+                      : arbPanelMode === "wide"
+                      ? "lg:col-span-7"
+                      : "lg:col-span-5"
+                  }`}>
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                         <span>📚</span> Available Arabic Parts Catalog (40 Sahams)
