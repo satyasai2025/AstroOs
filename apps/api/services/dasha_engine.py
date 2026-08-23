@@ -234,6 +234,218 @@ def _nakshatra_balance(
     return first_lord, balance_years, first_start
 
 
+# ── Narayana Dasha tables and helpers ──────────────────────────────────────────
+#
+# Narayana Dasha is NOT "Chara Dasha applied to D9" — that was this
+# module's previous, incorrect assumption (confirmed wrong via a
+# PyJHora jhora.horoscope.dhasa.raasi.narayana cross-check). It is a
+# genuinely different classical system, computed on the D1 (Rasi)
+# chart by default (not D9), with its own seed-sign rule, its own
+# fixed 12-sign progression table (with Ketu/Saturn exceptions when
+# either occupies the seed sign), its own duration formula, and a
+# two-cycle structure (each of the 12 progression signs runs once for
+# its computed duration, then again for the 12-minus-that complement),
+# totaling a fixed 144 years (12 signs x 12 years max, matching
+# Chara's classical companion system). Tables and formulas below are
+# ported directly from PyJHora's const.py / horoscope/dhasa/raasi/
+# narayana.py (jhora.horoscope.dhasa.raasi.narayana), not re-derived.
+
+# 12 progression tables (rows = seed sign 0=Aries..11=Pisces), each row
+# giving the 12-sign dasha order starting from that seed.
+NARAYANA_PROGRESSION_NORMAL: tuple[tuple[int, ...], ...] = (
+    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+    (1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 11, 6),
+    (2, 10, 6, 5, 1, 9, 8, 4, 0, 11, 7, 3),
+    (3, 2, 1, 0, 11, 10, 9, 8, 7, 6, 5, 4),
+    (4, 9, 2, 7, 0, 5, 10, 3, 8, 1, 6, 11),
+    (5, 9, 1, 2, 6, 10, 11, 3, 7, 8, 0, 4),
+    (6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5),
+    (7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5, 0),
+    (8, 4, 0, 11, 7, 3, 2, 10, 6, 5, 1, 9),
+    (9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 11, 10),
+    (10, 3, 8, 1, 6, 11, 4, 9, 2, 7, 0, 5),
+    (11, 3, 7, 8, 0, 4, 5, 9, 1, 2, 6, 10),
+)
+NARAYANA_PROGRESSION_SATURN_EXCEPTION: tuple[tuple[int, ...], ...] = tuple(
+    tuple((seed + i) % 12 for i in range(12)) for seed in range(12)
+)
+NARAYANA_PROGRESSION_KETU_EXCEPTION: tuple[tuple[int, ...], ...] = (
+    (0, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1),
+    (1, 6, 11, 4, 9, 2, 7, 0, 5, 10, 3, 8),
+    (2, 6, 10, 11, 3, 7, 8, 0, 4, 5, 9, 1),
+    (3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2),
+    (4, 11, 6, 1, 8, 3, 10, 5, 0, 7, 2, 9),
+    (5, 1, 9, 8, 4, 0, 11, 7, 3, 2, 10, 6),
+    (6, 5, 4, 3, 2, 1, 0, 11, 10, 9, 8, 7),
+    (7, 0, 5, 10, 3, 8, 1, 6, 11, 4, 9, 2),
+    (8, 0, 4, 5, 9, 1, 2, 6, 10, 11, 3, 7),
+    (9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8),
+    (10, 5, 0, 7, 2, 9, 4, 11, 6, 1, 8, 3),
+    (11, 7, 3, 2, 10, 6, 5, 1, 9, 8, 4, 0),
+)
+
+# "Even-footed" signs (a classical classification distinct from plain
+# odd/even sign parity) — Cancer, Leo, Virgo, Capricorn, Aquarius, Pisces.
+_EVEN_FOOTED_SIGNS = frozenset({3, 4, 5, 9, 10, 11})
+_ODD_SIGNS_0IDX = frozenset({0, 2, 4, 6, 8, 10})
+_DUAL_SIGNS_0IDX = frozenset({2, 5, 8, 11})
+_FIXED_SIGNS_0IDX = frozenset({1, 4, 7, 10})
+
+
+def _count_rasis_inclusive(from_idx: int, to_idx: int) -> int:
+    """Inclusive sign count from from_idx to to_idx, wrapping forward through the zodiac."""
+    return (to_idx - from_idx) % 12 + 1
+
+
+def _narayana_dhasa_duration(planets_by_sign: dict[int, list[str]], sign_idx: int) -> float:
+    """
+    Narayana's own duration rule — NOT the same formula as Chara Dasha.
+    Ported from PyJHora's narayana._dhasa_duration(): the count runs
+    from the sign to its lord's placement (or the reverse) depending on
+    whether the sign is "even-footed", minus one, defaulting to 12 if
+    that's <= 0; exalted lord adds a year, debilitated lord subtracts one.
+    """
+    lord = SIGN_LORDS[_RASHI_LIST[sign_idx]]
+    lord_sign_idx = _lord_sign_index(planets_by_sign, lord)
+
+    if sign_idx in _EVEN_FOOTED_SIGNS:
+        count = _count_rasis_inclusive(lord_sign_idx, sign_idx)
+    else:
+        count = _count_rasis_inclusive(sign_idx, lord_sign_idx)
+    duration = count - 1
+    if duration <= 0:
+        duration = 12
+
+    dignity = _lord_dignity_at(planets_by_sign, lord, lord_sign_idx)
+    if dignity == "exalted":
+        duration += 1
+    elif dignity == "debilitated":
+        duration -= 1
+    return float(duration)
+
+
+def _lord_sign_index(planets_by_sign: dict[int, list[tuple[str, str, float]]], lord: str) -> int:
+    for idx, occupants in planets_by_sign.items():
+        for planet, _dignity, _deg in occupants:
+            if planet == lord:
+                return idx
+    return _RASHI_LIST.index(SIGN_LORDS_INVERSE_DEFAULT.get(lord, "aries"))
+
+
+def _lord_dignity_at(planets_by_sign: dict[int, list[tuple[str, str, float]]], lord: str, sign_idx: int) -> str | None:
+    for planet, dignity, _deg in planets_by_sign.get(sign_idx, []):
+        if planet == lord:
+            return dignity
+    return None
+
+
+# Fallback only reached if a lord planet is entirely absent from the
+# chart data (should not happen for the 7 classical grahas) — maps a
+# lord back to a sign it classically rules, so duration math still
+# produces a sane (if not chart-specific) result rather than crashing.
+SIGN_LORDS_INVERSE_DEFAULT: dict[str, str] = {v: k for k, v in SIGN_LORDS.items()}
+
+
+def _stronger_rasi(
+    planets_by_sign: dict[int, list[tuple[str, str, float]]], sign_idx1: int, sign_idx2: int,
+) -> int:
+    """
+    Classical "stronger rasi" comparison — Rules 1, 3, 4, 5 of PyJHora's
+    house.stronger_rasi() cascade, plus its Rule-6 fallback (higher
+    longitude-within-sign of the two candidate lords). Rule 2 (benefic
+    conjunction/aspect count onto the rasi) is NOT implemented — it
+    needs a "graha drishti onto an arbitrary rashi" primitive this
+    codebase's AspectEngine doesn't currently expose (only planet-to-
+    planet aspects). Disclosed simplification, not a silent gap: on a
+    Rule-1/3/4/5 tie, this falls through one rule earlier than PyJHora
+    would (skipping straight from Rule 4 to Rule 5, i.e. never applying
+    Rule 2's tie-break) before reaching the same Rule-6 fallback.
+    """
+    count1 = len(planets_by_sign.get(sign_idx1, []))
+    count2 = len(planets_by_sign.get(sign_idx2, []))
+    if count1 != count2:
+        return sign_idx1 if count1 > count2 else sign_idx2
+
+    exalted1 = sum(1 for _, d, _deg in planets_by_sign.get(sign_idx1, []) if d == "exalted")
+    exalted2 = sum(1 for _, d, _deg in planets_by_sign.get(sign_idx2, []) if d == "exalted")
+    if (exalted1 > 0) != (exalted2 > 0):
+        return sign_idx1 if exalted1 > 0 else sign_idx2
+
+    lord1, lord2 = SIGN_LORDS[_RASHI_LIST[sign_idx1]], SIGN_LORDS[_RASHI_LIST[sign_idx2]]
+    lord1_sign = _lord_sign_index(planets_by_sign, lord1)
+    lord2_sign = _lord_sign_index(planets_by_sign, lord2)
+    oddity1 = (sign_idx1 in _ODD_SIGNS_0IDX) != (lord1_sign in _ODD_SIGNS_0IDX)
+    oddity2 = (sign_idx2 in _ODD_SIGNS_0IDX) != (lord2_sign in _ODD_SIGNS_0IDX)
+    if oddity1 != oddity2:
+        return sign_idx1 if oddity1 else sign_idx2
+
+    def _modality_rank(idx: int) -> int:
+        if idx in _DUAL_SIGNS_0IDX:
+            return 3
+        if idx in _FIXED_SIGNS_0IDX:
+            return 2
+        return 1
+
+    m1, m2 = _modality_rank(sign_idx1), _modality_rank(sign_idx2)
+    if m1 != m2:
+        return sign_idx1 if m1 > m2 else sign_idx2
+
+    # Rule-6 fallback: higher degree-within-sign of the two lords.
+    lord1_deg = _lord_degree_in_sign(planets_by_sign, lord1)
+    lord2_deg = _lord_degree_in_sign(planets_by_sign, lord2)
+    return sign_idx1 if lord1_deg >= lord2_deg else sign_idx2
+
+
+def _lord_degree_in_sign(planets_by_sign: dict[int, list[tuple[str, str, float]]], lord: str) -> float:
+    for occupants in planets_by_sign.values():
+        for entry in occupants:
+            if entry[0] == lord:
+                return entry[2] if len(entry) > 2 else 0.0
+    return 0.0
+
+
+def _narayana_seed_sign(planets_by_sign: dict[int, list[tuple[str, str]]], asc_sign_idx: int) -> int:
+    seventh_idx = (asc_sign_idx + 6) % 12
+    return _stronger_rasi(planets_by_sign, asc_sign_idx, seventh_idx)
+
+
+def _narayana_progression(planets_by_sign: dict[int, list[tuple[str, str, float]]], seed_idx: int) -> tuple[int, ...]:
+    # Rahu/Ketu are always present in a real chart (mathematical points,
+    # never "absent"), so no presence-check is needed before locating them.
+    ketu_sign = _lord_sign_index(planets_by_sign, "ketu")
+    saturn_sign = _lord_sign_index(planets_by_sign, "saturn")
+    if ketu_sign == seed_idx:
+        return NARAYANA_PROGRESSION_KETU_EXCEPTION[seed_idx]
+    if saturn_sign == seed_idx:
+        return NARAYANA_PROGRESSION_SATURN_EXCEPTION[seed_idx]
+    return NARAYANA_PROGRESSION_NORMAL[seed_idx]
+
+
+def _narayana_antardhasa_order(planets_by_sign: dict[int, list[tuple[str, str]]], dhasa_rasi_idx: int) -> tuple[int, ...]:
+    """
+    Antardasha order within one Narayana Mahadasha sign — its own seed
+    (stronger of the dasha-lord's sign and the 7th-lord's sign) and its
+    own direction rule (odd seed -> forward; Saturn in the seed forces
+    forward; Ketu in the MAHADASHA sign flips the direction). Ported
+    from PyJHora's narayana._narayana_antardhasa().
+    """
+    dasha_lord = SIGN_LORDS[_RASHI_LIST[dhasa_rasi_idx]]
+    lord_sign = _lord_sign_index(planets_by_sign, dasha_lord)
+    seventh_lord = SIGN_LORDS[_RASHI_LIST[(dhasa_rasi_idx + 6) % 12]]
+    seventh_lord_sign = _lord_sign_index(planets_by_sign, seventh_lord)
+    seed = _stronger_rasi(planets_by_sign, lord_sign, seventh_lord_sign)
+
+    direction = 1 if seed in _ODD_SIGNS_0IDX else -1
+    saturn_sign = _lord_sign_index(planets_by_sign, "saturn")
+    if saturn_sign == seed:
+        direction = 1
+    ketu_sign = _lord_sign_index(planets_by_sign, "ketu")
+    if ketu_sign == dhasa_rasi_idx:
+        direction *= -1
+
+    return tuple((seed + direction * i) % 12 for i in range(12))
+
+
 # ── Jaimini helpers ───────────────────────────────────────────────────────────
 
 
@@ -241,20 +453,27 @@ def _jaimini_sign_duration(sign: str, lord_sign: str, use_alternate: bool = Fals
     """
     Chara / Narayana sign duration by Neelakantha's rule:
 
-    Count from `sign` to `lord_sign` in the shorter direction.
-    If the lord is in the same sign: 12 years.
-    Special: for Scorpio (co-lord Ketu) and Aquarius (co-lord Rahu),
-    the shorter count from the two lords is used.
+    Count from `sign` to `lord_sign` — direction fixed by `sign`'s own
+    parity (odd/male sign -> count forward; even/female sign -> count
+    backward), the SAME parity rule already used by
+    _jaimini_sign_sequence() for the dasha's own sign-progression
+    direction. If the lord is in the same sign: 12 years.
 
-    Returns an integer duration in years (1–12).
+    REPLACES an earlier "whichever direction is numerically shorter"
+    implementation — confirmed wrong via cross-check against PyJHora's
+    jhora.horoscope.dhasa.raasi.chara/narayana modules (_dhasa_duration_
+    knrao_method / _pvnrao_method / _mindsutra, all of which fix
+    direction by sign parity, never by minimality). Example divergence:
+    Aries (odd) with lord in Scorpio — correct (forward) count is 7
+    years; the old "shorter of the two" logic picked backward (5 years)
+    instead, since 5 < 7.
     """
     from_idx = _RASHI_LIST.index(sign)
     to_idx = _RASHI_LIST.index(lord_sign)
 
-    forward = (to_idx - from_idx) % 12
-    backward = (from_idx - to_idx) % 12
+    is_odd = (from_idx % 2 == 0)  # 0-indexed Aries=0 -> odd in astro numbering
+    count = (to_idx - from_idx) % 12 if is_odd else (from_idx - to_idx) % 12
 
-    count = min(forward, backward)
     return 12 if count == 0 else count
 
 

@@ -184,7 +184,7 @@ _EXTENDED_28_OVERRIDES: dict[int, str] = {
 
 # 28-nakshatra token list — Abhijit inserted between Uttara Ashadha and
 # Shravana, same insertion point as sarvatobhadra_grid.py's SBC_BORDER
-# (that placement IS independently Saravali/JHora-verified, even though
+# (that placement IS independently Saravali/Classical Vedic-verified, even though
 # this specific 28-scheme Tara table's position-name assignments are not).
 _STANDARD_28: list[str] = (
     _STANDARD_27[: _STANDARD_27.index("shravana")]

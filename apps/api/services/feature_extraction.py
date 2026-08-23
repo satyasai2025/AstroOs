@@ -176,7 +176,7 @@ class FeatureExtractionService:
         return features
 
     async def extract_by_event_type(self, event_type: str) -> list[ExtractedFeature]:
-        """Extract features only for one LOKPA event type."""
+        """Extract features only for one KP Master event type."""
         LatestSnapshot, rn = _latest_snapshot_entity()
         rows = (
             await self._session.execute(

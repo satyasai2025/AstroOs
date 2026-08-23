@@ -10,16 +10,23 @@ Phase 1 (v2.0.0):
   BPHS-CY-001 Sunapha   — any planet (excl. Sun) in the 2nd from Moon
   BPHS-CY-002 Anapha    — any planet (excl. Sun) in the 12th from Moon
   BPHS-CY-003 Durudhara — planets in BOTH the 2nd and 12th from Moon
-  BPHS-CY-004 Kemadruma — no planets in 2nd/12th from Moon AND none
-                          conjunct Moon (inauspicious; classical
-                          cancellation exceptions, e.g. Moon in kendra
-                          from lagna, are a Phase 3 refinement, not
-                          implemented here — this is the base condition
-                          only, reported honestly as such)
+  BPHS-CY-004 Kemadruma — no planets in 2nd/12th from Moon, none
+                          conjunct Moon, AND no planet other than Moon
+                          in any kendra from lagna (inauspicious;
+                          cancelled if the Moon itself sits in a kendra
+                          from lagna — see evaluate_kemadruma's own
+                          docstring for the rule_version history; other
+                          classical cancellation exceptions remain a
+                          tracked deferral)
   BPHS-CY-005 Adhi Yoga — natural benefics in the 6th, 7th, and 8th
                           houses from Moon (full if all three occupied,
-                          partial if 1-2 are)
-  BPHS-CY-006 Chandra-Mangala Yoga — Moon and Mars associated
+                          partial if 1-2 are — see evaluate_adhi_yoga's
+                          docstring for how this compares to PyJHora's
+                          stricter all-benefics-confined reading)
+  BPHS-CY-006 Chandra-Mangala Yoga — Moon and Mars conjunct (same house;
+                          BPHS-strict, matches PyJHora — previously used
+                          a broader conjunct-or-aspect test not actually
+                          supported by the cited BPHS source)
 
 Phase 2 (v2.1.0 "Vistara"):
   BPHS-CY-007 Amavasya Yoga — Sun conjunct Moon (New Moon; within ~12 degrees)
@@ -37,7 +44,7 @@ from apps.api.services.yoga_predicates import (
     YogaContext,
     get_planet,
     houses_from,
-    is_associated,
+    is_conjunct,
     is_natural_benefic,
     planets_in_house,
 )
@@ -169,11 +176,23 @@ def evaluate_durudhara(ctx: YogaContext) -> Optional[YogaResult]:
 
 @register_yoga(
     yoga_id="BPHS-CY-004", name="Kemadruma Yoga", category="Chandra Yoga",
-    source_text="BPHS", rule_version="1.1",
+    source_text="BPHS", rule_version="1.2",
     requires=("D1", "HouseEngine"),
 )
 def evaluate_kemadruma(ctx: YogaContext) -> Optional[YogaResult]:
     """
+    rule_version 1.2 (was 1.1 in a prior pass): adds a second classical
+    BASE condition found missing via a PyJHora cross-check —
+    jhora.horoscope.chart.yoga.kemadruma_yoga() also requires that NO
+    planet other than the Moon occupies any kendra (1st/4th/7th/10th)
+    from the LAGNA (distinct from this function's existing "Moon itself
+    in a kendra from lagna cancels" exception below — that one is about
+    the Moon's own placement; this one is about every OTHER planet's
+    placement). Previously this codebase only checked 2nd/12th-from-
+    Moon and conjunction with Moon — a real base-condition gap, not
+    just a missing cancellation exception, which is why the version is
+    bumped again rather than folded silently into 1.1.
+
     rule_version 1.1 (was 1.0 in Phase 2): adds the most commonly-cited
     classical cancellation exception — Kemadruma is cancelled if the
     Moon itself is placed in a kendra (1st/4th/7th/10th) from the lagna.
@@ -194,7 +213,7 @@ def evaluate_kemadruma(ctx: YogaContext) -> Optional[YogaResult]:
     if moon is None:
         return YogaResult(
             yoga_id="BPHS-CY-004", name="Kemadruma Yoga", category="Chandra Yoga",
-            source_text="BPHS", rule_version="1.1", is_present=False,
+            source_text="BPHS", rule_version="1.2", is_present=False,
             strength=None, missing=("moon not found in chart",), trace=tuple(trace),
         )
 
@@ -208,7 +227,19 @@ def evaluate_kemadruma(ctx: YogaContext) -> Optional[YogaResult]:
     trace.append(f"Step 3: 12th from moon occupants → {twelfth_occupants}")
     trace.append(f"Step 4: planets conjunct moon → {conjunct}")
 
-    base_condition_met = not second_occupants and not twelfth_occupants and not conjunct
+    # v1.2: no planet OTHER than the Moon may occupy any kendra
+    # (1st/4th/7th/10th) from the LAGNA — a separate base condition from
+    # the Moon's own kendra placement checked later as a cancellation.
+    # Cross-verified against PyJHora's kemadruma_yoga().
+    lagna_kendra_occupants = sorted({
+        p for h in KENDRA_HOUSES for p in planets_in_house(ctx, h, exclude=("moon",))
+    })
+    trace.append(f"Step 4b: planets (other than Moon) in any kendra from lagna → {lagna_kendra_occupants}")
+
+    base_condition_met = (
+        not second_occupants and not twelfth_occupants
+        and not conjunct and not lagna_kendra_occupants
+    )
     satisfied, missing = [], []
 
     if not base_condition_met:
@@ -218,16 +249,18 @@ def evaluate_kemadruma(ctx: YogaContext) -> Optional[YogaResult]:
             missing.append(f"Planet(s) {twelfth_occupants} present in 12th from Moon (blocks Kemadruma)")
         if conjunct:
             missing.append(f"Planet(s) {conjunct} conjunct Moon (blocks Kemadruma)")
+        if lagna_kendra_occupants:
+            missing.append(f"Planet(s) {lagna_kendra_occupants} in a kendra from lagna (blocks Kemadruma)")
         trace.append("Step 5: base condition not met — cancellation check not applicable")
 
         return YogaResult(
             yoga_id="BPHS-CY-004", name="Kemadruma Yoga", category="Chandra Yoga",
-            source_text="BPHS", rule_version="1.1", is_present=False, strength=None,
+            source_text="BPHS", rule_version="1.2", is_present=False, strength=None,
             involved_planets=("moon",), involved_houses=(moon.house_number,),
             satisfied=tuple(satisfied), missing=tuple(missing), trace=tuple(trace),
         )
 
-    satisfied.append("No planets in 2nd/12th from Moon or conjunct Moon (base affliction condition met)")
+    satisfied.append("No planets in 2nd/12th from Moon, conjunct Moon, or in a kendra from lagna (base affliction condition met)")
     trace.append("Step 5: base condition met — checking cancellation")
 
     moon_in_kendra_from_lagna = moon.house_number in KENDRA_HOUSES
@@ -243,7 +276,7 @@ def evaluate_kemadruma(ctx: YogaContext) -> Optional[YogaResult]:
 
     return YogaResult(
         yoga_id="BPHS-CY-004", name="Kemadruma Yoga", category="Chandra Yoga",
-        source_text="BPHS", rule_version="1.1", is_present=is_present,
+        source_text="BPHS", rule_version="1.2", is_present=is_present,
         strength="full" if is_present else None,
         involved_planets=("moon",), involved_houses=(moon.house_number,),
         satisfied=tuple(satisfied), missing=tuple(missing), trace=tuple(trace),
@@ -256,6 +289,23 @@ def evaluate_kemadruma(ctx: YogaContext) -> Optional[YogaResult]:
     requires=("D1", "HouseEngine"),
 )
 def evaluate_adhi_yoga(ctx: YogaContext) -> Optional[YogaResult]:
+    """
+    Benefics in the 6th, 7th, and 8th houses from the Moon.
+
+    **Presence-condition choice, disclosed after a PyJHora cross-check**:
+    this evaluates "how many of the 3 houses (6/7/8 from Moon) have at
+    least one benefic" (full if all 3, partial if 1-2) — a per-house
+    occupancy test. PyJHora's jhora.horoscope.chart.yoga.adhi_yoga()
+    instead requires ALL natural benefics in the chart to fall within
+    that 3-house band (`all(...)`) as a single boolean condition, no
+    partial form. Both are attested classical readings of "benefics in
+    6-7-8 from Moon" — this is a legitimate alternate-tradition
+    difference, not a bug; not changed to match PyJHora since AstroOS's
+    per-house/graded-strength model is used consistently across this
+    module's other yogas (see NATURAL_BENEFICS below for the separate,
+    already-disclosed simplification on which planets count as
+    benefic).
+    """
     trace: list[str] = []
     moon = _moon_or_none(ctx)
     if moon is None:
@@ -308,6 +358,15 @@ def evaluate_adhi_yoga(ctx: YogaContext) -> Optional[YogaResult]:
     requires=("D1", "HouseEngine", "AspectEngine"),
 )
 def evaluate_chandra_mangala(ctx: YogaContext) -> Optional[YogaResult]:
+    """
+    Moon and Mars conjunct in the same house — classical BPHS definition
+    (conjunction only). Cross-verified against PyJHora's
+    jhora.horoscope.chart.yoga.chandra_mangala_yoga(), which likewise
+    checks conjunction only (`p_to_h[MARS_ID] == p_to_h[MOON_ID]`), no
+    aspect-based alternative. Previously used is_associated() (conjunct
+    OR aspecting), which is broader than the BPHS source this function
+    itself cites — corrected to match.
+    """
     trace: list[str] = []
     moon = get_planet(ctx, "moon")
     mars = get_planet(ctx, "mars")
@@ -320,11 +379,11 @@ def evaluate_chandra_mangala(ctx: YogaContext) -> Optional[YogaResult]:
 
     trace.append(f"Step 1: locate moon → house {moon.house_number}")
     trace.append(f"Step 2: locate mars → house {mars.house_number}")
-    associated = is_associated(ctx, "moon", "mars")
-    trace.append(f"Step 3: is_associated(moon, mars) → {associated}")
+    associated = is_conjunct(ctx, "moon", "mars")
+    trace.append(f"Step 3: is_conjunct(moon, mars) → {associated}")
 
-    satisfied = ("Moon and Mars are associated (conjunct or aspecting)",) if associated else ()
-    missing = () if associated else ("Moon and Mars are not associated",)
+    satisfied = ("Moon and Mars are conjunct (same house)",) if associated else ()
+    missing = () if associated else ("Moon and Mars are not conjunct",)
     trace.append(f"Step 4: rule {'satisfied' if associated else 'not satisfied'}")
 
     return YogaResult(

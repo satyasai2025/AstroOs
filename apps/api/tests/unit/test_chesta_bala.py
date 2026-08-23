@@ -1,86 +1,84 @@
 """
-AstroOS — Chesta Bala Unit Tests (Module 9 Phase 2)
+AstroOS — Chesta Bala Unit Tests (Module 9)
+
+Formula was replaced (see chesta_bala.py's module docstring): the
+earlier raw-speed-vs-mean-speed model was confirmed backwards (faster
+direct motion should score HIGHER, not clamp to 0) and is replaced by
+the classical Chesta Kendra method. Tests use real sidereal longitudes
+plus the birth JD/ayanamsa (needed to reconstruct mean longitudes),
+not just speed_deg_per_day.
 """
+
+from datetime import datetime, timezone
 
 import pytest
 
 from apps.api.domain.ephemeris import DignityType, SiderealPosition
+from apps.api.services.ephemeris_wrapper import datetime_to_jd
 from apps.api.services.shadbala.chesta_bala import ChestaBalaCalculator
 
+_JD = datetime_to_jd(datetime(1995, 1, 1, 12, 0, 0, tzinfo=timezone.utc))
+_AYANAMSA = 23.78725828436319  # this project's own verified Lahiri ayanamsa for the reference chart
 
-def _make_planet(planet, speed_deg_per_day, is_retrograde=False):
+
+def _make_planet(planet, sidereal_longitude, speed=1.0, retrograde=False):
     return SiderealPosition(
-        planet=planet, sidereal_longitude=10.0, rashi="aries", rashi_degree=10.0,
-        house_number=1, nakshatra="ashwini", pada=1, is_retrograde=is_retrograde,
+        planet=planet, sidereal_longitude=sidereal_longitude, rashi="aries", rashi_degree=10.0,
+        house_number=1, nakshatra="ashwini", pada=1, is_retrograde=retrograde,
         is_combust=False, combustion_orb=None, dignity=DignityType.NEUTRAL,
-        speed_deg_per_day=speed_deg_per_day,
+        speed_deg_per_day=speed,
     )
 
 
-def test_retrograde_gives_maximum_bala():
+def test_reference_chart_no_longer_produces_false_zeros():
+    """
+    1995-01-01 12:00 UTC, New Delhi — the bug this replacement fixes:
+    Mercury/Jupiter/Saturn previously scored exactly 0.0 (clamped) with
+    the old speed-vs-constant formula despite moving at ordinary direct
+    speed. None should be exactly 0 now.
+    """
+    longitudes = {
+        "mars": 128.8693, "mercury": 267.4526, "jupiter": 221.0448,
+        "venus": 210.5277, "saturn": 314.2452,
+    }
+    planets = [_make_planet(p, lon) for p, lon in longitudes.items()]
     calc = ChestaBalaCalculator()
-    p = _make_planet("mars", speed_deg_per_day=-0.3, is_retrograde=True)
-    result = calc.calculate(p)
-    assert result.value_shashtiamsas == pytest.approx(60.0)
-
-
-def test_near_stationary_gives_maximum_bala():
-    calc = ChestaBalaCalculator()
-    p = _make_planet("saturn", speed_deg_per_day=0.001, is_retrograde=False)
-    result = calc.calculate(p)
-    assert result.value_shashtiamsas == pytest.approx(60.0)
-
-
-def test_speed_at_or_above_mean_gives_zero():
-    calc = ChestaBalaCalculator()
-    p = _make_planet("mars", speed_deg_per_day=0.524, is_retrograde=False)  # exactly mean
-    result = calc.calculate(p)
-    assert result.value_shashtiamsas == pytest.approx(0.0, abs=1e-6)
-
-
-def test_speed_above_mean_clamps_at_zero_not_negative():
-    calc = ChestaBalaCalculator()
-    p = _make_planet("mars", speed_deg_per_day=2.0, is_retrograde=False)  # well above mean
-    result = calc.calculate(p)
-    assert result.value_shashtiamsas == pytest.approx(0.0, abs=1e-6)
-
-
-def test_speed_at_half_mean_gives_half_bala():
-    calc = ChestaBalaCalculator()
-    p = _make_planet("mars", speed_deg_per_day=0.262, is_retrograde=False)  # half of 0.524
-    result = calc.calculate(p)
-    assert result.value_shashtiamsas == pytest.approx(30.0, abs=0.5)
+    results = calc.calculate_all(planets, _JD, _AYANAMSA)
+    assert len(results) == 5
+    for r in results:
+        assert r.value_shashtiamsas > 0.0, f"{r.planet} incorrectly scored 0"
+        assert 0.0 <= r.value_shashtiamsas <= 60.0, f"{r.planet} out of 0-60 range"
 
 
 def test_rejects_sun_and_moon():
-    """Sun/Moon use different classical treatment, not scored by this calculator."""
     calc = ChestaBalaCalculator()
     with pytest.raises(ValueError):
-        calc.calculate(_make_planet("sun", speed_deg_per_day=0.9))
+        calc.calculate(_make_planet("sun", 100.0), _JD, _AYANAMSA)
     with pytest.raises(ValueError):
-        calc.calculate(_make_planet("moon", speed_deg_per_day=13.0))
+        calc.calculate(_make_planet("moon", 100.0), _JD, _AYANAMSA)
 
 
 def test_rejects_rahu_ketu():
     calc = ChestaBalaCalculator()
     with pytest.raises(ValueError):
-        calc.calculate(_make_planet("rahu", speed_deg_per_day=0.05))
+        calc.calculate(_make_planet("rahu", 100.0), _JD, _AYANAMSA)
 
 
-def test_calculate_all_returns_5_planets():
+def test_calculate_all_returns_only_the_5_scoped_planets():
+    planets = [_make_planet(p, 10.0 * i) for i, p in enumerate(
+        ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
+    )]
     calc = ChestaBalaCalculator()
-    planets = [
-        _make_planet(p, 0.1) for p in ["mars", "mercury", "jupiter", "venus", "saturn", "sun", "moon"]
-    ]
-    results = calc.calculate_all(planets)
-    assert len(results) == 5
-    assert {r.planet for r in results} == {"mars", "mercury", "jupiter", "venus", "saturn"}
+    results = calc.calculate_all(planets, _JD, _AYANAMSA)
+    result_planets = {r.planet for r in results}
+    assert result_planets == {"mars", "mercury", "jupiter", "venus", "saturn"}
 
 
-def test_value_always_between_0_and_60():
-    calc = ChestaBalaCalculator()
-    for speed in [-5.0, -0.5, 0.0, 0.001, 0.5, 1.0, 5.0]:
-        for planet in ["mars", "mercury", "jupiter", "venus", "saturn"]:
-            p = _make_planet(planet, speed, is_retrograde=(speed < 0))
-            result = calc.calculate(p)
-            assert 0.0 <= result.value_shashtiamsas <= 60.0
+def test_superior_planet_uses_suns_mean_longitude_as_seeghrocha():
+    result = ChestaBalaCalculator().calculate(_make_planet("mars", 128.8693), _JD, _AYANAMSA)
+    assert "Sun's mean longitude" in result.trace[0]
+
+
+def test_inferior_planet_uses_own_mean_longitude_as_seeghrocha():
+    result = ChestaBalaCalculator().calculate(_make_planet("mercury", 267.4526), _JD, _AYANAMSA)
+    assert "own mean longitude" in result.trace[0]

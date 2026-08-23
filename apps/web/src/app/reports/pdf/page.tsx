@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, tokenStore } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
-import type { AyanamsaCode, HouseSystemCode } from "@/lib/types";
+import type { AyanamsaCode, HouseSystemCode, NodeTypeCode } from "@/lib/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -26,6 +26,11 @@ const HOUSE_SYSTEM_OPTIONS = [
   { value: "E", label: "E — Equal" },
 ];
 
+const NODE_TYPE_OPTIONS = [
+  { value: "mean", label: "Mean Node (default)" },
+  { value: "true", label: "True Node" },
+];
+
 export default function ReportsPdfPage() {
   const storeRequest = useWorkflowStore((s) => s.request);
 
@@ -39,6 +44,7 @@ export default function ReportsPdfPage() {
   const [longitude, setLongitude] = useState("77.2090");
   const [ayanamsa, setAyanamsa] = useState<AyanamsaCode>("lahiri");
   const [houseSystem, setHouseSystem] = useState<HouseSystemCode>("P");
+  const [nodeType, setNodeType] = useState<NodeTypeCode>("mean");
 
   // ── Saved charts state ──────────────────────────────────────────────────
   const [savedCharts, setSavedCharts] = useState<any[]>([]);
@@ -175,6 +181,7 @@ export default function ReportsPdfPage() {
       longitude: lng,
       ayanamsa,
       house_system: houseSystem,
+      node_type: nodeType,
       title: title || "Chart Analysis",
       subject_name: subjectName || "Unnamed",
       generated_by: "AstroOS Web Reports",
@@ -215,7 +222,7 @@ export default function ReportsPdfPage() {
     } finally {
       setGenerating(false);
     }
-  }, [birthDate, birthTime, latitude, longitude, ayanamsa, houseSystem, title, subjectName]);
+  }, [birthDate, birthTime, latitude, longitude, ayanamsa, houseSystem, nodeType, title, subjectName]);
 
   return (
     <div className="space-y-6">
@@ -406,6 +413,24 @@ export default function ReportsPdfPage() {
               style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
             >
               {HOUSE_SYSTEM_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+              Rahu/Ketu Node
+            </label>
+            <select
+              value={nodeType}
+              onChange={(e) => setNodeType(e.target.value as NodeTypeCode)}
+              className="w-full rounded-xl border px-3 py-2 text-xs outline-none"
+              style={{ borderColor: "var(--border-primary)", background: "var(--bg-secondary)", color: "var(--text-primary)" }}
+            >
+              {NODE_TYPE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>

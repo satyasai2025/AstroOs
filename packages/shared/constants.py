@@ -278,7 +278,7 @@ SWEPH_PLANET_IDS: Final[dict[str, int]] = {
     "ketu":    -1,  # Derived as Rahu + 180°
 }
 
-# Lunar node variants. Classical Vedic practice — and both Jagannatha Hora and
+# Lunar node variants. Classical Vedic practice — and both Classical Vedic System and
 # AstroSage, verified against a reference chart — use the MEAN node; the true
 # (osculating) node can differ from it by up to ~1.8°, enough to shift Rahu/Ketu
 # into a different nakshatra and therefore change Vimshottari dasha balance.

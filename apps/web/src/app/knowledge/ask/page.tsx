@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Badge, Button, Card } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
 import type { AIResponseSchema } from "@/lib/types";
@@ -15,20 +16,30 @@ import type { AIResponseSchema } from "@/lib/types";
  * result rather than an error, which this page renders as-is so it's
  * obvious what state the feature is in.
  */
-export default function AskAstroOSPage() {
-  const [question, setQuestion] = useState("");
+function AskAstroOSContent() {
+  const searchParams = useSearchParams();
+  const initialQ = searchParams?.get("q") || "";
+  const [question, setQuestion] = useState(initialQ);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AIResponseSchema | null>(null);
 
-  async function handleAsk() {
-    if (!question.trim()) return;
+  useEffect(() => {
+    if (initialQ && !question) {
+      setQuestion(initialQ);
+    }
+  }, [initialQ]);
+
+  async function handleAsk(queryToAsk?: string) {
+    const textToQuery = (queryToAsk ?? question).trim();
+    if (!textToQuery) return;
+    if (queryToAsk) setQuestion(queryToAsk);
     setLoading(true);
     setError(null);
     setResult(null);
     try {
       const response = await api.post<AIResponseSchema>("/api/v1/ai/knowledge-qa", {
-        question: question.trim(),
+        question: textToQuery,
       });
       setResult(response);
     } catch (err) {
@@ -38,23 +49,32 @@ export default function AskAstroOSPage() {
     }
   }
 
-  const noSourceFound = result?.title === "No Matching Source Found";
+  const noSourceFound = result?.sources.length === 0;
+
+  const EXAMPLE_QUESTIONS = [
+    "What is the effect of Jupiter in the 7th house for marriage?",
+    "Explain Gaja Kesari Yoga and its planetary conditions",
+    "What are the classical significations (Karakatvas) of the Sun?",
+    "What results are given by Mars in the 10th house?",
+  ];
 
   return (
-    <div className="mx-auto max-w-3xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-          Ask AstroOS
-        </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-          Ask a general astrology question. Answers are grounded in AstroOS's own
-          classical-text knowledge base — never made up. See{" "}
-          <code style={{ fontSize: "var(--text-xs)" }}>docs/rag-knowledge-search.md</code>{" "}
-          for how to set up the local model this feature needs.
-        </p>
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
+            Ask AstroOS
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+            Ask a Vedic astrology question. Answers are strictly grounded in classical texts (BPHS, Saravali) and cited with reference sources.
+          </p>
+        </div>
+        <Button href="/knowledge" variant="secondary">
+          ← Back to Knowledge
+        </Button>
       </div>
 
-      <Card style={{ marginBottom: 16 }}>
+      <Card>
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
             type="text"
@@ -63,17 +83,41 @@ export default function AskAstroOSPage() {
             onKeyDown={(e) => {
               if (e.key === "Enter") handleAsk();
             }}
-            placeholder="e.g. What does Jupiter in the 7th house mean for marriage?"
-            className="flex-1 rounded-lg px-3 py-2 text-sm"
+            placeholder="e.g. What is the effect of Saturn in the 7th house?"
+            className="flex-1 rounded-lg px-3.5 py-2.5 text-sm outline-none"
             style={{
-              backgroundColor: "var(--bg-card)",
+              backgroundColor: "var(--bg-surface, var(--bg-card))",
               border: "1px solid var(--border-primary)",
               color: "var(--text-primary)",
             }}
           />
-          <Button onClick={handleAsk} disabled={loading || !question.trim()}>
-            {loading ? "Asking…" : "Ask"}
+          <Button onClick={() => handleAsk()} disabled={loading || !question.trim()} variant="primary">
+            {loading ? "Searching classical texts…" : "Ask AstroOS"}
           </Button>
+        </div>
+
+        {/* Quick Question Chips */}
+        <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
+          <p className="mb-2 text-xs font-medium text-slate-400">
+            Suggested questions to try:
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {EXAMPLE_QUESTIONS.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => handleAsk(q)}
+                className="text-left text-xs px-2.5 py-1 rounded-md transition-colors hover:border-cyan-500 hover:text-cyan-400"
+                style={{
+                  backgroundColor: "var(--bg-subtle, rgba(255, 255, 255, 0.03))",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
         </div>
       </Card>
 
@@ -84,22 +128,22 @@ export default function AskAstroOSPage() {
       )}
 
       {result && (
-        <Card>
+        <Card style={{ borderLeft: noSourceFound ? "3px solid var(--gold-400)" : "3px solid var(--success-400)" }}>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
               {result.title}
             </h2>
             <Badge tone={noSourceFound ? "neutral" : "success"}>
-              {noSourceFound ? "No source" : `Confidence: ${result.confidence}`}
+              {noSourceFound ? "No direct citation" : `Confidence: ${result.confidence}`}
             </Badge>
           </div>
-          <p className="whitespace-pre-line text-sm" style={{ color: "var(--text-secondary)" }}>
+          <p className="whitespace-pre-line text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             {result.body}
           </p>
           {result.sources.length > 0 && (
             <div className="mt-4 pt-3" style={{ borderTop: "1px solid var(--border-primary)" }}>
-              <p className="mb-1 text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
-                Sources used
+              <p className="mb-1.5 text-xs font-semibold" style={{ color: "var(--text-muted)" }}>
+                Verified Classical Sources
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {result.sources.map((s) => (
@@ -108,8 +152,30 @@ export default function AskAstroOSPage() {
               </div>
             </div>
           )}
+
+          {noSourceFound && (
+            <div className="mt-4 pt-3 flex flex-wrap items-center gap-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Need more information?
+              </span>
+              <Button href="/knowledge/browse?type=karakatvas" variant="secondary">
+                Browse 5,000+ Karakatvas
+              </Button>
+              <Button href="/help" variant="secondary">
+                View Help Guide
+              </Button>
+            </div>
+          )}
         </Card>
       )}
     </div>
+  );
+}
+
+export default function AskAstroOSPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-sm text-slate-400">Loading Ask AstroOS…</div>}>
+      <AskAstroOSContent />
+    </Suspense>
   );
 }

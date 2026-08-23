@@ -104,7 +104,7 @@ def test_unknown_scheme_rejected():
 def test_subdivisional_reproduces_classical_composites(composite, classical, lon):
     """The generic composition machinery must agree with the verified charts.
 
-    D81/D108/D144 were each checked against a JHora export; if the generic
+    D81/D108/D144 were each checked against a Classical Vedic export; if the generic
     "chart of a chart" builder reproduces them exactly at arbitrary
     longitudes, it inherits that verification.
     """
@@ -252,7 +252,7 @@ def test_d5_odd_sign_part1_is_aquarius():
 def test_d5_even_sign_part1_is_virgo():
     """Taurus (even, index 1), 2nd part (6-12°) → Virgo.
 
-    Verified against a JHora reference chart (2026-08-15, Pune): Gulika
+    Verified against a Classical Vedic reference chart (2026-08-15, Pune): Gulika
     and Uranus both land in Taurus 6-12deg and both show D5=Virgo.
     """
     vsign, _ = _d5_panchamsha(sign_index=1, deg=8.0)
@@ -262,7 +262,7 @@ def test_d5_even_sign_part1_is_virgo():
 def test_d5_even_sign_part0_is_taurus():
     """Taurus (even), 1st part (0-6°) → Taurus (self).
 
-    Verified against the same JHora reference chart: Mrityu Sphuta in
+    Verified against the same Classical Vedic reference chart: Mrityu Sphuta in
     Taurus 4°50' shows D5=Taurus.
     """
     vsign, _ = _d5_panchamsha(sign_index=1, deg=2.0)
@@ -336,7 +336,7 @@ def test_d11_worked_example_gemini_5th_part_lands_back_in_gemini():
 
 # ── D81 / D108 / D144 (composite "varga of varga") ────────────────────────────
 # Each is one varga applied to another's output. Reference values below are
-# from a JHora export (2026-08-15, Pune); D1 inputs are the same chart's D1
+# from a Classical Vedic export (2026-08-15, Pune); D1 inputs are the same chart's D1
 # column, so any sub-arc-minute drift is the export's own rounding.
 
 def test_d81_is_navamsha_of_navamsha():
@@ -515,15 +515,21 @@ def test_d30_even_sign_25to30_is_scorpio():
 
 # ── D60 (Shashtiamsha) ────────────────────────────────────────────────────────
 
-def test_d60_odd_sign_starts_aries():
-    """Aries (odd), first 0.5° part → Aries."""
-    vsign, _ = _d60_shashtiamsha(sign_index=0, deg=0.1)
+def test_d60_first_part_starts_from_the_planets_own_sign():
+    """
+    Counting is FROM THE PLANET'S OWN SIGN, not a fixed Aries/Libra
+    odd-even split (that was this function's previous, incorrect
+    behavior) — cross-verified against PyJHora's shashtyamsa_chart
+    (chart_method=1, "Traditional Parasara shashtyamsa (from sign)",
+    both PyJHora's own default and its documented standard method).
+    """
+    vsign, _ = _d60_shashtiamsha(sign_index=0, deg=0.1)  # Aries, part 0 -> Aries
     assert vsign == "aries"
-
-
-def test_d60_even_sign_starts_libra():
-    """Taurus (even), first 0.5° part → Libra."""
-    vsign, _ = _d60_shashtiamsha(sign_index=1, deg=0.1)
+    vsign, _ = _d60_shashtiamsha(sign_index=1, deg=0.1)  # Taurus, part 0 -> Taurus
+    assert vsign == "taurus"
+    vsign, _ = _d60_shashtiamsha(sign_index=8, deg=16.8125)  # reference chart: Sun in Sagittarius
+    assert vsign == "virgo"
+    vsign, _ = _d60_shashtiamsha(sign_index=8, deg=17.4318)  # reference chart: Moon in Sagittarius
     assert vsign == "libra"
 
 

@@ -743,7 +743,7 @@ async def ask_about_patterns(
 
     Read-only: never runs discovery, never persists anything. The LLM
     never touches the database — it only (1) picks an event_type from
-    the fixed, validated LOKPA list, which the router uses to query real
+    the fixed, validated KP Master list, which the router uses to query real
     rows, then (2) summarizes those real rows. It cannot introduce a
     pattern or statistic that wasn't actually fetched.
     """

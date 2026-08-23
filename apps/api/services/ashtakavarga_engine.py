@@ -40,12 +40,15 @@ class AshtakavargaEngine:
 
     def _occupied_rashis(self, chart: D1Chart) -> set[str]:
         """
-        Rashis occupied by any of the 7 classical grahas — used by
-        Ekadhipatya Shodhana's occupied-house protection. Scoped to the
-        7 classical grahas, consistent with the rest of this codebase's
-        Ashtakavarga scope; Rahu/Ketu occupancy is not tracked.
+        Rashis occupied by ANY graha (including Rahu/Ketu) — used by
+        Ekadhipatya Shodhana's occupied-house protection. Previously
+        scoped to only the 7 classical grahas; cross-verified against
+        PyJHora's jhora.horoscope.chart.ashtakavarga._ekadhipatya_sodhana(),
+        which checks raw chart occupancy (including the nodes) — a rashi
+        with only Rahu or Ketu in it is still "occupied" for this rule,
+        even though the nodes aren't Bhinnashtakavarga contributors.
         """
-        return {p.rashi for p in chart.planets if p.planet in _CLASSICAL_SEVEN}
+        return {p.rashi for p in chart.planets}
 
     def compute_bhinnashtakavarga(self, chart: D1Chart) -> list[BhinnashtakavargaResult]:
         """All 7 planets' individual Ashtakavarga tables (unreduced)."""

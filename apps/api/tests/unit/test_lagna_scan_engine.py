@@ -42,7 +42,7 @@ class TestBirthPosition:
         assert result.rashi_degree == pytest.approx(29.806, abs=0.01)
 
     def test_nakshatra_matches_jhora(self, result):
-        """JHora reports Mrigashira pada 2 for this lagna."""
+        """Classical Vedic reports Mrigashira pada 2 for this lagna."""
         assert result.nakshatra == "mrigashira"
         assert result.pada == 2
 

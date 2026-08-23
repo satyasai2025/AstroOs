@@ -6,7 +6,7 @@ Stage 2: Tajika aspects (Ithasala/Isharpha) between the 7 classical Grahas.
 
 Stage 3: Year Lord (Panchadhikari) — the 5-candidate selection rule,
 cross-checked against PyJHora (github.com/naturalstupid/PyJHora,
-jhora/horoscope/transit/tajaka.py — a library verified against ~6800
+vedic/horoscope/transit/tajaka.py — a library verified against ~6800
 tests from P.V.R. Narasimha Rao's book). One deliberate simplification:
 the final tie-break there falls through to Panchvargiya Bala (a whole
 separate 5-source planetary strength system not built here); this
@@ -14,7 +14,7 @@ implementation falls back directly to the first candidate (the Sun/Moon
 sign lord) in that rare case instead. See YearLordInfo.selection_method.
 
 Stage 4: Sahams (Punya, Vidya) — the classical A-B+C longitude formula,
-cross-checked against PyJHora's jhora/horoscope/transit/saham.py (same
+cross-checked against PyJHora's vedic/horoscope/transit/saham.py (same
 verified source as Stage 3). Only these two are built so far; PyJHora
 lists 36 total, each with its own A/B/C planet triple.
 

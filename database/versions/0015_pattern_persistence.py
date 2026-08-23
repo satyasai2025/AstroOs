@@ -54,7 +54,7 @@ def upgrade() -> None:
         "pattern_discovery_runs",
         *_audit_columns(),
         sa.Column("event_type", sa.String(30), nullable=True,
-                   comment="LOKPA event type this run targeted; null = all types."),
+                   comment="KP Master event type this run targeted; null = all types."),
         sa.Column("total_cases", sa.Integer, nullable=False, server_default="0"),
         sa.Column("total_events", sa.Integer, nullable=False, server_default="0"),
         sa.Column("execution_time_ms", sa.Integer, nullable=False, server_default="0"),

@@ -39,7 +39,7 @@ from apps.api.services.horoscope_engine import HoroscopeEngine
 #
 # These are regenerated from swe.utc_to_jd(...)[1] (jd_ut) and, for Rahu/Ketu,
 # from the MEAN node (swe.MEAN_NODE) — matching the Settings.NODE_TYPE default
-# and both Jagannatha Hora and AstroSage.
+# and both Classical Vedic System and AstroSage.
 
 # Test Case 1: 2000-01-07 13:30:00 UTC, Delhi (28.6139 N, 77.2090 E)
 # jd_ut = 2451551.0625040517

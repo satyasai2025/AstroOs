@@ -46,9 +46,26 @@ _CLASSICAL_SEVEN = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "satur
 # already-computed chart; the other 6 are computed on demand.
 _NON_D1_VARGAS = ["D2", "D3", "D7", "D9", "D12", "D30"]
 
-# Approximate point scale — see module docstring caveat.
+# Cross-verified against PyJHora's jhora.horoscope.chart.strength.
+# _sapthavargaja_bala_1()/_2(): moolatrikona=45, own=30, and a 5-tier
+# friend/enemy scale (great-friend 22.5 / friend 15 / neutral 7.5 /
+# enemy 3.75 / great-enemy 1.875) — there is NO separate "exalted" tier
+# in Saptavargaja Bala specifically (unlike Uchcha Bala, which scores
+# exact exaltation degree separately); an exalted planet is simply
+# scored at its moolatrikona/own-sign level here. The previous
+# "exalted": 60.0 entry was an unverified guess that didn't match this
+# reference and has been removed — exalted now falls through to the
+# moolatrikona tier below via `dignity if dignity != "exalted" else
+# "moolatrikona"` in calculate().
+#
+# The great-friend/great-enemy split (22.5 / 1.875) is NOT applied here
+# — this codebase's dignity computation (GrahaEngine.compute_dignity)
+# only produces a flat friendly/enemy (no Panchadha Maitri compound-
+# relationship tiering), so "friendly"/"enemy" below use the plain
+# friend/enemy points. Extending to the full 5-tier scale needs that
+# compound-relationship capability added to GrahaEngine first — a
+# separate, larger scope item, not a coefficient tweak.
 _DIGNITY_POINTS: dict[str, float] = {
-    "exalted": 60.0,
     "moolatrikona": 45.0,
     "own": 30.0,
     "friendly": 15.0,
@@ -56,6 +73,14 @@ _DIGNITY_POINTS: dict[str, float] = {
     "enemy": 3.75,
     "debilitated": 1.875,
 }
+
+
+def _dignity_points(dignity_value: str | None) -> float:
+    """"exalted" has no dedicated Saptavargaja tier — scored at moolatrikona's level."""
+    if dignity_value is None:
+        return 0.0
+    key = "moolatrikona" if dignity_value == "exalted" else dignity_value
+    return _DIGNITY_POINTS.get(key, 0.0)
 
 
 class SaptavargajaBalaCalculator:
@@ -100,7 +125,7 @@ class SaptavargajaBalaCalculator:
             d1_dignity = self._graha_engine.compute_dignity(
                 planet, d1_position.rashi, d1_position.rashi_degree
             )
-            points = _DIGNITY_POINTS.get(d1_dignity.value, 0.0) if d1_dignity else 0.0
+            points = _dignity_points(d1_dignity.value if d1_dignity else None)
             total += points
             trace.append(f"D1: dignity={d1_dignity.value if d1_dignity else 'none'} → {points} points")
 
@@ -120,7 +145,7 @@ class SaptavargajaBalaCalculator:
             varga_dignity = self._graha_engine.compute_dignity(
                 planet, varga_position.varga_rashi, varga_position.varga_rashi_degree
             )
-            points = _DIGNITY_POINTS.get(varga_dignity.value, 0.0) if varga_dignity else 0.0
+            points = _dignity_points(varga_dignity.value if varga_dignity else None)
             total += points
             trace.append(
                 f"{varga}: dignity={varga_dignity.value if varga_dignity else 'none'} → {points} points"

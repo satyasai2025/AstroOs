@@ -112,8 +112,13 @@ def test_choghadiya_saturday_sequence(engine):
     assert [c.name for c in day] == [
         "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal",
     ]
+    # Night steps by -2 through the cycle (not +1 like the day sequence) —
+    # cross-verified directly against PyJHora's raw gauri_choghadiya_night_table
+    # constant (Saturday row [2,0,5,3,1,6,4,2], decoded via its own
+    # 0:Udveg/1:Chara/2:Laabha/3:Amrit/4:Kaala/5:Shubha/6:Rog index legend).
+    # The previous "+1" sequence asserted here did not match that table.
     assert [c.name for c in night] == [
-        "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh",
+        "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh",
     ]
     assert all(c.is_day for c in day)
     assert all(not c.is_day for c in night)

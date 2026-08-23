@@ -688,15 +688,25 @@
                         </div>
 
                         <div class="info-card">
-                            <div class="info-card-hdr">Pinda Summary</div>
+                            <div class="info-card-hdr">Sodhya Pinda</div>
                             {% if report.pindas %}
-                            <div class="meta-kv">
-                                {% for p in report.pindas %}
-                                <span class="k">{{ p.category }}:</span> <span class="v">{{ p.pinda }}</span>
-                                {% endfor %}
-                            </div>
+                            <table class="astro-table" style="text-align: center;">
+                                <thead>
+                                    <tr><th style="text-align: left;">Planet</th><th>Rasi</th><th>Graha</th><th>Sodhya</th></tr>
+                                </thead>
+                                <tbody>
+                                    {% for p in report.pindas %}
+                                    <tr>
+                                        <td style="text-align: left;"><strong>{{ p.planet }}</strong></td>
+                                        <td>{{ p.rasi }}</td>
+                                        <td>{{ p.graha }}</td>
+                                        <td><strong>{{ p.sodhya }}</strong></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                             {% else %}
-                            <p style="font-size: 5.8pt; color: #94a3b8; font-style: italic;">Not yet available — no Pinda calculator implemented.</p>
+                            <p style="font-size: 5.8pt; color: #94a3b8; font-style: italic;">Not yet available.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -713,32 +723,32 @@
                             <thead>
                                 <tr>
                                     <th style="text-align: left;">Planet</th>
-                                    <th>Rupas (%)</th>
-                                    <th>Sthana (%)</th>
-                                    <th>Dig (%)</th>
-                                    <th>Kala (%)</th>
-                                    <th>Chesta (%)</th>
-                                    <th>Naisargika (%)</th>
-                                    <th>Total (%)</th>
+                                    <th>Sthana</th>
+                                    <th>Dig</th>
+                                    <th>Kala</th>
+                                    <th>Chesta</th>
+                                    <th>Naisargika</th>
+                                    <th>Drik</th>
+                                    <th>Total (Rupas)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for s in report.shadbala %}
                                 <tr>
                                     <td style="text-align: left;"><strong>{{ s.planet }}</strong></td>
-                                    <td><strong>{{ s.rupas }}</strong></td>
                                     <td>{{ s.sthana }}</td>
                                     <td>{{ s.dig }}</td>
                                     <td>{{ s.kala }}</td>
                                     <td>{{ s.chesta }}</td>
                                     <td>{{ s.naisargika }}</td>
+                                    <td>{{ s.drik }}</td>
                                     <td><strong>{{ s.total }}</strong></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                         {% else %}
-                        <p style="font-size: 5.8pt; color: #94a3b8; font-style: italic;">Not yet available — Shadbala engine's Kala Bala component (Varsha/Masa lord) is incomplete, so no combined Rupas total is shown until it's finished.</p>
+                        <p style="font-size: 5.8pt; color: #94a3b8; font-style: italic;">Not yet available.</p>
                         {% endif %}
                     </div>
 
@@ -792,6 +802,17 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Badhaka & Maraka Houses -->
+                    <div class="info-card" style="margin-bottom: 5px;">
+                        <div class="info-card-hdr">Badhaka &amp; Maraka Houses</div>
+                        <div class="meta-kv">
+                            <span class="k">Badhaka House:</span> <span class="v">{{ report.badhaka_maraka.badhaka_house }} ({{ report.badhaka_maraka.badhaka_sign }})</span>
+                            <span class="k">Badhaka Lord:</span> <span class="v">{{ report.badhaka_maraka.badhaka_lord }}</span>
+                            <span class="k">Maraka Houses:</span> <span class="v">{{ report.badhaka_maraka.maraka_houses | join(', ') }} ({{ report.badhaka_maraka.maraka_signs | join(', ') }})</span>
+                            <span class="k">Maraka Grahas:</span> <span class="v">{{ report.badhaka_maraka.maraka_lords | join(', ') }}</span>
+                        </div>
                     </div>
 
                     <!-- Calculation Standard -->

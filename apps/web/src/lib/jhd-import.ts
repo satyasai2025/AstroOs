@@ -1,9 +1,9 @@
 import type { WorkflowAnalysisRequest } from "@/lib/types";
 
 /**
- * Jagannatha Hora (.jhd) import.
+ * Classical Vedic System (.jhd) import.
  *
- * The .jhd birth file (in JHora's default text mode) is CRLF-separated lines:
+ * The .jhd birth file (in Classical Vedic's default text mode) is CRLF-separated lines:
  *
  *   1. Month        (1-12)
  *   2. Day          (1-31)
@@ -23,7 +23,7 @@ import type { WorkflowAnalysisRequest } from "@/lib/types";
  *
  * The parsed birth data is submitted as a normal birth-chart request, so the
  * backend recomputes the chart with this app's engine. Defaults mirror the
- * classic JHora setting: Lahiri ayanamsa, whole-sign houses.
+ * classic Classical Vedic setting: Lahiri ayanamsa, whole-sign houses.
  */
 
 export interface JhdParsePreview {

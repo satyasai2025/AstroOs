@@ -44,7 +44,7 @@ from apps.api.services.yoga_predicates import (
     get_house,
     get_planet,
     houses_from,
-    is_associated,
+    is_aspecting,
     is_natural_malefic,
     planets_in_house,
 )
@@ -648,7 +648,7 @@ def evaluate_rahu_ketu_kendra_malefic(ctx: YogaContext) -> Optional[YogaResult]:
             # Check for malefic aspects on this node
             malefic_aspectors = []
             for malefic in ["sun", "mars", "saturn"]:
-                if is_associated(ctx, malefic, node_name):
+                if is_aspecting(ctx, malefic, node_name):
                     malefic_aspectors.append(malefic)
             if malefic_aspectors:
                 nodes_in_kendra.append((node_name, node_pos.house_number, malefic_aspectors))

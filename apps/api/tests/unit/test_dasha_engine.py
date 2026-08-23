@@ -167,18 +167,26 @@ class TestJaiminiSignDuration:
     def test_opposite_sign_gives_6(self):
         assert _jaimini_sign_duration("aries", "libra") == 6
 
-    def test_shorter_direction_always_chosen(self):
-        assert _jaimini_sign_duration("aries", "scorpio") == 5
-        assert _jaimini_sign_duration("aries", "sagittarius") == 4
+    def test_direction_fixed_by_starting_signs_parity_not_shortest(self):
+        """
+        Direction is fixed by `sign`'s own odd/even parity (odd -> forward,
+        even -> backward), NOT by whichever direction is numerically
+        shorter — cross-verified against PyJHora's chara/narayana dhasa
+        duration methods. Aries (odd) counts FORWARD to Scorpio even
+        though backward (5) is shorter than forward (7).
+        """
+        assert _jaimini_sign_duration("aries", "scorpio") == 7  # odd sign -> forward, despite being the longer path
+        assert _jaimini_sign_duration("aries", "sagittarius") == 8  # odd sign -> forward
+        assert _jaimini_sign_duration("taurus", "scorpio") == 6  # even sign -> backward: (1-7)%12=6
 
-    def test_symmetric(self):
-        rashis = [
-            "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-            "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
-        ]
-        for a in rashis:
-            for b in rashis:
-                assert _jaimini_sign_duration(a, b) == _jaimini_sign_duration(b, a)
+    def test_direction_is_not_symmetric(self):
+        """
+        Parity-fixed direction means a<->b duration is generally
+        asymmetric (unlike the old "shorter of the two" implementation,
+        which was always symmetric by construction — itself a sign the
+        old logic didn't match the classical asymmetric rule).
+        """
+        assert _jaimini_sign_duration("aries", "gemini") != _jaimini_sign_duration("gemini", "aries")
 
     def test_all_durations_in_valid_range(self):
         rashis = [

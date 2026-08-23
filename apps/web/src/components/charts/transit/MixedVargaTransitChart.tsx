@@ -102,7 +102,7 @@ function groupByHouse(planets: RingPlanet[], ascRashi: string): Record<number, R
  * Concentric "Mixed Varga" style chart: the natal D1 on an inner ring,
  * live transit planets on an outer ring, sharing the same 12 house
  * divisions (both drawn from the same construction lines, just scaled
- * around the shared center) — the layout used by Jagannatha Hora's
+ * around the shared center) — the layout used by Classical Vedic System's
  * Mixed Varga view. Outer-ring planets are nudged from their house's
  * centroid toward its outermost vertex by rashi_degree/30, so a planet
  * visibly creeps across its house cell as the animation loop advances

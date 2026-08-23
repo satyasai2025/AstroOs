@@ -9,7 +9,7 @@ Converts to/from the domain objects in the router layer only; schemas
 never leak into ImportService or PatternDiscoveryService, same DTO-boundary
 discipline as apps/api/schemas/events.py.
 
-Event types follow the LOKPA classification (20+ categories).
+Event types follow the KP Master classification (20+ categories).
 Event windows enable ±N day analysis instead of single-date snapshots.
 """
 
@@ -485,7 +485,7 @@ class DiscoveredPatternSchema(BaseModel):
 class PatternDiscoveryRequestSchema(BaseModel):
     """Request for pattern discovery over the extracted feature dataset."""
     event_type: Optional[EventType] = Field(
-        default=None, description="Restrict discovery to one LOKPA event type."
+        default=None, description="Restrict discovery to one KP Master event type."
     )
     top_combos: int = Field(
         default=5, ge=1, le=25, description="Max single + combination patterns per type."
@@ -506,7 +506,7 @@ class PatternExploreRequestSchema(BaseModel):
     researcher sees, only what this response returns.
     """
     event_type: Optional[EventType] = Field(
-        default=None, description="Restrict discovery to one LOKPA event type."
+        default=None, description="Restrict discovery to one KP Master event type."
     )
     min_significance: float = Field(
         default=0.90, ge=0.5, le=0.999,

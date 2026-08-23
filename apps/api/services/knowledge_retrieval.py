@@ -101,14 +101,14 @@ _ENGINE_VERSION = "1.0"
 
 _NO_MATCH_RESPONSE = AIResponse(
     response_type="knowledge_qa",
-    title="No Matching Source Found",
-    summary="No relevant passage was found in the knowledge base for this question.",
+    title="No Matching Classical Source Found",
+    summary="No direct verified passage was found in the classical knowledge library for this query.",
     body=(
-        "This could mean: the question isn't covered by what's been "
-        "imported yet (see scripts/seed_knowledge.py and "
-        "scripts/backfill_embeddings.py), or the local embedding server "
-        "isn't running (see docs/rag-knowledge-search.md), or "
-        "AI_BACKEND isn't set to \"local_llm\"."
+        "We could not find a verified classical passage or rule in the current AstroOS library for this specific query.\n\n"
+        "To get grounded astrological insights without unverified assumptions, try:\n"
+        "• Asking about specific planetary placements (e.g., 'Sun in the 10th house' or 'Jupiter in Cancer')\n"
+        "• Querying named classical yogas (e.g., 'Gaja Kesari Yoga', 'Dharma Karmadhipati Yoga')\n"
+        "• Browsing entity significations in the Karakatvas & Knowledge Catalogue"
     ),
     sources=(),
     confidence="low",

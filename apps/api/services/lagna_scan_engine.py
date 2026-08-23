@@ -2,7 +2,7 @@
 AstroOS — Lagna Scan Engine
 
 Two questions professional software is expected to answer, both of which
-matter for birth-time rectification (cf. Jagannatha Hora's "When will
+matter for birth-time rectification (cf. Classical Vedic System's "When will
 lagna change sign in Rasi" and "Change birthtime to move lagna to"):
 
   1. Where does the birth lagna sit, and how close is it to a boundary?
@@ -229,7 +229,7 @@ class LagnaScanEngine:
     ) -> datetime:
         """Birth time that moves the lagna into the next/previous rashi.
 
-        Mirrors JHora's "Change birthtime to move lagna to → the previous /
+        Mirrors Classical Vedic's "Change birthtime to move lagna to → the previous /
         the next sign". Returns the moment just inside the target sign: one
         second past the boundary going forward, one second before it going
         back, so the result is unambiguously in the intended rashi rather

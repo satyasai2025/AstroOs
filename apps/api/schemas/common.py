@@ -23,6 +23,7 @@ AyanamsaCode = Literal[
     "true_chitra", "true_pushya",
 ]
 HouseSystemCode = Literal["W", "P", "K", "E"]
+NodeTypeCode = Literal["mean", "true"]
 
 
 class BirthDataInput(BaseModel):
@@ -49,6 +50,10 @@ class BirthDataInput(BaseModel):
         HouseSystemCode,
         Field(default="W", description="House system used for D1 lagna."),
     ] = "W"
+    node_type: Annotated[
+        NodeTypeCode,
+        Field(default="mean", description="Rahu/Ketu lunar node: 'mean' (classical, AstroSage-verified default) or 'true' (osculating, JHora-verified)."),
+    ] = "mean"
 
     @field_validator("birth_datetime_utc")
     @classmethod

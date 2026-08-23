@@ -27,7 +27,7 @@ cells.
 example already independently documented from this same source tool:
 Right `47,57,67,77`, Front `38,39,40,41,42,43,44,45`, Left `29,21,13,5`.
 Dhanishtha (cell 64) and Shatabhisha (cell 55) were separately confirmed
-against live JHora screenshots in this session (JHora's diagonal/
+against live Classical Vedic screenshots in this session (Classical Vedic's diagonal/
 straight-line highlights for both nakshatras landed exactly on the
 border cells this table's geometry predicts).
 
@@ -41,7 +41,7 @@ with sarvatobhadra_grid.py's SBC_BORDER, which uses a different (col,
 row) coordinate scheme for the same 28-cell perimeter.
 
 **Column-naming gotcha, confirmed by cross-checking against
-sarvatobhadra_grid.py's independently-derived (and JHora-verified, this
+sarvatobhadra_grid.py's independently-derived (and Classical Vedic-verified, this
 session) Forward/Opposite/Backward values for Dhanishtha and
 Shatabhisha:** this table's "front"/"left"/"right" column names do NOT
 correspond 1:1 by name to the classical Forward/Opposite/Backward terms
@@ -54,7 +54,7 @@ Verified both ways: Dhanishtha's `left` path ends at Ashlesha (cellnum
 Opposite=Vishakha; `right` is Shravana (74) matching Backward=Shravana.
 Shatabhisha's `left` ends at Pushya (7) matching Forward=Pushya;
 `front` ends at Swati (63) matching Opposite=Swati; `right` is Abhijit
-(75) matching Backward=Abhijit (the specific pair JHora-confirmed this
+(75) matching Backward=Abhijit (the specific pair Classical Vedic-confirmed this
 session). sbc_vedha_engine.py's motion-state rule ("Normal speed ->
 Front") therefore casts via this table's literal "front" column (i.e.
 the classical *Opposite* ray), not the classical Forward ray — this is

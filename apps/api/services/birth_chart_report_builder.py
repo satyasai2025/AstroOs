@@ -1,7 +1,7 @@
 """
 AstroOS — Birth Chart Foundation Report Builder (Module 20 / 21)
 
-Compiles the comprehensive, JHora-grade 2-page A4 Birth Chart Foundation Reference
+Compiles the comprehensive, Classical Vedic-grade 2-page A4 Birth Chart Foundation Reference
 Sheet strictly from canonical D1/D9 calculation snapshots and shared engines.
 """
 
@@ -16,8 +16,12 @@ import swisseph as swe
 from apps.api.domain.horoscope import D1Chart
 from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
 from apps.api.services.avastha_engine import AvasthaEngine
+from apps.api.services.badhaka_maraka_engine import BadhakaMarakaEngine
 from apps.api.services.chart_svg_renderer import render_north_indian_svg
+from apps.api.services.divisional_engine import DivisionalEngine
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd, jd_to_datetime
+from apps.api.services.pinda_engine import PindaEngine
+from apps.api.services.shadbala_engine import ShadbalaEngine
 from apps.api.services.vimsopaka_engine import VimsopakaEngine
 from packages.shared.enums import Rashi
 
@@ -122,6 +126,12 @@ class BirthChartReportBuilder:
         self._ashtakavarga_engine = AshtakavargaEngine()
         self._avastha_engine = AvasthaEngine()
         self._vimsopaka_engine = VimsopakaEngine(ephemeris_wrapper=self._wrapper)
+        self._pinda_engine = PindaEngine(self._ashtakavarga_engine)
+        self._divisional_engine = DivisionalEngine(self._wrapper)
+        self._shadbala_engine = ShadbalaEngine(
+            divisional_engine=self._divisional_engine, ephemeris_wrapper=self._wrapper,
+        )
+        self._badhaka_maraka_engine = BadhakaMarakaEngine()
 
     def build_report_data(
         self,
@@ -408,14 +418,79 @@ class BirthChartReportBuilder:
             for a in avastha_results
         ]
 
-        # ── 7. Shadbala Breakdown Matrix ──────────────────────────────────────
-        # ShadbalaEngine deliberately does not expose a combined Rupas total —
-        # several components (Varsha/Masa-lord Kala Bala) aren't implemented
-        # yet, so any single "total strength" number would misrepresent an
-        # incomplete result as finished. Rather than fabricate one, this
-        # section is omitted until the engine supports it; see
-        # apps/api/services/shadbala_engine.py's module docstring.
+        # ── 7. Shadbala Breakdown Matrix ────────────────────────────────────
+        # Real per-planet totals from ShadbalaEngine, now that every
+        # classical 6-fold component is implemented (see
+        # not_yet_implemented_components() — empty since the Abda/Masa
+        # Bala fix). Grand total = Sthana + Dig + Kala + Chesta +
+        # Naisargika + Drik Bala, each summed to Rupas (Shashtiamsas/60).
+        phase1 = self._shadbala_engine.compute_phase1_components(chart)  # naisargika, dig, drik
+        phase2 = self._shadbala_engine.compute_phase2_components(chart)  # chesta, paksha, ayana, yuddha
+        sthana = self._shadbala_engine.compute_sthana_bala_components(chart)  # uchcha, kendradi, drekkana
+        saptavargaja = self._shadbala_engine.compute_saptavargaja_bala(
+            chart, birth_datetime_utc=birth_dt, latitude=latitude, longitude=longitude,
+            ayanamsa=ayanamsa, house_system=house_system_raw,
+        )
+        ojayugmarasyamsa = self._shadbala_engine.compute_ojayugmarasyamsa_bala(
+            chart, birth_datetime_utc=birth_dt, latitude=latitude, longitude=longitude,
+            ayanamsa=ayanamsa, house_system=house_system_raw,
+        )
+        tribhaga = self._shadbala_engine.compute_tribhaga_bala(chart, latitude=latitude, longitude=longitude)
+        nathonnata = self._shadbala_engine.compute_nathonnata_bala(chart, latitude=latitude, longitude=longitude)
+        dina_hora = self._shadbala_engine.compute_dina_hora_bala(chart, latitude=latitude, longitude=longitude)
+        abda = self._shadbala_engine.compute_abda_bala(chart, birth_datetime_utc=birth_dt)
+        masa = self._shadbala_engine.compute_masa_bala(chart, birth_datetime_utc=birth_dt)
+
+        _SHASHTIAMSAS_PER_RUPA = 60.0
+        _CLASSICAL_SEVEN = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]
+
+        def _rupas_by_planet(*component_lists):
+            totals = {p: 0.0 for p in _CLASSICAL_SEVEN}
+            for results in component_lists:
+                for r in results:
+                    totals[r.planet] += r.value_shashtiamsas
+            return {p: round(v / _SHASHTIAMSAS_PER_RUPA, 2) for p, v in totals.items()}
+
+        sthana_rupas = _rupas_by_planet(
+            sthana["uchcha_bala"], sthana["kendradi_bala"], sthana["drekkana_bala"],
+            saptavargaja, ojayugmarasyamsa,
+        )
+        dig_rupas = _rupas_by_planet(phase1["dig_bala"])
+        kala_rupas = _rupas_by_planet(
+            phase2["paksha_bala"], phase2["ayana_bala"], phase2["yuddha_bala"],
+            tribhaga, nathonnata, dina_hora, abda, masa,
+        )
+        chesta_rupas = _rupas_by_planet(phase2["chesta_bala"])
+        naisargika_rupas = _rupas_by_planet(phase1["naisargika_bala"])
+        drik_rupas = _rupas_by_planet(phase1["drik_bala"])
+
         shadbala_rows = []
+        for p in _CLASSICAL_SEVEN:
+            total = (
+                sthana_rupas[p] + dig_rupas[p] + kala_rupas[p]
+                + chesta_rupas[p] + naisargika_rupas[p] + drik_rupas[p]
+            )
+            shadbala_rows.append({
+                "planet": p.capitalize(),
+                "sthana": sthana_rupas[p],
+                "dig": dig_rupas[p],
+                "kala": kala_rupas[p],
+                "chesta": chesta_rupas[p],
+                "naisargika": naisargika_rupas[p],
+                "drik": drik_rupas[p],
+                "total": round(total, 2),
+            })
+
+        # ── 7b. Badhaka & Maraka Houses ──────────────────────────────────────
+        badhaka_maraka = self._badhaka_maraka_engine.compute(chart)
+        badhaka_maraka_data = {
+            "badhaka_house": badhaka_maraka.badhaka_house,
+            "badhaka_sign": badhaka_maraka.badhaka_sign.capitalize(),
+            "badhaka_lord": badhaka_maraka.badhaka_lord.capitalize(),
+            "maraka_houses": list(badhaka_maraka.maraka_houses),
+            "maraka_signs": [s.capitalize() for s in badhaka_maraka.maraka_signs],
+            "maraka_lords": [p.capitalize() for p in badhaka_maraka.maraka_lords],
+        }
 
         # ── 8. Vimsopaka Bala (Shadvarga scheme) ────────────────────────────
         vimsopaka_result = self._vimsopaka_engine.compute_all(
@@ -436,11 +511,16 @@ class BirthChartReportBuilder:
         ]
 
         # ── 9. Pindas ─────────────────────────────────────────────────────────
-        # No Pinda (Rasi/Graha/Sodhya) calculator exists in this codebase yet
-        # — the previous values here were fixed constants shown on every
-        # chart regardless of input. Omitted until a real engine exists,
-        # rather than shipping fabricated numbers.
-        pinda_rows = []
+        # Real per-planet Rasi/Graha/Sodhya Pinda from PindaEngine, built on
+        # the (now-fixed) Shodhita Ashtakavarga — cross-verified against
+        # PyJHora byte-for-byte for this exact birth data. Previously this
+        # was a single fixed "337/337/337/1011" constant shown on every
+        # chart regardless of input.
+        pinda_results = self._pinda_engine.compute(chart)
+        pinda_rows = [
+            {"planet": p.planet.capitalize(), "rasi": p.rasi_pinda, "graha": p.graha_pinda, "sodhya": p.sodhya_pinda}
+            for p in pinda_results
+        ]
 
         return {
             "subject_name": subject_name,
@@ -485,5 +565,6 @@ class BirthChartReportBuilder:
             "shadbala": shadbala_rows,
             "vimsopaka": vimsopaka_rows,
             "pindas": pinda_rows,
+            "badhaka_maraka": badhaka_maraka_data,
         }
 

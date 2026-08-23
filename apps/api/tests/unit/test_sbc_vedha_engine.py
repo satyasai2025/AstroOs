@@ -4,7 +4,7 @@ AstroOS — SBC CellNum Vedha Engine Unit Tests
 Regression-anchors this session's real-source verifications:
 - packages/shared/sbc_cellnum_table.py's Right/Front/Left paths for
   Dhanishtha and Shatabhisha, cross-checked against
-  sarvatobhadra_grid.py's independently-derived (Saravali + live-JHora
+  sarvatobhadra_grid.py's independently-derived (Saravali + live-Classical Vedic
   confirmed) Forward/Opposite/Backward values.
 - The source tool's own real audit-log example (Janma Rasi Pisces at
   CellNum 39, Rahu transiting through Shatabhisha) — reused here only
@@ -60,7 +60,7 @@ def test_shatabhisha_front_matches_saravali_opposite_swati():
 
 
 def test_shatabhisha_right_matches_saravali_backward_abhijit():
-    """The specific pair JHora-confirmed this session (screenshot
+    """The specific pair Classical Vedic-confirmed this session (screenshot
     right-click "Highlight aspects FROM this star" on Shatabhisha)."""
     assert vedha_path("shatabhisha", "right")[-1] == cellnum_for_nakshatra("abhijit")
 

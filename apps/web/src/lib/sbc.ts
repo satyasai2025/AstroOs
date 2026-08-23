@@ -6,7 +6,7 @@
  * a specified Janma element. See apps/api/services/sbc_vedha_engine.py for
  * the underlying mechanism (benefic-only casting, motion-based direction,
  * dignity-based scoring) — sourced from a real SBC tool's VBA and
- * cross-checked against live JHora screenshots for Dhanishtha/Shatabhisha.
+ * cross-checked against live Classical Vedic screenshots for Dhanishtha/Shatabhisha.
  */
 
 "use client";

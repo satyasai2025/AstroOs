@@ -2,7 +2,7 @@
  * AstroOS — Astrological Formatting Helpers
  *
  * Shared, app-wide formatting for sidereal longitudes and sign/nakshatra
- * names, matching the conventional JHora-style output:
+ * names, matching the conventional Classical Vedic-style output:
  *
  *   Body    Longitude            Nakshatra Pada Rasi Navamsa
  *   Lagna   29 Ta 49' 17.89"     Mrig      2    Ta   Vi
@@ -11,7 +11,7 @@
  * these helpers so the whole app stays consistent.
  */
 
-// ── Sign abbreviations (JHora style) ─────────────────────────────────────────
+// ── Sign abbreviations (Classical Vedic style) ─────────────────────────────────────────
 
 export const RASHI_ABBREV: Record<string, string> = {
   aries: "Ar",
@@ -34,7 +34,7 @@ export function rashiAbbrev(rashi: string | null | undefined): string {
   return RASHI_ABBREV[rashi.toLowerCase()] ?? rashi;
 }
 
-// ── Nakshatra abbreviations (JHora style) ─────────────────────────────────────
+// ── Nakshatra abbreviations (Classical Vedic style) ─────────────────────────────────────
 
 export const NAKSHATRA_ABBREV: Record<string, string> = {
   ashwini: "Aswi",
@@ -75,7 +75,7 @@ export function nakshatraAbbrev(nakshatra: string | null | undefined): string {
 // ── Longitude formatting ──────────────────────────────────────────────────────
 
 /**
- * Format a full sidereal longitude (0–360°) in JHora's DMS form:
+ * Format a full sidereal longitude (0–360°) in Classical Vedic's DMS form:
  *
  *   29 Ta 49' 17.89"
  *
@@ -114,7 +114,7 @@ export function formatPosition(
   return `${deg} ${rashiAbbrev(rashi)} ${min}' ${sec.toFixed(2)}"`;
 }
 
-// ── Combined rows for the JHora-style position table ──────────────────────────
+// ── Combined rows for the Classical Vedic-style position table ──────────────────────────
 
 export interface PositionTableRow {
   /** Body name — "Lagna", planet names, etc. */

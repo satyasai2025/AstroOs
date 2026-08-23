@@ -62,6 +62,7 @@ from apps.api.services.shadbala.paksha_bala import PakshaBalaCalculator
 from apps.api.services.shadbala.saptavargaja_bala import SaptavargajaBalaCalculator
 from apps.api.services.shadbala.tribhaga_bala import TribhagaBalaCalculator
 from apps.api.services.shadbala.uchcha_bala import UchchaBalaCalculator
+from apps.api.services.shadbala.varsha_masa_bala import AbdaBalaCalculator, MasaBalaCalculator
 from apps.api.services.shadbala.yuddha_bala import YuddhaBalaCalculator
 
 
@@ -102,6 +103,8 @@ class ShadbalaEngine:
         self._kendradi = kendradi_calculator or KendradiBalaCalculator()
         self._drekkana = drekkana_calculator or DrekkanaBalaCalculator()
         self._yuddha = yuddha_calculator or YuddhaBalaCalculator()
+        self._abda = AbdaBalaCalculator()
+        self._masa = MasaBalaCalculator()
         self._ishta_kashta = IshtaKashtaBalaCalculator()
         self._saptavargaja = (
             SaptavargajaBalaCalculator(divisional_engine) if divisional_engine is not None else None
@@ -127,7 +130,7 @@ class ShadbalaEngine:
         return {
             "naisargika_bala": self._naisargika.calculate_all(),
             "dig_bala": self._dig.calculate_all(chart.planets, chart.houses),
-            "drik_bala": self._drik.calculate_all(chart.aspects),
+            "drik_bala": self._drik.calculate_all(chart.planets),
         }
 
     def compute_phase2_components(
@@ -135,9 +138,9 @@ class ShadbalaEngine:
     ) -> dict[str, list[BalaComponentResult]]:
         """Chesta + Paksha + Ayana + Yuddha Bala (Kala Bala sub-components) — see module docstring."""
         return {
-            "chesta_bala": self._chesta.calculate_all(chart.planets),
+            "chesta_bala": self._chesta.calculate_all(chart.planets, chart.ephemeris.julian_day, chart.ephemeris.ayanamsa_value),
             "paksha_bala": self._paksha.calculate_all(chart.planets),
-            "ayana_bala": self._ayana.calculate_all(chart.planets),
+            "ayana_bala": self._ayana.calculate_all(chart.planets, chart.ephemeris.ayanamsa_value),
             "yuddha_bala": self._yuddha.calculate_all(chart.planets),
         }
 
@@ -154,7 +157,7 @@ class ShadbalaEngine:
         have no Ishta/Kashta figure either, rather than a fabricated one).
         """
         uchcha_results = self._uchcha.calculate_all(chart.planets)
-        chesta_results = self._chesta.calculate_all(chart.planets)
+        chesta_results = self._chesta.calculate_all(chart.planets, chart.ephemeris.julian_day, chart.ephemeris.ayanamsa_value)
         ishta, kashta = self._ishta_kashta.calculate_all(uchcha_results, chesta_results)
         return {"ishta_bala": ishta, "kashta_bala": kashta}
 
@@ -262,16 +265,20 @@ class ShadbalaEngine:
         )
 
     def compute_dina_hora_bala(
-        self, chart: D1Chart, *, latitude: float, longitude: float,
+        self, chart: D1Chart, *, latitude: float, longitude: float, utc_offset_hours: float = 5.5,
     ) -> list[BalaComponentResult]:
         """
         Kala Bala's day/hour lordship sub-component — the Dina+Hora half
-        of the classical "Varsha-Masa-Dina-Hora Bala" (Varsha/Masa lord
-        are a separate, tracked deferral — see dina_hora_bala.py's
-        module docstring). Requires this engine to have been constructed
-        with an `ephemeris_wrapper` — raises RuntimeError otherwise. Same
+        of the classical "Varsha-Masa-Dina-Hora Bala" (Abda/Masa lord —
+        the other half — are compute_abda_bala()/compute_masa_bala()).
+        Requires this engine to have been constructed with an
+        `ephemeris_wrapper` — raises RuntimeError otherwise. Same
         dependency shape as compute_tribhaga_bala()/compute_nathonnata_bala()
         — all three need the following sunrise.
+
+        `utc_offset_hours` defaults to IST — see dina_hora_bala.py's
+        module docstring for why this is needed and why it isn't yet a
+        request-level parameter.
         """
         if self._dina_hora is None:
             raise RuntimeError(
@@ -280,6 +287,23 @@ class ShadbalaEngine:
             )
         return self._dina_hora.calculate_all(
             chart.planets, chart.ephemeris, latitude=latitude, longitude=longitude,
+            utc_offset_hours=utc_offset_hours,
+        )
+
+    def compute_abda_bala(
+        self, chart: D1Chart, *, birth_datetime_utc: datetime, utc_offset_hours: float = 5.5,
+    ) -> list[BalaComponentResult]:
+        """Kala Bala's Varsha (year) lordship sub-component. See varsha_masa_bala.py's module docstring."""
+        return self._abda.calculate_all(
+            chart.planets, birth_datetime_utc=birth_datetime_utc, utc_offset_hours=utc_offset_hours,
+        )
+
+    def compute_masa_bala(
+        self, chart: D1Chart, *, birth_datetime_utc: datetime, utc_offset_hours: float = 5.5,
+    ) -> list[BalaComponentResult]:
+        """Kala Bala's Masa (month) lordship sub-component. See varsha_masa_bala.py's module docstring."""
+        return self._masa.calculate_all(
+            chart.planets, birth_datetime_utc=birth_datetime_utc, utc_offset_hours=utc_offset_hours,
         )
 
     def implemented_components(self) -> list[str]:
@@ -288,6 +312,7 @@ class ShadbalaEngine:
             "naisargika_bala", "dig_bala", "drik_bala",
             "chesta_bala", "kala_bala.paksha_bala", "kala_bala.tribhaga_bala", "kala_bala.ayana_bala",
             "kala_bala.nathonnata_bala", "kala_bala.dina_hora_bala", "kala_bala.yuddha_bala",
+            "kala_bala.abda_bala", "kala_bala.masa_bala",
             "sthana_bala.uchcha_bala", "sthana_bala.kendradi_bala",
             "sthana_bala.drekkana_bala", "sthana_bala.saptavargaja_bala",
             "sthana_bala.ojayugmarasyamsa_bala",
@@ -296,17 +321,15 @@ class ShadbalaEngine:
 
     def not_yet_implemented_components(self) -> list[str]:
         """
-        The one remaining gap. Sthana Bala is fully implemented, and Kala
-        Bala's Yuddha Bala is now done too — only Varsha/Masa lord (the
-        other half of the classical "Varsha-Masa-Dina-Hora Bala"; Dina+
-        Hora lord ARE implemented, see kala_bala.dina_hora_bala above)
-        remains: it needs backward astronomical event-searching (most
-        recent Mesha Sankranti, lunar month boundary) this codebase
-        doesn't have, plus real definitional variance across traditions
-        on which reference event to use — a genuine scope gap, not a
-        coefficient caveat like everywhere else in Shadbala. Explicit,
-        so callers never have to guess what's missing.
+        No remaining gaps in the classical 6-fold Shadbala scope. Sthana
+        Bala is fully implemented; Kala Bala's Varsha-Masa-Dina-Hora Bala
+        is now complete across all 4 lordships — Abda (Varsha) and Masa
+        via the classical Ahargana day-count method (see
+        kala_bala.abda_bala / kala_bala.masa_bala, and
+        varsha_masa_bala.py's module docstring for why a Mesha-Sankranti
+        search wasn't needed after all), Dina+Hora via kala_bala.
+        dina_hora_bala. Kept as a method (returning empty) rather than
+        removed outright, so a future genuine gap has an obvious place
+        to be declared.
         """
-        return [
-            "kala_bala.varsha_masa_lord",
-        ]
+        return []

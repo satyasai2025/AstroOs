@@ -82,7 +82,7 @@ def _karaka_degree(planet: str, rashi_degree: float) -> float:
     motion through the zodiac, so classical Jaimini measures its karaka
     degree as "how much of the sign remains" (30 - rashi_degree) rather
     than degrees already traversed — the same convention used by every
-    major reference implementation (Jagannatha Hora, Parashara's Light).
+    major reference implementation (Classical Vedic System, Parashara's Light).
     Every other graha uses its rashi_degree directly.
     """
     if planet == "rahu":

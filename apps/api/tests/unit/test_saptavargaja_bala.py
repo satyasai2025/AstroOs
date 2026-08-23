@@ -75,14 +75,20 @@ def test_all_own_sign_gives_maximum_expected_sum():
 
 
 def test_all_exalted_gives_maximum_possible_sum():
-    """Saturn exalts in Libra — if exalted in all 7, sum = 7 * 60 = 420."""
+    """
+    Saturn exalts in Libra — Saptavargaja Bala has no dedicated "exalted"
+    tier (unlike Uchcha Bala, which scores the exact degree separately);
+    an exalted placement is scored at the moolatrikona/own ceiling here,
+    cross-verified against PyJHora's _sapthavargaja_bala_1/_2 (max 45 per
+    varga, not 60). If exalted in all 7 vargas, sum = 7 * 45 = 315.
+    """
     d1_chart = _make_d1_chart([_make_d1_position("saturn", "libra")])
     stub = _StubDivisionalEngine({v: "libra" for v in ["D2", "D3", "D7", "D9", "D12", "D30"]})
     calc = SaptavargajaBalaCalculator(stub)
     result = calc.calculate(
         "saturn", d1_chart, birth_datetime_utc=_BIRTH_DT, latitude=0.0, longitude=0.0,
     )
-    assert result.value_shashtiamsas == pytest.approx(7 * 60.0)
+    assert result.value_shashtiamsas == pytest.approx(7 * 45.0)
 
 
 def test_all_debilitated_gives_minimum_sum():

@@ -150,7 +150,7 @@ def datetime_to_jd(dt: datetime) -> float:
     return ``jd_ut``. The two differ by ΔT — roughly 42 s in 1971 and ~69 s
     today — which is small for the planets but shifts the **ascendant by
     ~10–17 arc-minutes**, enough to move a lagna into the wrong rashi near a
-    sign boundary. (Verified against a Jagannatha Hora reference chart:
+    sign boundary. (Verified against a Classical Vedic System reference chart:
     taking ``jd_et`` put the ascendant +8.7' off; ``jd_ut`` brings it to
     -1.1', matching the residual ayanamsa difference seen on every planet.)
     """
@@ -412,10 +412,20 @@ class EphemerisWrapper:
         """'mean' or 'true' — which lunar node Rahu/Ketu are computed from."""
         return self._node_type
 
-    def _planet_id(self, planet: str) -> int:
-        """Swiss Ephemeris body id, resolving Rahu against the configured node."""
+    def _planet_id(self, planet: str, node_type: str | None = None) -> int:
+        """
+        Swiss Ephemeris body id, resolving Rahu against a node type.
+
+        Unlike ayanamsa, mean/true node selection is NOT pyswisseph
+        process-global state — swe.MEAN_NODE/swe.TRUE_NODE are just body
+        ID constants passed directly to swe.calc_ut() per call, so an
+        explicit per-call `node_type` override (falling back to this
+        wrapper's configured default) is safe without any locking beyond
+        what calculate() already does for other reasons.
+        """
         if planet == "rahu":
-            return SWEPH_NODE_IDS[self._node_type]
+            key = node_type if node_type in SWEPH_NODE_IDS else self._node_type
+            return SWEPH_NODE_IDS[key]
         return SWEPH_PLANET_IDS[planet]
 
     # ── Ayanamsa ──────────────────────────────────────────────────────────────
@@ -455,17 +465,20 @@ class EphemerisWrapper:
 
     # ── Planet positions ───────────────────────────────────────────────────────
 
-    def get_planet_position(self, planet: str, jd: float) -> PlanetPosition:
+    def get_planet_position(
+        self, planet: str, jd: float, node_type: str | None = None,
+    ) -> PlanetPosition:
         """
         Calculate tropical ecliptic position for one Graha.
 
         Ketu is derived from Rahu + 180°, using whichever node (mean/true)
-        this wrapper was configured with — see `node_type`.
+        is in effect — `node_type` overrides this wrapper's configured
+        default for this call only; see `_planet_id`.
         """
         flags = swe.FLG_SWIEPH | swe.FLG_SPEED
 
         if planet == "ketu":
-            rahu_pos = self._calc_planet("rahu", jd, flags)
+            rahu_pos = self._calc_planet("rahu", jd, flags, node_type)
             longitude = _normalize(rahu_pos[0] + 180.0)
             return PlanetPosition(
                 planet="ketu",
@@ -476,7 +489,7 @@ class EphemerisWrapper:
                 is_retrograde=True,  # Ketu is always considered retrograde
             )
 
-        xx = self._calc_planet(planet, jd, flags)
+        xx = self._calc_planet(planet, jd, flags, node_type)
         return PlanetPosition(
             planet=planet,
             longitude=_normalize(xx[0]),
@@ -486,9 +499,9 @@ class EphemerisWrapper:
             is_retrograde=xx[3] < 0,
         )
 
-    def _calc_planet(self, planet: str, jd: float, flags: int) -> tuple:
+    def _calc_planet(self, planet: str, jd: float, flags: int, node_type: str | None = None) -> tuple:
         """Internal: call swe.calc_ut with the correct planet ID."""
-        planet_id = self._planet_id(planet)
+        planet_id = self._planet_id(planet, node_type)
         xx, retflag = swe.calc_ut(jd, planet_id, flags)
         if retflag < 0:
             raise RuntimeError(
@@ -496,10 +509,12 @@ class EphemerisWrapper:
             )
         return xx
 
-    def get_all_planet_positions(self, jd: float) -> dict[str, PlanetPosition]:
+    def get_all_planet_positions(
+        self, jd: float, node_type: str | None = None,
+    ) -> dict[str, PlanetPosition]:
         """Calculate tropical positions for all 9 Grahas."""
         return {
-            planet: self.get_planet_position(planet, jd)
+            planet: self.get_planet_position(planet, jd, node_type)
             for planet in SWEPH_PLANET_IDS
         }
 
@@ -613,11 +628,11 @@ class EphemerisWrapper:
 
         That mismatch is nonetheless the traditional Vedic convention, and
         measurably the right one here: benchmarked on a reference chart
-        against both Jagannatha Hora and AstroSage, this apparent-minus-mean
+        against both Classical Vedic System and AstroSage, this apparent-minus-mean
         form is closer to BOTH than swe.FLG_SIDEREAL is —
 
-            apparent − mean ayanamsa : 0.99' vs AstroSage, 1.04' vs JHora
-            swe.FLG_SIDEREAL         : 1.14' vs AstroSage, 1.24' vs JHora
+            apparent − mean ayanamsa : 0.99' vs AstroSage, 1.04' vs Classical Vedic
+            swe.FLG_SIDEREAL         : 1.14' vs AstroSage, 1.24' vs Classical Vedic
 
         (mean absolute deviation over the seven classical grahas). Switching
         to FLG_SIDEREAL would shift every longitude by the nutation and pull
@@ -734,10 +749,17 @@ class EphemerisWrapper:
 
     def get_vara(self, jd: float) -> VaraInfo:
         """
-        Calculate the Vedic weekday (Vara).
+        Calculate the weekday (Vara) for the given Julian Day.
 
-        JD 0.0 = Monday noon. Day starts at local sunrise in classical Vedic,
-        but here we use the calendar day (UTC midnight-based).
+        JD 0.0 = Monday noon. This method itself is boundary-agnostic —
+        it just derives a weekday from whatever `jd` it's given. The
+        classical Vedic day runs sunrise-to-sunrise, not civil midnight
+        to midnight, so callers wanting Vara for a birth/event moment
+        should pass the SUNRISE Julian Day bracketing that moment (see
+        get_sunrise_sunset()), not the moment's own `jd`, whenever the
+        moment could fall before local sunrise — see calculate()'s own
+        call site for the standard pattern (also used by
+        muhurta_engine.py's get_vara(sunrise_jd) calls).
         Julian Day modulo 7 gives: 0=Monday … 6=Sunday in Swiss Ephemeris.
         We re-map to Sunday=0 … Saturday=6.
         """
@@ -761,6 +783,7 @@ class EphemerisWrapper:
         longitude: float,
         ayanamsa: str = AyanamsaSystem.LAHIRI.value,
         house_system: str = "W",
+        node_type: str | None = None,
     ) -> EphemerisResult:
         """
         Perform a full ephemeris calculation for a given moment and location.
@@ -781,12 +804,15 @@ class EphemerisWrapper:
             longitude: Geographic longitude in decimal degrees (+E, -W).
             ayanamsa: Ayanamsa system key (default: Lahiri).
             house_system: Swiss Ephemeris house system code (default: W = Whole Sign).
+            node_type: 'mean' or 'true' — overrides this wrapper's configured
+                default node for this call only (see `_planet_id`'s docstring
+                for why this needs no locking, unlike ayanamsa).
 
         Returns:
             EphemerisResult with all positions and panchanga elements.
         """
         with self._lock:
-            return self._calculate_locked(dt, latitude, longitude, ayanamsa, house_system)
+            return self._calculate_locked(dt, latitude, longitude, ayanamsa, house_system, node_type)
 
     def _calculate_locked(
         self,
@@ -795,6 +821,7 @@ class EphemerisWrapper:
         longitude: float,
         ayanamsa: str,
         house_system: str,
+        node_type: str | None = None,
     ) -> EphemerisResult:
         """
         Unlocked calculation body. Only call while holding `self._lock` —
@@ -828,7 +855,7 @@ class EphemerisWrapper:
         ayanamsa_val = self.get_ayanamsa(jd)
 
         # ── Tropical positions ────────────────────────────────────────────────
-        tropical_positions = self.get_all_planet_positions(jd)
+        tropical_positions = self.get_all_planet_positions(jd, node_type)
         asc_tropical, cusp_tropicals = self.get_ascendant_and_cusps(
             jd, latitude, longitude, house_system
         )
@@ -974,8 +1001,28 @@ class EphemerisWrapper:
 
         yoga = self.get_yoga(moon_sid, sun_sid)
         karana = self.get_karana(tithi)
-        vara = self.get_vara(jd)
         moon_nak = longitude_to_nakshatra(moon_sid)
+
+        # Module 9 Phase 0: sunrise/sunset for this birth date/location —
+        # needed by Kala Bala's Nathonnata/Ayana/Tribhaga sub-components,
+        # and (below) to compute Vara on the classical sunrise-to-sunrise
+        # Vedic day rather than the civil midnight-to-midnight day.
+        # None/None at circumpolar latitudes (see get_sunrise_sunset).
+        sunrise_jd, sunset_jd = self.get_sunrise_sunset(jd, latitude, longitude)
+        is_daytime_birth = (
+            sunrise_jd is not None and sunset_jd is not None
+            and sunrise_jd <= jd <= sunset_jd
+        )
+
+        # Vara (weekday) uses the Vedic day boundary (sunrise-to-sunrise),
+        # not civil midnight — a birth before local sunrise still belongs
+        # to the PREVIOUS Vedic day. get_sunrise_sunset() already returns
+        # the most recent sunrise at-or-before `jd` (see its own
+        # docstring), so computing weekday from `sunrise_jd` instead of
+        # `jd` directly gives the correct day for pre-sunrise births too.
+        # Falls back to `jd` itself at circumpolar latitudes where
+        # sunrise/sunset are undefined.
+        vara = self.get_vara(sunrise_jd if sunrise_jd is not None else jd)
 
         panchanga = PanchangaResult(
             tithi=tithi,
@@ -985,15 +1032,6 @@ class EphemerisWrapper:
             vara=vara,
             julian_day=jd,
             ayanamsa_deg=ayanamsa_val,
-        )
-
-        # Module 9 Phase 0: sunrise/sunset for this birth date/location —
-        # needed by Kala Bala's Nathonnata/Ayana/Tribhaga sub-components.
-        # None/None at circumpolar latitudes (see get_sunrise_sunset).
-        sunrise_jd, sunset_jd = self.get_sunrise_sunset(jd, latitude, longitude)
-        is_daytime_birth = (
-            sunrise_jd is not None and sunset_jd is not None
-            and sunrise_jd <= jd <= sunset_jd
         )
 
         return EphemerisResult(

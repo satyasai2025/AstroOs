@@ -272,11 +272,11 @@ def test_punya_and_vidya_saham_swap_operands_for_night_birth():
     )
 
 
-# ── Real JHora export cross-check: all 36 Sahams, one real chart ──
+# ── Real Classical Vedic export cross-check: all 36 Sahams, one real chart ──
 #
 # Birth: 1971-06-30 04:57:40 IST, Vadodara (73E12'00", 22N18'00").
-# Varsha year 55 -> solar return 2026-06-30 ~07:22:54 IST (JHora-reported).
-# JHora export values below (degree/Rashi/minute/second), user-supplied.
+# Varsha year 55 -> solar return 2026-06-30 ~07:22:54 IST (Classical Vedic-reported).
+# Classical Vedic export values below (degree/Rashi/minute/second), user-supplied.
 # 33/36 match within the codebase's documented ~1-2 arcmin systematic
 # ayanamsa tolerance; Karma/Bandhu/Vanik are a known limitation — see
 # varshaphal_engine.py's module docstring for why they're left as-is.
@@ -338,7 +338,7 @@ def test_33_of_36_sahams_match_real_jhora_export():
             mismatched.append(name)
 
     assert set(mismatched) == _KNOWN_LIMITATION_SAHAMS, (
-        f"Unexpected Saham mismatches against the real JHora export: "
+        f"Unexpected Saham mismatches against the real Classical Vedic export: "
         f"{set(mismatched) - _KNOWN_LIMITATION_SAHAMS}"
     )
     assert len(matched) == 33

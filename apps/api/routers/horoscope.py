@@ -278,6 +278,7 @@ async def generate_d1_chart(
             longitude=request.longitude,
             ayanamsa=request.ayanamsa,
             house_system=request.house_system,
+            node_type=request.node_type,
         )
     except ValueError as exc:
         raise HTTPException(
@@ -547,7 +548,7 @@ async def lagna_scan(
     summary="Birth time that moves the lagna to the adjacent sign",
     description=(
         "Returns the birth time that would place the lagna just inside the "
-        "next or previous rashi — the counterpart to Jagannatha Hora's "
+        "next or previous rashi — the counterpart to Classical Vedic System's "
         "\"Change birthtime to move lagna to → the previous / the next sign\". "
         "Useful for bounding how far a birth time would have to be wrong for "
         "the lagna to differ."

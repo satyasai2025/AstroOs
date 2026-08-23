@@ -1,19 +1,29 @@
 """
 AstroOS — Dina-Hora Bala Unit Tests (Module 9)
 
-Uses a stub EphemerisWrapper (controllable next-sunrise) to test the
-Dina/Hora lord matching precisely and deterministically. See
-tests/integration/test_dina_hora_bala_integration.py for coverage
-against real computed charts.
+Uses real EphemerisWrapper output (not a synthetic stub) because the
+Hora-lord formula itself (see dina_hora_bala.py) needs a real calendar
+date/civil-weekday, not just relative JD offsets — a from-scratch
+"24 planetary hours" method used here previously didn't; it's been
+replaced with PyJHora's verified formula, which does.
+
+Every expected value below was independently cross-checked against
+PyJHora's jhora.horoscope.chart.strength._hora_bala() /
+_vaaradhipathi() for New Delhi (28.6139N, 77.2090E, IST) on 1995-01-01
+at each listed birth time — see tests/integration/
+test_dina_hora_bala_integration.py for further chart-level coverage.
 """
+
+from datetime import datetime, timezone
 
 import pytest
 
-from apps.api.domain.ephemeris import (
-    Ascendant, DignityType, EphemerisResult, PanchangaResult,
-    SiderealPosition, TithiInfo, NakshatraInfo, YogaInfo, KaranaInfo, VaraInfo,
-)
+from apps.api.domain.ephemeris import DignityType, SiderealPosition
+from apps.api.services.ephemeris_wrapper import EphemerisWrapper
+from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.shadbala.dina_hora_bala import DinaHoraBalaCalculator
+
+_LAT, _LON = 28.6139, 77.2090
 
 
 def _make_planet(planet):
@@ -24,122 +34,71 @@ def _make_planet(planet):
     )
 
 
-def _make_panchanga(vara_lord="sun"):
-    return PanchangaResult(
-        tithi=TithiInfo(number=1, name="Pratipada", paksha="shukla", completion_percent=50.0),
-        nakshatra=NakshatraInfo(
-            nakshatra="ashwini", nakshatra_number=1, pada=1, lord="ketu",
-            degree_in_nakshatra=5.0, degree_in_pada=1.0,
-        ),
-        yoga=YogaInfo(number=1, name="Vishkambha", completion_percent=50.0),
-        karana=KaranaInfo(number=1, name="Bava", is_fixed=False),
-        vara=VaraInfo(number=0, name="Sunday", lord=vara_lord),
-        julian_day=0.0, ayanamsa_deg=24.0,
-    )
+def _ephemeris_result(hour, minute=0):
+    """Real EphemerisResult for 1995-01-01, IST time (hour:minute), New Delhi."""
+    from datetime import timedelta
+    wrapper = EphemerisWrapper("data/ephemeris")
+    local_dt = datetime(1995, 1, 1, hour, minute, 0, tzinfo=timezone.utc)
+    birth_dt_utc = local_dt - timedelta(hours=5, minutes=30)
+    return wrapper.calculate(dt=birth_dt_utc, latitude=_LAT, longitude=_LON, ayanamsa="lahiri")
 
 
-def _make_ephemeris_result(birth_jd, sunrise_jd, sunset_jd, is_daytime_birth, vara_lord="sun"):
-    return EphemerisResult(
-        julian_day=birth_jd, ayanamsa_value=24.0, ayanamsa_system="lahiri",
-        ascendant=Ascendant(
-            longitude=0.0, sidereal_longitude=0.0, rashi="aries", rashi_degree=0.0,
-            nakshatra="ashwini", pada=1,
-        ),
-        house_cusps=[], planet_positions=[], panchanga=_make_panchanga(vara_lord),
-        sunrise_jd=sunrise_jd, sunset_jd=sunset_jd, is_daytime_birth=is_daytime_birth,
-    )
+@pytest.mark.parametrize("hour,minute,expected_dina,expected_hora", [
+    (17, 30, "sun", "mercury"),     # verified: 17:30 IST -> Sunday, dina=Sun, hora=Mercury
+    (23, 0, "sun", "sun"),          # verified: 23:00 IST -> still Sunday's Vedic day, hora=Sun
+    (6, 0, "saturn", "jupiter"),    # verified: 06:00 IST, before ~07:13 sunrise -> previous
+                                     # (Saturday) Vedic day. Fixed in ephemeris_wrapper.py's
+                                     # calculate(): Vara is now derived from the sunrise JD
+                                     # bracketing the birth moment, not the birth moment's own
+                                     # civil-midnight-based JD.
+])
+def test_dina_and_hora_lord_match_verified_reference(hour, minute, expected_dina, expected_hora):
+    result = _ephemeris_result(hour, minute)
+    calc = DinaHoraBalaCalculator(EphemerisWrapper("data/ephemeris"))
 
+    dina_r = calc.calculate(_make_planet(expected_dina), result, latitude=_LAT, longitude=_LON)
+    assert dina_r.value_shashtiamsas >= 45.0, f"{expected_dina} should score at least Dina's 45 points"
 
-class _StubWrapper:
-    def __init__(self, next_sunrise):
-        self._next_sunrise = next_sunrise
-
-    def get_sunrise_sunset(self, jd, latitude, longitude):
-        return self._next_sunrise, None
-
-
-def test_dina_lord_matches_scores_15():
-    """Sunday's lord is Sun — birth right at sunrise, hora 1 = sun's own hora too (both match)."""
-    result = _make_ephemeris_result(
-        birth_jd=0.0, sunrise_jd=0.0, sunset_jd=1.0, is_daytime_birth=True, vara_lord="sun",
-    )
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
-    r = calc.calculate(_make_planet("sun"), result, latitude=0.0, longitude=0.0)
-    assert r.value_shashtiamsas == pytest.approx(30.0)
+    hora_r = calc.calculate(_make_planet(expected_hora), result, latitude=_LAT, longitude=_LON)
+    assert hora_r.value_shashtiamsas >= 60.0, f"{expected_hora} should score at least Hora's 60 points"
 
 
 def test_dina_lord_no_match_scores_0_for_dina_component():
-    result = _make_ephemeris_result(
-        birth_jd=0.0, sunrise_jd=0.0, sunset_jd=1.0, is_daytime_birth=True, vara_lord="venus",
-    )
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
-    r = calc.calculate(_make_planet("mars"), result, latitude=0.0, longitude=0.0)
+    result = _ephemeris_result(17, 30)
+    calc = DinaHoraBalaCalculator(EphemerisWrapper("data/ephemeris"))
+    r = calc.calculate(_make_planet("venus"), result, latitude=_LAT, longitude=_LON)
     assert any("Dina" in t and "no match" in t for t in r.trace)
 
 
-def test_hora_sequence_follows_chaldean_order_from_dina_lord():
-    """Day split into 12 horas from sunrise=0 to sunset=12 -> each hora is exactly 1.0 wide."""
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
-    expected_sequence = ["saturn", "jupiter", "mars", "sun", "venus", "mercury", "moon",
-                          "saturn", "jupiter", "mars", "sun", "venus"]
-    for hora_index, expected_lord in enumerate(expected_sequence):
-        birth_jd = hora_index + 0.5
-        result = _make_ephemeris_result(
-            birth_jd=birth_jd, sunrise_jd=0.0, sunset_jd=12.0, is_daytime_birth=True, vara_lord="saturn",
-        )
-        r = calc.calculate(_make_planet(expected_lord), result, latitude=0.0, longitude=0.0)
-        assert any(f"hora lord -> {expected_lord}" in t for t in r.trace), (
-            f"hora {hora_index}: expected {expected_lord}"
-        )
+def test_sun_dina_lord_scores_exactly_45_when_not_also_hora_lord():
+    """17:30 IST: Sun is Dina lord (45) but Mercury is Hora lord, so Sun scores exactly 45, not 105."""
+    result = _ephemeris_result(17, 30)
+    calc = DinaHoraBalaCalculator(EphemerisWrapper("data/ephemeris"))
+    r = calc.calculate(_make_planet("sun"), result, latitude=_LAT, longitude=_LON)
+    assert r.value_shashtiamsas == pytest.approx(45.0)
 
 
-def test_night_hora_continues_from_hora_13():
-    """Night horas (13-24) continue the same Chaldean cycle, not restart."""
-    result = _make_ephemeris_result(
-        birth_jd=12.5, sunrise_jd=0.0, sunset_jd=12.0, is_daytime_birth=False, vara_lord="saturn",
-    )
-    calc = DinaHoraBalaCalculator(_StubWrapper(next_sunrise=24.0))
-    r = calc.calculate(_make_planet("saturn"), result, latitude=0.0, longitude=0.0)
-    assert any("hora lord -> mercury" in t for t in r.trace)
-
-
-def test_missing_sunrise_sunset_skips_hora_but_keeps_dina():
-    result = _make_ephemeris_result(
-        birth_jd=1.0, sunrise_jd=None, sunset_jd=None, is_daytime_birth=None, vara_lord="mars",
-    )
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
-    r = calc.calculate(_make_planet("mars"), result, latitude=89.0, longitude=0.0)
-    assert r.value_shashtiamsas == pytest.approx(15.0)
-
-
-def test_missing_next_sunrise_skips_hora_but_keeps_dina():
-    result = _make_ephemeris_result(
-        birth_jd=12.5, sunrise_jd=0.0, sunset_jd=12.0, is_daytime_birth=False, vara_lord="moon",
-    )
-    calc = DinaHoraBalaCalculator(_StubWrapper(next_sunrise=None))
-    r = calc.calculate(_make_planet("moon"), result, latitude=89.0, longitude=0.0)
-    assert r.value_shashtiamsas == pytest.approx(15.0)
+def test_missing_sunrise_skips_hora_but_keeps_dina():
+    result = _ephemeris_result(17, 30)
+    result = result.__class__(**{**result.__dict__, "sunrise_jd": None, "sunset_jd": None})
+    calc = DinaHoraBalaCalculator(EphemerisWrapper("data/ephemeris"))
+    r = calc.calculate(_make_planet("sun"), result, latitude=_LAT, longitude=_LON)
+    assert r.value_shashtiamsas == pytest.approx(45.0)
+    assert any("hora lord skipped" in t for t in r.trace)
 
 
 def test_rejects_rahu_ketu():
-    result = _make_ephemeris_result(birth_jd=0.5, sunrise_jd=0.0, sunset_jd=1.0, is_daytime_birth=True)
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
+    result = _ephemeris_result(17, 30)
+    calc = DinaHoraBalaCalculator(EphemerisWrapper("data/ephemeris"))
     with pytest.raises(ValueError):
-        calc.calculate(_make_planet("rahu"), result, latitude=0.0, longitude=0.0)
+        calc.calculate(_make_planet("rahu"), result, latitude=_LAT, longitude=_LON)
 
 
 def test_calculate_all_returns_7_classical_grahas():
-    result = _make_ephemeris_result(birth_jd=0.5, sunrise_jd=0.0, sunset_jd=1.0, is_daytime_birth=True)
+    result = _ephemeris_result(17, 30)
     planets = [_make_planet(p) for p in
                ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]]
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
-    results = calc.calculate_all(planets, result, latitude=0.0, longitude=0.0)
+    calc = DinaHoraBalaCalculator(EphemerisWrapper("data/ephemeris"))
+    results = calc.calculate_all(planets, result, latitude=_LAT, longitude=_LON)
     assert len(results) == 7
     assert "rahu" not in {r.planet for r in results}
-
-
-def test_trace_notes_varsha_masa_not_computed():
-    result = _make_ephemeris_result(birth_jd=0.5, sunrise_jd=0.0, sunset_jd=1.0, is_daytime_birth=True)
-    calc = DinaHoraBalaCalculator(_StubWrapper(None))
-    r = calc.calculate(_make_planet("sun"), result, latitude=0.0, longitude=0.0)
-    assert any("Varsha/Masa not computed" in t for t in r.trace)

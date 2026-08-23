@@ -40,7 +40,7 @@ class PatternDiscoveryRunModel(AstroBase):
 
     event_type: Mapped[Optional[str]] = mapped_column(
         String(30), nullable=True, index=True,
-        comment="LOKPA event type this run targeted; null = all types.",
+        comment="KP Master event type this run targeted; null = all types.",
     )
     total_cases: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     total_events: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

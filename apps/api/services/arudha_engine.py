@@ -19,7 +19,7 @@ Exception (the "falls on itself / 7th from itself" shift): if the raw
 Arudha Pada lands in house N's own sign, or in the 7th sign from it, the
 Pada is shifted to the 10th sign counted (inclusively) from the raw
 position — i.e. +9 signs. This is the standard, universally-cited
-version of the exception (matching Jagannatha Hora / Parashara's Light's
+version of the exception (matching Classical Vedic System / Parashara's Light's
 default behavior): without it, the Arudha would sit on top of or exactly
 opposite its own house, which classical commentary treats as an invalid,
 self-cancelling result.
@@ -33,7 +33,7 @@ packages.shared.constants.JAIMINI_ALT_LORDS. The alternate Rahu/Ketu
 lordship of Aquarius/Scorpio is a real, documented Jaimini convention,
 but it is specific to Jaimini's Dasha systems (Chara/Narayana Dasha —
 see dasha_engine.py), not to Arudha Pada computation, where every major
-reference (BPHS, Jagannatha Hora, Parashara's Light) uses standard
+reference (BPHS, Classical Vedic System, Parashara's Light) uses standard
 planetary rulership.
 """
 

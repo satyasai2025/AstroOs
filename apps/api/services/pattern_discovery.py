@@ -6,7 +6,7 @@ Finds statistically notable astrological patterns behind real-life events.
 Input:  normalised ExtractedFeature rows (see feature_extraction.py).
 Output: DiscoveredPattern objects grouping one or more dimension/value
         observations (e.g. mahadasha=Jupiter, transit=Sa_7th_house) that
-        co-occur across research cases of a given LOKPA event type.
+        co-occur across research cases of a given KP Master event type.
 
 Approach (documented so results are reproducible):
   * Base rate (expected_by_chance) — for each (dimension, value), the

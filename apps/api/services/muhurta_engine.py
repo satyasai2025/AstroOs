@@ -139,7 +139,12 @@ class MuhurtaEngine:
 
         night_start_idx = _CHOGHADIYA_CYCLE.index(_NIGHT_CHOGHADIYA_START[weekday])
         for i in range(8):
-            name = _CHOGHADIYA_CYCLE[(night_start_idx + i) % 7]
+            # Night steps by -2 (not +1 like the day sequence) — cross-
+            # verified against PyJHora's gauri_choghadiya_night_table.
+            # The previous +1 step only matched PyJHora on segment 1
+            # (the start); segments 2-8 were wrong for every weekday,
+            # including flipping auspicious/inauspicious labels.
+            name = _CHOGHADIYA_CYCLE[(night_start_idx - 2 * i) % 7]
             start = sunset_jd + i * night_length
             periods.append(ChoghadiyaPeriod(
                 index=i + 1, name=name, nature=_CHOGHADIYA_NATURE[name],

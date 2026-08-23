@@ -27,7 +27,7 @@ D60 (Shashtiamsha)      — 60 parts; odd→Aries, even→Libra
 
 Composite ("varga of varga") charts — no standalone degree formula exists;
 each is one varga applied to another's output. Composition order verified
-empirically against a JHora reference export, not assumed:
+empirically against a Classical Vedic reference export, not assumed:
 D81  (Nava-Navamsha)    — D9 of D9
 D108 (Ashtottaramsha)   — D12 of D9   (NOT D9 of D12 — that matches 0/15)
 D144 (Dwadasamsa²)      — D12 of D12
@@ -363,14 +363,19 @@ def _d45_akshavedamsha(sign_index: int, deg: float) -> tuple[str, float]:
 def _d60_shashtiamsha(sign_index: int, deg: float) -> tuple[str, float]:
     """
     D60 — Shashtiamsha (the most detailed varga).
-    Sixty equal 0.5° parts.
-    Odd sign: starts from Aries (0).
-    Even sign: starts from Libra (6).
+    Sixty equal 0.5° parts, counted FORWARD FROM THE PLANET'S OWN SIGN
+    (not from a fixed Aries/Libra odd-even split — that was this
+    function's previous, incorrect implementation). This is the
+    "Traditional Parasara Shashtyamsha" method — cross-verified against
+    PyJHora's jhora.horoscope.chart.charts.shashtyamsa_chart(
+    chart_method=1), which is both PyJHora's own default and explicitly
+    labeled "Traditional Parasara shashtyamsa (from sign)" in its
+    docstring. Confirmed exact for the 1995-01-01 12:00 UTC, New Delhi
+    reference chart (Sun -> Virgo, Moon -> Libra).
     """
     part_size = 0.5
     part = min(int(deg / part_size), 59)
-    start = 0 if _is_odd_sign(sign_index) else 6
-    vsign_idx = (start + part) % 12
+    vsign_idx = (sign_index + part) % 12
     vdeg = (deg % part_size) * 60.0
     return _RASHI_LIST[vsign_idx], vdeg
 
@@ -386,7 +391,7 @@ _D5_ODD_SIGNS = (0, 10, 8, 2, 6)     # Aries, Aquarius, Sagittarius, Gemini, Lib
 _D5_EVEN_SIGNS = (1, 5, 11, 9, 7)    # Taurus, Virgo, Pisces, Capricorn, Scorpio
                                       # (Venus, Mercury, Jupiter, Saturn, Mars — reverse
                                       # planet order, EACH PLANET'S OTHER SIGN, not its
-                                      # sign used above.) Corrected against a JHora
+                                      # sign used above.) Corrected against a Classical Vedic
                                       # reference chart (2026-08-15, Pune) — the initial
                                       # "reverse of the odd table" guess did not match;
                                       # this table was reverse-engineered from ~15
@@ -476,16 +481,16 @@ def _d11_rudramsha(sign_index: int, deg: float) -> tuple[str, float]:
 # D81/D108/D144 are not independent degree-mapping schemes — each is one varga
 # applied to the *output* of another, which is why no standalone classical
 # formula for them exists. The exact composition order was determined
-# empirically from a JHora reference export (2026-08-15, Pune) rather than
+# empirically from a Classical Vedic reference export (2026-08-15, Pune) rather than
 # guessed: each hypothesis below was tested against 15 independent bodies and
-# only kept when it reproduced JHora's own output.
+# only kept when it reproduced Classical Vedic's own output.
 
 
 def _d81_nava_navamsha(sign_index: int, deg: float) -> tuple[str, float]:
     """
     D81 — Nava-Navamsha: the Navamsha of the Navamsha (9 × 9).
 
-    Verified against the JHora reference export at full precision:
+    Verified against the Classical Vedic reference export at full precision:
     15/15 signs and 15/15 degrees, every degree within the tolerance
     implied by the export's arcminute-rounded D1 input (+/-0.7 deg here,
     since a D1 rounding error is amplified 81x).
@@ -498,7 +503,7 @@ def _d108_ashtottaramsha(sign_index: int, deg: float) -> tuple[str, float]:
     """
     D108 — Ashtottaramsha: the Dvadashamsha of the Navamsha (9 × 12).
 
-    Order matters — D12-of-D9 reproduces JHora exactly (15/15 signs and
+    Order matters — D12-of-D9 reproduces Classical Vedic exactly (15/15 signs and
     15/15 degrees, all within the +/-0.9 deg tolerance implied by the
     export's arcminute-rounded D1 input) while the reverse composition,
     D9-of-D12, matches 0/15.
@@ -511,7 +516,7 @@ def _d144_dwadasamsa_dwadasamsa(sign_index: int, deg: float) -> tuple[str, float
     """
     D144 — Dwadasamsa-Dwadasamsa: the Dvadashamsha of the Dvadashamsha (12 × 12).
 
-    Verified 14/15 signs and 14/15 degrees against the JHora reference
+    Verified 14/15 signs and 14/15 degrees against the Classical Vedic reference
     export. The single difference is confirmed to be a rounding artefact,
     not a formula disagreement: the export gives Gemini 29°31' where this
     returns Cancer 0°00' — 0.47° apart, straddling a sign boundary, well

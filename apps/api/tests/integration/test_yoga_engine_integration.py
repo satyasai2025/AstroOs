@@ -129,8 +129,8 @@ def test_all_70_yogas_registered():
 
 
 def test_version_bumped_yogas_report_correct_version():
-    """Kemadruma and Shakata were bumped to 1.1 in Phase 3 — confirm the registry reflects it."""
+    """Kemadruma (now 1.2 — added the missing lagna-kendra base condition) and Shakata (1.1) — confirm the registry reflects it."""
     from apps.api.services.yoga_registry import get_yoga
 
-    assert get_yoga("BPHS-CY-004").rule_version == "1.1"
+    assert get_yoga("BPHS-CY-004").rule_version == "1.2"
     assert get_yoga("BPHS-ARY-003").rule_version == "1.1"

@@ -170,7 +170,7 @@ class TestDrikBala:
     aspectual strength.
 
     This previously asserted `>= 0`, which is astrologically wrong; it only
-    held by coincidence for this fixture chart. Jagannatha Hora's own Bhava
+    held by coincidence for this fixture chart. Classical Vedic System's own Bhava
     Bala output publishes negative DrigBala values (e.g. -0.87 for the 3rd
     house, -3.95 for the 7th in a reference chart), confirming the classical
     behaviour.
@@ -415,10 +415,11 @@ class TestComponentCoverage:
         assert "chesta_bala" in implemented
 
     def test_not_yet_implemented_list(self, shadbala_engine):
+        """Abda (Varsha) and Masa lord are now implemented via the Ahargana
+        method — see varsha_masa_bala.py — so the classical 6-fold Shadbala
+        scope has no remaining gaps."""
         gaps = shadbala_engine.not_yet_implemented_components()
-        assert "kala_bala.varsha_masa_lord" in gaps, (
-            "Varsha/Masa lord should be listed as not yet implemented"
-        )
+        assert gaps == []
 
     def test_all_phase1_components_computed(self, shadbala_engine, horoscope_engine):
         chart = _generate_chart(horoscope_engine)

@@ -132,7 +132,7 @@ def test_kemadruma_cancelled_when_moon_in_kendra_from_lagna():
     result = _result(chart, "BPHS-CY-004")
     assert result.is_present is False
     assert any("Cancelled" in s for s in result.satisfied)
-    assert result.rule_version == "1.1"
+    assert result.rule_version == "1.2"
 
 
 def test_kemadruma_absent_when_planet_conjunct_moon():

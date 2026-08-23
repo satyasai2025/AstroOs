@@ -90,6 +90,7 @@ class HoroscopeEngine:
         longitude: float,
         ayanamsa: str = AyanamsaSystem.LAHIRI.value,
         house_system: str = "W",
+        node_type: str | None = None,
     ) -> D1Chart:
         """
         Generate a complete D1 (Rashi) birth chart.
@@ -100,6 +101,9 @@ class HoroscopeEngine:
             longitude: Geographic longitude (+E, -W).
             ayanamsa: Ayanamsa key (default: 'lahiri').
             house_system: House system code ('W'=Whole Sign, 'P'=Placidus).
+            node_type: 'mean' or 'true' Rahu/Ketu node — defaults to the
+                wrapper's configured default (see packages.shared.constants.
+                DEFAULT_NODE_TYPE) when not given.
 
         Returns:
             D1Chart with all positions, aspects, and strength assessments.
@@ -121,6 +125,7 @@ class HoroscopeEngine:
             longitude=longitude,
             ayanamsa=ayanamsa,
             house_system=house_system,
+            node_type=node_type,
         )
 
         aspects = self._aspect_engine.compute(ephe_result.planet_positions)

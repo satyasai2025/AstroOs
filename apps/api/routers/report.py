@@ -195,6 +195,7 @@ async def build_chart_report(
             longitude=body.longitude,
             ayanamsa=body.ayanamsa,
             house_system=body.house_system,
+            node_type=body.node_type,
         )
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
@@ -321,6 +322,7 @@ async def generate_chart_pdf(
         longitude=body.longitude,
         ayanamsa=body.ayanamsa,
         house_system=body.house_system,
+        node_type=body.node_type,
     )
     dasha_tree, active_dasha_chain, yoga_results = _compute_dasha_and_yogas(wrapper, chart, body)
     report = ReportEngine.build_chart_report(
@@ -372,6 +374,7 @@ async def generate_chart_html(
         longitude=body.longitude,
         ayanamsa=body.ayanamsa,
         house_system=body.house_system,
+        node_type=body.node_type,
     )
     dasha_tree, active_dasha_chain, yoga_results = _compute_dasha_and_yogas(wrapper, chart, body)
     report = ReportEngine.build_chart_report(
@@ -417,6 +420,7 @@ async def generate_chart_csv(
         longitude=body.longitude,
         ayanamsa=body.ayanamsa,
         house_system=body.house_system,
+        node_type=body.node_type,
     )
     report = ReportEngine.build_chart_report(
         chart,
@@ -427,13 +431,13 @@ async def generate_chart_csv(
         subject_name=body.subject_name,
         generated_by=body.generated_by,
     )
-@router.post("/foundation/birth-chart", summary="Generate JHora-grade Birth Chart Foundation Reference Sheet")
+@router.post("/foundation/birth-chart", summary="Generate Classical Vedic-grade Birth Chart Foundation Reference Sheet")
 async def generate_foundation_birth_chart(
     body: ChartReportRequest,
     export_format: str = "html",
     wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
 ) -> Response:
-    """Generate JHora-grade 2-page A4 Birth Chart Foundation Reference Sheet."""
+    """Generate Classical Vedic-grade 2-page A4 Birth Chart Foundation Reference Sheet."""
     from apps.api.services.birth_chart_report_builder import BirthChartReportBuilder
     from apps.api.services.report_template_engine import ReportTemplateEngine
 
@@ -445,8 +449,9 @@ async def generate_foundation_birth_chart(
         longitude=body.longitude,
         ayanamsa=body.ayanamsa,
         house_system=body.house_system,
+        node_type=body.node_type,
     )
-    
+
     builder = BirthChartReportBuilder(wrapper)
     report_data = builder.build_report_data(
         chart=chart,
@@ -478,4 +483,4 @@ async def generate_foundation_birth_chart(
             content=html_content,
             media_type="text/html",
             headers={"Content-Disposition": f'inline; filename="{body.subject_name or "chart"}_foundation.html"'},
-        )
+        )

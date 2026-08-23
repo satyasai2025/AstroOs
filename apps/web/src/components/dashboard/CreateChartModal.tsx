@@ -499,7 +499,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 <div>
                   <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Import From File</h3>
                   <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                    Load a Jagannatha Hora (.jhd) chart export. The chart is recomputed by this app's engine.
+                    Load a Classical Vedic System (.jhd) chart export. The chart is recomputed by this app's engine.
                   </p>
                 </div>
 
@@ -508,7 +508,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 </label>
                 <input
                   type="file"
-                  accept=".jhd,.jhora"
+                  accept=".jhd,.vedic"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) void handleImportFile(file);

@@ -155,7 +155,7 @@ export function CentralEventsExplorer() {
         </div>
       </div>
 
-      {/* --- TAB 1 & 2: LIST & SEARCH VIEW (LOKPA Split-Screen Style) --- */}
+      {/* --- TAB 1 & 2: LIST & SEARCH VIEW (KP Master Split-Screen Style) --- */}
       {(activeTab === "list" || activeTab === "search") && (
         <div className="space-y-4">
           {/* Filter Bar */}
@@ -224,7 +224,7 @@ export function CentralEventsExplorer() {
               </div>
             </div>
 
-            {/* Right Column: Exact LOKPA-Style Details Box */}
+            {/* Right Column: Exact KP Master-Style Details Box */}
             <div className="lg:col-span-6 space-y-4">
               {selectedEvent ? (
                 <div
@@ -250,7 +250,7 @@ export function CentralEventsExplorer() {
                     </p>
                   </div>
 
-                  {/* LOKPA Style Main House & Supporting Houses Box */}
+                  {/* KP Master Style Main House & Supporting Houses Box */}
                   <div
                     style={{
                       background: "#1e293b",

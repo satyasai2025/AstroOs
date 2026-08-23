@@ -3,13 +3,13 @@ Unit tests for UpagrahaEngine (Gulika/Maandi + Bhava/Hora/Ghati lagnas).
 
 The reference chart is the one used throughout this repo's accuracy work:
 30-Jun-1971 04:57:40 IST, Vadodara (22N18, 73E12), Lahiri. Expected values
-come from Jagannatha Hora's own output for that chart.
+come from Classical Vedic System's own output for that chart.
 
-Tolerance is 2 arc-minutes rather than arc-seconds on purpose: JHora's
+Tolerance is 2 arc-minutes rather than arc-seconds on purpose: Classical Vedic's
 Lahiri variant differs from Swiss Ephemeris SIDM_LAHIRI by ~55", which
 shows up on every derived point (and on every planet). Tightening below
 that would be testing the ayanamsa variant, not the upagraha maths — with
-JHora's own ayanamsa substituted, these same formulas land within ~20".
+Classical Vedic's own ayanamsa substituted, these same formulas land within ~20".
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ def _dms(d: int, m: int, s: float) -> float:
     return d + m / 60 + s / 3600
 
 
-# JHora reference longitudes (sidereal, Lahiri)
+# Classical Vedic reference longitudes (sidereal, Lahiri)
 _JHORA = {
     "gulika":      240 + _dms(13, 44, 7.34),
     "maandi":      240 + _dms(23, 23, 28.23),
@@ -66,7 +66,7 @@ class TestDayNightFrame:
 
     def test_vedic_weekday_is_previous_day(self, result):
         """Vedic days run sunrise-to-sunrise: a pre-dawn Wednesday birth
-        still belongs to Tuesday. JHora likewise reports Tuesday."""
+        still belongs to Tuesday. Classical Vedic likewise reports Tuesday."""
         assert result.weekday == "tuesday"
 
     def test_night_starts_from_fifth_weekday_lord(self, result):
@@ -85,7 +85,7 @@ class TestAgainstJHora:
         got = by_name[name].sidereal_longitude
         diff_arcmin = abs(got - _JHORA[name]) * 60
         assert diff_arcmin < _TOL_ARCMIN, (
-            f"{name}: got {got:.4f}, JHora {_JHORA[name]:.4f} "
+            f"{name}: got {got:.4f}, Classical Vedic {_JHORA[name]:.4f} "
             f"({diff_arcmin:.2f} arc-min apart)"
         )
 

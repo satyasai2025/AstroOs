@@ -46,10 +46,12 @@ from apps.api.domain.prediction_validation import (
 from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
 from apps.api.services.classical_rule_evidence_engine import ClassicalRuleEvidenceEngine, ClassicalRuleRegistry
 from apps.api.services.dasha_engine import DashaEngine
+from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd, longitude_to_nakshatra
 from apps.api.services.kp_decision_tree_engine import KPDecisionTreeEngine
 from apps.api.services.prediction_backtest_engine import PredictionBacktestEngine
 from apps.api.services.prediction_validation_service import PredictionValidationService
 from apps.api.services.sbc_ray_matrix_engine import SBCRayMatrixEngine
+from packages.shared.constants import SWEPH_PLANET_IDS
 
 
 class PredictionConfluenceEngine:
@@ -66,6 +68,7 @@ class PredictionConfluenceEngine:
         dasha_engine: Optional[DashaEngine] = None,
         ashtakavarga_engine: Optional[AshtakavargaEngine] = None,
         validation_service: Optional[PredictionValidationService] = None,
+        ephemeris_wrapper: Optional[EphemerisWrapper] = None,
     ) -> None:
         self._kp = kp_engine or KPDecisionTreeEngine()
         self._sbc = sbc_engine or SBCRayMatrixEngine()
@@ -73,6 +76,7 @@ class PredictionConfluenceEngine:
         self._dasha = dasha_engine
         self._ashtakavarga = ashtakavarga_engine or AshtakavargaEngine()
         self._validation_service = validation_service or PredictionValidationService()
+        self._wrapper = ephemeris_wrapper or EphemerisWrapper("data/ephemeris")
 
     def synthesize(
         self,
@@ -365,6 +369,40 @@ class PredictionConfluenceEngine:
             },
         )
 
+    def _compute_real_transit_planets(self, ref_dt: datetime) -> list[dict[str, Any]]:
+        """
+        Real sidereal nakshatra positions for all 9 grahas at `ref_dt`,
+        formatted for SBCRayMatrixEngine.compute_complete_sangya_matrix's
+        `transit_planets` argument. Fixes a real bug: this argument was
+        previously never supplied by any caller, silently falling back
+        to SBCRayMatrixEngine's hardcoded placeholder transit data (see
+        that engine's _get_default_transits()) — meaning the SBC layer
+        of this confluence engine was evaluating fictional planetary
+        positions, not the actual reference date's real transits.
+        Location-independent (planet sidereal longitude doesn't depend
+        on observer lat/lon, only house cusps do, which this doesn't need).
+        """
+        jd = datetime_to_jd(ref_dt)
+        ayanamsa_val = self._wrapper.get_ayanamsa(jd)
+        transits: list[dict[str, Any]] = []
+        for planet in SWEPH_PLANET_IDS:
+            pos = self._wrapper.get_planet_position(planet, jd)
+            sidereal_lon = self._wrapper.to_sidereal(pos.longitude, ayanamsa_val)
+            nak = longitude_to_nakshatra(sidereal_lon)
+            # NakshatraInfo.nakshatra is lowercase snake_case (e.g.
+            # "purva_ashadha"); SBC_28_NAKSHATRAS uses Title Case with
+            # spaces (e.g. "Purva Ashadha") — normalize or the nakshatra
+            # match in compute_complete_sangya_matrix silently fails.
+            nak_name = nak.nakshatra.replace("_", " ").title()
+            transits.append({
+                "planet": planet.capitalize(),
+                "longitude": sidereal_lon,
+                "nakshatra": nak_name,
+                "is_retrograde": pos.is_retrograde,
+                "speed_deg_day": abs(pos.speed_deg_per_day),
+            })
+        return transits
+
     def _evaluate_sbc_vedha(
         self,
         chart_data: dict[str, Any],
@@ -383,7 +421,8 @@ class PredictionConfluenceEngine:
         }.get(category, "Janma (1st)")
 
         try:
-            sbc_matrix = self._sbc.compute_complete_sangya_matrix(chart_data)
+            real_transits = self._compute_real_transit_planets(ref_dt)
+            sbc_matrix = self._sbc.compute_complete_sangya_matrix(chart_data, transit_planets=real_transits)
             matching_entry = next((s for s in sbc_matrix.sangyas if s.sangya_name.startswith(target_sangya.split()[0])), None)
             
             if matching_entry and matching_entry.status.value == "Afflicted":

@@ -114,11 +114,29 @@ export function computeAllHouseSignificators(chart: D1ChartResponse): HouseSigni
 // Deliberately only the four the founder specified. Extend only against a
 // cited classical source, not by guessing plausible-looking house numbers.
 
-export const KP_EVENT_HOUSE_GROUPS: Record<string, { label: string; houses: number[] }> = {
-  marriage: { label: "Marriage", houses: [2, 7, 11] },
-  career: { label: "Career / Job", houses: [2, 6, 10, 11] },
-  childbirth: { label: "Childbirth", houses: [2, 5, 11] },
-  disease: { label: "Disease / Problems", houses: [6, 8, 12] },
+export const KP_EVENT_HOUSE_GROUPS = {
+  career: { label: "Job Appointment & Career", houses: [2, 6, 10, 11], primaryCusp: 10, polarity: "BENEFICIAL" },
+  promotion: { label: "Promotion & Status Elevation", houses: [2, 6, 10, 11], primaryCusp: 10, polarity: "BENEFICIAL" },
+  break_in_service: { label: "Break in Service / Job Loss", houses: [5, 8, 12], primaryCusp: 10, polarity: "ADVERSE" },
+  change_of_job: { label: "Change of Job / Transfer", houses: [3, 5, 10, 11], primaryCusp: 10, polarity: "BENEFICIAL" },
+  govt_job: { label: "Government Job / PSU", houses: [6, 10, 11], primaryCusp: 10, polarity: "BENEFICIAL" },
+  accumulating_wealth: { label: "Accumulating Huge Wealth", houses: [2, 6, 11], primaryCusp: 2, polarity: "BENEFICIAL" },
+  payment_recovery: { label: "Recovery of Pending Dues", houses: [2, 6, 11], primaryCusp: 2, polarity: "BENEFICIAL" },
+  bank_loan_sanction: { label: "Bank Loan Sanction", houses: [6, 8, 11], primaryCusp: 6, polarity: "BENEFICIAL" },
+  bad_debt_loss: { label: "Bad Debt / Sunk Capital Loss", houses: [5, 8, 12], primaryCusp: 12, polarity: "ADVERSE" },
+  marriage: { label: "Marriage & Conjugal Union", houses: [2, 7, 11], primaryCusp: 7, polarity: "BENEFICIAL" },
+  love_marriage: { label: "Love Marriage", houses: [5, 7, 11], primaryCusp: 5, polarity: "BENEFICIAL" },
+  divorce_separation: { label: "Divorce / Marital Separation", houses: [1, 6, 10, 12], primaryCusp: 7, polarity: "ADVERSE" },
+  foreign_travel_visa: { label: "Foreign Travel & Visa", houses: [3, 9, 11, 12], primaryCusp: 12, polarity: "BENEFICIAL" },
+  visa_rejection: { label: "Visa Rejection / Delay", houses: [4, 8], primaryCusp: 12, polarity: "ADVERSE" },
+  purchase_of_property: { label: "Purchase of Property / Flat", houses: [4, 11, 12], primaryCusp: 4, polarity: "BENEFICIAL" },
+  childbirth: { label: "Childbirth & Progeny", houses: [2, 5, 11], primaryCusp: 5, polarity: "BENEFICIAL" },
+  adopt_a_child: { label: "Adopt a Child", houses: [4, 8, 11], primaryCusp: 4, polarity: "BENEFICIAL" },
+  medical_recovery: { label: "Medical Recovery / Disease Cure", houses: [1, 5, 11], primaryCusp: 5, polarity: "BENEFICIAL" },
+  surgery_operation: { label: "Surgery / Medical Operation", houses: [1, 5, 8, 11], primaryCusp: 6, polarity: "BENEFICIAL" },
+  disease: { label: "Disease & Prolonged Illness", houses: [6, 8, 12], primaryCusp: 6, polarity: "ADVERSE" },
+  litigation_victory: { label: "Court Case / Litigation Victory", houses: [1, 6, 11], primaryCusp: 6, polarity: "BENEFICIAL" },
+  higher_education: { label: "Higher Education / PhD", houses: [4, 9, 11], primaryCusp: 9, polarity: "BENEFICIAL" },
 };
 
 export type KPEventKey = keyof typeof KP_EVENT_HOUSE_GROUPS;

@@ -171,7 +171,7 @@ export default function ImportChartPage() {
   // birth moment/location is the exception, not the norm, for a bulk file.
   const [forceNewBulk, setForceNewBulk] = useState(false);
 
-  // .jhd (Jagannatha Hora) is a single-chart file, not a bulk row table —
+  // .jhd (Classical Vedic System) is a single-chart file, not a bulk row table —
   // parsed client-side, then created through the same single-chart pipeline
   // as the dashboard's "New Chart" flow instead of /workflow/bulk-import.
   const [jhdPreview, setJhdPreview] = useState<JhdParsePreview | null>(null);
@@ -328,7 +328,7 @@ export default function ImportChartPage() {
             Click to upload or drag and drop
           </p>
           <p className="mt-1 text-xs text-slate-700 dark:text-slate-200">
-            CSV, JSON or Jagannatha Hora (.jhd) charts
+            CSV, JSON or Classical Vedic System (.jhd) charts
           </p>
         </div>
 

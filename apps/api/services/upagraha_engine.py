@@ -13,16 +13,16 @@ These points are *entirely* defined by the sunrise/sunset frame, so the
 rise/set convention is not cosmetic. Swiss Ephemeris defaults to the
 upper limb with atmospheric refraction (what an observer sees). Classical
 Vedic computation uses the **centre of the disc with no refraction**, and
-so does Jagannatha Hora.
+so does Classical Vedic System.
 
 On the benchmark chart the two differ by ~4 minutes at each end — enough
-to move Gulika by about 1°. Verified against JHora (30-Jun-1971 04:57:40
-IST, Vadodara), using JHora's own ayanamsa to isolate the method:
+to move Gulika by about 1°. Verified against Classical Vedic (30-Jun-1971 04:57:40
+IST, Vadodara), using Classical Vedic's own ayanamsa to isolate the method:
 
     Gulika   −20″      Maandi   −21″
     Bhava L. −53″      Hora L.  −31″      Ghati L. +36″
 
-i.e. sub-arc-minute, the same residual every planet shows against JHora
+i.e. sub-arc-minute, the same residual every planet shows against Classical Vedic
 (its Lahiri variant differs from SIDM_LAHIRI). With AstroOS's own default
 ayanamsa the offset is ~−76″, which is the ayanamsa difference, not a
 method error.
@@ -40,7 +40,7 @@ Gulika / Maandi
     Gulika is the ascendant at the START of Saturn's part; Maandi is the
     ascendant at its MIDPOINT. (Traditions differ — some treat the two as
     one point, some use the end of the part. The start/midpoint pair is
-    what JHora produces and what is implemented here; see
+    what Classical Vedic produces and what is implemented here; see
     Settings-free `GULIKA_METHOD` note in the router docs.)
 
 Special Lagnas

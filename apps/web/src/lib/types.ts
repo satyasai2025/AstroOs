@@ -131,6 +131,7 @@ export type AyanamsaCode =
   | "true_chitra"
   | "true_pushya";
 export type HouseSystemCode = "W" | "P" | "K" | "E";
+export type NodeTypeCode = "mean" | "true";
 export type DashaSystemCode =
   | "vimshottari"
   | "yogini"

@@ -52,6 +52,22 @@ EKADHIPATYA_PAIRS: tuple[tuple[str, str], ...] = (
     ("capricorn", "aquarius"),
 )
 
+# Ekadhipatya Shodhana only reduces a planet's OWN bindu table, at the
+# ONE pair of rashis IT co-owns — not all 5 pairs applied uniformly to
+# every planet. Sun and Moon own exactly one rashi each (Leo, Cancer)
+# and are excluded entirely: their tables are never touched by this
+# step. Cross-verified against PyJHora's _ekadhipatya_sodhana(), whose
+# loop only runs for Mars..Saturn (range(MOON_ID+1, SATURN_ID+1)), each
+# planet only ever modifying its own bav[p] at its own rasi_owners[p]
+# pair.
+PLANET_EKADHIPATYA_PAIR: dict[str, tuple[str, str]] = {
+    "mars": ("aries", "scorpio"),
+    "venus": ("taurus", "libra"),
+    "mercury": ("gemini", "virgo"),
+    "jupiter": ("sagittarius", "pisces"),
+    "saturn": ("capricorn", "aquarius"),
+}
+
 _RULE_VERSION = "1.0"
 
 
@@ -81,22 +97,48 @@ class ShodhanaCalculator:
         self, bhinna: BhinnashtakavargaResult, occupied_rashis: set[str]
     ) -> BhinnashtakavargaResult:
         """
-        `occupied_rashis` — rashis currently occupied by a planet in the
-        D1 chart; bindus in an occupied rashi are never reduced, per the
-        source's stated exception. Scoped to the 7 classical grahas
-        (consistent with the rest of this codebase's Ashtakavarga scope)
-        — Rahu/Ketu occupancy is not tracked here.
+        `occupied_rashis` — rashis occupied by ANY graha in the D1 chart,
+        including Rahu/Ketu (see AshtakavargaEngine._occupied_rashis);
+        bindus in an occupied rashi are never reduced, per the source's
+        stated exception.
+
+        Unlike Trikona Shodhana, this is NOT a "subtract the group
+        minimum" operation — it's a REPLACE operation between the two
+        co-lorded rashis. Cross-verified against PyJHora's
+        jhora.horoscope.chart.ashtakavarga._ekadhipatya_sodhana():
+          - Either bindu is 0, or both rashis are occupied -> no change.
+          - Both rashis empty: unequal -> both become the lower value;
+            equal -> both become 0.
+          - Exactly one rashi occupied: the empty one becomes 0 if its
+            value is lower than the occupied one's, otherwise the empty
+            one is set EQUAL to the occupied one's value (copied, not
+            subtracted) — the occupied rashi's own bindu count never
+            changes.
         """
         bindus = list(bhinna.bindus_by_rashi)
+        pair = PLANET_EKADHIPATYA_PAIR.get(bhinna.target_planet)
 
-        for pair in EKADHIPATYA_PAIRS:
-            indices = [_RASHI_LIST.index(r) for r in pair]
-            values = [bindus[i] for i in indices]
-            minimum = min(values)
-            for i, rashi in zip(indices, pair):
-                if rashi in occupied_rashis:
-                    continue
-                bindus[i] -= minimum
+        if pair is not None:
+            i1, i2 = (_RASHI_LIST.index(r) for r in pair)
+            r1, r2 = pair
+            v1, v2 = bindus[i1], bindus[i2]
+            r1_occupied = r1 in occupied_rashis
+            r2_occupied = r2 in occupied_rashis
+
+            if v1 == 0 or v2 == 0 or (r1_occupied and r2_occupied):
+                pass
+            elif not r1_occupied and not r2_occupied:
+                if v1 != v2:
+                    lower = min(v1, v2)
+                    bindus[i1] = lower
+                    bindus[i2] = lower
+                else:
+                    bindus[i1] = 0
+                    bindus[i2] = 0
+            elif r1_occupied:
+                bindus[i2] = 0 if v2 < v1 else v1
+            else:
+                bindus[i1] = 0 if v1 < v2 else v2
 
         return BhinnashtakavargaResult(
             target_planet=bhinna.target_planet,

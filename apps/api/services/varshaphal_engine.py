@@ -29,21 +29,21 @@ domain/varshaphal.py's module docstring for the PyJHora cross-check and
 the one documented simplification (Panchvargiya Bala tie-break skipped).
 
 Sahams: all 36 classical A-B+C longitude formulas, cross-checked
-against PyJHora's jhora/horoscope/transit/saham.py — same verified
-source as Year Lord — AND against a real Jagannatha Hora desktop-
+against PyJHora's vedic/horoscope/transit/saham.py — same verified
+source as Year Lord — AND against a real Classical Vedic System desktop-
 software export supplied by the user (birth 1971-06-30 04:57:40 IST,
 Vadodara; Varsha year 55 = 2026-06-30 solar return). 33 of 36 values
-matched that JHora export within the same ~1-2 arcminute systematic
+matched that Classical Vedic export within the same ~1-2 arcminute systematic
 tolerance already documented for this codebase's ayanamsa (see
 domain/varshaphal.py). One deliberate deviation from PyJHora:
 Gaurava Saham uses the SAME formula as Yasas Saham (Jupiter - Punya +
 Lagna), not PyJHora's book formula (Jupiter - Moon + Sun) — PyJHora's
-own source comment admits that book formula "does not match JHora
-s/w", and the real JHora export confirms Gaurava and Yasas share an
+own source comment admits that book formula "does not match Classical Vedic
+s/w", and the real Classical Vedic export confirms Gaurava and Yasas share an
 identical value, so the export was trusted over the book formula.
 
 KNOWN LIMITATION — Karma, Bandhu, and Vanik Saham came out a full sign
-(30°) off the JHora export, all three specifically when Mercury and
+(30°) off the Classical Vedic export, all three specifically when Mercury and
 Lagna land in the same Rashi (true for the export chart: Mercury,
 Jupiter, Venus, and Lagna were all in Cancer). PyJHora's
 _is_C_between_B_to_A sweep never re-checks B's own Rashi, so B and C
@@ -54,7 +54,7 @@ each fixed these 3 while silently breaking 10+ of the other 33 that
 were already correct. Given one adversarial chart isn't enough to
 derive the right general rule, these 3 are left as-is (matching
 PyJHora's literal algorithm) rather than risk a blind fix. Needs a
-second real JHora export — ideally one where B and C DON'T coincide in
+second real Classical Vedic export — ideally one where B and C DON'T coincide in
 sign — to properly diagnose.
 
 Not yet built: Mudda Dasha, Patyayini Dasha — deferred, see
@@ -358,7 +358,7 @@ class VarshaphalEngine:
         results["punya"] = day_night(moon, sun, lagna)
         results["vidya"] = day_night(sun, moon, lagna)
         results["yasas"] = day_night(jupiter, results["punya"], lagna)
-        results["gaurava"] = results["yasas"]  # see module docstring: real JHora matches Yasas, not the book formula
+        results["gaurava"] = results["yasas"]  # see module docstring: real Classical Vedic matches Yasas, not the book formula
         results["mitra"] = day_night(jupiter, results["punya"], venus)
         results["mahatmya"] = day_night(results["punya"], mars, lagna)
         results["asha"] = day_night(saturn, mars, lagna)

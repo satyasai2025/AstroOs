@@ -2,7 +2,7 @@
  * AstroOS — Sarvatobhadra Chakra (SBC) CellNum grid — frontend mirror.
  *
  * Duplicates packages/shared/sbc_cellnum_table.py's 32 anchor rows
- * (Right/Front/Left CellNum paths per nakshatra, JHora-cross-checked
+ * (Right/Front/Left CellNum paths per nakshatra, Classical Vedic-cross-checked
  * for Dhanishtha/Shatabhisha) so the client can highlight a clicked
  * nakshatra's Vedha rays without a round trip — same "static reference
  * geometry duplicated on the frontend" judgment call as SBC_BORDER in

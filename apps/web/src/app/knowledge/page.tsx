@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Badge, Button, Card, KnowledgeGraph } from "@/components/ui";
 
 interface StatDef {
@@ -51,6 +54,15 @@ const GRAPH_EDGES = [
   { from: "sun", to: "mars" },
 ];
 
+const SUGGESTIONS = [
+  { label: "✨ Gaja Kesari Yoga", action: "/knowledge/browse?type=yogas" },
+  { label: "☉ Sun Karakatvas", action: "/knowledge/browse?type=karakatvas" },
+  { label: "⌂ 10th House (Career)", action: "/knowledge/browse?type=houses" },
+  { label: "★ Ashwini Nakshatra", action: "/knowledge/browse?type=nakshatras" },
+  { label: "📜 BPHS Classical Texts", action: "/knowledge/browse?type=texts" },
+  { label: "🤖 Ask: Jupiter in 7th House", action: "/knowledge/ask?q=What%20is%20the%20effect%20of%20Jupiter%20in%20the%207th%20House?" },
+];
+
 function StatCard({ stat }: { stat: StatDef }) {
   const accentVar =
     stat.accent === "cyan"
@@ -79,15 +91,32 @@ function StatCard({ stat }: { stat: StatDef }) {
 }
 
 export default function KnowledgeHomePage() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleAskAI = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!searchQuery.trim()) {
+      router.push("/knowledge/ask");
+    } else {
+      router.push(`/knowledge/ask?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleBrowse = () => {
+    router.push("/knowledge/browse");
+  };
+
   return (
-    <div>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div className="space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
             Knowledge Home
           </h1>
           <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-            Centralized knowledge base of Vedic Astrology
+            Centralized knowledge base & classical reference engine of Vedic Astrology
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -97,8 +126,8 @@ export default function KnowledgeHomePage() {
           <Button href="/knowledge/browse" variant="violet">
             Browse Entities
           </Button>
-          <Button href="/knowledge/tools" variant="secondary">
-            Knowledge Tools
+          <Button href="/help" variant="secondary">
+            Help Center
           </Button>
           <Button href="/knowledge/admin" variant="secondary">
             Admin
@@ -106,12 +135,75 @@ export default function KnowledgeHomePage() {
         </div>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+      {/* Global Knowledge Search Hero Card */}
+      <Card style={{ padding: "20px 24px", background: "linear-gradient(180deg, var(--bg-card) 0%, rgba(56, 189, 248, 0.04) 100%)" }}>
+        <div className="max-w-3xl">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-base" aria-hidden="true">🔍</span>
+            <h2 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+              Search Knowledge Base & Classical Texts
+            </h2>
+          </div>
+          <p className="mb-4 text-xs" style={{ color: "var(--text-secondary)" }}>
+            Ask a natural question to AI, search 5,000+ Karakatvas, explore Yogas, or lookup classical slokas from BPHS & Saravali.
+          </p>
+
+          <form onSubmit={handleAskAI} className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search concepts, e.g. 'Gaja Kesari Yoga', 'Jupiter in 7th House', 'Mesha Rashi'…"
+                className="w-full rounded-lg px-3.5 py-2.5 text-sm outline-none transition-all"
+                style={{
+                  backgroundColor: "var(--bg-surface, var(--bg-card))",
+                  border: "1px solid var(--border-primary)",
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button type="submit" variant="primary">
+                Ask AI Q&A
+              </Button>
+              <Button type="button" onClick={handleBrowse} variant="secondary">
+                Browse Entities
+              </Button>
+            </div>
+          </form>
+
+          {/* Quick suggestions */}
+          <div className="mt-3 flex flex-wrap items-center gap-1.5 pt-2">
+            <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
+              Quick Examples:
+            </span>
+            {SUGGESTIONS.map((item) => (
+              <Link
+                key={item.label}
+                href={item.action}
+                className="inline-flex items-center rounded-md px-2 py-0.5 text-xs transition-colors hover:opacity-80"
+                style={{
+                  backgroundColor: "var(--bg-subtle, rgba(255, 255, 255, 0.05))",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
         {STATS.map((s) => (
           <StatCard key={s.label} stat={s} />
         ))}
       </div>
 
+      {/* 3 Columns Section */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card padding="0" style={{ gridColumn: "span 1" }}>
           <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -172,6 +264,59 @@ export default function KnowledgeHomePage() {
           <KnowledgeGraph nodes={GRAPH_NODES} edges={GRAPH_EDGES} width={260} height={170} />
         </Card>
       </div>
+
+      {/* How To Use & Help Guide Section */}
+      <Card style={{ padding: "20px 24px" }}>
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-base">💡</span>
+              <h3 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
+                How to use AstroOS Knowledge Base
+              </h3>
+            </div>
+            <p className="mt-1 text-xs" style={{ color: "var(--text-secondary)" }}>
+              Quick guide on searching, querying AI, and verifying classical astrological literature.
+            </p>
+          </div>
+          <Link
+            href="/help"
+            className="inline-flex items-center gap-1 text-xs font-semibold hover:underline"
+            style={{ color: "var(--cyan-400)" }}
+          >
+            Visit Full AstroOS Help Center →
+          </Link>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="rounded-lg p-3.5" style={{ backgroundColor: "var(--bg-subtle, rgba(255, 255, 255, 0.02))", border: "1px solid var(--border-subtle)" }}>
+            <div className="mb-1 text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+              🤖 1. Ask Classical Questions
+            </div>
+            <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Use <strong>Ask AstroOS</strong> to query combinations (e.g. <em>"Sun in 10th house"</em>). Answers cite verified classical texts like BPHS and Saravali without hallucinations.
+            </p>
+          </div>
+
+          <div className="rounded-lg p-3.5" style={{ backgroundColor: "var(--bg-subtle, rgba(255, 255, 255, 0.02))", border: "1px solid var(--border-subtle)" }}>
+            <div className="mb-1 text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+              📊 2. Explore 5,000+ Karakatvas
+            </div>
+            <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Filter through planetary significations and house meanings under <strong>Browse Entities</strong> to discover deeper interpretive nuances for each planet and sign.
+            </p>
+          </div>
+
+          <div className="rounded-lg p-3.5" style={{ backgroundColor: "var(--bg-subtle, rgba(255, 255, 255, 0.02))", border: "1px solid var(--border-subtle)" }}>
+            <div className="mb-1 text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+              📚 3. Classical Literature & Rules
+            </div>
+            <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              Inspect astrological rules and slokas evaluated by the calculation engine to understand why a chart prediction or yoga is triggered.
+            </p>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

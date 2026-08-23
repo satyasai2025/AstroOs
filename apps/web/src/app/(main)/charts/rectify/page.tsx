@@ -197,7 +197,7 @@ export default function RectifyPage() {
   }, [body]);
 
   /** Applies the shift for real: rewrites the birth time and re-analyses,
-   *  the way JHora's "Change birthtime to move lagna to" does. Merely
+   *  the way Classical Vedic's "Change birthtime to move lagna to" does. Merely
    *  reporting the new time would leave the chart showing the old one. */
   const doShift = useCallback(
     async (direction: "next" | "previous") => {

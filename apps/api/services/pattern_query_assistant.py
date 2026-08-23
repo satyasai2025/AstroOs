@@ -14,7 +14,7 @@ Two stages, kept deliberately narrow so the LLM can never fabricate a
 finding:
 
   1. Parse — the LLM's ONLY job is to pick one event_type out of the
-     fixed LOKPA list (or none). Its answer is validated against that
+     fixed KP Master list (or none). Its answer is validated against that
      real list server-side before it's ever used to query the database;
      an out-of-list answer is discarded, not trusted. The LLM never
      touches the database.

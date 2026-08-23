@@ -2,7 +2,7 @@
 AstroOS — Planet Sign-Change Domain Objects
 
 "When will this planet change sign?" — the planetary counterpart to the
-lagna scanner (domain/lagna_scan.py), matching what Jagannatha Hora offers
+lagna scanner (domain/lagna_scan.py), matching what Classical Vedic System offers
 as "When will this planet change sign in this chart?".
 
 Unlike the lagna, a planet's longitude is NOT monotonic: it stations and

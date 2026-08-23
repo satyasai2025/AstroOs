@@ -86,13 +86,13 @@ class TestJaiminiDasha:
     def test_chara_dasha(self, bundle):
         assert bundle.chara_dasha.system == "chara"
         assert bundle.chara_dasha.lagna_rashi == "virgo"
-        assert bundle.chara_dasha.total_cycle_years == 46
+        assert bundle.chara_dasha.total_cycle_years == 90
         assert len(bundle.chara_dasha.periods) == 12
 
     def test_narayana_dasha(self, bundle):
         assert bundle.narayana_dasha.system == "narayana"
         assert bundle.narayana_dasha.lagna_rashi == "cancer"
-        assert bundle.narayana_dasha.total_cycle_years == 43
+        assert bundle.narayana_dasha.total_cycle_years == 77
         assert len(bundle.narayana_dasha.periods) == 12
 
 

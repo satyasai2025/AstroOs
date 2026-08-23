@@ -13,7 +13,7 @@ interface PlanetaryPositionsTableProps {
 }
 
 /**
- * JHora-style planetary positions table. Rows: Lagna first, then the
+ * Classical Vedic-style planetary positions table. Rows: Lagna first, then the
  * nine grahas. Columns: Body | Longitude | Nakshatra | Pada | Rasi |
  * Navamsa — longitudes in deg/sign/min/sec form, signs/nakshatras as
  * short abbreviations. Uses the app-wide formatters from
