@@ -34,7 +34,14 @@ apps/api/services/event_category_service.py), rather than guessing a
 wrong event<->category pairing. No data is discarded.
 
 Usage:
-    python scripts/convert_astroos_csv.py <input.csv> <output_prefix> [--limit N] [--batch-size 1000]
+    python scripts/convert_astroos_csv.py <input.csv> <output_prefix> [--limit N] [--batch-size 1000] [--only-relationship]
+
+--only-relationship keeps ONLY marriage/relationship data per person —
+event_name entries under the source's own "Relationship / ..." prefix and
+category_name entries under "Family & Relations / Relationship / ..." —
+dropping every other event/category, and dropping entirely any person who
+has no relationship/marriage data at all (rather than fabricating a
+placeholder event for them).
 
 Writes <output_prefix>_batch_001.json, _batch_002.json, ... (one file per
 <=1000-case batch) plus a summary printed to stdout.
@@ -105,7 +112,20 @@ def _is_bad_coordinate(row: dict[str, str]) -> bool:
         return True
 
 
-def convert_row(row: dict[str, str]) -> dict:
+def _is_relationship_event(event_name: str) -> bool:
+    """Matches the source's own "Relationship / ..." event_name prefix
+    (Marriage, Divorce dates, Begin/End significant relationship, etc.)."""
+    return event_name.strip().startswith("Relationship / ")
+
+
+def _is_relationship_category(category_name: str) -> bool:
+    """Matches the source's own "Family & Relations / Relationship / ..."
+    category_name prefix (Marriage - Very happy, Number of Divorces,
+    Mate - Noted, etc.)."""
+    return category_name.strip().startswith("Family & Relations / Relationship / ")
+
+
+def convert_row(row: dict[str, str], *, only_relationship: bool = False) -> dict:
     fname = row["fname"].strip()
     lname = row["lname"].strip()
     name = f"{fname} {lname}".strip()
@@ -128,6 +148,9 @@ def convert_row(row: dict[str, str]) -> dict:
 
     event_names = _split_multi(row.get("event_name", ""))
     category_names = _split_multi(row.get("category_name", ""))
+    if only_relationship:
+        event_names = [e for e in event_names if _is_relationship_event(e)]
+        category_names = [c for c in category_names if _is_relationship_category(c)]
     verified = row.get("rr", "").strip().upper() in ("AA", "A")
 
     life_events = []
@@ -162,6 +185,12 @@ def convert_row(row: dict[str, str]) -> dict:
             "description": cat,
         })
 
+    if not life_events and only_relationship:
+        # No marriage/relationship data for this person at all — drop them
+        # rather than fabricating a placeholder event, since the whole
+        # point of --only-relationship is a person actually has that data.
+        return None
+
     if not life_events:
         life_events = [{
             "type": "Other",
@@ -188,7 +217,7 @@ def convert_row(row: dict[str, str]) -> dict:
         "ayanamsa": "lahiri",
         "house_system": "P",
         "life_events": life_events,
-        "source_batch": "astroos-public-dataset-import",
+        "source_batch": "astroos-public-dataset-import-relationship-only" if only_relationship else "astroos-public-dataset-import",
     }
 
 
@@ -205,6 +234,7 @@ def main() -> None:
     batch_size = _DEFAULT_BATCH_SIZE
     if "--batch-size" in sys.argv:
         batch_size = int(sys.argv[sys.argv.index("--batch-size") + 1])
+    only_relationship = "--only-relationship" in sys.argv
 
     with open(input_path, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
@@ -231,7 +261,11 @@ def main() -> None:
         rows = rows[:limit]
         print(f"--limit applied: converting only {len(rows)} row(s)")
 
-    cases = [convert_row(r) for r in rows]
+    converted = [convert_row(r, only_relationship=only_relationship) for r in rows]
+    cases = [c for c in converted if c is not None]
+    if only_relationship:
+        no_relationship_data = len(converted) - len(cases)
+        print(f"--only-relationship applied: dropped {no_relationship_data} person(s) with no relationship/marriage data")
 
     num_batches = (len(cases) + batch_size - 1) // batch_size if cases else 0
     for i in range(num_batches):

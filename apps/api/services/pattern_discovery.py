@@ -8,40 +8,40 @@ Output: DiscoveredPattern objects grouping one or more dimension/value
         observations (e.g. mahadasha=Jupiter, transit=Sa_7th_house) that
         co-occur across research cases of a given KP Master event type.
 
+Statistical Methodology & Architecture Framework:
+------------------------------------------------
+Classical Jyotish provides the hypotheses; AstroOS statistically evaluates
+their observed associations in the available dataset across 5 distinct pillars:
+
+1. Support / Occurrence Rate (k / n):
+   Raw point-estimate frequency of cases exhibiting the feature.
+
+2. Uncertainty / Wilson Confidence Interval (CI_lower):
+   Quantifies proportion point-estimate uncertainty under small sample sizes (Wilson 1927).
+   Note: Wilson lower bound quantifies estimation uncertainty; it is NOT a hypothesis significance test.
+
+3. Effect Size / Base Rate Lift Ratio (p / p0):
+   Effect size metric comparing observed event-type frequency (p) to global population baseline (p0).
+   Note: Base Rate Lift (p / p0) is mathematically distinct from Odds Ratio ((a/b)/(c/d)).
+
+4. Hypothesis Testing & Significance Complement (1 - p):
+   One-tailed Z-test evaluating whether observed frequency exceeds global baseline chance
+   expectation under null hypothesis assumptions.
+   Screening threshold: p <= 0.10 (represented internally as Significance Complement 1 - p >= 0.90).
+   Note: Configured threshold p <= 0.10 specifies screening alpha for a one-tailed test against global baseline,
+   NOT a universal claim of empirical astrological validity.
+
+5. Evidence Ranking / Composite Research Score:
+   Weighted rank combining confidence lower bounds and effect size lift.
+
 Approach (documented so results are reproducible):
   * Base rate (expected_by_chance) — for each (dimension, value), the
-    share of ALL research cases in the dataset that exhibit it. This is
-    the "how common is this feature in general" baseline.
-  * Event-type rate                 — the share of cases of the target event
-    type that exhibit the feature.
-  * Significance                    — the event-type rate is first shrunk to
-    its Wilson score interval LOWER BOUND (see _wilson_lower_bound) before
-    being compared to the base rate via a one-tailed normal-approximation
-    test. A raw point-estimate rate built on very few matching cases (e.g.
-    2 out of 12) carries wide real uncertainty even when it looks large;
-    the Wilson correction reflects that uncertainty by pulling the rate
-    toward a conservative lower estimate before testing it, so significance
-    is driven by how many cases actually support a rate, not just its
-    point estimate. A large, well-supported effect in a small event-type
-    (e.g. 8 of 13 cases) still clears easily; a 2-of-500 coincidence does
-    not. The displayed frequency/description always use the raw rate —
-    only the significance gate uses the shrunk one.
-  * Combinations                    — among the significant dimension-values,
-    enumerate co-occurring pairs/triples. The intersection of cases matching
-    ALL dimensions (the "joint" group) is Wilson-shrunk exactly like a
-    single dimension's rate, then tested against the product-of-base-rates
-    (independence) expectation via the same significance test — not a bare
-    "joint rate beats expectation" comparison. Two dimensions can each be
-    individually well-supported (e.g. 50 cases each) yet intersect down to
-    just 2-3 cases; without this, that thin intersection would be reported
-    as if it were as solid as either dimension alone.
-  * Confidence                      — per-dimension significance; a pattern's
-    confidence is the joint (product) of its component significance scores,
-    capped at the combo's own joint significance so a combination can never
-    read as more confident than its actual joint sample supports.
-
-Pure computation over the passed-in feature list — no DB access here, so
-the engine is trivially testable. The router owns DB reads.
+    share of ALL research cases in the dataset that exhibit it.
+  * Event-type rate                 — the share of cases of the target event type.
+  * Significance                    — the event-type rate is Wilson-shrunk (CI_lower)
+    before testing via a one-tailed normal-approximation test (p-value computation).
+  * Combinations                    — enumerate co-occurring pairs/triples.
+  * Significance Complement         — per-dimension 1 - p_value complement score.
 """
 
 from __future__ import annotations
@@ -62,22 +62,15 @@ from apps.api.domain.research_case import (
 # Bumped by hand whenever the significance/combination logic below changes
 # materially. Stamped onto every persisted DiscoveredPattern row so a pattern
 # can be traced back to the exact algorithm that produced it.
-ALGORITHM_VERSION = "1.5.0"
+ALGORITHM_VERSION = "1.5.2"
 
 # Only dimension-values whose rate clears this share of cases are
 # considered candidates for combination discovery.
 MIN_FREQUENCY = 0.10
-# Significance floor for a dimension-value to be reported at all.
+# Internal Significance Complement threshold (1 - p >= 0.90, corresponding to screening p <= 0.10 for one-tailed test)
 MIN_SIGNIFICANCE = 0.90
 # z used for the Wilson score lower bound that shrinks small-count rates
-# before testing significance. This is a SECOND, compounding correction
-# on top of the existing significance test below, not a standalone
-# confidence level — calibrated empirically (not to a textbook 90/95%)
-# against known cases: 1.645/1.28 over-corrected and also failed solid
-# large-sample findings (e.g. 87-of-582 at a real 3.3pt lift); 0.84 was
-# too weak and still passed a 2-of-12 coincidence. 1.0 is the smallest
-# value that filters the small-count case while leaving large-sample
-# and strong-small-event findings intact. Higher = more conservative.
+# before testing significance.
 WILSON_Z = 1.0
 # Cap on candidate pool before combinatorial enumeration.
 MAX_CANDIDATES_PER_DIMENSION = 12
@@ -177,15 +170,12 @@ def _join_phrases(phrases: list[str]) -> str:
 
 
 def _wilson_lower_bound(successes: int, n: int, z: float = WILSON_Z) -> float:
-    """Lower bound of the Wilson score confidence interval for a binomial
-    proportion successes/n.
+    """Lower bound of the Wilson score confidence interval (CI_lower) for binomial proportion (Wilson 1927).
 
-    Unlike the raw point estimate, this naturally accounts for how few
-    cases actually support a rate: successes=2, n=12 (16.7%) shrinks to a
-    lower bound far below 16.7%, while successes=87, n=582 (14.9%) barely
-    moves, since a large sample already pins the true rate down tightly.
-    Standard formula (Wilson 1927) — well-behaved for small n and rates
-    near 0 or 1, unlike the plain normal approximation.
+    Distinction Note:
+    - Wilson lower bound quantifies estimation uncertainty under small sample sizes.
+    - It is NOT a hypothesis significance test (p-value).
+    - It shrinks small-sample point estimates (e.g. 2/12) to a conservative lower bound.
     """
     if n <= 0:
         return 0.0
@@ -198,12 +188,11 @@ def _wilson_lower_bound(successes: int, n: int, z: float = WILSON_Z) -> float:
 
 
 def _significance(observed: float, expected: float, n: int) -> float:
-    """One-tailed normal-approximation binomial significance in 0..1.
+    """Significance Complement (1 - p_value) via one-tailed Z-test against global baseline.
 
-    ``observed`` should already be the Wilson-shrunk rate (see
-    _wilson_lower_bound), not the raw point-estimate frequency — this
-    function itself is unchanged, but feeding it a small-sample-aware
-    rate is what makes the overall significance score small-sample-aware.
+    Calculates the Significance Complement (1 - p_value) under the null hypothesis
+    that observed event rate does not exceed expected global baseline chance.
+    Returns value in [0..1]. Configured threshold 0.90 corresponds to one-tailed p <= 0.10.
     """
     if n <= 1 or expected <= 0.0 or expected >= 1.0:
         return 0.0

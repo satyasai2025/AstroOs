@@ -10,6 +10,34 @@ import { useEventTypeTree, useUpdateEventType, type EventTypeNode } from "@/lib/
 import type { LifeEventDetail, ResearchCaseDetail, ResearchCaseSummary, ResearchCaseBatchImport, ResearchCaseBatchValidation, ResearchCaseImportResponse, ResearchCasePayload } from "@/lib/types";
 import { EventDetailBody, EventTimelineChart } from "@/components/research/EventTimelineChart";
 import { LifeEventCard } from "@/components/research/LifeEventCard";
+import { GuidedHelpTour, type TourStep } from "@/components/ui/GuidedHelpTour";
+
+const CASE_DATABANK_TOUR_STEPS: TourStep[] = [
+  {
+    targetSelector: '[data-tour="case-import"]',
+    title: "Step 1 of 4: Import Case Dataset",
+    description: "Use the Bulk Import wizard to upload CSV case datasets (Rodden Rating AA verified charts with natal coordinates and life events).",
+    actionText: "Click '📤 Bulk Import' to open the import wizard.",
+  },
+  {
+    targetSelector: '[data-tour="case-blocks"]',
+    title: "Step 2 of 4: Chart & Case Block Workspace",
+    description: "Dock and view interactive life event timelines, planetary positions (D1, D9, D10), and KP horary snapshots inline in the VS Code-style studio.",
+    actionText: "Select any case from the navigator to view details.",
+  },
+  {
+    targetSelector: '[data-tour="case-filters"]',
+    title: "Step 3 of 4: Master Dataset Filters",
+    description: "Search across 8,000+ verified research cases, filter by verification status, and organize dataset collections.",
+    actionText: "Use search and filters to query the databank.",
+  },
+  {
+    targetSelector: '[data-tour="case-finish"]',
+    title: "Step 4 of 4 (Submit): Finish & Export Findings",
+    description: "Export research datasets, tag event categories, or jump directly into the Pattern Discovery Studio to mine empirical rules.",
+    actionText: "Click '✨ Pattern Discovery' to analyze mined patterns.",
+  },
+];
 
 // ── Inline Sub-Tool Panel 1: Bulk Import ──
 function InlineBulkImportPanel({ onClose }: { onClose: () => void }) {
@@ -263,6 +291,7 @@ function InlineEventsPanel({ onClose }: { onClose: () => void }) {
 
 export default function ResearchCasesListPage() {
   const [cases, setCases] = useState<ResearchCaseSummary[]>([]);
+  const [totalCases, setTotalCases] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -276,19 +305,32 @@ export default function ResearchCasesListPage() {
 
   // Studio Dockable Active Tool State
   const [activeTool, setActiveTool] = useState<"bulk-import" | "event-types" | "datasets" | "events" | null>(null);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
+  // Debounced server-side search — with 8,000+ cases now imported, the
+  // backend only ever returns one page (default 200) so client-side
+  // filtering over that page alone would silently miss almost everything
+  // outside it. This mirrors what the backend's `total` count fix is
+  // for: the case list badge previously showed len(page) (always <=200)
+  // instead of the real total, which is what looked "fake" once the
+  // count stopped matching the actual imported number.
   useEffect(() => {
-    researchCasesApi
-      .list()
-      .then((data) => {
-        setCases(data.cases);
-        if (data.cases.length > 0 && !selectedCaseId) {
-          setSelectedCaseId(data.cases[0].research_case_id);
-        }
-      })
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load research cases."))
-      .finally(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    const handle = setTimeout(() => {
+      researchCasesApi
+        .list({ search: searchTerm.trim() || undefined, limit: 200 })
+        .then((data) => {
+          setCases(data.cases);
+          setTotalCases(data.total);
+          if (data.cases.length > 0 && !selectedCaseId) {
+            setSelectedCaseId(data.cases[0].research_case_id);
+          }
+        })
+        .catch((err) => setError(err instanceof Error ? err.message : "Failed to load research cases."))
+        .finally(() => setLoading(false));
+    }, 300);
+    return () => clearTimeout(handle);
+  }, [searchTerm]);
 
   useEffect(() => {
     if (!selectedCaseId) return;
@@ -319,19 +361,16 @@ export default function ResearchCasesListPage() {
     };
   }, [selectedCaseId]);
 
+  // Search now happens server-side (see the debounced effect above, which
+  // re-fetches on searchTerm change) — only status stays a client-side
+  // filter over the current page, since it's a cheap enum check.
   const filteredCases = cases.filter((c) => {
-    const matchesSearch =
-      !searchTerm.trim() ||
-      (c.person_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.research_case_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (c.dob || "").includes(searchTerm);
-
     const matchesStatus =
       statusFilter === "all" ||
       (statusFilter === "passed" && c.validation_status === "passed") ||
       (statusFilter === "pending" && c.validation_status !== "passed");
 
-    return matchesSearch && matchesStatus;
+    return matchesStatus;
   });
 
   return (
@@ -355,6 +394,15 @@ export default function ResearchCasesListPage() {
           <div className="flex items-center gap-2 flex-wrap">
             <button
               type="button"
+              onClick={() => setIsTourOpen(true)}
+              className="px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition cursor-pointer flex items-center gap-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30"
+            >
+              <span>❓ Guided Tour</span>
+            </button>
+
+            <button
+              type="button"
+              data-tour="case-import"
               onClick={() => setActiveTool((prev) => (prev === "bulk-import" ? null : "bulk-import"))}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition cursor-pointer flex items-center gap-1.5 ${
                 activeTool === "bulk-import"
@@ -401,9 +449,11 @@ export default function ResearchCasesListPage() {
               <span>📅 Life Events</span>
             </button>
 
-            <Button href="/research/patterns" variant="primary" size="sm">
-              ✨ Pattern Discovery
-            </Button>
+            <span data-tour="case-finish">
+              <Button href="/research/patterns" variant="primary" size="sm">
+                ✨ Pattern Discovery
+              </Button>
+            </span>
           </div>
         </div>
 
@@ -420,9 +470,9 @@ export default function ResearchCasesListPage() {
         )}
 
         {/* ── IDE 3-Pane Resizable Workspace (NO POPUPS) ── */}
-        <ResizablePanels defaultSizes={[0.26, 0.44, 0.30]} className="min-h-[640px]">
+        <ResizablePanels data-tour="case-blocks" defaultSizes={[0.26, 0.44, 0.30]} className="min-h-[640px]">
           {/* PANE 1: Case Navigator (Left) */}
-          <div className="flex flex-col gap-3 pr-2 h-full">
+          <div data-tour="case-filters" className="flex flex-col gap-3 pr-2 h-full">
             <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2.5">
               {/* Search */}
               <input
@@ -452,9 +502,14 @@ export default function ResearchCasesListPage() {
                   ))}
                 </div>
                 <span className="text-slate-500 dark:text-slate-400 font-bold">
-                  {filteredCases.length}
+                  {totalCases.toLocaleString()}
                 </span>
               </div>
+              {totalCases > cases.length && (
+                <p className="text-[10px] text-slate-400">
+                  Showing {cases.length.toLocaleString()} of {totalCases.toLocaleString()} — search to narrow.
+                </p>
+              )}
             </div>
 
             {/* Cases List */}
@@ -630,6 +685,13 @@ export default function ResearchCasesListPage() {
           </div>
         </ResizablePanels>
       </div>
+
+      <GuidedHelpTour
+        steps={CASE_DATABANK_TOUR_STEPS}
+        isOpen={isTourOpen}
+        onClose={() => setIsTourOpen(false)}
+        tourId="cases"
+      />
     </AppShell>
   );
 }

@@ -63,7 +63,14 @@ export const researchCasesApi = {
     api.post<ResearchCaseImportResponse>("/api/v1/research/cases/import", payload),
 
   /** List imported research cases. */
-  list: () => api.get<ResearchCaseListResponse>("/api/v1/research/cases"),
+  list: (params: { search?: string; limit?: number; offset?: number } = {}) => {
+    const qs = new URLSearchParams();
+    if (params.search) qs.set("search", params.search);
+    if (params.limit) qs.set("limit", String(params.limit));
+    if (params.offset) qs.set("offset", String(params.offset));
+    const query = qs.toString();
+    return api.get<ResearchCaseListResponse>(`/api/v1/research/cases${query ? `?${query}` : ""}`);
+  },
 
   /** One case's full life-event timeline, each with its astrological
    * snapshot (dasha/yogas/transits/house-lord dignity/nakshatras) — powers

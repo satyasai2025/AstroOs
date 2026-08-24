@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.config import get_settings
@@ -1083,20 +1083,43 @@ async def update_event_type(
     tags=["Research Cases"],
 )
 async def list_research_cases(
+    search: str | None = None,
+    limit: int = 200,
+    offset: int = 0,
     session: AsyncSession = Depends(get_db_session),
 ) -> ResearchCaseListResponseSchema:
-    """List research cases (summary: id, person, dob, event count)."""
+    """List research cases (summary: id, person, dob, event count).
+
+    ``total`` is the TRUE count of matching (non-deleted) cases, not just
+    the number of rows in this page — with 8,000+ cases now in the DB
+    (post bulk-import), returning ``len(cases)`` here made the UI's case
+    count badge always show the page-size cap (200) instead of the real
+    total, which is exactly the kind of "looks fake" number this was
+    reported for. ``limit``/``offset`` support real pagination instead of
+    silently truncating at 200 with no way to see the rest.
+    """
+    base_query = select(ResearchCaseModel).where(ResearchCaseModel.deleted_at.is_(None))
+    count_query = select(func.count()).select_from(ResearchCaseModel).where(
+        ResearchCaseModel.deleted_at.is_(None)
+    )
+    if search:
+        pattern = f"%{search}%"
+        search_filter = (
+            ResearchCaseModel.person_name.ilike(pattern)
+            | ResearchCaseModel.research_case_id.ilike(pattern)
+        )
+        base_query = base_query.where(search_filter)
+        count_query = count_query.where(search_filter)
+
+    total = (await session.execute(count_query)).scalar_one()
     cases = (
         await session.execute(
-            select(ResearchCaseModel)
-            .where(ResearchCaseModel.deleted_at.is_(None))
-            .order_by(ResearchCaseModel.created_at.desc())
-            .limit(200)
+            base_query.order_by(ResearchCaseModel.created_at.desc()).limit(limit).offset(offset)
         )
     ).scalars().all()
 
     return ResearchCaseListResponseSchema(
-        total=len(cases),
+        total=total,
         cases=[
             ResearchCaseSummarySchema(
                 research_case_id=c.research_case_id,
