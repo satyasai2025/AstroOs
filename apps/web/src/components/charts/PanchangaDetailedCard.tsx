@@ -165,14 +165,14 @@ export function PanchangaDetailedCard({ result, request }: Props) {
             </div>
 
             {/* 5 Panchanga Limbs Breakdown */}
-            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 space-y-1.5">
+            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Lunar Yr-Mo:</span>
-                <span className="font-bold text-amber-400">Parabhava - Sravana</span>
+                <span className="font-bold text-amber-700 dark:text-amber-400">Parabhava - Sravana</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Tithi:</span>
-                <span className="font-bold text-slate-900 dark:text-slate-100">{tithiName} <span className="text-[10px] text-slate-400">({tithiLeft})</span></span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{tithiName} <span className="text-[10px] text-slate-500 dark:text-slate-400">({tithiLeft})</span></span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Weekday:</span>
@@ -180,35 +180,35 @@ export function PanchangaDetailedCard({ result, request }: Props) {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Nakshatra:</span>
-                <span className="font-bold text-slate-900 dark:text-slate-100">{nakName} <span className="text-[10px] text-slate-400">({nakLeft})</span></span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{nakName} <span className="text-[10px] text-slate-500 dark:text-slate-400">({nakLeft})</span></span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Yoga:</span>
-                <span className="font-bold text-slate-900 dark:text-slate-100">{yogaName} <span className="text-[10px] text-slate-400">({yogaLeft})</span></span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{yogaName} <span className="text-[10px] text-slate-500 dark:text-slate-400">({yogaLeft})</span></span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Karana:</span>
-                <span className="font-bold text-slate-900 dark:text-slate-100">{karanaName} <span className="text-[10px] text-slate-400">({karanaLeft})</span></span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{karanaName} <span className="text-[10px] text-slate-500 dark:text-slate-400">({karanaLeft})</span></span>
               </div>
             </div>
 
             {/* Hora & Astronomical Timings */}
-            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 space-y-1 text-[10px]">
+            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 space-y-1 text-[10px]">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Hora Lord:</span>
-                <span className="font-bold text-cyan-400">{horaLord}</span>
+                <span className="font-bold text-cyan-700 dark:text-cyan-400">{horaLord}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Sunrise / Sunset:</span>
-                <span className="text-slate-300">{sunrise} / {sunset}</span>
+                <span className="text-slate-700 dark:text-slate-300 font-semibold">{sunrise} / {sunset}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Janma Ghatis:</span>
-                <span className="text-slate-300">{janmaGhatis}</span>
+                <span className="text-slate-700 dark:text-slate-300 font-semibold">{janmaGhatis}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Ayanamsa:</span>
-                <span className="font-bold text-amber-400">{ayanamsaStr}</span>
+                <span className="font-bold text-amber-700 dark:text-amber-400">{ayanamsaStr}</span>
               </div>
             </div>
           </div>
@@ -217,10 +217,10 @@ export function PanchangaDetailedCard({ result, request }: Props) {
         {/* ── Tab 2: Vimshottari Dasha ── */}
         {activeTab === "dasha" && (
           <div className="mt-3 space-y-3">
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80">
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80">
               <div className="flex items-center justify-between text-xs font-bold text-slate-900 dark:text-slate-100">
                 <span>{currentMD} Mahadasha</span>
-                <span className="text-cyan-600 dark:text-cyan-400 font-mono">{percentElapsed}% Completed</span>
+                <span className="text-cyan-700 dark:text-cyan-400 font-mono">{percentElapsed}% Completed</span>
               </div>
               <div className="mt-2 w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
                 <div
@@ -228,8 +228,8 @@ export function PanchangaDetailedCard({ result, request }: Props) {
                   style={{ width: `${percentElapsed}%` }}
                 />
               </div>
-              <p className="mt-2 text-[10px] text-slate-400 font-mono">
-                Current Active Sub-Period: <span className="text-cyan-300 font-bold">{currentMD} / {currentAD}</span>
+              <p className="mt-2 text-[10px] text-slate-600 dark:text-slate-400 font-mono">
+                Current Active Sub-Period: <span className="text-cyan-700 dark:text-cyan-300 font-bold">{currentMD} / {currentAD}</span>
               </p>
             </div>
 

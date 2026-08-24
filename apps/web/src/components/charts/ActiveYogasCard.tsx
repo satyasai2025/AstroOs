@@ -37,7 +37,7 @@ export function ActiveYogasCard({ result }: Props) {
             <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
               Active Yogas
             </span>
-            <span className="px-1.5 py-0.2 rounded-full bg-cyan-500/20 text-cyan-400 font-mono text-[10px] font-bold">
+            <span className="px-1.5 py-0.2 rounded-full bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 font-mono text-[10px] font-bold">
               ({yogasToDisplay.length})
             </span>
           </div>
@@ -54,17 +54,17 @@ export function ActiveYogasCard({ result }: Props) {
           {yogasToDisplay.map((y, idx) => (
             <div
               key={y.name + idx}
-              className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-100 dark:border-slate-800/80 hover:border-cyan-500/40 transition"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800/80 hover:border-cyan-500/40 transition"
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold text-xs flex-shrink-0">
+                <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold text-xs flex-shrink-0">
                   ☸
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                     {y.name}
                   </h4>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate">
                     {y.description}
                   </p>
                 </div>
@@ -73,8 +73,8 @@ export function ActiveYogasCard({ result }: Props) {
               <span
                 className={`px-2 py-0.5 rounded text-[10px] font-extrabold border flex-shrink-0 ml-2 ${
                   y.tone === "emerald"
-                    ? "text-emerald-400 border-emerald-500/40 bg-emerald-950/30"
-                    : "text-amber-400 border-amber-500/40 bg-amber-950/30"
+                    ? "text-emerald-700 dark:text-emerald-400 border-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/30"
+                    : "text-amber-700 dark:text-amber-400 border-amber-500/40 bg-amber-50 dark:bg-amber-950/30"
                 }`}
               >
                 {y.strength}

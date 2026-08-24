@@ -104,11 +104,24 @@ class ResearchDecisionActionEngine:
         discovered_hypos = self._mining_engine.list_hypotheses(objective=target_objective)
         top_hypo = discovered_hypos[0] if discovered_hypos else None
         # P20 Prospective Validation
+        # Match the registration relevant to THIS decision's top mined
+        # hypothesis (falling back to the most recent matching
+        # registration only if no mined hypothesis is available) — not
+        # blindly the first "target_objective"-matching registration
+        # found anywhere, which would silently pick up an unrelated
+        # rule's prospective report whenever multiple rules for the same
+        # objective have been registered (e.g. by a different test/run).
         prospective_regs = [r for r in self._prospective_engine.list_registrations() if r.target_objective.lower() == target_objective.lower()]
         prospective_supported = False
+        relevant_reg = None
         if prospective_regs:
+            if top_hypo is not None:
+                relevant_reg = next((r for r in prospective_regs if r.hypothesis_id == top_hypo.hypothesis_id), None)
+            if relevant_reg is None:
+                relevant_reg = prospective_regs[-1]
+        if relevant_reg is not None:
             for rep in self._prospective_engine._reports.values():
-                if rep.registration_id == prospective_regs[0].registration_id and rep.final_lifecycle_status == ProspectiveRuleLifecycleStatus.PROSPECTIVELY_SUPPORTED:
+                if rep.registration_id == relevant_reg.registration_id and rep.final_lifecycle_status == ProspectiveRuleLifecycleStatus.PROSPECTIVELY_SUPPORTED:
                     prospective_supported = True
                     break
 

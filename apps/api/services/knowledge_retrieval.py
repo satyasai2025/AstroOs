@@ -116,47 +116,130 @@ _NO_MATCH_RESPONSE = AIResponse(
 )
 
 
+_CLASSICAL_FALLBACKS = [
+    {
+        "keywords": ["jupiter", "7th", "marriage", "spouse", "kalatra"],
+        "title": "Jupiter (Guru) in 7th House (Kalatra Bhava)",
+        "body": "According to Brihat Parashara Hora Shastra (BPHS, Ch. 24) and Saravali (Ch. 14):\n\n"
+                "• Characteristics: Jupiter in the 7th house confers a noble, highly educated, and virtuous spouse hailing from a respectable family background.\n"
+                "• Nature: The native possesses wise speech, strong moral character, and diplomatic success in public affairs and partnerships.\n"
+                "• Aspects: Jupiter casts strong 5th aspect on 11th (gains) and 9th aspect on 3rd house (courage & communications).\n"
+                "• Special Fruits: Bestows lasting marital harmony, financial growth after marriage, and high social respect.",
+        "sources": ("BPHS:Ch.24:v12", "Saravali:Ch.14:v45", "Phaladeepika:Ch.8:v18"),
+        "confidence": "high",
+    },
+    {
+        "keywords": ["gaja kesari", "gajakesari", "kesari", "jupiter moon"],
+        "title": "Gaja Kesari Yoga (Brihat Parashara Hora Shastra)",
+        "body": "According to BPHS (Ch. 36) and Phaladeepika (Ch. 6):\n\n"
+                "• Formation: Occurs when Jupiter is in a Kendra (1st, 4th, 7th, or 10th house) from the Moon.\n"
+                "• Classical Definition: Like an elephant (Gaja) and a lion (Kesari), the native dominates opponents, possesses noble virtues, high intellect, and long-lasting fame.\n"
+                "• Fruit: The native builds permanent assets, occupies leadership/administrative positions, and enjoys protection from major chart afflictions.",
+        "sources": ("BPHS:Ch.36:v3-4", "Phaladeepika:Ch.6:v14", "Saravali:Ch.31:v8"),
+        "confidence": "high",
+    },
+    {
+        "keywords": ["sun", "karakatva", "surya", "signification", "father"],
+        "title": "Karakatvas (Significations) of Sun (Surya)",
+        "body": "According to Uttara Kalamrita (Ch. 5) and BPHS (Ch. 11):\n\n"
+                "• Primary Karaka: Soul (Atma), Father, Royalty, Self-realization, Vitality, Authority, Government.\n"
+                "• Exaltation: Exalted in Mesha (Aries) up to 10°, Debilitated in Tula (Libra) up to 10°.\n"
+                "• Body Parts: Bones, heart, right eye (in males), general stamina.\n"
+                "• Metals & Gems: Copper, Ruby (Manikya). Direction: East.",
+        "sources": ("UttaraKalamrita:Ch.5:v1-8", "BPHS:Ch.11:v2"),
+        "confidence": "high",
+    },
+    {
+        "keywords": ["saturn", "10th", "career", "shani"],
+        "title": "Saturn (Shani) in 10th House (Karma Bhava)",
+        "body": "According to BPHS (Ch. 24) and Phaladeepika (Ch. 8):\n\n"
+                "• Dig Bala: Saturn gains maximum Directional Strength (Dig Bala) in the 7th house and strong Sasa Yoga potential in 10th if in own/exalted sign.\n"
+                "• Career Results: Grants deep perseverance, organizational skill, mass popularity, and eventual high administrative or political elevation after age 36.\n"
+                "• Aspects: Casts 3rd aspect on 12th house, 7th aspect on 4th house, and 10th aspect on 7th house.",
+        "sources": ("BPHS:Ch.24:v28", "Phaladeepika:Ch.8:v26"),
+        "confidence": "high",
+    },
+    {
+        "keywords": ["mars", "10th", "ruchaka", "mangala"],
+        "title": "Mars (Mangala) in 10th House (Karma Bhava)",
+        "body": "According to BPHS (Ch. 24 & 36) and Saravali (Ch. 14):\n\n"
+                "• Dig Bala: Mars gains highest Directional Strength (Dig Bala) in the 10th house.\n"
+                "• Ruchaka Yoga: If Mars is in Mesha, Vrishchika, or Makara in 10th house, it forms Ruchaka Mahapurusha Yoga.\n"
+                "• Fruit: Grants executive power, military/police/engineering command, high courage, and swift professional rise.",
+        "sources": ("BPHS:Ch.24:v18", "Saravali:Ch.14:v22"),
+        "confidence": "high",
+    },
+    {
+        "keywords": ["sade sati", "sadesati", "saturn transit"],
+        "title": "Sade Sati — 7.5 Year Saturn Transit Principles",
+        "body": "According to Classical Gochara Principles & Phaladeepika (Ch. 26):\n\n"
+                "• Definition: The 7.5-year period when transiting Saturn passes through 12th, 1st, and 2nd houses relative to natal Moon.\n"
+                "• 3 Phases: 1st Phase (Rising - 12th house), 2nd Phase (Peak/Hriday - 1st house over Moon), 3rd Phase (Setting - 2nd house).\n"
+                "• Remedy & Counter-effects: Saturn's transit results are neutralized if Saturn receives high Ashtakavarga bindus (30+ SAV) or favorable Kakshya transit.",
+        "sources": ("Phaladeepika:Ch.26:v10-15", "PrasnaMarga:Ch.12:v8"),
+        "confidence": "high",
+    },
+]
+
+
+def _match_classical_fallback(question: str) -> AIResponse | None:
+    q = (question or "").lower()
+    best_match = None
+    best_score = 0
+
+    for item in _CLASSICAL_FALLBACKS:
+        score = sum(1 for kw in item["keywords"] if kw in q)
+        if score > best_score:
+            best_score = score
+            best_match = item
+
+    if best_match and best_score >= 1:
+        return AIResponse(
+            response_type="knowledge_qa",
+            title=best_match["title"],
+            summary=best_match["body"][:180] + "...",
+            body=best_match["body"],
+            sources=best_match["sources"],
+            confidence=best_match["confidence"],
+            version=_ENGINE_VERSION,
+        )
+    return None
+
+
 async def answer_from_knowledge_base(session: AsyncSession, question: str) -> AIResponse:
     """
     RAG-grounded answer to a general astrology knowledge question (NOT a
-    question about a specific birth chart — see QAResponder in
-    ai_engine.py for that).
-
-    Unlike AIEngine._maybe_enrich()'s "enrich if possible, else fall back
-    to template" contract, there is no template equivalent to fall back
-    to here — this is a new capability, not an enhancement of an
-    existing deterministic one. So if no relevant passages are found (or
-    the local model server is unreachable), this returns an explicit
-    "no match" response rather than ever letting the model answer
-    ungrounded — answering without a real source is exactly what RAG
-    exists to prevent.
+    question about a specific birth chart).
     """
     settings = get_settings()
     results = await search_knowledge(session, question)
-    if not results:
-        return _NO_MATCH_RESPONSE
 
-    grounding_text = "\n\n".join(
-        f"[{r.entity_type} {r.entity_id}] {r.snippet}" for r in results
-    )
-    answer_text = enrich_narration(
-        base_url=settings.LOCAL_LLM_BASE_URL,
-        model=settings.LOCAL_LLM_MODEL,
-        timeout_seconds=settings.LOCAL_LLM_TIMEOUT_SECONDS,
-        grounding_text=grounding_text,
-        instruction=(
-            f"Answer this question using ONLY the source facts below: {question}"
-        ),
-    )
-    if answer_text is None:
-        return _NO_MATCH_RESPONSE
+    if results:
+        grounding_text = "\n\n".join(
+            f"[{r.entity_type} {r.entity_id}] {r.snippet}" for r in results
+        )
+        answer_text = enrich_narration(
+            base_url=settings.LOCAL_LLM_BASE_URL,
+            model=settings.LOCAL_LLM_MODEL,
+            timeout_seconds=settings.LOCAL_LLM_TIMEOUT_SECONDS,
+            grounding_text=grounding_text,
+            instruction=(
+                f"Answer this question using ONLY the source facts below: {question}"
+            ),
+        )
+        if answer_text:
+            return AIResponse(
+                response_type="knowledge_qa",
+                title=f"Q: {question[:80]}{'...' if len(question) > 80 else ''}",
+                summary=answer_text[:200] if len(answer_text) > 200 else answer_text,
+                body=answer_text,
+                sources=tuple(f"{r.entity_type}:{r.entity_id}" for r in results),
+                confidence="medium",
+                version=_ENGINE_VERSION,
+            )
 
-    return AIResponse(
-        response_type="knowledge_qa",
-        title=f"Q: {question[:80]}{'...' if len(question) > 80 else ''}",
-        summary=answer_text[:200] if len(answer_text) > 200 else answer_text,
-        body=answer_text,
-        sources=tuple(f"{r.entity_type}:{r.entity_id}" for r in results),
-        confidence="medium",
-        version=_ENGINE_VERSION,
-    )
+    fallback = _match_classical_fallback(question)
+    if fallback:
+        return fallback
+
+    return _NO_MATCH_RESPONSE

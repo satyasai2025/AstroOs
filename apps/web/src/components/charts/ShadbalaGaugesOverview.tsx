@@ -89,16 +89,16 @@ export function ShadbalaGaugesOverview({ result }: Props) {
     const virupas = Math.round(rawScore * 60);
 
     let status = "Average";
-    let colorClass = "text-amber-400 border-amber-500/40 bg-amber-950/30";
+    let colorClass = "text-amber-700 dark:text-amber-400 border-amber-500/40 bg-amber-50 dark:bg-amber-950/30";
     let gaugeColor = "#f59e0b"; // amber
 
     if (ratio >= 1.25) {
       status = "Very Strong";
-      colorClass = "text-emerald-400 border-emerald-500/40 bg-emerald-950/30";
+      colorClass = "text-emerald-700 dark:text-emerald-400 border-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/30";
       gaugeColor = "#10b981"; // emerald
     } else if (ratio >= 1.0) {
       status = "Strong";
-      colorClass = "text-emerald-400 border-emerald-500/40 bg-emerald-950/30";
+      colorClass = "text-emerald-700 dark:text-emerald-400 border-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/30";
       gaugeColor = "#10b981";
     }
 
@@ -216,21 +216,21 @@ export function ShadbalaGaugesOverview({ result }: Props) {
 
       {/* ── Interactive Shadbala Details Modal ── */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-          <div className="w-full max-w-2xl rounded-2xl border border-slate-700 bg-slate-900 p-5 text-slate-100 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
+          <div className="w-full max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 text-slate-900 dark:text-slate-100 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
-                <h3 className="text-base font-extrabold text-cyan-400 flex items-center gap-2">
+                <h3 className="text-base font-extrabold text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
                   <span>📊</span> Parashari Shadbala Strength Breakdown
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Six-fold planetary strength calculation (Sthana, Dig, Kala, Chesta, Naisargika &amp; Drik Bala)
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-slate-100 text-base font-bold cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-100 text-base font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -240,7 +240,7 @@ export function ShadbalaGaugesOverview({ result }: Props) {
             <div className="overflow-x-auto max-h-[360px] custom-scrollbar">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-400 uppercase text-[10px]">
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase text-[10px]">
                     <th className="py-2 px-2">Planet</th>
                     <th className="py-2 px-2 text-right">Rupas</th>
                     <th className="py-2 px-2 text-right">Virupas</th>
@@ -249,14 +249,14 @@ export function ShadbalaGaugesOverview({ result }: Props) {
                     <th className="py-2 px-2 text-center">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                   {planetDetailsList.map((p) => (
-                    <tr key={p.name} className="hover:bg-slate-800/40">
-                      <td className="py-2 px-2 font-bold text-slate-200">{p.name}</td>
-                      <td className="py-2 px-2 text-right font-extrabold text-cyan-300">{p.score} R</td>
-                      <td className="py-2 px-2 text-right text-slate-300">{p.virupas} Virupas</td>
-                      <td className="py-2 px-2 text-right text-slate-400">{p.required} R</td>
-                      <td className="py-2 px-2 text-right font-bold text-slate-100">{p.ratio}</td>
+                    <tr key={p.name} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                      <td className="py-2 px-2 font-bold text-slate-900 dark:text-slate-200">{p.name}</td>
+                      <td className="py-2 px-2 text-right font-extrabold text-cyan-700 dark:text-cyan-300">{p.score} R</td>
+                      <td className="py-2 px-2 text-right text-slate-700 dark:text-slate-300">{p.virupas} Virupas</td>
+                      <td className="py-2 px-2 text-right text-slate-500 dark:text-slate-400">{p.required} R</td>
+                      <td className="py-2 px-2 text-right font-bold text-slate-900 dark:text-slate-100">{p.ratio}</td>
                       <td className="py-2 px-2 text-center">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${p.colorClass}`}>
                           {p.status}

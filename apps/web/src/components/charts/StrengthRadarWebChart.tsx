@@ -142,20 +142,22 @@ export function StrengthRadarWebChart({ result }: Props) {
           </span>
         </div>
 
-        {/* Hover Tooltip Overlay */}
-        {hoveredAxis ? (
-          <div className="mt-2 p-2 rounded-lg bg-cyan-950/90 border border-cyan-500/40 text-xs font-mono text-cyan-200 transition-all animate-fade-in">
-            <div className="flex items-center justify-between font-bold text-white">
-              <span>{hoveredAxis.name}</span>
-              <span className="text-cyan-400">{(hoveredAxis.value * 100).toFixed(0)}%</span>
+        {/* Fixed-height Tooltip Container (h-[48px]) to prevent layout shift & SVG shaking */}
+        <div className="h-[48px] my-1 flex items-center">
+          {hoveredAxis ? (
+            <div className="w-full p-2 rounded-lg bg-slate-900 dark:bg-cyan-950/90 border border-cyan-500/40 text-xs font-mono text-cyan-200 shadow-md transition-none">
+              <div className="flex items-center justify-between font-bold text-white text-[11px]">
+                <span>{hoveredAxis.name}</span>
+                <span className="text-cyan-400 font-extrabold">{(hoveredAxis.value * 100).toFixed(0)}%</span>
+              </div>
+              <p className="text-[10px] text-slate-300 truncate mt-0.5">{hoveredAxis.desc}</p>
             </div>
-            <p className="text-[10px] text-slate-300 mt-0.5">{hoveredAxis.desc}</p>
-          </div>
-        ) : (
-          <p className="text-[10px] text-slate-400 text-center mt-1.5 font-mono">
-            Hover over any axis node to view Parashari Bala calculations
-          </p>
-        )}
+          ) : (
+            <div className="w-full text-center text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+              Hover over any axis node to view Parashari Bala calculations
+            </div>
+          )}
+        </div>
 
         {/* SVG Radar Web Canvas */}
         <div className="relative my-1 flex items-center justify-center overflow-visible">
@@ -224,16 +226,17 @@ export function StrengthRadarWebChart({ result }: Props) {
               const isHovered = hoveredAxis?.name === a.name;
               return (
                 <g key={i} className="cursor-pointer" onMouseEnter={() => setHoveredAxis(a)} onMouseLeave={() => setHoveredAxis(null)}>
+                  {/* Invisible enlarged hit target to prevent mouse flicker */}
+                  <circle cx={x} cy={y} r="14" fill="transparent" />
                   <circle
                     cx={x}
                     cy={y}
-                    r={isHovered ? "7" : "4"}
+                    r={isHovered ? "6.5" : "4.5"}
                     fill={isHovered ? "#38bdf8" : "#06b6d4"}
                     stroke="#ffffff"
                     strokeWidth="1.5"
-                    className="transition-all duration-200"
                   />
-                  {isHovered && <circle cx={x} cy={y} r="11" fill="none" stroke="#38bdf8" strokeWidth="1" opacity={0.6} />}
+                  {isHovered && <circle cx={x} cy={y} r="10" fill="none" stroke="#38bdf8" strokeWidth="1" opacity={0.7} />}
                 </g>
               );
             })}
@@ -256,8 +259,8 @@ export function StrengthRadarWebChart({ result }: Props) {
                   dominantBaseline="central"
                   onMouseEnter={() => setHoveredAxis(a)}
                   onMouseLeave={() => setHoveredAxis(null)}
-                  className={`cursor-pointer transition-all ${
-                    isHovered ? "fill-cyan-400 font-extrabold text-[11px]" : "fill-slate-600 dark:fill-slate-300 font-bold text-[9.5px]"
+                  className={`cursor-pointer transition-colors text-[10px] ${
+                    isHovered ? "fill-cyan-600 dark:fill-cyan-400 font-extrabold" : "fill-slate-600 dark:fill-slate-300 font-semibold"
                   }`}
                 >
                   {a.name} ({(a.value * 100).toFixed(0)}%)
