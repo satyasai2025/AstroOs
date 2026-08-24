@@ -224,7 +224,7 @@ export function PredictionConfluenceWorkspace() {
                   {synthesis.synthesized_event_description}
                 </h2>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Subject: <strong className="text-slate-800">{synthesis.subject_name}</strong> • Chart ID: <span className="font-mono text-slate-700">{synthesis.chart_id}</span>
+                  Native: <strong className="text-slate-800">{synthesis.subject_name}</strong> • Chart ID: <span className="font-mono text-slate-700">{synthesis.chart_id}</span>
                 </p>
               </div>
 

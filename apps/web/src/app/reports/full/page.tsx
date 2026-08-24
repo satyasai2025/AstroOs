@@ -197,7 +197,7 @@ export default function ReportsFullPage() {
             }}
           >
             <Input
-              label="Subject Name"
+              label="Native Name"
               placeholder="e.g. Alex"
               value={subjectName}
               onChange={setSubjectName}
@@ -306,7 +306,7 @@ function FullReportBody({ report }: { report: FullReportResponse }) {
           {report.title}
         </h1>
         <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", marginTop: "var(--space-1)" }}>
-          Subject: {report.subject_name} · Generated{" "}
+          Native: {report.subject_name} · Generated{" "}
           {new Date(report.generated_at).toUTCString()}
         </p>
       </div>

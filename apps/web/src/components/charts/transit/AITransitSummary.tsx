@@ -9,7 +9,7 @@ interface Props {
   subjectName?: string;
 }
 
-export function AITransitSummary({ transits, patterns, subjectName = "Subject" }: Props) {
+export function AITransitSummary({ transits, patterns, subjectName = "Native" }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [summary, setSummary] = useState<{

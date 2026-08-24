@@ -443,7 +443,7 @@ export default function ImportChartPage() {
             </p>
             <div className="rounded-lg border p-4 text-sm" style={{ borderColor: "var(--border-primary)" }}>
               <dl className="grid grid-cols-2 gap-x-4 gap-y-2">
-                <dt style={{ color: "var(--text-muted)" }}>Subject</dt>
+                <dt style={{ color: "var(--text-muted)" }}>Native</dt>
                 <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.subject_name}</dd>
                 <dt style={{ color: "var(--text-muted)" }}>Birth (local, as stored in file)</dt>
                 <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.birth_local}</dd>

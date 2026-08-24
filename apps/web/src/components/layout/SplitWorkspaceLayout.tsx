@@ -136,7 +136,7 @@ export function SplitWorkspaceLayout({
               <div className="rounded-xl border border-dashed border-slate-300 dark:border-slate-800 p-4 text-center">
                 <p className="text-xs font-medium text-slate-700 dark:text-slate-300">No active chart loaded.</p>
                 <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                  Select or create a chart to view the subject profile.
+                  Select or create a chart to view the native profile.
                 </p>
               </div>
             )}

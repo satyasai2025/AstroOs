@@ -355,7 +355,7 @@ function ChartsPageContent() {
           <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Chart Visualization</h1>
           <p className="text-xs text-slate-600 dark:text-slate-400">
             D1 Rashi &amp; divisional varga charts.
-            {request && (<><span> Subject: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span> · Ayanamsa: {request.ayanamsa}</span></>)}
+            {request && (<><span> Native: <span className="font-semibold text-slate-800 dark:text-slate-200">{request.subject_name}</span> · Ayanamsa: {request.ayanamsa}</span></>)}
           </p>
         </div>
         <div className="flex items-center gap-2">

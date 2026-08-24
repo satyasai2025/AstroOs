@@ -392,7 +392,7 @@ function VisualizationViewer({
           <dl className="space-y-1.5 text-xs">
             {request?.subject_name && (
               <div className="flex justify-between gap-2">
-                <dt style={{ color: "var(--text-muted)" }}>Subject</dt>
+                <dt style={{ color: "var(--text-muted)" }}>Native</dt>
                 <dd style={{ color: "var(--text-primary)" }}>{request.subject_name}</dd>
               </div>
             )}

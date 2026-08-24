@@ -261,7 +261,7 @@ function ChartComparePageContent() {
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">Position 1 (Active Subject):</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">Position 1 (Active Native):</span>
                     {pos1Chart ? (
                       <Badge tone="success">{pos1Chart.subject_name}</Badge>
                     ) : (

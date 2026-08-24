@@ -20,7 +20,7 @@ test.describe("Priority 15: Longitudinal Cohort Statistical Validation Studio", 
     await expect(page.locator("span:has-text('Empirical ROC-AUC')")).toBeVisible();
     await expect(page.locator("span:has-text('Brier Calibration Score')")).toBeVisible();
     await expect(page.locator("span:has-text('Permutation p-value')")).toBeVisible();
-    await expect(page.locator("span:has-text('Evaluated Subjects')")).toBeVisible();
+    await expect(page.locator("span:has-text('Evaluated Natives')")).toBeVisible();
 
     // 4. Verify Executive Summary Banner
     await expect(page.locator("text=Executive Statistical Synthesis & Confidence Bounds")).toBeVisible();

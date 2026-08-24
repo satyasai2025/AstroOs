@@ -33,7 +33,7 @@ test.describe("Priority 27: Longitudinal Outcome Tracking Studio", () => {
 
     // 5. Switch to Real-World Observation Stream Tab
     await page.click("button:has-text('Real-World Observation Stream')");
-    await expect(page.locator("th:has-text('Subject ID')")).toBeVisible();
+    await expect(page.locator("th:has-text('Native ID')")).toBeVisible();
     await expect(page.locator("th:has-text('Predicted Window')")).toBeVisible();
     await expect(page.locator("th:has-text('Actual Event Date')")).toBeVisible();
 

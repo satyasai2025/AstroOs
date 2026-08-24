@@ -41,7 +41,7 @@ export default function EventVerificationPage() {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
 
   const columns: TableColumn<EventRow>[] = [
-    { key: "chartSubject", label: "Subject" },
+    { key: "chartSubject", label: "Native" },
     { key: "eventTitle", label: "Event" },
     { key: "eventDate", label: "Date" },
     { key: "ruleMatched", label: "Rule Matched" },
@@ -76,7 +76,7 @@ export default function EventVerificationPage() {
       <Card style={{ marginBottom: 12 }}>
         <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
           Sample review queue shown below is illustrative. Per-chart verification against a single
-          subject's real life events already exists (see the Verification tab after running an
+          native's real life events already exists (see the Verification tab after running an
           analysis) — this page stages what a cross-chart review workflow could look like.
         </p>
       </Card>

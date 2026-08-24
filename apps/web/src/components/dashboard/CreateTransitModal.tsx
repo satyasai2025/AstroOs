@@ -509,7 +509,7 @@ export function CreateTransitModal({ open, onClose }: Props) {
                 <h3 className="mb-2 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Birth Chart Details</h3>
                 <div className="grid grid-cols-1 gap-2 text-xs md:grid-cols-2">
                   <div>
-                    <span style={{ color: "var(--text-muted)" }}>Subject:</span>
+                    <span style={{ color: "var(--text-muted)" }}>Native:</span>
                     <span className="ml-2" style={{ color: "var(--text-primary)" }}>{activeSubjectName}</span>
                   </div>
                   <div>

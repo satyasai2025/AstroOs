@@ -33,7 +33,7 @@ const FEATURE_GUIDES: FeatureGuide[] = [
       "The foundation of Vedic horoscope analysis. Generates the Rashi (D-1) birth chart, Bhava Chalit chart, exact planetary degrees, retrograde (R) status, combustion (C), dignity (exalted/debilitated), and house ownerships.",
     howToUse: [
       "Click '+ Quick Action' in the top header or sidebar and select 'New Natal Chart'.",
-      "Enter Subject Name, Birth Date, Exact Time, and City/Coordinates (with Timezone).",
+      "Enter Native Name, Birth Date, Exact Time, and City/Coordinates (with Timezone).",
       "Switch between North Indian (Diamond) and South Indian (Box) formats using the layout toggle.",
       "Hover or click any planet/house to inspect aspect rays, nakshatra lords, and sub-divisions.",
     ],
@@ -486,7 +486,7 @@ const FEATURE_GUIDES: FeatureGuide[] = [
     howToUse: [
       "Navigate to Reports → PDF Reports (/reports/pdf) from the main menu.",
       "Select a saved chart from your library or click '✨ Auto-fill Demo Sample Chart' for instant testing.",
-      "Customize Subject Name, Report Title, Ayanamsha (Lahiri, KP, Raman), and House System (Placidus, Whole Sign).",
+      "Customize Native Name, Report Title, Ayanamsha (Lahiri, KP, Raman), and House System (Placidus, Whole Sign).",
       "Click 'Download Printable PDF Report' to generate and download a standalone high-resolution PDF document.",
       "Inspect the 'Active Report Templates Directory' section to view active report templates loaded on the server.",
     ],

@@ -153,7 +153,7 @@ export function BirthDetailsForm({ onSubmit, isPending, errorMessage }: Props) {
     <form onSubmit={handleSubmit} className="glass-card space-y-4 p-6">
       <div>
         <label htmlFor="subjectName" className="field-label">
-          Subject Name
+          Native Name
         </label>
         <input
           id="subjectName"

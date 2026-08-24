@@ -67,7 +67,7 @@ export function NarrativeReportWorkspace({
   mode = "single",
   chartData,
   chartBData,
-  subjectName = "Primary Subject",
+  subjectName = "Primary Native",
   subjectBName = "Partner / Event Snapshot",
 }: Props) {
   const [report, setReport] = useState<FullStructuredAstrologicalReportResponse | null>(null);
@@ -158,7 +158,7 @@ export function NarrativeReportWorkspace({
             {report?.report_title || "AstroOS Technical Astrological Report"}
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Subject: <strong className="text-zinc-200">{report?.subject_name || subjectName}</strong> • Generated: {report?.generated_at_iso || "Live"} • Swiss Ephemeris Standard
+            Native: <strong className="text-zinc-200">{report?.subject_name || subjectName}</strong> • Generated: {report?.generated_at_iso || "Live"} • Swiss Ephemeris Standard
           </p>
         </div>
 

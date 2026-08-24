@@ -244,7 +244,7 @@ export function PredictionValidationWorkbench() {
             <table className="w-full text-left text-xs">
               <thead className="bg-neutral-950 text-neutral-400 uppercase font-medium border-b border-neutral-800">
                 <tr>
-                  <th className="p-3">ID / Subject</th>
+                  <th className="p-3">ID / Native</th>
                   <th className="p-3">Technique</th>
                   <th className="p-3">Category</th>
                   <th className="p-3">Predicted Event</th>

@@ -530,7 +530,7 @@ function TransitAnalysisPageContent() {
                 borderColor: "var(--border-primary)",
                 color: "var(--text-primary)",
               }}
-              aria-label="Switch Subject Chart"
+              aria-label="Switch Native Chart"
             >
               {myCharts.data.charts.map((c) => (
                 <option key={c.id} value={c.id}>

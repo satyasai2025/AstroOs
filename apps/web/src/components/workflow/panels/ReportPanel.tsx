@@ -301,7 +301,7 @@ export function ReportPanel({
           {report.title}
         </h3>
         <p className="mb-4 text-xs text-slate-500">
-          Subject: {report.subject_name} · Generated{" "}
+          Native: {report.subject_name} · Generated{" "}
           {new Date(report.metadata.generated_at).toUTCString()}
         </p>
 

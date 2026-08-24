@@ -541,7 +541,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Subject Name</label>
+                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Native Name</label>
                   <input
                     type="text"
                     value={subjectName}
