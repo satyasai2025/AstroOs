@@ -13,7 +13,7 @@ import { ShadbalaGaugesOverview } from "@/components/charts/ShadbalaGaugesOvervi
 import { StrengthRadarWebChart } from "@/components/charts/StrengthRadarWebChart";
 import { ActiveYogasCard } from "@/components/charts/ActiveYogasCard";
 import { PanchangaDetailedCard } from "@/components/charts/PanchangaDetailedCard";
-import { ShareButton } from "@/components/ui";
+import { ResizablePanels, ShareButton } from "@/components/ui";
 import { useChartEvents } from "@/lib/events";
 import { useWorkflowStore } from "@/lib/store";
 import { VARGA_DIVISORS } from "@/lib/astro";
@@ -221,10 +221,10 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
         </div>
       </div>
 
-      {/* ── Row 2: Main 3-Column Above-the-Fold Grid ── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-stretch">
-        {/* Column 1 (lg:col-span-4): Lagna Chart (D1) Canvas */}
-        <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm flex flex-col justify-between">
+      {/* ── Row 2: Main Resizable 3-Column Above-the-Fold Panels ── */}
+      <ResizablePanels defaultSizes={[0.34, 0.33, 0.33]}>
+        {/* Column 1: Lagna Chart (D1) Canvas */}
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm flex flex-col justify-between h-full">
           <div>
             <div className="mb-2 flex flex-col gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center justify-between gap-1.5">
@@ -351,8 +351,8 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
           </div>
         </div>
 
-        {/* Column 2 (lg:col-span-4): Planetary Positions Table */}
-        <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm flex flex-col justify-between">
+        {/* Column 2: Planetary Positions Table */}
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm flex flex-col justify-between h-full">
           <PlanetaryPositionsTable
             ascendant={chart.ascendant}
             planets={chart.planets}
@@ -361,29 +361,29 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
           />
         </div>
 
-        {/* Column 3 (lg:col-span-4): Shadbala Overview Circular Gauges */}
-        <div className="lg:col-span-4 flex flex-col">
+        {/* Column 3: Shadbala Overview Circular Gauges */}
+        <div className="flex flex-col h-full">
           <ShadbalaGaugesOverview result={result} />
         </div>
-      </div>
+      </ResizablePanels>
 
-      {/* ── Row 3: Bottom 3-Column Grid ── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-stretch">
-        {/* Column 1 (lg:col-span-4): Jagannatha Hora Classical Panchanga & Dasha Card */}
-        <div className="lg:col-span-4 flex flex-col">
+      {/* ── Row 3: Bottom Resizable 3-Column Panels ── */}
+      <ResizablePanels defaultSizes={[0.34, 0.33, 0.33]}>
+        {/* Column 1: Jagannatha Hora Classical Panchanga & Dasha Card */}
+        <div className="flex flex-col h-full">
           <PanchangaDetailedCard result={result} request={request} />
         </div>
 
-        {/* Column 2 (lg:col-span-4): Strength Analysis 6-Axis Radar Web Chart */}
-        <div className="lg:col-span-4 flex flex-col">
+        {/* Column 2: Strength Analysis 6-Axis Radar Web Chart */}
+        <div className="flex flex-col h-full">
           <StrengthRadarWebChart result={result} />
         </div>
 
-        {/* Column 3 (lg:col-span-4): Active Yogas Card */}
-        <div className="lg:col-span-4 flex flex-col">
+        {/* Column 3: Active Yogas Card */}
+        <div className="flex flex-col h-full">
           <ActiveYogasCard result={result} />
         </div>
-      </div>
+      </ResizablePanels>
 
       {/* ── Below-the-Fold Expandable Sections ── */}
       <div className="space-y-4 pt-2">

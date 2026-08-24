@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Badge, Card, Select } from "@/components/ui";
+import { Badge, Button, Card, Select } from "@/components/ui";
 import { KARAKATVA_GRAHAS, useKarakatvaSearch } from "@/lib/karakatva";
 
 export const dynamic = "force-dynamic";
@@ -24,22 +24,22 @@ type EntityType =
   | "texts"
   | "rules";
 
-const ENTITY_TYPES: { value: EntityType; label: string }[] = [
-  { value: "planets", label: "Planets (Navagraha)" },
-  { value: "signs", label: "Signs (Rashi)" },
-  { value: "houses", label: "Houses (Bhava)" },
-  { value: "nakshatras", label: "Nakshatras (27 Stars)" },
-  { value: "yogas", label: "Classical Yogas" },
-  { value: "vargas", label: "Divisional Charts (Shodashavarga)" },
-  { value: "dashas", label: "Dashas & Timing Systems" },
-  { value: "ashtakavarga", label: "Ashtakavarga & Kakshya" },
-  { value: "transits", label: "Transits (Gochara, Vedha, Latta)" },
-  { value: "shadbala", label: "Shadbala & Planetary Strengths" },
-  { value: "sahamas", label: "Sahamas (Arabic Parts)" },
-  { value: "prashna_kp", label: "Prashna & KP Sub-Lord" },
-  { value: "karakatvas", label: "Karakatvas (Significations)" },
-  { value: "texts", label: "Classical Texts & Scriptures" },
-  { value: "rules", label: "Vedic Rules Engine" },
+const ENTITY_TYPES: { value: EntityType; label: string; icon: string }[] = [
+  { value: "planets", label: "Planets (Navagraha)", icon: "☉" },
+  { value: "signs", label: "Signs (Rashi)", icon: "▦" },
+  { value: "houses", label: "Houses (Bhava)", icon: "⌂" },
+  { value: "nakshatras", label: "Nakshatras (27 Stars)", icon: "★" },
+  { value: "yogas", label: "Classical Yogas", icon: "◎" },
+  { value: "vargas", label: "Divisional Charts (Shodashavarga)", icon: "☸" },
+  { value: "dashas", label: "Dashas & Timing Systems", icon: "⏳" },
+  { value: "ashtakavarga", label: "Ashtakavarga & Kakshya", icon: "🔢" },
+  { value: "transits", label: "Transits (Gochara, Vedha, Latta)", icon: "🪐" },
+  { value: "shadbala", label: "Shadbala & Planetary Strengths", icon: "⚖" },
+  { value: "sahamas", label: "Sahamas (Arabic Parts)", icon: "🎯" },
+  { value: "prashna_kp", label: "Prashna & KP Sub-Lord", icon: "🔮" },
+  { value: "karakatvas", label: "Karakatvas (Significations)", icon: "▤" },
+  { value: "texts", label: "Classical Texts & Scriptures", icon: "📜" },
+  { value: "rules", label: "Vedic Rules Engine", icon: "⚗" },
 ];
 
 /**
@@ -204,86 +204,220 @@ function BrowseContent() {
   const searchParams = useSearchParams();
   const type = (searchParams.get("type") as EntityType) ?? "planets";
   const [graha, setGraha] = useState("sun");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const karakatvaQuery = useKarakatvaSearch({ graha });
 
-  const setType = (v: string) => {
+  const setType = (v: EntityType) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("type", v);
     router.push(`/knowledge/browse?${params.toString()}`);
   };
 
+  const currentTypeObj = ENTITY_TYPES.find((t) => t.value === type) ?? ENTITY_TYPES[0];
+
+  // Filter rows based on search term
+  const rawRows = type === "karakatvas" ? [] : REFERENCE_ROWS[type] || [];
+  const filteredRows = rawRows.filter((r) => {
+    if (!searchTerm.trim()) return true;
+    const term = searchTerm.toLowerCase();
+    return r.title.toLowerCase().includes(term) || r.desc.toLowerCase().includes(term);
+  });
+
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: "var(--text-primary)" }}>
-          Knowledge Browse
-        </h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-          Browse Vedic astrology reference entities by category.
-        </p>
-      </div>
-
-      <div className="mb-4 max-w-xs">
-        <Select label="Entity Type" options={ENTITY_TYPES} value={type} onChange={setType} />
-      </div>
-
-      {type === "karakatvas" ? (
-        <div className="space-y-3">
-          <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-            Real data from the Karakatva database (450 seeded entries) — same source as{" "}
-            <a href="/karakatva" style={{ color: "var(--cyan-400)" }}>
-              /karakatva
-            </a>
-            .
+    <div className="space-y-6 pb-12">
+      {/* ── Top Header Title & Actions ── */}
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">📚</span>
+            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+              Vedic Knowledge Explorer
+            </h1>
+          </div>
+          <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+            Authoritative reference entities, significations, planetary rules, and scriptures across 15 classical categories.
           </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button href="/knowledge" variant="secondary">
+            ← Knowledge Home
+          </Button>
+          <Button href="/knowledge/ask" variant="primary">
+            ✨ Ask AI Astrologer
+          </Button>
+        </div>
+      </div>
+
+      {/* ── 15 Category Horizontal Tabs Bar ── */}
+      <div className="overflow-x-auto pb-1.5 custom-scrollbar">
+        <div className="flex items-center gap-1.5 min-w-max">
+          {ENTITY_TYPES.map((t) => {
+            const isActive = t.value === type;
+            const count =
+              t.value === "karakatvas"
+                ? "450+"
+                : REFERENCE_ROWS[t.value as keyof typeof REFERENCE_ROWS]?.length || 0;
+
+            return (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => setType(t.value)}
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-extrabold transition cursor-pointer ${
+                  isActive
+                    ? "bg-cyan-500/15 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 border border-cyan-500/50 shadow-xs"
+                    : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
+                }`}
+              >
+                <span>{t.icon}</span>
+                <span>{t.label}</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-mono ${
+                    isActive
+                      ? "bg-cyan-500 text-white"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Search & Filter Controls ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+        <div className="flex-1 min-w-[240px] relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder={`🔍 Search in ${currentTypeObj.label} (e.g. "Jupiter", "Exalted", "10th")...`}
+            className="w-full rounded-xl px-3.5 py-2 text-xs bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 outline-none focus:border-cyan-500 transition"
+          />
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => setSearchTerm("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-200 font-bold"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 font-mono">
+          <span>Active Category:</span>
+          <span className="font-extrabold text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-lg border border-cyan-500/20">
+            {currentTypeObj.icon} {currentTypeObj.label}
+          </span>
+          <Badge tone="cyan">
+            {type === "karakatvas" ? "450+ Entries" : `${filteredRows.length} Entries`}
+          </Badge>
+        </div>
+      </div>
+
+      {/* ── Special Karakatvas Database View ── */}
+      {type === "karakatvas" ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 font-medium">
+            <span>
+              💡 Real-time Karakatva Database with 450+ classical significations from BPHS &amp; Uttara Kalamrita.
+            </span>
+            <a href="/karakatva" className="font-bold underline hover:text-amber-400">
+              Open Full Studio →
+            </a>
+          </div>
+
           <div className="max-w-xs">
             <Select
-              label="Filter by Graha"
-              options={KARAKATVA_GRAHAS.map((g) => ({ value: g, label: g }))}
+              label="Filter by Graha (Planet)"
+              options={KARAKATVA_GRAHAS.map((g) => ({ value: g, label: g.toUpperCase() }))}
               value={graha}
               onChange={setGraha}
             />
           </div>
+
           {karakatvaQuery.isLoading && (
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-              Loading…
-            </p>
+            <p className="text-xs text-slate-400 font-mono">Loading Karakatva database entries…</p>
           )}
-          {karakatvaQuery.data?.karakatvas.slice(0, 20).map((item) => (
-            <Card key={item.id}>
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>
-                  {item.subject}
-                </h3>
-                {item.graha && <Badge tone="cyan">{item.graha}</Badge>}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {karakatvaQuery.data?.karakatvas.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm hover:border-cyan-500/40 transition flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
+                      {item.subject}
+                    </h3>
+                    {item.graha && (
+                      <Badge tone="cyan" className="uppercase font-mono text-[10px]">
+                        {item.graha}
+                      </Badge>
+                    )}
+                  </div>
+                  {item.description && (
+                    <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
               </div>
-              {item.description && (
-                <p className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
-                  {item.description}
-                </p>
-              )}
-            </Card>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
-              Showing authoritative Vedic reference entities for <strong className="text-cyan-400 font-bold">{ENTITY_TYPES.find(t => t.value === type)?.label}</strong>:
-            </p>
-            <Badge tone="cyan">{REFERENCE_ROWS[type]?.length || 0} Entries</Badge>
-          </div>
-          {REFERENCE_ROWS[type]?.map((row) => (
-            <Card key={row.title}>
-              <h3 className="text-base font-bold text-white">
-                {row.title}
-              </h3>
-              <p className="mt-1 text-sm text-slate-300 leading-relaxed">
-                {row.desc}
-              </p>
-            </Card>
-          ))}
+        /* ── Standard 14 Reference Categories Cards Grid ── */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {filteredRows.length === 0 ? (
+            <div className="col-span-full py-12 text-center text-xs text-slate-500 dark:text-slate-400 font-mono">
+              No entities found matching "{searchTerm}". Try a different search term or category.
+            </div>
+          ) : (
+            filteredRows.map((row, idx) => (
+              <div
+                key={row.title + idx}
+                className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm hover:border-cyan-500/40 transition flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-bold text-xs">
+                        {currentTypeObj.icon}
+                      </span>
+                      <h3 className="text-xs font-extrabold text-slate-900 dark:text-slate-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition">
+                        {row.title}
+                      </h3>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      #{idx + 1}
+                    </span>
+                  </div>
+
+                  <p className="mt-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {row.desc}
+                  </p>
+                </div>
+
+                <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px]">
+                  <span className="font-mono text-slate-500 dark:text-slate-400">
+                    Category: {currentTypeObj.label.split(" ")[0]}
+                  </span>
+                  <a
+                    href={`/knowledge/ask?q=${encodeURIComponent("Explain " + row.title)}`}
+                    className="font-bold text-cyan-600 dark:text-cyan-400 hover:underline"
+                  >
+                    Ask AI Details →
+                  </a>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>

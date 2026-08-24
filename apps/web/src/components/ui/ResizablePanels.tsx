@@ -5,22 +5,24 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 interface ResizablePanelsProps {
   /** One entry per panel; length must stay fixed for the component's lifetime. */
   children: ReactNode[];
-  /** Initial width of each panel as a fraction of the row, must sum to 1. */
+  /** Initial width/height fraction of each panel as a fraction (0..1), must sum to 1. */
   defaultSizes?: number[];
-  /** Minimum width fraction any single panel can be dragged down to. */
+  /** Minimum width/height fraction any single panel can be dragged down to. */
   minSize?: number;
+  /** Layout direction: 'horizontal' (columns) or 'vertical' (rows). Default: 'horizontal'. */
+  direction?: "horizontal" | "vertical";
   className?: string;
 }
 
 /**
- * Horizontal row of panels separated by draggable dividers, stacking to a
- * single column below md. Sizes are fractions (0..1) of the row width and
- * persist only for the component instance's lifetime.
+ * Row or column of panels separated by draggable dividers (split panes).
+ * Sizes are fractions (0..1) of container dimension and persist for component instance lifetime.
  */
 export function ResizablePanels({
   children,
   defaultSizes,
-  minSize = 0.15,
+  minSize = 0.12,
+  direction = "horizontal",
   className,
 }: ResizablePanelsProps) {
   const count = children.length;
@@ -28,13 +30,19 @@ export function ResizablePanels({
     () => defaultSizes ?? Array.from({ length: count }, () => 1 / count),
   );
   const containerRef = useRef<HTMLDivElement>(null);
-  const dragState = useRef<{ index: number; startX: number; startSizes: number[] } | null>(null);
+  const dragState = useRef<{ index: number; startPos: number; startSizes: number[] } | null>(null);
+
+  const isHorizontal = direction === "horizontal";
 
   const onPointerMove = useCallback((e: PointerEvent) => {
     const drag = dragState.current;
     const container = containerRef.current;
     if (!drag || !container) return;
-    const deltaFraction = (e.clientX - drag.startX) / container.getBoundingClientRect().width;
+    const rect = container.getBoundingClientRect();
+    const totalDim = isHorizontal ? rect.width : rect.height;
+    const currentPos = isHorizontal ? e.clientX : e.clientY;
+    const deltaFraction = (currentPos - drag.startPos) / totalDim;
+
     const left = drag.index;
     const right = drag.index + 1;
     let move = deltaFraction;
@@ -44,7 +52,7 @@ export function ResizablePanels({
     next[left] = drag.startSizes[left] + move;
     next[right] = drag.startSizes[right] - move;
     setSizes(next);
-  }, [minSize]);
+  }, [isHorizontal, minSize]);
 
   const endDrag = useCallback(() => {
     dragState.current = null;
@@ -54,7 +62,8 @@ export function ResizablePanels({
 
   const startDrag = (index: number) => (e: React.PointerEvent) => {
     e.preventDefault();
-    dragState.current = { index, startX: e.clientX, startSizes: sizes };
+    const pos = isHorizontal ? e.clientX : e.clientY;
+    dragState.current = { index, startPos: pos, startSizes: sizes };
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", endDrag);
   };
@@ -69,26 +78,40 @@ export function ResizablePanels({
           key={`divider-${i}`}
           onPointerDown={startDrag(i - 1)}
           role="separator"
-          aria-orientation="vertical"
-          className="hidden shrink-0 cursor-col-resize md:flex md:items-stretch"
-          style={{ width: 9 }}
+          aria-orientation={isHorizontal ? "vertical" : "horizontal"}
+          className={`shrink-0 select-none group flex items-center justify-center transition-colors ${
+            isHorizontal
+              ? "hidden md:flex w-2.5 cursor-col-resize hover:bg-cyan-500/20 active:bg-cyan-500/40"
+              : "w-full h-2.5 cursor-row-resize hover:bg-cyan-500/20 active:bg-cyan-500/40"
+          }`}
+          title="Drag to resize panel split"
         >
           <div
-            className="mx-auto h-full w-px transition-colors hover:bg-[var(--accent)] active:bg-[var(--accent)]"
-            style={{ backgroundColor: "var(--border-primary)" }}
+            className={`rounded-full transition-all ${
+              isHorizontal
+                ? "w-1 h-8 bg-slate-300 dark:bg-slate-700 group-hover:bg-cyan-400 group-active:bg-cyan-400"
+                : "h-1 w-12 bg-slate-300 dark:bg-slate-700 group-hover:bg-cyan-400 group-active:bg-cyan-400"
+            }`}
           />
         </div>,
       );
     }
     items.push(
-      <div key={i} className="min-w-0 flex-1 md:flex-none" style={{ flexBasis: `${sizes[i] * 100}%` }}>
+      <div
+        key={i}
+        className="min-w-0 flex-1 md:flex-none"
+        style={{ flexBasis: `${sizes[i] * 100}%` }}
+      >
         {child}
       </div>,
     );
   });
 
   return (
-    <div ref={containerRef} className={`flex flex-col md:flex-row ${className ?? ""}`}>
+    <div
+      ref={containerRef}
+      className={`flex ${isHorizontal ? "flex-col md:flex-row" : "flex-col"} gap-2 md:gap-0 ${className ?? ""}`}
+    >
       {items}
     </div>
   );

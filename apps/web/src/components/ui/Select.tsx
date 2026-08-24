@@ -64,7 +64,7 @@ export function Select({ label, options = [], value, onChange, placeholder = "Se
         </svg>
       </button>
       {open && (
-        <div className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl p-1.5 max-h-60 overflow-y-auto">
+        <div className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl p-1.5 max-h-44 overflow-y-auto">
           {options.map((o) => (
             <div
               key={o.value}

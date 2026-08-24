@@ -6,6 +6,18 @@
  * and lookup selectors.
  */
 
+/**
+ * Strips hierarchical category trails like "Relationship / Relationship / Begin significant relationship"
+ * or "Other Interests & Inclinations / Criminal Victim / Homicide victim"
+ * into clean leaf titles like "Begin significant relationship" or "Homicide victim".
+ */
+export function formatEventTitle(text: string | null | undefined): string {
+  if (!text) return "";
+  const parts = text.split("/").map((p) => p.trim()).filter(Boolean);
+  if (parts.length === 0) return text.trim();
+  return parts[parts.length - 1];
+}
+
 // ── Rashis (Zodiac Signs) ──────────────────────────────────────────────────────
 
 export const RASHIS = [

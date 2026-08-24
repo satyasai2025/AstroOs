@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge, Button, Card, Table, type TableColumn } from "@/components/ui";
 import { AppShell } from "@/components/layout/AppShell";
+import { CaseManualEntryForm } from "@/components/research/CaseManualEntryForm";
 import { researchCasesApi } from "@/lib/researchCases";
 import { titleCaseToken } from "@/lib/api";
 import type {
@@ -53,6 +54,7 @@ export default function ResearchImportPage() {
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<"upload" | "validate" | "result">("upload");
+  const [uploadMode, setUploadMode] = useState<"file" | "manual">("file");
 
   const loadCases = useCallback(async () => {
     try {
@@ -96,6 +98,18 @@ export default function ResearchImportPage() {
         setPayload(null);
         setError(err instanceof Error ? err.message : "Could not parse JSON file.");
       }
+    },
+    [runValidation],
+  );
+
+  const handleManualSubmit = useCallback(
+    (p: ResearchCaseBatchImport) => {
+      setFileName(null);
+      setImportResult(null);
+      setError(null);
+      setPayload(p);
+      setStep("validate");
+      void runValidation(p);
     },
     [runValidation],
   );
@@ -178,46 +192,71 @@ export default function ResearchImportPage() {
 
       {/* ── STEP 1: Upload ──────────────────────────────────────────────────── */}
       {step === "upload" && (
-        <Card padding="0" className="mb-6">
-          <div className="p-8">
-            <div
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const file = e.dataTransfer.files?.[0];
-                if (file) void handleFile(file);
-              }}
-              onClick={() => fileInputRef.current?.click()}
-              role="button"
-              tabIndex={0}
-              className="border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer transition-all hover:border-cyan-400 hover:bg-cyan-400/5"
+        <>
+          <div className="mb-4 flex gap-2">
+            <Button
+              size="sm"
+              variant={uploadMode === "file" ? "primary" : "secondary"}
+              onClick={() => setUploadMode("file")}
             >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="application/json,.json"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) void handleFile(file);
-                }}
-              />
-              <div className="text-gray-300">
-                <p className="text-lg font-semibold mb-1">Drop JSON file here</p>
-                <p className="text-sm text-gray-500">or click to browse</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-center gap-3">
-              <Button
-                variant="secondary"
-                onClick={() => void handleFile(new File([JSON.stringify(SAMPLE_PAYLOAD, null, 2)], "sample.json", { type: "application/json" }))}
-              >
-                Load Sample
-              </Button>
-            </div>
+              Upload JSON
+            </Button>
+            <Button
+              size="sm"
+              variant={uploadMode === "manual" ? "primary" : "secondary"}
+              onClick={() => setUploadMode("manual")}
+            >
+              Manual Entry
+            </Button>
           </div>
-        </Card>
+
+          {uploadMode === "file" ? (
+            <Card padding="0" className="mb-6">
+              <div className="p-8">
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) void handleFile(file);
+                  }}
+                  onClick={() => fileInputRef.current?.click()}
+                  role="button"
+                  tabIndex={0}
+                  className="border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer transition-all hover:border-cyan-400 hover:bg-cyan-400/5"
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="application/json,.json"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) void handleFile(file);
+                    }}
+                  />
+                  <div className="text-gray-300">
+                    <p className="text-lg font-semibold mb-1">Drop JSON file here</p>
+                    <p className="text-sm text-gray-500">or click to browse</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-center gap-3">
+                  <Button
+                    variant="secondary"
+                    onClick={() => void handleFile(new File([JSON.stringify(SAMPLE_PAYLOAD, null, 2)], "sample.json", { type: "application/json" }))}
+                  >
+                    Load Sample
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ) : (
+            <div className="mb-6">
+              <CaseManualEntryForm onSubmit={handleManualSubmit} />
+            </div>
+          )}
+        </>
       )}
 
       {/* ── STEP 2: Validation ──────────────────────────────────────────────── */}

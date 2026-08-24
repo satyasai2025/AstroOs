@@ -261,6 +261,36 @@ class LifeEventModel(AstroBase):
     category: Mapped[str] = mapped_column(
         String(100), default="Other", nullable=False
     )
+    category_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("event_categories.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+        comment=(
+            "Optional FK to the leaf node in event_categories (the "
+            "hierarchical category tree). Nullable so existing rows and "
+            "any import that only supplies the plain-text `category` "
+            "field keep working unchanged. When set, `category` is kept "
+            "in sync with the node's resolved path for backward-compat "
+            "string reads."
+        ),
+    )
+    event_type_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("event_types.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+        comment=(
+            "Optional FK to the leaf node in event_types (the open, "
+            "hierarchical event-type tree that replaces the closed "
+            "`event_type` enum for the manual-entry/import path). When "
+            "set, `event_type_label` mirrors the node's resolved path "
+            "and the legacy `event_type` enum column is set to 'other'."
+        ),
+    )
+    event_type_label: Mapped[str] = mapped_column(
+        String(100), default="Other", nullable=False
+    )
     verified: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )

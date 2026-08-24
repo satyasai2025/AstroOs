@@ -14,6 +14,7 @@
 import { useMemo, useState } from "react";
 import { Badge, Modal } from "@/components/ui";
 import { titleCaseToken } from "@/lib/api";
+import { formatEventTitle } from "@/lib/astro";
 import type { LifeEventDetail } from "@/lib/types";
 
 type Tone = "cyan" | "gold" | "violet" | "success" | "danger";
@@ -68,53 +69,47 @@ function layoutEvents(events: LifeEventDetail[]): PositionedEvent[] {
 
 function SnapshotSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: "var(--space-3)" }}>
-      <div
-        style={{
-          fontSize: "var(--text-xs)",
-          fontWeight: "var(--weight-semibold)",
-          color: "var(--text-tertiary)",
-          textTransform: "uppercase",
-          letterSpacing: "var(--tracking-wide)",
-          marginBottom: 6,
-        }}
-      >
+    <div className="mb-4">
+      <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1 font-mono">
         {label}
       </div>
       {children}
     </div>
   );
 }
-
-function EventDetailBody({ event }: { event: LifeEventDetail }) {
+export function EventDetailBody({ event }: { event: LifeEventDetail }) {
   const s = event.snapshot;
   const activeTransits = s ? Object.entries(s.transit_features).filter(([, active]) => active) : [];
   const houseEntries = s ? Object.entries(s.house_lord_statuses).sort((a, b) => Number(a[0]) - Number(b[0])) : [];
 
   return (
-    <div>
+    <div className="space-y-4">
       <SnapshotSection label="Date">
-        <div style={{ color: "var(--text-primary)", fontSize: "var(--text-base)" }}>
+        <div className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
           {formatDate(event.event_date)}
-          {event.event_time && <span style={{ color: "var(--text-tertiary)" }}> · {event.event_time}</span>}
-          {event.event_place && <span style={{ color: "var(--text-tertiary)" }}> · {event.event_place}</span>}
+          {event.event_time && <span className="text-slate-500 dark:text-slate-400 font-mono font-normal"> · {event.event_time}</span>}
+          {event.event_place && <span className="text-slate-500 dark:text-slate-400 font-mono font-normal"> · {event.event_place}</span>}
         </div>
       </SnapshotSection>
 
       <SnapshotSection label="Description">
-        <div style={{ color: "var(--text-secondary)" }}>
-          {event.description || <span style={{ color: "var(--text-tertiary)" }}>No description recorded.</span>}
+        <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+          {event.description || event.event_type ? (
+            formatEventTitle(event.description || event.event_type)
+          ) : (
+            <span className="text-slate-400 italic">No description recorded.</span>
+          )}
         </div>
       </SnapshotSection>
 
       <SnapshotSection label="Chart / Astrological Positions">
         {!s ? (
-          <div style={{ color: "var(--text-tertiary)", fontSize: "var(--text-sm)" }}>
+          <div className="text-xs text-slate-500 dark:text-slate-400 italic font-mono">
             No astrological snapshot has been computed for this event yet.
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap gap-1.5">
               {s.mahadasha && <Badge tone="cyan">Mahadasha: {titleCaseToken(s.mahadasha)}</Badge>}
               {s.antardasha && <Badge tone="violet">Antardasha: {titleCaseToken(s.antardasha)}</Badge>}
               {s.pratyantar && <Badge tone="gold">Pratyantar: {titleCaseToken(s.pratyantar)}</Badge>}
@@ -122,8 +117,8 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
 
             {s.active_yogas.length > 0 && (
               <div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", marginBottom: 4 }}>Active Yogas</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1 font-mono">Active Yogas</div>
+                <div className="flex flex-wrap gap-1.5">
                   {s.active_yogas.map((y) => (
                     <Badge key={y} tone="success">{y}</Badge>
                   ))}
@@ -133,8 +128,8 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
 
             {activeTransits.length > 0 && (
               <div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", marginBottom: 4 }}>Transits</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1 font-mono">Transits</div>
+                <div className="flex flex-wrap gap-1.5">
                   {activeTransits.map(([key]) => (
                     <Badge key={key} tone="neutral">{titleCaseToken(key)}</Badge>
                   ))}
@@ -144,21 +139,14 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
 
             {houseEntries.length > 0 && (
               <div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", marginBottom: 4 }}>House Lord Dignity</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))", gap: 6 }}>
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1 font-mono">House Lord Dignity</div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 font-mono text-[11px]">
                   {houseEntries.map(([house, status]) => (
                     <div
                       key={house}
-                      style={{
-                        fontSize: "var(--text-xs)",
-                        color: "var(--text-secondary)",
-                        background: "var(--surface-glass-strong)",
-                        border: "1px solid var(--border-default)",
-                        borderRadius: "var(--radius-md)",
-                        padding: "4px 8px",
-                      }}
+                      className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 text-slate-800 dark:text-slate-200 font-bold"
                     >
-                      House {house}: {titleCaseToken(status)}
+                      House {house}: <span className="text-cyan-600 dark:text-cyan-400">{titleCaseToken(status)}</span>
                     </div>
                   ))}
                 </div>
@@ -167,8 +155,8 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
 
             {s.nakshatra_activations.length > 0 && (
               <div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", marginBottom: 4 }}>Nakshatra Placements</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1 font-mono">Nakshatra Placements</div>
+                <div className="flex flex-wrap gap-1.5">
                   {s.nakshatra_activations.map((n) => (
                     <Badge key={n} tone="violet">{titleCaseToken(n)}</Badge>
                   ))}
@@ -180,8 +168,8 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
       </SnapshotSection>
 
       <SnapshotSection label="Notes">
-        <div style={{ color: "var(--text-secondary)" }}>
-          {event.notes || <span style={{ color: "var(--text-tertiary)" }}>No notes recorded.</span>}
+        <div className="text-xs text-slate-700 dark:text-slate-300">
+          {event.notes || <span className="text-slate-400 italic">No notes recorded.</span>}
         </div>
       </SnapshotSection>
     </div>
@@ -190,11 +178,22 @@ function EventDetailBody({ event }: { event: LifeEventDetail }) {
 
 interface EventTimelineChartProps {
   events: LifeEventDetail[];
+  onSelectEvent?: (event: LifeEventDetail) => void;
+  selectedEventId?: string;
 }
 
-export function EventTimelineChart({ events }: EventTimelineChartProps) {
-  const [selected, setSelected] = useState<LifeEventDetail | null>(null);
+export function EventTimelineChart({ events, onSelectEvent, selectedEventId }: EventTimelineChartProps) {
+  const [selectedModal, setSelectedModal] = useState<LifeEventDetail | null>(null);
+
   const positioned = useMemo(() => layoutEvents(events), [events]);
+
+  const handleEventClick = (event: LifeEventDetail) => {
+    if (onSelectEvent) {
+      onSelectEvent(event);
+    } else {
+      setSelectedModal(event);
+    }
+  };
 
   if (events.length === 0) {
     return (
@@ -229,6 +228,7 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
         {positioned.map(({ event, pct, lane }) => {
           const tone = toneForEventType(event.event_type);
           const isTop = lane === "top";
+          const isSelected = selectedEventId === event.id;
           return (
             <div
               key={event.id}
@@ -244,7 +244,8 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
             >
               {isTop && (
                 <button
-                  onClick={() => setSelected(event)}
+                  type="button"
+                  onClick={() => handleEventClick(event)}
                   style={{
                     position: "absolute",
                     bottom: 14,
@@ -260,36 +261,37 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
                   }}
                   aria-label={`${event.event_type} on ${formatDate(event.event_date)}`}
                 >
-                  <span style={{ fontSize: "var(--text-xs)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
-                    {event.event_type}
+                  <span className={`text-xs font-semibold truncate max-w-[110px] ${isSelected ? "text-cyan-500 dark:text-cyan-400 font-extrabold" : "text-slate-800 dark:text-slate-200"}`}>
+                    {formatEventTitle(event.event_type || event.description)}
                   </span>
-                  <span style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                     {formatDate(event.event_date)}
                   </span>
                 </button>
               )}
 
               <button
-                onClick={() => setSelected(event)}
-                aria-label={`View details for ${event.event_type} on ${formatDate(event.event_date)}`}
+                type="button"
+                onClick={() => handleEventClick(event)}
+                aria-label={`View details for ${formatEventTitle(event.event_type || event.description)} on ${formatDate(event.event_date)}`}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 26,
+                  height: 26,
                   borderRadius: "50%",
                   background: TONE_HEX[tone],
-                  boxShadow: `0 0 10px ${TONE_HEX[tone]}`,
-                  border: "2px solid var(--bg-surface-800, #0D1528)",
+                  boxShadow: isSelected ? `0 0 16px 4px ${TONE_HEX[tone]}` : `0 0 10px ${TONE_HEX[tone]}`,
+                  border: isSelected ? "3px solid #06b6d4" : "2px solid var(--bg-surface-800, #0D1528)",
                   cursor: "pointer",
                   padding: 0,
                   transition: "transform 0.15s ease",
+                  transform: isSelected ? "scale(1.25)" : "scale(1)",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.3)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               ></button>
 
               {!isTop && (
                 <button
-                  onClick={() => setSelected(event)}
+                  type="button"
+                  onClick={() => handleEventClick(event)}
                   style={{
                     position: "absolute",
                     top: 14,
@@ -303,13 +305,13 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
                     gap: 2,
                     width: 120,
                   }}
-                  aria-label={`${event.event_type} on ${formatDate(event.event_date)}`}
+                  aria-label={`${formatEventTitle(event.event_type || event.description)} on ${formatDate(event.event_date)}`}
                 >
-                  <span style={{ fontSize: "var(--text-xs)", color: "var(--text-tertiary)", fontFamily: "var(--font-mono)" }}>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                     {formatDate(event.event_date)}
                   </span>
-                  <span style={{ fontSize: "var(--text-xs)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
-                    {event.event_type}
+                  <span className={`text-xs font-semibold truncate max-w-[110px] ${isSelected ? "text-cyan-500 dark:text-cyan-400 font-extrabold" : "text-slate-800 dark:text-slate-200"}`}>
+                    {formatEventTitle(event.event_type || event.description)}
                   </span>
                 </button>
               )}
@@ -318,14 +320,16 @@ export function EventTimelineChart({ events }: EventTimelineChartProps) {
         })}
       </div>
 
-      <Modal
-        open={selected !== null}
-        onClose={() => setSelected(null)}
-        title={selected ? `${selected.event_type}` : ""}
-        width={560}
-      >
-        {selected && <EventDetailBody event={selected} />}
-      </Modal>
+      {!onSelectEvent && (
+        <Modal
+          open={selectedModal !== null}
+          onClose={() => setSelectedModal(null)}
+          title={selectedModal ? `${selectedModal.event_type}` : ""}
+          width={560}
+        >
+          {selectedModal && <EventDetailBody event={selectedModal} />}
+        </Modal>
+      )}
     </div>
   );
 }

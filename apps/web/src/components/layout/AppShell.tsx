@@ -8,7 +8,7 @@ import { useCurrentUser, useLogout } from "@/lib/auth";
 import { useWorkflowStore } from "@/lib/store";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useTheme } from "./ThemeProvider";
 import { CommandPalette } from "./CommandPalette";
 import { ActiveChartSelectorModal } from "./ActiveChartSelectorModal";
@@ -280,29 +280,58 @@ function AppShellInner({
 
   const [isDraggingSidebar, setIsDraggingSidebar] = useState(false);
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    setIsDraggingSidebar(true);
-  };
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((v) => {
+      const next = !v;
+      try {
+        localStorage.setItem("sidebar:collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  }, []);
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  // ── Global Keyboard Shortcut (Ctrl+B / Cmd+B) to Toggle Sidebar ──
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleSidebar]);
+
+  // ── Smooth Window-Level Pointer Drag Resizing ──
+  useEffect(() => {
     if (!isDraggingSidebar) return;
-    const newWidth = e.clientX;
-    if (newWidth >= 160 && newWidth <= 480) {
-      setSidebarWidth(newWidth);
-      if (sidebarCollapsed) setSidebarCollapsed(false);
-    }
-  };
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (isDraggingSidebar) {
+    const handlePointerMove = (e: PointerEvent) => {
+      const newWidth = e.clientX;
+      if (newWidth >= 150 && newWidth <= 520) {
+        setSidebarWidth(newWidth);
+        if (sidebarCollapsed) setSidebarCollapsed(false);
+      }
+    };
+
+    const handlePointerUp = () => {
       setIsDraggingSidebar(false);
       try {
-        e.currentTarget.releasePointerCapture(e.pointerId);
         localStorage.setItem("sidebar:width", String(sidebarWidth));
       } catch {}
-    }
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [isDraggingSidebar, sidebarCollapsed, sidebarWidth]);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDraggingSidebar(true);
   };
 
   const hasToken = typeof window !== "undefined" && !!tokenStore.getAccess();
@@ -315,16 +344,6 @@ function AppShellInner({
 
   const isActive = (href: string) => {
     return isRouteActive(href, pathname, searchParams);
-  };
-
-  const toggleSidebar = () => {
-    setSidebarCollapsed((v) => {
-      const next = !v;
-      try {
-        localStorage.setItem("sidebar:collapsed", String(next));
-      } catch {}
-      return next;
-    });
   };
 
   if (!hasToken || isLoading) {
@@ -619,20 +638,18 @@ function AppShellInner({
       {/* ── Global Resizable Sidebar Drag Handle ── */}
       <div
         onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
         onDoubleClick={() => {
           setSidebarWidth(256);
           localStorage.setItem("sidebar:width", "256");
         }}
-        className={`hidden lg:flex w-1.5 relative z-30 cursor-col-resize flex-none items-center justify-center transition-colors select-none ${
+        className={`hidden lg:flex w-2 relative z-30 cursor-col-resize flex-none items-center justify-center transition-colors select-none group ${
           isDraggingSidebar
-            ? "bg-cyan-500 shadow-[0_0_12px_rgba(6,182,212,0.6)]"
+            ? "bg-cyan-500 shadow-[0_0_12px_rgba(6,182,212,0.8)]"
             : "bg-transparent hover:bg-cyan-500/40 border-r border-slate-200 dark:border-slate-800"
         }`}
-        title="Drag horizontally to resize left navigation sidebar (Double-click to reset)"
+        title="Click to collapse (Ctrl+B) · Drag to resize"
       >
-        <div className="w-0.5 h-8 bg-slate-400/40 rounded-full" />
+        <div className="w-1 h-8 bg-slate-400/40 group-hover:bg-cyan-400 rounded-full transition-colors" />
       </div>
 
       {/* ── Main column ── */}

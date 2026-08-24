@@ -63,7 +63,13 @@ from apps.api.schemas.research_case import (
     ConfidenceBucketSchema,
     ConfidenceDistributionResponseSchema,
     DatasetValidationReportSchema,
+    EventCategorySchema,
+    EventCategoryTreeResponseSchema,
+    EventCategoryUpdateSchema,
     EventType,
+    EventTypeSchema,
+    EventTypeTreeResponseSchema,
+    EventTypeUpdateSchema,
     EvidenceRecalculationResultSchema,
     ExtractedFeatureSchema,
     FeatureExtractionResponseSchema,
@@ -101,8 +107,14 @@ from apps.api.schemas.research_case import (
 )
 from apps.api.services.classical_references import get_references_for_pattern
 from apps.api.services.dataset_validation import DatasetValidationService
+from apps.api.services.event_category_service import CategoryTreeNode, EventCategoryService
+from apps.api.services.event_type_service import EventTypeService, EventTypeTreeNode
 from apps.api.services.feature_extraction import FeatureExtractionService, summarize
-from apps.api.services.import_service import ResearchCaseImportService, SnapshotComputer
+from apps.api.services.import_service import (
+    ResearchCaseImportService,
+    SnapshotComputer,
+    load_existing_case_hashes,
+)
 from apps.api.services.pattern_discovery import PatternDiscoveryService
 from apps.api.services.pattern_explainer import (
     PatternExplainer,
@@ -866,9 +878,11 @@ async def research_case_import_schema() -> dict:
 )
 async def validate_research_cases(
     payload: ResearchCaseBatchImportSchema,
+    session: AsyncSession = Depends(get_db_session),
 ) -> ResearchCaseBatchValidationSchema:
     """Validate a batch of research cases without persisting anything."""
-    return validate_research_case_batch(payload.cases)
+    existing_hashes = await load_existing_case_hashes(session)
+    return validate_research_case_batch(payload.cases, existing_hashes=existing_hashes)
 
 
 @router.post(
@@ -896,13 +910,21 @@ async def import_research_cases(
             detail="Ephemeris wrapper not initialised.",
         )
 
-    validations = validate_research_case_batch(payload.cases)
+    # update_existing=True hands duplicate handling entirely to
+    # import_cases's content-match logic below (update instead of reject),
+    # so validation must not pre-flag those same cases as hard errors.
+    existing_hashes = set() if payload.update_existing else await load_existing_case_hashes(session)
+    validations = validate_research_case_batch(payload.cases, existing_hashes=existing_hashes)
     valid_schemas = [
         c for c, v in zip(payload.cases, validations.validations) if v.valid
     ]
     persisted = await ResearchCaseImportService(
         session, SnapshotComputer(wrapper)
-    ).import_cases([c.to_domain() for c in valid_schemas], user_id=_user.id.value)
+    ).import_cases(
+        [c.to_domain() for c in valid_schemas],
+        user_id=_user.id.value,
+        update_existing=payload.update_existing,
+    )
 
     # Re-merge per-case results in input order (invalid cases get error results)
     persisted_iter = iter(persisted)
@@ -933,6 +955,124 @@ async def import_research_cases(
         succeeded=succeeded,
         failed=len(payload.cases) - succeeded,
         results=[_case_result_to_schema(r) for r in results],
+    )
+
+
+def _category_node_to_schema(node: CategoryTreeNode) -> EventCategorySchema:
+    return EventCategorySchema(
+        id=node.id,
+        name=node.name,
+        level=node.level,
+        path=node.path,
+        house_number=node.house_number,
+        karaka_planet=node.karaka_planet,
+        source=node.source,
+        source_doc_count=node.source_doc_count,
+        children=[_category_node_to_schema(c) for c in node.children],
+    )
+
+
+@router.get(
+    "/event-categories",
+    response_model=EventCategoryTreeResponseSchema,
+    summary="Full research-event category tree, nested.",
+    tags=["Research Cases"],
+)
+async def get_event_category_tree(
+    session: AsyncSession = Depends(get_db_session),
+) -> EventCategoryTreeResponseSchema:
+    """
+    Open, source-taxonomy-driven category tree for research events (NOT
+    the fixed `EventType` enum — see event_category_service.py's module
+    docstring). Nodes are auto-created on import; Vedic house/karaka tags
+    are optional and attached later via PATCH below.
+    """
+    tree = await EventCategoryService(session).get_tree()
+    return EventCategoryTreeResponseSchema(categories=[_category_node_to_schema(n) for n in tree])
+
+
+@router.patch(
+    "/event-categories/{category_id}",
+    response_model=EventCategorySchema,
+    summary="Attach/update Vedic house-and-karaka tags on a category node.",
+    tags=["Research Cases"],
+)
+async def update_event_category(
+    category_id: uuid.UUID,
+    payload: EventCategoryUpdateSchema,
+    session: AsyncSession = Depends(get_db_session),
+    _user: User = Depends(require_researcher),
+) -> EventCategorySchema:
+    """Researcher-curation step — every category node starts untagged
+    (house_number/karaka_planet=NULL); this is how Vedic metadata gets
+    attached over time without blocking import on having it upfront."""
+    service = EventCategoryService(session)
+    node = await service.update_tags(
+        category_id,
+        house_number=payload.house_number,
+        karaka_planet=payload.karaka_planet,
+        description=payload.description,
+    )
+    if node is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found.")
+    await session.commit()
+    return EventCategorySchema(
+        id=str(node.id), name=node.name, level=node.level, path=node.path,
+        house_number=node.house_number, karaka_planet=node.karaka_planet,
+        source=node.source, source_doc_count=node.source_doc_count, children=[],
+    )
+
+
+def _event_type_node_to_schema(node: EventTypeTreeNode) -> EventTypeSchema:
+    return EventTypeSchema(
+        id=node.id,
+        name=node.name,
+        level=node.level,
+        path=node.path,
+        source=node.source,
+        children=[_event_type_node_to_schema(c) for c in node.children],
+    )
+
+
+@router.get(
+    "/event-types",
+    response_model=EventTypeTreeResponseSchema,
+    summary="Full research-event type tree, nested.",
+    tags=["Research Cases"],
+)
+async def get_event_type_tree(
+    session: AsyncSession = Depends(get_db_session),
+) -> EventTypeTreeResponseSchema:
+    """
+    Open, hierarchical event-type tree replacing the closed `EventType`
+    enum for the manual-entry/import path (the enum itself, and the
+    pattern-discovery/assistant endpoints that key off it, are unchanged
+    — see event_type_service.py's module docstring).
+    """
+    tree = await EventTypeService(session).get_tree()
+    return EventTypeTreeResponseSchema(event_types=[_event_type_node_to_schema(n) for n in tree])
+
+
+@router.patch(
+    "/event-types/{event_type_id}",
+    response_model=EventTypeSchema,
+    summary="Attach/update a description on an event-type node.",
+    tags=["Research Cases"],
+)
+async def update_event_type(
+    event_type_id: uuid.UUID,
+    payload: EventTypeUpdateSchema,
+    session: AsyncSession = Depends(get_db_session),
+    _user: User = Depends(require_researcher),
+) -> EventTypeSchema:
+    service = EventTypeService(session)
+    node = await service.update_node(event_type_id, description=payload.description)
+    if node is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event type not found.")
+    await session.commit()
+    return EventTypeSchema(
+        id=str(node.id), name=node.name, level=node.level, path=node.path,
+        source=node.source, children=[],
     )
 
 
@@ -1531,6 +1671,7 @@ async def get_research_case_detail(
             LifeEventDetailSchema(
                 id=event.id,
                 event_type=_BACKEND_TO_EVENT_TYPE.get(_plain_event_type(event.event_type), EventType.OTHER),
+                event_type_label=event.event_type_label,
                 event_date=event_date,
                 event_time=event.event_time,
                 event_place=event.event_place,

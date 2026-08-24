@@ -29,7 +29,7 @@ from apps.api.schemas.research_case import (
 )
 
 
-def _hash_case(person_name: str, dob: date, latitude: float, longitude: float) -> str:
+def hash_case(person_name: str, dob: date, latitude: float, longitude: float) -> str:
     """Deterministic hash for duplicate detection."""
     payload = f"{person_name}|{dob.isoformat()}|{latitude:.4f}|{longitude:.4f}"
     return hashlib.sha256(payload.encode()).hexdigest()[:20]
@@ -85,7 +85,7 @@ def validate_research_case(
         issues.append(_issue("person.timezone", "Timezone is required.", "error"))
 
     # ── Duplicate case hash ────────────────────────────────────────────────
-    case_hash = _hash_case(
+    case_hash = hash_case(
         person.name or "anonymous", person.dob, person.latitude, person.longitude
     )
     duplicate_case = case_hash in seen_hashes
@@ -179,9 +179,17 @@ def validate_research_case(
 
 def validate_research_case_batch(
     cases: list[ResearchCaseCreateSchema],
+    existing_hashes: Optional[set[str]] = None,
 ) -> ResearchCaseBatchValidationSchema:
-    """Validate a batch of cases; duplicate detection cross-cases."""
-    seen_hashes: set[str] = set()
+    """Validate a batch of cases; duplicate detection cross-cases.
+
+    ``existing_hashes``, when given, seeds the dedup set with hashes of
+    cases already persisted in the DB (see
+    apps.api.services.import_service.load_existing_case_hashes) — without
+    it, duplicate detection only catches repeats WITHIN this one batch,
+    not a batch re-imported (in full or in part) in a later request.
+    """
+    seen_hashes: set[str] = set(existing_hashes) if existing_hashes else set()
     validations = []
     for case in cases:
         val = validate_research_case(case, existing_hashes=seen_hashes)

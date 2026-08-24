@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ApiError } from "@/lib/api";
 import { KARAKATVA_GRAHAS, useKarakatvaSearch, type Karakatva } from "@/lib/karakatva";
-import { Badge, Card, Input, Select } from "@/components/ui";
+import { Badge, Card, Input, ResizablePanels, Select } from "@/components/ui";
 
 const GRAHA_LABELS: Record<string, string> = {
   sun: "Sun (Surya)",
@@ -90,74 +90,77 @@ export default function KarakatvaExplorerPage() {
         </p>
       </div>
 
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex-1">
-          <Input
-            label="Search signification"
-            value={subjectInput}
-            onChange={setSubjectInput}
-            placeholder="e.g. career, blood, marriage, surgery..."
-          />
+      <ResizablePanels defaultSizes={[0.30, 0.70]}>
+        {/* Left Filter & Search Panel */}
+        <div className="space-y-4 pr-2">
+          <Card>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-3 border-b pb-2" style={{ borderColor: "var(--border-primary)" }}>
+              Filter Catalogue
+            </h2>
+            <div className="space-y-3">
+              <Input
+                label="Search signification"
+                value={subjectInput}
+                onChange={setSubjectInput}
+                placeholder="e.g. career, blood, marriage..."
+              />
+              <Select
+                label="Planet (graha)"
+                value={graha}
+                onChange={setGraha}
+                placeholder="All planets"
+                options={[{ value: "", label: "All planets" }, ...KARAKATVA_GRAHAS.map((g) => ({ value: g, label: grahaLabel(g) }))]}
+              />
+            </div>
+          </Card>
         </div>
 
-        <div className="sm:w-48">
-          <Select
-            label="Planet (graha)"
-            value={graha}
-            onChange={setGraha}
-            placeholder="All planets"
-            options={[{ value: "", label: "All planets" }, ...KARAKATVA_GRAHAS.map((g) => ({ value: g, label: grahaLabel(g) }))]}
-          />
+        {/* Right Catalogue Results Panel */}
+        <div className="pl-2 space-y-3">
+          {!hasQuery && (
+            <Card style={{ padding: "2rem", textAlign: "center" }}>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                Type at least 2 characters, or pick a planet, to search the karakatva catalogue.
+              </p>
+            </Card>
+          )}
+
+          {hasQuery && (isLoading || isFetching) && (
+            <Card style={{ padding: "2rem", textAlign: "center" }}>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Searching…</p>
+            </Card>
+          )}
+
+          {hasQuery && isError && (
+            <Card style={{ padding: "2rem", textAlign: "center" }}>
+              <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
+                {errorMessage}
+              </p>
+            </Card>
+          )}
+
+          {hasQuery && !isLoading && !isFetching && !isError && results.length === 0 && (
+            <Card style={{ padding: "2rem", textAlign: "center" }}>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                No matching significations found. Sourced from Brihat Parashara Hora Shastra (BPHS).
+              </p>
+            </Card>
+          )}
+
+          {hasQuery && !isLoading && !isFetching && !isError && results.length > 0 && (
+            <div>
+              <p className="mb-3 text-xs" style={{ color: "var(--text-muted)" }}>
+                {data?.total ?? results.length} result{(data?.total ?? results.length) === 1 ? "" : "s"}.
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {results.map((item) => (
+                  <KarakatvaCard key={item.id} item={item} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-
-      {!hasQuery && (
-        <Card style={{ padding: "2rem", textAlign: "center" }}>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            Type at least 2 characters, or pick a planet, to search the karakatva catalogue.
-          </p>
-        </Card>
-      )}
-
-      {hasQuery && (isLoading || isFetching) && (
-        <Card style={{ padding: "2rem", textAlign: "center" }}>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Searching…</p>
-        </Card>
-      )}
-
-      {hasQuery && isError && (
-        <Card style={{ padding: "2rem", textAlign: "center" }}>
-          <p className="text-sm" style={{ color: "var(--danger-400)" }} role="alert">
-            {errorMessage}
-          </p>
-        </Card>
-      )}
-
-      {hasQuery && !isLoading && !isFetching && !isError && results.length === 0 && (
-        <Card style={{ padding: "2rem", textAlign: "center" }}>
-          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-            No matching significations found. This catalogue currently holds a
-            few hundred classical entries (grahas, houses, nakshatras) sourced
-            from BPHS — if searches keep coming back empty even for common
-            terms like &quot;career&quot; or &quot;marriage&quot;, the one-time
-            knowledge base seed script (<code>python -m apps.api.scripts.seed_knowledge</code>)
-            may not have been run against this database yet.
-          </p>
-        </Card>
-      )}
-
-      {hasQuery && !isLoading && !isFetching && !isError && results.length > 0 && (
-        <div>
-          <p className="mb-3 text-xs" style={{ color: "var(--text-muted)" }}>
-            {data?.total ?? results.length} result{(data?.total ?? results.length) === 1 ? "" : "s"}.
-          </p>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {results.map((item) => (
-              <KarakatvaCard key={item.id} item={item} />
-            ))}
-          </div>
-        </div>
-      )}
+      </ResizablePanels>
     </>
   );
 }

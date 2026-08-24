@@ -16,27 +16,24 @@ export function SplitWorkspaceLayout({
   const request = useWorkflowStore((s) => s.request);
   const setRequest = useWorkflowStore((s) => s.setRequest);
 
-  const [leftWidth, setLeftWidth] = useState(() => {
-    if (typeof window === "undefined") return 280;
-    try {
-      const stored = localStorage.getItem("workspace:subject_width");
-      const parsed = stored ? parseInt(stored, 10) : 280;
-      return isNaN(parsed) ? 280 : Math.max(160, Math.min(450, parsed));
-    } catch {
-      return 280;
-    }
-  });
-
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return localStorage.getItem("workspace:subject_collapsed") === "true";
-    } catch {
-      return false;
-    }
-  });
-
+  const [leftWidth, setLeftWidth] = useState(280);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const storedCollapsed = localStorage.getItem("workspace:subject_collapsed") === "true";
+      if (storedCollapsed) setIsCollapsed(true);
+      const storedWidth = localStorage.getItem("workspace:subject_width");
+      if (storedWidth) {
+        const parsed = parseInt(storedWidth, 10);
+        if (!isNaN(parsed) && parsed >= 160 && parsed <= 450) {
+          setLeftWidth(parsed);
+        }
+      }
+    } catch {}
+  }, []);
 
   useEffect(() => {
     if (!request && typeof window !== "undefined") {

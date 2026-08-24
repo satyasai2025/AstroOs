@@ -1139,12 +1139,27 @@ export interface ResearchEventSnapshot {
 
 export interface ResearchLifeEvent {
   id?: string | null;
-  type: ResearchEventType;
+  /** Legacy closed 22-value event type. Optional now that event_type_path
+   * (the open Event Tree) exists — kept for backward-compat JSON-upload
+   * payloads and the pattern-discovery/assistant features that still key
+   * off it. Falls back to "Other" when neither is supplied. */
+  type?: ResearchEventType;
   event_date: string; // YYYY-MM-DD
   event_time?: string | null; // HH:MM
   event_place?: string | null;
   severity?: "Major" | "Moderate" | "Minor";
   category?: string;
+  /** Optional hierarchical category path, e.g. ["Notable", "Famous", "Royal family"],
+   * up to 6 levels. Resolves to (and auto-creates missing nodes in) the open
+   * event_categories tree — see apps/api/services/event_category_service.py.
+   * When supplied, overrides `category`. */
+  category_path?: string[];
+  /** Optional hierarchical event-type path, e.g. ["Relationship", "Marriage",
+   * "Love marriage"], up to 6 levels. Resolves against the open event_types
+   * tree (apps/api/services/event_type_service.py) — replaces `type` for the
+   * manual-entry/import path. When supplied, the legacy `type` enum is
+   * stored as "other". */
+  event_type_path?: string[];
   verified?: boolean;
   confidence?: "high" | "medium" | "low";
   source?: string;
@@ -1180,6 +1195,11 @@ export interface ResearchCasePayload {
 export interface ResearchCaseBatchImport {
   cases: ResearchCasePayload[];
   generate_ids?: boolean;
+  /** When true, a case matching an already-persisted one by person name +
+   * dob + tob is updated (new life_events appended) instead of being
+   * rejected as a duplicate — backs the bulk-import wizard's "Update
+   * existing cases" option. See apps/api/services/import_service.py. */
+  update_existing?: boolean;
 }
 
 // ── Research Case responses ──────────────────────────────────────────────────
@@ -1252,6 +1272,7 @@ export interface LifeEventSnapshot {
 export interface LifeEventDetail {
   id: string;
   event_type: string;
+  event_type_label: string;
   event_date: string;
   event_time?: string | null;
   event_place?: string | null;

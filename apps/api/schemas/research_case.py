@@ -238,12 +238,46 @@ class AttachmentSchema(BaseModel):
 class LifeEventCreateSchema(BaseModel):
     """One recorded life event for a research case."""
     id: Optional[str] = Field(default=None, max_length=50)
-    type: EventType
+    type: Optional[EventType] = Field(
+        default=None,
+        description=(
+            "Legacy closed 22-value event type. Optional now that "
+            "event_type_path (the open Event Tree) exists — kept for "
+            "backward-compat JSON-upload payloads and the "
+            "pattern-discovery/assistant endpoints that still key off it. "
+            "Falls back to 'Other' when neither this nor event_type_path "
+            "is supplied."
+        ),
+    )
     event_date: date
     event_time: Optional[str] = Field(default=None, description="HH:MM")
     event_place: Optional[str] = Field(default=None, max_length=300)
     severity: Severity = Severity.MODERATE
     category: str = Field(default="Other", max_length=100)
+    category_path: Optional[list[str]] = Field(
+        default=None,
+        max_length=6,
+        description=(
+            "Optional hierarchical category path, e.g. [\"Notable\", \"Famous\", "
+            "\"Royal family\"], up to 6 levels deep. When supplied, resolves "
+            "to a node in the event_categories tree (auto-creating any "
+            "missing segment) and the resolved path overwrites `category` "
+            "for backward-compat string reads. Open vocabulary — unlike "
+            "`type`, unrecognized paths are created, not rejected."
+        ),
+    )
+    event_type_path: Optional[list[str]] = Field(
+        default=None,
+        max_length=6,
+        description=(
+            "Optional hierarchical event-type path, e.g. [\"Relationship\", "
+            "\"Marriage\", \"Love marriage\"], up to 6 levels deep. Mirrors "
+            "category_path but resolves against the open event_types tree "
+            "instead of the closed `type` enum — replaces `type` for the "
+            "manual-entry/import path. When supplied, the legacy `type` "
+            "enum column is stored as 'other'."
+        ),
+    )
     verified: bool = False
     confidence: SourceConfidence = SourceConfidence.MEDIUM
     source: str = Field(default="self-report", max_length=100)
@@ -257,12 +291,14 @@ class LifeEventCreateSchema(BaseModel):
     def to_domain(self) -> LifeEventDomain:
         return LifeEventDomain(
             id=self.id,
-            type=EVENT_TYPE_TO_BACKEND[self.type.value],
+            type=EVENT_TYPE_TO_BACKEND[self.type.value] if self.type else "other",
             event_date=self.event_date,
             event_time=self.event_time,
             event_place=self.event_place,
             severity=self.severity.value.lower(),
             category=self.category,
+            category_path=list(self.category_path) if self.category_path else None,
+            event_type_path=list(self.event_type_path) if self.event_type_path else None,
             verified=self.verified,
             confidence=self.confidence.value,
             source=self.source,
@@ -315,6 +351,14 @@ class ResearchCaseBatchImportSchema(BaseModel):
     """Batch import — wraps multiple cases in one request."""
     cases: list[ResearchCaseCreateSchema] = Field(min_length=1, max_length=1000)
     generate_ids: bool = True
+    update_existing: bool = Field(
+        default=False,
+        description=(
+            "When true, a case matching an already-persisted one by "
+            "person name + dob + tob is updated (new life_events "
+            "appended) instead of being rejected as a duplicate."
+        ),
+    )
 
 
 # ── Responses ───────────────────────────────────────────────────────────────
@@ -390,6 +434,7 @@ class LifeEventDetailSchema(BaseModel):
     for the event timeline view."""
     id: uuid.UUID
     event_type: EventType
+    event_type_label: str = "Other"
     event_date: date
     event_time: Optional[str] = None
     event_place: Optional[str] = None
@@ -726,3 +771,57 @@ class SnapshotRebuildResultSchema(BaseModel):
 
 class EvidenceRecalculationResultSchema(BaseModel):
     patterns_refreshed: int
+
+
+# ── Event Category Tree (open, source-taxonomy-driven) ─────────────────────
+
+
+class EventCategorySchema(BaseModel):
+    """One node in the research-event category tree, nested."""
+    id: str
+    name: str
+    level: int
+    path: str
+    house_number: Optional[int] = None
+    karaka_planet: Optional[str] = None
+    source: str
+    source_doc_count: Optional[int] = None
+    children: list["EventCategorySchema"] = Field(default_factory=list)
+
+
+EventCategorySchema.model_rebuild()
+
+
+class EventCategoryTreeResponseSchema(BaseModel):
+    categories: list[EventCategorySchema]
+
+
+class EventCategoryUpdateSchema(BaseModel):
+    """Researcher-curation payload: attach/update Vedic metadata on an
+    existing (usually auto-created) category node."""
+    house_number: Optional[int] = Field(default=None, ge=1, le=12)
+    karaka_planet: Optional[str] = Field(default=None, max_length=20)
+    description: Optional[str] = Field(default=None, max_length=2000)
+
+
+class EventTypeSchema(BaseModel):
+    """One node in the research-event type tree, nested."""
+    id: str
+    name: str
+    level: int
+    path: str
+    source: str
+    children: list["EventTypeSchema"] = Field(default_factory=list)
+
+
+EventTypeSchema.model_rebuild()
+
+
+class EventTypeTreeResponseSchema(BaseModel):
+    event_types: list[EventTypeSchema]
+
+
+class EventTypeUpdateSchema(BaseModel):
+    """Researcher-curation payload: attach/update a description on an
+    existing (usually auto-created) event-type node."""
+    description: Optional[str] = Field(default=None, max_length=2000)

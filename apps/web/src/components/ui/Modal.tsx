@@ -11,7 +11,7 @@ interface ModalProps {
   width?: number;
 }
 
-export function Modal({ open, title, children, footer, onClose, width = 480 }: ModalProps) {
+export function Modal({ open, title, children, footer, onClose, width = 520 }: ModalProps) {
   if (!open) return null;
   return (
     <div
@@ -22,8 +22,8 @@ export function Modal({ open, title, children, footer, onClose, width = 480 }: M
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "rgba(5,7,13,0.65)",
-        backdropFilter: "blur(6px)",
+        background: "rgba(15,23,42,0.65)",
+        backdropFilter: "blur(8px)",
       }}
       onClick={onClose}
     >
@@ -35,30 +35,37 @@ export function Modal({ open, title, children, footer, onClose, width = 480 }: M
           maxHeight: "90vh",
           display: "flex",
           flexDirection: "column",
-          background: "linear-gradient(180deg, var(--bg-surface-800), var(--bg-surface-700))",
-          border: "1px solid var(--border-default)",
-          borderRadius: "var(--radius-xl)",
-          boxShadow: "var(--shadow-xl)",
+          backgroundColor: "var(--bg-card, #ffffff)",
+          borderColor: "var(--border-primary, #e2e8f0)",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          borderRadius: "1rem",
+          boxShadow: "0 20px 25px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.1)",
         }}
+        className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-2xl transition-colors"
       >
         {/* Fixed header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "var(--space-3)", borderBottom: "1px solid var(--border-subtle)", flexShrink: 0 }}>
-          <span style={{ fontFamily: "var(--font-display)", fontSize: "var(--text-xl)", fontWeight: "var(--weight-semibold)", color: "var(--text-primary)" }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex-shrink-0">
+          <span className="text-base font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
             {title}
           </span>
-          <span onClick={onClose} style={{ cursor: "pointer", color: "var(--text-tertiary)", fontSize: 18, lineHeight: 1, padding: 4, flexShrink: 0 }}>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 text-base font-bold p-1 rounded transition cursor-pointer"
+          >
             ✕
-          </span>
+          </button>
         </div>
 
         {/* Scrollable body */}
-        <div style={{ color: "var(--text-secondary)", fontSize: "var(--text-base)", padding: "var(--space-3)", overflowY: "auto", flex: 1 }}>
+        <div className="p-4 overflow-y-auto flex-1 text-xs text-slate-800 dark:text-slate-200 leading-relaxed custom-scrollbar">
           {children}
         </div>
 
         {/* Pinned footer */}
         {footer && (
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, padding: "var(--space-3)", borderTop: "1px solid var(--border-subtle)", flexShrink: 0 }}>
+          <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-slate-200 dark:border-slate-800 flex-shrink-0">
             {footer}
           </div>
         )}

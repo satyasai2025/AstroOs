@@ -89,6 +89,8 @@ class LifeEvent:
     event_place: Optional[str] = None
     severity: str = "moderate"
     category: str = "Other"
+    category_path: Optional[list[str]] = None
+    event_type_path: Optional[list[str]] = None
     verified: bool = False
     confidence: str = "medium"
     source: str = "self-report"

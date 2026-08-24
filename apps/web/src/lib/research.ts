@@ -572,6 +572,61 @@ export const exportApi = {
   },
 };
 
+// ── Event Category Tree (open, source-taxonomy-driven) ──────────────────────
+
+export interface EventCategoryNode {
+  id: string;
+  name: string;
+  level: number;
+  path: string;
+  house_number: number | null;
+  karaka_planet: string | null;
+  source: string;
+  source_doc_count: number | null;
+  children: EventCategoryNode[];
+}
+
+export interface EventCategoryTreeResponse {
+  categories: EventCategoryNode[];
+}
+
+export interface EventCategoryUpdateRequest {
+  house_number?: number | null;
+  karaka_planet?: string | null;
+  description?: string | null;
+}
+
+export const eventCategoriesApi = {
+  tree: () => api.get<EventCategoryTreeResponse>("/api/v1/research/event-categories"),
+  update: (id: string, data: EventCategoryUpdateRequest) =>
+    api.patch<EventCategoryNode>(`/api/v1/research/event-categories/${id}`, data),
+};
+
+// ── Event Type Tree (open, replaces the closed EventType enum for manual entry) ──
+
+export interface EventTypeNode {
+  id: string;
+  name: string;
+  level: number;
+  path: string;
+  source: string;
+  children: EventTypeNode[];
+}
+
+export interface EventTypeTreeResponse {
+  event_types: EventTypeNode[];
+}
+
+export interface EventTypeUpdateRequest {
+  description?: string | null;
+}
+
+export const eventTypesApi = {
+  tree: () => api.get<EventTypeTreeResponse>("/api/v1/research/event-types"),
+  update: (id: string, data: EventTypeUpdateRequest) =>
+    api.patch<EventTypeNode>(`/api/v1/research/event-types/${id}`, data),
+};
+
 // ── React Query Hooks ────────────────────────────────────────────────────────
 
 export function useResearchProjects(userId?: string) {
@@ -593,6 +648,42 @@ export function useHypotheses(projectId?: string) {
   return useQuery({
     queryKey: ["research", "hypotheses", projectId],
     queryFn: () => hypothesisValidationApi.list({ project_id: projectId }),
+  });
+}
+
+export function useEventCategoryTree() {
+  return useQuery({
+    queryKey: ["research", "event-categories"],
+    queryFn: () => eventCategoriesApi.tree(),
+  });
+}
+
+export function useUpdateEventCategory() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: EventCategoryUpdateRequest }) =>
+      eventCategoriesApi.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["research", "event-categories"] });
+    },
+  });
+}
+
+export function useEventTypeTree() {
+  return useQuery({
+    queryKey: ["research", "event-types"],
+    queryFn: () => eventTypesApi.tree(),
+  });
+}
+
+export function useUpdateEventType() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: EventTypeUpdateRequest }) =>
+      eventTypesApi.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["research", "event-types"] });
+    },
   });
 }
 

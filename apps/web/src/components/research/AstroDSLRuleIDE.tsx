@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { ResizablePanels } from "@/components/ui";
 
 export interface CustomRule {
   rule_id: string;
@@ -227,9 +228,9 @@ export function AstroDSLRuleIDE() {
       </div>
 
       {activeTab === "ide" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <ResizablePanels defaultSizes={[0.55, 0.45]}>
           {/* Code Editor Panel */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="space-y-4 pr-2">
             {/* Quick Templates */}
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
@@ -245,7 +246,7 @@ export function AstroDSLRuleIDE() {
                       setIsValid(null);
                       setSyntaxError("");
                     }}
-                    className="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/20 px-3 py-1.5 rounded-md transition-colors"
+                    className="text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/20 px-3 py-1.5 rounded-md transition-colors cursor-pointer"
                   >
                     {tmpl.title}
                   </button>
@@ -312,31 +313,31 @@ export function AstroDSLRuleIDE() {
             <div className="flex items-center space-x-3 pt-2">
               <button
                 onClick={handleValidate}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 text-sm font-medium rounded-lg border border-slate-700 transition-colors"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 text-sm font-medium rounded-lg border border-slate-700 transition-colors cursor-pointer"
               >
                 Validate Syntax
               </button>
               <button
                 onClick={handleTestEvaluate}
                 disabled={isEvaluating}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 text-sm font-medium rounded-lg shadow-lg shadow-indigo-600/20 transition-colors disabled:opacity-50"
+                className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 text-sm font-bold rounded-lg shadow-lg transition-colors flex items-center gap-2 cursor-pointer"
               >
-                {isEvaluating ? "Evaluating..." : "Test on Chart"}
+                {isEvaluating ? "Evaluating AST..." : "Test on Chart ▶"}
               </button>
               <button
                 onClick={handleSaveRule}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-sm font-medium rounded-lg shadow-lg shadow-emerald-600/20 transition-colors"
+                className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer"
               >
                 Save to Registry
               </button>
             </div>
           </div>
 
-          {/* Sandbox Testing & Trace Inspector */}
-          <div className="lg:col-span-5 space-y-4">
-            <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-4 shadow-xl">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300 border-b border-slate-800 pb-2">
-                Sandbox Evaluation Inspector
+          {/* AST & Sandbox Evaluation Output Panel */}
+          <div className="space-y-4 pl-2">
+            <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3 shadow-inner min-h-[360px]">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-2">
+                Sandboxed AST Evaluation &amp; Trace
               </h2>
 
               {testResult ? (
@@ -389,7 +390,7 @@ export function AstroDSLRuleIDE() {
               )}
             </div>
           </div>
-        </div>
+        </ResizablePanels>
       ) : (
         /* Registry & Import/Export View */
         <div className="space-y-4">
