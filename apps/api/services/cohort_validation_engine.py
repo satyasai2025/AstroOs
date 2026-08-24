@@ -202,4 +202,4 @@ class CohortValidationEngine:
         area = 0.0
         for i in range(1, len(recalls)):
             area += (recalls[i] - recalls[i - 1]) * precisions[i]
-        return max(0.0, min(1.0, area)) if area > 0 else 0.85
+        return max(0.0, min(1.0, area))
