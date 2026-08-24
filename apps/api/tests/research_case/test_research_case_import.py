@@ -154,6 +154,21 @@ class TestSnapshotComputer:
         assert snap.current_dasha.antardasha
         assert snap.active_yogas, "expected at least one active yoga"
         assert snap.transits, "expected transit features"
+        assert snap.shadbala, "expected shadbala features"
+        assert snap.facts, "expected unified facts list"
+
+    def test_snapshot_has_full_canonical_fact_coverage(self, wrapper):
+        per_event = SnapshotComputer(wrapper).compute_case(make_domain_case())
+        snap = per_event[0][1][0]
+        categories = {f.key.split(".")[0] for f in snap.facts}
+
+        required_categories = {
+            "planet", "house", "yoga", "shadbala", "ashtakavarga",
+            "maraka", "badhaka", "aspect", "friendship", "functional",
+            "guna", "transit", "dasha", "varga", "sbc",
+        }
+        for cat in required_categories:
+            assert cat in categories, f"missing expected fact category: {cat}"
 
     def test_dasha_changes_across_event_dates(self, wrapper):
         per_event = SnapshotComputer(wrapper).compute_case(make_domain_case())

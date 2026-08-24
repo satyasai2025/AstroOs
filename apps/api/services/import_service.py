@@ -50,14 +50,23 @@ from apps.api.models.research_case import (
     LifeEventModel,
     ResearchCaseModel,
 )
+from apps.api.services.aspect_engine import AspectEngine
+from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
+from apps.api.services.badhaka_maraka_engine import BadhakaMarakaEngine
 from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.dasha_lookup import find_active_dasha_chain
+from apps.api.services.divisional_engine import DivisionalEngine
 from apps.api.services.event_category_service import EventCategoryService
 from apps.api.services.event_type_service import EventTypeService
+from apps.api.services.fact_builder import FactBuilder
+from apps.api.services.functional_lordship_engine import FunctionalLordshipEngine
 from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.house_engine import HouseEngine
+from apps.api.services.nakshatra_vedha_calculator import NakshatraVedhaCalculator
 from apps.api.services.research_validation import hash_case
+from apps.api.services.shadbala_engine import ShadbalaEngine
 from apps.api.services.transit_engine import TransitEngine
+from apps.api.services.vedha_calculator import VedhaCalculator
 from apps.api.services.yoga_engine import YogaEngine
 
 logger = logging.getLogger(__name__)
@@ -69,7 +78,7 @@ _NOON = time(12, 0)
 # both stamp snapshots with this — per EventSnapshotModel's "append, never
 # overwrite" contract, bumping it and rebuilding produces new snapshot rows
 # alongside the old ones, never mutates history.
-CURRENT_SNAPSHOT_VERSION = "1.1"
+CURRENT_SNAPSHOT_VERSION = "1.2"
 
 
 async def load_existing_case_hashes(session: AsyncSession) -> set[str]:
@@ -103,11 +112,12 @@ def _to_utc(d: date, t: Optional[str], tz_name: str) -> datetime:
 
 class SnapshotComputer:
     """
-    Computes EventSnapshots for one research case.
+    Computes EventSnapshots for one research case using FactBuilder as the
+    single canonical engine boundary.
 
-    Natal work (D1 chart, dasha tree, natal yogas) is date-invariant and
+    Natal work (D1 chart, dasha tree, divisional charts) is date-invariant and
     computed once per case; dasha chain + transit are date-dependent and
-    resolved per event date.
+    resolved per event date via FactBuilder.
     """
 
     def __init__(self, wrapper, dasha_system: str = "vimshottari") -> None:
@@ -118,6 +128,31 @@ class SnapshotComputer:
         self._transit_engine = TransitEngine(wrapper)
         self._yoga_engine = YogaEngine()
         self._house_engine = HouseEngine()
+        self._divisional_engine = DivisionalEngine(wrapper)
+        self._shadbala_engine = ShadbalaEngine(
+            divisional_engine=self._divisional_engine,
+            ephemeris_wrapper=wrapper,
+        )
+        self._ashtakavarga_engine = AshtakavargaEngine()
+        self._badhaka_maraka_engine = BadhakaMarakaEngine()
+        self._aspect_engine = AspectEngine()
+        self._functional_lordship_engine = FunctionalLordshipEngine()
+        self._vedha_calculator = VedhaCalculator()
+        self._nakshatra_vedha_calculator = NakshatraVedhaCalculator()
+
+        self._fact_builder = FactBuilder(
+            graha_engine=None,
+            house_engine=self._house_engine,
+            yoga_engine=self._yoga_engine,
+            shadbala_engine=self._shadbala_engine,
+            ashtakavarga_engine=self._ashtakavarga_engine,
+            transit_engine=self._transit_engine,
+            badhaka_maraka_engine=self._badhaka_maraka_engine,
+            aspect_engine=self._aspect_engine,
+            functional_lordship_engine=self._functional_lordship_engine,
+            vedha_calculator=self._vedha_calculator,
+            nakshatra_vedha_calculator=self._nakshatra_vedha_calculator,
+        )
 
     def compute_case(self, case: ResearchCase) -> list[tuple[LifeEvent, list[EventSnapshot]]]:
         """
@@ -143,45 +178,81 @@ class SnapshotComputer:
             ayanamsa=case.ayanamsa,
             house_system=case.house_system,
         )
-        yoga_results = self._yoga_engine.evaluate_all(chart)
-        active_yogas = [y.name for y in yoga_results if y.is_present]
 
-        # House-lord dignity and natal nakshatra placements are, like
-        # active_yogas above, date-invariant (derived from the D1 chart
-        # alone) — computed once per case and reused for every event.
-        house_summary = self._house_engine.build_house_summary(chart.houses, chart.planets)
-        planets_by_name = {p.planet: p for p in chart.planets}
-        house_lord_statuses: dict[str, str] = {}
-        for house in house_summary:
-            lord_position = planets_by_name.get(house.lord)
-            dignity = lord_position.dignity if lord_position else None
-            house_lord_statuses[str(house.house_number)] = dignity.value if dignity else "neutral"
-        nakshatra_activations = [f"{p.planet}_{p.nakshatra}" for p in chart.planets]
+        # Compute divisional charts
+        vargas = {}
+        varga_codes = case.divisional_charts if case.divisional_charts else ["D9", "D10"]
+        for code in varga_codes:
+            try:
+                vargas[code] = self._divisional_engine.compute(
+                    birth_datetime_utc=birth_utc,
+                    latitude=case.person.latitude,
+                    longitude=case.person.longitude,
+                    varga=code,
+                    ayanamsa=case.ayanamsa,
+                    house_system=case.house_system,
+                )
+            except Exception as exc:
+                logger.warning("Failed to compute varga %s for case %s: %s", code, case.id, exc)
 
         per_event: list[tuple[LifeEvent, list[EventSnapshot]]] = []
         for event in case.life_events:
             try:
                 event_utc = _to_utc(event.event_date, event.event_time, case.person.timezone)
-                chain = find_active_dasha_chain(dasha_tree, event.event_date)
-                dasha: Optional[DashaSnapshot] = None
-                if chain:
-                    dasha = DashaSnapshot(
-                        mahadasha=chain[0].lord,
-                        antardasha=chain[1].lord if len(chain) > 1 else "",
-                        pratyantar=chain[2].lord if len(chain) > 2 else None,
-                    )
-                transit_results = self._transit_engine.compute_transit(chart, event_utc)
-                transit_features = {
-                    f"{r.planet}_{r.transit_rashi}": True for r in transit_results
+                registry = self._fact_builder.build_facts(
+                    chart=chart,
+                    transit_datetime_utc=event_utc,
+                    dasha_tree=dasha_tree,
+                    vargas=vargas,
+                )
+                facts_list = registry.all_facts()
+
+                # Derive backward-compatible views from registry/facts
+                md = registry.get_value("dasha.current_lord")
+                ad = registry.get_value("dasha.antardasha_lord", "")
+                dasha: Optional[DashaSnapshot] = DashaSnapshot(mahadasha=md, antardasha=ad) if md else None
+
+                transits = {
+                    f"{p.planet}_{registry.get_value(f'transit.{p.planet}.rashi')}": True
+                    for p in chart.planets
+                    if registry.has_fact(f"transit.{p.planet}.rashi")
                 }
+                shadbala = {
+                    p: registry.get_value(f"shadbala.{p}.total", 0.0)
+                    for p in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]
+                    if registry.has_fact(f"shadbala.{p}.total")
+                }
+                active_yogas = [
+                    f.key.split(".")[1]
+                    for f in facts_list
+                    if f.key.startswith("yoga.") and f.key.endswith(".present") and f.value is True
+                ]
+                varga_activations = {
+                    f"{f.key.split('.')[2]}_{f.key.split('.')[1]}": str(f.value)
+                    for f in facts_list
+                    if f.key.startswith("varga.") and f.key.endswith(".rashi")
+                }
+                nakshatra_activations = [f"{p.planet}_{p.nakshatra}" for p in chart.planets]
+                house_lord_statuses = {
+                    str(i): (
+                        next((p.dignity.value for p in chart.planets if p.planet == registry.get_value(f"house.{i}.lord")), "neutral")
+                        if registry.has_fact(f"house.{i}.lord")
+                        else "neutral"
+                    )
+                    for i in range(1, 13)
+                }
+
                 snapshot = EventSnapshot(
                     snapshot_date=event.event_date,
                     snapshot_version=CURRENT_SNAPSHOT_VERSION,
                     current_dasha=dasha,
-                    transits=transit_features,
-                    active_yogas=list(active_yogas),
-                    nakshatra_activations=list(nakshatra_activations),
-                    house_lord_statuses=dict(house_lord_statuses),
+                    transits=transits,
+                    shadbala=shadbala,
+                    active_yogas=active_yogas,
+                    varga_activations=varga_activations,
+                    nakshatra_activations=nakshatra_activations,
+                    house_lord_statuses=house_lord_statuses,
+                    facts=facts_list,
                 )
             except Exception as exc:  # noqa: BLE001 — per-event best effort
                 logger.warning(
@@ -431,6 +502,7 @@ class ResearchCaseImportService:
                                 varga_activations=json.dumps(snap.varga_activations),
                                 nakshatra_activations=json.dumps(snap.nakshatra_activations),
                                 house_lord_statuses=json.dumps(snap.house_lord_statuses),
+                                facts_json=json.dumps([{"key": f.key, "value": f.value, "source": f.source} for f in snap.facts]) if snap.facts else None,
                             )
                         )
                         total_snapshots += 1
@@ -544,6 +616,7 @@ class ResearchCaseImportService:
                             varga_activations=json.dumps(snap.varga_activations),
                             nakshatra_activations=json.dumps(snap.nakshatra_activations),
                             house_lord_statuses=json.dumps(snap.house_lord_statuses),
+                            facts_json=json.dumps([{"key": f.key, "value": f.value, "source": f.source} for f in snap.facts]) if snap.facts else None,
                         )
                     )
                     snapshots_created += 1

@@ -155,7 +155,12 @@ def _humanize_dimension(dimension: str, value: str) -> str:
         planet = _PLANET_CODE_TO_NAME.get(planet_token, planet_token)
         return f"{planet} shadbala of {value}"
 
-    label = _title(dimension)
+    if dimension.startswith("composite_"):
+        comp_name = dimension[len("composite_"):]
+        label = _title(comp_name)
+        return f"{label} signature" if present else f"absence of {label}"
+
+    label = _title(dimension.replace(".", " "))
     if is_bool:
         return label if present else f"the absence of {label}"
     return f"{label} of {value}"

@@ -22,7 +22,9 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from typing import Optional
+from typing import Any, Optional
+
+from apps.api.domain.facts import Fact
 
 
 @dataclass(frozen=True)
@@ -76,6 +78,7 @@ class EventSnapshot:
     varga_activations: dict[str, str] = field(default_factory=dict)
     nakshatra_activations: list[str] = field(default_factory=list)
     house_lord_statuses: dict[str, str] = field(default_factory=dict)
+    facts: list[Fact] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -154,9 +157,30 @@ class ExtractedFeature:
 
     feature_name: str
     feature_value: str | float | bool
-    feature_category: str  # yoga, dasha, transit, shadbala, house, nakshatra, varga
+    feature_category: str  # yoga, dasha, transit, shadbala, house, nakshatra, varga, ...
     event_type: str
     research_case_id: str
+    event_date: date
+    confidence: float = 1.0
+
+
+@dataclass(frozen=True)
+class FactReference:
+    """Provenance and data for one canonical fact participating in a composite feature."""
+
+    key: str
+    value: Any
+    source: str = ""
+
+
+@dataclass(frozen=True)
+class CompositeFeature:
+    """Structured composite astrological signature derived from co-occurring facts."""
+
+    composite_name: str
+    components: list[FactReference]
+    research_case_id: str
+    event_type: str
     event_date: date
     confidence: float = 1.0
 

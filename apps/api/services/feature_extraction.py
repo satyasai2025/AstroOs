@@ -36,6 +36,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import aliased
 
+from apps.api.domain.facts import Fact
 from apps.api.domain.research_case import ExtractedFeature
 from apps.api.models.research_case import (
     EventSnapshotModel,
@@ -203,6 +204,54 @@ class FeatureExtractionService:
             )
         return features
 
+    @staticmethod
+    def _deserialize_facts(snapshot: EventSnapshotModel) -> list[Fact] | None:
+        """Persistence boundary — deserialize ``facts_json`` TEXT column into
+        domain ``Fact`` objects.  Returns ``None`` when the column is absent or
+        unparseable, so callers can fall back to the legacy per-column path.
+        This is the ONLY place in FeatureExtractionService that touches
+        ``snapshot.facts_json``; all feature logic works with ``list[Fact]``.
+        """
+        if not snapshot.facts_json:
+            return None
+        try:
+            raw = json.loads(snapshot.facts_json)
+        except (ValueError, TypeError) as exc:
+            logger.warning("facts_json parse error (snapshot id=%s): %s", getattr(snapshot, "id", "?"), exc)
+            return None
+        if not isinstance(raw, list):
+            return None
+        facts: list[Fact] = []
+        for item in raw:
+            key = item.get("key") if isinstance(item, dict) else None
+            if not key:
+                continue
+            facts.append(Fact(key=key, value=item.get("value"), source=item.get("source", "")))
+        return facts or None
+
+    @staticmethod
+    def _from_facts(
+        facts: list[Fact],
+        *,
+        research_case_id: str,
+        event_type: str,
+        event_date: date,
+    ) -> list[ExtractedFeature]:
+        """Pure domain function — convert a hydrated ``list[Fact]`` into
+        ``ExtractedFeature`` rows.  Receives no DB objects, no JSON strings.
+        """
+        return [
+            ExtractedFeature(
+                feature_name=f.key,
+                feature_value=f.value,
+                feature_category=f.key.split(".")[0],
+                event_type=event_type,
+                research_case_id=research_case_id,
+                event_date=event_date,
+            )
+            for f in facts
+        ]
+
     def _from_snapshot(
         self,
         research_case_id: str,
@@ -210,7 +259,45 @@ class FeatureExtractionService:
         event_date: date,
         snapshot: EventSnapshotModel,
     ) -> list[ExtractedFeature]:
-        """Normalise one snapshot into feature rows."""
+        """Normalise one snapshot into feature rows.
+
+        Fast path (new snapshots): deserialize ``facts_json`` at the
+        persistence boundary → pass domain ``list[Fact]`` to
+        ``_from_facts``; no JSON string ever enters feature logic.
+
+        Legacy fallback (pre-migration rows with null ``facts_json``): read
+        the individual JSON blob columns the old SnapshotComputer wrote.
+        """
+        # ── Persistence boundary: hydrate facts_json → domain Fact objects ──
+        facts = self._deserialize_facts(snapshot)
+        if facts is not None:
+            return self._from_facts(
+                facts,
+                research_case_id=research_case_id,
+                event_type=event_type,
+                event_date=event_date,
+            )
+
+        # ── Legacy fallback: pre-migration snapshot rows ──────────────────────
+        return self._from_snapshot_legacy(
+            research_case_id=research_case_id,
+            event_type=event_type,
+            event_date=event_date,
+            snapshot=snapshot,
+        )
+
+    def _from_snapshot_legacy(
+        self,
+        research_case_id: str,
+        event_type: str,
+        event_date: date,
+        snapshot: EventSnapshotModel,
+    ) -> list[ExtractedFeature]:
+        """Legacy extraction path for pre-migration snapshot rows (null
+        ``facts_json``).  Reads the individual JSON blob columns written by
+        the old SnapshotComputer.  Preserved unchanged for backward
+        compatibility; will be dropped once all snapshots are rebuilt.
+        """
         features: list[ExtractedFeature] = []
 
         # ── Dasha chain (structured columns, not JSON) ─────────────────────

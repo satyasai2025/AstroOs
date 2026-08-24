@@ -153,3 +153,101 @@ def test_fact_values_match_specification_examples_exactly(wrapper, chart):
         "shadbala.jupiter.total", "ashtakavarga.jupiter.bindu", "transit.saturn.house",
     ]:
         assert facts.has_fact(key), f"missing fact: {key}"
+
+
+def test_maraka_and_badhaka_facts_present(chart):
+    builder = FactBuilder()
+    facts = builder.build_facts(chart)
+    assert facts.has_fact("badhaka.house")
+    assert facts.has_fact("badhaka.lord")
+    assert facts.has_fact("maraka.house_2")
+    assert facts.has_fact("maraka.house_7")
+    for p in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]:
+        assert facts.has_fact(f"maraka.lord.{p}")
+        assert isinstance(facts.get_value(f"maraka.lord.{p}"), bool)
+
+
+def test_aspect_facts_present(chart):
+    builder = FactBuilder()
+    facts = builder.build_facts(chart)
+    # Check that at least some planetary aspects are computed
+    aspect_present_facts = [f for f in facts.all_facts() if f.key.startswith("aspect.") and f.key.endswith(".present")]
+    assert len(aspect_present_facts) > 0
+    for f in aspect_present_facts:
+        assert f.value is True
+        type_key = f.key.replace(".present", ".type")
+        assert facts.has_fact(type_key)
+
+
+def test_friendship_facts_present(chart):
+    builder = FactBuilder()
+    facts = builder.build_facts(chart)
+    for p1 in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]:
+        for p2 in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]:
+            if p1 == p2:
+                continue
+            assert facts.has_fact(f"friendship.natural.{p1}.{p2}")
+            assert facts.get_value(f"friendship.natural.{p1}.{p2}") in ("friend", "enemy", "neutral")
+            assert facts.has_fact(f"friendship.temporary.{p1}.{p2}")
+            assert facts.get_value(f"friendship.temporary.{p1}.{p2}") in ("friend", "enemy")
+            assert facts.has_fact(f"friendship.panchadha.{p1}.{p2}")
+            assert facts.get_value(f"friendship.panchadha.{p1}.{p2}") in ("adhi_mitra", "mitra", "sama", "shatru", "adhi_shatru")
+
+
+def test_functional_lordship_facts_present(chart):
+    builder = FactBuilder()
+    facts = builder.build_facts(chart)
+    for p in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]:
+        assert facts.has_fact(f"functional.{p}.lordship")
+        assert facts.get_value(f"functional.{p}.lordship") in ("benefic", "malefic", "neutral")
+        assert facts.has_fact(f"functional.{p}.yogakaraka")
+        assert isinstance(facts.get_value(f"functional.{p}.yogakaraka"), bool)
+
+
+def test_guna_facts_present_for_nakshatra_only(chart):
+    builder = FactBuilder()
+    facts = builder.build_facts(chart)
+    # Check that nakshatra guna exists
+    guna_facts = [f for f in facts.all_facts() if f.key.startswith("guna.nakshatra.")]
+    assert len(guna_facts) > 0
+    for f in guna_facts:
+        assert f.value in ("sattvic", "rajasic", "tamasic", "rajasic-tamasic")
+
+    # Planet and rashi gunas are NOT_IMPLEMENTED
+    for p in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn"]:
+        assert not facts.has_fact(f"guna.planet.{p}")
+    for r in ["aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"]:
+        assert not facts.has_fact(f"guna.rashi.{r}")
+
+
+def test_transit_gati_vedha_and_sbc_facts_present(wrapper, chart):
+    transit_engine = TransitEngine(wrapper)
+    builder = FactBuilder(transit_engine=transit_engine)
+    facts = builder.build_facts(chart, transit_datetime_utc=datetime(2026, 7, 12, tzinfo=timezone.utc))
+
+    VALID_GATIS = {"vikala", "vakra", "mandatara", "manda", "sama", "chara", "atichara"}
+    for p in ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]:
+        assert facts.has_fact(f"transit.{p}.gati")
+        gati_val = facts.get_value(f"transit.{p}.gati")
+        assert gati_val in VALID_GATIS, f"unexpected gati {gati_val} for {p}"
+
+        # SBC position
+        assert facts.has_fact(f"sbc.{p}.position")
+        assert facts.has_fact(f"sbc.{p}.vedha.active")
+
+
+def test_fact_builder_determinism(wrapper, chart):
+    shadbala_engine = ShadbalaEngine(divisional_engine=DivisionalEngine(wrapper), ephemeris_wrapper=wrapper)
+    transit_engine = TransitEngine(wrapper)
+    builder = FactBuilder(shadbala_engine=shadbala_engine, transit_engine=transit_engine)
+
+    transit_dt = datetime(2026, 7, 12, 12, 0, 0, tzinfo=timezone.utc)
+    facts_1 = builder.build_facts(chart, transit_datetime_utc=transit_dt)
+    facts_2 = builder.build_facts(chart, transit_datetime_utc=transit_dt)
+
+    list_1 = sorted([(f.key, str(f.value), f.source) for f in facts_1.all_facts()])
+    list_2 = sorted([(f.key, str(f.value), f.source) for f in facts_2.all_facts()])
+
+    assert list_1 == list_2
+    assert len(list_1) > 50
+

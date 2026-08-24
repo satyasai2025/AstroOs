@@ -411,6 +411,10 @@ class EventSnapshotModel(AstroBase):
         Text, nullable=True,
         comment="JSON dict: {\\\"7L\\\": \\\"strong\\\", \\\"10L\\\": \\\"activated\\\"}"
     )
+    facts_json: Mapped[Optional[str]] = mapped_column(
+        Text, nullable=True,
+        comment="JSON list of Fact dicts: [{\\\"key\\\": \\\"...\\\", \\\"value\\\": ..., \\\"source\\\": \\\"...\\\"}]"
+    )
 
     # ── Relationships ──────────────────────────────────────────────────────
     life_event: Mapped["LifeEventModel"] = relationship(
