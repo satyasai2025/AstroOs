@@ -100,6 +100,8 @@ from apps.api.schemas.research_case import (
     ResearchCaseImportResponseSchema,
     ResearchCaseImportResultSchema,
     ResearchCaseListResponseSchema,
+    ResearchQueryRequestSchema,
+    ResearchQueryResponseSchema,
     ResearchCaseSummarySchema,
     SnapshotRebuildResultSchema,
     TopFactorSchema,
@@ -109,6 +111,7 @@ from apps.api.services.classical_references import get_references_for_pattern
 from apps.api.services.dataset_validation import DatasetValidationService
 from apps.api.services.event_category_service import CategoryTreeNode, EventCategoryService
 from apps.api.services.event_type_service import EventTypeService, EventTypeTreeNode
+from apps.api.services.research_query_service import QueryCondition, ResearchQueryService
 from apps.api.services.feature_extraction import FeatureExtractionService, summarize
 from apps.api.services.import_service import (
     ResearchCaseImportService,
@@ -1132,6 +1135,62 @@ async def list_research_cases(
                 created_at=c.created_at,
             )
             for c in cases
+        ],
+    )
+
+
+@router.post(
+    "/cases/query",
+    response_model=ResearchQueryResponseSchema,
+    summary="Query research cases by real canonical Fact conditions.",
+    tags=["Research Cases"],
+)
+async def query_research_cases(
+    payload: ResearchQueryRequestSchema,
+    session: AsyncSession = Depends(get_db_session),
+) -> ResearchQueryResponseSchema:
+    """
+    Backs the Query Builder UI. Conditions are AND-combined and matched
+    against the real Fact vocabulary FactBuilder produces (e.g.
+    "planet.saturn.retrograde"="true", "maraka.lord.saturn"="true",
+    "planet.rahu.house"="1") — not a mocked/illustrative result. A case
+    matches if ANY of its life events' latest snapshot satisfies every
+    condition.
+    """
+    conditions = [
+        QueryCondition(field=c.field, operator=c.operator, value=c.value)
+        for c in payload.conditions
+    ]
+    matched_ids, total_scanned = await ResearchQueryService(session).query(conditions)
+
+    if not matched_ids:
+        return ResearchQueryResponseSchema(total_scanned=total_scanned, total_matched=0, matches=[])
+
+    matched_cases = (
+        await session.execute(
+            select(ResearchCaseModel)
+            .where(ResearchCaseModel.research_case_id.in_(matched_ids))
+            .where(ResearchCaseModel.deleted_at.is_(None))
+            .order_by(ResearchCaseModel.created_at.desc())
+            .limit(500)
+        )
+    ).scalars().all()
+
+    return ResearchQueryResponseSchema(
+        total_scanned=total_scanned,
+        total_matched=len(matched_ids),
+        matches=[
+            ResearchCaseSummarySchema(
+                research_case_id=c.research_case_id,
+                person_name=c.person_name,
+                dob=c.dob.date() if c.dob else None,
+                gender=c.gender,
+                total_events=len(c.life_events),
+                validation_status=c.validation_status,
+                duplicate_of_id=c.duplicate_of_id,
+                created_at=c.created_at,
+            )
+            for c in matched_cases
         ],
     )
 

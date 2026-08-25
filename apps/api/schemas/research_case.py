@@ -18,7 +18,7 @@ from __future__ import annotations
 import uuid
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -413,6 +413,24 @@ class ResearchCaseListResponseSchema(BaseModel):
     """Paginated-ish summary list of research cases."""
     total: int
     cases: list[ResearchCaseSummarySchema]
+
+
+class QueryConditionSchema(BaseModel):
+    """One AND-combined condition against the real Fact vocabulary, e.g.
+    field="planet.saturn.retrograde", operator="equals", value="true"."""
+    field: str = Field(min_length=1, max_length=200)
+    operator: Literal["equals", "not_equals", "contains"] = "equals"
+    value: str = Field(max_length=200)
+
+
+class ResearchQueryRequestSchema(BaseModel):
+    conditions: list[QueryConditionSchema] = Field(min_length=1, max_length=20)
+
+
+class ResearchQueryResponseSchema(BaseModel):
+    total_scanned: int
+    total_matched: int
+    matches: list[ResearchCaseSummarySchema]
 
 
 class LifeEventSnapshotSchema(BaseModel):

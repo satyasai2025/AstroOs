@@ -45,6 +45,8 @@ import type {
   ResearchCaseDetail,
   ResearchCaseImportResponse,
   ResearchCaseListResponse,
+  ResearchQueryRequest,
+  ResearchQueryResponse,
   SnapshotRebuildResult,
   TopFactorsResponse,
 } from "./types";
@@ -61,6 +63,13 @@ export const researchCasesApi = {
   /** Validate, snapshot-compute, and persist a batch of cases. */
   importCases: (payload: ResearchCaseBatchImport) =>
     api.post<ResearchCaseImportResponse>("/api/v1/research/cases/import", payload),
+
+  /** Query real research cases by AND-combined conditions over the
+   * canonical Fact vocabulary FactBuilder produces (e.g.
+   * "planet.saturn.retrograde"="true") — powers the Query Builder page.
+   * Not a mocked/illustrative result. */
+  queryCases: (payload: ResearchQueryRequest) =>
+    api.post<ResearchQueryResponse>("/api/v1/research/cases/query", payload),
 
   /** List imported research cases. */
   list: (params: { search?: string; limit?: number; offset?: number } = {}) => {

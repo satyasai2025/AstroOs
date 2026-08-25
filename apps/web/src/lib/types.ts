@@ -1253,6 +1253,24 @@ export interface ResearchCaseSummary {
   created_at?: string | null;
 }
 
+// ── Research Case Query (real facts_json search — Query Builder) ─────────────
+
+export interface QueryCondition {
+  field: string;
+  operator: "equals" | "not_equals" | "contains";
+  value: string;
+}
+
+export interface ResearchQueryRequest {
+  conditions: QueryCondition[];
+}
+
+export interface ResearchQueryResponse {
+  total_scanned: number;
+  total_matched: number;
+  matches: ResearchCaseSummary[];
+}
+
 export interface ResearchCaseListResponse {
   total: number;
   cases: ResearchCaseSummary[];
