@@ -54,7 +54,7 @@ import {
   type QueryLogEntry,
 } from "@/lib/research";
 import { getCurrentDashaChain, currentTransitSummary } from "@/lib/kpiScoring";
-import type { WorkflowAnalysisResponse, YogaResultResponse, BirthChartSummary } from "@/lib/types";
+import type { WorkflowAnalysisResponse, WorkflowAnalysisRequest, YogaResultResponse, BirthChartSummary } from "@/lib/types";
 import { Badge, Button, Card, KpiCard, SearchInput } from "@/components/ui";
 import { KpiScorecards } from "@/components/dashboard/KpiScorecards";
 import { DashboardPanchangaStudioCard } from "@/components/charts/DashboardPanchangaStudioCard";
@@ -708,7 +708,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
               color={PALETTE[0]}
             />
             <QuickAction
-              href="/charts?view=dasha"
+              href="/charts/dasha"
               label="Dasha Explorer"
               sublabel="Analyze dashas & periods"
               color={PALETTE[1]}

@@ -10,6 +10,8 @@ interface PlanetaryPositionsTableProps {
   href?: string;
   /** Set false to omit the header row + card chrome (inline embedding). */
   standalone?: boolean;
+  activePlanet?: string | null;
+  onPlanetClick?: (planet: string) => void;
 }
 
 /**

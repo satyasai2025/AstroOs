@@ -96,7 +96,7 @@ function TransitAnalysisPageContent() {
   const analyze = useAnalyzeWorkflow();
   const myCharts = useMyCharts();
   const [autoLoadStarted, setAutoLoadStarted] = useState(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "sky_motion">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "sky_motion" | "advanced_studio">("overview");
 
   const [houseReference, setHouseReference] = useState<"moon" | "ascendant">("moon");
   const [transitDateTime, setTransitDateTime] = useState(() => {

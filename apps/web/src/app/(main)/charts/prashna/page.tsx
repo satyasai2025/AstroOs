@@ -130,7 +130,7 @@ const TABS: TabType[] = [
   "AI Astrologer",
 ];
 
-export function computeUtcIsoString(
+function computeUtcIsoString(
   dateStr: string,
   timeStr: string,
   gmtOffsetHours: number = 5.5,

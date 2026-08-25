@@ -244,6 +244,8 @@ export interface PlanetStrengthSchema {
   is_in_trikona: boolean;
   is_in_dusthana: boolean;
   strength_score: number;
+  total_rupas?: number;
+  ratio?: number;
 }
 
 export interface PanchangaSchema {
@@ -443,6 +445,7 @@ export interface YogaEvaluationResponse {
   total_present: number;
   strength_scored?: boolean;
   with_timeline?: boolean;
+  detected_yogas?: any[];
 }
 
 // ── Yoga Timeline (Phase 2 activation / Dasha correlation) ──────────────────────

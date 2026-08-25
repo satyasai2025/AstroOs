@@ -22,7 +22,7 @@ export function AyanamsaSelectorDropdown() {
     if (request) {
       setRequest({
         ...request,
-        ayanamsa: newAyanamsa,
+        ayanamsa: newAyanamsa as any,
       });
     }
   };

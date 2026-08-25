@@ -385,7 +385,7 @@ export function evaluateCuspCSL(
 // ── Event Engine ──────────────────────────────────────────────────────────────
 
 /** The primary cusp each event is classically read from. */
-export const EVENT_PRIMARY_CUSP: Record<KPEventKey, number> = {
+export const EVENT_PRIMARY_CUSP: Partial<Record<KPEventKey, number>> = {
   marriage: 7,
   career: 10,
   childbirth: 5,
@@ -401,7 +401,7 @@ export function computeEventPromise(
   eventKey: KPEventKey,
 ): EventPromise {
   const group = KP_EVENT_HOUSE_GROUPS[eventKey];
-  const primaryCusp = EVENT_PRIMARY_CUSP[eventKey];
+  const primaryCusp = EVENT_PRIMARY_CUSP[eventKey] ?? group.houses[0] ?? 1;
 
   const cslVerdict = evaluateCuspCSL(chart, primaryCusp, group.houses);
 

@@ -292,7 +292,7 @@ export function NorthIndianChart({
         const isActive = activePlanet === planet.planet;
         const ascColor = "var(--chart-ascendant)";
 
-        const { offsetX, offsetY } = getPlanetOffset(i, houseCount, house === 1);
+        const { offsetX, offsetY } = getPlanetOffset(i, houseCount, house);
         const itemX = px + offsetX;
         const itemY = py + offsetY;
 
