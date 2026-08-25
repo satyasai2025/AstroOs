@@ -60,6 +60,11 @@ class RulingPlanetEntryResponse(BaseModel):
     sub_sub_lord: str
     as_aspecting: str = ""
     is_conjunction: str = ""
+    planet: str = ""
+    source: str = ""
+    reason: str = ""
+    priority: int = 0
+    relationship_to_judgement: str = ""
 
 
 class RulingPlanetsSnapshotResponse(BaseModel):
@@ -113,12 +118,18 @@ class RuleTriggeredResponse(BaseModel):
     reference: str
     triggered: str
     weight: int
+    rule_name: str = ""
+    result: str = ""
+    evidence: str = ""
+    supporting_factors: list[str] = Field(default_factory=list)
+    contradicting_factors: list[str] = Field(default_factory=list)
 
 
 class ContradictionResponse(BaseModel):
     title: str
     description: str
     advice: str
+    source_factor: str = ""
 
 
 class PrashnaJudgementResponse(BaseModel):
@@ -141,6 +152,7 @@ class HoraryPlanetPosition(BaseModel):
     degree_float: float
     nakshatra: str
     pada: int
+    house_number: int = 1
     own_houses: list[int] = Field(default_factory=list)
     sign_lord: str
     star_lord: str
@@ -171,12 +183,12 @@ class HoraryHouseCusp(BaseModel):
 class PrashnaFullCalculationRequest(BaseModel):
     name: str = "Querent"
     gender: str = "Male"
-    question: str = "Will I get this job?"
-    moment_utc: datetime = Field(default_factory=datetime.utcnow)
-    latitude: float = 18.5204
-    longitude: float = 73.8567
+    question: str = Field(..., min_length=1, description="Question asked by the querent")
+    moment_utc: datetime = Field(..., description="Query moment in UTC")
+    latitude: float = Field(..., ge=-90.0, le=90.0, description="Latitude between -90 and 90")
+    longitude: float = Field(..., ge=-180.0, le=180.0, description="Longitude between -180 and 180")
     place_name: str = "Pune, Maharashtra, India"
-    timezone_offset: float = 5.5
+    timezone_offset: float = Field(5.5, ge=-14.0, le=14.0, description="Timezone offset in hours")
     horary_number: int | None = None
     horary_system: Literal["kp_249", "kp_2193"] = "kp_249"
     ayanamsa: str = "lahiri"

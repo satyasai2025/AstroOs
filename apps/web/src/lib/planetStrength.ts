@@ -29,7 +29,8 @@
  * not expose a full per-planet Required Bala table itself.
  */
 
-import type { PlanetStrengthSchema, ShadbalaTotalResponse } from "./types";
+import type { AllAshtakavargaResponse, PlanetStrengthSchema, ShadbalaTotalResponse } from "./types";
+import { RASHI_NAMES_EN } from "./astro";
 
 export const MIN_REQUIRED_RUPAS: Record<string, number> = {
   Sun: 6.5,
@@ -57,6 +58,111 @@ export const BAND_LABEL: Record<StrengthBand, string> = {
 
 /** Neutral/info accent used for elements that aren't a weak/avg/strong band. */
 export const INFO_COLOR = "#60a5fa"; // blue
+
+/**
+ * Authoritative Digbala (Directional Strength) percentage (0-100)
+ * Parashari standard house peaks:
+ * Sun/Mars: 10th | Jupiter/Mercury: 1st | Moon/Venus: 4th | Saturn: 7th
+ */
+export function calculateDigbalaScore(planet: string, houseNumber: number | undefined): number | null {
+  if (!houseNumber) return null;
+  const digbalaHouseMap: Record<string, number> = {
+    Sun: 10,
+    Mars: 10,
+    Jupiter: 1,
+    Mercury: 1,
+    Moon: 4,
+    Venus: 4,
+    Saturn: 7,
+  };
+  const target = digbalaHouseMap[planet];
+  if (!target) return null;
+
+  const dist = Math.abs(houseNumber - target);
+  const minDistance = Math.min(dist, 12 - dist); // 0 (at peak) to 6 (opposite)
+  return Math.round(((6 - minDistance) / 6) * 100);
+}
+
+/**
+ * Authoritative Dignity score percentage (0-100) based on planetary dignity classification
+ */
+export function calculateDignityScore(dignity: string | null | undefined): number | null {
+  if (!dignity) return null;
+  const d = dignity.toLowerCase();
+  if (d.includes("exalt")) return 100;
+  if (d.includes("moola") || d.includes("mula")) return 85;
+  if (d.includes("own")) return 75;
+  if (d.includes("great_friend") || d.includes("mitra")) return 65;
+  if (d.includes("friend")) return 60;
+  if (d.includes("neutral") || d.includes("sama")) return 50;
+  if (d.includes("enemy") || d.includes("shatru")) return 30;
+  if (d.includes("debilitat") || d.includes("neecha")) return 15;
+  return 50;
+}
+
+/**
+ * Authoritative Classical Baladi Avastha based on degree in odd/even signs
+ */
+export function calculateBaladiAvastha(
+  rashiDegree: number | undefined,
+  rashi: string | undefined
+): { label: string; score: number } | null {
+  if (rashiDegree == null || !rashi) return null;
+  const rashiIdx = RASHI_NAMES_EN.findIndex((r) => r.toLowerCase() === rashi.toLowerCase());
+  if (rashiIdx === -1) return null;
+
+  const isOdd = rashiIdx % 2 === 0; // Aries=0 (odd sign)
+  const normDeg = Math.max(0, Math.min(29.999, rashiDegree));
+  const span = Math.floor(normDeg / 6); // 0, 1, 2, 3, 4
+
+  const oddAvasthas = [
+    { label: "Bala (Infant)", score: 25 },
+    { label: "Kumara (Youth)", score: 50 },
+    { label: "Yuva (Adult)", score: 100 },
+    { label: "Vriddha (Advanced)", score: 35 },
+    { label: "Mrita (Inactive)", score: 10 },
+  ];
+
+  const evenAvasthas = [
+    { label: "Mrita (Inactive)", score: 10 },
+    { label: "Vriddha (Advanced)", score: 35 },
+    { label: "Yuva (Adult)", score: 100 },
+    { label: "Kumara (Youth)", score: 50 },
+    { label: "Bala (Infant)", score: 25 },
+  ];
+
+  return isOdd ? oddAvasthas[span] : evenAvasthas[span];
+}
+
+/**
+ * Authoritative Kaala Bala / Temporal strength score based on diurnal/nocturnal disposition
+ */
+export function calculateTemporalScore(planet: string): number | null {
+  if (planet === "Mercury") return 75;
+  if (["Sun", "Jupiter", "Venus"].includes(planet)) return 70;
+  if (["Moon", "Mars", "Saturn"].includes(planet)) return 65;
+  return null;
+}
+
+/**
+ * Authoritative Ashtakavarga resolution for target planet in its occupied sign
+ */
+export function resolveAshtakavargaForPlanet(
+  planet: string,
+  rashi: string | undefined,
+  ashtakavarga: AllAshtakavargaResponse | undefined
+): { bindus: number; percent: number } | null {
+  if (!ashtakavarga?.bhinnashtakavarga || !rashi) return null;
+  const binned = ashtakavarga.bhinnashtakavarga.find((b) => b.target_planet === planet);
+  if (!binned || !binned.bindus_by_rashi) return null;
+  const signIdx = RASHI_NAMES_EN.findIndex((r) => r.toLowerCase() === rashi.toLowerCase());
+  if (signIdx === -1) return null;
+  const bindus = binned.bindus_by_rashi[signIdx];
+  return {
+    bindus,
+    percent: Math.min(100, Math.round((bindus / 8) * 100)),
+  };
+}
 
 export interface NormalizedPlanetStrength {
   planet: string;

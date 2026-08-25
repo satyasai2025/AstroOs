@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
 import { PlanetDetailPanel } from "@/components/charts/PlanetDetailPanel";
@@ -127,8 +127,14 @@ function ChartsPageContent() {
   const [housesMode, setHousesMode] = useState<HousesMode>("standard");
   const [activeKinds, setActiveKinds] = useState<Set<EdgeKind>>(new Set(ALL_EDGE_KINDS));
 
+  const router = useRouter();
+
   useEffect(() => {
     const requested = searchParams.get("view");
+    if (requested === "planets") {
+      router.replace("/charts/planets");
+      return;
+    }
     if (requested && (VALID_VIEWS as string[]).includes(requested)) {
       setView(requested as ViewMode);
     }
@@ -136,7 +142,7 @@ function ChartsPageContent() {
     if (requestedMode === "advanced" || requestedMode === "standard") {
       setHousesMode(requestedMode);
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   const [selectedVarga, setSelectedVarga] = useState<string>("D1");
   const [activePlanet, setActivePlanet] = useState<string | null>(null);

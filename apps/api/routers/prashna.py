@@ -102,12 +102,17 @@ def _serialise_rp(rp: RulingPlanetsSnapshot) -> RulingPlanetsSnapshotResponse:
         entries=[
             RulingPlanetEntryResponse(
                 point_name=e.point_name,
-                sign_lord=e.sign_lord.capitalize(),
-                star_lord=e.star_lord.capitalize(),
-                sub_lord=e.sub_lord.capitalize(),
-                sub_sub_lord=e.sub_sub_lord.capitalize(),
+                sign_lord=e.sign_lord.capitalize() if e.sign_lord else "",
+                star_lord=e.star_lord.capitalize() if e.star_lord else "",
+                sub_lord=e.sub_lord.capitalize() if e.sub_lord else "",
+                sub_sub_lord=e.sub_sub_lord.capitalize() if e.sub_sub_lord else "",
                 as_aspecting=e.as_aspecting,
                 is_conjunction=e.is_conjunction,
+                planet=e.planet.capitalize() if e.planet else (e.sign_lord.capitalize() if e.sign_lord else ""),
+                source=e.source,
+                reason=e.reason,
+                priority=e.priority,
+                relationship_to_judgement=e.relationship_to_judgement,
             )
             for e in rp.entries
         ],
@@ -171,6 +176,11 @@ def _serialise_judgement(j: PrashnaJudgement) -> PrashnaJudgementResponse:
                 reference=r.reference,
                 triggered=r.triggered,
                 weight=r.weight,
+                rule_name=r.rule_name,
+                result=r.result,
+                evidence=r.evidence,
+                supporting_factors=list(r.supporting_factors),
+                contradicting_factors=list(r.contradicting_factors),
             )
             for r in j.supporting_rules
         ],
@@ -179,6 +189,7 @@ def _serialise_judgement(j: PrashnaJudgement) -> PrashnaJudgementResponse:
                 title=c.title,
                 description=c.description,
                 advice=c.advice,
+                source_factor=c.source_factor,
             )
             for c in j.contradictions
         ],
@@ -291,6 +302,8 @@ async def calculate_prashna(
         # 3. Planets
         planet_names = ("sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu")
         planets_data: list[HoraryPlanetPosition] = []
+        asc_rashi_idx = ("aries", "taurus", "gemini", "cancer", "leo", "virgo",
+                         "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces").index(longitude_to_rashi(sid_asc)[0])
 
         for p_name in planet_names:
             p_pos = wrapper.get_planet_position(p_name, jd)
@@ -298,6 +311,9 @@ async def calculate_prashna(
             r_name, r_deg = longitude_to_rashi(sid_lon)
             nak = longitude_to_nakshatra(sid_lon)
             lords = engine.get_kp_lords_for_longitude(sid_lon)
+            p_rashi_idx = ("aries", "taurus", "gemini", "cancer", "leo", "virgo",
+                           "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces").index(r_name)
+            p_house = house_offset(asc_rashi_idx, p_rashi_idx)
 
             planets_data.append(
                 HoraryPlanetPosition(
@@ -307,6 +323,7 @@ async def calculate_prashna(
                     degree_float=r_deg,
                     nakshatra=nak.nakshatra,
                     pada=nak.pada,
+                    house_number=p_house,
                     sign_lord=lords["sign_lord"].capitalize(),
                     star_lord=lords["star_lord"].capitalize(),
                     sub_lord=lords["sub_lord"].capitalize(),

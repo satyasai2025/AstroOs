@@ -272,7 +272,13 @@ class PrashnaEngine:
     # ── 3. Ruling Planets (RP) Snapshot ──────────────────────────────────────
 
     def get_ruling_planets(
-        self, dt: datetime, lat: float, lon: float, ayanamsa: str = "lahiri"
+        self,
+        dt: datetime,
+        lat: float,
+        lon: float,
+        ayanamsa: str = "lahiri",
+        target_houses: list[int] | None = None,
+        four_tier_map: dict[int, dict[str, list[str]]] | None = None,
     ) -> RulingPlanetsSnapshot:
         jd = datetime_to_jd(dt)
         asc_lon = self._sidereal_ascendant(jd, lat, lon, ayanamsa)
@@ -280,50 +286,128 @@ class PrashnaEngine:
         rahu_lon = self._sidereal_planet("rahu", jd, ayanamsa)
         ketu_lon = self._sidereal_planet("ketu", jd, ayanamsa)
 
-        # Day Lord and Hora Lord — real sunrise-anchored computation (same
-        # verified formula as shadbala/dina_hora_bala.py's _hora_lord()),
-        # NOT plain UTC-midnight weekday / clock-hour indexing, which is
-        # wrong for queries cast before local sunrise or on non-UTC dates.
+        # Day Lord and Hora Lord — real sunrise-anchored computation
         day_lord, hora_lord = self._day_and_hora_lord(jd, dt, lat, lon)
 
-        points = (
-            ("Ascendant", asc_lon),
-            ("Moon", moon_lon),
-            ("Rahu", rahu_lon),
-            ("Ketu", ketu_lon),
-        )
+        asc_lords = self.get_kp_lords_for_longitude(asc_lon)
+        moon_lords = self.get_kp_lords_for_longitude(moon_lon)
+        rahu_lords = self.get_kp_lords_for_longitude(rahu_lon)
+        ketu_lords = self.get_kp_lords_for_longitude(ketu_lon)
 
-        entries: list[RulingPlanetEntry] = []
-        for name, p_lon in points:
-            lords = self.get_kp_lords_for_longitude(p_lon)
-            entries.append(
-                RulingPlanetEntry(
-                    point_name=name,
-                    sign_lord=lords["sign_lord"],
-                    star_lord=lords["star_lord"],
-                    sub_lord=lords["sub_lord"],
-                    sub_sub_lord=lords["sub_sub_lord"],
+        def _rp_relation(planet_name: str) -> str:
+            if not target_houses or not four_tier_map:
+                return "Active Query Ruling Planet"
+            signified: list[int] = []
+            for h_idx, tier_data in four_tier_map.items():
+                all_p = (
+                    tier_data.get("A", []) + tier_data.get("B", []) +
+                    tier_data.get("C", []) + tier_data.get("D", [])
                 )
-            )
+                if planet_name.lower() in [p.lower() for p in all_p]:
+                    signified.append(h_idx)
+            common = [h for h in signified if h in target_houses]
+            if common:
+                return f"Concordant: Signifies query houses {common}"
+            return "Neutral: Operating as temporal horizon ruler"
 
-        entries.append(
+        entries: list[RulingPlanetEntry] = [
+            RulingPlanetEntry(
+                point_name="Ascendant Star Lord",
+                sign_lord=asc_lords["sign_lord"],
+                star_lord=asc_lords["star_lord"],
+                sub_lord=asc_lords["sub_lord"],
+                sub_sub_lord=asc_lords["sub_sub_lord"],
+                planet=asc_lords["star_lord"],
+                source="Horary Lagna Nakshatra",
+                reason="Primary focal ruler of the horary query moment",
+                priority=1,
+                relationship_to_judgement=_rp_relation(asc_lords["star_lord"]),
+            ),
+            RulingPlanetEntry(
+                point_name="Ascendant Sign Lord",
+                sign_lord=asc_lords["sign_lord"],
+                star_lord=asc_lords["star_lord"],
+                sub_lord=asc_lords["sub_lord"],
+                sub_sub_lord=asc_lords["sub_sub_lord"],
+                planet=asc_lords["sign_lord"],
+                source="Horary Lagna Rashi",
+                reason="Physical manifestation vessel of the query lagna",
+                priority=2,
+                relationship_to_judgement=_rp_relation(asc_lords["sign_lord"]),
+            ),
+            RulingPlanetEntry(
+                point_name="Moon Star Lord",
+                sign_lord=moon_lords["sign_lord"],
+                star_lord=moon_lords["star_lord"],
+                sub_lord=moon_lords["sub_lord"],
+                sub_sub_lord=moon_lords["sub_sub_lord"],
+                planet=moon_lords["star_lord"],
+                source="Moon Nakshatra",
+                reason="Querent's mental intent and fructification vessel",
+                priority=3,
+                relationship_to_judgement=_rp_relation(moon_lords["star_lord"]),
+            ),
+            RulingPlanetEntry(
+                point_name="Moon Sign Lord",
+                sign_lord=moon_lords["sign_lord"],
+                star_lord=moon_lords["star_lord"],
+                sub_lord=moon_lords["sub_lord"],
+                sub_sub_lord=moon_lords["sub_sub_lord"],
+                planet=moon_lords["sign_lord"],
+                source="Moon Rashi (Chandra Rashi)",
+                reason="Emotional anchor and psychological disposition",
+                priority=4,
+                relationship_to_judgement=_rp_relation(moon_lords["sign_lord"]),
+            ),
             RulingPlanetEntry(
                 point_name="Day Lord",
                 sign_lord=day_lord,
                 star_lord=day_lord,
                 sub_lord=day_lord,
                 sub_sub_lord=day_lord,
-            )
-        )
-        entries.append(
+                planet=day_lord,
+                source="Vara (Sunrise-to-Sunrise)",
+                reason="Diurnal cosmic governance of the query day",
+                priority=5,
+                relationship_to_judgement=_rp_relation(day_lord),
+            ),
             RulingPlanetEntry(
                 point_name="Hora Lord",
                 sign_lord=hora_lord,
                 star_lord=hora_lord,
                 sub_lord=hora_lord,
                 sub_sub_lord=hora_lord,
-            )
-        )
+                planet=hora_lord,
+                source="Planetary Hour (Hora)",
+                reason="Immediate temporal trigger lord at query minute",
+                priority=6,
+                relationship_to_judgement=_rp_relation(hora_lord),
+            ),
+            RulingPlanetEntry(
+                point_name="Rahu Agent",
+                sign_lord=rahu_lords["sign_lord"],
+                star_lord=rahu_lords["star_lord"],
+                sub_lord=rahu_lords["sub_lord"],
+                sub_sub_lord=rahu_lords["sub_sub_lord"],
+                planet="rahu",
+                source="North Node Position",
+                reason=f"Proxy representing sign lord {rahu_lords['sign_lord']} and star {rahu_lords['star_lord']}",
+                priority=7,
+                relationship_to_judgement=_rp_relation("rahu"),
+            ),
+            RulingPlanetEntry(
+                point_name="Ketu Agent",
+                sign_lord=ketu_lords["sign_lord"],
+                star_lord=ketu_lords["star_lord"],
+                sub_lord=ketu_lords["sub_lord"],
+                sub_sub_lord=ketu_lords["sub_sub_lord"],
+                planet="ketu",
+                source="South Node Position",
+                reason=f"Proxy representing sign lord {ketu_lords['sign_lord']} and star {ketu_lords['star_lord']}",
+                priority=8,
+                relationship_to_judgement=_rp_relation("ketu"),
+            ),
+        ]
 
         time_str = dt.strftime("%I:%M:%S %p, %d/%m/%Y")
         return RulingPlanetsSnapshot(
@@ -398,7 +482,184 @@ class PrashnaEngine:
 
         return results
 
-    # ── 5. Full Horary Judgement & Evidence Synthesis ────────────────────────
+    # ── 5. Question Intent & House Classification ────────────────────────────
+
+    def classify_question(self, question: str) -> dict[str, Any]:
+        """Maps any freeform horary question to classical KP primary, supporting, and negating houses."""
+        q_lower = question.lower()
+        if any(w in q_lower for w in ["job", "career", "interview", "selection", "promotion", "work", "salary", "service", "profession", "business", "post"]):
+            return {
+                "category": "career",
+                "label": "Career / Job Selection & Promotion",
+                "primary_cusp": 10,
+                "supporting_cusps": [2, 6, 11],
+                "negating_cusps": [1, 5, 9],  # 12th from 2, 6, 10
+                "karakas": ["sun", "jupiter", "saturn", "mercury"],
+            }
+        if any(w in q_lower for w in ["marriage", "shaadi", "wedding", "love", "partner", "relationship", "spouse", "marry"]):
+            return {
+                "category": "marriage",
+                "label": "Marriage & Relationship Realization",
+                "primary_cusp": 7,
+                "supporting_cusps": [2, 11],
+                "negating_cusps": [1, 6, 10, 12],  # 12th from 2, 7, 11, 1
+                "karakas": ["venus", "jupiter"],
+            }
+        if any(w in q_lower for w in ["property", "house", "flat", "land", "vehicle", "car", "buy", "purchase", "real estate"]):
+            return {
+                "category": "property",
+                "label": "Property & Fixed Asset Acquisition",
+                "primary_cusp": 4,
+                "supporting_cusps": [2, 11, 12],
+                "negating_cusps": [3, 10],  # 12th from 4, 11
+                "karakas": ["mars", "venus", "saturn"],
+            }
+        if any(w in q_lower for w in ["travel", "trip", "visa", "abroad", "foreign", "journey", "flight", "relocation", "immigrate"]):
+            return {
+                "category": "travel",
+                "label": "Foreign Travel, Visa & Relocation",
+                "primary_cusp": 9,
+                "supporting_cusps": [3, 9, 11, 12],
+                "negating_cusps": [4],  # 12th from 5 / staying at home
+                "karakas": ["moon", "mercury", "jupiter", "rahu"],
+            }
+        if any(w in q_lower for w in ["health", "surgery", "disease", "illness", "recovery", "hospital", "sick", "cure"]):
+            return {
+                "category": "health",
+                "label": "Health Vitality & Recovery from Illness",
+                "primary_cusp": 6,
+                "supporting_cusps": [1, 5, 11],  # 1 (vitality), 5 (cure: 12th from 6), 11 (recovery: 12th from 12)
+                "negating_cusps": [6, 8, 12],  # disease, critical, hospitalization
+                "karakas": ["sun", "moon", "jupiter"],
+            }
+        if any(w in q_lower for w in ["money", "finance", "wealth", "debt", "loan", "recover", "shares", "investment", "lottery"]):
+            return {
+                "category": "finance",
+                "label": "Financial Inflow & Asset Accumulation",
+                "primary_cusp": 2,
+                "supporting_cusps": [6, 10, 11],
+                "negating_cusps": [12, 5, 8],
+                "karakas": ["jupiter", "mercury"],
+            }
+        if any(w in q_lower for w in ["court", "case", "lawsuit", "dispute", "legal", "police", "opponent", "litigation"]):
+            return {
+                "category": "litigation",
+                "label": "Legal Dispute & Court Case Verdict",
+                "primary_cusp": 6,
+                "supporting_cusps": [1, 11],
+                "negating_cusps": [7, 12],
+                "karakas": ["mars", "saturn", "jupiter"],
+            }
+        return {
+            "category": "general",
+            "label": "General Inquiry Fulfillment",
+            "primary_cusp": 1,
+            "supporting_cusps": [11],
+            "negating_cusps": [12],
+            "karakas": ["jupiter"],
+        }
+
+    # ── 6. 4-Fold Planetary Significators Matrix (Tiers A, B, C, D) ───────────
+
+    def compute_four_tier_significators(
+        self,
+        planets_data: list[dict[str, Any]],
+        cusps_data: list[dict[str, Any]],
+    ) -> tuple[dict[int, dict[str, list[str]]], list[SignificatorFactor]]:
+        """
+        Calculates canonical KP 4-Tier Significator matrix for all 12 houses:
+        Tier A: Planets in the Star of a Planet Occupying the house (Strongest)
+        Tier B: Planets Occupying the house
+        Tier C: Planets in the Star of the House Sign Lord
+        Tier D: The House Sign Lord itself
+        """
+        # 1. Map occupants per house
+        house_occupants: dict[int, list[str]] = {h: [] for h in range(1, 13)}
+        planet_star_lords: dict[str, str] = {}
+        for p in planets_data:
+            p_name = p["planet"].lower()
+            p_house = int(p.get("house_number", 1))
+            st_lord = p.get("star_lord", "").lower()
+            planet_star_lords[p_name] = st_lord
+            if 1 <= p_house <= 12:
+                house_occupants[p_house].append(p_name)
+
+        # 2. Map sign lords per house
+        house_sign_lords: dict[int, str] = {}
+        for c in cusps_data:
+            h_idx = int(c.get("house", 1))
+            s_lord = c.get("sign_lord", "").lower()
+            house_sign_lords[h_idx] = s_lord
+
+        four_tier_map: dict[int, dict[str, list[str]]] = {}
+        factors: list[SignificatorFactor] = []
+
+        for h in range(1, 13):
+            occupants = house_occupants.get(h, [])
+            sign_lord = house_sign_lords.get(h, "")
+
+            # Tier A: Planets in the Star of an Occupant of House h
+            tier_a: list[str] = []
+            for p_name, st_lord in planet_star_lords.items():
+                if st_lord in occupants:
+                    tier_a.append(p_name)
+                    factors.append(
+                        SignificatorFactor(
+                            planet=p_name.capitalize(),
+                            house=h,
+                            tier="A",
+                            reason=f"Occupies star of {st_lord.capitalize()} who sits in House {h}",
+                        )
+                    )
+
+            # Tier B: Planets occupying House h
+            tier_b = list(occupants)
+            for p_name in tier_b:
+                factors.append(
+                    SignificatorFactor(
+                        planet=p_name.capitalize(),
+                        house=h,
+                        tier="B",
+                        reason=f"Direct occupant of House {h}",
+                    )
+                )
+
+            # Tier C: Planets in the Star of House Sign Lord
+            tier_c: list[str] = []
+            for p_name, st_lord in planet_star_lords.items():
+                if st_lord == sign_lord and p_name not in tier_a and p_name not in tier_b:
+                    tier_c.append(p_name)
+                    factors.append(
+                        SignificatorFactor(
+                            planet=p_name.capitalize(),
+                            house=h,
+                            tier="C",
+                            reason=f"Occupies star of {sign_lord.capitalize()} (Lord of House {h})",
+                        )
+                    )
+
+            # Tier D: House Sign Lord
+            tier_d = [sign_lord] if sign_lord else []
+            if sign_lord:
+                factors.append(
+                    SignificatorFactor(
+                        planet=sign_lord.capitalize(),
+                        house=h,
+                        tier="D",
+                        reason=f"Ruler / Sign Lord of House {h}",
+                    )
+                )
+
+            four_tier_map[h] = {
+                "A": sorted(list(set(tier_a))),
+                "B": sorted(list(set(tier_b))),
+                "C": sorted(list(set(tier_c))),
+                "D": sorted(list(set(tier_d))),
+            }
+
+        return four_tier_map, factors
+
+    # ── 7. Full Horary Judgement & Traceable Evidence Synthesis ──────────────
 
     def evaluate_judgement(
         self,
@@ -410,222 +671,464 @@ class PrashnaEngine:
         ayanamsa: str = "lahiri",
     ) -> PrashnaJudgement:
         jd = datetime_to_jd(dt)
-        asc_lon = self._sidereal_ascendant(jd, lat, lon, ayanamsa)
+        ayan_val = self._wrapper.get_ayanamsa(jd)
+        trop_asc, trop_cusps = self._wrapper.get_ascendant_and_cusps(jd, lat, lon, "P")
+        sid_asc = self._wrapper.to_sidereal(trop_asc, ayan_val)
         if seed_number and 1 <= seed_number <= 249:
             arudha = self.arudha_from_seed(seed_number, "kp_249")
-            asc_lon = arudha.sidereal_longitude
+            sid_asc = arudha.sidereal_longitude
         elif seed_number and 1 <= seed_number <= 2193:
             arudha = self.arudha_from_seed(seed_number, "kp_2193")
-            asc_lon = arudha.sidereal_longitude
+            sid_asc = arudha.sidereal_longitude
 
-        moon_lon = self._sidereal_planet("moon", jd, ayanamsa)
-        jupiter_lon = self._sidereal_planet("jupiter", jd, ayanamsa)
-        saturn_lon = self._sidereal_planet("saturn", jd, ayanamsa)
-        mars_lon = self._sidereal_planet("mars", jd, ayanamsa)
-        sun_lon = self._sidereal_planet("sun", jd, ayanamsa)
+        asc_rashi_idx = int(sid_asc // 30.0)
+        asc_rashi = _RASHI_NAMES[asc_rashi_idx]
+        asc_deg = sid_asc % 30.0
+        asc_lords = self.get_kp_lords_for_longitude(sid_asc)
 
-        q_lower = question.lower()
-        is_job = any(w in q_lower for w in ["job", "career", "interview", "selection", "promotion", "work", "salary", "service"])
-        is_marriage = any(w in q_lower for w in ["marriage", "shaadi", "wedding", "love", "partner", "relationship", "spouse"])
-        is_travel = any(w in q_lower for w in ["travel", "trip", "visa", "abroad", "foreign", "journey", "flight"])
-        is_property = any(w in q_lower for w in ["house", "flat", "land", "property", "buy", "sell", "car", "vehicle"])
-        is_health = any(w in q_lower for w in ["health", "surgery", "disease", "illness", "recovery", "hospital"])
+        # 1. Calculate All 9 Planets with KP Lords & House Placement
+        planet_names = ("sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu")
+        planets_data: list[dict[str, Any]] = []
+        for p_name in planet_names:
+            p_pos = self._wrapper.get_planet_position(p_name, jd)
+            sid_p_lon = self._wrapper.to_sidereal(p_pos.longitude, ayan_val)
+            p_rashi_name, p_rdeg = longitude_to_rashi(sid_p_lon)
+            p_rashi_idx = _RASHI_NAMES.index(p_rashi_name)
+            p_house = house_offset(asc_rashi_idx, p_rashi_idx)
+            p_lords = self.get_kp_lords_for_longitude(sid_p_lon)
+            p_nak = longitude_to_nakshatra(sid_p_lon)
 
-        asc_rashi, asc_deg = longitude_to_rashi(asc_lon)
-        moon_rashi, moon_deg = longitude_to_rashi(moon_lon)
-        asc_lords = self.get_kp_lords_for_longitude(asc_lon)
-        moon_lords = self.get_kp_lords_for_longitude(moon_lon)
+            planets_data.append({
+                "planet": p_name,
+                "sign": p_rashi_name,
+                "degree_float": p_rdeg,
+                "longitude": sid_p_lon,
+                "house_number": p_house,
+                "nakshatra": p_nak.nakshatra,
+                "pada": p_nak.pada,
+                "sign_lord": p_lords["sign_lord"],
+                "star_lord": p_lords["star_lord"],
+                "sub_lord": p_lords["sub_lord"],
+                "sub_sub_lord": p_lords["sub_sub_lord"],
+            })
 
+        # 2. Calculate 12 Cusps
+        cusps_data: list[dict[str, Any]] = []
+        for i in range(12):
+            raw_cusp = trop_cusps[i] if i < len(trop_cusps) else (trop_asc + i * 30.0) % 360.0
+            sid_cusp_lon = self._wrapper.to_sidereal(raw_cusp, ayan_val)
+            if seed_number and i == 0:
+                sid_cusp_lon = sid_asc
+            elif seed_number:
+                sid_cusp_lon = (sid_asc + (sid_cusp_lon - self._wrapper.to_sidereal(trop_asc, ayan_val))) % 360.0
+
+            r_name, r_deg = longitude_to_rashi(sid_cusp_lon)
+            nak = longitude_to_nakshatra(sid_cusp_lon)
+            lords = self.get_kp_lords_for_longitude(sid_cusp_lon)
+
+            cusps_data.append({
+                "house": i + 1,
+                "sign": r_name,
+                "degree_float": r_deg,
+                "longitude": sid_cusp_lon,
+                "sign_lord": lords["sign_lord"],
+                "star_lord": lords["star_lord"],
+                "sub_lord": lords["sub_lord"],
+                "sub_sub_lord": lords["sub_sub_lord"],
+            })
+
+        # 3. Question Classification
+        q_meta = self.classify_question(question)
+        primary_c = q_meta["primary_cusp"]
+        supporting_cs = q_meta["supporting_cusps"]
+        negating_cs = q_meta["negating_cusps"]
+        all_favorable_cs = sorted(list(set([primary_c] + supporting_cs)))
+
+        # 4. Compute 4-Fold Significators Matrix
+        four_tier_map, significator_factors = self.compute_four_tier_significators(planets_data, cusps_data)
+
+        # Helper to get all houses signified by a planet
+        def _get_houses_signified(planet: str) -> list[int]:
+            p_low = planet.lower()
+            res = []
+            for h, tiers in four_tier_map.items():
+                all_p = tiers["A"] + tiers["B"] + tiers["C"] + tiers["D"]
+                if p_low in [p.lower() for p in all_p]:
+                    res.append(h)
+            return sorted(list(set(res)))
+
+        # 5. Ruling Planets snapshot connected to query
+        rp_snapshot = self.get_ruling_planets(
+            dt, lat, lon, ayanamsa, target_houses=all_favorable_cs, four_tier_map=four_tier_map
+        )
+        active_rp_names = list({e.planet.lower() for e in rp_snapshot.entries if e.planet})
+
+        # 6. Evaluation of Rules & Evidence
         evidence: list[KeyEvidenceItem] = []
         rules: list[RuleTriggeredItem] = []
         contradictions: list[ContradictionItem] = []
-        score = 50
+        eval_score = 50  # Baseline neutral
 
-        # Rule 1: Lagna Lord Dignity & Kendra Placement
+        # ─────────────────────────────────────────────────────────────────────
+        # RULE 1: Primary Cuspal Sub-Lord (CSL) Connection
+        # ─────────────────────────────────────────────────────────────────────
+        primary_cusp_obj = cusps_data[primary_c - 1]
+        csl_name = primary_cusp_obj["sub_lord"].lower()
+        csl_star = next((p["star_lord"].lower() for p in planets_data if p["planet"].lower() == csl_name), "mercury")
+
+        csl_signified = _get_houses_signified(csl_name)
+        csl_star_signified = _get_houses_signified(csl_star)
+        combined_csl_houses = sorted(list(set(csl_signified + csl_star_signified)))
+
+        fav_hits = [h for h in combined_csl_houses if h in all_favorable_cs]
+        neg_hits = [h for h in combined_csl_houses if h in negating_cs]
+        is_direct_veto = len(neg_hits) > 0 and len(fav_hits) == 0
+        is_strong_promise = len(fav_hits) > 0 and len(neg_hits) == 0
+
+        csl_rule_weight = 0
+        csl_supp: list[str] = []
+        csl_contra: list[str] = []
+
+        if is_strong_promise:
+            csl_rule_weight = 40
+            eval_score += 40
+            csl_supp.append(f"Cuspal Sub-Lord {csl_name.capitalize()} & Star {csl_star.capitalize()} signify fruitful houses {fav_hits}")
+            csl_indication: Literal["Positive", "Very Positive", "Neutral", "Slight Negative", "Negative"] = "Very Positive"
+            csl_expl = f"Primary {primary_c}th CSL {csl_name.capitalize()} connects directly with fulfillment houses ({fav_hits}) without 12th-house negation."
+        elif len(fav_hits) > 0 and len(neg_hits) > 0:
+            csl_rule_weight = 10
+            eval_score += 10
+            csl_supp.append(f"CSL connects with favorable houses {fav_hits}")
+            csl_contra.append(f"CSL also connects with negating houses {neg_hits} indicating conditions/delays")
+            csl_indication = "Positive"
+            csl_expl = f"Primary {primary_c}th CSL {csl_name.capitalize()} signifies fruitful houses {fav_hits}, but carries dual connection to {neg_hits}."
+            contradictions.append(
+                ContradictionItem(
+                    title=f"CSL dual connection to houses {neg_hits}",
+                    description=f"Sub-Lord {csl_name.capitalize()} touches negating houses ({neg_hits}) creating initial friction.",
+                    advice="Maintain strict documentation and avoid hasty agreements.",
+                    source_factor="Primary CSL Negation",
+                )
+            )
+        elif is_direct_veto:
+            csl_rule_weight = -40
+            eval_score -= 40
+            csl_contra.append(f"CSL strictly signifies negating houses {neg_hits}")
+            csl_indication = "Negative"
+            csl_expl = f"Primary {primary_c}th CSL {csl_name.capitalize()} activates negating houses {neg_hits} (12th from query anchor), creating an active denial veto."
+            contradictions.append(
+                ContradictionItem(
+                    title=f"Primary Cuspal Sub-Lord Veto via House {neg_hits}",
+                    description=f"Sub-Lord {csl_name.capitalize()} denies fructification by activating negation houses.",
+                    advice="Reassess timing and strategy; current configuration denies immediate fulfillment.",
+                    source_factor="CSL Direct Veto",
+                )
+            )
+        else:
+            csl_rule_weight = 0
+            csl_indication = "Neutral"
+            csl_expl = f"Primary {primary_c}th CSL {csl_name.capitalize()} is uncommitted; weak direct signification of houses {primary_c} or {all_favorable_cs}."
+
         evidence.append(
             KeyEvidenceItem(
-                factor="Lagna & Lagna Lord",
-                indication="Positive",
-                explanation=f"Lagna in {asc_rashi.capitalize()}. Lagna Lord {asc_lords['sign_lord'].capitalize()} active in query moment.",
-                weight=18,
+                factor=f"{primary_c}th Cuspal Sub-Lord ({csl_name.capitalize()})",
+                indication=csl_indication,
+                explanation=csl_expl,
+                weight=csl_rule_weight,
             )
         )
         rules.append(
             RuleTriggeredItem(
-                rule_id="HRY-001",
-                rule_principle="Strong Lagna Lord gives query manifestation and direct success",
-                reference="Prashna Marga, Ch. 2",
-                triggered="Yes",
-                weight=18,
+                rule_id="KP-CSL-PRIMARY",
+                rule_name="Primary Cuspal Sub-Lord Promise",
+                rule_principle=f"{primary_c}th Cuspal Sub-Lord signifies favorable houses ({all_favorable_cs}) for positive fruition",
+                reference="K.P. Reader Vol VI (Horary Astrology)",
+                triggered="Yes" if (is_strong_promise or is_direct_veto) else ("Partially" if fav_hits else "No"),
+                weight=csl_rule_weight,
+                result="Favorable Promise" if is_strong_promise else ("Denied / Negated" if is_direct_veto else "Conditional / Weak"),
+                evidence=f"CSL {csl_name.capitalize()} (Star: {csl_star.capitalize()}) signifies houses {combined_csl_houses}",
+                supporting_factors=tuple(csl_supp),
+                contradicting_factors=tuple(csl_contra),
             )
         )
-        score += 18
 
-        # Rule 2: Domain CSL evaluation
-        if is_job or not (is_marriage or is_travel or is_property or is_health):
-            evidence.append(
-                KeyEvidenceItem(
-                    factor="7th / 10th House (Job/Work/Opportunity)",
-                    indication="Positive",
-                    explanation="10th & 6th significators strongly support fulfillment of desires with sustained effort.",
-                    weight=20,
-                )
-            )
-            rules.append(
-                RuleTriggeredItem(
-                    rule_id="HRY-014",
-                    rule_principle="10th and 11th cuspal sub-lords in favorable star yield affirmative outcome",
-                    reference="KP Reader VI (Horary)",
-                    triggered="Yes",
-                    weight=20,
-                )
-            )
-            score += 20
-        elif is_marriage:
-            evidence.append(
-                KeyEvidenceItem(
-                    factor="7th House (Partnership/Marriage)",
-                    indication="Positive",
-                    explanation="7th CSL connected with 2nd and 11th houses indicating union and celebration.",
-                    weight=20,
-                )
-            )
-            rules.append(
-                RuleTriggeredItem(
-                    rule_id="HRY-015",
-                    rule_principle="7th CSL in star of significator of 2, 7, 11 brings marriage",
-                    reference="KP Reader VI (Horary)",
-                    triggered="Yes",
-                    weight=20,
-                )
-            )
-            score += 20
+        # ─────────────────────────────────────────────────────────────────────
+        # RULE 2: Ruling Planets Concordance & Confirmation
+        # ─────────────────────────────────────────────────────────────────────
+        rp_supp: list[str] = []
+        rp_contra: list[str] = []
+        concordant_rps: list[str] = []
+        discordant_rps: list[str] = []
 
-        # Rule 3: Moon Condition
-        moon_nak = longitude_to_nakshatra(moon_lon)
+        for rp_entry in rp_snapshot.entries:
+            p = rp_entry.planet.lower()
+            if not p:
+                continue
+            p_houses = _get_houses_signified(p)
+            if any(h in all_favorable_cs for h in p_houses):
+                concordant_rps.append(p.capitalize())
+            elif any(h in negating_cs for h in p_houses):
+                discordant_rps.append(p.capitalize())
+
+        concordant_rps = sorted(list(set(concordant_rps)))
+        discordant_rps = sorted(list(set(discordant_rps)))
+        is_csl_in_rp = csl_name in [p.lower() for p in active_rp_names]
+
+        rp_weight = 0
+        if len(concordant_rps) >= 3 or is_csl_in_rp:
+            rp_weight = 25
+            eval_score += 25
+            rp_supp.append(f"Ruling Planets ({', '.join(concordant_rps)}) actively signify favorable houses {all_favorable_cs}")
+            if is_csl_in_rp:
+                rp_supp.append(f"Primary CSL {csl_name.capitalize()} is confirmed as an active Ruling Planet at query moment")
+            rp_indication: Literal["Positive", "Very Positive", "Neutral", "Slight Negative", "Negative"] = "Very Positive"
+            rp_expl = f"Strong RP concordance: {len(concordant_rps)} Ruling Planets ({', '.join(concordant_rps)}) align with query houses."
+        elif len(concordant_rps) >= 1:
+            rp_weight = 15
+            eval_score += 15
+            rp_supp.append(f"Partial RP agreement via {', '.join(concordant_rps)}")
+            rp_indication = "Positive"
+            rp_expl = f"Moderate RP support: Ruling Planets ({', '.join(concordant_rps)}) support query fruition."
+        else:
+            rp_weight = -10
+            eval_score -= 10
+            rp_contra.append("Ruling Planets lack direct connection to primary query houses")
+            rp_indication = "Slight Negative"
+            rp_expl = "Weak Ruling Planet concordance at query moment; indicates delay or lack of immediate alignment."
+
         evidence.append(
             KeyEvidenceItem(
-                factor="Moon Condition",
-                indication="Positive",
-                explanation=f"Moon placed in {moon_rashi.capitalize()} ({moon_nak.nakshatra} nakshatra) showing clear mental intention.",
-                weight=15,
+                factor="Ruling Planets & Hora Concordance",
+                indication=rp_indication,
+                explanation=rp_expl,
+                weight=rp_weight,
             )
         )
         rules.append(
             RuleTriggeredItem(
-                rule_id="HRY-023",
-                rule_principle="Moon without combustion and void-of-course gives positive query fruition",
-                reference="Prashna Marga, Ch. 3",
-                triggered="Yes",
-                weight=15,
+                rule_id="KP-RP-CONCORDANCE",
+                rule_name="Ruling Planets Concordance",
+                rule_principle="Ruling Planets at query moment confirming primary significators grants affirmative seal",
+                reference="Classical Horary Confluence (K.S. Krishnamurti)",
+                triggered="Yes" if rp_weight >= 15 else "Partially",
+                weight=rp_weight,
+                result="Concordant" if rp_weight >= 15 else "Discordant / Neutral",
+                evidence=f"Active RPs: {', '.join(active_rp_names)}. Concordant: {', '.join(concordant_rps)}",
+                supporting_factors=tuple(rp_supp),
+                contradicting_factors=tuple(rp_contra),
             )
         )
-        score += 15
 
-        # Rule 4: Jupiter Benefic Influence
+        # ─────────────────────────────────────────────────────────────────────
+        # RULE 3: Moon Condition, House & Paksha
+        # ─────────────────────────────────────────────────────────────────────
+        moon_data = next((p for p in planets_data if p["planet"] == "moon"), planets_data[1])
+        moon_h = moon_data["house_number"]
+        moon_sign = moon_data["sign"]
+        moon_nak = moon_data["nakshatra"]
+        moon_st = moon_data["star_lord"]
+        moon_houses = _get_houses_signified("moon")
+
+        sun_data = next((p for p in planets_data if p["planet"] == "sun"), planets_data[0])
+        separation = (moon_data["longitude"] - sun_data["longitude"]) % 360.0
+        is_waxing = separation < 180.0
+
+        moon_weight = 0
+        moon_supp: list[str] = []
+        moon_contra: list[str] = []
+
+        if moon_h in all_favorable_cs or any(h in all_favorable_cs for h in moon_houses):
+            moon_weight += 15
+            moon_supp.append(f"Moon in House {moon_h} ({moon_sign.capitalize()}) activates fruitful significations {moon_houses}")
+        elif moon_h in (6, 8, 12) and q_meta["category"] != "health":
+            moon_weight -= 10
+            moon_contra.append(f"Moon placed in Dusthana house {moon_h} indicates mental anxiety or delay")
+        else:
+            moon_weight += 5
+
+        if is_waxing:
+            moon_supp.append("Waxing Moon (Shukla Paksha) supports increasing strength")
+        else:
+            moon_contra.append("Waning Moon (Krishna Paksha) indicates moderation")
+
+        eval_score += moon_weight
+        moon_indication: Literal["Positive", "Very Positive", "Neutral", "Slight Negative", "Negative"] = (
+            "Positive" if moon_weight >= 10 else ("Slight Negative" if moon_weight < 0 else "Neutral")
+        )
         evidence.append(
             KeyEvidenceItem(
-                factor="Jupiter Influence",
-                indication="Very Positive",
-                explanation="Jupiter (Guru) acts as supreme benefic karaka providing wisdom, backing and auspicious support.",
-                weight=15,
+                factor=f"Moon Placement & Condition ({moon_sign.capitalize()} H{moon_h})",
+                indication=moon_indication,
+                explanation=f"Moon in {moon_sign.capitalize()} ({moon_nak}) in House {moon_h}. Signifies houses {moon_houses}.",
+                weight=moon_weight,
             )
         )
         rules.append(
             RuleTriggeredItem(
-                rule_id="HRY-041",
-                rule_principle="Jupiter aspect or placement over query significators indicates opportunity",
-                reference="B.P.H.S., Ch. 53",
-                triggered="Yes",
-                weight=15,
+                rule_id="KP-MOON-FAVOR",
+                rule_name="Moon Fructification Condition",
+                rule_principle="Moon occupies favorable house and star signifying query fruition without combustion",
+                reference="Prashna Marga Ch. 3",
+                triggered="Yes" if moon_weight >= 10 else "Partially",
+                weight=moon_weight,
+                result="Favorable" if moon_weight >= 10 else "Moderate",
+                evidence=f"Moon in H{moon_h}, Star {moon_st.capitalize()}, Paksha: {'Shukla' if is_waxing else 'Krishna'}",
+                supporting_factors=tuple(moon_supp),
+                contradicting_factors=tuple(moon_contra),
             )
         )
-        score += 15
 
-        # Rule 5: Rahu/Ketu Axis
+        # ─────────────────────────────────────────────────────────────────────
+        # RULE 4: Benefic Karaka (Jupiter) Influence
+        # ─────────────────────────────────────────────────────────────────────
+        jup_data = next((p for p in planets_data if p["planet"] == "jupiter"), None)
+        jup_h = jup_data["house_number"] if jup_data else 10
+        jup_aspects_lagna = jup_h in (1, 5, 7, 9)
+        jup_aspects_primary = house_offset(primary_c, jup_h) in (1, 5, 7, 9)
+
+        jup_weight = 0
+        jup_supp: list[str] = []
+        if jup_h in all_favorable_cs or jup_aspects_lagna or jup_aspects_primary:
+            jup_weight = 15
+            eval_score += 15
+            jup_supp.append(f"Jupiter in House {jup_h} exerts auspicious benefic drishti over key query houses")
+            jup_indication: Literal["Positive", "Very Positive", "Neutral", "Slight Negative", "Negative"] = "Very Positive"
+            jup_expl = f"Guru (Jupiter) placed in House {jup_h} grants divine backing, favorable perception, and institutional support."
+        else:
+            jup_weight = 5
+            eval_score += 5
+            jup_indication = "Neutral"
+            jup_expl = f"Jupiter placed in House {jup_h} is neutral to primary query axis."
+
         evidence.append(
             KeyEvidenceItem(
-                factor="Rahu/Ketu Axis",
-                indication="Neutral",
-                explanation="Rahu/Ketu axis introduces sudden unconventional developments and swift progress.",
-                weight=0,
+                factor="Jupiter Benefic Influence",
+                indication=jup_indication,
+                explanation=jup_expl,
+                weight=jup_weight,
             )
         )
         rules.append(
             RuleTriggeredItem(
-                rule_id="HRY-067",
-                rule_principle="Rahu in 10th or 11th gives unconventional gain after initial ambiguity",
-                reference="Prashna Marga, Ch. 11",
-                triggered="Partially",
-                weight=5,
+                rule_id="KP-BENEFIC-JUPITER",
+                rule_name="Benefic Karaka Support",
+                rule_principle="Jupiter aspect or placement over query significators indicates opportunity & success",
+                reference="B.P.H.S. Ch. 53",
+                triggered="Yes" if jup_weight >= 15 else "Partially",
+                weight=jup_weight,
+                result="Supportive" if jup_weight >= 15 else "Neutral",
+                evidence=f"Jupiter transiting House {jup_h} from Horary Lagna",
+                supporting_factors=tuple(jup_supp),
+                contradicting_factors=(),
             )
         )
 
-        # Rule 6: Malefic Influences & Contradictions
+        # ─────────────────────────────────────────────────────────────────────
+        # RULE 5: Malefic Scrutiny (Saturn / Mars / Rahu)
+        # ─────────────────────────────────────────────────────────────────────
+        sat_data = next((p for p in planets_data if p["planet"] == "saturn"), None)
+        sat_h = sat_data["house_number"] if sat_data else 6
+        mars_data = next((p for p in planets_data if p["planet"] == "mars"), None)
+        mars_h = mars_data["house_number"] if mars_data else 9
+
+        malefic_weight = -5
+        eval_score -= 5
         evidence.append(
             KeyEvidenceItem(
-                factor="Malefic Influence / Saturn Aspect",
+                factor="Saturn / Mars Scrutiny & Diligence",
                 indication="Slight Negative",
-                explanation="Saturn/Mars connection indicates hard work, competitive scrutiny, and slight delay before success.",
-                weight=-5,
+                explanation=f"Saturn in House {sat_h} and Mars in House {mars_h} require rigorous diligence and procedural patience.",
+                weight=malefic_weight,
+            )
+        )
+        rules.append(
+            RuleTriggeredItem(
+                rule_id="KP-MALEFIC-SCRUTINY",
+                rule_name="Malefic Scrutiny & Procedural Friction",
+                rule_principle="Saturn / Mars aspect over temporal axes introduces vetting scrutiny and procedural delay",
+                reference="Prashna Marga Ch. 11",
+                triggered="Yes",
+                weight=malefic_weight,
+                result="Scrutiny Active",
+                evidence=f"Saturn H{sat_h}, Mars H{mars_h}",
+                supporting_factors=(),
+                contradicting_factors=(
+                    f"Saturn in House {sat_h} introduces thorough background checks and deliberate pacing",
+                    f"Mars in House {mars_h} indicates active competition",
+                ),
             )
         )
         contradictions.append(
             ContradictionItem(
-                title="Mars/Saturn aspect may bring competition or patience requirement",
-                description="Aggressive competitors or procedural diligence required.",
-                advice="Prepare thoroughly, avoid workplace conflict, and remain patient with communication timelines.",
-            )
-        )
-        contradictions.append(
-            ContradictionItem(
-                title="Rahu influence indicates unexpected procedural twists",
-                description="Documentation or interview rounds may have unconventional questions.",
-                advice="Stay flexible, verify all offer details, and present your practical expertise clearly.",
+                title="Saturn / Mars connection introduces competition or diligence demand",
+                description="Procedural diligence or technical vetting rounds required before confirmation.",
+                advice="Prepare thoroughly, verify all prerequisites, and maintain patient follow-up.",
+                source_factor="Saturn/Mars Alignment",
             )
         )
 
-        final_confidence = min(max(score, 45), 92)
-        verdict: Literal["YES", "NO", "MIXED"] = "YES" if final_confidence >= 65 else ("MIXED" if final_confidence >= 50 else "NO")
+        # ─────────────────────────────────────────────────────────────────────
+        # 7. Final Verdict & Confidence Derivation
+        # ─────────────────────────────────────────────────────────────────────
+        total_support_weight = sum(r.weight for r in rules if r.weight > 0 and r.triggered in ("Yes", "Partially"))
+        total_contra_weight = abs(sum(r.weight for r in rules if r.weight < 0 and r.triggered in ("Yes", "Partially")))
 
-        # Relevant Houses & Lords — real whole-sign rashi/lord per house,
-        # counted from the actual computed Ascendant. Previously houses
-        # 2/4/6/7/10/11 were hardcoded to fixed signs/lords regardless of
-        # the real Lagna (only house 1 used the real value) — fabricated
-        # data for every chart except the one specific Lagna those
-        # constants happened to match.
-        _RELEVANT_HOUSE_NOTES = {
-            1: f"Lagna in {asc_rashi.capitalize()}",
-            2: "Financial gain and family support",
-            4: "Domestic environment & comfort",
-            6: "Competition, service, overcome hurdles",
-            7: "Public dealing and partnerships",
-            10: "Career, authority, and status in world",
-            11: "Fulfillment of desires & victory",
-        }
-        _RELEVANT_HOUSE_STRENGTH = {
-            1: "Strong", 2: "Average", 4: "Average", 6: "Strong",
-            7: "Strong", 10: "Average", 11: "Strong",
-        }
-        asc_rashi_idx = _RASHI_NAMES.index(asc_rashi)
-        relevant_houses = tuple(
-            RelevantHouseItem(
-                house=h,
-                sign=_RASHI_NAMES[(asc_rashi_idx + h - 1) % 12].capitalize(),
-                lord=_SIGN_LORDS[(asc_rashi_idx + h - 1) % 12].capitalize(),
-                strength=_RELEVANT_HOUSE_STRENGTH[h],
-                note=_RELEVANT_HOUSE_NOTES[h],
+        final_score = min(max(eval_score, 15), 95)
+
+        if is_direct_veto or final_score < 42 or (total_contra_weight >= total_support_weight and final_score < 50):
+            verdict: Literal["YES", "NO", "MIXED"] = "NO"
+            final_confidence = min(92, max(55, int(100 - final_score)))
+            strength_label = "Unfavorable Indication" if final_confidence >= 75 else "Moderate Denial"
+        elif is_strong_promise and final_score >= 65 and total_support_weight >= 2 * total_contra_weight:
+            verdict = "YES"
+            final_confidence = min(95, max(65, int(final_score)))
+            strength_label = "Strong Indication" if final_confidence >= 75 else "Moderate Affirmation"
+        else:
+            verdict = "MIXED"
+            final_confidence = min(85, max(50, int(abs(final_score - 50) + 50)))
+            strength_label = "Mixed / Conditional Indication"
+
+        # ─────────────────────────────────────────────────────────────────────
+        # 8. Dynamic Relevant Houses Matrix
+        # ─────────────────────────────────────────────────────────────────────
+        relevant_house_indices = sorted(list(set([1, primary_c] + supporting_cs + negating_cs)))
+        relevant_houses: list[RelevantHouseItem] = []
+        for h in relevant_house_indices:
+            c_info = cusps_data[h - 1]
+            h_sign = c_info["sign"].capitalize()
+            h_lord = c_info["sign_lord"].capitalize()
+            h_occ = [p["planet"].capitalize() for p in planets_data if p["house_number"] == h]
+
+            if h in all_favorable_cs:
+                str_label: Literal["Strong", "Average", "Weak"] = "Strong" if h_occ or h == primary_c else "Average"
+                note_str = f"Fruitful query bhava ({'Primary Anchor' if h == primary_c else 'Desire Fulfillment'})"
+                if h_occ:
+                    note_str += f" with {', '.join(h_occ)}"
+            elif h in negating_cs:
+                str_label = "Weak"
+                note_str = f"Negating/Veto house (12th from {primary_c} or supporting)"
+            else:
+                str_label = "Average"
+                note_str = f"House {h} in {h_sign}"
+
+            relevant_houses.append(
+                RelevantHouseItem(
+                    house=h,
+                    sign=h_sign,
+                    lord=h_lord,
+                    strength=str_label,
+                    note=note_str,
+                )
             )
-            for h in (1, 2, 4, 6, 7, 10, 11)
-        )
 
-        # Dynamic Timing Calculation
-        # 1. Running Dasha from Moon
+        # ─────────────────────────────────────────────────────────────────────
+        # 9. Dynamic Timing Calculation
+        # ─────────────────────────────────────────────────────────────────────
         dasha_tree = self._dasha.compute_vimshottari(dt, lat, lon, ayanamsa, max_depth=2)
         query_date = dt.date()
         active_maha = next(
             (m for m in dasha_tree.mahadashas if m.start_date <= query_date <= m.end_date),
-            dasha_tree.mahadashas[0] if dasha_tree.mahadashas else None
+            dasha_tree.mahadashas[0] if dasha_tree.mahadashas else None,
         )
         dasha_maha = active_maha.lord.capitalize() if active_maha else moon_lords["star_lord"].capitalize()
         active_antar = (
@@ -635,30 +1138,22 @@ class PrashnaEngine:
         )
         antardasha_lord = active_antar.lord.capitalize() if active_antar else asc_lords["sub_lord"].capitalize()
 
-        # 2. Window
-        end_window_dt = dt + timedelta(days=90)
-        window_str = f"{dt.strftime('%b %Y')} – {end_window_dt.strftime('%b %Y')}"
+        if active_antar:
+            window_str = f"{active_antar.start_date.strftime('%b %Y')} – {active_antar.end_date.strftime('%b %Y')}"
+        else:
+            end_window_dt = dt + timedelta(days=90)
+            window_str = f"{dt.strftime('%b %Y')} – {end_window_dt.strftime('%b %Y')}"
 
-        # Real Jupiter transit house from the horary Lagna (whole-sign,
-        # Jupiter aspects 1st/5th/7th/9th from itself) and real Moon
-        # paksha from the actual Sun-Moon angular separation — previously
-        # both were hardcoded strings claiming a fixed, always-supportive
-        # configuration regardless of the actual computed longitudes.
-        jupiter_rashi_idx = int(jupiter_lon // 30.0)
-        jupiter_house = house_offset(asc_rashi_idx, jupiter_rashi_idx)
-        jupiter_aspects_lagna = jupiter_house in (1, 5, 7, 9)
         transit_support = (
-            f"Jupiter transiting house {jupiter_house} from horary Lagna — "
-            + ("aspects/occupies Lagna, supportive of fruition" if jupiter_aspects_lagna
-               else "no direct aspect on Lagna from current position")
+            f"Jupiter transiting House {jup_h} from horary Lagna — "
+            + ("aspects/occupies Lagna & Primary Cusp, highly supportive" if (jup_aspects_lagna or jup_aspects_primary)
+               else "operating in supportive whole-sign alignment")
         )
 
-        moon_sun_separation = (moon_lon - sun_lon) % 360.0
-        is_waxing = moon_sun_separation < 180.0
         moon_cycle = (
             f"{'Waxing' if is_waxing else 'Waning'} Moon "
             f"({'Shukla' if is_waxing else 'Krishna'} Paksha) — "
-            + ("supportive" if is_waxing else "less supportive, classically")
+            + ("supportive of query fruition" if is_waxing else "calls for patience")
         )
 
         timing = TimingIndication(
@@ -670,20 +1165,26 @@ class PrashnaEngine:
         )
 
         conclusions = (
-            f"Strong Lagna and Lagna Lord ({asc_lords['sign_lord'].capitalize()}) alignment",
-            "Primary query significators confirm positive event manifestation",
-            "Jupiter's auspicious influence grants favor from decision makers",
-            "Procedural delay or competitive scrutiny due to Saturn/Mars influence",
-            f"Result: {verdict} — The indications strongly favor successful attainment.",
+            f"Primary {primary_c}th Cuspal Sub-Lord ({csl_name.capitalize()}) evaluation indicates {verdict}.",
+            f"Ruling Planets ({', '.join(concordant_rps[:3]) if concordant_rps else 'temporal horizon'}) affirm event realization.",
+            f"Jupiter's benefic placement in House {jup_h} reinforces positive outcome.",
+            f"Saturn & Mars scrutiny indicates diligent vetting and standard procedural timeline.",
+            f"Final Judgement: {verdict} ({final_confidence}% Confidence) — {strength_label}.",
+        )
+
+        summary_text = (
+            f"Canonical KP Prashna analysis indicates {strength_label.lower()} for {q_meta['label']}. "
+            f"Primary Cuspal Sub-Lord {csl_name.capitalize()} connects with fruitful houses ({fav_hits or combined_csl_houses}), "
+            f"supported by Ruling Planets ({', '.join(concordant_rps[:2]) if concordant_rps else 'Ascendant/Moon'}) and Hora Lord {rp_snapshot.hora_lord.capitalize()}."
         )
 
         return PrashnaJudgement(
             verdict=verdict,
             confidence_percentage=final_confidence,
-            strength_label="Strong Indication" if final_confidence >= 75 else "Moderate Indication",
-            summary=f"The horary indications are favorable for this inquiry. The planetary configuration and KP sub-lords confirm affirmative fruition with diligence.",
+            strength_label=strength_label,
+            summary=summary_text,
             key_evidences=tuple(evidence),
-            relevant_houses=relevant_houses,
+            relevant_houses=tuple(relevant_houses),
             timing=timing,
             conclusions=conclusions,
             supporting_rules=tuple(rules),

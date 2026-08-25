@@ -320,6 +320,15 @@ class PrashnaSphutaResult:
 
 
 @dataclass(frozen=True)
+class SignificatorFactor:
+    """Explains why a planet became a significator for a house."""
+    planet: str
+    house: int
+    tier: Literal["A", "B", "C", "D"]
+    reason: str
+
+
+@dataclass(frozen=True)
 class RulingPlanetEntry:
     point_name: str  # "Ascendant", "Moon", "Rahu", "Ketu", "Day Lord", "Hora Lord"
     sign_lord: str
@@ -328,6 +337,11 @@ class RulingPlanetEntry:
     sub_sub_lord: str
     as_aspecting: str = ""
     is_conjunction: str = ""
+    planet: str = ""
+    source: str = ""
+    reason: str = ""
+    priority: int = 0
+    relationship_to_judgement: str = ""
 
 
 @dataclass(frozen=True)
@@ -387,6 +401,11 @@ class RuleTriggeredItem:
     reference: str
     triggered: Literal["Yes", "Partially", "No"]
     weight: int
+    rule_name: str = ""
+    result: str = ""
+    evidence: str = ""
+    supporting_factors: tuple[str, ...] = field(default_factory=tuple)
+    contradicting_factors: tuple[str, ...] = field(default_factory=tuple)
 
 
 @dataclass(frozen=True)
@@ -394,6 +413,7 @@ class ContradictionItem:
     title: str
     description: str
     advice: str
+    source_factor: str = ""
 
 
 @dataclass(frozen=True)

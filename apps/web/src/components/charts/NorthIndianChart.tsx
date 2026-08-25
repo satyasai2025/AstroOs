@@ -212,28 +212,33 @@ export function NorthIndianChart({
     }
 
     // ── Helper to calculate clean planet positions within house centroids ─────
-    const getPlanetOffset = (i: number, count: number, isHouse1: boolean) => {
+    const getPlanetOffset = (i: number, count: number, house: number) => {
+      const isHouse1 = house === 1;
       const yShift = isHouse1 ? 6 : 0;
+      const isCorner = [2, 3, 5, 6, 8, 9, 11, 12].includes(house);
+
       if (count <= 1) {
         return { offsetX: 0, offsetY: yShift };
       }
       if (count === 2) {
-        return { offsetX: 0, offsetY: (i === 0 ? -14 : 14) + yShift };
+        const offset = isCorner ? 11 : 13;
+        return { offsetX: 0, offsetY: (i === 0 ? -offset : offset) + yShift };
       }
+
       // 3+ planets: 2-column balanced grid
       const col = i % 2 === 0 ? 0 : 1;
       const rowIndex = Math.floor(i / 2);
       const itemsInCol = Math.ceil(count / 2) - (col === 1 && count % 2 !== 0 ? 1 : 0);
-      const colSpacing = count >= 5 ? 26 : 24;
+      const colSpacing = isCorner ? (count >= 4 ? 14 : 16) : (count >= 5 ? 24 : 20);
       const offsetX = col === 0 ? -colSpacing : colSpacing;
 
       let offsetY = 0;
       if (itemsInCol === 1) {
         offsetY = 0;
       } else if (itemsInCol === 2) {
-        offsetY = rowIndex === 0 ? -16 : 16;
+        offsetY = rowIndex === 0 ? (isCorner ? -13 : -15) : (isCorner ? 13 : 15);
       } else {
-        offsetY = (rowIndex - 1) * 28;
+        offsetY = (rowIndex - 1) * (isCorner ? 22 : 26);
       }
       return { offsetX, offsetY: offsetY + yShift };
     };
@@ -245,8 +250,11 @@ export function NorthIndianChart({
       const [px, py] = toPoint(HOUSE_CENTROIDS[house]);
       const count = ps.length;
       ps.forEach((planet, i) => {
-        const { offsetX, offsetY } = getPlanetOffset(i, count, house === 1);
-        planetPositions[planet.planet] = [px + offsetX, py + offsetY];
+        const { offsetX, offsetY } = getPlanetOffset(i, count, house);
+        // Clamp to ensure planets stay inside SVG bounds
+        const clampedX = Math.max(16, Math.min(size - 16, px + offsetX));
+        const clampedY = Math.max(16, Math.min(size - 16, py + offsetY));
+        planetPositions[planet.planet] = [clampedX, clampedY];
       });
     }
 

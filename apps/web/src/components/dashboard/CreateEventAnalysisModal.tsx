@@ -11,13 +11,11 @@ import type {
 } from "@/lib/types";
 import { useMemo, useState } from "react";
 
-/** Local date/time → UTC instant, using Date.UTC() semantics (treats the
- * date/time as literal wall-clock digits) minus the place's real offset, so
- * the result is the true UTC instant. */
+/** Local date/time → UTC instant */
 function localToUtcIso(dateStr: string, timeStr: string, utcOffsetMinutes: number): string {
   const [y, m, d] = dateStr.split("-").map(Number);
   const [h, mi, s] = timeStr.split(":").map(Number);
-  const asUtc = Date.UTC(y, m - 1, d, h ?? 0, mi ?? 0, s ?? 0);
+  const asUtc = Date.UTC(y!, m! - 1, d!, h ?? 0, mi ?? 0, s ?? 0);
   return new Date(asUtc - utcOffsetMinutes * 60_000).toISOString();
 }
 
@@ -30,13 +28,163 @@ function formatOffset(minutes: number): string {
 }
 
 const SCOPE_OPTIONS: { key: EventAnalysisScopeFlag; label: string; hint: string }[] = [
-  { key: "muhurta", label: "Muhurta", hint: "Event-moment fitness" },
-  { key: "natal_promise", label: "Natal Promise", hint: "Relevant houses/lords for the event" },
-  { key: "dasha_support", label: "Dasha Support", hint: "Active dasha chain support" },
-  { key: "transit_influence", label: "Transit Influence", hint: "Transits at the event moment" },
-  { key: "planetary_strength", label: "Planetary Strength", hint: "Shadbala / planet strength" },
-  { key: "yogas_activated", label: "Yogas Activated", hint: "Natal + event-chart yogas" },
-  { key: "overall_score", label: "Overall Score", hint: "Composite success score" },
+  { key: "muhurta", label: "Muhurta Fitness", hint: "Moment panchang, tithi, vara, nakshatra & hora auspiciousness" },
+  { key: "natal_promise", label: "Natal Promise", hint: "Relevant houses (Bhavas) and Karaka lords promise in D1/D9" },
+  { key: "dasha_support", label: "Dasha Support", hint: "Active Vimshottari Mahadasha, Antardasha & Pratyantardasha" },
+  { key: "transit_influence", label: "Transit Influence (Gochara)", hint: "Planetary transits over natal sensitive points at event moment" },
+  { key: "planetary_strength", label: "Planetary Strength", hint: "Shadbala, Ashtakavarga points, and Digbala ratings" },
+  { key: "yogas_activated", label: "Yogas Activated", hint: "Auspicious and inauspicious planetary yogas triggered by event" },
+  { key: "overall_score", label: "Composite Success Score", hint: "Weighted probabilistic event manifestation score" },
+];
+
+/** Standardized AstroOS Life Event Taxonomy */
+export interface EventCategoryConfig {
+  id: string;
+  name: string;
+  icon: string;
+  houses: string;
+  events: string[];
+}
+
+export const ASTROOS_EVENT_CATEGORIES: EventCategoryConfig[] = [
+  {
+    id: "career",
+    name: "Career & Job",
+    icon: "💼",
+    houses: "10H · 6H · 2H · 11H",
+    events: [
+      "Job Interview & Selection",
+      "New Job Joining",
+      "Promotion & Rank Elevation",
+      "Business Launch & Incorporation",
+      "Contract & Deal Signing",
+      "Resignation & Career Shift",
+      "Retirement Commencement",
+    ],
+  },
+  {
+    id: "marriage",
+    name: "Marriage & Relationships",
+    icon: "💍",
+    houses: "7H · 2H · 11H",
+    events: [
+      "Engagement & Ring Ceremony",
+      "Vivaha / Wedding Muhurta",
+      "First Meeting / Proposal",
+      "Legal Marriage Registration",
+      "Partnership Agreement",
+      "Marital Reconciliation",
+    ],
+  },
+  {
+    id: "property",
+    name: "Property & Real Estate",
+    icon: "🏠",
+    houses: "4H · 11H · 12H",
+    events: [
+      "Griha Pravesh (Housewarming)",
+      "Property / Flat Purchase Registration",
+      "Bhumi Pujan / Construction Start",
+      "Vehicle / Car Purchase",
+      "Home Renovation Commencement",
+      "Property Sale & Handover",
+    ],
+  },
+  {
+    id: "finance",
+    name: "Finance & Wealth",
+    icon: "💰",
+    houses: "2H · 11H · 5H · 9H",
+    events: [
+      "Major Capital Investment",
+      "Loan Approval & Disbursal",
+      "Gold & Precious Asset Purchase",
+      "Debt Settlement & Payoff",
+      "Stock Market Portfolio Entry",
+      "Inheritance / Legacy Receipt",
+    ],
+  },
+  {
+    id: "education",
+    name: "Education & Academics",
+    icon: "🎓",
+    houses: "5H · 9H · 4H",
+    events: [
+      "University Admission & Enrollment",
+      "Competitive Examination Appearance",
+      "Vidyarambha Ceremony",
+      "Graduation & Degree Award",
+      "Research Thesis Submission",
+      "Scholarship Grant Receipt",
+    ],
+  },
+  {
+    id: "travel",
+    name: "Travel & Relocation",
+    icon: "✈️",
+    houses: "9H · 12H · 3H",
+    events: [
+      "Visa Application Submission",
+      "Foreign Relocation / Immigration Flight",
+      "Passport / Green Card Issuance",
+      "Sacred Pilgrimage / Tirth Yatra Departure",
+      "Domestic City Relocation",
+      "International Business Tour",
+    ],
+  },
+  {
+    id: "health",
+    name: "Health & Medical",
+    icon: "🏥",
+    houses: "1H · 6H · 8H",
+    events: [
+      "Surgical Operation / Medical Procedure",
+      "Treatment & Therapy Commencement",
+      "Ayurvedic Rejuvenation / Detox Start",
+      "Medical Diagnostic Evaluation",
+      "Hospital Discharge & Full Recovery",
+    ],
+  },
+  {
+    id: "family",
+    name: "Family & Progeny",
+    icon: "👶",
+    houses: "5H · 2H · 9H",
+    events: [
+      "Childbirth / Progeny Arrival",
+      "Namakarana (Naming Ceremony)",
+      "Annaprashana (First Feeding)",
+      "Mundan (Chudakarana Ceremony)",
+      "Upanayana (Sacred Thread Ceremony)",
+      "Child Adoption Finalization",
+    ],
+  },
+  {
+    id: "legal",
+    name: "Legal & Governance",
+    icon: "⚖️",
+    houses: "6H · 9H · 10H",
+    events: [
+      "Court Case / Petition Filing",
+      "Judicial Final Verdict Day",
+      "Government Tender Submission",
+      "Legal Arbitration & Settlement",
+      "Patent / Trademark Filing",
+    ],
+  },
+  {
+    id: "spiritual",
+    name: "Spiritual & Initiation",
+    icon: "🕉️",
+    houses: "9H · 5H · 12H · 1H",
+    events: [
+      "Mantra Diksha & Guru Initiation",
+      "Temple Consecration / Yajna Purna Ahuti",
+      "Meditation Retreat Commencement",
+      "Spiritual Vow / Sannyasa Deeksha",
+      "Satyanarayan Katha / Vedic Puja",
+    ],
+  },
 ];
 
 interface Props {
@@ -51,15 +199,20 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
   const charts = chartsData?.charts ?? [];
 
   const [step, setStep] = useState(1);
+  const [chartSearch, setChartSearch] = useState("");
 
   // Step 1 — subject natal chart
   const [selectedChartId, setSelectedChartId] = useState<string | null>(null);
 
   // Step 2 — event details
-  const [eventName, setEventName] = useState("");
-  const [category, setCategory] = useState("");
-  const [eventDate, setEventDate] = useState("");
-  const [eventTime, setEventTime] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("career");
+  const [eventName, setEventName] = useState<string>("Job Interview & Selection");
+  const [isCustomTitle, setIsCustomTitle] = useState(false);
+
+  const now = new Date();
+  const [eventDate, setEventDate] = useState(now.toISOString().split("T")[0]!);
+  const [eventTime, setEventTime] = useState(now.toTimeString().split(" ")[0]!);
+
   const [useBirthLocation, setUseBirthLocation] = useState(true);
   const [placeSearchText, setPlaceSearchText] = useState("");
   const [eventPlace, setEventPlace] = useState<PlaceResultResponse | null>(null);
@@ -71,7 +224,23 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
 
   const selectedChart = charts.find((c) => c.id === selectedChartId) ?? null;
 
-  // Effective event location: custom place if chosen, else the birth coords.
+  // Active category object
+  const currentCategoryConfig = useMemo(() => {
+    return ASTROOS_EVENT_CATEGORIES.find((c) => c.id === selectedCategory) ?? ASTROOS_EVENT_CATEGORIES[0]!;
+  }, [selectedCategory]);
+
+  // Filtered charts list for search
+  const filteredCharts = useMemo(() => {
+    if (!chartSearch.trim()) return charts;
+    const q = chartSearch.toLowerCase();
+    return charts.filter(
+      (c) =>
+        c.subject_name.toLowerCase().includes(q) ||
+        (c.place_name && c.place_name.toLowerCase().includes(q)),
+    );
+  }, [charts, chartSearch]);
+
+  // Effective event location
   const effectiveLat = eventPlace ? eventPlace.latitude : (useBirthLocation ? selectedChart?.birth_latitude ?? null : null);
   const effectiveLon = eventPlace ? eventPlace.longitude : (useBirthLocation ? selectedChart?.birth_longitude ?? null : null);
 
@@ -82,26 +251,42 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
   );
 
   const canContinueToEvent = !!selectedChartId;
-  const canContinueToScope = !!eventName && canContinueToEvent;
+  const canContinueToScope = !!eventName.trim() && canContinueToEvent;
   const canAnalyze =
     canContinueToScope &&
     !!eventDate &&
     !!eventTime &&
-    // Only require tzQuery.data when we have coordinates to resolve
     (!effectiveLat || !effectiveLon || !!tzQuery.data) &&
     !createAnalysis.isPending;
 
   function reset() {
     setStep(1);
     setSelectedChartId(null);
-    setEventName("");
-    setCategory("");
-    setEventDate("");
-    setEventTime("");
+    setChartSearch("");
+    setSelectedCategory("career");
+    setEventName("Job Interview & Selection");
+    setIsCustomTitle(false);
+    setEventDate(new Date().toISOString().split("T")[0]!);
+    setEventTime(new Date().toTimeString().split(" ")[0]!);
     setUseBirthLocation(true);
     setPlaceSearchText("");
     setEventPlace(null);
     setScope(SCOPE_OPTIONS.map((o) => o.key));
+  }
+
+  function handleCategoryChange(catId: string) {
+    setSelectedCategory(catId);
+    const cat = ASTROOS_EVENT_CATEGORIES.find((c) => c.id === catId);
+    if (cat && cat.events.length > 0) {
+      setEventName(cat.events[0]!);
+      setIsCustomTitle(false);
+    }
+  }
+
+  function handleHereAndNow() {
+    const d = new Date();
+    setEventDate(d.toISOString().split("T")[0]!);
+    setEventTime(d.toTimeString().split(" ")[0]!);
   }
 
   function toggleScope(key: EventAnalysisScopeFlag) {
@@ -113,22 +298,18 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
   function handleAnalyze() {
     if (!selectedChart || !tzQuery.data || !eventDate || !eventTime) return;
     const eventDatetimeUtc = localToUtcIso(eventDate, eventTime, tzQuery.data.utc_offset_minutes);
+
     createAnalysis.mutate(
       {
         birth_chart_id: selectedChart.id,
-        event_name: eventName
-          .trim()
-          .split(/\s+/)
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-          .join(" ") || "Untitled Event",
-        category: category.trim() || null,
+        event_name: eventName.trim() || "Untitled Event",
+        category: currentCategoryConfig.name,
         event_datetime_utc: eventDatetimeUtc,
         latitude: eventPlace ? eventPlace.latitude : null,
         longitude: eventPlace ? eventPlace.longitude : null,
         place_name: eventPlace?.display_name
-          ?.split(/\s+/)
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-          .join(" ") ?? null,
+          ? eventPlace.display_name.split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ")
+          : selectedChart.place_name ?? null,
         timezone_iana: tzQuery.data.iana_name,
         scope,
       },
@@ -146,28 +327,34 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
 
       <div
-        className="obsidian-card relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden"
-        style={{ backgroundColor: "var(--obsidian-surface-elevated)" }}
+        className="obsidian-card relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+        style={{ backgroundColor: "var(--obsidian-surface-elevated, #0f172a)", borderColor: "var(--border-primary)" }}
       >
         {/* Header */}
-        <div className="flex items-start justify-between border-b p-5" style={{ borderColor: "var(--border-primary)" }}>
+        <div
+          className="flex items-center justify-between border-b px-6 py-4"
+          style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+        >
           <div className="flex items-center gap-3">
             <div
-              className="flex h-10 w-10 items-center justify-center rounded-lg"
-              style={{ backgroundColor: "var(--obsidian-accent-tertiary-soft)", color: "var(--obsidian-accent-tertiary)" }}
+              className="flex h-10 w-10 items-center justify-center rounded-xl border text-xl"
+              style={{
+                backgroundColor: "rgba(6,182,212,0.15)",
+                borderColor: "rgba(6,182,212,0.3)",
+                color: "#06b6d4",
+              }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="5" width="18" height="16" rx="2" />
-                <path d="M3 10h18M8 3v4M16 3v4" />
-              </svg>
+              📅
             </div>
             <div>
-              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Event Analysis</h2>
-              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                Analyze a chosen event moment against a saved natal chart.
+              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                Event Analysis (घटना फलादेश)
+              </h2>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Analyze a chosen life event moment against a saved natal birth chart
               </p>
             </div>
           </div>
@@ -175,182 +362,329 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded p-1 transition-colors"
+            className="rounded-lg p-1.5 transition hover:opacity-70 cursor-pointer"
             style={{ color: "var(--text-muted)" }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M6 18L18 6M6 6l12 12" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
-        {/* Step rail */}
-        <div className="flex gap-4 border-b px-5 py-3" style={{ borderColor: "var(--border-primary)" }}>
-          {["Select Chart", "Add Event", "Scope & Analyze"].map((label, i) => {
-            const n = i + 1;
-            return (
-              <div key={n} className="flex items-center gap-1.5">
-                <span
-                  className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold"
-                  style={{
-                    backgroundColor: step >= n ? "var(--obsidian-accent-tertiary)" : "var(--obsidian-surface)",
-                    color: step >= n ? "#fff" : "var(--text-muted)",
-                    border: step >= n ? "none" : "1px solid var(--border-primary)",
-                  }}
-                >
-                  {n}
-                </span>
-                <span className="text-xs font-medium" style={{ color: step === n ? "var(--text-primary)" : "var(--text-muted)" }}>
-                  {label}
-                </span>
-              </div>
-            );
-          })}
+        {/* Step Rail */}
+        <div
+          className="flex items-center gap-3 border-b px-6 py-3"
+          style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}
+        >
+          {[
+            { n: 1, title: "1. Select Natal Chart" },
+            { n: 2, title: "2. AstroOS Event Taxonomy" },
+            { n: 3, title: "3. Scope & Calculate" },
+          ].map((item) => (
+            <div key={item.n} className="flex items-center gap-2">
+              <span
+                className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition"
+                style={{
+                  backgroundColor: step >= item.n ? "var(--obsidian-accent-secondary, #06b6d4)" : "transparent",
+                  color: step >= item.n ? "#000" : "var(--text-muted)",
+                  border: step >= item.n ? "none" : "1px solid var(--border-primary)",
+                }}
+              >
+                {step > item.n ? "✓" : item.n}
+              </span>
+              <span
+                className="text-xs font-semibold hidden sm:inline"
+                style={{ color: step === item.n ? "var(--text-primary)" : "var(--text-muted)" }}
+              >
+                {item.title}
+              </span>
+              {item.n < 3 && <span className="text-xs text-slate-700">›</span>}
+            </div>
+          ))}
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-5">
+        {/* Content Area */}
+        <div className="flex-1 overflow-y-auto p-6" style={{ backgroundColor: "var(--bg-card)" }}>
+
+          {/* STEP 1: Select Saved Birth Chart */}
           {step === 1 && (
-            <div>
-              <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Select Saved Birth Chart</h3>
-              <p className="mb-4 text-xs" style={{ color: "var(--text-secondary)" }}>
-                Pick the person whose natal chart anchors this event analysis.
-              </p>
-              {chartsLoading && <p className="text-xs" style={{ color: "var(--text-muted)" }}>Loading saved charts…</p>}
-              {!chartsLoading && charts.length === 0 && (
-                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                  No saved charts yet. Create a birth chart first, then return here.
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                  Select Subject Natal Chart
+                </h3>
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                  Pick the person whose natal chart (D1/D9) anchors this event transit and Dasha analysis.
                 </p>
-              )}
-              <div className="space-y-2">
-                {charts.map((c) => {
-                  const selected = selectedChartId === c.id;
-                  return (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => setSelectedChartId(c.id)}
-                      className="flex w-full items-center justify-between gap-3 rounded-lg border p-3 text-left transition-colors"
-                      style={{
-                        borderColor: selected ? "var(--obsidian-accent-tertiary)" : "var(--border-primary)",
-                        backgroundColor: selected ? "var(--obsidian-accent-tertiary-soft)" : "transparent",
-                      }}
-                    >
-                      <div>
-                        <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-                          {c.subject_name}{c.is_default ? " (default)" : ""}
-                        </p>
-                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                          {new Date(c.birth_datetime_utc).toLocaleDateString()}
-                          {c.place_name ? ` · ${c.place_name}` : ""}
-                        </p>
-                      </div>
-                      <span className="text-xs" style={{ color: "var(--obsidian-accent-tertiary)" }}>
-                        {selected ? "Selected ✓" : "Select"}
-                      </span>
-                    </button>
-                  );
-                })}
               </div>
+
+              {chartsLoading && (
+                <p className="text-xs font-mono text-cyan-400">Loading saved birth charts…</p>
+              )}
+
+              {!chartsLoading && charts.length === 0 && (
+                <div
+                  className="rounded-xl border p-4 text-center text-xs"
+                  style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}
+                >
+                  <p style={{ color: "var(--text-secondary)" }}>No saved charts yet.</p>
+                  <p className="mt-1" style={{ color: "var(--text-muted)" }}>
+                    Please create or import a birth chart first, then return here for event analysis.
+                  </p>
+                </div>
+              )}
+
+              {charts.length > 0 && (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Search saved charts by name or place..."
+                    value={chartSearch}
+                    onChange={(e) => setChartSearch(e.target.value)}
+                    className="obsidian-input w-full text-xs"
+                  />
+
+                  <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1">
+                    {filteredCharts.map((c) => {
+                      const selected = selectedChartId === c.id;
+                      return (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => setSelectedChartId(c.id)}
+                          className="flex w-full items-center justify-between gap-3 rounded-xl border p-3.5 text-left transition cursor-pointer"
+                          style={{
+                            borderColor: selected ? "var(--obsidian-accent-secondary, #06b6d4)" : "var(--border-primary)",
+                            backgroundColor: selected ? "rgba(6,182,212,0.12)" : "var(--bg-primary)",
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="flex h-9 w-9 items-center justify-center rounded-xl font-bold text-xs border"
+                              style={{
+                                borderColor: selected ? "var(--obsidian-accent-secondary)" : "var(--border-primary)",
+                                backgroundColor: selected ? "rgba(6,182,212,0.2)" : "var(--bg-card)",
+                                color: selected ? "#06b6d4" : "var(--text-secondary)",
+                              }}
+                            >
+                              {c.subject_name.slice(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>
+                                {c.subject_name} {c.is_default && <span className="text-[10px] text-cyan-400 font-normal">(Default)</span>}
+                              </p>
+                              <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+                                {new Date(c.birth_datetime_utc).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                                {c.place_name ? ` · ${c.place_name}` : ""}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span
+                            className="text-xs font-bold px-3 py-1 rounded-lg border transition"
+                            style={{
+                              borderColor: selected ? "rgba(6,182,212,0.4)" : "transparent",
+                              backgroundColor: selected ? "rgba(6,182,212,0.2)" : "transparent",
+                              color: selected ? "#06b6d4" : "var(--text-muted)",
+                            }}
+                          >
+                            {selected ? "Selected ✓" : "Select"}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
+          {/* STEP 2: AstroOS Event Taxonomy & Time */}
           {step === 2 && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Add Event</h3>
+                <h3 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                  Standardized Event Selection (AstroOS Taxonomy)
+                </h3>
                 <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
-                  Describe the event and when/where it happens. Times are local to the event's location.
+                  Select the certified life event category and specific event type anchored to Vedic Bhavas.
                 </p>
               </div>
 
-              <div>
-                <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Event Name</label>
-                <input
-                  type="text"
-                  value={eventName}
-                  onChange={(e) => setEventName(e.target.value)}
-                  className="obsidian-input"
-                  placeholder="e.g. Business Launch, Marriage, House Purchase"
-                />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Category (optional)</label>
-                <input
-                  type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="obsidian-input"
-                  placeholder="e.g. Career, Marriage, Travel"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Event Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
-                    className="obsidian-input w-full"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Event Time</label>
-                  <input
-                    type="time"
-                    step="1"
-                    required
-                    value={eventTime}
-                    onChange={(e) => setEventTime(e.target.value)}
-                    className="obsidian-input w-full"
-                  />
+              {/* 1. Category Selection Pills */}
+              <div className="space-y-2">
+                <label className="block text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
+                  1. Choose Life Event Category:
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  {ASTROOS_EVENT_CATEGORIES.map((cat) => {
+                    const active = selectedCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => handleCategoryChange(cat.id)}
+                        className="flex flex-col items-start p-2.5 rounded-xl border text-left transition cursor-pointer"
+                        style={{
+                          borderColor: active ? "var(--obsidian-accent-secondary, #06b6d4)" : "var(--border-primary)",
+                          backgroundColor: active ? "rgba(6,182,212,0.15)" : "var(--bg-primary)",
+                        }}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span>{cat.icon}</span>
+                          <span className="text-xs font-bold truncate" style={{ color: active ? "#06b6d4" : "var(--text-primary)" }}>
+                            {cat.name.split(" ")[0]}
+                          </span>
+                        </div>
+                        <span className="text-[10px] mt-1 font-mono" style={{ color: "var(--text-muted)" }}>
+                          {cat.houses}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-              <p className="-mt-2 text-[11px] text-slate-500 dark:text-slate-400">
-                Local date and time at the event's location — not UTC. The location below determines the conversion.
-              </p>
 
-              <div>
-                <div className="mb-1.5 flex items-center justify-between">
-                  <label className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Event Location</label>
+              {/* 2. Standardized Event Names Presets */}
+              <div className="space-y-2 pt-2 border-t" style={{ borderColor: "var(--border-primary)" }}>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
+                    2. Select Event Type ({currentCategoryConfig.name}):
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setIsCustomTitle((v) => !v)}
+                    className="text-[11px] font-semibold text-cyan-400 hover:underline cursor-pointer"
+                  >
+                    {isCustomTitle ? "← Pick from standard presets" : "✏️ Custom title override"}
+                  </button>
+                </div>
+
+                {!isCustomTitle ? (
+                  <div className="flex flex-wrap gap-2">
+                    {currentCategoryConfig.events.map((ev) => {
+                      const active = eventName === ev;
+                      return (
+                        <button
+                          key={ev}
+                          type="button"
+                          onClick={() => setEventName(ev)}
+                          className="px-3 py-1.5 rounded-lg border text-xs font-medium transition cursor-pointer"
+                          style={{
+                            borderColor: active ? "var(--obsidian-accent-secondary, #06b6d4)" : "var(--border-primary)",
+                            backgroundColor: active ? "rgba(6,182,212,0.18)" : "var(--bg-primary)",
+                            color: active ? "#06b6d4" : "var(--text-secondary)",
+                          }}
+                        >
+                          {ev} {active && "✓"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <input
+                      type="text"
+                      value={eventName}
+                      onChange={(e) => setEventName(e.target.value)}
+                      placeholder="Enter specific custom title (e.g. Google Senior Architect Appointment)"
+                      className="obsidian-input w-full text-xs"
+                    />
+                    <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                      Category remains strictly aligned with {currentCategoryConfig.name} ({currentCategoryConfig.houses}).
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* 3. Event Date & Time */}
+              <div className="space-y-2 pt-2 border-t" style={{ borderColor: "var(--border-primary)" }}>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
+                    3. Event Date &amp; Time (Local Moment):
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleHereAndNow}
+                    className="text-[11px] font-bold text-cyan-400 hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <span>⚡ Here &amp; Now</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <span className="block text-[11px]" style={{ color: "var(--text-secondary)" }}>Event Date:</span>
+                    <input
+                      type="date"
+                      required
+                      value={eventDate}
+                      onChange={(e) => setEventDate(e.target.value)}
+                      className="obsidian-input w-full text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <span className="block text-[11px]" style={{ color: "var(--text-secondary)" }}>Event Time:</span>
+                    <input
+                      type="time"
+                      step="1"
+                      required
+                      value={eventTime}
+                      onChange={(e) => setEventTime(e.target.value)}
+                      className="obsidian-input w-full text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Event Location */}
+              <div className="space-y-2 pt-2 border-t" style={{ borderColor: "var(--border-primary)" }}>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
+                    4. Event Geographic Location:
+                  </label>
                   <button
                     type="button"
                     onClick={() => {
                       setUseBirthLocation((v) => !v);
                       if (!useBirthLocation) setEventPlace(null);
                     }}
-                    className="text-[11px] transition"
-                    style={{ color: "var(--obsidian-accent-secondary)" }}
+                    className="text-[11px] font-semibold text-cyan-400 hover:underline cursor-pointer"
                   >
-                    {useBirthLocation ? "Use a different location" : "Use the birth location"}
+                    {useBirthLocation ? "📍 Use different event location" : "👶 Use subject's birth location"}
                   </button>
                 </div>
 
                 {useBirthLocation && selectedChart ? (
-                  <div className="rounded-lg border p-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--obsidian-surface)" }}>
-                    <p className="font-medium" style={{ color: "var(--text-secondary)" }}>
-                      {selectedChart.place_name ?? "Birth location"}
-                    </p>
-                    <p className="mt-1" style={{ color: "var(--text-muted)" }}>
-                      {selectedChart.birth_latitude.toFixed(4)}°{selectedChart.birth_latitude >= 0 ? "N" : "S"},{" "}
-                      {selectedChart.birth_longitude.toFixed(4)}°{selectedChart.birth_longitude >= 0 ? "E" : "W"}
-                    </p>
+                  <div
+                    className="rounded-xl border p-3 text-xs flex items-center justify-between"
+                    style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}
+                  >
+                    <div>
+                      <p className="font-bold" style={{ color: "var(--text-primary)" }}>
+                        {selectedChart.place_name ?? "Birth location"}
+                      </p>
+                      <p className="text-[11px] font-mono mt-0.5" style={{ color: "var(--text-muted)" }}>
+                        {selectedChart.birth_latitude.toFixed(4)}°N, {selectedChart.birth_longitude.toFixed(4)}°E
+                      </p>
+                    </div>
+                    <span className="text-[11px] text-cyan-400 font-semibold">Matched with Natal Chart</span>
                   </div>
                 ) : (
-                  <BirthPlaceSearch
-                    value={placeSearchText}
-                    onChange={(text) => {
-                      setPlaceSearchText(text);
-                      setEventPlace(null);
-                    }}
-                    onSelect={(place) => {
-                      setEventPlace(place);
-                      setPlaceSearchText(place.display_name);
-                    }}
-                  />
+                  <div className="space-y-1">
+                    <BirthPlaceSearch
+                      value={placeSearchText}
+                      onChange={(text) => {
+                        setPlaceSearchText(text);
+                        setEventPlace(null);
+                      }}
+                      onSelect={(place) => {
+                        setEventPlace(place);
+                        setPlaceSearchText(place.display_name);
+                      }}
+                    />
+                  </div>
                 )}
 
                 {eventDate && !useBirthLocation && eventPlace && renderTzHint()}
@@ -358,33 +692,55 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
             </div>
           )}
 
+          {/* STEP 3: Select Scope & Calculate */}
           {step === 3 && (
-            <div>
-              <h3 className="mb-1 text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Select Analysis Scope</h3>
-              <p className="mb-4 text-xs" style={{ color: "var(--text-secondary)" }}>
-                Choose which dimensions to score. All are selected by default.
-              </p>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                  Select Analysis Dimensions (Scope)
+                </h3>
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                  Choose which astrological dimensions to calculate. All 7 dimensions are recommended for complete fidelity.
+                </p>
+              </div>
+
+              {/* Event Summary Banner */}
+              <div
+                className="rounded-xl border p-3.5 text-xs flex flex-wrap items-center justify-between gap-3"
+                style={{ borderColor: "rgba(6,182,212,0.3)", backgroundColor: "rgba(6,182,212,0.08)" }}
+              >
+                <div>
+                  <span className="text-cyan-400 font-bold block">{currentCategoryConfig.icon} {eventName}</span>
+                  <span style={{ color: "var(--text-muted)" }}>
+                    Subject: <strong>{selectedChart?.subject_name}</strong> · Date: {eventDate} {eventTime}
+                  </span>
+                </div>
+                <span className="font-mono text-xs font-bold text-cyan-300">
+                  Houses: {currentCategoryConfig.houses}
+                </span>
+              </div>
+
               <div className="space-y-2">
                 {SCOPE_OPTIONS.map((o) => {
                   const checked = scope.includes(o.key);
                   return (
                     <label
                       key={o.key}
-                      className="flex cursor-pointer items-center justify-between gap-3 rounded-lg border p-3"
+                      className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border p-3.5 transition"
                       style={{
-                        borderColor: checked ? "var(--obsidian-accent-tertiary)" : "var(--border-primary)",
-                        backgroundColor: checked ? "var(--obsidian-accent-tertiary-soft)" : "transparent",
+                        borderColor: checked ? "var(--obsidian-accent-secondary, #06b6d4)" : "var(--border-primary)",
+                        backgroundColor: checked ? "rgba(6,182,212,0.08)" : "var(--bg-primary)",
                       }}
                     >
                       <div>
-                        <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{o.label}</p>
+                        <p className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>{o.label}</p>
                         <p className="text-[11px]" style={{ color: "var(--text-muted)" }}>{o.hint}</p>
                       </div>
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleScope(o.key)}
-                        className="h-4 w-4 rounded"
+                        className="h-4 w-4 rounded accent-cyan-400"
                       />
                     </label>
                   );
@@ -394,32 +750,38 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
           )}
 
           {createAnalysis.isError && (
-            <p className="mt-4 text-xs" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
-              {(createAnalysis.error as Error)?.message ?? "Event analysis failed."}
+            <p className="mt-4 text-xs font-semibold text-rose-400">
+              {(createAnalysis.error as Error)?.message ?? "Event analysis computation failed."}
             </p>
           )}
         </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between border-t p-4" style={{ borderColor: "var(--border-primary)" }}>
+        {/* Footer Navigation */}
+        <div
+          className="flex items-center justify-between border-t px-6 py-4"
+          style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
+        >
           <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
-            Event chart is a computed artifact — no new saved birth chart.
+            ⚡ Instant event-transit matrix synthesized against natal D1/D9.
           </span>
-          <div className="flex gap-2">
+
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={step === 1 ? onClose : () => setStep((s) => s - 1)}
-              className="obsidian-btn-secondary text-sm"
+              className="obsidian-btn-secondary text-xs px-4 py-2"
               disabled={createAnalysis.isPending}
             >
-              {step === 1 ? "Cancel" : "Back"}
+              {step === 1 ? "Cancel" : "← Back"}
             </button>
+
             {step < 3 ? (
               <button
                 type="button"
                 onClick={() => setStep((s) => s + 1)}
                 disabled={step === 1 ? !canContinueToEvent : !canContinueToScope}
-                className="obsidian-btn-primary text-sm"
+                className="obsidian-btn-primary text-xs px-5 py-2 font-bold cursor-pointer disabled:opacity-50"
+                style={{ backgroundColor: "var(--obsidian-accent-secondary, #06b6d4)", color: "#000" }}
               >
                 Continue →
               </button>
@@ -428,15 +790,16 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
                 type="button"
                 onClick={handleAnalyze}
                 disabled={!canAnalyze}
-                className="obsidian-btn-primary text-sm"
+                className="obsidian-btn-primary text-xs px-6 py-2.5 font-bold cursor-pointer disabled:opacity-50"
+                style={{ backgroundColor: "var(--obsidian-accent-secondary, #06b6d4)", color: "#000" }}
               >
                 {createAnalysis.isPending ? (
                   <>
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
-                    Analyzing…
+                    <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-t-transparent border-black" />
+                    <span>Analyzing Event Moment…</span>
                   </>
                 ) : (
-                  "Analyze Event"
+                  "Calculate Event Analysis →"
                 )}
               </button>
             )}
@@ -446,19 +809,19 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
     </div>
   );
 
-  // Helper for the tz resolution hint on step 2 (custom location).
+  // Timezone resolution hint helper
   function renderTzHint() {
     if (tzQuery.isLoading) {
-      return <p className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>Resolving timezone…</p>;
+      return <p className="mt-1 text-xs text-cyan-400">Resolving event timezone…</p>;
     }
     if (tzQuery.isError) {
-      return <p className="mt-1 text-xs" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>Could not resolve a timezone for this location.</p>;
+      return <p className="mt-1 text-xs text-rose-400">Could not resolve timezone for this location.</p>;
     }
     if (tzQuery.data) {
       return (
-        <p className="mt-1 text-xs" style={{ color: "var(--obsidian-accent-success, #10B981)" }}>
+        <p className="mt-1 text-xs text-emerald-400 font-mono">
           {tzQuery.data.iana_name} · {formatOffset(tzQuery.data.utc_offset_minutes)}
-          {tzQuery.data.is_dst ? " · DST in effect" : ""}
+          {tzQuery.data.is_dst ? " · DST Active" : ""}
         </p>
       );
     }

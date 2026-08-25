@@ -52,6 +52,10 @@ export default function ChartDetailPage() {
   const chartId = params.chartId;
 
   useEffect(() => {
+    if (chartId === "planets") {
+      router.replace("/charts/planets");
+      return;
+    }
     if (chartId && KNOWN_VIEW_REDIRECTS[chartId]) {
       router.replace(`/charts?view=${KNOWN_VIEW_REDIRECTS[chartId]}`);
     }

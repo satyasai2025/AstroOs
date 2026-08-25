@@ -555,6 +555,25 @@ function AppShellInner({
                 </p>
                 <div className="flex flex-col gap-0.5">
                   {items.map((item) => {
+                    // "New Chart" — opens the modal instead of navigating
+                    if (item.href === "#" && item.label === "New Chart") {
+                      return (
+                        <button
+                          key="new-chart"
+                          type="button"
+                          className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/10 dark:hover:bg-cyan-950/60 border border-cyan-500/30"
+                          title={sidebarCollapsed ? "New Chart" : undefined}
+                          onClick={() => {
+                            clearWorkflowResult();
+                            openCreateModal();
+                          }}
+                        >
+                          <NavIcon name={item.icon} />
+                          {!sidebarCollapsed && item.label}
+                        </button>
+                      );
+                    }
+
                     const active = isActive(item.href);
                     return (
                       <Link
@@ -565,14 +584,6 @@ function AppShellInner({
                             ? "bg-cyan-500/15 dark:bg-cyan-950/80 text-cyan-700 dark:text-cyan-300 font-extrabold border border-cyan-500/40 shadow-none"
                             : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium"
                         }`}
-                        onClick={
-                          item.href === "/dashboard" && item.label === "New Chart"
-                            ? () => {
-                                clearWorkflowResult();
-                                openCreateModal();
-                              }
-                            : undefined
-                        }
                         aria-current={active ? "page" : undefined}
                         title={sidebarCollapsed ? item.label : undefined}
                       >
@@ -623,15 +634,41 @@ function AppShellInner({
         </nav>
 
 
-        <div className="mt-4 border-t pt-3" style={{ borderColor: "var(--border-primary)" }}>
-          <button
-            type="button"
-            onClick={() => logout.mutate()}
-            disabled={logout.isPending}
-            className="btn-ghost w-full text-xs"
-          >
-            {logout.isPending ? "Signing out…" : "Sign out"}
-          </button>
+        {/* ── User Profile & Footer ── */}
+        <div className="mt-auto border-t pt-3" style={{ borderColor: "var(--border-primary)" }}>
+          {!sidebarCollapsed ? (
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2.5 rounded-xl p-2" style={{ backgroundColor: "var(--bg-input)" }}>
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-cyan-900/60 font-bold text-cyan-300 border border-cyan-500/40 text-xs">
+                  {user.display_name ? user.display_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase() : "DU"}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <p className="truncate text-xs font-bold" style={{ color: "var(--text-primary)" }}>
+                      {user.display_name || "Demo User"}
+                    </p>
+                    <span className="rounded px-1.5 py-0.2 text-[9px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      Premium
+                    </span>
+                  </div>
+                  <p className="truncate text-[10px] capitalize" style={{ color: "var(--text-muted)" }}>
+                    {user.role || "Researcher"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between px-1 text-[10px]" style={{ color: "var(--text-muted)" }}>
+                <span>AstroOS v2.0.0</span>
+                <span>© 2026 AstroOS Team</span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cyan-900/60 font-bold text-cyan-300 border border-cyan-500/40 text-xs" title={user.display_name || "Demo User"}>
+                {user.display_name ? user.display_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase() : "DU"}
+              </div>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -891,6 +928,7 @@ function AppShellInner({
             });
           }}
           isPending={analyze.isPending}
+          errorMessage={analyze.error?.message ?? null}
           initialChartType={createModalInitialType as ChartTypeId | null}
         />
       </div>

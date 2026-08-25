@@ -20,7 +20,16 @@ import type {
   YogaResultResponse,
 } from "@/lib/types";
 import { rashiLordFromApiName } from "@/lib/astro";
-import { normalizePlanetStrength, type NormalizedPlanetStrength } from "@/lib/planetStrength";
+import {
+  normalizePlanetStrength,
+  type NormalizedPlanetStrength,
+  calculateDigbalaScore,
+  calculateDignityScore,
+  calculateBaladiAvastha,
+  calculateTemporalScore,
+  resolveAshtakavargaForPlanet,
+  MIN_REQUIRED_RUPAS,
+} from "@/lib/planetStrength";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import {
   BHAVA_STRUCTURE,
@@ -37,6 +46,13 @@ export interface PlanetContext {
   position: PlanetPositionSchema | null;
   strength: NormalizedPlanetStrength | null;
   shadbala: ShadbalaTotalResponse | null;
+  shadbalaPercent: number | null;
+  digbalaScore: number | null;
+  dignityScore: number | null;
+  avastha: { label: string; score: number } | null;
+  temporalScore: number | null;
+  ashtakavargaInfo: { bindus: number; percent: number } | null;
+  overallStrengthScore: number;
   /** Sign the planet occupies → its dispositor (lord of the occupied sign). */
   dispositor: string | null;
   /** Houses (1-12) whose sign lord is this graha. */
@@ -73,7 +89,7 @@ export function resolvePlanetContext(
   planet: string,
   result: WorkflowAnalysisResponse,
 ): PlanetContext {
-  const { chart, vargas, yogas, shadbala, transits, dasha } = result;
+  const { chart, vargas, yogas, shadbala, transits, dasha, ashtakavarga } = result;
 
   const position = chart.planets.find((p) => p.planet === planet) ?? null;
   const strengthEntry = result.chart.planet_strengths.find(
@@ -83,6 +99,31 @@ export function resolvePlanetContext(
     ? (normalizePlanetStrength(chart.planet_strengths, shadbala).find((n) => n.planet === planet) ??
       null)
     : null;
+
+  const planetShadbala = shadbala.find((s) => s.planet === planet) ?? null;
+  const minRequired = MIN_REQUIRED_RUPAS[planet] || 6.0;
+  const shadbalaPercent = planetShadbala
+    ? Math.min(100, Math.round((planetShadbala.total_rupas / minRequired) * 100))
+    : null;
+
+  const digbalaScore = calculateDigbalaScore(planet, position?.house_number);
+  const dignityScore = calculateDignityScore(position?.dignity);
+  const avastha = calculateBaladiAvastha(position?.rashi_degree, position?.rashi);
+  const temporalScore = calculateTemporalScore(planet);
+  const ashtakavargaInfo = resolveAshtakavargaForPlanet(planet, position?.rashi, ashtakavarga);
+
+  // Authoritative overall score from canonical strength model
+  let overallStrengthScore: number;
+  if (strength?.score != null) {
+    overallStrengthScore = strength.score;
+  } else {
+    const available = [shadbalaPercent, ashtakavargaInfo?.percent, dignityScore, digbalaScore, temporalScore, avastha?.score].filter(
+      (v): v is number => v != null
+    );
+    overallStrengthScore = available.length > 0
+      ? Math.round(available.reduce((a, b) => a + b, 0) / available.length)
+      : 50;
+  }
 
   const dispositor = position ? rashiLordFromApiName(position.rashi) : null;
 
@@ -119,7 +160,14 @@ export function resolvePlanetContext(
     planet,
     position,
     strength,
-    shadbala: shadbala.find((s) => s.planet === planet) ?? null,
+    shadbala: planetShadbala,
+    shadbalaPercent,
+    digbalaScore,
+    dignityScore,
+    avastha,
+    temporalScore,
+    ashtakavargaInfo,
+    overallStrengthScore,
     dispositor,
     houseOwnerOf,
     conjunctions,
