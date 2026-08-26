@@ -144,10 +144,29 @@ def _build_source_reliability_record() -> SourceReliabilityRecord:
 
 def _page_fixture_files() -> List[Path]:
     """All per-page YAML fixtures except _source.yaml and validation_requirements.yaml."""
-    excluded = {"_source.yaml", "validation_requirements.yaml"}
-    return sorted(
+    # Metadata/governance fixtures that describe the corpus rather than being
+    # source pages. Seeding these would create empty documents with no chunks.
+    excluded = {
+        "_source.yaml",
+        "validation_requirements.yaml",
+        "primary_text_verification.yaml",
+        "technique_mapping.yaml",
+    }
+    candidates = sorted(
         p for p in _FIXTURE_ROOT.glob("*.yaml") if p.name not in excluded
     )
+
+    # Structural guard: a real page fixture has both a page_url and at least one
+    # item. This keeps a future metadata file from silently becoming a document
+    # if someone forgets to add it to `excluded` above.
+    pages: List[Path] = []
+    for p in candidates:
+        fixture = _load_yaml(p)
+        if not fixture.get("page_url") or not fixture.get("items"):
+            print(f"  skipping non-page fixture: {p.name}", file=sys.stderr)
+            continue
+        pages.append(p)
+    return pages
 
 
 def _build_document_and_chunks(fixture_path: Path) -> tuple[IngestedDocument, List[IngestedChunk]]:

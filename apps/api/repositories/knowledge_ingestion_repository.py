@@ -47,8 +47,23 @@ class KnowledgeIngestionRepository:
             "doc_metadata": doc.metadata or None,
         }
         stmt = pg_insert(IngestedDocumentModel).values(**values)
+        # Conflict on the PRIMARY KEY, not on (title, edition).
+        #
+        # Callers supply a deterministic document_id (e.g. the seed scripts use
+        # uuid5 of the page slug), so `id` is the document's real identity and a
+        # re-run collides there first. The (title, edition) unique constraint
+        # cannot serve as the conflict target because `edition` is routinely
+        # NULL, and PostgreSQL treats NULLs as DISTINCT in a UNIQUE constraint —
+        # so that clause never fires for NULL-edition rows and the statement
+        # fell through to a raw primary-key violation. This made the "idempotent
+        # upsert" non-idempotent in practice: it only succeeded while the table
+        # was empty.
+        #
+        # `title` is intentionally NOT in the update set: it is part of the
+        # unique constraint, and rewriting it here could push an existing row
+        # into collision with a different row.
         stmt = stmt.on_conflict_do_update(
-            constraint="uq_ingested_documents_title_edition",
+            index_elements=["id"],
             set_={
                 "source_id": stmt.excluded.source_id,
                 "author": stmt.excluded.author,
