@@ -16,7 +16,10 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
+
+if TYPE_CHECKING:  # import only for typing — avoids a runtime import cycle
+    from apps.api.domain.benchmark_experiment import BenchmarkExperiment
 
 from apps.api.domain.knowledge_reliability import (
     ActorRole,
@@ -302,6 +305,47 @@ class KnowledgeReliabilityEngine:
 
     def get_policy(self, policy_id: str) -> Optional[ValidationPolicy]:
         return self._policies.get(policy_id)
+
+    def build_validation_summary_from_experiment(
+        self,
+        rule_id: str,
+        experiment: "BenchmarkExperiment",
+        policy_id: str,
+        profile_id: Optional[str] = None,
+    ) -> RuleValidationSummary:
+        """
+        Derive a RuleValidationSummary for `rule_id` from a REAL
+        BenchmarkExperiment, using apps/api/domain/benchmark_validation_bridge.
+
+        This is the wiring between the benchmark system and the knowledge
+        governance system. Before it existed, every RuleValidationSummary in
+        the codebase was hand-constructed with manually supplied numbers, so a
+        governance record could not be traced back to an actual benchmark run.
+
+        The returned summary carries the experiment's real experiment_id and
+        corpus id/version, so `transition_lifecycle`'s existing
+        benchmark_experiment_id invariant is satisfiable from genuine data.
+
+        This method does NOT transition the rule. Pass the result to
+        `transition_lifecycle(...)` — which keeps every existing governance
+        guard (actor authority, state machine, policy check) in force. In
+        particular an AI actor still cannot reach VALIDATED/REVIEWED/CANONICAL.
+        """
+        from apps.api.domain.benchmark_validation_bridge import (
+            build_validation_summary_from_benchmark,
+        )
+
+        policy = self.get_policy(policy_id)
+        if not policy:
+            raise ValidationPolicyViolationError(
+                f"Validation policy '{policy_id}' not found."
+            )
+        return build_validation_summary_from_benchmark(
+            experiment=experiment,
+            rule_id=rule_id,
+            policy=policy,
+            profile_id=profile_id,
+        )
 
     def evaluate_validation_against_policy(
         self,
