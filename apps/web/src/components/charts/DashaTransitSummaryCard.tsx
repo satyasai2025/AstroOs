@@ -90,7 +90,7 @@ export function DashaTransitSummaryCard({
             Vimshottari Dasha
           </span>
           <Link
-            href="/charts?view=dasha"
+            href="/charts/dasha"
             className="text-[10px] font-semibold text-cyan-600 dark:text-cyan-400 hover:underline"
           >
             Timeline →

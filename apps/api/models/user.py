@@ -85,6 +85,13 @@ class UserModel(AstroBase):
         cascade="all, delete-orphan",
     )
 
+    user_plan: Mapped[Optional["UserPlanModel"]] = relationship(
+        "UserPlanModel",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
 
 class UserSessionModel(AstroBase):
     __tablename__ = "user_sessions"

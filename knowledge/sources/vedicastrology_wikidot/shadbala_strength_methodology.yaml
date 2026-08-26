@@ -1,0 +1,107 @@
+# knowledge/sources/vedicastrology_wikidot/shadbala_strength_methodology.yaml
+#
+# Extracted knowledge items from
+# http://vedicastrology.wikidot.com/main-strength-versus-shadbala
+# and DAC/VPC-related claims cross-referenced from
+# http://vedicastrology.wikidot.com/ashtaka-varga (same author/methodology cluster).
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+#
+# THIS PAGE MUST NOT BE TREATED AS CANONICAL. It contains empirical/methodology
+# claims (logarithmic base-2 strength scaling, DAC precision requirements) that
+# require independent validation before any promotion consideration.
+
+page_title: "Main Strength Versus Shadbala"
+page_url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
+technique_mapping:
+  best_fit_technique_key: null
+  note: >
+    No existing TechniqueModel.technique_key found via grep for "shadbala" or
+    "ishta-kashta" in apps/api/models/technique.py or its repository/tests — the
+    repo appears to have no seeded technique row for Shadbala strength methodology
+    yet. technique_source_link: if/when a TechniqueModel row for
+    technique_key="shadbala" (or similar) is created by a human curator, this
+    fixture's items should be wired to it via a TechniqueSourceModel row with
+    source_type="notes", reference=page_url. No migration is created here.
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
+    page_title: "Main Strength Versus Shadbala"
+    section: "Main Strength Versus Shadbala"
+    title: "Ishta/Kashta 'main strength' uses base-2 logarithmic scaling"
+    claim: >
+      The page claims BPHS's Ishta-Kashta chapter (verses 9-10, immediately following
+      the Shadbala/Spashta-bala-nirnaya chapter) defines a "main strength" (Shubha/Ashubha
+      anka) scored on a geometric progression equivalent to a base-2 logarithmic scale:
+      60-45-30-22-15-8-4-2-0 for Uchcha (exalted) - Moolatrikona - Svagrihi (own sign) -
+      Adhimitra - Mitragrihi (friendly) - Samagrihi (neutral) - Shatrugrihi (enemy) -
+      Atishatrugrihi (great enemy) dignities respectively, in contrast to Shadbala where
+      the max-to-min ratio is only about 2:1.
+    item_type: UNVERIFIED_CLAIM
+    requires_validation: true
+    suggested_validation_approach: >
+      Requires textual verification against a critical edition of BPHS's Ishta-Kashta-adhyaya
+      (verses 9-10) to confirm the claimed 60-45-30-22-15-8-4-2-0 scale is textually accurate
+      and not an author reinterpretation, followed by backtesting the claimed predictive
+      superiority of this "main strength" over Shadbala against a ground-truth event dataset
+      via the existing benchmark_engine (apps/api/services/benchmark_engine.py).
+    referenced_classical_source: "BPHS (Brihat Parashara Hora Shastra) — Ishta-Kashta-adhyaya, verses 9-10"
+    related_concepts: ["shadbala", "ishta-kashta", "dignity-scoring", "uchcha", "moolatrikona"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
+    page_title: "Main Strength Versus Shadbala"
+    section: "Main Strength Versus Shadbala"
+    title: "Shadbala should only be consulted when Ishta-Kashta 'main strength' is tied"
+    claim: >
+      IF two competing planets have equal Ishta-Kashta ('main strength') scores, THEN
+      Shadbala should be consulted as a tiebreaker; the page asserts Shadbala is
+      otherwise over-relied-upon by modern astrologers ("अत्यधिक दुरुपयोग ... आधुनिक काल की
+      बीमारी है" — "excessive misuse of Shadbala is a disease of the modern era"), a
+      practice it frames as a deviation from traditional practice ("व्यवहारिक परम्परा").
+    item_type: RULE
+    condition_summary: "Two competing planets have equal main-strength (Ishta/Kashta) scores."
+    conclusion_summary: >
+      Only then should Shadbala values be used to break the tie and determine relative
+      planetary strength; otherwise Ishta-Kashta main strength alone should govern.
+    requires_validation: true
+    suggested_validation_approach: >
+      Backtest whether Ishta-Kashta-primary / Shadbala-tiebreak ordering produces better
+      predictive hit rates than Shadbala-primary ordering, using the existing
+      benchmark_engine categories and a held-out research case dataset.
+    referenced_classical_source: "BPHS (Brihat Parashara Hora Shastra) — Ishta-Kashta-adhyaya"
+    related_concepts: ["shadbala", "ishta-kashta", "planetary-strength-comparison"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/ashtaka-varga"
+    page_title: "Ashtaka Varga"
+    section: "Two Ways of Using AshtakaVarga"
+    title: "DAC (Dashaa Aarambha Chakra) requires very high birth-time accuracy and is claimed largely impractical today"
+    claim: >
+      The page claims DAC (Dashaa Aarambha Chakra — a chart claimed by the author to
+      be prescribed twice in BPHS for judging results of a specific dasha period)
+      "is impractical now because it requires birthtime accuracy of a high degree,"
+      and proposes SC (Sudarshana Chakra) combined with VPC (Varsha Pravesha Chakra)
+      and Vimshottari Dasha as the practical substitute, with Ashtakavarga (AV) used
+      only as a last resort when the combined SC+VPC+Vimshottari result remains uncertain.
+    item_type: UNVERIFIED_CLAIM
+    requires_validation: true
+    suggested_validation_approach: >
+      This is the DAC/strength-methodology claim explicitly flagged by the integration
+      task as requiring scrutiny (birth-time-accuracy claims, VPC/MPC substitution
+      methodology). Requires: (1) textual verification of the "prescribed twice in
+      BPHS" claim against a critical edition; (2) backtesting DAC vs SC+VPC+Vimshottari
+      predictive accuracy on a ground-truth event dataset via the existing
+      benchmark_engine, since no "millisecond accuracy" or "90% correct cases" figures
+      are independently substantiated anywhere on this page.
+    referenced_classical_source: "BPHS (claimed; exact verse reference not given on page)"
+    related_concepts: ["dasha-aarambha-chakra", "sudarshana-chakra", "varsha-pravesha-chakra", "vimshottari", "ashtakavarga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

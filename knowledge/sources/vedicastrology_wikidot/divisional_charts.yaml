@@ -1,0 +1,87 @@
+# knowledge/sources/vedicastrology_wikidot/divisional_charts.yaml
+#
+# Extracted knowledge items from http://vedicastrology.wikidot.com/divisional-charts
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+
+page_title: "Divisional Charts"
+page_url: "http://vedicastrology.wikidot.com/divisional-charts"
+technique_mapping:
+  best_fit_technique_key: null
+  note: >
+    Maps conceptually to "Shodasha Varga" (divisional-chart) methodology. No existing
+    TechniqueModel.technique_key found via grep of apps/api/models/technique.py usage
+    for a divisional/varga technique. technique_source_link: if a TechniqueModel row
+    for technique_key="shodasha_varga" (or similar) is created later, wire this
+    fixture's items to it via TechniqueSourceModel(source_type="notes", reference=page_url).
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/divisional-charts"
+    page_title: "Divisional Charts"
+    section: "Divisionals versus D-1"
+    title: "D1 (Rashi chart) is itself the first divisional, and Bhava-Chalita is the proper D1"
+    claim: >
+      The page claims D1 is not simply the Rashi Chart but the Bhava-Chalita (BC)
+      chart, and that "lots of people confuse D1 with Rasi Chart" — asserting Rasi
+      Chart is only the base mathematical construct for deriving all divisionals,
+      aspects, and relations, while all Bhava-phala (house-based predictive results)
+      must be deduced from the Bhava-Chalita chart specifically.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: "BPHS (calls D1 the 'Lagna Divisional')"
+    related_concepts: ["d1", "bhava-chalita", "rashi-chart", "shodasha-varga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/divisional-charts"
+    page_title: "Divisional Charts"
+    section: "Divisionals versus D-1"
+    title: "Vimshopaka Strength governs which divisional's Vimshottari planet dominates during overlap"
+    claim: >
+      IF the current Vimshottari-dasha planet in a divisional chart (e.g. D24, for
+      education) is stronger by Vimshopaka Strength than the current Vimshottari
+      planet in D1, THEN the D24 (or other divisional) result will override the D1
+      result during that planet's dasha period, even if the two planets differ; the
+      page states that practitioners unaware of this Vimshopaka-weighted overlap
+      rule may wrongly suspect errors in birth time or ayanamsha when divisional
+      predictions appear to contradict D1.
+    item_type: RULE
+    condition_summary: >
+      Comparing Vimshottari-dasha-lord strength (via Vimshopaka Strength, per BPHS)
+      between D1 and a relevant divisional chart (e.g. D24 for education) during an
+      overlapping dasha period.
+    conclusion_summary: >
+      The divisional chart's stronger dasha-lord result is claimed to dominate/override
+      the D1 result for domain-specific predictions during that period.
+    referenced_classical_source: "BPHS (Vimshopaka Strength)"
+    related_concepts: ["vimshopaka-strength", "vimshottari", "d24", "divisional-override"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/divisional-charts"
+    page_title: "Divisional Charts"
+    section: "Deities Of Divisional Charts"
+    title: "D-9 deity (e.g. Rakshasa) claimed correlated with libido-related outcomes including a 2014 rape-case spike"
+    claim: >
+      The author claims to have researched D-9 (Navamsha) planetary deities and
+      asserts, as an example, that "the abnormal rise in rape cases during first
+      half of 2014 was caused by preponderance of Rakshasa D9-deity for majority of
+      planets," and that a native's Mahadasha planet in D-9 having a Rakshasa deity
+      indicates danger related to libido expressed in demonic/harmful ways.
+    item_type: UNVERIFIED_CLAIM
+    requires_validation: true
+    suggested_validation_approach: >
+      This is a strong, specific empirical/social claim (correlating a named societal
+      statistic with an astrological configuration) with no cited dataset, sample
+      size, or methodology. Requires sourcing of the underlying crime-statistics claim
+      and, separately, backtesting the D-9-deity-to-outcome correlation against a
+      ground-truth event dataset via the existing benchmark_engine before any
+      credence is given.
+    referenced_classical_source: null
+    related_concepts: ["navamsha", "d9-deities", "rakshasa-deity", "mundane-astrology"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

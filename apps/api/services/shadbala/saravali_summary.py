@@ -52,7 +52,19 @@ Sub-Bala Breakdown (17 individually tracked sub-components):
 
   Ishta & Kashta Bala (2 derived):
     16. Ishta Bala = √(Uchcha × Cheshta)
-    17. Kashta Bala = √((60 - Uchcha) × (60 - Cheshta))
+    17. Kashta Bala = 60 - Ishta Bala
+
+    Kashta is the arithmetic complement of Ishta, per BPHS Ch. 28 ("Ishta
+    and Kashta Bala"), verse 6: "...Half of the sum will represent the
+    Ishta Phala (benefice tendency) of the planet. Reduce Ishta Phala from
+    60 to obtain the planet's Kashta Phala (or malefic tendency)."
+    (R. Santhanam translation, p. 230.)
+
+    This fallback previously computed √((60 - Uchcha) × (60 - Cheshta)) —
+    a variant that is widespread in secondary literature and astrology
+    software but contradicts the primary text, and which disagreed with
+    services/shadbala/ishta_kashta_bala.py for every input where
+    Uchcha != Cheshta. The two paths now agree.
 """
 
 from __future__ import annotations
@@ -273,11 +285,17 @@ class SaravaliShadbalaEvaluator:
                 v_ishta = m_ishta[p]
                 v_kashta = m_kashta[p]
             else:
-                # Calculate classical Ishta/Kashta: sqrt(uchcha * chesta), sqrt((60-uchcha)*(60-chesta))
+                # Ishta = sqrt(Uchcha * Cheshta); Kashta = 60 - Ishta.
+                # Kashta is the complement of Ishta per BPHS Ch. 28 v. 6 —
+                # see this module's docstring for the verse text and for why
+                # the previous sqrt((60-u)*(60-c)) variant was replaced.
+                # Must stay identical to shadbala/ishta_kashta_bala.py; the
+                # cross-implementation agreement is locked by
+                # tests/unit/test_ishta_kashta_consistency.py.
                 u = max(0.0, min(60.0, v_uchcha))
                 c = max(0.0, min(60.0, v_chesta))
                 v_ishta = round(math.sqrt(u * c), 4)
-                v_kashta = round(math.sqrt((60.0 - u) * (60.0 - c)), 4)
+                v_kashta = round(60.0 - v_ishta, 4)
 
             # Individual Sub-Bala Criteria Checks
             sub_reqs = INDIVIDUAL_SUB_BALA_REQUIREMENTS.get(p, {})

@@ -58,7 +58,7 @@ class ResearchEngine:
         research_repo: Optional[ResearchRepository] = None,
     ) -> None:
         from apps.api.repositories.research_repository import ResearchRepository as _RR
-        if isinstance(research_repo_or_wrapper, _RR):
+        if isinstance(research_repo_or_wrapper, _RR) or hasattr(research_repo_or_wrapper, "get_project"):
             self._repo = research_repo_or_wrapper
             ephemeris_wrapper = None
         else:

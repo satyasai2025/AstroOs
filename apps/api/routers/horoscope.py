@@ -30,6 +30,7 @@ from apps.api.dependencies import (
     get_current_user_from_bearer,
     get_db_session,
     get_ephemeris_wrapper,
+    require_entitlement,
 )
 from apps.api.domain.ephemeris import DignityType
 from apps.api.domain.horoscope import D1Chart
@@ -248,6 +249,7 @@ def _chart_to_response(chart: D1Chart, chart_id: uuid.UUID | None = None) -> D1C
         "and the Panchanga (Tithi, Nakshatra, Yoga, Karana, Vara)."
     ),
     status_code=status.HTTP_200_OK,
+    dependencies=[Depends(require_entitlement("saved_horoscopes", "create"))],
 )
 async def generate_d1_chart(
     request: D1ChartRequest,
@@ -330,6 +332,7 @@ async def generate_d1_chart(
         "account, most recently created first."
     ),
     status_code=status.HTTP_200_OK,
+    dependencies=[Depends(require_entitlement("saved_horoscopes", "view"))],
 )
 async def list_my_charts(
     limit: int = 50,
@@ -360,6 +363,7 @@ async def list_my_charts(
         "every other chart query."
     ),
     status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_entitlement("saved_horoscopes", "edit"))],
 )
 async def delete_chart(
     chart_id: uuid.UUID,
@@ -385,6 +389,7 @@ async def delete_chart(
         "endpoint is for switching it to a different chart later."
     ),
     status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_entitlement("saved_horoscopes", "edit"))],
 )
 async def set_default_chart(
     chart_id: uuid.UUID,

@@ -503,7 +503,7 @@ function AppShellInner({
                 onClick={(e) => {
                   e.preventDefault();
                   setQuickActionOpen(false);
-                  router.push("/charts?view=dasha");
+                  router.push("/charts/dasha");
                 }}
               >
                 <NavIcon name="clock" />

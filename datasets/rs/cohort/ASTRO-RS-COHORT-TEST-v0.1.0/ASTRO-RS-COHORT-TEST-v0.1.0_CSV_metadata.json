@@ -39,8 +39,8 @@
   "record_count": 2,
   "field_count": 0,
   "lifecycle_stage": "Candidacy",
-  "created_at": "2026-08-25T08:15:51.195308+00:00",
-  "updated_at": "2026-08-25T08:15:51.195318+00:00",
+  "created_at": "2026-08-26T13:43:40.358212+00:00",
+  "updated_at": "2026-08-26T13:43:40.358232+00:00",
   "maintainer": "AstroOS Research Data Office",
   "changelog_ref": "ASTRO-RS-COHORT-TEST-v0.1.0_changelog.md"
 }

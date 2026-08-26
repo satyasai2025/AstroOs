@@ -135,6 +135,10 @@ function ChartsPageContent() {
       router.replace("/charts/planets");
       return;
     }
+    if (requested === "dasha") {
+      router.replace("/charts/dasha");
+      return;
+    }
     if (requested && (VALID_VIEWS as string[]).includes(requested)) {
       setView(requested as ViewMode);
     }

@@ -218,6 +218,30 @@ class UpagrahaEngine:
             lon_ = self._sidereal_ascendant(moment, latitude, longitude, ayanamsa)
             upagrahas.append(UpagrahaPosition(name=name, **self._describe(lon_, asc_lon)))
 
+        # Sun-derived Upagrahas (BPHS Ch. 3 / Ch. 25)
+        # Current sidereal Sun longitude
+        sun_now = self._wrapper.to_sidereal(
+            self._wrapper.get_planet_position("sun", jd).longitude,
+            self._wrapper.get_ayanamsa(jd),
+        )
+
+        dhuma = (sun_now + 133.0 + 20.0 / 60.0) % 360.0
+        vyatipata = (360.0 - dhuma) % 360.0
+        parivesha = (vyatipata + 180.0) % 360.0
+        indrachapa = (360.0 - parivesha) % 360.0
+        upaketu = (indrachapa + 16.0 + 40.0 / 60.0) % 360.0
+        kaala = (sun_now + 283.0 + 20.0 / 60.0) % 360.0
+
+        for name, lon_val in (
+            ("dhuma", dhuma),
+            ("vyatipata", vyatipata),
+            ("parivesha", parivesha),
+            ("indrachapa", indrachapa),
+            ("upaketu", upaketu),
+            ("kaala", kaala),
+        ):
+            upagrahas.append(UpagrahaPosition(name=name, **self._describe(lon_val, asc_lon)))
+
         # Special lagnas — progressions of the Sun at the Vedic day's sunrise.
         sun_at_sunrise = self._wrapper.to_sidereal(
             self._wrapper.get_planet_position("sun", vedic_sunrise).longitude,
@@ -240,3 +264,4 @@ class UpagrahaEngine:
             weekday=_WEEKDAY_NAMES[weekday_idx],
             starting_lord=_WEEKDAY_LORDS[start_idx],
         )
+

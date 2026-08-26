@@ -399,7 +399,7 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
         <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Full Vimshottari Dasha Timeline</h2>
-            <Link href="/charts?view=dasha" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">View Full Explorer →</Link>
+            <Link href="/charts/dasha" className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">View Full Explorer →</Link>
           </div>
           <DashaTimeline
             dasha={dasha}

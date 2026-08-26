@@ -55,6 +55,21 @@ _DB_SKIP_REASON = (
     "run regardless.)"
 )
 
+# This fixture calls drop_all() on TEST_DB_URL's database at teardown (see
+# test_engine below). A misconfigured TEST_DATABASE_URL pointing at the real
+# app database (e.g. astroos_db) would silently wipe it with no error and no
+# backup coverage — this happened once already. Requiring "test" in the
+# database name is a cheap, hard guard against repeating that.
+if TEST_DB_URL and "test" not in TEST_DB_URL.rsplit("/", 1)[-1].lower():
+    raise RuntimeError(
+        f"Refusing to run: TEST_DATABASE_URL's database name "
+        f"({TEST_DB_URL.rsplit('/', 1)[-1]!r}) does not contain 'test'. "
+        "This fixture drops all tables on teardown — pointing it at a "
+        "non-test database (e.g. the app's astroos_db) will destroy real "
+        "data. Use a database whose name contains 'test', e.g. "
+        "astroos_test_db."
+    )
+
 # ── PostgreSQL ENUM types ─────────────────────────────────────────────────────
 # The model column factories (astrology.py) use create_type=False because
 # ENUM DDL is managed by Alembic migrations. create_all() needs these types

@@ -43,6 +43,13 @@ from apps.api.models.technique import (  # noqa: E402
     TechniqueSourceModel,
     TechniqueValidationCaseModel,
 )
+from apps.api.models.plan import (  # noqa: E402
+    PlanModel,
+    FeatureModel,
+    PlanFeatureModel,
+    PlanLimitModel,
+    UserPlanModel,
+)
 
 # ── Alembic Config ────────────────────────────────────────────────────────────
 config = context.config

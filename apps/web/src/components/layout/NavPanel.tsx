@@ -354,7 +354,7 @@ function NavPanelInner({
               onClick={(e) => {
                 e.preventDefault();
                 setQuickActionOpen(false);
-                router.push("/charts?view=dasha");
+                router.push("/charts/dasha");
               }}
             >
               <NavIcon name="clock" className="h-3.5 w-3.5" />

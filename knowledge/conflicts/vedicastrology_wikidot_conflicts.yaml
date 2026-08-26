@@ -1,0 +1,64 @@
+# knowledge/conflicts/vedicastrology_wikidot_conflicts.yaml
+#
+# EmpiricalConflictRecord-shaped entries (see apps/api/domain/knowledge_reliability.py
+# EmpiricalConflictRecord dataclass) documenting claims from VedicAstrology.Wikidot
+# that contradict content already in knowledge/catalogues/ or knowledge/conflicts/.
+# These are NOT auto-resolved — status is ACTIVE_DISPUTE pending human review.
+# This file follows the same top-level shape as apps/api/domain/conflict.py's
+# KnowledgeConflict loader conventions used by knowledge/conflicts/conflict-00N.yaml,
+# but is scoped specifically to Wikidot-sourced disputes for traceability.
+
+conflicts:
+  - conflict_id: "CONFLICT-WIKIDOT-001"
+    topic: "Whether Bhava-Chalita or whole-sign Rashi-Chakra should be used for house-based (Bhava-phala) predictions"
+    technique_framework: "Parashari"
+    supporting_sources:
+      - "VedicAstrology.Wikidot — origin-and-meaning-of-horoscopic-houses (http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses)"
+      - "VedicAstrology.Wikidot — divisional-charts (http://vedicastrology.wikidot.com/divisional-charts)"
+    contradicting_sources:
+      - "knowledge/conflicts/conflict-001.yaml (recommended_position: Parashari whole-sign default)"
+      - "apps/api/services/ephemeris_wrapper.py:684 (house_number computed via whole-sign rashi offset from Lagna; no cuspal/Bhava-Chalita house system implemented)"
+    empirical_findings: []
+    status: ACTIVE_DISPUTE
+    notes: >
+      VedicAstrology.Wikidot claims (INFORMAL_TRADITION, UNREVIEWED source) that
+      Bhava-Chalita (movable, unequal-angle houses computed per Keplerian equal-area
+      logic) is the textually correct method per Surya-Siddhanta for ALL house-based
+      predictions, and that the whole-sign Rashi-Chakra method — which is what
+      conflict-001.yaml documents as the current Parashari default AND what the
+      codebase actually implements end-to-end (per conflict-001.yaml's Phase 6
+      cross-reference to ephemeris_wrapper.py:684) — is a widespread simplification
+      used "to save time" by "not-so-learned astrologers." This is a direct challenge
+      to the codebase's implemented default, sourced from an UNREVIEWED informal
+      source. Preserved here as an active dispute, NOT resolved in favor of either
+      position. No code change is implied or should be made from this entry alone;
+      any move toward implementing a cuspal/Bhava-Chalita house system would require
+      separate human-governed technique work, not a Wikidot ingestion side effect.
+
+  - conflict_id: "CONFLICT-WIKIDOT-002"
+    topic: "Relative precedence of Shadbala versus Ishta-Kashta ('main strength') in determining planetary strength for predictions"
+    technique_framework: "Parashari"
+    supporting_sources:
+      - "VedicAstrology.Wikidot — main-strength-versus-shadbala (http://vedicastrology.wikidot.com/main-strength-versus-shadbala)"
+    contradicting_sources:
+      - "knowledge/catalogues/ (Shadbala is not deprioritized or gated behind an Ishta-Kashta tie in the existing catalogue structure — spot-checked knowledge/catalogues/grahas/surya.yaml and the grahas/ and yogas/ catalogue folders, which reference planetary strength generally without any Ishta-Kashta-primary/Shadbala-tiebreak precedence rule)"
+    empirical_findings: []
+    status: ACTIVE_DISPUTE
+    notes: >
+      VedicAstrology.Wikidot claims Shadbala is "excessively misused" by modern
+      astrologers and should only be consulted as a tiebreaker when BPHS's
+      Ishta-Kashta ('main strength', a claimed base-2 logarithmic scale) yields a
+      tie between two planets. No existing AstroOS catalogue file was found asserting
+      this precedence order or gating rule; Shadbala is used as a general-purpose
+      strength measure elsewhere in the codebase without this claimed restriction.
+      Preserved as an active dispute pending textual verification of the underlying
+      BPHS citation and empirical backtesting (see
+      knowledge/sources/vedicastrology_wikidot/validation_requirements.yaml,
+      VR-WIKIDOT-STRENGTH-01). Not resolved; no engine behavior should change based
+      on this entry alone.
+
+history:
+  - version: 1.0
+    date: 2026-08-26
+    change: "Initial conflict entries logged during VedicAstrology.Wikidot governed ingestion."
+    author: "AstroOS Knowledge Integration (AI-assisted, session rkmvedant@gmail.com)"

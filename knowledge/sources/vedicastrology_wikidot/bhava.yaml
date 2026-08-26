@@ -1,0 +1,61 @@
+# knowledge/sources/vedicastrology_wikidot/bhava.yaml
+#
+# Extracted knowledge items from
+# http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+
+page_title: "Origin And Meaning Of Horoscopic Houses"
+page_url: "http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses"
+technique_mapping:
+  best_fit_technique_key: null
+  note: >
+    No existing TechniqueModel.technique_key found for "bhava-chalita house computation"
+    via grep of apps/api/models/technique.py usage; this page's core claim (that
+    Bhava-Chalita, not whole-sign Rashi-Chakra, should be used for all predictive
+    results) directly contradicts the Parashari whole-sign default documented in
+    knowledge/conflicts/conflict-001.yaml and implemented in
+    apps/api/services/ephemeris_wrapper.py:684 (house_number via rashi offset, no
+    cuspal house system). Logged as a conflict — see
+    knowledge/conflicts/vedicastrology_wikidot_conflicts.yaml. No new TechniqueModel
+    row is proposed since the whole-sign approach is already the implemented default.
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses"
+    page_title: "Origin And Meaning Of Horoscopic Houses"
+    section: "Origin And Meanings Of Horoscopic Houses"
+    title: "All Bhava-phala predictions must use Bhava-Chalita, not Rashi-Chakra"
+    claim: >
+      Per Surya-Siddhanta, Lagna is the ecliptic point on the eastern horizon; since
+      the ecliptic is elliptical, the twelve house (bhava) divisions are unequal in
+      angular size and should be computed via Bhava-Chalita (movable houses,
+      individually reckoned per Keplerian equal-area-in-equal-time logic), not by
+      simply adding 30 degrees per house from the Lagna as in the Rashi-Chakra
+      (whole-sign) method. The page asserts most astrologers incorrectly use the
+      simpler Rashi-Chakra for predictions to save effort, when Rashi-Chakra should
+      properly be used only for exaltation/debility/friendship/aspect computations,
+      not for house-based (Bhava-phala) predictions.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: "Surya-Siddhanta"
+    related_concepts: ["bhava-chalita", "rashi-chakra", "lagna", "whole-sign-houses"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses"
+    page_title: "Origin And Meaning Of Horoscopic Houses"
+    section: "Origin And Meanings Of Horoscopic Houses"
+    title: "Angular houses (1/4/7/10) derive their significations from horizon geometry"
+    claim: >
+      The 4th house signifies land/mother/vehicle because it lies below the observer
+      at the nadir; the 10th house signifies father/glory because it lies at the
+      zenith; the 7th house lies at the western horizon and 1st (Lagna) at the
+      eastern horizon — the page claims these positional/geometric relationships
+      are the origin of each angular house's core significations.
+    item_type: INTERPRETIVE_CLAIM
+    referenced_classical_source: null
+    related_concepts: ["kendra", "bhava-significations", "lagna", "dasham-bhava"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

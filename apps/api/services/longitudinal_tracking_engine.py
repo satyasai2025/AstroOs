@@ -135,7 +135,12 @@ class LongitudinalTrackingEngine:
         # recorded subjects until real outcomes are ingested via
         # record_subject_outcome().
         key = f"{target_objective}:{effective_rule_id}"
-        records = self._tracked_records.get(key, [])
+        records = list(self._tracked_records.get(key, []))
+        if not records and rule_id is None:
+            prefix = f"{target_objective}:"
+            for k, v in self._tracked_records.items():
+                if k.startswith(prefix):
+                    records.extend(v)
         total_subjects = len(records)
         confirmed_hits = sum(1 for r in records if r.verification_status == OutcomeVerificationStatus.CONFIRMED_HIT)
         confirmed_misses = sum(1 for r in records if r.verification_status == OutcomeVerificationStatus.CONFIRMED_MISS)

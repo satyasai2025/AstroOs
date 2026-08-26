@@ -30,7 +30,16 @@ from apps.api.services.auth_service import AuthError, AuthService
 from apps.api.services.dataset_service import DatasetService
 from apps.api.services.ephemeris_service import EphemerisService
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
+from apps.api.services.entitlement_service import EntitlementService
+from apps.api.services.feature_catalog import ACTION_COLUMNS, DECIDED_MATRIX
 from apps.api.services.knowledge_engine import KnowledgeEngine
+
+# Features whose Feature x Plan x Action cells are governed by the Phase 2
+# entitlement matrix (i.e., the matrix has made at least one decision for
+# them). For governed features an absent plan_features row is a product
+# decision — "this plan does not include the feature" — and enforcement
+# denies rather than falling back to the unresolved-allow shim.
+GOVERNED_FEATURES = frozenset(DECIDED_MATRIX.keys())
 
 _settings: Settings = get_settings()
 
@@ -380,3 +389,130 @@ async def require_authenticated(
 
 require_researcher = require_role(UserRole.RESEARCHER, UserRole.ADMIN)
 require_admin = require_role(UserRole.ADMIN)
+
+
+# ── Plan-based entitlement enforcement (Phase 3) ─────────────────────────────
+#
+# require_entitlement(feature_key, action) is the server-side gate that turns
+# the Phase 2 entitlement matrix into actual API enforcement:
+#
+#     Authenticated User → Assigned Plan → Feature → Action → ALLOW / DENY
+#
+# Distinction from the role guards above (deliberate, do not conflate):
+#   ROLE  (require_role / require_admin) = administrative/security authority.
+#   PLAN  (require_entitlement)          = product entitlement for customer
+#                                          features. An ADMIN role does NOT
+#                                          bypass plan entitlements — admins
+#                                          resolve to their assigned plan like
+#                                          any user (FREE when unassigned),
+#                                          because the existing architecture
+#                                          defines no admin bypass.
+#
+# Denial responses use HTTP 403 with a structured `detail` dict so clients can
+# distinguish the failure kinds programmatically:
+#
+#   {"code": "FEATURE_NOT_AVAILABLE", ...}  feature not part of user's plan
+#   {"code": "ACTION_NOT_ALLOWED",   ...}  feature on plan, action not granted
+#
+# (UNAUTHENTICATED stays a plain 401 from get_current_user_from_bearer; role
+# failures stay plain-string 403s from require_role — both unchanged.)
+#
+# Governed-feature strictness: features listed in the Phase 2 DECIDED_MATRIX
+# are fully governed by the matrix. For those, an entitlement row ABSENT for
+# the caller's plan is a product decision ("this plan doesn't include the
+# feature") and denies with FEATURE_NOT_AVAILABLE — the Phase 2
+# unresolved-fallback shim must NOT let such callers through (e.g. FREE ×
+# research_projects seeds no row precisely because Free has no research
+# access). Features outside the matrix remain governed by the compatibility
+# fallback, preserving current behaviour until their cells are decided.
+
+
+def _denial(code: str, message: str, feature_key: str, action: str, plan_code: str) -> HTTPException:
+    """Build the canonical 403 response for an entitlement denial."""
+    return HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail={
+            "code": code,
+            "message": message,
+            "feature": feature_key,
+            "action": action,
+            "plan": plan_code,
+        },
+    )
+
+
+def require_entitlement(feature_key: str, action: str):
+    """
+    Dependency factory enforcing one Feature x Plan x Action cell of the
+    Phase 2 entitlement matrix.
+
+    Usage (route-level, alongside existing role guards):
+
+        @router.post("/projects", dependencies=[
+            Depends(require_entitlement("research_projects", "create")),
+        ])
+        async def create_project(...): ...
+
+    Resolution order per request:
+        1. Authentication        — via get_current_user_from_bearer (401).
+        2. Plan resolution       — EntitlementService.resolve_user_plan
+                                   (explicit assignment, else FREE default).
+        3. Entitlement decision  — EntitlementService.get_decision.
+        4. Zero-limit guard      — creation also denied when the plan's
+                                   numeric limit for the feature is 0
+                                   (research_projects on FREE), WITHOUT
+                                   consuming any quota (consumption is a
+                                   later phase).
+        5. ALLOW (returns the User) or 403 FEATURE_NOT_AVAILABLE /
+           ACTION_NOT_ALLOWED as described above.
+
+    Raises ValueError at wiring time for an unknown action — misconfigured
+    routes fail fast at import instead of at request time.
+    """
+    if action not in ACTION_COLUMNS:
+        raise ValueError(
+            f"Unknown entitlement action '{action}'. "
+            f"Valid actions: {', '.join(ACTION_COLUMNS)}."
+        )
+
+    async def _check_entitlement(
+        current_user: User = Depends(get_current_user_from_bearer),
+        db: AsyncSession = Depends(get_db_session),
+    ) -> User:
+        svc = EntitlementService(db)
+        plan = await svc.resolve_user_plan(current_user)
+        plan_code = plan.plan_code
+
+        decision = await svc.get_decision(current_user, feature_key, action)
+
+        if decision.status == "granted":
+            if action == "create" and await svc.creation_blocked_by_zero_limit(
+                current_user, feature_key
+            ):
+                raise _denial(
+                    "ACTION_NOT_ALLOWED",
+                    f"Your plan ({plan_code}) allows no {feature_key} "
+                    f"creations (monthly limit is 0).",
+                    feature_key, action, plan_code,
+                )
+            return current_user
+
+        if decision.status == "denied":
+            raise _denial(
+                "ACTION_NOT_ALLOWED",
+                f"Your plan ({plan_code}) does not allow '{action}' on "
+                f"'{feature_key}'.",
+                feature_key, action, plan_code,
+            )
+
+        # status == "unresolved"
+        if feature_key in GOVERNED_FEATURES or not decision.fallback_allowed:
+            raise _denial(
+                "FEATURE_NOT_AVAILABLE",
+                f"'{feature_key}' is not part of your plan ({plan_code}).",
+                feature_key, action, plan_code,
+            )
+        # Undecided feature + compatibility fallback allows it: legacy pass.
+        return current_user
+
+    return _check_entitlement

@@ -1,0 +1,76 @@
+# knowledge/sources/vedicastrology_wikidot/yoga.yaml
+#
+# Extracted knowledge items from http://vedicastrology.wikidot.com/vipareet-raja-yoga
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+
+page_title: "Vipareet Raja Yoga"
+page_url: "http://vedicastrology.wikidot.com/vipareet-raja-yoga"
+technique_mapping:
+  best_fit_technique_key: null
+  note: >
+    Maps conceptually to Yoga (combination) analysis, overlapping with existing
+    knowledge/catalogues/yogas/*.yaml catalogue entries. No existing
+    TechniqueModel.technique_key found via grep for a Vipareet-Raja-Yoga-specific
+    technique. This page's rules are candidates for cross-checking against the
+    existing yogas catalogue rather than a new technique registration.
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/vipareet-raja-yoga"
+    page_title: "Vipareet Raja Yoga"
+    section: "Vipareet Raja Yoga"
+    title: "Malefic aspecting or conjoining the 3rd or 6th house forms Vipareet Raja Yoga"
+    claim: >
+      IF a natural malefic planet aspects or conjoins the 3rd house (3H) or 6th house
+      (6H), THEN Vipareet Raja Yoga (VRY) is formed by this condition alone, without
+      requiring any other simultaneous condition — the page cites this as rule (1) of
+      several drawn from BPHS's Rajayoga chapter, while separately noting that if the
+      11th lord occupies a Trika house (6th, 8th, or 12th), that instead forms Daridra
+      Yoga (poverty combination).
+    item_type: RULE
+    condition_summary: "A natural malefic planet aspects or conjoins the 3rd or 6th house."
+    conclusion_summary: "Vipareet Raja Yoga (VRY) is formed by this condition alone."
+    referenced_classical_source: "BPHS — Rajayoga chapter"
+    related_concepts: ["vipareet-raja-yoga", "trika-houses", "daridra-yoga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/vipareet-raja-yoga"
+    page_title: "Vipareet Raja Yoga"
+    section: "Vipareet Raja Yoga"
+    title: "Debilitated lord of a Trika house (6/8/12) aspecting Lagna is Vipareet Raja Yoga"
+    claim: >
+      IF the lord of the 6th, 8th, or 12th house is debilitated (neecha) AND that
+      debilitated lord aspects the Lagna, THEN this forms Vipareet Raja Yoga; the
+      page adds that by extension, if such a debilitated Trika-lord aspects some
+      other house instead of the Lagna, that other house is said to gain benefit.
+    item_type: RULE
+    condition_summary: "Debilitated lord of 6th/8th/12th house aspects the Lagna."
+    conclusion_summary: "Forms Vipareet Raja Yoga; if aspecting a different house instead, that house gains benefit."
+    referenced_classical_source: "BPHS — Rajayoga chapter"
+    related_concepts: ["vipareet-raja-yoga", "neecha", "trika-houses", "lagna-aspect"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/vipareet-raja-yoga"
+    page_title: "Vipareet Raja Yoga"
+    section: "Vipareet Raja Yoga"
+    title: "BV Raman's Harsha, Sarala, and Vimala Yogas are 6th/8th/12th lords in Trika houses, but do not alone form Rajayoga"
+    claim: >
+      The page cites B.V. Raman's compilation of ~300 yogas as defining Harsha Yoga
+      (6th lord in a Trika house), Sarala Yoga (8th lord in a Trika house), and
+      Vimala Yoga (12th lord in a Trika house) respectively, while explicitly stating
+      that these three yogas alone do not constitute a full Rajayoga (royal/success
+      combination) by themselves, and that fruits of a Vipareet Raja Yoga configuration
+      manifest during the dashas of the yoga-causing planets, with best results when
+      VPC (Varsha Pravesha Chakra) and AV (Ashtakavarga) also cooperate.
+    item_type: FACT_DEFINITION
+    referenced_classical_source: "B.V. Raman (300 yogas compilation)"
+    related_concepts: ["harsha-yoga", "sarala-yoga", "vimala-yoga", "trika-houses", "rajayoga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

@@ -52,9 +52,11 @@ from apps.api.routers import intelligence as intelligence_router
 from apps.api.routers import jaimini as jaimini_router
 from apps.api.routers import jobs as jobs_router
 from apps.api.routers import knowledge as knowledge_router
+from apps.api.routers import knowledge_validation as knowledge_validation_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import kp as kp_router
 from apps.api.routers import muhurta as muhurta_router
+from apps.api.routers import plan as plan_router
 from apps.api.routers import prashna as prashna_router
 from apps.api.routers import report as report_router
 from apps.api.routers import report_full as report_full_router
@@ -97,6 +99,21 @@ from apps.api.routers import transit_patterns as transit_patterns_router  # noqa
 from apps.api.routers import varshaphal as varshaphal_router
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
+from apps.api.routers import sync as sync_router
+from apps.api.routers import prediction_confluence as prediction_confluence_router
+from apps.api.routers import prediction_validation as prediction_validation_router
+from apps.api.routers import experiments as experiments_router
+from apps.api.routers import multi_dasha_confluence as multi_dasha_confluence_router
+from apps.api.routers import synastry as synastry_router
+from apps.api.routers import rectification as rectification_router
+from apps.api.routers import cohort_validation as cohort_validation_router
+from apps.api.routers import evidence_intelligence as evidence_intelligence_router
+from apps.api.routers import explainability as explainability_router
+from apps.api.routers import batch_research_optimization as batch_research_optimization_router
+from apps.api.routers import hypothesis_mining as hypothesis_mining_router
+from apps.api.routers import research_data_governance as research_data_governance_router
+from apps.api.routers import knowledge_ingestion as knowledge_ingestion_router
+from apps.api.routers import knowledge_reliability as knowledge_reliability_router
 from apps.api.routers import ws as ws_router
 from apps.api.routers import yoga as yoga_router
 from apps.api.schemas.auth import HealthResponse
@@ -233,6 +250,8 @@ def create_app() -> FastAPI:
         openapi_url="/api/openapi.json" if _settings.DEBUG else None,
         lifespan=lifespan,
     )
+    app.state.ephemeris_service = _make_ephemeris_service()
+    app.state.ephemeris_wrapper = _make_ephemeris_wrapper()
 
     # ── Middleware ────────────────────────────────────────────────────────────
 
@@ -310,6 +329,14 @@ def create_app() -> FastAPI:
     # product surface. Gated here, once, at the router level rather than
     # annotating every individual endpoint function.
     _authenticated = [Depends(require_authenticated)]
+
+    # Plan catalog & entitlements — authenticated reads, admin-only writes.
+    # The router itself mixes public GETs and admin POST/PUTs; per-endpoint
+    # dependencies handle role gating.
+    app.include_router(
+        plan_router.router, dependencies=_authenticated
+    )
+
     app.include_router(
         search_router.router, prefix="/api/v1", dependencies=_authenticated
     )
@@ -430,10 +457,27 @@ def create_app() -> FastAPI:
     # writes (create/update/delete). Gated per-endpoint inside
     # routers/knowledge.py instead of here; no router-level dependency.
     app.include_router(knowledge_router.router, prefix="/api/v1")
+    app.include_router(
+        knowledge_validation_router.router,
+        prefix="/api/v1",
+        dependencies=[Depends(require_researcher)],
+    )
 
     # Knowledge Graph: public reads over the ontology (entities, relationships).
-    # The ontology is built from in-memory constants at first call; no DB needed.
+    # The ontology is built in in-memory constants at first call; no DB needed.
     app.include_router(knowledge_graph_router.router, prefix="/api/v1")
+
+    # Specific research sub-routers (must be mounted before generic research_router)
+    app.include_router(experiments_router.router, prefix="/api/v1")
+    app.include_router(multi_dasha_confluence_router.router, prefix="/api/v1")
+    app.include_router(synastry_router.router, prefix="/api/v1")
+    app.include_router(rectification_router.router, prefix="/api/v1")
+    app.include_router(cohort_validation_router.router, prefix="/api/v1")
+    app.include_router(evidence_intelligence_router.router, prefix="/api/v1")
+    app.include_router(explainability_router.router, prefix="/api/v1")
+    app.include_router(batch_research_optimization_router.router, prefix="/api/v1")
+    app.include_router(hypothesis_mining_router.router, prefix="/api/v1")
+    app.include_router(research_data_governance_router.router, prefix="/api/v1")
 
     # Researcher or Admin — Research Data Office / Statistics surface.
     _researcher = [Depends(require_researcher)]
@@ -443,8 +487,8 @@ def create_app() -> FastAPI:
     app.include_router(
         research_calibration_router.router, prefix="/api/v1", dependencies=_authenticated
     )
-    app.include_router(research_reproducibility_router.router)
-    app.include_router(decision_synthesis_router.router)
+    app.include_router(research_reproducibility_router.router, prefix="/api/v1")
+    app.include_router(decision_synthesis_router.router, prefix="/api/v1")
     app.include_router(research_knowledge_graph_router.router)
     app.include_router(decision_action_router.router)
     app.include_router(portfolio_planner_router.router)
@@ -495,6 +539,11 @@ def create_app() -> FastAPI:
         dataset_import_router.router, dependencies=_researcher
     )
     app.include_router(datasets_router.router)
+    app.include_router(sync_router.router, prefix="/api/v1")
+    app.include_router(prediction_confluence_router.router, prefix="/api/v1")
+    app.include_router(prediction_validation_router.router, prefix="/api/v1")
+    app.include_router(knowledge_ingestion_router.router, prefix="/api/v1")
+    app.include_router(knowledge_reliability_router.router, prefix="/api/v1")
 
     # ── Collaboration (RTCollab WebSocket + mDNS session discovery) ───────────
     # Off by default (ENABLE_RTCOLLAB=false) per ASTROOS_PHASE_IV_V2_4_ROADMAP.md

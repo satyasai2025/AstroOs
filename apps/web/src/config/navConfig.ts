@@ -178,7 +178,7 @@ export const NAV_CONFIG: NavGroup[] = [
         icon: "analysis",
         color: "--section-analysis",
         items: [
-          { href: "/charts?view=dasha", label: "Dasha", subtitle: "Vimshottari periods", icon: "clock", viewId: "analysis-dasha" },
+          { href: "/charts/dasha", label: "Dasha", subtitle: "Vimshottari periods", icon: "clock", viewId: "analysis-dasha" },
           { href: "/charts/transit", label: "Transit & Gochar", subtitle: "Live Gochar & Real-time Timeline", icon: "orbit", viewId: "analysis-gochar" },
           { href: "/charts?view=timeline", label: "Transit (Timeline)", subtitle: "Current planetary positions", icon: "orbit", viewId: "analysis-transit" },
           { href: "/charts?view=yogas", label: "Yogas", icon: "star" },
@@ -381,7 +381,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/charts?view=divisional", label: "Divisional Charts", icon: "grid" },
       { href: "/charts/planets", label: "Planet Explorer", icon: "search" },
       { href: "/charts?view=houses", label: "House Explorer", icon: "house" },
-      { href: "/charts?view=dasha", label: "Dasha Explorer", icon: "clock" },
+      { href: "/charts/dasha", label: "Dasha Explorer", icon: "clock" },
       { href: "/charts/transit", label: "Transit Explorer", icon: "orbit" },
       { href: "/charts?view=yogas", label: "Yogas & Combinations", icon: "star" },
       { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid" },

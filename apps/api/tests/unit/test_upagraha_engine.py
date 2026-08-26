@@ -115,3 +115,29 @@ class TestStructure:
     def test_all_longitudes_normalised(self, by_name):
         for p in by_name.values():
             assert 0.0 <= p.sidereal_longitude < 360.0
+
+    def test_sun_derived_upagrahas_presence_and_invariants(self, by_name):
+        expected = ["dhuma", "vyatipata", "parivesha", "indrachapa", "upaketu", "kaala"]
+        for name in expected:
+            assert name in by_name
+            pos = by_name[name]
+            assert 0.0 <= pos.sidereal_longitude < 360.0
+            assert len(pos.rashi) > 0
+            assert 1 <= pos.house_number <= 12
+
+        # Classical Invariant: Upaketu + 30° = Sun (mod 360)
+        # Indrachapa = 360 - Parivesha, Upaketu = Indrachapa + 16°40'
+        # Parivesha = Vyatipata + 180, Vyatipata = 360 - Dhuma, Dhuma = Sun + 133°20'
+        # => Upaketu = 360 - (360 - (Sun + 133°20') + 180) + 16°40' = Sun - 30°
+        # => Upaketu + 30° = Sun
+        upaketu_lon = by_name["upaketu"].sidereal_longitude
+        dhuma_lon = by_name["dhuma"].sidereal_longitude
+        vyatipata_lon = by_name["vyatipata"].sidereal_longitude
+        parivesha_lon = by_name["parivesha"].sidereal_longitude
+        indrachapa_lon = by_name["indrachapa"].sidereal_longitude
+
+        # Check exact mathematical relationships
+        assert (vyatipata_lon + dhuma_lon) % 360.0 == pytest.approx(0.0, abs=1e-5)
+        assert (parivesha_lon - vyatipata_lon) % 360.0 == pytest.approx(180.0, abs=1e-5)
+        assert (indrachapa_lon + parivesha_lon) % 360.0 == pytest.approx(0.0, abs=1e-5)
+

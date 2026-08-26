@@ -111,6 +111,10 @@ class FactBuilder:
         vedha_calculator: VedhaCalculator | None = None,
         nakshatra_vedha_calculator: NakshatraVedhaCalculator | None = None,
         sbc_report_service: SBCReportService | None = None,
+        vaiseshikamsa_engine: Any | None = None,
+        avastha_engine: Any | None = None,
+        special_points_engine: Any | None = None,
+        sensitive_degrees_engine: Any | None = None,
     ) -> None:
         self._graha_engine = graha_engine or GrahaEngine()
         self._house_engine = house_engine or HouseEngine()
@@ -128,6 +132,11 @@ class FactBuilder:
             nakshatra_vedha_calculator or NakshatraVedhaCalculator()
         )
         self._sbc_report_service = sbc_report_service
+        self._vaiseshikamsa_engine = vaiseshikamsa_engine
+        self._avastha_engine = avastha_engine
+        self._special_points_engine = special_points_engine
+        self._sensitive_degrees_engine = sensitive_degrees_engine
+
 
     def _build_planet_facts(self, chart: D1Chart, registry: FactRegistry) -> None:
         for position in chart.planets:
@@ -368,6 +377,67 @@ class FactBuilder:
                     pos.varga_house_number, "divisional_engine",
                 ))
 
+    def _build_vaiseshikamsa_facts(self, chart: D1Chart, registry: FactRegistry) -> None:
+        if self._vaiseshikamsa_engine is None:
+            from apps.api.services.vaiseshikamsa_engine import VaiseshikamsaEngine
+            self._vaiseshikamsa_engine = VaiseshikamsaEngine()
+
+        result = self._vaiseshikamsa_engine.calculate_all(chart, scheme="dasavarga")
+        for p in result.planets:
+            registry.add_fact(Fact(f"vaiseshikamsa.{p.planet}.title", p.title, "vaiseshikamsa_engine"))
+            registry.add_fact(Fact(f"vaiseshikamsa.{p.planet}.auspicious_count", p.auspicious_varga_count, "vaiseshikamsa_engine"))
+            registry.add_fact(Fact(f"vaiseshikamsa.{p.planet}.swavarga_count", p.swavarga_count, "vaiseshikamsa_engine"))
+
+    def _build_avastha_facts(self, chart: D1Chart, registry: FactRegistry) -> None:
+        if self._avastha_engine is None:
+            from apps.api.services.avastha_engine import AvasthaEngine
+            self._avastha_engine = AvasthaEngine()
+
+        results = self._avastha_engine.compute_all(chart.planets)
+        for r in results:
+            registry.add_fact(Fact(f"avastha.{r.planet}.baladi", r.baladi_avastha, "avastha_engine"))
+            registry.add_fact(Fact(f"avastha.{r.planet}.deeptadi", r.deeptadi_avastha, "avastha_engine"))
+            if r.jagradadi_avastha:
+                registry.add_fact(Fact(f"avastha.{r.planet}.jagradadi", r.jagradadi_avastha, "avastha_engine"))
+            if r.sayanadi_avastha:
+                registry.add_fact(Fact(f"avastha.{r.planet}.sayanadi", r.sayanadi_avastha, "avastha_engine"))
+
+    def _build_special_points_facts(self, chart: D1Chart, registry: FactRegistry) -> None:
+        if self._special_points_engine is None:
+            from apps.api.services.special_points_engine import SpecialPointsEngine
+            self._special_points_engine = SpecialPointsEngine()
+
+        snapshot = self._special_points_engine.compute_all(chart)
+        bb = snapshot.bhrigu_bindu
+        yogi = snapshot.yogi_points
+
+        registry.add_fact(Fact("special_point.bhrigu_bindu.rashi", bb.rashi, "special_points_engine"))
+        registry.add_fact(Fact("special_point.bhrigu_bindu.nakshatra", bb.nakshatra, "special_points_engine"))
+        registry.add_fact(Fact("special_point.bhrigu_bindu.house", bb.house_number, "special_points_engine"))
+
+        registry.add_fact(Fact("special_point.yogi.planet", yogi.yogi_planet, "special_points_engine"))
+        registry.add_fact(Fact("special_point.sahayogi.planet", yogi.sahayogi_planet, "special_points_engine"))
+        registry.add_fact(Fact("special_point.avayogi.planet", yogi.avayogi_planet, "special_points_engine"))
+
+    def _build_sensitive_degrees_facts(self, chart: D1Chart, registry: FactRegistry) -> None:
+        if self._sensitive_degrees_engine is None:
+            from apps.api.services.sensitive_degrees_engine import SensitiveDegreesEngine
+            self._sensitive_degrees_engine = SensitiveDegreesEngine()
+
+        snapshot = self._sensitive_degrees_engine.compute_all(chart)
+        khara = snapshot.khara_lords
+
+        registry.add_fact(Fact("sensitive_degrees.khara.moon_64th_navamsha_lord", khara.moon_64th_navamsha_lord, "sensitive_degrees_engine"))
+        registry.add_fact(Fact("sensitive_degrees.khara.lagna_64th_navamsha_lord", khara.lagna_64th_navamsha_lord, "sensitive_degrees_engine"))
+        registry.add_fact(Fact("sensitive_degrees.khara.lagna_22nd_drekkana_lord", khara.lagna_22nd_drekkana_lord, "sensitive_degrees_engine"))
+
+        for mb in snapshot.mrityu_bhagas:
+            registry.add_fact(Fact(f"sensitive_degrees.mrityu_bhaga.{mb.point}.active", mb.is_in_mrityu_bhaga, "sensitive_degrees_engine"))
+
+        for pushk in snapshot.pushkara_evaluations:
+            registry.add_fact(Fact(f"sensitive_degrees.pushkara_navamsha.{pushk.point}.active", pushk.is_pushkara_navamsha, "sensitive_degrees_engine"))
+            registry.add_fact(Fact(f"sensitive_degrees.pushkara_bhaga.{pushk.point}.active", pushk.is_in_pushkara_bhaga, "sensitive_degrees_engine"))
+
     def build_facts(
         self,
         chart: D1Chart,
@@ -391,6 +461,10 @@ class FactBuilder:
         self._build_friendship_facts(chart, registry)
         self._build_functional_lordship_facts(chart, registry)
         self._build_guna_facts(chart, registry)
+        self._build_vaiseshikamsa_facts(chart, registry)
+        self._build_avastha_facts(chart, registry)
+        self._build_special_points_facts(chart, registry)
+        self._build_sensitive_degrees_facts(chart, registry)
 
         # Time/event-scoped facts
         if transit_datetime_utc is not None:
@@ -399,3 +473,4 @@ class FactBuilder:
         self._build_varga_facts(vargas, registry)
 
         return registry
+

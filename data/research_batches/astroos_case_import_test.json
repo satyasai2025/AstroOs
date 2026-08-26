@@ -1,0 +1,367 @@
+{
+  "cases": [
+    {
+      "person": {
+        "name": "King of France François I",
+        "gender": "Male",
+        "dob": "1494-09-21",
+        "tob": "22:02",
+        "place": "Cognac",
+        "country": "France",
+        "latitude": 45.7,
+        "longitude": -0.3333,
+        "timezone": "UTC",
+        "source": "Astro-Databank import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1494-09-21",
+          "category": "Notable / Famous / Royal family; Traits / Personality / Ambitious; Lifestyle / Financial / Wealthy",
+          "verified": true,
+          "source": "Astro-Databank import",
+          "description": "Death / Death, Cause unspecified",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Traits / Personality / Ambitious",
+            "Lifestyle / Financial / Wealthy"
+          ]
+        }
+      ],
+      "source_batch": "astrodatabank-import"
+    },
+    {
+      "person": {
+        "name": "Girolamo Cardano",
+        "gender": "Male",
+        "dob": "1501-10-04",
+        "tob": "17:53",
+        "place": "Pavia",
+        "country": "Italy",
+        "latitude": 45.1667,
+        "longitude": 9.1667,
+        "timezone": "UTC",
+        "source": "Astro-Databank import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1501-10-04",
+          "category": "Family / Parenting / Kids -Traumatic event; Passions / Criminal Perpetrator / Civil/ Political; Voca",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death, Cause unspecified",
+          "tags": [
+            "Family / Parenting / Kids -Traumatic event",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Vocation / Medical / Physician",
+            "Vocation / Occult Fields / Astrologer",
+            "Notable / Famous / Top 5% of Profession",
+            "Vocation / Writers / Astrology",
+            "Notable / Book Collection / Occult/ Misc. Collection"
+          ]
+        },
+        {
+          "type": "Other",
+          "event_date": "1501-10-04",
+          "category": "Family / Parenting / Kids -Traumatic event; Passions / Criminal Perpetrator / Civil/ Political; Voca",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death of Child",
+          "tags": [
+            "Family / Parenting / Kids -Traumatic event",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Vocation / Medical / Physician",
+            "Vocation / Occult Fields / Astrologer",
+            "Notable / Famous / Top 5% of Profession",
+            "Vocation / Writers / Astrology",
+            "Notable / Book Collection / Occult/ Misc. Collection"
+          ]
+        }
+      ],
+      "source_batch": "astrodatabank-import"
+    },
+    {
+      "person": {
+        "name": "Queen Catherine de Medici",
+        "gender": "Female",
+        "dob": "1519-04-23",
+        "tob": "04:19",
+        "place": "Florence",
+        "country": "Italy",
+        "latitude": 43.7667,
+        "longitude": 11.25,
+        "timezone": "UTC",
+        "source": "Astro-Databank import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1519-04-23",
+          "category": "Notable / Famous / Royal family; Family / Relationship / Mate - Noted; Family / Relationship / Widow",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death by Disease",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Relationship / Mate - Noted",
+            "Family / Relationship / Widowed",
+            "Family / Parenting / Kids >3",
+            "Notable / Book Collection / Profiles Of Women",
+            "Traits / Personality / Aggressive/ brash"
+          ]
+        },
+        {
+          "type": "Marriage",
+          "event_date": "1519-04-23",
+          "category": "Notable / Famous / Royal family; Family / Relationship / Mate - Noted; Family / Relationship / Widow",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Relationship / Marriage",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Relationship / Mate - Noted",
+            "Family / Relationship / Widowed",
+            "Family / Parenting / Kids >3",
+            "Notable / Book Collection / Profiles Of Women",
+            "Traits / Personality / Aggressive/ brash"
+          ]
+        },
+        {
+          "type": "Promotion",
+          "event_date": "1519-04-23",
+          "category": "Notable / Famous / Royal family; Family / Relationship / Mate - Noted; Family / Relationship / Widow",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Work / Gain social status",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Relationship / Mate - Noted",
+            "Family / Relationship / Widowed",
+            "Family / Parenting / Kids >3",
+            "Notable / Book Collection / Profiles Of Women",
+            "Traits / Personality / Aggressive/ brash"
+          ]
+        }
+      ],
+      "source_batch": "astrodatabank-import"
+    },
+    {
+      "person": {
+        "name": "Henry Sidney",
+        "gender": "Male",
+        "dob": "1529-07-30",
+        "tob": "01:22",
+        "place": "London",
+        "country": "England",
+        "latitude": 51.5,
+        "longitude": -0.1667,
+        "timezone": "UTC",
+        "source": "Astro-Databank import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1529-07-30",
+          "category": "Family / Childhood / Advantaged; Family / Parenting / Kids - Noted",
+          "verified": true,
+          "source": "Astro-Databank import",
+          "description": "Death / Death, Cause unspecified",
+          "tags": [
+            "Family / Childhood / Advantaged",
+            "Family / Parenting / Kids - Noted"
+          ]
+        }
+      ],
+      "source_batch": "astrodatabank-import"
+    },
+    {
+      "person": {
+        "name": "Giovanni Battista Cardano",
+        "gender": "Male",
+        "dob": "1534-05-24",
+        "tob": "19:49",
+        "place": "Milan",
+        "country": "Italy",
+        "latitude": 45.4667,
+        "longitude": 9.2,
+        "timezone": "UTC",
+        "source": "Astro-Databank import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1534-05-24",
+          "category": "Passions / Criminal Perpetrator / Homicide single; Passions / Criminal Perpetrator / Executed; Perso",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death by Execution",
+          "tags": [
+            "Passions / Criminal Perpetrator / Homicide single",
+            "Passions / Criminal Perpetrator / Executed",
+            "Personal / Death / Unusual"
+          ]
+        }
+      ],
+      "source_batch": "astrodatabank-import"
+    },
+    {
+      "person": {
+        "name": "Queen of Scots Mary",
+        "gender": "Female",
+        "dob": "1542-12-18",
+        "tob": "13:26",
+        "place": "Linlithgow",
+        "country": "Scotland",
+        "latitude": 55.9833,
+        "longitude": -3.6167,
+        "timezone": "UTC",
+        "source": "Astro-Databank import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death by Execution",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Other",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death of Child",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Death of Spouse",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death of Mate",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Death of Parent",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death of Mother",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Death of Parent",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Death / Death of Father",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Other",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Family / Change in family responsibilities",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Marriage",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Relationship / Marriage",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        },
+        {
+          "type": "Other",
+          "event_date": "1542-12-18",
+          "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
+          "verified": false,
+          "source": "Astro-Databank import",
+          "description": "Social / Return Home",
+          "tags": [
+            "Notable / Famous / Royal family",
+            "Family / Parenting / Birthing - Miscarriages",
+            "Family / Parenting / Kids - Noted",
+            "Passions / Criminal Perpetrator / Civil/ Political",
+            "Personal / Death / Unusual",
+            "Notable / Book Collection / Profiles Of Women"
+          ]
+        }
+      ],
+      "source_batch": "astrodatabank-import"
+    }
+  ],
+  "generate_ids": true
+}
