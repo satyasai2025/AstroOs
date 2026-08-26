@@ -56,6 +56,10 @@ export default function ChartDetailPage() {
       router.replace("/charts/planets");
       return;
     }
+    if (chartId === "dasha") {
+      router.replace("/charts/dasha");
+      return;
+    }
     if (chartId && KNOWN_VIEW_REDIRECTS[chartId]) {
       router.replace(`/charts?view=${KNOWN_VIEW_REDIRECTS[chartId]}`);
     }
@@ -99,6 +103,25 @@ export default function ChartDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasMatchingResult, autoRecomputeStarted, summary]);
 
+  const effectiveSummary: BirthChartSummary | null =
+    summary ??
+    (storeRequest
+      ? {
+          id: chartId,
+          subject_name: storeRequest.subject_name || "Chart",
+          birth_datetime_utc: storeRequest.birth_datetime_utc,
+          birth_latitude: storeRequest.latitude,
+          birth_longitude: storeRequest.longitude,
+          place_name: storeRequest.place_name || null,
+          ayanamsa: storeRequest.ayanamsa || "lahiri",
+          house_system: storeRequest.house_system || "W",
+          lagna_rashi: storeResult?.chart.ascendant.rashi || null,
+          moon_nakshatra: storeResult?.chart.ascendant.nakshatra || null,
+          created_at: new Date().toISOString(),
+          is_default: false,
+        }
+      : null);
+
   let body: React.ReactNode;
 
   if (hasMatchingResult) {
@@ -106,7 +129,7 @@ export default function ChartDetailPage() {
       <ChartDetailView
         result={storeResult!}
         request={storeRequest!}
-        onEditDetails={summary ? () => setRecomputeTarget(summary) : undefined}
+        onEditDetails={effectiveSummary ? () => setRecomputeTarget(effectiveSummary) : undefined}
       />
     );
   } else if (chartsLoading || analyze.isPending) {

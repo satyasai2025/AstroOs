@@ -51,7 +51,7 @@ class EventCategoryModel(AstroBase):
         doc="Optional Vedic bhava (1-12) this category has been researcher-tagged with. Unset by default.",
     )
     karaka_planet: Mapped[Optional[str]] = mapped_column(
-        String(20),
+        String(100),
         nullable=True,
         doc="Optional significator planet this category has been researcher-tagged with. Unset by default.",
     )
