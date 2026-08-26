@@ -16,7 +16,15 @@ import uuid
 from typing import Any, Dict, List, Optional
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from apps.api.dependencies import get_db_session
+from apps.api.repositories.knowledge_reliability_repository import (
+    KnowledgeReliabilityRepository,
+)
 
 from apps.api.domain.knowledge_reliability import (
     ActorRole,
@@ -182,12 +190,49 @@ def register_source(
     return _serialize_source(rec)
 
 
+@router.get("/sources", response_model=List[SourceReliabilityResponse])
+async def list_sources(
+    limit: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+    tier: str | None = Query(None, description="Filter by SourceReliabilityTier value."),
+    review_status: str | None = Query(None, description="Filter by ReviewStatus value."),
+    session: AsyncSession = Depends(get_db_session),
+) -> List[SourceReliabilityResponse]:
+    """
+    List registered sources from the DATABASE.
+
+    Deliberately DB-backed rather than reading the in-memory
+    KnowledgeReliabilityEngine: sources registered by seed scripts live in
+    `knowledge_source_reliabilities`, and the process-local engine cannot see
+    them. Without this, a registered source was undiscoverable over HTTP —
+    `GET /sources/{id}` required already knowing the id.
+
+    Tier and review_status are returned AS STORED; this endpoint never
+    re-rates a source.
+    """
+    repo = KnowledgeReliabilityRepository(session)
+    records = await repo.list_source_reliabilities(
+        limit=limit, offset=offset, tier=tier, review_status=review_status
+    )
+    return [_serialize_source(r) for r in records]
+
+
 @router.get("/sources/{source_id}", response_model=SourceReliabilityResponse)
-def get_source(
+async def get_source(
     source_id: uuid.UUID,
+    session: AsyncSession = Depends(get_db_session),
     engine: KnowledgeReliabilityEngine = Depends(get_reliability_engine),
 ):
+    """
+    Fetch one source. Checks the in-memory engine first (so records registered
+    in-process during this run, and test fixtures, keep working), then falls
+    back to the database for persisted records.
+    """
     rec = engine.get_source(source_id)
+    if not rec:
+        rec = await KnowledgeReliabilityRepository(session).get_source_reliability(
+            source_id
+        )
     if not rec:
         raise HTTPException(status_code=404, detail="Source reliability record not found.")
     return _serialize_source(rec)

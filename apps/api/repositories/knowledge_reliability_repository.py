@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
-from typing import Optional, Sequence
+from typing import List, Optional, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -232,6 +232,38 @@ class KnowledgeReliabilityRepository:
         res = await self._session.execute(stmt)
         model = res.scalar_one_or_none()
         return _source_to_domain(model) if model else None
+
+    async def list_source_reliabilities(
+        self,
+        limit: int = 50,
+        offset: int = 0,
+        tier: Optional[str] = None,
+        review_status: Optional[str] = None,
+    ) -> List[SourceReliabilityRecord]:
+        """
+        List registered sources, newest first, with optional tier /
+        review_status filters.
+
+        Read-only counterpart to `get_source_reliability`, which could only
+        fetch one source by id — leaving callers with no way to discover what
+        sources exist. Soft-deleted rows are excluded, matching the single-get.
+        """
+        stmt = select(KnowledgeSourceReliabilityModel).where(
+            KnowledgeSourceReliabilityModel.deleted_at.is_(None),
+        )
+        if tier:
+            stmt = stmt.where(KnowledgeSourceReliabilityModel.tier == tier)
+        if review_status:
+            stmt = stmt.where(
+                KnowledgeSourceReliabilityModel.review_status == review_status
+            )
+        stmt = (
+            stmt.order_by(KnowledgeSourceReliabilityModel.created_at.desc())
+            .limit(limit)
+            .offset(offset)
+        )
+        res = await self._session.execute(stmt)
+        return [_source_to_domain(m) for m in res.scalars().all()]
 
     # ── Rule Reliability ─────────────────────────────────────────────────────
 
