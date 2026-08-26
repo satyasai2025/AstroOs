@@ -67,13 +67,22 @@ import itertools
 from datetime import datetime, timedelta, timezone
 
 from apps.api.domain.varshaphal import (
+    MasaPraveshChart,
+    MuddaDashaPeriod,
     MunthaInfo,
+    PanchavargiyaBala,
+    PatyayiniDashaPeriod,
     SahamInfo,
     TajikaAspect,
+    TajikaYoga,
     VarshaphalResult,
     YearLordInfo,
 )
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd, jd_to_datetime
+from apps.api.services.tajaka_bala_engine import TajakaBalaEngine
+from apps.api.services.tajaka_constants import DEEPTAMSHA
+from apps.api.services.tajaka_dasha_engine import TajakaDashaEngine
+from apps.api.services.tajaka_yoga_engine import TajakaYogaEngine
 from packages.shared.constants import DEGREES_PER_RASHI, SIGN_LORDS
 from packages.shared.enums import AyanamsaSystem, Rashi
 
@@ -104,7 +113,7 @@ _ISHARPHA_LOOKBACK_DAYS = 1.0
 
 
 class VarshaphalEngine:
-    """Computes the Varsha Pravesh chart and Muntha for one solar-return year."""
+    """Computes the Varsha Pravesh chart and full Classical Tajika analysis."""
 
     def __init__(self, wrapper: EphemerisWrapper):
         self._wrapper = wrapper
@@ -136,8 +145,14 @@ class VarshaphalEngine:
 
         muntha = self._compute_muntha(natal_chart.ascendant.rashi, varsha_year, varsha_chart)
         tajika_aspects = self._compute_tajika_aspects(varsha_chart)
-        year_lord = self._compute_year_lord(natal_chart.ascendant.rashi, muntha, varsha_chart)
+        panchavargiya_bala = TajakaBalaEngine.calculate_all(varsha_chart)
+        year_lord = self._compute_year_lord(
+            natal_chart.ascendant.rashi, muntha, varsha_chart, panchavargiya_bala
+        )
         sahams = self._compute_sahams(varsha_chart)
+        tajika_yogas = TajakaYogaEngine.evaluate_all_yogas(varsha_chart, tajika_aspects)
+        mudda_dasha = TajakaDashaEngine.calculate_mudda_dasha(varsha_chart, solar_return_jd)
+        patyayini_dasha = TajakaDashaEngine.calculate_patyayini_dasha(varsha_chart, solar_return_jd)
 
         return VarshaphalResult(
             varsha_year=varsha_year,
@@ -147,6 +162,93 @@ class VarshaphalEngine:
             tajika_aspects=tajika_aspects,
             year_lord=year_lord,
             sahams=sahams,
+            panchavargiya_bala=panchavargiya_bala,
+            tajika_yogas=tajika_yogas,
+            mudda_dasha=mudda_dasha,
+            patyayini_dasha=patyayini_dasha,
+        )
+
+    def calculate_masa_pravesh(
+        self,
+        birth_dt: datetime,
+        latitude: float,
+        longitude: float,
+        varsha_year: int,
+        month_number: int,
+        ayanamsa: str = AyanamsaSystem.LAHIRI.value,
+        house_system: str = "W",
+    ) -> MasaPraveshChart:
+        """Computes Masa Pravesh (Solar Month Return) chart for month N (1..12)."""
+        if not (1 <= month_number <= 12):
+            raise ValueError("month_number must be between 1 and 12.")
+
+        natal_chart = self._wrapper.calculate(birth_dt, latitude, longitude, ayanamsa, house_system)
+        natal_sun = next(p for p in natal_chart.planet_positions if p.planet == "sun")
+        natal_sun_sid_lon = natal_sun.sidereal_longitude
+
+        target_sun_lon = (natal_sun_sid_lon + (month_number - 1) * 30.0) % 360.0
+
+        # Estimate date
+        approx_days = (varsha_year * 365.2425) + ((month_number - 1) * 30.437)
+        guess_dt = birth_dt + timedelta(days=approx_days)
+        jd = datetime_to_jd(guess_dt)
+
+        with self._wrapper.sidereal_mode(ayanamsa):
+            for _ in range(_SOLVER_MAX_ITERATIONS):
+                ayanamsa_val = self._wrapper.get_ayanamsa(jd)
+                sun_tropical = self._wrapper.get_planet_position("sun", jd)
+                sun_sid_lon = self._wrapper.to_sidereal(sun_tropical.longitude, ayanamsa_val)
+
+                diff = sun_sid_lon - target_sun_lon
+                diff = (diff + 180.0) % 360.0 - 180.0
+
+                if abs(diff) < _SOLVER_TOLERANCE_DEG:
+                    break
+
+                jd -= diff / _SUN_MEAN_DEG_PER_DAY
+
+        masa_return_dt = jd_to_datetime(jd)
+        chart = self._wrapper.calculate(masa_return_dt, latitude, longitude, ayanamsa, house_system)
+
+        natal_asc_idx = _RASHI_LIST.index(natal_chart.ascendant.rashi)
+        muntha_idx = (natal_asc_idx + varsha_year - 1 + (month_number - 1)) % 12
+        muntha_rashi = _RASHI_LIST[muntha_idx]
+
+        # Masa Lord (Sign lord of the Sun's current rashi)
+        sun_rashi_idx = int(target_sun_lon // 30) % 12
+        masa_lord = SIGN_LORDS[_RASHI_LIST[sun_rashi_idx]]
+
+        return MasaPraveshChart(
+            month_number=month_number,
+            solar_longitude_target=target_sun_lon,
+            solar_return_jd=jd,
+            solar_return_date=masa_return_dt.isoformat(),
+            chart=chart,
+            muntha_rashi=muntha_rashi,
+            masa_lord=masa_lord,
+        )
+
+    def calculate_all_masa_pravesh(
+        self,
+        birth_dt: datetime,
+        latitude: float,
+        longitude: float,
+        varsha_year: int,
+        ayanamsa: str = AyanamsaSystem.LAHIRI.value,
+        house_system: str = "W",
+    ) -> tuple[MasaPraveshChart, ...]:
+        """Computes all 12 Masa Pravesh monthly charts for the Varsha year."""
+        return tuple(
+            self.calculate_masa_pravesh(
+                birth_dt=birth_dt,
+                latitude=latitude,
+                longitude=longitude,
+                varsha_year=varsha_year,
+                month_number=m,
+                ayanamsa=ayanamsa,
+                house_system=house_system,
+            )
+            for m in range(1, 13)
         )
 
     def _solve_solar_return(
@@ -164,11 +266,6 @@ class VarshaphalEngine:
         guess_dt = birth_dt + timedelta(days=365.2425 * varsha_year)
         jd = datetime_to_jd(guess_dt)
 
-        # pyswisseph's sidereal mode is process-global — set it once under
-        # the wrapper's lock for this whole solve, rather than per-iteration
-        # unlocked calls that could interleave with a concurrent request's
-        # calculate() and silently read the wrong ayanamsa (see
-        # EphemerisWrapper.sidereal_mode's docstring).
         with self._wrapper.sidereal_mode(ayanamsa):
             for _ in range(_SOLVER_MAX_ITERATIONS):
                 ayanamsa_val = self._wrapper.get_ayanamsa(jd)
@@ -213,6 +310,8 @@ class VarshaphalEngine:
             t_exit_a = exit_a / abs(a.speed_deg_per_day) if abs(a.speed_deg_per_day) > 1e-9 else float("inf")
             t_exit_b = exit_b / abs(b.speed_deg_per_day) if abs(b.speed_deg_per_day) > 1e-9 else float("inf")
 
+            orb_limit = (DEEPTAMSHA.get(name_a, 10.0) + DEEPTAMSHA.get(name_b, 10.0)) / 2.0
+
             for angle in _ASPECT_ANGLES:
                 orb = sep - angle
                 if abs(orb) > 15.0:
@@ -232,11 +331,19 @@ class VarshaphalEngine:
                     days_since_exact = abs(orb) / rate
                     is_isharpha = days_since_exact <= _ISHARPHA_LOOKBACK_DAYS
 
+                within_deeptamsha = abs(orb) <= orb_limit
+
                 aspects.append(TajikaAspect(
-                    planet_a=name_a, planet_b=name_b, aspect_angle=angle,
-                    current_orb_deg=round(abs(orb), 6), is_applying=is_applying,
-                    is_ithasala=is_ithasala, is_isharpha=is_isharpha,
+                    planet_a=name_a,
+                    planet_b=name_b,
+                    aspect_angle=angle,
+                    current_orb_deg=round(abs(orb), 6),
+                    is_applying=is_applying,
+                    is_ithasala=is_ithasala,
+                    is_isharpha=is_isharpha,
                     days_to_exact=round(days_to_exact, 6) if days_to_exact is not None else None,
+                    deeptamsha_orb_limit=round(orb_limit, 2),
+                    within_deeptamsha=within_deeptamsha,
                 ))
 
         return tuple(aspects)
@@ -252,7 +359,13 @@ class VarshaphalEngine:
         return {(rashi_idx + 3) % 12, (rashi_idx + 9) % 12, (rashi_idx + 6) % 12, rashi_idx}
 
     @classmethod
-    def _compute_year_lord(cls, natal_asc_rashi: str, muntha: MunthaInfo, varsha_chart) -> YearLordInfo:
+    def _compute_year_lord(
+        cls,
+        natal_asc_rashi: str,
+        muntha: MunthaInfo,
+        varsha_chart,
+        panchavargiya_balas: tuple[PanchavargiyaBala, ...] = (),
+    ) -> YearLordInfo:
         positions = {p.planet: p for p in varsha_chart.planet_positions}
         varsha_lagna_idx = _RASHI_LIST.index(varsha_chart.ascendant.rashi)
         natal_asc_idx = _RASHI_LIST.index(natal_asc_rashi)
@@ -279,27 +392,46 @@ class VarshaphalEngine:
         def candidate_rashi_idx(planet: str) -> int:
             return _RASHI_LIST.index(positions[planet].rashi)
 
+        bala_map = {b.planet: b.visheshika_bala for b in panchavargiya_balas}
+
         benefic_shortlist = [
             c for c in candidates if varsha_lagna_idx in cls._benefic_houses_from(candidate_rashi_idx(c))
         ]
         if len(benefic_shortlist) == 1:
             return YearLordInfo(
-                candidates=tuple(candidates), selected=benefic_shortlist[0],
+                candidates=tuple(candidates),
+                selected=benefic_shortlist[0],
                 selection_method="benefic_aspect",
+                candidate_balas=bala_map,
             )
 
         malefic_shortlist = [
             c for c in candidates if varsha_lagna_idx in cls._malefic_houses_from(candidate_rashi_idx(c))
         ]
-        if len(malefic_shortlist) == 1:
+        if len(malefic_shortlist) == 1 and not benefic_shortlist:
             return YearLordInfo(
-                candidates=tuple(candidates), selected=malefic_shortlist[0],
+                candidates=tuple(candidates),
+                selected=malefic_shortlist[0],
                 selection_method="malefic_aspect",
+                candidate_balas=bala_map,
+            )
+
+        # Tie-break or multiple aspecting candidates: choose candidate with highest Panchavargiya Bala
+        aspecting = benefic_shortlist or malefic_shortlist or candidates
+        if bala_map:
+            best_candidate = max(aspecting, key=lambda c: bala_map.get(c, 0.0))
+            return YearLordInfo(
+                candidates=tuple(candidates),
+                selected=best_candidate,
+                selection_method="panchavargiya_bala",
+                candidate_balas=bala_map,
             )
 
         return YearLordInfo(
-            candidates=tuple(candidates), selected=candidates[0],
+            candidates=tuple(candidates),
+            selected=candidates[0],
             selection_method="fallback_first_candidate",
+            candidate_balas=bala_map,
         )
 
     @staticmethod

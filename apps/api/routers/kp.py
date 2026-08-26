@@ -121,7 +121,11 @@ def _get_kp_engine() -> KPEngine:
 # ── Serialisation ──────────────────────────────────────────────────────────────
 
 
-def _to_response(result, transit_datetime_utc: datetime) -> KPAnalysisResponse:
+def _to_response(
+    result,
+    transit_datetime_utc: datetime,
+    body: "KPAnalysisRequest | None" = None,
+) -> KPAnalysisResponse:
     from apps.api.schemas.kp import (  # local import avoids a circular-import trap
         CSLVerdictResponse,
         DashaLinkResponse,
@@ -250,6 +254,8 @@ def _to_response(result, transit_datetime_utc: datetime) -> KPAnalysisResponse:
                 active_dasha_level=e["active_dasha_level"],
                 steps=[EvidenceStepResponse(label=s["label"], value=s["value"]) for s in e["steps"]],
                 verdict_detail=e["verdict_detail"],
+                technique_framework=e.get("technique_framework", "KP System"),
+                classical_rule_citation=e.get("classical_rule_citation", ""),
             )
             for e in result.evidence
         ],
@@ -264,6 +270,9 @@ def _to_response(result, transit_datetime_utc: datetime) -> KPAnalysisResponse:
             for t in result.transit_positions
         ],
         transit_datetime_utc=transit_datetime_utc,
+        ayanamsa_used=body.ayanamsa if body else "krishnamurti",
+        house_system_used=body.house_system if body else "P",
+        ayanamsa_warnings=body.get_ayanamsa_warnings() if body else [],
     )
 
 
@@ -339,7 +348,7 @@ async def analyze_kp(
             detail=f"Failed to analyze KP data: {exc}",
         )
 
-    return _to_response(result, transit_datetime_utc)
+    return _to_response(result, transit_datetime_utc, body=body)
 
 
 # ── DI for New KP Modules ──────────────────────────────────────────────────────
@@ -575,6 +584,8 @@ async def get_ruling_planets(
             is_node=e.is_node,
             represented_planet=e.represented_planet,
             note=e.note,
+            is_retrograde=e.is_retrograde,
+            retrograde_caution=e.retrograde_caution,
         )
         for e in res.ruling_planets_ordered
     ]
@@ -591,6 +602,7 @@ async def get_ruling_planets(
         ruling_planets_ordered=items,
         raw_ruling_planets=res.raw_ruling_planets,
         node_representations=res.node_representations,
+        retrograde_rp_flags=res.retrograde_rp_flags,
     )
 
 

@@ -113,3 +113,138 @@ class SynastryMatrixResponse(BaseModel):
     structural_summary: str
     timing_summary: str
     provenance_notes: str
+
+
+# ── 1. Kuja Dosha Schemas ──────────────────────────────────────────────────────
+
+
+class KujaDoshaProfileSchema(BaseModel):
+    chart_name: str
+    has_dosha: bool
+    severity: str
+    house_from_lagna: Optional[int]
+    house_from_moon: Optional[int]
+    house_from_venus: Optional[int]
+    raw_dosha_points: float
+    effective_dosha_score: float
+    pariharas_applied: list[str]
+    is_cancelled: bool
+    explanation: str
+
+
+class KujaDoshaComparisonSchema(BaseModel):
+    partner_a: KujaDoshaProfileSchema
+    partner_b: KujaDoshaProfileSchema
+    is_balanced: bool
+    dosha_difference: float
+    compatibility_verdict: str
+    classical_mitigation_notes: str
+
+
+# ── 2. Dasa Kuta Schemas ───────────────────────────────────────────────────────
+
+
+class DasaKutaEvaluateRequest(BaseModel):
+    girl_rashi: str = Field(description="Girl Moon Rashi (e.g. 'aries')")
+    girl_nakshatra: str = Field(description="Girl Moon Nakshatra (e.g. 'ashwini')")
+    boy_rashi: str = Field(description="Boy Moon Rashi (e.g. 'leo')")
+    boy_nakshatra: str = Field(description="Boy Moon Nakshatra (e.g. 'magha')")
+
+
+class DasaKutaItemSchema(BaseModel):
+    name: str
+    label: str
+    is_compatible: bool
+    obtained_score: float
+    max_score: float
+    partner_a_value: str
+    partner_b_value: str
+    description: str
+    classical_source: str
+
+
+class DasaKutaResponse(BaseModel):
+    items: list[DasaKutaItemSchema]
+    total_score: float
+    max_total_score: float
+    compatibility_percentage: float
+    is_rajju_compatible: bool
+    is_vedha_compatible: bool
+    is_mahendra_present: bool
+    is_stree_deergha_present: bool
+    verdict: str
+    summary: str
+
+
+# ── 3. Upapada & Navamsha Schemas ──────────────────────────────────────────────
+
+
+class UpapadaCompatibilitySchema(BaseModel):
+    ul_rashi_a: str
+    ul_rashi_b: str
+    lagna_rashi_a: str
+    lagna_rashi_b: str
+    moon_rashi_a: str
+    moon_rashi_b: str
+    alignment_type: str
+    is_harmonious: bool
+    second_from_ul_status_a: str
+    second_from_ul_status_b: str
+    jaimini_compatibility_score: float
+    explanation: str
+
+
+class NavamshaSynastrySchema(BaseModel):
+    d9_lagna_a: str
+    d9_lagna_b: str
+    lagna_relationship: str
+    d9_moon_a: str
+    d9_moon_b: str
+    d9_venus_a: str
+    d9_venus_b: str
+    mutual_d9_trines: list[str]
+    navamsha_harmony_score: float
+    verdict: str
+    explanation: str
+
+
+# ── 4. Composite Chart Schemas ────────────────────────────────────────────────
+
+
+class CompositePlanetSchema(BaseModel):
+    planet: str
+    sidereal_longitude: float
+    rashi: str
+    rashi_degree: float
+    house_number: int
+
+
+class CompositeChartResponse(BaseModel):
+    chart_a_name: str
+    chart_b_name: str
+    composite_ascendant: CompositePlanetSchema
+    composite_planets: list[CompositePlanetSchema]
+    relationship_purpose_summary: str
+
+
+# ── 5. Full Synastry & Compatibility Bundle ───────────────────────────────────
+
+
+class FullCompatibilityRequest(BaseModel):
+    chart_a_birth: BirthInput
+    chart_b_birth: BirthInput
+    relationship_type: str = Field(default="marriage")
+
+
+class FullCompatibilityResponse(BaseModel):
+    chart_a_name: str
+    chart_b_name: str
+    ashta_kuta: AshtaKutaResponse
+    dasa_kuta: DasaKutaResponse
+    kuja_dosha: KujaDoshaComparisonSchema
+    upapada_compatibility: UpapadaCompatibilitySchema
+    navamsha_synastry: NavamshaSynastrySchema
+    composite_chart: CompositeChartResponse
+    overall_compatibility_index: float
+    overall_verdict: str
+    executive_summary: str

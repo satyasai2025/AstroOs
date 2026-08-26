@@ -28,7 +28,7 @@ bundled result.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
 
 from apps.api.domain.horoscope import D1Chart
@@ -38,8 +38,11 @@ from apps.api.domain.jaimini import (
     CharaKarakaResult,
     CharaKarakaScheme,
     JaiminiDashaResult,
+    JaiminiEventTimingWindow,
+    JaiminiExpandedYoga,
     KarakamsaResult,
     RashiAspectResult,
+    UpapadaDeepAnalysis,
 )
 from apps.api.domain.prediction_evidence import PredictionEvidence
 from apps.api.services.argala_engine import ArgalaEngine
@@ -50,6 +53,10 @@ from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.jaimini_dasha_adapter import JaiminiDashaAdapter
 from apps.api.services.jaimini_engine import CharaKarakaEngine
+from apps.api.services.jaimini_event_timing_engine import JaiminiEventTimingEngine
+from apps.api.services.jaimini_expanded_yogas import JaiminiExpandedYogaEngine
+from apps.api.services.jaimini_special_dashas import MandookaDashaEngine, ShoolaDashaEngine
+from apps.api.services.jaimini_upapada_engine import JaiminiUpapadaAnalysisEngine
 from apps.api.services.jaimini_yoga_context import JaiminiYogaContext
 from apps.api.services.jaimini_yoga_engine import JaiminiYogaEngine
 from apps.api.services.karakamsa_engine import KarakamsaEngine
@@ -93,6 +100,45 @@ class JaiminiOrchestrator:
         self._karakamsa_engine = KarakamsaEngine(self._chara_karaka_engine)
         self._argala_engine = ArgalaEngine()
         self._yoga_engine = JaiminiYogaEngine()
+        self._shoola_engine = ShoolaDashaEngine()
+        self._mandooka_engine = MandookaDashaEngine()
+        self._upapada_engine = JaiminiUpapadaAnalysisEngine(self._arudha_engine, self._rashi_aspect_engine)
+        self._expanded_yoga_engine = JaiminiExpandedYogaEngine(
+            self._chara_karaka_engine, self._arudha_engine, self._rashi_aspect_engine, self._karakamsa_engine
+        )
+        self._event_timing_engine = JaiminiEventTimingEngine(
+            self._chara_karaka_engine,
+            self._arudha_engine,
+            self._rashi_aspect_engine,
+            self._shoola_engine,
+            self._mandooka_engine,
+        )
+
+    def compute_upapada(self, d1_chart: D1Chart) -> UpapadaDeepAnalysis:
+        return self._upapada_engine.analyze(d1_chart)
+
+    def compute_shoola_dasha(self, d1_chart: D1Chart, start_date: date, max_depth: int = 2) -> JaiminiDashaResult:
+        return self._shoola_engine.compute(d1_chart, start_date, max_depth=max_depth)
+
+    def compute_mandooka_dasha(self, d1_chart: D1Chart, start_date: date, max_depth: int = 2) -> JaiminiDashaResult:
+        return self._mandooka_engine.compute(d1_chart, start_date, max_depth=max_depth)
+
+    def compute_expanded_yogas(
+        self,
+        d1_chart: D1Chart,
+        d9_chart: Optional[VargaChart] = None,
+        scheme: CharaKarakaScheme = "sapta_karaka",
+    ) -> tuple[JaiminiExpandedYoga, ...]:
+        return self._expanded_yoga_engine.evaluate_all(d1_chart, d9_chart, scheme=scheme)
+
+    def compute_event_timing(
+        self,
+        d1_chart: D1Chart,
+        start_date: date,
+        chara_dasha: JaiminiDashaResult,
+        scheme: CharaKarakaScheme = "sapta_karaka",
+    ) -> tuple[JaiminiEventTimingWindow, ...]:
+        return self._event_timing_engine.generate_timing_windows(d1_chart, start_date, chara_dasha, scheme=scheme)
 
     def compute_bundle(
         self,

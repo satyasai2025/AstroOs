@@ -187,8 +187,121 @@ class TestCreationBlockedByZeroLimit:
             EntitlementService, "get_plan_limits",
             new_callable=AsyncMock,
             return_value=MagicMock(research_projects_monthly=None),
-        ):
+                ):
             svc = EntitlementService(MagicMock())
             blocked = await svc.creation_blocked_by_zero_limit(
                 custom_user, "research_projects")
             assert blocked is False
+
+
+# ── Tests: Denial response shapes ──────────────────────────────────────────────
+
+
+class TestDenialResponseShape:
+    """Error responses from require_entitlement must be structured for clients."""
+
+    def test_feature_not_available_has_code_and_message(self):
+        from apps.api.dependencies import _denial
+        exc = _denial(
+            "FEATURE_NOT_AVAILABLE",
+            "Free plan does not include research_projects.",
+            "research_projects", "create", "FREE",
+        )
+        assert exc.status_code == status.HTTP_403_FORBIDDEN
+        assert exc.detail["code"] == "FEATURE_NOT_AVAILABLE"
+        assert "research_projects" in exc.detail["feature"]
+        assert "FREE" in exc.detail["plan"]
+        assert "create" in exc.detail["action"]
+        assert isinstance(exc.detail["message"], str)
+
+    def test_action_not_allowed_has_code_and_message(self):
+        from apps.api.dependencies import _denial
+        exc = _denial(
+            "ACTION_NOT_ALLOWED",
+            "Free plan does not allow export on research_projects.",
+            "research_projects", "export", "FREE",
+        )
+        assert exc.status_code == status.HTTP_403_FORBIDDEN
+        assert exc.detail["code"] == "ACTION_NOT_ALLOWED"
+
+
+# ── Tests: Governed features list ──────────────────────────────────────────────
+
+
+class TestGovernedFeatures:
+    """GOVERNED_FEATURES must exactly match keys in DECIDED_MATRIX."""
+
+    def test_governed_features_matches_decided_matrix(self):
+        from apps.api.dependencies import GOVERNED_FEATURES
+        assert GOVERNED_FEATURES == frozenset(DECIDED_MATRIX.keys())
+
+    def test_saved_horoscopes_is_governed(self):
+        from apps.api.dependencies import GOVERNED_FEATURES
+        assert "saved_horoscopes" in GOVERNED_FEATURES
+
+    def test_research_projects_is_governed(self):
+        from apps.api.dependencies import GOVERNED_FEATURES
+        assert "research_projects" in GOVERNED_FEATURES
+
+
+# ── Tests: Phase 2 matrix matches spec ────────────────────────────────────────
+
+
+class TestDecidedMatrixSpec:
+    """The DECIDED_MATRIX must match the Phase 2 product spec exactly."""
+
+    def test_saved_horoscopes_every_plan_has_view_and_create(self):
+        for plan_code in ("FREE", "PRO", "RESEARCH", "CUSTOM"):
+            assert "view" in DECIDED_MATRIX["saved_horoscopes"][plan_code]
+            assert "create" in DECIDED_MATRIX["saved_horoscopes"][plan_code]
+
+    def test_research_projects_free_has_no_access(self):
+        assert DECIDED_MATRIX["research_projects"]["FREE"] == {}
+
+    def test_research_projects_pro_has_view_and_create(self):
+        assert DECIDED_MATRIX["research_projects"]["PRO"] == {
+            "view": True, "create": True}
+
+    def test_research_projects_research_has_view_and_create(self):
+        assert DECIDED_MATRIX["research_projects"]["RESEARCH"] == {
+            "view": True, "create": True}
+
+    def test_research_projects_custom_left_to_admins(self):
+        assert DECIDED_MATRIX["research_projects"]["CUSTOM"] == {}
+
+
+# Cleanup
+def teardown_module(module):
+    """Remove dependency overrides after all tests run."""
+    app.dependency_overrides.clear()
+
+
+# ── Tests: Denial response shapes ──────────────────────────────────────────────
+
+
+class TestDenialResponseShape:
+    """Error responses from require_entitlement must be structured for clients."""
+
+    def test_feature_not_available_has_code_and_message(self):
+        from apps.api.dependencies import _denial
+        exc = _denial(
+            "FEATURE_NOT_AVAILABLE",
+            "Free plan does not include research_projects.",
+            "research_projects", "create", "FREE",
+        )
+        assert exc.status_code == status.HTTP_403_FORBIDDEN
+        assert exc.detail["code"] == "FEATURE_NOT_AVAILABLE"
+        assert "research_projects" in exc.detail["feature"]
+        assert "FREE" in exc.detail["plan"]
+        assert "create" in exc.detail["action"]
+        assert isinstance(exc.detail["message"], str)
+
+    def test_action_not_allowed_has_code_and_message(self):
+        from apps.api.dependencies import _denial
+        exc = _denial(
+            "ACTION_NOT_ALLOWED",
+            "Free plan does not allow export on research_projects.",
+            "research_projects", "export", "FREE",
+        )
+        assert exc.status_code == status.HTTP_403_FORBIDDEN
+        assert exc.detail["code"] == "ACTION_NOT_ALLOWED"

@@ -1,8 +1,8 @@
 # AstroOS — Vedic Astrology Research Platform
 
-> **v2.3.0 "Lakshmi"** (released) · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
+> **v2.5.0 "Jyotish Vidya"** (released) · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
 
-A production-grade Vedic Astrology Research Platform for scholars, practitioners, and researchers. Built on Swiss Ephemeris with full divisional chart support (D1–D60), six Dasha systems, and a clean REST API.
+A production-grade Vedic Astrology Research Platform for scholars, practitioners, and researchers. Built on Swiss Ephemeris with full divisional chart support (D1–D60), multi-tradition Dasha systems, classical Tajika Varshaphal, Jaimini Sutras, Mundane Geopolitical Forecasting, Krishnamurti Paddhati (KP), and a strict Governed Knowledge RAG pipeline.
 
 ---
 
@@ -33,11 +33,16 @@ A production-grade Vedic Astrology Research Platform for scholars, practitioners
 AstroOS computes Vedic birth charts from geographic coordinates and UTC birth times using the Swiss Ephemeris library. It supports:
 
 - **Birth chart (D1)** with Graha drishti aspects and dignity scoring
-- **15 Divisional charts** (D2 Hora through D60 Shashtiamsha) per Parashara rules
-- **6 Dasha systems**: Vimshottari, Yogini, Ashtottari, Kalachakra, Chara (Jaimini), Narayana (Jaimini)
-- **6 Ayanamsa systems**: Lahiri, KP, Raman, Yukteshwar, Fagan-Bradley, True Chitra
-- **4 House systems**: Whole Sign, Placidus, Koch, Equal
-- Multi-level dasha sub-periods: Mahadasha → Antardasha → Pratyantar → Sookshma → Prana
+- **22 Divisional charts** (D2 Hora through D60 Shashtiamsha, D81, D108, D144) per Parashara rules
+- **Multiple Dasha systems**: Vimshottari, Yogini, Ashtottari, Kalachakra, Chara, Narayana, Shoola, Mandooka, Mudda, Patyayini
+- **Ayanamsa systems**: Lahiri, KP (Krishnamurti), Raman, Yukteshwar, Fagan-Bradley, True Chitra
+- **House systems**: Whole Sign, Placidus, Koch, Equal
+- **Krishnamurti Paddhati (KP)**: 4-Tier Significator Matrix, Cuspal Sub-Lord (CSL) decision tree, 2193 Sub-Sub Lord table, Ruling Planets with retrograde governance, BTR engine
+- **Jaimini Upadesha Sutras**: Chara Karakas, Arudha Padas ($AL, UL, A11$), Rashi Drishti, Karakamsha/Swamsha, Shoola & Mandooka Dashas, Jaimini Yogas & Event Timing
+- **Tajika Varshaphal**: Panchavargiya Bala, 16 Shodasha Yogas, Mudda & Patyayini Dashas, Varsheshwara, Masa Pravesh
+- **Mundane Forecasting**: Chaitra Shukla Pratipada, Cardinal Solar Ingresses, Planetary Cabinet (Nava Nayakas), Eclipse Analysis, Kurma Chakra 9-Sector Tortoise
+- **Compatibility & Synastry**: Tri-Bhava Kuja Dosha with 10 Pariharas, Dasa Kuta (10 Poruthams), Upapada & D9 Synastry, Midpoint Composite Charts
+- **Governed Knowledge Engine (RAG)**: Hybrid RRF retrieval (PostgreSQL full-text + pgvector), strict Anti-Contamination Invariant, Technique Isolation
 
 ---
 

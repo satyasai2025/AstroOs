@@ -111,3 +111,124 @@ class SynastryMatrix:
     structural_summary: str
     timing_summary: str
     provenance_notes: str
+
+
+# ── 1. Comprehensive Kuja Dosha (Manglik) Domain Models ─────────────────────────
+
+
+@dataclass(frozen=True)
+class KujaDoshaProfile:
+    """Detailed Tri-Bhava Kuja Dosha analysis for a single chart."""
+    chart_name: str
+    has_dosha: bool
+    severity: str  # 'None', 'Mild', 'Moderate', 'Severe'
+    house_from_lagna: Optional[int]
+    house_from_moon: Optional[int]
+    house_from_venus: Optional[int]
+    raw_dosha_points: float  # Lagna(100) + Moon(50) + Venus(25) = max 175
+    effective_dosha_score: float  # After classical pariharas (0-100 scale)
+    pariharas_applied: tuple[str, ...]
+    is_cancelled: bool
+    explanation: str
+
+
+@dataclass(frozen=True)
+class KujaDoshaComparison:
+    """Cross-chart Kuja Dosha balance evaluation between Partner A and Partner B."""
+    partner_a: KujaDoshaProfile
+    partner_b: KujaDoshaProfile
+    is_balanced: bool
+    dosha_difference: float
+    compatibility_verdict: str
+    classical_mitigation_notes: str
+
+
+# ── 2. Dasa Kuta (10 Poruthams) Domain Models ──────────────────────────────────
+
+
+@dataclass(frozen=True)
+class DasaKutaItem:
+    """Evaluation of a single Porutham in the South Indian 10-Kuta system."""
+    name: str  # e.g. 'Dina', 'Gana', 'Mahendra', 'Stree Deergha', 'Yoni', 'Rashi', 'Rashi Adhipati', 'Vashya', 'Rajju', 'Vedha'
+    label: str
+    is_compatible: bool
+    obtained_score: float
+    max_score: float
+    partner_a_value: str
+    partner_b_value: str
+    description: str
+    classical_source: str
+
+
+@dataclass(frozen=True)
+class DasaKutaResult:
+    """Aggregate result for the 10-Porutham compatibility framework."""
+    items: tuple[DasaKutaItem, ...]
+    total_score: float
+    max_total_score: float
+    compatibility_percentage: float
+    is_rajju_compatible: bool
+    is_vedha_compatible: bool
+    is_mahendra_present: bool
+    is_stree_deergha_present: bool
+    verdict: str
+    summary: str
+
+
+# ── 3. Upapada & D9 Navamsha Synastry Domain Models ────────────────────────────
+
+
+@dataclass(frozen=True)
+class UpapadaCompatibility:
+    """Jaimini Upapada Lagna (A12) alignment and 2nd house marital sustenance."""
+    ul_rashi_a: str
+    ul_rashi_b: str
+    lagna_rashi_a: str
+    lagna_rashi_b: str
+    moon_rashi_a: str
+    moon_rashi_b: str
+    alignment_type: str  # '1/7 Axis', 'Trinal (1/5/9)', 'Mutual Kendra (1/4/7/10)', 'Neutral/Dusthana'
+    is_harmonious: bool
+    second_from_ul_status_a: str
+    second_from_ul_status_b: str
+    jaimini_compatibility_score: float  # 0.0 to 100.0
+    explanation: str
+
+
+@dataclass(frozen=True)
+class NavamshaSynastryResult:
+    """D9 Navamsha divisional cross-chart harmonic resonance."""
+    d9_lagna_a: str
+    d9_lagna_b: str
+    lagna_relationship: str  # 'Conjoined', 'Trinal 5/9', 'Kendra 1/4/7/10', 'Opposite 1/7', 'Shadashtaka 6/8'
+    d9_moon_a: str
+    d9_moon_b: str
+    d9_venus_a: str
+    d9_venus_b: str
+    mutual_d9_trines: tuple[str, ...]
+    navamsha_harmony_score: float  # 0.0 to 100.0
+    verdict: str
+    explanation: str
+
+
+# ── 4. Composite & Midpoint Chart Domain Models ────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CompositePlanet:
+    """Midpoint planetary position for composite relationship chart."""
+    planet: str
+    sidereal_longitude: float
+    rashi: str
+    rashi_degree: float
+    house_number: int
+
+
+@dataclass(frozen=True)
+class CompositeChartResult:
+    """Midpoint composite horoscope representing the relationship entity."""
+    chart_a_name: str
+    chart_b_name: str
+    composite_ascendant: CompositePlanet
+    composite_planets: tuple[CompositePlanet, ...]
+    relationship_purpose_summary: str

@@ -52,6 +52,18 @@ class RulingPlanetEntry:
     is_node: bool
     represented_planet: Optional[str] = None
     note: str = ""
+    # ── KP Retrograde Governance (KP Reader 4, Ch. 8) ──────────────────────────
+    is_retrograde: bool = False
+    retrograde_caution: str = ""
+    """
+    Classical KP rule (K.S. Krishnamurti, Reader 4):
+    A retrograde planet in the Ruling Planets set should be treated with
+    caution — it acts with intensified but delayed/reversed significations.
+    KP practitioners traditionally demote or exclude a retrograde RP when
+    a direct planet of the same priority class is available; this engine
+    flags but retains the retrograde planet so the caller can apply their
+    own policy.
+    """
 
 
 @dataclass(frozen=True)
@@ -69,6 +81,18 @@ class RulingPlanetsSnapshot:
     ruling_planets_ordered: list[RulingPlanetEntry]
     raw_ruling_planets: list[str]
     node_representations: dict[str, list[str]]
+    # ── KP Retrograde Governance ────────────────────────────────────────────────
+    retrograde_rp_flags: dict[str, str] = None  # planet → retrograde caution note
+    """
+    Non-empty dict when one or more Ruling Planets are retrograde.
+    Classical source: K.S. Krishnamurti, Reader 4 Ch. 8 — retrograde planets
+    in the RP set deliver their significations in a delayed or intensified
+    manner and should be used with caution during event timing.
+    """
+
+    def __post_init__(self):
+        if self.retrograde_rp_flags is None:
+            object.__setattr__(self, "retrograde_rp_flags", {})
 
 
 class KPRulingPlanetsEngine:
@@ -148,17 +172,51 @@ class KPRulingPlanetsEngine:
         # 3. Moon Star Lord
         # 4. Moon Sign Lord
         # 5. Day Lord
+        #
+        # KP Reader 4 (Ch. 8) — Retrograde RP Rule:
+        # "A retrograde planet in the RP set signifies the matter but with delay or
+        #  with intensified and sometimes reversed results. When a direct planet of
+        #  the same priority class is available, prefer the direct planet. Always
+        #  flag retrogrades explicitly so the practitioner can weigh them."
+        retrograde_map: dict[str, bool] = {
+            p.planet.lower(): p.is_retrograde for p in chart.planets
+        }
+        # Day Lord (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn) is never
+        # considered retrograde for RP purposes — it governs the sunrise-to-sunrise
+        # Vara and has no retrograde motion concept in classical KP.
+
+        def _rp_entry(planet: str, role: str, priority: int) -> RulingPlanetEntry:
+            is_retro = retrograde_map.get(planet, False)
+            caution = (
+                f"{planet.capitalize()} is RETROGRADE (KP Reader 4 Ch.8): its RP significations "
+                "are intensified but may manifest with delay or reversal. "
+                "Prefer a direct RP of the same class when available."
+            ) if is_retro else ""
+            return RulingPlanetEntry(
+                planet=planet,
+                role=role,
+                priority=priority,
+                is_node=planet in {"rahu", "ketu"},
+                is_retrograde=is_retro,
+                retrograde_caution=caution,
+            )
+
         entries: List[RulingPlanetEntry] = []
         if asc_nl:
-            entries.append(RulingPlanetEntry(planet=asc_nl, role="Ascendant Star Lord", priority=1, is_node=asc_nl in {"rahu", "ketu"}))
+            entries.append(_rp_entry(asc_nl, "Ascendant Star Lord", 1))
         if asc_sl:
-            entries.append(RulingPlanetEntry(planet=asc_sl, role="Ascendant Sign Lord", priority=2, is_node=asc_sl in {"rahu", "ketu"}))
+            entries.append(_rp_entry(asc_sl, "Ascendant Sign Lord", 2))
         if moon_nl:
-            entries.append(RulingPlanetEntry(planet=moon_nl, role="Moon Star Lord", priority=3, is_node=moon_nl in {"rahu", "ketu"}))
+            entries.append(_rp_entry(moon_nl, "Moon Star Lord", 3))
         if moon_sl:
-            entries.append(RulingPlanetEntry(planet=moon_sl, role="Moon Sign Lord", priority=4, is_node=moon_sl in {"rahu", "ketu"}))
+            entries.append(_rp_entry(moon_sl, "Moon Sign Lord", 4))
         if day_lord:
-            entries.append(RulingPlanetEntry(planet=day_lord, role="Day Lord (Vara)", priority=5, is_node=day_lord in {"rahu", "ketu"}))
+            # Day lord is never retrograde in KP; pass False explicitly.
+            entries.append(RulingPlanetEntry(
+                planet=day_lord, role="Day Lord (Vara)", priority=5,
+                is_node=day_lord in {"rahu", "ketu"},
+                is_retrograde=False, retrograde_caution="",
+            ))
 
         # Distinct ordered raw list
         raw_rps = []
@@ -170,6 +228,12 @@ class KPRulingPlanetsEngine:
                 for rep in node_reps[e.planet]:
                     if rep not in raw_rps:
                         raw_rps.append(rep)
+
+        retrograde_rp_flags = {
+            e.planet: e.retrograde_caution
+            for e in entries
+            if e.is_retrograde
+        }
 
         return RulingPlanetsSnapshot(
             query_datetime_utc=query_datetime_utc,
@@ -185,4 +249,5 @@ class KPRulingPlanetsEngine:
             ruling_planets_ordered=entries,
             raw_ruling_planets=raw_rps,
             node_representations=node_reps,
+            retrograde_rp_flags=retrograde_rp_flags,
         )

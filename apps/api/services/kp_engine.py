@@ -989,6 +989,14 @@ def compute_timing_analysis(
 # ── Evidence chain ─────────────────────────────────────────────────────────────
 
 
+KP_EVENT_CLASSICAL_CITATIONS: dict[str, str] = {
+    "marriage": "K.S. Krishnamurti, KP Reader 4 (Marriage, Married Life and Children), Ch. 2: 7th CSL establishing connection to Houses 2, 7, or 11 indicates marriage promise; connection to 6, 1, or 10 negates/delays.",
+    "career": "K.S. Krishnamurti, KP Reader 3 (How to Judge a Horoscope), Ch. 10: 10th CSL signifying Houses 2, 6, 10, or 11 promises professional elevation and gainful employment.",
+    "childbirth": "K.S. Krishnamurti, KP Reader 4, Ch. 5: 5th CSL signifying Houses 2, 5, or 11 in fertile signs (Cancer, Scorpio, Pisces) promises progeny.",
+    "disease": "K.S. Krishnamurti, KP Reader 3, Ch. 6: 6th CSL signifying dusthanas (6, 8, 12) signifies disease and physical ailments, negated by vitality houses (1, 5, 11).",
+}
+
+
 def compute_event_evidence(
     chart: D1Chart,
     dasha_tree: DashaTree,
@@ -1037,6 +1045,11 @@ def compute_event_evidence(
         },
     ]
 
+    citation = KP_EVENT_CLASSICAL_CITATIONS.get(
+        event_key,
+        "K.S. Krishnamurti, KP Reader Series (Cuspal Sub-Lord & Significator Theory)",
+    )
+
     return {
         "eventKey": event_key,
         "label": promise["label"],
@@ -1050,6 +1063,8 @@ def compute_event_evidence(
         "active_dasha_level": active_level["level"] if active_level else None,
         "steps": steps,
         "verdict_detail": csl_verdict["detail"],
+        "technique_framework": "KP System",
+        "classical_rule_citation": citation,
     }
 
 

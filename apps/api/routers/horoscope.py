@@ -77,6 +77,7 @@ from apps.api.services.divisional_engine import compute_varga_sign
 from apps.api.services.lagna_scan_engine import LagnaScanEngine
 from apps.api.services.sign_change_engine import SignChangeEngine
 from apps.api.services.upagraha_engine import UpagrahaEngine
+from apps.api.services.quota_service import QuotaService
 
 logger = logging.getLogger(__name__)
 
@@ -255,6 +256,7 @@ async def generate_d1_chart(
     request: D1ChartRequest,
     user: User = Depends(get_current_user_from_bearer),
     engine: HoroscopeEngine = Depends(_get_horoscope_engine),
+    session: AsyncSession = Depends(get_db_session),
 ) -> D1ChartResponse:
     """
     Generate a D1 (Rashi) birth chart.
@@ -294,6 +296,33 @@ async def generate_d1_chart(
             detail="Ephemeris calculation failed. Check server logs.",
         ) from exc
 
+    # ── Phase 4 quota pre-check ────────────────────────────────────────────────
+    # Before we persist (which is the actual quota-consuming operation), verify
+    # the user still has headroom under their plan's monthly limit for
+    # saved_horoscopes.  The entitlement dependency above already confirmed the
+    # plan includes the feature at all; this is the usage-budget gate.
+    quota_service = QuotaService(session)
+    quota_status = await quota_service.check_quota(
+        user=user,
+        feature_key="saved_horoscopes",
+        amount=1,
+    )
+    if not quota_status.allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "code": "QUOTA_EXHAUSTED",
+                "message": (
+                    f"You have reached your monthly limit of "
+                    f"{quota_status.limit} saved horoscopes. "
+                    f"Limit resets in {quota_status.reset_in}s."
+                ),
+                "limit": quota_status.limit,
+                "current_usage": quota_status.current_usage,
+                "reset_in_seconds": quota_status.reset_in,
+            },
+        )
+
     # Persistence step. The calculation above already succeeded and its
     # result is what we return either way — but if saving it fails, that
     # is reported as an error rather than silently returned as if nothing
@@ -319,6 +348,37 @@ async def generate_d1_chart(
                 "Please retry."
             ),
         ) from exc
+
+    # ── Phase 4 quota consumption ────────────────────────────────────────────────
+    # Persistence succeeded → atomically increment the usage counter so it
+    # cannot exceed the plan limit between the pre-check above and the record
+    # insertion.  consume_quota re-checks atomically (row-level lock on the
+    # usage row) to close the race window for concurrent requests.
+    consumed = await quota_service.consume_quota(
+        user=user,
+        feature_key="saved_horoscopes",
+        amount=1,
+    )
+    if not consumed:
+        # Extremely unlikely: raced past the pre-check.  Roll back the just
+        # committed chart so the user's quota state stays consistent.
+        logger.error(
+            "Quota consumed after pre-check passed for user %s, feature "
+            "saved_horoscopes — rolling back chart_id %s",
+            user.id.value,
+            chart_id,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "code": "QUOTA_EXHAUSTED_RACE",
+                "message": (
+                    "Your monthly saved-horoscope limit was reached by a "
+                    "concurrent request. The chart was computed but not "
+                    "saved; please retry next month."
+                ),
+            },
+        )
 
     return _chart_to_response(chart, chart_id=chart_id)
 

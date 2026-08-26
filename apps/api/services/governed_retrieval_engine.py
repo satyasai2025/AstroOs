@@ -263,10 +263,10 @@ class GovernedRetrievalEngine:
         query: str,
         filters: RetrievalFilter,
     ) -> List[Tuple[IngestedChunkModel, float]]:
-        """Keyword retrieval using repository full-text search with RRF scoring."""
-        tokens = [
-            t for t in re.split(r"\W+", query.lower()) if len(t) > 2
-        ]
+        """Keyword retrieval using Sanskrit/English terminology expansion + repository full-text search."""
+        from apps.api.services.terminology_service import TerminologyService
+
+        tokens = TerminologyService.expand_query_tokens(query)
         if not tokens:
             return []
 

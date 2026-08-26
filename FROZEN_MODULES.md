@@ -62,7 +62,7 @@ admin-approved change.
 | `apps/api/services/yogas/arishta_yoga.py` | `2ba2968bd1ebe23bc6cde4eb8339c2b93b56823e6b9d659deea35453ae7db20e` | Aspect-vs-conjunction rule fixed |
 | `apps/api/services/yogas/chandra_yoga.py` | `9a212b861e4847533a5f9bae85f5abe703e1d5945cf0dc4649fbdd73914e2c7e` | Chandra-Mangala + Kemadruma fixed |
 | `apps/api/services/prediction_confluence_engine.py` | `6f6a523ff3ef97b70de3592583724b1ac3e3e5f8f345c925d9cc69ccbe990f1f` | Fake SBC transit fallback fixed |
-| `apps/api/schemas/kp.py` | `a05ef580132644030317c08c6d97fe29b98fb72810fecb78f25bc1bd0f4e7d8f` | House-system default fixed |
+| `apps/api/schemas/kp.py` | `e6883e5e3840dcc859e6e118a0e193a24e74788b166556eae18bb483bcbdcf7d` | House-system default fixed |
 | `apps/api/services/ephemeris_wrapper.py` | `e1deaf237d1370c7eaa6c55f6cf941504bc337d3c45502cd19b657c114e3c5d3` | Vara sunrise-boundary fix; nakshatra/sub-lord math verified exact |
 | `apps/api/services/horoscope_engine.py` | `80727e36fae80d47e428edc8100b0604746b42b9877a2124fc35f3945d60ca65` | node_type threading verified |
 | `apps/api/services/transit_engine.py` | `0cfbd43eb32f91784959245abf102f2e6c863a04abf683abade28534dcff0fcd` | Real house_from_natal_ascendant added |
@@ -74,12 +74,12 @@ admin-approved change.
 | `apps/api/services/house_engine.py` | `6f97e60d5a14240aeec8bffcd272faa7da921571c93291ddeb6933b06217eceb` | Verified clean |
 | `apps/api/services/aspect_engine.py` | `337d16f0cee72bffb6b16dbecc94855a5a563d16f3c42f63ba78de814dd60346` | Verified clean |
 | `apps/api/services/sphuta_drishti_engine.py` | `7590060082d0342e3a795dee0bf2e58955c6901b4ae75bcadc5223a2e0ff2600` | Piecewise discontinuities fixed |
-| `apps/api/services/upagraha_engine.py` | `6b7ca9826558bcff337a097755fefdad217998479fc66d168f8c236d4e24a08a` | Verified correct; scope gap disclosed |
+| `apps/api/services/upagraha_engine.py` | `b0357b462c87615cb85999361d2d198a0599c0195f48518dc5cd48e995fa8dcc` | Verified correct; scope gap disclosed |
 | `apps/api/services/sadhu_padhdhati_engine.py` | `836aa1cd601a2ef84067a215c8a79eb89ad684db0b72a2dc1c9943728b3e725a` | Boundary-year + citation bugs fixed |
-| `apps/api/services/kp_engine.py` | `24d75ed499527c8571cc5a8883e4f8f8f1c26750666575e974b8e2ce8d8c994e` | Verified clean |
+| `apps/api/services/kp_engine.py` | `d7cca7a7755400ee2b2535ae78b2b560c15eadae3e5db22ff8785e5b117e0b24` | Verified clean |
 | `apps/api/services/kp_btr_engine.py` | `630c8b955c36404d23868f103bb0e92b717e024d1b381142f3a624e674f66c2a` | Docstring/implementation mismatch fixed |
 | `apps/api/services/kp_decision_tree_engine.py` | `3d324cdd8b5e967553771bf0dd9fd57e0c57655f456e21a9bf101bfc5782b2f6` | Fabricated fallback data fixed |
-| `apps/api/services/kp_rp_engine.py` | `ac5273c13193304c128bf4f50507e14d501113da841e49abdbaf84cbdb51baf7` | Day Lord sunrise-basis fixed |
+| `apps/api/services/kp_rp_engine.py` | `23efef7275f5e3e0e86e32afaa09c02b484678c20ee6cbb30093b4324b0aecde` | Day Lord sunrise-basis fixed |
 | `apps/api/services/arudha_engine.py` | `dbfa0041a3866b83811cf08dd2d940ea1e4d96abb58adbb9f2e81d780d1cfa90` | Verified clean |
 | `apps/api/services/argala_engine.py` | `23f0c782d68c967fd6a6ab1de97214facba193ac5b2b77a4751d3e3d9313fdd6` | Verified clean |
 | `apps/api/services/karakamsa_engine.py` | `a1110c0744ea6c18eca83f0ae4ed94525bb4baf2030b17634dc4626a02fc920c` | Verified clean |
@@ -98,6 +98,26 @@ admin-approved change.
 | `apps/api/services/sbc_vedha_engine.py` | `a0829c712db416fa366d81d066f54d67193a805154cee02839306aaa9908821e` | Verified clean |
 | `apps/api/services/sbc_ray_matrix_engine.py` | `95ace8c21a35bbfae0884e8c3d36b8b4da2baa8a9012cec36298915352b5759a` | Fake-transit-fallback landmine removed |
 | `apps/api/services/tarabala_report_service.py` | `b1b5c96669faca38f3c116eb8716a57d8366756b4889a6fd3ee20fc88c4c7fcb` | Verified clean |
+| `apps/api/services/tajaka_constants.py` | `6b8a629050aa5081a163351fc2cfdaf38cf93c4d71757b7c7c0d7dced02cde9f` | Classical Deeptamsha orbs & 12-sign Hadda table constants |
+| `apps/api/services/tajaka_bala_engine.py` | `13f1ebcb7a6a128c9b596d63cb90b70cd76a97143f54300b592648907780ff19` | Panchavargiya Bala (5-fold Tajika strength & Visheshika scale) |
+| `apps/api/services/tajaka_yoga_engine.py` | `317c8ddb30d5a324de7fa6f92a2eae495511da23c2db99ffa53d56f5be592af9` | 16 Classical Tajika Yogas (Shodasha Yogas) engine |
+| `apps/api/services/tajaka_dasha_engine.py` | `cb41986b6a5f742316e074056d35d6b04893592edc37f050af719164b30ba568` | Mudda & Patyayini annual dasha engine |
+| `apps/api/services/terminology_service.py` | `432a7cb7e9d3cfad105a27c4b35b7e8fcdccdbaaee77d91fedae423e27c85100` | Unified Sanskrit/English astrological terminology resolver & query expander |
+| `apps/api/services/claim_grounding_validator.py` | `ae72b41adeb6e2d2e550960b60ab9d46ae25e3bf3b185b346291ffcfe82ee77c` | Claim grounding & hallucination prevention validator |
+| `apps/api/services/ai_evaluation_framework.py` | `5fb9ff558911952f94ff6ef167b7385a2deea3ff10b8f9b6c9e52430c7de69b9` | AI grounding & governance benchmarking evaluation harness |
+| `apps/api/services/kuja_dosha_engine.py` | `4e7e3272b2113ee4b3e05164bed3c21693f744c93e69b4dec1365eb08db95820` | Comprehensive Tri-Bhava Kuja Dosha (Lagna, Moon, Venus) & 10 classical pariharas |
+| `apps/api/services/dasa_kuta_engine.py` | `b13167c34e2c67130e82bdc2a046a4799db12b000899f01f601523e0e290ddfa` | South Indian 10-Poruthams compatibility system including Rajju & Vedha |
+| `apps/api/services/jaimini_navamsha_synastry.py` | `6bdb0af758b1674990c6d7577dd2fedc4375912cabfe61326db15f8d533f7a67` | Jaimini Upapada Lagna (A12) & D9 Navamsha synastry harmony engine |
+| `apps/api/services/composite_chart_engine.py` | `ad45f1c82581459cabb560fce777d5667cfa6d557027bf07ef7fb22821436e5b` | Shortest-arc circular midpoint composite relationship chart engine |
+| `apps/api/services/mundane_ingress_engine.py` | `747885d32a68c43d7a761543f5ff75deaf6162889c8d20e34afa2c73bf7aae1f` | High-precision Chaitra Shukla Pratipada & 4 cardinal solar ingresses solver |
+| `apps/api/services/planetary_cabinet_engine.py` | `b58425c94225689ec362672340820d8c335502a4c8ee0c0c8031ece612d6632f` | Classical 9-minister cosmic governance council (Nava Nayakas) engine |
+| `apps/api/services/mundane_eclipse_engine.py` | `0e54f52970b791a3e6baa32234715555d6fbb52da94bfa7e0fe8d95e59726c65` | Standalone solar & lunar eclipse detection and mundane impact duration engine |
+| `apps/api/services/kurma_chakra_engine.py` | `43fc38c12a7b32ffa32ed77c8705ade00a5eeb612bfd00e8715121cc6e3abbba` | 9-sector celestial tortoise (Kurma Chakra) geopolitical & seismic engine |
+| `apps/api/services/mundane_analysis_engine.py` | `82fef689567a6c96fa76a9cf9eec49be84722b79662108c91d08f5388ffa64ee` | 12 Mundane Bhavas & comprehensive national forecasting engine |
+| `apps/api/services/jaimini_special_dashas.py` | `788bcaa0cf2daf8df06c43688659e4bb3bb29fec42411daa7d6fcb8f9cf8b220` | Classical Shoola Dasha (9-year longevity/maraka) & Mandooka Dasha (frog-jump D11) |
+| `apps/api/services/jaimini_upapada_engine.py` | `027be93481146f1fedee1e5570ff310b1fe2999c704477f4d7f33d5db6ac2ec9` | In-depth native Upapada Lagna (UL) 2nd/8th house longevity & stability analysis |
+| `apps/api/services/jaimini_expanded_yogas.py` | `68708de89485ee3897affbb6f0fbea5731a24edc07b275c65081b9f3615b9b90` | Classical Jaimini Raja, Dhana (AK-PK, AmK-DK, AL-A11), Vipareeta, & Moksha yogas |
+| `apps/api/services/jaimini_event_timing_engine.py` | `cbbaf045b8ca0ff4d94d44a55cd81835698c21954102ad1237fa321777943058` | Predictive event-timing synthesizing Jaimini Dashas, Karakas, & Arudhas |
 
 ## Explicitly NOT frozen (known remaining gaps)
 

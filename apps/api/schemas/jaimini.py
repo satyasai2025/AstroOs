@@ -179,7 +179,7 @@ class JaiminiDashaPeriodSchema(BaseModel):
 
 
 class JaiminiDashaResultSchema(BaseModel):
-    system: Literal["chara", "narayana"]
+    system: Literal["chara", "narayana", "shoola", "mandooka"]
     lagna_rashi: str = Field(description="D1 Lagna sign (the dasha sequence's starting point).")
     periods: list[JaiminiDashaPeriodSchema]
     max_depth: int
@@ -214,6 +214,55 @@ class JaiminiYogasResponse(BaseModel):
 class JaiminiKarakamsaResponse(KarakamsaResultSchema):
     """Karakamsa/Swamsa piece of the bundle response — omitted from the
     bundle when the request's include_karakamsa is False."""
+
+
+class UpapadaDeepAnalysisResponse(BaseModel):
+    upapada_rashi: str
+    upapada_lord: str
+    upapada_lord_rashi: str
+    second_house_rashi: str
+    second_house_occupants: list[str]
+    second_house_aspects: list[str]
+    second_house_status: str
+    eighth_house_rashi: str
+    eighth_house_occupants: list[str]
+    relationship_longevity_score: float
+    classical_notes: str
+
+
+class JaiminiExpandedYogaSchema(BaseModel):
+    yoga_name: str
+    rule_id: str
+    is_present: bool
+    participating_elements: list[str]
+    strength_score: float
+    classical_source: str
+    description: str
+
+
+class JaiminiEventTimingWindowSchema(BaseModel):
+    event_category: str
+    dasha_system: str
+    dasha_sign: str
+    antardasha_sign: Optional[str]
+    start_date: date
+    end_date: date
+    probability_score: float
+    trigger_reasons: list[str]
+    classical_sutra: str
+
+
+class JaiminiComprehensiveResponse(BaseModel):
+    chara_karaka: JaiminiKarakasResponse
+    arudha: JaiminiArudhaResponse
+    rashi_aspect: JaiminiAspectsResponse
+    karakamsa: Optional[JaiminiKarakamsaResponse] = None
+    chara_dasha: JaiminiDashaResponse
+    shoola_dasha: JaiminiDashaResponse
+    mandooka_dasha: JaiminiDashaResponse
+    upapada_analysis: UpapadaDeepAnalysisResponse
+    expanded_yogas: list[JaiminiExpandedYogaSchema]
+    event_timing_windows: list[JaiminiEventTimingWindowSchema]
 
 
 class JaiminiBundleResponse(BaseModel):

@@ -12,7 +12,16 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+# ── KP Ayanamsa constants ──────────────────────────────────────────────────────
+
+# K.S. Krishnamurti mandated his own ayanamsa for Sub Lord calculations.
+# Using any other ayanamsa shifts Sub Lord boundaries and invalidates the cusp
+# SSL chain. The schema emits a governance warning (never a silent 422) so the
+# caller can decide — KP practitioners sometimes deliberately compare systems.
+KP_CANONICAL_AYANAMSAS: frozenset[str] = frozenset({"krishnamurti", "kp", "krishnamurti_new"})
+KP_ACCEPTED_HOUSE_SYSTEMS: frozenset[str] = frozenset({"P", "p", "placidus"})
 
 # ── Request ───────────────────────────────────────────────────────────────────
 
@@ -20,19 +29,61 @@ from pydantic import BaseModel, Field
 class KPAnalysisRequest(BaseModel):
     """One birth-data submission drives the whole KP analysis. Mirrors the
     workflow request's core fields — the same payload the frontend already
-    holds, reused as-is."""
+    holds, reused as-is.
+
+    Governance note: KP theory (K.S. Krishnamurti, Reader 1–6) requires the
+    Krishnamurti ayanamsa and Placidus house system. Sending any other
+    ayanamsa or house system will include a non-empty `ayanamsa_warnings`
+    list in the response — the calculation still runs, but results must be
+    treated with caution.
+    """
 
     birth_datetime_utc: datetime = Field(
         description="UTC birth datetime (ISO-8601, must include timezone offset)."
     )
     latitude: float = Field(ge=-90.0, le=90.0)
     longitude: float = Field(ge=-180.0, le=180.0)
-    ayanamsa: str = "lahiri"
-    house_system: str = "P"  # KP is classically Placidus-cusp-specific — matches every other KP schema in this file
+    ayanamsa: str = Field(
+        default="krishnamurti",
+        description=(
+            "Ayanamsa to use. KP canonical: 'krishnamurti'. "
+            "Non-KP ayanamsas are accepted but trigger a governance warning."
+        ),
+    )
+    house_system: str = Field(
+        default="P",
+        description=(
+            "House system. KP classical: 'P' (Placidus). "
+            "Non-Placidus systems are accepted but trigger a governance warning."
+        ),
+    )
     transit_datetime_utc: Optional[datetime] = Field(
         default=None,
         description="Defaults to now (UTC) if omitted — the 'current transits' moment used for KP timing triggers.",
     )
+
+    @model_validator(mode="after")
+    def _validate_kp_settings(self) -> "KPAnalysisRequest":
+        """Populate internal warning flags — does NOT raise; lets the engine run."""
+        self._ayanamsa_warnings: list[str] = []
+        if self.ayanamsa.lower() not in KP_CANONICAL_AYANAMSAS:
+            self._ayanamsa_warnings.append(
+                f"AYANAMSA_NOT_KP: '{self.ayanamsa}' is not the canonical KP ayanamsa. "
+                "K.S. Krishnamurti (Reader 1, Ch. 3) specifies his own ayanamsa for Sub Lord boundary calculations. "
+                "Sub Lord / SSL divisions computed with a different ayanamsa are NOT classical KP. "
+                "Recommended: ayanamsa='krishnamurti'."
+            )
+        if self.house_system.upper() not in {"P", "PLACIDUS"}:
+            self._ayanamsa_warnings.append(
+                f"HOUSE_SYSTEM_NOT_PLACIDUS: '{self.house_system}' is not Placidus. "
+                "KP Cuspal Sub-Lord theory requires Placidus cusps. "
+                "Recommended: house_system='P'."
+            )
+        return self
+
+    def get_ayanamsa_warnings(self) -> list[str]:
+        """Return governance warnings accumulated during validation."""
+        return getattr(self, "_ayanamsa_warnings", [])
 
 
 # ── Response ──────────────────────────────────────────────────────────────────
@@ -199,11 +250,28 @@ class EventEvidenceResponse(BaseModel):
     active_dasha_level: Optional[str] = None
     steps: list[EvidenceStepResponse] = []
     verdict_detail: str
+    # ── Governed Research & Technique Provenance ───────────────────────────
+    technique_framework: str = Field(
+        default="KP System",
+        description="Classical technique framework governing this evaluation (isolated from Parashari/Jaimini).",
+    )
+    classical_rule_citation: str = Field(
+        default="",
+        description="Formal classical reference from K.S. Krishnamurti Readers establishing this rule.",
+    )
 
 
 class KPAnalysisResponse(BaseModel):
     """The complete KP analysis + evidence for one chart at one transit
-    moment — everything the KP Analysis Center renders, pre-computed."""
+    moment — everything the KP Analysis Center renders, pre-computed.
+
+    Governance fields:
+    - ``ayanamsa_used`` — the ayanamsa the engine actually used.
+    - ``ayanamsa_warnings`` — non-empty when a non-KP ayanamsa or
+      non-Placidus house system was submitted. Sub Lord boundaries are
+      sensitive to ayanamsa; results computed with a non-canonical ayanamsa
+      should be treated with caution (K.S. Krishnamurti, Reader 1 Ch. 3).
+    """
 
     cusps: list[KPCuspResponse]
     planet_profiles: list[KPPlanetProfileResponse]
@@ -215,6 +283,23 @@ class KPAnalysisResponse(BaseModel):
     evidence: list[EventEvidenceResponse]
     transit_positions: list[TransitPositionResponse]
     transit_datetime_utc: datetime
+    # ── Governance ──────────────────────────────────────────────────────────
+    ayanamsa_used: str = Field(
+        default="krishnamurti",
+        description="The ayanamsa the engine used for this analysis.",
+    )
+    house_system_used: str = Field(
+        default="P",
+        description="The house system the engine used for this analysis.",
+    )
+    ayanamsa_warnings: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Non-empty when the submitted ayanamsa or house system deviates from "
+            "the KP canonical settings (Krishnamurti ayanamsa + Placidus). "
+            "Results are still computed, but must be treated with appropriate caution."
+        ),
+    )
 
 
 # ── 1. KP Events & Custom Event Schemas ────────────────────────────────────────
@@ -317,6 +402,17 @@ class KPRulingPlanetItemResponse(BaseModel):
     is_node: bool
     represented_planet: Optional[str] = None
     note: str = ""
+    # ── KP Retrograde Governance (KP Reader 4, Ch. 8) ──────────────────────
+    is_retrograde: bool = False
+    retrograde_caution: str = Field(
+        default="",
+        description=(
+            "Non-empty when this RP is retrograde. "
+            "Per K.S. Krishnamurti Reader 4 Ch. 8, retrograde planets in the RP "
+            "set signify with delay or reversal; a direct planet of the same class "
+            "should be preferred when available."
+        ),
+    )
 
 
 class KPRulingPlanetsResponse(BaseModel):
@@ -331,6 +427,15 @@ class KPRulingPlanetsResponse(BaseModel):
     ruling_planets_ordered: list[KPRulingPlanetItemResponse]
     raw_ruling_planets: list[str]
     node_representations: dict[str, list[str]]
+    # ── KP Retrograde Governance ────────────────────────────────────────────
+    retrograde_rp_flags: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Non-empty when one or more Ruling Planets are retrograde. "
+            "Maps planet name → retrograde caution note. "
+            "Classical source: K.S. Krishnamurti, Reader 4 Ch. 8."
+        ),
+    )
 
 
 # ── 4. Sub-Sub Lord (SSL) Reference Table Schemas ─────────────────────────────

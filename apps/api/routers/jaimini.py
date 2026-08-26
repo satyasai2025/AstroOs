@@ -44,12 +44,16 @@ from apps.api.schemas.jaimini import (
     JaiminiAspectsResponse,
     JaiminiBundleRequest,
     JaiminiBundleResponse,
+    JaiminiComprehensiveResponse,
     JaiminiDashaResponse,
+    JaiminiEventTimingWindowSchema,
+    JaiminiExpandedYogaSchema,
     JaiminiKarakamsaResponse,
     JaiminiKarakasResponse,
     JaiminiDashaPeriodSchema,
     KarakamsaHouseEntrySchema,
     RashiAspectSchema,
+    UpapadaDeepAnalysisResponse,
 )
 from apps.api.schemas.prediction_evidence import (
     PredictionConfidenceSchema,
@@ -321,3 +325,252 @@ async def compute_jaimini_argala(
         )
 
     return _serialise_argala(argala)
+
+
+@router.post(
+    "/upapada",
+    response_model=UpapadaDeepAnalysisResponse,
+    summary="Compute deep native Upapada Lagna (UL) relationship analysis",
+)
+async def compute_jaimini_upapada(
+    body: JaiminiBundleRequest,
+    orchestrator: JaiminiOrchestrator = Depends(_get_jaimini_orchestrator),
+) -> UpapadaDeepAnalysisResponse:
+    d1_chart = await asyncio.to_thread(
+        orchestrator.compute_d1_chart,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+    )
+    res = orchestrator.compute_upapada(d1_chart)
+    return UpapadaDeepAnalysisResponse(
+        upapada_rashi=res.upapada_rashi,
+        upapada_lord=res.upapada_lord,
+        upapada_lord_rashi=res.upapada_lord_rashi,
+        second_house_rashi=res.second_house_rashi,
+        second_house_occupants=list(res.second_house_occupants),
+        second_house_aspects=list(res.second_house_aspects),
+        second_house_status=res.second_house_status,
+        eighth_house_rashi=res.eighth_house_rashi,
+        eighth_house_occupants=list(res.eighth_house_occupants),
+        relationship_longevity_score=res.relationship_longevity_score,
+        classical_notes=res.classical_notes,
+    )
+
+
+@router.post(
+    "/shoola-dasha",
+    response_model=JaiminiDashaResponse,
+    summary="Compute Shoola Dasha (9-year fixed signs longevity/maraka dasha)",
+)
+async def compute_shoola_dasha(
+    body: JaiminiBundleRequest,
+    orchestrator: JaiminiOrchestrator = Depends(_get_jaimini_orchestrator),
+) -> JaiminiDashaResponse:
+    d1_chart = await asyncio.to_thread(
+        orchestrator.compute_d1_chart,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+    )
+    res = orchestrator.compute_shoola_dasha(d1_chart, body.birth_datetime_utc.date(), max_depth=body.max_dasha_depth)
+    return _serialise_dasha(res)
+
+
+@router.post(
+    "/mandooka-dasha",
+    response_model=JaiminiDashaResponse,
+    summary="Compute Mandooka Dasha (Frog-jump sign periods for D11/career)",
+)
+async def compute_mandooka_dasha(
+    body: JaiminiBundleRequest,
+    orchestrator: JaiminiOrchestrator = Depends(_get_jaimini_orchestrator),
+) -> JaiminiDashaResponse:
+    d1_chart = await asyncio.to_thread(
+        orchestrator.compute_d1_chart,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+    )
+    res = orchestrator.compute_mandooka_dasha(d1_chart, body.birth_datetime_utc.date(), max_depth=body.max_dasha_depth)
+    return _serialise_dasha(res)
+
+
+@router.post(
+    "/expanded-yogas",
+    response_model=list[JaiminiExpandedYogaSchema],
+    summary="Compute comprehensive Jaimini Raja, Dhana, Arudha, and Moksha yogas",
+)
+async def compute_expanded_yogas(
+    body: JaiminiBundleRequest,
+    orchestrator: JaiminiOrchestrator = Depends(_get_jaimini_orchestrator),
+) -> list[JaiminiExpandedYogaSchema]:
+    d1_chart = await asyncio.to_thread(
+        orchestrator.compute_d1_chart,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+    )
+    d9_chart = None
+    if body.include_karakamsa:
+        d9_chart = await asyncio.to_thread(
+            orchestrator._divisional_engine.compute,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            varga="D9",
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+    yogas = orchestrator.compute_expanded_yogas(d1_chart, d9_chart, scheme=body.scheme)
+    return [
+        JaiminiExpandedYogaSchema(
+            yoga_name=y.yoga_name,
+            rule_id=y.rule_id,
+            is_present=y.is_present,
+            participating_elements=list(y.participating_elements),
+            strength_score=y.strength_score,
+            classical_source=y.classical_source,
+            description=y.description,
+        )
+        for y in yogas
+    ]
+
+
+@router.post(
+    "/event-timing",
+    response_model=list[JaiminiEventTimingWindowSchema],
+    summary="Generate predictive event timing windows using Jaimini dashas & Karakas",
+)
+async def compute_event_timing(
+    body: JaiminiBundleRequest,
+    orchestrator: JaiminiOrchestrator = Depends(_get_jaimini_orchestrator),
+) -> list[JaiminiEventTimingWindowSchema]:
+    bundle = await asyncio.to_thread(
+        orchestrator.compute_bundle,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+        scheme=body.scheme,
+        max_dasha_depth=body.max_dasha_depth,
+        include_karakamsa=body.include_karakamsa,
+    )
+    windows = orchestrator.compute_event_timing(
+        bundle.d1_chart,
+        body.birth_datetime_utc.date(),
+        bundle.chara_dasha,
+        scheme=body.scheme,
+    )
+    return [
+        JaiminiEventTimingWindowSchema(
+            event_category=w.event_category,
+            dasha_system=w.dasha_system,
+            dasha_sign=w.dasha_sign,
+            antardasha_sign=w.antardasha_sign,
+            start_date=w.start_date,
+            end_date=w.end_date,
+            probability_score=w.probability_score,
+            trigger_reasons=list(w.trigger_reasons),
+            classical_sutra=w.classical_sutra,
+        )
+        for w in windows
+    ]
+
+
+@router.post(
+    "/comprehensive",
+    response_model=JaiminiComprehensiveResponse,
+    summary="Compute all Jaimini systems: Karakas, Arudhas, Karakamsa, Chara/Shoola/Mandooka Dashas, Upapada, Yogas & Event Timing",
+)
+async def compute_jaimini_comprehensive(
+    body: JaiminiBundleRequest,
+    orchestrator: JaiminiOrchestrator = Depends(_get_jaimini_orchestrator),
+) -> JaiminiComprehensiveResponse:
+    bundle = await asyncio.to_thread(
+        orchestrator.compute_bundle,
+        birth_datetime_utc=body.birth_datetime_utc,
+        latitude=body.latitude,
+        longitude=body.longitude,
+        ayanamsa=body.ayanamsa,
+        house_system=body.house_system,
+        scheme=body.scheme,
+        max_dasha_depth=body.max_dasha_depth,
+        include_karakamsa=body.include_karakamsa,
+    )
+    start_d = body.birth_datetime_utc.date()
+    shoola = orchestrator.compute_shoola_dasha(bundle.d1_chart, start_d, max_depth=body.max_dasha_depth)
+    mandooka = orchestrator.compute_mandooka_dasha(bundle.d1_chart, start_d, max_depth=body.max_dasha_depth)
+    upapada_res = orchestrator.compute_upapada(bundle.d1_chart)
+
+    d9_chart = None
+    if body.include_karakamsa:
+        d9_chart = await asyncio.to_thread(
+            orchestrator._divisional_engine.compute,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            varga="D9",
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+    exp_yogas = orchestrator.compute_expanded_yogas(bundle.d1_chart, d9_chart, scheme=body.scheme)
+    timing_windows = orchestrator.compute_event_timing(bundle.d1_chart, start_d, bundle.chara_dasha, scheme=body.scheme)
+
+    return JaiminiComprehensiveResponse(
+        chara_karaka=_serialise_karakas(bundle.chara_karaka),
+        arudha=_serialise_arudha(bundle.arudha),
+        rashi_aspect=_serialise_aspects(bundle.rashi_aspect),
+        karakamsa=_serialise_karakamsa(bundle.karakamsa) if bundle.karakamsa else None,
+        chara_dasha=_serialise_dasha(bundle.chara_dasha),
+        shoola_dasha=_serialise_dasha(shoola),
+        mandooka_dasha=_serialise_dasha(mandooka),
+        upapada_analysis=UpapadaDeepAnalysisResponse(
+            upapada_rashi=upapada_res.upapada_rashi,
+            upapada_lord=upapada_res.upapada_lord,
+            upapada_lord_rashi=upapada_res.upapada_lord_rashi,
+            second_house_rashi=upapada_res.second_house_rashi,
+            second_house_occupants=list(upapada_res.second_house_occupants),
+            second_house_aspects=list(upapada_res.second_house_aspects),
+            second_house_status=upapada_res.second_house_status,
+            eighth_house_rashi=upapada_res.eighth_house_rashi,
+            eighth_house_occupants=list(upapada_res.eighth_house_occupants),
+            relationship_longevity_score=upapada_res.relationship_longevity_score,
+            classical_notes=upapada_res.classical_notes,
+        ),
+        expanded_yogas=[
+            JaiminiExpandedYogaSchema(
+                yoga_name=y.yoga_name,
+                rule_id=y.rule_id,
+                is_present=y.is_present,
+                participating_elements=list(y.participating_elements),
+                strength_score=y.strength_score,
+                classical_source=y.classical_source,
+                description=y.description,
+            )
+            for y in exp_yogas
+        ],
+        event_timing_windows=[
+            JaiminiEventTimingWindowSchema(
+                event_category=w.event_category,
+                dasha_system=w.dasha_system,
+                dasha_sign=w.dasha_sign,
+                antardasha_sign=w.antardasha_sign,
+                start_date=w.start_date,
+                end_date=w.end_date,
+                probability_score=w.probability_score,
+                trigger_reasons=list(w.trigger_reasons),
+                classical_sutra=w.classical_sutra,
+            )
+            for w in timing_windows
+        ],
+    )

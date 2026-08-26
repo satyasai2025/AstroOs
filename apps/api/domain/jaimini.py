@@ -271,8 +271,47 @@ class JaiminiDashaPeriod:
 
 @dataclass(frozen=True)
 class JaiminiDashaResult:
-    system: Literal["chara", "narayana"]
-    lagna_rashi: str  # DashaTree.trigger_planet, renamed. Chara: the Lagna sign. Narayana: the dasha's seed sign (NOT necessarily Lagna) — see jaimini_dasha_adapter.py's module docstring.
+    system: Literal["chara", "narayana", "shoola", "mandooka"]
+    lagna_rashi: str  # DashaTree.trigger_planet, renamed. Chara: the Lagna sign. Narayana: seed sign.
     periods: tuple[JaiminiDashaPeriod, ...]  # DashaTree.mahadashas, renamed
     max_depth: int
     total_cycle_years: int
+
+
+@dataclass(frozen=True)
+class UpapadaDeepAnalysis:
+    upapada_rashi: str
+    upapada_lord: str
+    upapada_lord_rashi: str
+    second_house_rashi: str
+    second_house_occupants: tuple[str, ...]
+    second_house_aspects: tuple[str, ...]
+    second_house_status: str
+    eighth_house_rashi: str
+    eighth_house_occupants: tuple[str, ...]
+    relationship_longevity_score: float
+    classical_notes: str
+
+
+@dataclass(frozen=True)
+class JaiminiExpandedYoga:
+    yoga_name: str
+    rule_id: str
+    is_present: bool
+    participating_elements: tuple[str, ...]
+    strength_score: float
+    classical_source: str
+    description: str
+
+
+@dataclass(frozen=True)
+class JaiminiEventTimingWindow:
+    event_category: str  # "Career & Status", "Marriage & Relationship", "Wealth & Prosperity", "Health & Longevity"
+    dasha_system: str
+    dasha_sign: str
+    antardasha_sign: Optional[str]
+    start_date: date
+    end_date: date
+    probability_score: float
+    trigger_reasons: tuple[str, ...]
+    classical_sutra: str

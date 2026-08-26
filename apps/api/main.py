@@ -56,6 +56,7 @@ from apps.api.routers import knowledge_validation as knowledge_validation_router
 from apps.api.routers import knowledge_graph as knowledge_graph_router
 from apps.api.routers import kp as kp_router
 from apps.api.routers import muhurta as muhurta_router
+from apps.api.routers import mundane as mundane_router
 from apps.api.routers import plan as plan_router
 from apps.api.routers import prashna as prashna_router
 from apps.api.routers import report as report_router
@@ -471,6 +472,7 @@ def create_app() -> FastAPI:
     app.include_router(experiments_router.router, prefix="/api/v1")
     app.include_router(multi_dasha_confluence_router.router, prefix="/api/v1")
     app.include_router(synastry_router.router, prefix="/api/v1")
+    app.include_router(mundane_router.router, prefix="/api/v1")
     app.include_router(rectification_router.router, prefix="/api/v1")
     app.include_router(cohort_validation_router.router, prefix="/api/v1")
     app.include_router(evidence_intelligence_router.router, prefix="/api/v1")

@@ -28,6 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.config import get_settings
 from apps.api.dependencies import get_current_user_from_bearer, get_db_session, require_researcher
+from apps.api.services.quota_service import QuotaService
 from apps.api.domain.research import SnapshotCondition, SnapshotQuery
 from apps.api.domain.research_case import CaseImportResult, DiscoveredPattern
 from apps.api.domain.user import User, UserId
@@ -217,8 +218,59 @@ async def create_project(
     body: ResearchProjectCreateRequest,
     engine: ResearchEngine = Depends(_get_engine),
     _user: User = Depends(require_researcher),
+    session: AsyncSession = Depends(get_db_session),
 ) -> ResearchProjectResponse:
+    # ── Phase 4 quota pre-check ─────────────────────────────────────────────
+    # require_researcher already confirmed the plan has research_projects
+    # (zero-limit FREE plans are blocked there).  This is the usage-budget gate.
+    quota_svc = QuotaService(session)
+    quota_status = await quota_svc.check_quota(
+        user=_user,
+        feature_key="research_projects",
+        amount=1,
+    )
+    if not quota_status.allowed:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "code": "QUOTA_EXHAUSTED",
+                "message": (
+                    f"You have reached your monthly limit of "
+                    f"{quota_status.limit} research projects. "
+                    f"Limit resets in {quota_status.reset_in}s."
+                ),
+                "limit": quota_status.limit,
+                "current_usage": quota_status.current_usage,
+                "reset_in_seconds": quota_status.reset_in,
+            },
+        )
+
     project = await engine.create_project(user_id=_user.id.value, **body.model_dump())
+
+    # ── Phase 4 quota consumption ───────────────────────────────────────────────
+    consumed = await quota_svc.consume_quota(
+        user=_user,
+        feature_key="research_projects",
+        amount=1,
+    )
+    if not consumed:
+        logger.error(
+            "Quota race on research_project creation for user %s — "
+            "project %s created but quota exhausted concurrently",
+            _user.id.value,
+            project.id,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail={
+                "code": "QUOTA_EXHAUSTED_RACE",
+                "message": (
+                    "Monthly research-project limit was reached by a "
+                    "concurrent request. Please retry next month."
+                ),
+            },
+        )
+
     return _project_response(project)
 
 

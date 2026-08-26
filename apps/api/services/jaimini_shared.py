@@ -65,12 +65,30 @@ def is_kendra(from_rashi: str, to_rashi: str) -> bool:
     return house_count(from_rashi, to_rashi) in (1, 4, 7, 10)
 
 
+def is_trikona(from_rashi: str, to_rashi: str) -> bool:
+    """Whether to_rashi is a Trikona (1st/5th/9th) counted inclusively from from_rashi."""
+    return house_count(from_rashi, to_rashi) in (1, 5, 9)
+
+
+def is_movable(rashi: str) -> bool:
+    return rashi.lower() in _CHARA_RASHIS
+
+
+def is_fixed(rashi: str) -> bool:
+    return rashi.lower() in _STHIRA_RASHIS
+
+
+def is_dual(rashi: str) -> bool:
+    return rashi.lower() in _DVISVABHAVA_RASHIS
+
+
 def sign_nature(rashi: str) -> SignNature:
-    if rashi in _CHARA_RASHIS:
+    r = rashi.lower()
+    if r in _CHARA_RASHIS:
         return "chara"
-    if rashi in _STHIRA_RASHIS:
+    if r in _STHIRA_RASHIS:
         return "sthira"
-    if rashi in _DVISVABHAVA_RASHIS:
+    if r in _DVISVABHAVA_RASHIS:
         return "dvisvabhava"
     raise ValueError(f"Unrecognized rashi: {rashi!r}")
 
