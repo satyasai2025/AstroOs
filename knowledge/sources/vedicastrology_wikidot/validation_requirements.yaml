@@ -20,10 +20,34 @@ requirements:
     source_url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
     suggested_benchmark_category: GENERAL_METHODOLOGY
     status: NOT_YET_BENCHMARKED
+    # This claim has TWO separable parts with DIFFERENT evidence status.
+    textual_status:
+      scale_values: VERIFIED_EXPLICIT
+      precedence_over_shadbala: UNVERIFIED
+    primary_text_refs:
+      - PTV-BPHS-CH28-V7-9   # see primary_text_verification.yaml
     notes: >
-      No existing PlanetBenchmark/HouseBenchmark/VargaBenchmark category in
-      apps/api/domain/benchmark.py directly covers dignity-scoring precedence rules;
-      flagged as GENERAL_METHODOLOGY pending human decision on taxonomy extension.
+      CORRECTION (primary-text pass): the 60-45-30-22-15-8-4-2-0 values were
+      previously rated NOT_SUPPORTED on the basis of secondary-source search
+      alone. That rating was WRONG. The values are explicit in BPHS Ch. 28
+      vv. 7-9 ("ISHTA KASHTA SAPTAVARGAJA PHALA"), R. Santhanam translation
+      pp. 230-231. See primary_text_verification.yaml / PTV-BPHS-CH28-V7-9.
+
+      Three things remain unverified and keep this requirement open:
+        1. The "base-2 logarithmic" characterisation is the source's own
+           interpretation; BPHS presents a plain table with no such wording.
+        2. The verse table is DIGNITY-based (Saptavargaja), distinct from the
+           astronomical Ishta/Kashta of Ch. 28 v. 6 — conflating them is a
+           live risk in this source's framing.
+        3. The PRECEDENCE claim (Shadbala only as tiebreaker) has no verse
+           support found at all, and is the empirically testable part. It
+           remains the actual subject of this benchmark requirement, and is
+           the open half of CONFLICT-WIKIDOT-002.
+
+      Benchmark taxonomy note (unchanged): no existing PlanetBenchmark /
+      HouseBenchmark / VargaBenchmark category in apps/api/domain/benchmark.py
+      covers dignity-scoring precedence rules; GENERAL_METHODOLOGY is an
+      explicit fallback pending a human decision on extending the taxonomy.
 
   - requirement_id: VR-WIKIDOT-DAC-01
     claim: >

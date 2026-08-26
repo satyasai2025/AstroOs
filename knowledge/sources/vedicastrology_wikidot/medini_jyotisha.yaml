@@ -1,0 +1,224 @@
+# knowledge/sources/vedicastrology_wikidot/medini_jyotisha.yaml
+#
+# Extracted knowledge items from
+# http://vedicastrology.wikidot.com/raaj-jyotisha
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+#
+# PHASE 2 GAP CLOSURE. _source.yaml previously listed "Medini Jyotisha" under
+# pages_skipped ("candidate raaj-jyotisha exists but was not fetched due to
+# scope/time budget"). The page was fetched and is real: 74,665 characters,
+# written entirely in Hindi/Devanagari.
+#
+# ── SCOPE DECISION: only part of this page was ingested ──────────────────────
+# The page is roughly two things bolted together:
+#   (a) Medini/mundane astrology METHODOLOGY — chakra levels, Divya-varsha as a
+#       long-period unit, how mundane charts are cast. This IS in scope and is
+#       extracted below.
+#   (b) A long applied section using that methodology to narrate world history
+#       and Kaliyuga period-predictions (Persia's fall, Tarain, Panipat, Plassey,
+#       Waterloo, the World Wars), plus polemical material — a critique of
+#       "Macaulayite" historiography, a dismissive definition of the European
+#       "nation" concept, and attacks on "Darwinist so-called Hindus".
+#
+# (b) was deliberately NOT ingested. It is historical-political assertion rather
+# than astrological technique, it is not testable by any AstroOS benchmark, and
+# ingesting it would put contested ethno-political claims into a corpus that
+# feeds rule extraction and AI explanation. Excluding it is a scope judgement,
+# not a truth judgement — the material remains on the source page.
+#
+# Note the source's own framing is polemical throughout; the items below are
+# recorded as WHAT THE SOURCE CLAIMS, at UNVERIFIED, per the standing rule that
+# this source is preserved-not-endorsed.
+
+page_title: "Raaj Jyotisha (Medini Jyotisha)"
+page_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+language: "Hindi (Devanagari)"
+technique_mapping:
+  best_fit_technique_key: medini_jyotisha
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
+  note: >
+    Mundane astrology. AstroOS has apps/api/domain/mundane.py and
+    routers/mundane.py (added by concurrent work on 2026-08-26); whether this
+    source's method matches that implementation has NOT been assessed.
+
+    Mapping APPLIED 2026-08-26: a `medini_jyotisha` TechniqueModel row exists
+    (provenance=UNTESTED, status=research) with this page attached via
+    TechniqueSourceModel (source_type="notes"). That attachment is
+    organisational only — all 7 items below remain UNVERIFIED / DOCUMENTED.
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "राजज्योतिष के विभाग (Divisions of Raj-Jyotisha)"
+    title: "Medini Jyotisha operates at six nested chakra levels"
+    claim: >
+      Medini Jyotisha (mundane astrology), described as the principal branch of
+      Raj-Jyotisha, studies natural and man-made events of the earth across six
+      nested levels: Prithvi-chakra (also called Padma-chakra, whole earth),
+      Desha-chakra (country), Pradesha-chakra (janapada/province),
+      Mandala-chakra (district), Grama/Nagara-chakra (village or city), and
+      Grihya/Kshetra-chakra (household or field).
+    item_type: FACT_DEFINITION
+    referenced_classical_source: null
+    related_concepts: ["Medini Jyotisha", "Mundane astrology", "Desha-chakra", "Prithvi-chakra"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "राजज्योतिष के विभाग (Divisions of Raj-Jyotisha)"
+    title: "Sthapana-chakra: a foundation-moment chart, distinct from the country's own chart"
+    claim: >
+      The second branch of Raj-Jyotisha is Sthapana-chakra — a chart cast for the
+      founding moment of a village, city or state, or for a ruler's/leader's
+      assumption of office. The page gives independent India's 15 August 1947
+      chart as an example and asserts it is DISTINCT from India's Desha-chakra:
+      the 1947 chart is said to show the fortunes of the group to whom power was
+      transferred, not of the country as a whole.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: null
+    related_concepts: ["Sthapana-chakra", "Desha-chakra", "foundation chart"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "दीर्घकालिक फलादेश का साधन - दिव्यवर्ष (Divya-varsha)"
+    title: "Divya-varsha = 360 solar years, used as the unit for long-period mundane charts"
+    claim: >
+      Per the siddhanta texts and Puranas, one Divya-varsha ("divine year", a
+      year of the devas) equals 360 solar years. The page claims that just as
+      mundane charts are cast at Meshadi (nirayana Sun entering Aries) for the
+      solar year, charts are likewise cast for the entry of a Divya-varsha and
+      Divya-masa — and that this tradition has been forgotten. It cites the Gita's
+      description of Uttarayana as the devas' day and Dakshinayana as their night
+      as being the day and night of this same Divya-varsha.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: "Siddhanta texts and Puranas (unnamed); Bhagavad Gita (Uttarayana/Dakshinayana)"
+    related_concepts: ["Divya-varsha", "Meshadi", "Uttarayana", "Dakshinayana"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "राजज्योतिष के विभाग (Divisions of Raj-Jyotisha)"
+    title: "Natal and national charts use identical mathematics and judgement method"
+    claim: >
+      The page asserts that individual horoscopes and national charts are built
+      from the same ganita (mathematics) and the same phalita (judgement) method,
+      both based on Parashara's Hora Shastra, while differing in several important
+      respects that the page does not fully enumerate in this section.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: "BPHS (Parashara's Hora Shastra), unspecified"
+    related_concepts: ["Desha-chakra", "natal chart", "ganita", "phalita"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "मेदिनीचक्र बनाने की विधि (Method of constructing Medini-chakra)"
+    title: "Mundane ingress charts have exact time, unlike natal charts"
+    claim: >
+      The page argues a methodological advantage for mundane work: an individual
+      chart always carries some birth-time uncertainty, whereas national and
+      international charts are cast for a year/month INGRESS moment, whose time is
+      exactly known. It concludes that astrological rules can therefore be studied
+      in mundane charts without the doubt introduced by birth-time error.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: null
+    related_concepts: ["ingress chart", "birth-time rectification", "Medini-chakra"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+    cross_reference_note: >
+      Directly relevant to VR-WIKIDOT-DAC-01. The same site elsewhere argues DAC
+      is impractical BECAUSE of extreme birth-time sensitivity; here it argues
+      mundane charts escape that problem entirely. The two claims are consistent
+      with each other and, taken together, suggest the source treats birth-time
+      precision as the central limiting factor on predictive method. Not verified.
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "राजज्योतिष के विभाग (Divisions of Raj-Jyotisha)"
+    title: "Claim that two-thirds of Parashara's Hora Shastra is lost and surviving editions are corrupted"
+    claim: >
+      The page claims two-thirds of Parashara's Hora Shastra is lost; that the
+      surviving third was published by Devachandra Jha and Ganeshdatta Pathak; and
+      that Sitaram Jha published a corrupted edition after making arbitrary changes
+      to the manuscript. It further alleges this corrupted edition is gaining
+      universal acceptance because South Indian astrologers dominate the internet,
+      and that the corruption specifically involved removing Bhava-Chalita — which
+      it says has little effect on charts in South India but causes increasingly
+      wrong charts at latitudes far from the equator.
+    item_type: OPINION_ASSERTION
+    referenced_classical_source: "BPHS manuscript transmission (Devachandra Jha, Ganeshdatta Pathak, Sitaram Jha editions)"
+    related_concepts: ["BPHS recension", "Bhava-Chalita", "manuscript transmission"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+    handling_note: >
+      Classified OPINION_ASSERTION, not FACT_DEFINITION, and recorded verbatim-in-
+      substance without endorsement. It is an unverified allegation of deliberate
+      textual corruption against a NAMED individual, and it carries a regional
+      attribution about South Indian astrologers that this project takes no
+      position on. It is retained only because it is the source's own stated
+      rationale for CONFLICT-WIKIDOT-001 (Bhava-Chalita vs whole-sign) — knowing
+      WHY the source holds that position is useful provenance. Nothing here
+      resolves that conflict, which remains ACTIVE_DISPUTE.
+      Related: primary_text_verification.yaml notes an independent critique of the
+      Santhanam BPHS recension by this same author, so recension disputes around
+      BPHS are a real scholarly area — but this specific allegation is unverified.
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    page_title: "Raaj Jyotisha"
+    section: "मेदिनीचक्र बनाने की विधि (Method of constructing Medini-chakra)"
+    title: "Varahamihira's Brihat Samhita is cited as precedent for map-based mundane chakras"
+    claim: >
+      The page claims that well-known Kaliyuga astrologers including Varahamihira
+      discussed map-based mundane chakras in detail in works such as Brihat
+      Samhita, and complains that no modernist astrologer active on the internet
+      has acknowledged the need to study Medini chakras on a map.
+    item_type: UNVERIFIED_CLAIM
+    referenced_classical_source: "Brihat Samhita (Varahamihira) — no chapter or verse given"
+    related_concepts: ["Brihat Samhita", "Medini-chakra", "map-based astrology"]
+    technique_framework: Parashari
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+    requires_validation: true
+    suggested_validation_approach: >
+      Checkable against a primary text: Brihat Samhita is available in
+      transcription. Confirming whether it describes map-projected mundane chakras
+      would settle this claim. Not attempted in this pass — no chapter/verse was
+      given to target, and the full-text search effort is comparable to the BPHS
+      Ch. 28 pass recorded in primary_text_verification.yaml.
+
+# ── Deliberately NOT extracted from this page ────────────────────────────────
+excluded_content:
+  - section: "विश्व-इतिहास का दीर्घकालीन सारांश / कलियुग फलादेश (world-history and Kaliyuga period predictions)"
+    reason: >
+      Applied historical-political narration and prediction, not astrological
+      methodology. Not benchmarkable by any existing AstroOS category, and
+      ingesting it would place contested historical-political claims into a corpus
+      that feeds rule extraction and AI explanation.
+  - section: "मेगास्थनीज की इण्डिका और मैकॉलेवादी इतिहास (Megasthenes' Indica and Macaulayite historiography)"
+    reason: >
+      Historiographical polemic. Outside the scope of astrological technique
+      extraction entirely.
+  - section: "परिभाषा (definition of Rashtra vs the European 'nation')"
+    reason: >
+      Contains an explicitly disparaging characterisation of the European concept
+      of nationhood. Not astrological content; no extraction value that would
+      justify carrying it into the knowledge base.

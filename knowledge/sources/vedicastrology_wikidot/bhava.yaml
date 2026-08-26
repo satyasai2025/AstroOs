@@ -7,7 +7,10 @@
 page_title: "Origin And Meaning Of Horoscopic Houses"
 page_url: "http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses"
 technique_mapping:
-  best_fit_technique_key: null
+  best_fit_technique_key: bhava_analysis
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
   note: >
     No existing TechniqueModel.technique_key found for "bhava-chalita house computation"
     via grep of apps/api/models/technique.py usage; this page's core claim (that

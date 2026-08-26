@@ -6,7 +6,10 @@
 page_title: "Divisional Charts"
 page_url: "http://vedicastrology.wikidot.com/divisional-charts"
 technique_mapping:
-  best_fit_technique_key: null
+  best_fit_technique_key: shodasha_varga
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
   note: >
     Maps conceptually to "Shodasha Varga" (divisional-chart) methodology. No existing
     TechniqueModel.technique_key found via grep of apps/api/models/technique.py usage

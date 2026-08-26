@@ -8,7 +8,10 @@
 page_title: "Ashtaka Varga / Sudarshana Chakra"
 page_url: "http://vedicastrology.wikidot.com/ashtaka-varga ; http://vedicastrology.wikidot.com/sudarshana-chakra"
 technique_mapping:
-  best_fit_technique_key: null
+  best_fit_technique_key: ashtakavarga
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
   note: >
     Maps conceptually to "Ashtakavarga" and "Sudarshana Chakra" techniques. No existing
     TechniqueModel.technique_key found via grep of apps/api/models/technique.py usage

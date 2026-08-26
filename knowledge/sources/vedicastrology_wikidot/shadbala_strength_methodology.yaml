@@ -13,7 +13,10 @@
 page_title: "Main Strength Versus Shadbala"
 page_url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
 technique_mapping:
-  best_fit_technique_key: null
+  best_fit_technique_key: shadbala
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
   note: >
     No existing TechniqueModel.technique_key found via grep for "shadbala" or
     "ishta-kashta" in apps/api/models/technique.py or its repository/tests — the

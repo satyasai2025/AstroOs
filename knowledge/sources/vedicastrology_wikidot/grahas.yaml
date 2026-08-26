@@ -6,7 +6,10 @@
 page_title: "Planetary Traits 1"
 page_url: "http://vedicastrology.wikidot.com/planetary-traits-1"
 technique_mapping:
-  best_fit_technique_key: null
+  best_fit_technique_key: graha_karakatva
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
   note: >
     General graha-definitional content overlapping with the existing
     knowledge/catalogues/grahas/*.yaml catalogue (e.g. surya.yaml). No grep match for

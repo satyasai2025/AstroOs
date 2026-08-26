@@ -91,8 +91,22 @@ pages_skipped:
     reason: "No dedicated Drishti page found under an obvious slug; aspects are referenced in passing across multiple pages (e.g. origin-and-meaning-of-horoscopic-houses) but not extracted as a standalone page in this pass."
   - label: "Varshaphala"
     reason: "No dedicated methodology page found; only annual-chart DATA pages exist (e.g. divya-varsha-phala-1579-1939-ad), which are tabular datasets, not methodology articles, and were skipped as out of scope for methodology extraction."
+  # NOTE: "Medini Jyotisha" was resolved on 2026-08-26 and moved out of this
+  # skipped list — see pages_fetched_later below and medini_jyotisha.yaml.
+
+pages_fetched_later:
   - label: "Medini Jyotisha"
-    reason: "No page under an obvious 'medini' slug was fetched in this pass (candidate raaj-jyotisha exists but was not fetched due to scope/time budget); noted as a gap for future extension."
+    slug: "raaj-jyotisha"
+    url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    fetched: 2026-08-26
+    fixture: medini_jyotisha.yaml
+    note: >
+      Page exists and is substantial (74,665 chars, Hindi/Devanagari). Only the
+      mundane-astrology METHODOLOGY portion was extracted (7 items). The applied
+      world-history / Kaliyuga-prediction sections and the historiographical and
+      ethno-political polemic were deliberately excluded as out of scope — see
+      medini_jyotisha.yaml `excluded_content` for the specific sections and
+      reasons. This is a scope decision, not a truth judgement.
 
 # === HISTORY ===
 
@@ -100,4 +114,13 @@ history:
   - version: 1.0
     date: 2026-08-26
     change: "Initial source registration for VedicAstrology.Wikidot integration into the governed knowledge-ingestion pipeline."
+    author: "AstroOS Knowledge Integration (AI-assisted, session rkmvedant@gmail.com)"
+  - version: 1.1
+    date: 2026-08-26
+    change: >
+      Phase 2 gap closure. Fetched the previously-skipped Medini Jyotisha page
+      (raaj-jyotisha) and added medini_jyotisha.yaml with 7 methodology items,
+      all UNVERIFIED / DOCUMENTED. Rashi, Nakshatra, Drishti and Varshaphala
+      remain skipped — re-confirmed that no dedicated methodology pages exist for
+      them on this site, so there is nothing further to fetch.
     author: "AstroOS Knowledge Integration (AI-assisted, session rkmvedant@gmail.com)"

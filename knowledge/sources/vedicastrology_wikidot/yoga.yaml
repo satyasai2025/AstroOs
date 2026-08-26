@@ -6,7 +6,10 @@
 page_title: "Vipareet Raja Yoga"
 page_url: "http://vedicastrology.wikidot.com/vipareet-raja-yoga"
 technique_mapping:
-  best_fit_technique_key: null
+  best_fit_technique_key: yoga_analysis
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
   note: >
     Maps conceptually to Yoga (combination) analysis, overlapping with existing
     knowledge/catalogues/yogas/*.yaml catalogue entries. No existing

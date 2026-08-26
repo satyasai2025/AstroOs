@@ -1,0 +1,206 @@
+# knowledge/sources/vedicastrology_wikidot/technique_mapping.yaml
+#
+# PHASE 5 — TECHNIQUE MAPPING for the VedicAstrology.Wikidot corpus.
+#
+# Maps each ingested page to the technique it belongs to, using the EXISTING
+# technique infrastructure:
+#   - apps/api/domain/technique.py      -> TechniqueDefinition (technique_id = stable snake_case slug)
+#   - apps/api/models/technique.py      -> TechniqueModel (technique_key), TechniqueSourceModel
+#   - apps/api/domain/knowledge_reliability.py -> TechniqueFramework (closed enum)
+#
+# NO new technique engine, registry, or parallel taxonomy is introduced here.
+#
+# ── State of the technique registry ──────────────────────────────────────────
+# When this mapping was first written, `techniques` and `technique_sources` were
+# BOTH EMPTY (0 rows) and no technique_key was seeded anywhere in the codebase or
+# migrations — so the mappings were recorded as PROPOSALS.
+#
+# They have since been APPLIED (2026-08-26) by
+# apps/api/scripts/seed_wikidot_techniques.py, which reads this file. See the
+# `registry_state` block below for what was created and under what provenance.
+#
+# `framework` values are constrained to the TechniqueFramework enum. Every page
+# in this corpus is Parashari-tradition material; none is Jaimini/KP/Tajika.
+#
+# IMPORTANT: mapping a page to a technique is an ORGANISATIONAL act. It does not
+# validate, endorse, or promote any claim on that page. All items remain
+# UNVERIFIED / DOCUMENTED per the knowledge-reliability lifecycle.
+
+registry_state:
+  status: APPLIED
+  applied_at: "2026-08-26"
+  applied_by: apps/api/scripts/seed_wikidot_techniques.py
+  techniques_table_rows: 8
+  technique_sources_table_rows: 8
+  note: >
+    The mappings below are no longer proposals — they have been applied to the
+    database. Before this, both tables were EMPTY (0 rows); no technique_key was
+    seeded anywhere in the codebase or migrations, so there was nothing for a
+    source to attach to.
+
+    Every technique row was created with provenance=UNTESTED and
+    status="research", NOT source_derived/validated: this corpus is
+    INFORMAL_TRADITION / UNREVIEWED, and marking these SOURCE_DERIVED would
+    falsely imply a classical text states them. technique_sources rows use
+    source_type="notes" (a community wiki is not a book or classical_text).
+
+    Attaching a source to a technique changed NO chunk's verification_status or
+    lifecycle_state — all 27 Wikidot chunks remain UNVERIFIED / DOCUMENTED, and
+    0 are CANONICAL or VALIDATED. Verified post-seed.
+
+    The seed script is idempotent: re-running skips existing technique_keys and
+    already-attached source references (confirmed by a second run returning
+    0 created / 0 attached).
+
+mappings:
+
+  - page_file: overview.yaml
+    page_title: "Overview"
+    framework: Parashari
+    proposed_technique_key: null
+    technique_exists: null   # N/A — no technique was created or attached for this page
+    rationale: >
+      Historical/definitional essay on Jyotisha as a discipline (Siddhanta,
+      Samhita, Hora branches). Not a predictive technique — deliberately left
+      unmapped rather than forced into one. Its items are FACT_DEFINITION type.
+      Confirmed post-seed: this page has NO technique_sources row, by design.
+
+  - page_file: grahas.yaml
+    page_title: "Planetary Traits 1"
+    framework: Parashari
+    proposed_technique_key: graha_karakatva
+    technique_exists: true   # created 2026-08-26
+    overlaps_existing_catalogue:
+      - knowledge/catalogues/grahas/*.yaml
+      - knowledge/catalogues/karakatvas/graha-karakatvas.yaml
+    rationale: >
+      Graha nature/classification and temperament attribution. Overlaps the
+      existing graha + karakatva catalogues, which are the canonical home for
+      this material; the Wikidot page is a secondary commentary on it.
+    caution: >
+      Contains RULE chunk CHK-PLANETARYTRAITS1-volatility-vs-stability-of-
+      temperament-0002 (volatile vs stable temperament by Lagna association)
+      with NO classical citation on the page.
+
+  - page_file: bhava.yaml
+    page_title: "Origin And Meaning Of Horoscopic Houses"
+    framework: Parashari
+    proposed_technique_key: bhava_analysis
+    technique_exists: true   # created 2026-08-26
+    rationale: >
+      House signification and the house-computation question.
+    caution: >
+      This page is the source of CONFLICT-WIKIDOT-001 — it asserts Bhava-Chalita
+      is mandatory for all Bhava-phala, contradicting the whole-sign Rashi-Chakra
+      default that AstroOS actually implements (ephemeris_wrapper.py). Mapping
+      this page to bhava_analysis does NOT settle that dispute; the conflict
+      record stays ACTIVE_DISPUTE.
+
+  - page_file: divisional_charts.yaml
+    page_title: "Divisional Charts"
+    framework: Parashari
+    proposed_technique_key: shodasha_varga
+    technique_exists: true   # created 2026-08-26
+    related_existing_code:
+      - apps/api/services/divisional_engine.py   # D2-D144 computation
+      - apps/api/services/vimsopaka_engine.py    # Vimsopaka Bala across varga schemes
+    rationale: >
+      Divisional-chart methodology, including the claimed Vimshopaka-weighted
+      D1-vs-divisional override rule (chunk CHK-DIVISIONALCHARTS-divisionals-
+      versus-d-1-0001).
+    caution: >
+      The override rule has no verse citation and one identifiable dissenting
+      position in the secondary literature. The underlying Vimsopaka Bala
+      calculation DOES already exist in AstroOS; the override precedence does not.
+
+  - page_file: shadbala_strength_methodology.yaml
+    page_title: "Main Strength Versus Shadbala"
+    framework: Parashari
+    proposed_technique_key: shadbala
+    technique_exists: true   # created 2026-08-26
+    related_existing_code:
+      - apps/api/services/shadbala_engine.py
+      - apps/api/services/shadbala/ishta_kashta_bala.py
+      - apps/api/services/shadbala/saravali_summary.py
+    rationale: >
+      Planetary-strength methodology: Ishta-Kashta vs Shadbala precedence.
+    caution: >
+      Source of CONFLICT-WIKIDOT-002 (precedence, still UNVERIFIED) and of the
+      9-step scale claim (now VERIFIED as BPHS Ch. 28 vv. 7-9 — see
+      primary_text_verification.yaml / PTV-BPHS-CH28-V7-9). The BPHS Ch. 28 v. 6
+      verse found via this page's claim led to a real code fix in
+      saravali_summary.py.
+
+  - page_file: ashtakavarga_sudarshana_chakra.yaml
+    page_title: "Ashtaka Varga / Sudarshana Chakra"
+    framework: Parashari
+    proposed_technique_key: ashtakavarga
+    secondary_technique_key: sudarshana_chakra
+    technique_exists: true   # created 2026-08-26
+    related_existing_code:
+      - apps/api/services/sadhu_padhdhati_engine.py   # SC-based, but marriage-timing scoped only
+      - apps/api/services/multi_dasha_confluence_engine.py
+    rationale: >
+      Covers two distinct techniques on one page — Ashtakavarga and Sudarshana
+      Chakra — plus the DAC precedence claim. Listed with a secondary key rather
+      than inventing a merged technique.
+    caution: >
+      DAC (Dashaa Aarambha Chakra) has NO implementation in AstroOS and is
+      described by the source itself as impractical. See VR-WIKIDOT-DAC-01.
+
+  - page_file: yoga.yaml
+    page_title: "Vipareet Raja Yoga"
+    framework: Parashari
+    proposed_technique_key: yoga_analysis
+    technique_exists: true   # created 2026-08-26
+    overlaps_existing_catalogue:
+      - knowledge/catalogues/yogas/**/*.yaml
+    related_existing_code:
+      - apps/api/services/yogas/composite_yogas.py
+    rationale: >
+      Yoga (combination) detection. The existing yogas catalogue and yoga engine
+      are the canonical home; note neither currently implements Vipareeta Raja
+      Yoga in any form.
+    caution: >
+      Primary-text verification (see primary_text_verification.yaml) found:
+      rule 1 (malefic on 3rd/6th) NOT_SUPPORTED; rule 2 (debilitated Trika lord
+      aspecting Lagna) PARTIALLY_SUPPORTED via BPHS Ch. 39 v. 28; and the
+      Harsha/Sarala/Vimala triad attributed here to B.V. Raman is textually
+      Phaladeepika v. 57, NOT BPHS Ch. 36 as widely claimed.
+
+  - page_file: medini_jyotisha.yaml
+    page_title: "Raaj Jyotisha (Medini Jyotisha)"
+    framework: Parashari
+    proposed_technique_key: medini_jyotisha
+    technique_exists: true   # created 2026-08-26
+    related_existing_code:
+      - apps/api/domain/mundane.py     # added by concurrent work 2026-08-26
+      - apps/api/routers/mundane.py
+    rationale: >
+      Mundane astrology — the six nested chakra levels, Sthapana-chakra, and
+      Divya-varsha as a long-period unit. AstroOS gained mundane domain/router
+      modules on 2026-08-26; whether this source's method matches that
+      implementation has NOT been assessed.
+    caution: >
+      Only the methodology half of this page was ingested. Its applied
+      world-history/Kaliyuga predictions and its historiographical and
+      ethno-political polemic were excluded — see medini_jyotisha.yaml
+      `excluded_content`. One item is an OPINION_ASSERTION alleging deliberate
+      corruption of a BPHS manuscript by a named individual; it is retained only
+      as provenance for why this source rejects whole-sign houses
+      (CONFLICT-WIKIDOT-001), and is explicitly not endorsed.
+
+# ── What a future authorised step would do with this file ───────────────────
+next_step_when_authorised:
+  description: >
+    Seed the six proposed TechniqueModel rows (graha_karakatva, bhava_analysis,
+    shodasha_varga, shadbala, ashtakavarga + sudarshana_chakra, yoga_analysis),
+    then create one TechniqueSourceModel row per mapping above, with
+    source_type="user" (community wiki) or "notes", reference = the page URL,
+    and notes carrying the `caution` text.
+  constraints:
+    - Use the existing TechniqueRepository; do not add a parallel registry.
+    - provenance must be set so these are not mistaken for classical-derived
+      techniques; the SOURCE is INFORMAL_TRADITION / UNREVIEWED.
+    - Attaching a source to a technique must NOT change any item's
+      verification_status or lifecycle_state.
