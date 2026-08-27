@@ -65,7 +65,7 @@ class EventCategoryModel(AstroBase):
     source_doc_count: Mapped[Optional[int]] = mapped_column(
         Integer,
         nullable=True,
-        doc="Real usage-frequency count carried over from a bulk-seed source (e.g. Astro-Databank doc counts), if any.",
+        doc="Real usage-frequency count carried over from a bulk-seed source (e.g. category doc counts), if any.",
     )
 
     parent: Mapped[Optional["EventCategoryModel"]] = relationship(

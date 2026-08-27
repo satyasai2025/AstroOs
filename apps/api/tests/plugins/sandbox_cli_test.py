@@ -2,8 +2,11 @@ import pytest
 import asyncio
 from httpx import AsyncClient
 from fastapi import status
-from astroOS.api.main import app
-from astroOS.sdks.python.astroos.client import AstroOSClient
+from apps.api.main import app
+try:
+    from astroos.client import AstroOSClient
+except ImportError:
+    from packages.python.astroos.client import AstroOSClient
 
 @pytest.fixture
 async def plugin_client():

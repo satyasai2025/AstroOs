@@ -68,7 +68,7 @@ function isRealLifeEvent(name: string): boolean {
     return false;
   }
 
-  // Filter out non-event demographic/tag noise from AstroDatabank
+  // Filter out non-event demographic/tag noise from research datasets
   if (lower.includes("population")) return false;
   if (lower.includes("step group")) return false;
   if (lower.includes("minutes of fame")) return false;
@@ -120,7 +120,15 @@ const BASE_EVENT_TYPES: string[] = [
   "Relocation Abroad",
   "Childbirth",
   "Pregnancy",
+  "Death, Cause unspecified",
+  "Death by Disease",
+  "Death by Heart Attack",
+  "Death by Accident",
+  "Death by Suicide",
   "Death by Homicide",
+  "Death of Mate",
+  "Death by Execution",
+  "Death by War or Terrorism",
   "Death of Parent",
   "Death of Mother",
   "Death of Father",

@@ -11,7 +11,7 @@
         "latitude": 45.7,
         "longitude": -0.3333,
         "timezone": "UTC",
-        "source": "Astro-Databank import"
+        "source": "Research Dataset import"
       },
       "ayanamsa": "lahiri",
       "house_system": "P",
@@ -21,7 +21,7 @@
           "event_date": "1494-09-21",
           "category": "Notable / Famous / Royal family; Traits / Personality / Ambitious; Lifestyle / Financial / Wealthy",
           "verified": true,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death, Cause unspecified",
           "tags": [
             "Notable / Famous / Royal family",
@@ -30,7 +30,7 @@
           ]
         }
       ],
-      "source_batch": "astrodatabank-import"
+      "source_batch": "research-batch-import"
     },
     {
       "person": {
@@ -43,7 +43,7 @@
         "latitude": 45.1667,
         "longitude": 9.1667,
         "timezone": "UTC",
-        "source": "Astro-Databank import"
+        "source": "Research Dataset import"
       },
       "ayanamsa": "lahiri",
       "house_system": "P",
@@ -53,7 +53,7 @@
           "event_date": "1501-10-04",
           "category": "Family / Parenting / Kids -Traumatic event; Passions / Criminal Perpetrator / Civil/ Political; Voca",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death, Cause unspecified",
           "tags": [
             "Family / Parenting / Kids -Traumatic event",
@@ -70,7 +70,7 @@
           "event_date": "1501-10-04",
           "category": "Family / Parenting / Kids -Traumatic event; Passions / Criminal Perpetrator / Civil/ Political; Voca",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death of Child",
           "tags": [
             "Family / Parenting / Kids -Traumatic event",
@@ -83,7 +83,7 @@
           ]
         }
       ],
-      "source_batch": "astrodatabank-import"
+      "source_batch": "research-batch-import"
     },
     {
       "person": {
@@ -96,7 +96,7 @@
         "latitude": 43.7667,
         "longitude": 11.25,
         "timezone": "UTC",
-        "source": "Astro-Databank import"
+        "source": "Research Dataset import"
       },
       "ayanamsa": "lahiri",
       "house_system": "P",
@@ -106,7 +106,7 @@
           "event_date": "1519-04-23",
           "category": "Notable / Famous / Royal family; Family / Relationship / Mate - Noted; Family / Relationship / Widow",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death by Disease",
           "tags": [
             "Notable / Famous / Royal family",
@@ -122,7 +122,7 @@
           "event_date": "1519-04-23",
           "category": "Notable / Famous / Royal family; Family / Relationship / Mate - Noted; Family / Relationship / Widow",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Relationship / Marriage",
           "tags": [
             "Notable / Famous / Royal family",
@@ -138,7 +138,7 @@
           "event_date": "1519-04-23",
           "category": "Notable / Famous / Royal family; Family / Relationship / Mate - Noted; Family / Relationship / Widow",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Work / Gain social status",
           "tags": [
             "Notable / Famous / Royal family",
@@ -150,7 +150,7 @@
           ]
         }
       ],
-      "source_batch": "astrodatabank-import"
+      "source_batch": "research-batch-import"
     },
     {
       "person": {
@@ -163,7 +163,7 @@
         "latitude": 51.5,
         "longitude": -0.1667,
         "timezone": "UTC",
-        "source": "Astro-Databank import"
+        "source": "Research Dataset import"
       },
       "ayanamsa": "lahiri",
       "house_system": "P",
@@ -173,7 +173,7 @@
           "event_date": "1529-07-30",
           "category": "Family / Childhood / Advantaged; Family / Parenting / Kids - Noted",
           "verified": true,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death, Cause unspecified",
           "tags": [
             "Family / Childhood / Advantaged",
@@ -181,7 +181,7 @@
           ]
         }
       ],
-      "source_batch": "astrodatabank-import"
+      "source_batch": "research-batch-import"
     },
     {
       "person": {
@@ -194,7 +194,7 @@
         "latitude": 45.4667,
         "longitude": 9.2,
         "timezone": "UTC",
-        "source": "Astro-Databank import"
+        "source": "Research Dataset import"
       },
       "ayanamsa": "lahiri",
       "house_system": "P",
@@ -204,7 +204,7 @@
           "event_date": "1534-05-24",
           "category": "Passions / Criminal Perpetrator / Homicide single; Passions / Criminal Perpetrator / Executed; Perso",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death by Execution",
           "tags": [
             "Passions / Criminal Perpetrator / Homicide single",
@@ -213,7 +213,7 @@
           ]
         }
       ],
-      "source_batch": "astrodatabank-import"
+      "source_batch": "research-batch-import"
     },
     {
       "person": {
@@ -226,7 +226,7 @@
         "latitude": 55.9833,
         "longitude": -3.6167,
         "timezone": "UTC",
-        "source": "Astro-Databank import"
+        "source": "Research Dataset import"
       },
       "ayanamsa": "lahiri",
       "house_system": "P",
@@ -236,7 +236,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death by Execution",
           "tags": [
             "Notable / Famous / Royal family",
@@ -252,7 +252,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death of Child",
           "tags": [
             "Notable / Famous / Royal family",
@@ -268,7 +268,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death of Mate",
           "tags": [
             "Notable / Famous / Royal family",
@@ -284,7 +284,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death of Mother",
           "tags": [
             "Notable / Famous / Royal family",
@@ -300,7 +300,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Death / Death of Father",
           "tags": [
             "Notable / Famous / Royal family",
@@ -316,7 +316,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Family / Change in family responsibilities",
           "tags": [
             "Notable / Famous / Royal family",
@@ -332,7 +332,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Relationship / Marriage",
           "tags": [
             "Notable / Famous / Royal family",
@@ -348,7 +348,7 @@
           "event_date": "1542-12-18",
           "category": "Notable / Famous / Royal family; Family / Parenting / Birthing - Miscarriages; Family / Parenting / ",
           "verified": false,
-          "source": "Astro-Databank import",
+          "source": "Research Dataset import",
           "description": "Social / Return Home",
           "tags": [
             "Notable / Famous / Royal family",
@@ -360,7 +360,7 @@
           ]
         }
       ],
-      "source_batch": "astrodatabank-import"
+      "source_batch": "research-batch-import"
     }
   ],
   "generate_ids": true

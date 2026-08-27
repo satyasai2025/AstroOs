@@ -2,7 +2,7 @@
 AstroOS — Event Category Tree Bulk Seed (Research Module)
 
 One-time (idempotent) bulk-seed of the event_categories tree from a
-pre-extracted ID->{name, docs} map (e.g. the Astro-Databank category
+pre-extracted ID->{name, docs} map (e.g. the research category
 taxonomy), with an optional top-level rename map applied first.
 
 Idempotent: reuses EventCategoryService.resolve_or_create_category_path,

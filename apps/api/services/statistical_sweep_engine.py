@@ -527,7 +527,7 @@ class StatisticalSweepEngine:
             },
             {
                 "cohort_id": "CENTENARIAN_LONGEVITY_BENCHMARK",
-                "title": "Astro-Databank Centenarian Longevity Benchmark (N=100)",
+                "title": "Centenarian Longevity Benchmark (N=100)",
                 "description": "Validated centenarian & octogenarian records testing Saturn in Upachaya/8th house.",
                 "sample_size": 100,
                 "rodden_rating": "AA",
