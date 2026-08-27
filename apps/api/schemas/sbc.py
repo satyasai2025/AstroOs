@@ -5,10 +5,12 @@ AstroOS — Sarvatobhadra Chakra (SBC) API Schemas
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Annotated, Any, Optional
+from typing import Annotated, Any, Literal, Optional
 
 
 from pydantic import BaseModel, Field, field_validator
+
+from apps.api.schemas.ai import DisclosedEventInput
 
 
 class SBCReportRequest(BaseModel):
@@ -186,6 +188,43 @@ class SBCScanRequest(BaseModel):
         Field(default=1, ge=1, le=30, description="Days between samples. Daily by default; see SBCScanEngine's granularity caveat."),
     ] = 1
 
+    subject_status: Annotated[
+        Literal["living", "deceased_historical"],
+        Field(
+            default="living",
+            description=(
+                "Who the scan is about. 'deceased_historical' selects research/backtesting "
+                "mode against a documented historical figure."
+            ),
+        ),
+    ] = "living"
+    disclosed_events: Annotated[
+        list[DisclosedEventInput],
+        Field(
+            default_factory=list,
+            description=(
+                "Life events the native reported themselves. Windows overlapping one of these "
+                "in a matching life domain are reported as confirmed rather than inferred."
+            ),
+        ),
+    ]
+    now_utc: Annotated[
+        Optional[datetime],
+        Field(
+            default=None,
+            description="Reference 'now' for past/present/future classification. Defaults to current UTC.",
+        ),
+    ] = None
+    window_gap_days: Annotated[
+        float,
+        Field(
+            default=3.0,
+            ge=0.0,
+            le=365.0,
+            description="Hits no further apart than this are grouped into one reported window.",
+        ),
+    ] = 3.0
+
     @field_validator("start_utc", "end_utc")
     @classmethod
     def _require_tz_scan(cls, v: datetime) -> datetime:
@@ -193,10 +232,61 @@ class SBCScanRequest(BaseModel):
             raise ValueError("start_utc/end_utc must include a timezone offset")
         return v
 
+    @field_validator("now_utc")
+    @classmethod
+    def _require_tz_now(cls, v: Optional[datetime]) -> Optional[datetime]:
+        if v is not None and v.tzinfo is None:
+            return v.replace(tzinfo=timezone.utc)
+        return v
+
+
+class SBCStancePolicyResponse(BaseModel):
+    """What an output about this window is permitted to say."""
+
+    direction: str  # "past" | "present" | "future"
+    voice: str  # "retrodictive" | "advisory" | "prospective"
+    may_name_specific_event: bool
+    requires_invitation_to_confirm: bool
+    requires_confidence_qualifier: bool = True
+    longevity_formula_allowed: bool = False
+    prohibited_categories: list[str] = Field(default_factory=list)
+    rationale: str = ""
+
+
+class SBCEventMatchResponse(BaseModel):
+    event_id: str
+    domain: str
+    description: str = ""
+    overlap_days: float
+    domain_matches: bool
+    matched_sangyas: list[str] = Field(default_factory=list)
+    is_confirmation: bool
+
 
 class SBCScanHitResponse(BaseModel):
     moment_utc: datetime
     vedha_result: SBCVedhaResultResponse
+    temporal_direction: str = "present"
+    tier: str = "none"
+    afflicted_sangyas: list[str] = Field(default_factory=list)
+    activated_sangyas: list[str] = Field(default_factory=list)
+    policy: Optional[SBCStancePolicyResponse] = None
+    event_matches: list[SBCEventMatchResponse] = Field(default_factory=list)
+
+
+class SBCScanWindowResponse(BaseModel):
+    """Consecutive hits collapsed into one contiguous period."""
+
+    start_utc: datetime
+    end_utc: datetime
+    duration_days: float
+    hit_count: int
+    temporal_direction: str
+    tier: str
+    afflicted_sangyas: list[str] = Field(default_factory=list)
+    policy: SBCStancePolicyResponse
+    event_matches: list[SBCEventMatchResponse] = Field(default_factory=list)
+    confirmed_by_disclosure: bool = False
 
 
 class SBCScanResponse(BaseModel):
@@ -205,4 +295,5 @@ class SBCScanResponse(BaseModel):
     end_utc: datetime
     step_days: int
     hits: list[SBCScanHitResponse]
+    windows: list[SBCScanWindowResponse] = Field(default_factory=list)
 

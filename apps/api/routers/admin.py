@@ -142,3 +142,84 @@ async def activate_user(
     activated = await engine.activate_user(user_id)
     if not activated:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found.")
+
+
+# ── Phase 13 Billing & Ops Console ───────────────────────────────────────────
+
+from apps.api.dependencies import get_db_session
+from apps.api.models.notification import EmailLogModel
+from apps.api.models.payment import PaymentModel, PaymentStatus
+from apps.api.models.subscription import SubscriptionModel
+from apps.api.schemas.payment import PaymentResponse
+from sqlalchemy import desc, func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+
+@router.get("/billing/payments", summary="Global payment transactions with GST tax audit")
+async def admin_list_payments(
+    limit: int = 50,
+    offset: int = 0,
+    db: AsyncSession = Depends(get_db_session),
+):
+    """List all global payment transactions with itemized base amount and GST tax fields."""
+    stmt = select(PaymentModel).order_by(desc(PaymentModel.created_at)).limit(limit).offset(offset)
+    res = await db.execute(stmt)
+    payments = list(res.scalars().all())
+
+    count_res = await db.execute(select(func.count(PaymentModel.id)))
+    total = count_res.scalar_one() or 0
+
+    return {
+        "items": [PaymentResponse.model_validate(p) for p in payments],
+        "total": total,
+    }
+
+
+@router.get("/billing/subscriptions", summary="Global subscription lifecycle overview")
+async def admin_list_subscriptions(
+    limit: int = 50,
+    offset: int = 0,
+    db: AsyncSession = Depends(get_db_session),
+):
+    """List all user subscriptions with active status, plan code, and grace periods."""
+    stmt = select(SubscriptionModel).order_by(desc(SubscriptionModel.created_at)).limit(limit).offset(offset)
+    res = await db.execute(stmt)
+    subs = list(res.scalars().all())
+
+    count_res = await db.execute(select(func.count(SubscriptionModel.id)))
+    total = count_res.scalar_one() or 0
+
+    return {
+        "items": [
+            {
+                "id": str(s.id),
+                "user_id": str(s.user_id),
+                "plan_id": str(s.plan_id),
+                "status": s.status,
+                "billing_cycle": s.billing_cycle,
+                "current_period_start": s.current_period_start.isoformat() if s.current_period_start else None,
+                "current_period_end": s.current_period_end.isoformat() if s.current_period_end else None,
+                "created_at": s.created_at.isoformat(),
+            }
+            for s in subs
+        ],
+        "total": total,
+    }
+
+
+@router.post("/billing/refunds/{payment_id}", summary="Process an admin refund")
+async def admin_refund_payment(
+    payment_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session),
+):
+    """Issue an administrative refund on a transaction."""
+    stmt = select(PaymentModel).where(PaymentModel.id == payment_id)
+    res = await db.execute(stmt)
+    payment = res.scalar_one_or_none()
+    if not payment:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Payment record not found.")
+
+    payment.status = PaymentStatus.REFUNDED.value
+    await db.commit()
+    await db.refresh(payment)
+    return PaymentResponse.model_validate(payment)

@@ -1,0 +1,59 @@
+﻿{
+  "person_name": "Jawaharlal Nehru",
+  "chart_id": "WKD-NEHRU-009",
+  "source": "Wikipedia: Jawaharlal Nehru (infobox birth_date=1889-11-14, birth_place=Allahabad, North-Western Provinces, British India)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1889-11-14",
+    "time_utc": "23:12:00",
+    "latitude": 25.4358,
+    "longitude": 81.8464,
+    "note": "Birth time cited in Vedic tradition as 11:57pm LMT Allahabad = approx 23:12 UTC"
+  },
+  "rectified_birth_time": {
+    "date": "1889-11-14",
+    "time_utc": "23:12:00",
+    "latitude": 25.4358,
+    "longitude": 81.8464,
+    "source": "Wikidot birth-chart-of-jawaharlal-nehru (rectified); nakshatra: Hasta, pada 2; ascendant: Cancer"
+  },
+  "birth_data": {
+    "janma_nakshatra": "hasta",
+    "nakshatra_pada": 2,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "cancer"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1947-08-15",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Became first Prime Minister of independent India"
+    },
+    {
+      "event_date": "1962-10-20",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sino-Indian War begins — major national crisis"
+    },
+    {
+      "event_date": "1964-05-27",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Death in office (stroke)"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-jawaharlal-nehru",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

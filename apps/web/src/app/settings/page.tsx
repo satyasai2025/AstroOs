@@ -74,6 +74,28 @@ const SETTINGS_CATEGORIES: SettingsCategory[] = [
     badge: "Access & Security",
   },
   {
+    id: "billing",
+    title: "Billing, Subscription & Quotas",
+    href: "/settings/billing",
+    icon: "sparkle",
+    accentColor: "from-cyan-500 to-teal-500",
+    description:
+      "Manage your active plan, upgrade to PRO / RESEARCH, view live horoscope/research quota limits, and download GST invoices.",
+    keySettings: ["Current Subscription Tier", "Saved Horoscopes Quota", "Monthly Research Runs", "GST Tax Invoices & Receipts"],
+    badge: "Plans & Invoicing",
+  },
+  {
+    id: "notifications",
+    title: "Email & Notification Alerts",
+    href: "/settings/notifications",
+    icon: "bell",
+    accentColor: "from-purple-500 to-pink-500",
+    description:
+      "Configure your email notification preferences, usage threshold alerts (80% and 100% quota), and technique updates.",
+    keySettings: ["Billing & Receipt Alerts", "Security Notification Rules", "Usage Quota Thresholds", "New Technique Releases"],
+    badge: "Communication",
+  },
+  {
     id: "data",
     title: "Data Storage, Backup & Exports",
     href: "/settings/data",

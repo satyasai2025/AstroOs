@@ -29,9 +29,16 @@ import logging
 import uuid
 from datetime import date, datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.dependencies import get_ephemeris_wrapper
+from apps.api.dependencies import (
+    get_db_session,
+    get_ephemeris_wrapper,
+    require_authenticated,
+    require_entitlement,
+)
+from apps.api.domain.user import User
 from apps.api.domain.research import AstrologicalSnapshot
 from apps.api.domain.statistics import AggregateReport, DatasetMetadata, Distribution
 from apps.api.domain.timeline import Timeline, TimelineSummary
@@ -301,17 +308,33 @@ async def list_available_templates() -> list[str]:
     return ReportTemplateEngine.list_templates()
 
 
-@router.post("/chart/pdf", summary="Generate chart report as PDF")
+@router.post(
+    "/chart/pdf",
+    summary="Generic chart report as PDF (legacy)",
+    deprecated=True,
+)
 async def generate_chart_pdf(
     body: ChartReportRequest,
     template_name: str = "horoscope.html",
     wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
 ) -> Response:
-    """Generate a chart report as PDF using WeasyPrint.
+    """Generic chart report as PDF. Superseded by the report registry routes.
 
-    Optional query param ``template_name`` selects the Jinja2 template
-    (horoscope.html, career.html, marriage.html, health.html,
-    wealth.html, spiritual.html, transit.html).
+    IMPORTANT — what ``template_name`` actually does. The selectable
+    templates (career.html, marriage.html, health.html, wealth.html,
+    spiritual.html, transit.html) are ~140-byte stubs that all extend
+    _report_layout.html and differ ONLY in their title and heading string.
+    They are byte-identical apart from the domain word. Passing
+    ``career.html`` therefore returns the same generic chart document as
+    ``horoscope.html``, headed "Career Report" — it performs no career
+    analysis of any kind.
+
+    For a real domain report with houses, karakas, cited classical rules and
+    dasha timing, use the registry routes: POST /report/analysis/career,
+    /report/analysis/marriage, /report/analysis/dasha. Those are declared in
+    the report registry and gated by require_entitlement.
+
+    Kept because existing callers and scripts/check_phase_f.py depend on it.
     """
     from apps.api.services.report_template_engine import ReportTemplateEngine
     horoscope_engine = HoroscopeEngine(wrapper)
@@ -353,17 +376,21 @@ async def generate_chart_pdf(
     )
 
 
-@router.post("/chart/html", summary="Generate chart report as HTML")
+@router.post(
+    "/chart/html",
+    summary="Generic chart report as HTML (legacy)",
+    deprecated=True,
+)
 async def generate_chart_html(
     body: ChartReportRequest,
     template_name: str = "horoscope.html",
     wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
 ) -> Response:
-    """Generate a chart report as standalone HTML.
+    """Generic chart report as standalone HTML. See generate_chart_pdf.
 
-    Optional query param ``template_name`` selects the Jinja2 template
-    (horoscope.html, career.html, marriage.html, health.html,
-    wealth.html, spiritual.html, transit.html).
+    The selectable domain templates change only the heading text — they do
+    not produce a domain analysis. Use POST /report/analysis/{career,
+    marriage,dasha} for the real reports.
     """
     from apps.api.services.report_template_engine import ReportTemplateEngine
     horoscope_engine = HoroscopeEngine(wrapper)
@@ -431,15 +458,66 @@ async def generate_chart_csv(
         subject_name=body.subject_name,
         generated_by=body.generated_by,
     )
-@router.post("/foundation/birth-chart", summary="Generate Classical Vedic-grade Birth Chart Foundation Reference Sheet")
-async def generate_foundation_birth_chart(
+@router.get("/registry", summary="List reports available to the caller's plan")
+async def list_available_reports(
+    context: str | None = Query(
+        None,
+        description=(
+            "Comma-separated app context keys, e.g. 'birth_chart' or "
+            "'birth_chart,dasha'. Omit for all reports the plan allows."
+        ),
+    ),
+    session: AsyncSession = Depends(get_db_session),
+    user: User = Depends(require_authenticated),
+) -> list[dict]:
+    """
+    Drives the contextual Export menu.
+
+    The frontend must not hard-code report lists or subscription checks — it
+    asks here with its current app context and renders whatever comes back.
+    Entitlement is resolved from the caller's actual plan.
+    """
+    from apps.api.domain.report_registry import available_for
+    from apps.api.services.entitlement_service import EntitlementService
+
+    plan = await EntitlementService(session).resolve_user_plan(user)
+    plan_code = getattr(plan, "plan_code", "FREE")
+
+    ctx = {c.strip() for c in context.split(",") if c.strip()} if context else None
+    return [
+        {
+            "report_type": r.report_type,
+            "domain": r.domain.value,
+            "title": r.title,
+            "description": r.description,
+            "page_target": r.page_target,
+            "minimum_entitlement": r.minimum_entitlement,
+            "supported_formats": [f.value for f in r.supported_formats],
+            "report_version": r.report_version,
+        }
+        for r in available_for(plan_code, context=ctx)
+    ]
+
+
+async def _render_registry_report(
+    *,
+    report_type: str,
     body: ChartReportRequest,
-    export_format: str = "html",
-    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+    export_format: str,
+    wrapper: EphemerisWrapper,
 ) -> Response:
-    """Generate Classical Vedic-grade 2-page A4 Birth Chart Foundation Reference Sheet."""
-    from apps.api.services.birth_chart_report_builder import BirthChartReportBuilder
+    """
+    Shared render path for every registry-declared birth report.
+
+    Entitlement is NOT checked here — it is declared on the ReportDefinition
+    and enforced by the route's require_entitlement dependency, so a builder
+    can never become a second, divergent paywall.
+    """
+    from apps.api.domain.report_registry import get_report
+    from apps.api.services.report_assembler import ReportAssembler
     from apps.api.services.report_template_engine import ReportTemplateEngine
+
+    definition = get_report(report_type)
 
     horoscope_engine = HoroscopeEngine(wrapper)
     chart = await asyncio.to_thread(
@@ -452,35 +530,157 @@ async def generate_foundation_birth_chart(
         node_type=body.node_type,
     )
 
-    builder = BirthChartReportBuilder(wrapper)
-    report_data = builder.build_report_data(
+    report_data = await asyncio.to_thread(
+        ReportAssembler(wrapper).assemble,
+        report_type=report_type,
         chart=chart,
-        subject_name=body.subject_name or "Subject",
         birth_datetime_utc=body.birth_datetime_utc,
         latitude=body.latitude,
         longitude=body.longitude,
-        ayanamsa_name=body.ayanamsa.capitalize() if body.ayanamsa else "Lahiri",
+        subject_name=body.subject_name or "Subject",
+        place_name=getattr(body, "place_name", "") or "—",
+        ayanamsa=body.ayanamsa,
+        ayanamsa_name=(body.ayanamsa or "lahiri").capitalize(),
         house_system_code=body.house_system,
     )
 
-    if export_format.lower() == "json":
+    stem = (body.subject_name or "chart").replace(" ", "_")
+    fmt = export_format.lower()
+
+    if fmt == "json":
         import json
         return Response(
             content=json.dumps(report_data, indent=2, default=str),
             media_type="application/json",
-            headers={"Content-Disposition": f'attachment; filename="{body.subject_name or "chart"}_foundation.json"'},
+            headers={"Content-Disposition": f'attachment; filename="{stem}.json"'},
         )
-    elif export_format.lower() == "pdf":
-        pdf_bytes = ReportTemplateEngine.render_pdf(report_data, template_name="birth_chart.html")
+    if fmt == "pdf":
+        # page_target is the registry's contract (Foundation 2, Detailed 5).
+        # Passing it makes the renderer verify the result, so a template
+        # regression fails the request instead of shipping a 6-page "2-page"
+        # report. Domain analyses declare None — their length is dynamic.
+        pdf_bytes = ReportTemplateEngine.render_pdf(
+            report_data,
+            template_name=definition.template_name,
+            expected_pages=definition.page_target,
+        )
         return Response(
             content=pdf_bytes,
             media_type="application/pdf",
-            headers={"Content-Disposition": f'attachment; filename="{body.subject_name or "chart"}_foundation.pdf"'},
+            headers={"Content-Disposition": f'attachment; filename="{stem}.pdf"'},
         )
-    else:
-        html_content = ReportTemplateEngine.render_html(report_data, template_name="birth_chart.html")
-        return Response(
-            content=html_content,
-            media_type="text/html",
-            headers={"Content-Disposition": f'inline; filename="{body.subject_name or "chart"}_foundation.html"'},
-        )
+    html_content = ReportTemplateEngine.render_html(
+        report_data, template_name=definition.template_name
+    )
+    return Response(
+        content=html_content,
+        media_type="text/html",
+        headers={"Content-Disposition": f'inline; filename="{stem}.html"'},
+    )
+
+
+@router.post(
+    "/foundation/birth-chart",
+    summary="Birth Chart Foundation — 2-page A4 reference sheet (free tier)",
+)
+async def generate_foundation_birth_chart(
+    body: ChartReportRequest,
+    export_format: str = "html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    """Free-tier reference sheet. Declared FREE in the report registry."""
+    return await _render_registry_report(
+        report_type="BIRTH_CHART_FOUNDATION",
+        body=body,
+        export_format=export_format,
+        wrapper=wrapper,
+    )
+
+
+@router.post(
+    "/detailed/birth-chart",
+    summary="Detailed Birth Report — 5-page A4 (paid tier)",
+    dependencies=[Depends(require_entitlement("reports", "export"))],
+)
+async def generate_detailed_birth_chart(
+    body: ChartReportRequest,
+    export_format: str = "html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    """
+    Paid-tier birth report. `require_entitlement` gates it against the
+    Phase 2 matrix; the registry declares PRO as the minimum plan.
+    """
+    return await _render_registry_report(
+        report_type="BIRTH_CHART_DETAILED",
+        body=body,
+        export_format=export_format,
+        wrapper=wrapper,
+    )
+
+
+# ── Premium domain analyses ──────────────────────────────────────────────
+#
+# One route per domain rather than a single /analysis/{domain} endpoint: each
+# is a distinct product with its own entry in the report registry, and an
+# explicit route keeps the entitlement dependency visible at the definition
+# instead of hidden behind a path parameter.
+#
+# These carry no `page_target` — a domain report's length follows the number
+# of classical rules that fired and dasa windows that qualified, so the
+# geometry test asserts A4 dimensions and zero overflow rather than an exact
+# page count.
+
+
+@router.post(
+    "/analysis/marriage",
+    summary="Marriage Analysis — Promise & Timing (premium)",
+    dependencies=[Depends(require_entitlement("reports", "export"))],
+)
+async def generate_marriage_analysis(
+    body: ChartReportRequest,
+    export_format: str = "html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    return await _render_registry_report(
+        report_type="MARRIAGE_ANALYSIS",
+        body=body,
+        export_format=export_format,
+        wrapper=wrapper,
+    )
+
+
+@router.post(
+    "/analysis/career",
+    summary="Career Analysis — Promise & Timing (premium)",
+    dependencies=[Depends(require_entitlement("reports", "export"))],
+)
+async def generate_career_analysis(
+    body: ChartReportRequest,
+    export_format: str = "html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    return await _render_registry_report(
+        report_type="CAREER_ANALYSIS",
+        body=body,
+        export_format=export_format,
+        wrapper=wrapper,
+    )
+
+
+@router.post(
+    "/analysis/dasha",
+    summary="Dasha Analysis — full Vimshottari reading (premium)",
+    dependencies=[Depends(require_entitlement("reports", "export"))],
+)
+async def generate_dasha_analysis(
+    body: ChartReportRequest,
+    export_format: str = "html",
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> Response:
+    return await _render_registry_report(
+        report_type="DASHA_ANALYSIS",
+        body=body,
+        export_format=export_format,
+        wrapper=wrapper,
+    )

@@ -60,6 +60,8 @@ export const VIEW_TO_CLEAN_PATH: Record<string, string> = {
   planets: "/charts/planets",
   nakshatra: "/charts/nakshatra",
   predictions: "/charts/predictions",
+  sbc: "/charts?view=sbc",
+  tarabala: "/charts/tarabala",
 };
 
 /**
@@ -184,8 +186,9 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/charts?view=yogas", label: "Yogas", icon: "star" },
           { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid" },
           { href: "/charts?view=strength", label: "Shadbala", subtitle: "Planet strength", icon: "bar", viewId: "analysis-shadbala" },
-          { href: "/charts/sbc", label: "Sarvatobhadra Chakra", icon: "grid" },
-          { href: "/charts/tarabala", label: "Navatara / Tarabala", icon: "star" },
+          { href: "/timing", label: "Unified Event Timing", subtitle: "Sensitive timelines & convergence", icon: "clock", viewId: "analysis-timing" },
+          { href: "/charts/sbc", label: "Sarvatobhadra Chakra (SBC)", subtitle: "9x9 Grid · 112-Pada Vedha Rays", icon: "grid", viewId: "analysis-sbc" },
+          { href: "/charts/tarabala", label: "Navatara / Tarabala", subtitle: "27-Tara · 9 Cycles", icon: "star", viewId: "analysis-tarabala" },
         ],
       },
       {
@@ -371,6 +374,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/ai/explain", label: "AI Explain", icon: "sparkle" },
       { href: "/events", label: "Life Event Explorer", icon: "calendar" },
       { href: "/research/projects", label: "Research Explorer", icon: "search" },
+      { href: "/help", label: "Help & Methodology", icon: "book" },
     ],
   },
   {
@@ -387,6 +391,9 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/charts?view=ashtakavarga", label: "Ashtakavarga", icon: "grid" },
       { href: "/charts/kp", label: "KP Analysis", icon: "target" },
       { href: "/charts?view=jaimini", label: "Jaimini Analysis", icon: "book" },
+      { href: "/charts/sbc", label: "Sarvatobhadra Chakra (SBC)", icon: "grid" },
+      { href: "/timing", label: "Unified Event Timing", icon: "clock" },
+      { href: "/charts/tarabala", label: "Navatara / Tarabala", icon: "star" },
     ],
   },
   {

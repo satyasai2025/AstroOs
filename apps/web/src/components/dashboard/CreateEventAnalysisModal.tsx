@@ -5,11 +5,13 @@ import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
 import { useCreateEventAnalysis } from "@/lib/eventAnalysis";
 import { useTimezoneResolution } from "@/lib/geocoding";
 import { useMyCharts } from "@/lib/charts";
+import { useEventCategoryTree } from "@/lib/research";
+import type { EventCategoryNode } from "@/lib/research";
 import type {
   EventAnalysisScopeFlag,
   PlaceResultResponse,
 } from "@/lib/types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 /** Local date/time → UTC instant */
 function localToUtcIso(dateStr: string, timeStr: string, utcOffsetMinutes: number): string {
@@ -44,6 +46,57 @@ export interface EventCategoryConfig {
   icon: string;
   houses: string;
   events: string[];
+}
+
+/** Icon mapping for database-driven taxonomy root domains */
+const ROOT_ICONS: Record<string, string> = {
+  "Career & Professions": "💼",
+  Career: "💼",
+  Finance: "💰",
+  Health: "🏥",
+  "Health Conditions": "🩺",
+  "Family & Relations": "👪",
+  Family: "👪",
+  Marriage: "💍",
+  Legal: "⚖️",
+  Spiritual: "🕉️",
+  Property: "🏠",
+  Travel: "✈️",
+  Education: "🎓",
+  Relationships: "💞",
+  Loss: "🥀",
+  "Personality & Mind": "🧠",
+  "Character & Temperament": "🎭",
+  "Communication & News": "📰",
+  Social: "👥",
+  "Fame & Renown": "🌟",
+  "Private Life": "🔒",
+  "Interests & Inclinations": "✨",
+  "Living Patterns": "🌿",
+  "World Affairs": "🌍",
+  General: "📌",
+};
+
+function rootIcon(name: string): string {
+  return ROOT_ICONS[name] ?? "📌";
+}
+
+/** Collect all leaf nodes (no children) under a taxonomy node */
+function collectLeaves(node: EventCategoryNode, out: EventCategoryNode[] = []): EventCategoryNode[] {
+  if (!node.children || node.children.length === 0) {
+    out.push(node);
+  } else {
+    for (const child of node.children) collectLeaves(child, out);
+  }
+  return out;
+}
+
+/** First tagged leaf's Vedic anchor, e.g. "2H · Jupiter" */
+function rootHousesTag(leaves: EventCategoryNode[]): string {
+  const tagged = leaves.find((l) => l.house_number != null);
+  if (!tagged || tagged.house_number == null) return "—";
+  const h = `${tagged.house_number}H`;
+  return tagged.karaka_planet ? `${h} · ${tagged.karaka_planet}` : h;
 }
 
 export const ASTROOS_EVENT_CATEGORIES: EventCategoryConfig[] = [
@@ -209,6 +262,10 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
   const [eventName, setEventName] = useState<string>("Job Interview & Selection");
   const [isCustomTitle, setIsCustomTitle] = useState(false);
 
+  // Dynamic event-category library (Postgres-backed) with static fallback
+  const catTree = useEventCategoryTree();
+  const [eventFilter, setEventFilter] = useState("");
+
   const now = new Date();
   const [eventDate, setEventDate] = useState(now.toISOString().split("T")[0]!);
   const [eventTime, setEventTime] = useState(now.toTimeString().split(" ")[0]!);
@@ -224,10 +281,64 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
 
   const selectedChart = charts.find((c) => c.id === selectedChartId) ?? null;
 
-  // Active category object
+  // Active category object — DB taxonomy preferred, built-in presets fallback
+  type CatVM = EventCategoryConfig & { leafCount?: number };
+  const dbRoots = useMemo(() => catTree.data?.categories ?? [], [catTree.data]);
+  const usingDb = dbRoots.length > 0;
+
+  const dbVMs = useMemo<CatVM[]>(
+    () =>
+      dbRoots
+        .map((root) => {
+          const leaves = collectLeaves(root).sort((a, b) => a.name.localeCompare(b.name));
+          return {
+            id: root.id,
+            name: root.name,
+            icon: rootIcon(root.name),
+            houses: rootHousesTag(leaves),
+            events: leaves.map((l) => l.name),
+            leafCount: leaves.length,
+          };
+        })
+        .filter((v) => v.events.length > 0),
+    [dbRoots],
+  );
+
+  const categoryVMs: readonly CatVM[] = usingDb ? dbVMs : ASTROOS_EVENT_CATEGORIES;
+
   const currentCategoryConfig = useMemo(() => {
-    return ASTROOS_EVENT_CATEGORIES.find((c) => c.id === selectedCategory) ?? ASTROOS_EVENT_CATEGORIES[0]!;
-  }, [selectedCategory]);
+    return (
+      categoryVMs.find((c) => c.id === selectedCategory) ??
+      (usingDb ? categoryVMs[0] : ASTROOS_EVENT_CATEGORIES[0])!
+    );
+  }, [categoryVMs, selectedCategory, usingDb]);
+
+  // Ensure selection lands on a real DB domain once loaded
+  useEffect(() => {
+    if (!usingDb || !dbVMs.length) return;
+    if (!dbVMs.some((v) => v.id === selectedCategory)) {
+      const first = dbVMs[0]!;
+      setSelectedCategory(first.id);
+      setEventName(first.events[0] ?? "");
+      setIsCustomTitle(false);
+    }
+  }, [usingDb, dbVMs, selectedCategory]);
+
+  const activeLeaf = useMemo<EventCategoryNode | null>(() => {
+    if (!usingDb) return null;
+    for (const root of dbRoots) {
+      const hit = collectLeaves(root).find((l) => l.name === eventName);
+      if (hit) return hit;
+    }
+    return null;
+  }, [usingDb, dbRoots, eventName]);
+
+  const visibleEvents = useMemo(() => {
+    const evs = currentCategoryConfig?.events ?? [];
+    const q = eventFilter.trim().toLowerCase();
+    const filtered = q ? evs.filter((e) => e.toLowerCase().includes(q)) : evs;
+    return { list: filtered.slice(0, 80), total: filtered.length };
+  }, [currentCategoryConfig, eventFilter]);
 
   // Filtered charts list for search
   const filteredCharts = useMemo(() => {
@@ -263,6 +374,7 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
     setStep(1);
     setSelectedChartId(null);
     setChartSearch("");
+    setEventFilter("");
     setSelectedCategory("career");
     setEventName("Job Interview & Selection");
     setIsCustomTitle(false);
@@ -276,9 +388,10 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
 
   function handleCategoryChange(catId: string) {
     setSelectedCategory(catId);
-    const cat = ASTROOS_EVENT_CATEGORIES.find((c) => c.id === catId);
-    if (cat && cat.events.length > 0) {
-      setEventName(cat.events[0]!);
+    setEventFilter("");
+    const vm = categoryVMs.find((c) => c.id === catId);
+    if (vm && vm.events.length > 0) {
+      setEventName(vm.events[0]!);
       setIsCustomTitle(false);
     }
   }
@@ -517,8 +630,16 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
                 <label className="block text-xs font-bold uppercase tracking-wider" style={{ color: "var(--text-primary)" }}>
                   1. Choose Life Event Category:
                 </label>
+                {catTree.isLoading && (
+                  <p className="text-xs font-mono text-cyan-400">Loading full event-category library…</p>
+                )}
+                {catTree.isError && (
+                  <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                    ⚠ Category library unavailable right now — showing built-in presets.
+                  </p>
+                )}
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                  {ASTROOS_EVENT_CATEGORIES.map((cat) => {
+                  {categoryVMs.map((cat) => {
                     const active = selectedCategory === cat.id;
                     return (
                       <button
@@ -536,6 +657,9 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
                           <span className="text-xs font-bold truncate" style={{ color: active ? "#06b6d4" : "var(--text-primary)" }}>
                             {cat.name.split(" ")[0]}
                           </span>
+                  {cat.leafCount != null && (
+                   <span className="text-[9px] font-mono" style={{ color: "var(--text-muted)" }}>( {cat.leafCount} )</span>
+                  )}
                         </div>
                         <span className="text-[10px] mt-1 font-mono" style={{ color: "var(--text-muted)" }}>
                           {cat.houses}
@@ -562,8 +686,18 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
                 </div>
 
                 {!isCustomTitle ? (
-                  <div className="flex flex-wrap gap-2">
-                    {currentCategoryConfig.events.map((ev) => {
+                  <div className="space-y-2">
+                    {(currentCategoryConfig.events.length > 24 || eventFilter) && (
+                      <input
+                        type="text"
+                        value={eventFilter}
+                        onChange={(e) => setEventFilter(e.target.value)}
+                        placeholder={`Filter ${currentCategoryConfig.events.length} events…`}
+                        className="obsidian-input w-full text-xs"
+                      />
+                    )}
+                    <div className="flex flex-wrap gap-2">
+                      {visibleEvents.list.map((ev) => {
                       const active = eventName === ev;
                       return (
                         <button
@@ -581,6 +715,12 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
                         </button>
                       );
                     })}
+                    </div>
+                    {visibleEvents.total > visibleEvents.list.length && (
+                      <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                        Showing 80 of {visibleEvents.total} — refine the filter to narrow down.
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-1">
@@ -597,6 +737,22 @@ export function CreateEventAnalysisModal({ open, onClose }: Props) {
                   </div>
                 )}
               </div>
+
+              {/* Selected leaf Vedic anchor */}
+              {activeLeaf && (activeLeaf.house_number != null || !!activeLeaf.karaka_planet) && (
+                <div
+                  className="flex flex-wrap items-center gap-2 rounded-lg border px-3 py-1.5"
+                  style={{ borderColor: "rgba(6,182,212,0.35)", backgroundColor: "rgba(6,182,212,0.06)" }}
+                >
+                  <span className="text-[10px] font-mono font-bold text-cyan-300">
+                    {activeLeaf.house_number != null ? `${activeLeaf.house_number}H` : ""}
+                    {activeLeaf.karaka_planet ? ` · ${activeLeaf.karaka_planet}` : ""}
+                  </span>
+                  <span className="text-[10px] truncate" style={{ color: "var(--text-muted)" }}>
+                    {activeLeaf.path}
+                  </span>
+                </div>
+              )}
 
               {/* 3. Event Date & Time */}
               <div className="space-y-2 pt-2 border-t" style={{ borderColor: "var(--border-primary)" }}>

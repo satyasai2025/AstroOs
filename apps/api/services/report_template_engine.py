@@ -5,9 +5,17 @@ from __future__ import annotations
 import csv
 import io
 import json
+import logging
 import os
 from typing import Any, Optional
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import (
+    Environment,
+    FileSystemLoader,
+    TemplateNotFound,
+    select_autoescape,
+)
+
+logger = logging.getLogger(__name__)
 
 _TEMPLATES_DIR = os.path.join(
     os.path.dirname(__file__), "..", "..", "..", "templates", "reports"
@@ -27,20 +35,52 @@ class ReportTemplateEngine:
 
     @staticmethod
     def render_html(report: dict, template_name: str = "horoscope.html") -> str:
+        """
+        Render `report` through `template_name`.
+
+        Falls back to base.html ONLY when the requested template does not
+        exist. Any other failure — a syntax error in the template, a bad
+        variable reference — is raised.
+
+        This previously caught bare `Exception` and silently returned
+        base.html, so a broken template produced a plausible-looking but
+        WRONG document with no error anywhere: the caller asked for the
+        foundation sheet and got the generic fallback instead, and nothing
+        in the logs said so.
+        """
         try:
             template = _env.get_template(template_name)
-            return template.render(report=report)
-        except Exception:
+        except TemplateNotFound:
+            logger.warning(
+                "Report template %r not found; falling back to base.html",
+                template_name,
+            )
             return _env.get_template("base.html").render(report=report)
+        return template.render(report=report)
 
     @staticmethod
-    def render_pdf(report: dict, template_name: str = "horoscope.html") -> bytes:
-        try:
-            import weasyprint
-        except ImportError:
-            raise RuntimeError("weasyprint required: pip install weasyprint")
+    def render_pdf(
+        report: dict,
+        template_name: str = "horoscope.html",
+        *,
+        expected_pages: int | None = None,
+    ) -> bytes:
+        """
+        Render `report` to PDF.
+
+        Delegates to `services.pdf_renderer`, which prefers headless Chromium
+        — the renderer the fixed-A4 templates were composed and tested
+        against. This previously called WeasyPrint directly, which cannot even
+        import on Windows without GTK, so every PDF export raised.
+
+        `expected_pages` is the registry page_target. When given, the rendered
+        page count is verified and a mismatch raises rather than returning a
+        mis-paginated report.
+        """
+        from apps.api.services.pdf_renderer import render_pdf as _render
+
         html = ReportTemplateEngine.render_html(report, template_name)
-        return weasyprint.HTML(string=html).write_pdf()
+        return _render(html, expected_pages=expected_pages)
 
     @staticmethod
     def render_json(report: dict) -> str:

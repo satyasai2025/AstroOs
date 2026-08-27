@@ -107,8 +107,11 @@ def test_all_dig_bala_values_within_valid_range(real_chart):
 def test_engine_reports_incomplete_status_honestly(real_chart):
     """The engine must never silently imply completeness it doesn't have."""
     engine = ShadbalaEngine()
-    assert len(engine.implemented_components()) == 15
-    assert len(engine.not_yet_implemented_components()) == 1
+    # Classical 6-fold Shadbala is fully implemented (Abda/Masa lord done via
+    # the Ahargana method — see varsha_masa_bala.py), so there are no remaining
+    # gaps and at least 15 components must be present.
+    assert len(engine.implemented_components()) >= 15
+    assert engine.not_yet_implemented_components() == []
     assert "sthana_bala.saptavargaja_bala" in engine.implemented_components()
     assert "kala_bala.tribhaga_bala" in engine.implemented_components()
     assert "kala_bala.ayana_bala" in engine.implemented_components()
@@ -116,7 +119,8 @@ def test_engine_reports_incomplete_status_honestly(real_chart):
     assert "kala_bala.nathonnata_bala" in engine.implemented_components()
     assert "kala_bala.dina_hora_bala" in engine.implemented_components()
     assert "kala_bala.yuddha_bala" in engine.implemented_components()
-    assert "kala_bala.varsha_masa_lord" in engine.not_yet_implemented_components()
+    assert "kala_bala.abda_bala" in engine.implemented_components()
+    assert "kala_bala.masa_bala" in engine.implemented_components()
 
 
 def test_compute_ojayugmarasyamsa_bala_requires_divisional_engine(real_chart):

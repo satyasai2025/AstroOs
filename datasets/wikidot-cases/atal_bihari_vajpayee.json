@@ -1,0 +1,68 @@
+﻿{
+  "person_name": "Atal Bihari Vajpayee",
+  "chart_id": "WKD-VAJPAYEE-006",
+  "source": "Wikipedia: Atal Bihari Vajpayee (infobox birth_date=1924-12-25, birth_place=Gwalior, Central India Agency, British India)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1924-12-25",
+    "time_utc": "00:42:00",
+    "latitude": 26.2183,
+    "longitude": 78.1828,
+    "note": "6:12am IST = 00:42 UTC, widely cited in Vedic astrology tradition"
+  },
+  "rectified_birth_time": {
+    "date": "1924-12-25",
+    "time_utc": "00:42:00",
+    "latitude": 26.2183,
+    "longitude": 78.1828,
+    "source": "Wikidot birth-chart-of-atal-bihari-vajpayee (rectified); nakshatra: Purva Ashadha, pada 1; ascendant: Scorpio"
+  },
+  "birth_data": {
+    "janma_nakshatra": "purva_ashadha",
+    "nakshatra_pada": 1,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "scorpio"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1999-10-13",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sworn in as Prime Minister (third term) after BJP-led NDA majority"
+    },
+    {
+      "event_date": "1998-05-11",
+      "event_date_precision": "exact_date",
+      "life_domain": "ACHIEVEMENT",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Pokhran-II nuclear tests (Operation Shakti) conducted"
+    },
+    {
+      "event_date": "1999-07-26",
+      "event_date_precision": "exact_date",
+      "life_domain": "ACHIEVEMENT",
+      "valence": "RESIDUAL",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Kargil War ends with Indian victory (Operation Vijay)"
+    },
+    {
+      "event_date": "2004-05-13",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "BJP-led NDA lost general elections; resigned as Prime Minister"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-atal-bihari-vajpayee",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

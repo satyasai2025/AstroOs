@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>AstroOS — Detailed Birth Report</title>
+{% from "_report_styles.html" import report_styles %}
+{% from "_jhora_body.html" import jhora_body_styles, jhora_body_table,
+                                  jhora_mahadasha_table, jhora_antardasha_table %}
+{% from "_varga_grid.html" import varga_grid_styles %}
+{{ report_styles() }}
+{{ jhora_body_styles() }}
+{{ varga_grid_styles() }}
+</head>
+<body>
+{#
+    AstroOS — DETAILED BIRTH REPORT (Medium paid tier)
+
+    Contract: EXACTLY 5 physical A4 pages, per the report tier spec and the
+    page_target on BIRTH_CHART_DETAILED in domain/report_registry.py. The
+    count is asserted against a real rendered PDF, not eyeballed.
+
+    Page plan follows the spec's suggested structure:
+      1 Birth profile   2 Planetary & chart detail   3 Dasha & strength
+      4 Ashtakavarga    5 Summary & methodology
+
+    It stays a BIRTH report — no marriage/career/health/timing prediction.
+    Those are separate domain reports at the premium tier.
+#}
+
+{% macro mast(title, sub, n) %}
+<div class="mast">
+    <div class="mast-logo"></div>
+    <div class="mast-c">
+        <div class="mast-title">{{ title }}</div>
+        <div class="mast-sub">{{ sub }}</div>
+    </div>
+    <div class="mast-pg">Page {{ n }} of 5</div>
+</div>
+{% endmacro %}
+
+{% macro foot() %}
+<div class="foot">
+    <div><b>AstroOS</b> — Vedic Intelligence, Engineered for Accuracy</div>
+    <div style="text-align:right;">
+        {{ report.ayanamsa }} &middot; {{ report.house_system }} &middot; astroos.com
+    </div>
+</div>
+{% endmacro %}
+
+<!-- ══════ PAGE 1 — BIRTH PROFILE ══════ -->
+<div class="a4">
+    {{ mast(report.subject_name or "Birth Chart", "Detailed Birth Report", 1) }}
+
+    <div class="jhead">
+        <div>
+            <b>{{ report.birth_date }}</b> &middot; {{ report.birth_time }} &middot; {{ report.timezone }}<br/>
+            {{ report.latitude }}, {{ report.longitude }} — {{ report.place }}
+        </div>
+        <div style="text-align:right;">
+            {{ report.panchanga.tithi }}<br/>{{ report.panchanga.nakshatra }}
+        </div>
+    </div>
+    <div class="jhead2">
+        {{ report.panchanga.vaara }} &middot; {{ report.panchanga.yoga }} Yoga &middot;
+        {{ report.panchanga.karana }} Karana &middot; {{ report.panchanga.hora }} &middot;
+        Sunrise {{ report.panchanga.sunrise }} &middot; Sunset {{ report.panchanga.sunset }}
+    </div>
+
+    <div class="charts">
+        <div class="chart-box">
+            <div class="chart-cap">Rasi Chart (D-1)</div>
+            <div class="chart-inner">{{ report.d1_svg | safe }}</div>
+        </div>
+        <div class="chart-box">
+            <div class="chart-cap">Navamsa Chart (D-9)</div>
+            <div class="chart-inner">{{ report.d9_svg | safe }}</div>
+        </div>
+    </div>
+
+    <div class="sec" style="margin-top:4mm;">Current Vimshottari Position</div>
+    {% set ad = (report.active_antardashas or [])|selectattr("is_current")|first %}
+    <div class="kpi">
+        <div class="kpi-i">
+            <div class="kpi-k">Mahadasa</div>
+            <div class="kpi-v">{{ report.active_md_lord or "—" }}</div>
+            <div class="kpi-s">{{ report.active_md_range or "" }}</div>
+        </div>
+        <div class="kpi-i">
+            <div class="kpi-k">Antardasa</div>
+            <div class="kpi-v">{{ ad.lord if ad else "—" }}</div>
+            <div class="kpi-s">{% if ad %}{{ ad.start }} — {{ ad.end }}{% endif %}</div>
+        </div>
+        <div class="kpi-i">
+            <div class="kpi-k">Lagna</div>
+            <div class="kpi-v">{{ report.planets[0].rashi_name }}</div>
+            <div class="kpi-s">{{ report.planets[0].nakshatra }} pada {{ report.planets[0].pada }}</div>
+        </div>
+    </div>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PAGE 2 — PLANETARY & CHART DETAIL ══════ -->
+<div class="a4">
+    {{ mast("Planetary Detail", "Positions · Karakas · Divisional Placements", 2) }}
+    {{ jhora_body_table(report.body_rows) }}
+
+    {#  Divisional placements as a table, not more kundalis: four charts
+        beside the 15-row body table overflowed this page by ~42mm, and the
+        table conveys the same four vargas in about a quarter of the height. #}
+    <div class="sec" style="margin-top:4.5mm;">Divisional Placements</div>
+    <table class="tbl tight">
+        <thead>
+            <tr>
+                <th style="width:32mm;">Planet</th>
+                {% for v in report.varga_table.vargas %}
+                <th>{{ v.code }} <span style="font-weight:400;">{{ v.name }}</span></th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in report.varga_table.rows %}
+            <tr>
+                <td class="pl">{{ row.planet }}</td>
+                {% for v in report.varga_table.vargas %}
+                <td>{{ row.signs.get(v.code, "—") }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PAGE 3 — DASHA & STRENGTH ══════ -->
+<div class="a4">
+    {{ mast("Dasha & Strength", "Vimshottari · Shadbala · Avasthas", 3) }}
+
+    <div class="sec">Mahadasa Sequence</div>
+    {{ jhora_mahadasha_table(report.dasha_timeline, report.active_md_lord) }}
+
+    <div class="sec" style="margin-top:4.5mm;">Shadbala (Rupas)</div>
+    <table class="tbl tight">
+        <thead>
+            <tr>
+                <th>Planet</th><th class="n">Sthana</th><th class="n">Dig</th>
+                <th class="n">Kala</th><th class="n">Chesta</th>
+                <th class="n">Naisargika</th><th class="n">Drik</th><th class="n">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in report.shadbala %}
+            <tr>
+                <td class="pl">{{ s.planet }}</td>
+                <td class="n">{{ s.sthana }}</td><td class="n">{{ s.dig }}</td>
+                <td class="n">{{ s.kala }}</td><td class="n">{{ s.chesta }}</td>
+                <td class="n">{{ s.naisargika }}</td><td class="n">{{ s.drik }}</td>
+                <td class="n"><b>{{ s.total }}</b></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="half" style="margin-top:4.5mm;">
+        <div>
+            <div class="sec">Vimsopaka Bala</div>
+            <table class="tbl tight">
+                <thead><tr><th>Planet</th><th class="n">Score</th><th>Grade</th></tr></thead>
+                <tbody>
+                {% for v in report.vimsopaka %}
+                    <tr><td class="pl">{{ v.planet }}</td>
+                        <td class="n">{{ v.score }}</td><td>{{ v.category }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="sec">Planetary Avasthas</div>
+            <table class="tbl tight">
+                <thead><tr><th>Planet</th><th>Baladi</th><th>Deeptadi</th></tr></thead>
+                <tbody>
+                {% for a in report.avasthas %}
+                    <tr><td class="pl">{{ a.planet }}</td>
+                        <td>{{ a.baladi }}</td><td>{{ a.deeptadi }}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PAGE 4 — ASHTAKAVARGA ══════ -->
+<div class="a4">
+    {{ mast("Ashtakavarga", "Sarvashtakavarga · Pinda", 4) }}
+
+    <div class="sec">Sarvashtakavarga — Bindu Distribution</div>
+    <table class="tbl tight">
+        <thead>
+            <tr>
+                <th>Sign</th>
+                <th class="n">Sun</th><th class="n">Moon</th><th class="n">Mars</th>
+                <th class="n">Merc</th><th class="n">Jup</th>
+                <th class="n">Ven</th><th class="n">Sat</th>
+                <th class="n">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in report.sav_rows %}
+            <tr>
+                <td class="pl">{{ row.sign }}</td>
+                {% for b in row.bindus %}<td class="n">{{ b }}</td>{% endfor %}
+                <td class="n {{ 'sav-hi' if row.total >= 30 else ('sav-lo' if row.total <= 25 else '') }}">
+                    <b>{{ row.total }}</b>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="kpi" style="margin-top:4mm;">
+        <div class="kpi-i">
+            <div class="kpi-k">Total Bindus</div>
+            <div class="kpi-v">{{ report.sav_summary.total }}</div>
+            <div class="kpi-s">across twelve signs</div>
+        </div>
+        <div class="kpi-i">
+            <div class="kpi-k">Average / Sign</div>
+            <div class="kpi-v">{{ report.sav_summary.average }}</div>
+            <div class="kpi-s">baseline 28</div>
+        </div>
+        <div class="kpi-i">
+            <div class="kpi-k">Range</div>
+            <div class="kpi-v">{{ report.sav_summary.minimum }}–{{ report.sav_summary.maximum }}</div>
+            <div class="kpi-s">lowest to highest sign</div>
+        </div>
+    </div>
+
+    <div class="sec" style="margin-top:4.5mm;">Pinda Values</div>
+    <table class="tbl tight">
+        <thead>
+            <tr><th>Planet</th><th class="n">Rasi Pinda</th>
+                <th class="n">Graha Pinda</th><th class="n">Sodhya Pinda</th></tr>
+        </thead>
+        <tbody>
+        {% for p in report.pindas %}
+            <tr><td class="pl">{{ p.planet }}</td>
+                <td class="n">{{ p.rasi }}</td><td class="n">{{ p.graha }}</td>
+                <td class="n">{{ p.sodhya }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PAGE 5 — SUMMARY & METHODOLOGY ══════ -->
+<div class="a4">
+    {{ mast("Chart Summary", "Antardasas · Reference · Methodology", 5) }}
+
+    <div class="sec">Antardasas of the current {{ report.active_md_lord or "" }} Mahadasa</div>
+    {{ jhora_antardasha_table(report.active_antardashas, report.active_md_lord) }}
+
+    <div class="sec" style="margin-top:4.5mm;">Badhaka &amp; Maraka Reference</div>
+    <div class="half">
+        <div>
+            <table class="kv">
+                <tr><td class="k">Badhaka House</td><td class="v">{{ report.badhaka_maraka.badhaka_house }}</td></tr>
+                <tr><td class="k">Badhaka Sign</td><td class="v">{{ report.badhaka_maraka.badhaka_sign }}</td></tr>
+                <tr><td class="k">Badhaka Lord</td><td class="v">{{ report.badhaka_maraka.badhaka_lord }}</td></tr>
+            </table>
+        </div>
+        <div>
+            <table class="kv">
+                <tr><td class="k">Maraka Houses</td><td class="v">{{ report.badhaka_maraka.maraka_houses|join(", ") }}</td></tr>
+                <tr><td class="k">Maraka Signs</td><td class="v">{{ report.badhaka_maraka.maraka_signs|join(", ") }}</td></tr>
+                <tr><td class="k">Maraka Lords</td><td class="v">{{ report.badhaka_maraka.maraka_lords|join(", ") }}</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="sec" style="margin-top:4.5mm;">Calculation Methodology</div>
+    <div class="half">
+        <div>
+            <table class="kv">
+                <tr><td class="k">Ayanamsa</td><td class="v">{{ report.ayanamsa }}</td></tr>
+                <tr><td class="k">Ayanamsa Value</td><td class="v">{{ report.ayanamsa_value }}</td></tr>
+                <tr><td class="k">House System</td><td class="v">{{ report.house_system }}</td></tr>
+            </table>
+        </div>
+        <div>
+            <table class="kv">
+                <tr><td class="k">Ephemeris</td><td class="v">{{ report.ephemeris_version }}</td></tr>
+                <tr><td class="k">Coordinates</td><td class="v">{{ report.coordinate_system }}</td></tr>
+                <tr><td class="k">Report Version</td><td class="v">Detailed v1.0</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="disc">
+        <b>This is a Detailed Birth Report.</b> Every figure above is computed
+        by canonical AstroOS engines — nothing is estimated or authored.
+        Marriage, career, health, transit and event-timing analyses are
+        published as separate AstroOS domain reports.
+    </div>
+
+    {{ foot() }}
+</div>
+
+</body>
+</html>

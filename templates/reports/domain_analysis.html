@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>AstroOS — {{ report.report_title }}</title>
+{% from "_report_styles.html" import report_styles %}
+{{ report_styles() }}
+<style>
+    .verdict {
+        border: 1px solid var(--rule); background: var(--tint);
+        padding: 3.5mm 4mm; margin-top: 3mm;
+    }
+    .verdict-k {
+        font-size: 7.5pt; letter-spacing: .12em; text-transform: uppercase;
+        color: var(--muted); font-weight: 600;
+    }
+    .verdict-v { font-size: 13pt; font-weight: 700; margin: 1mm 0; }
+    .v-SUPPORTED { color: #1a7f37; }
+    .v-MIXED { color: #b8860b; }
+    .v-CONTRADICTED { color: #b3261e; }
+    .v-INSUFFICIENT_EVIDENCE, .v-NOT_APPLICABLE { color: var(--muted); }
+    .verdict-s { font-size: 8.4pt; color: var(--ink); }
+
+    .factor {
+        border-left: 3px solid var(--rule); padding: 1.8mm 0 1.8mm 3mm;
+        margin-bottom: 2mm; font-size: 8.4pt;
+    }
+    .factor.sup { border-left-color: #1a7f37; }
+    .factor.con { border-left-color: #b3261e; }
+    .factor b { color: var(--navy); }
+    .factor .src { display: block; font-size: 7.5pt; color: var(--muted); margin-top: .6mm; }
+
+    /* Shared .tbl cells are nowrap, which suits fixed-width chart data. The
+       free-text columns here (citations, inclusion basis) are long enough to
+       push the table past the 186mm usable box, so they wrap instead. */
+    .cite {
+        font-size: 7.5pt; color: var(--muted); font-style: italic;
+        white-space: normal; line-height: 1.25;
+    }
+    table.tbl td.wrap { white-space: normal; line-height: 1.25; }
+    table.tbl { table-layout: fixed; }
+    .pill {
+        display: inline-block; font-size: 7.5pt; font-weight: 700;
+        padding: .5mm 1.6mm; border-radius: 2px;
+    }
+    .pill-yes { background: #e6f4ea; color: #1a7f37; }
+    .pill-no  { background: #f1f2f5; color: var(--muted); }
+    tr.now td { background: #fdf6e0 !important; font-weight: 600; }
+    .limit {
+        border-left: 3px solid var(--gold); background: var(--tint);
+        padding: 3mm 4mm; font-size: 8pt; color: var(--ink); margin-top: 4mm;
+    }
+</style>
+</head>
+<body>
+{#
+    AstroOS — PREMIUM DOMAIN ANALYSIS
+
+    Two-part structure per the report tier spec: PART 1 THE PROMISE, then
+    PART 2 THE TIMING. Page count is DYNAMIC (page_target=None in the
+    registry) because the number of fired rules and relevant dasa windows
+    varies by chart.
+
+    Nothing here is authored interpretation. Each rule carries the citation
+    the evidence engine attached to it, each factor names its source, and the
+    timing section states in plain words what it does NOT establish.
+#}
+
+{% macro mast(title, sub) %}
+<div class="mast">
+    <div class="mast-logo"></div>
+    <div class="mast-c">
+        <div class="mast-title">{{ title }}</div>
+        <div class="mast-sub">{{ sub }}</div>
+    </div>
+    <div class="mast-pg">{{ report.subject_name }}</div>
+</div>
+{% endmacro %}
+
+{% macro foot() %}
+<div class="foot">
+    <div><b>AstroOS</b> — Vedic Intelligence, Engineered for Accuracy</div>
+    <div style="text-align:right;">
+        {{ report.ayanamsa }} &middot; {{ report.house_system }} &middot; astroos.com
+    </div>
+</div>
+{% endmacro %}
+
+<!-- ══════ COVER / BIRTH CONTEXT ══════ -->
+<div class="a4">
+    {{ mast(report.report_title, "Premium Domain Analysis") }}
+
+    <div class="jhead">
+        <div>
+            <b>{{ report.birth_date }}</b> &middot; {{ report.birth_time }} &middot; {{ report.timezone }}<br/>
+            {{ report.latitude }}, {{ report.longitude }} — {{ report.place }}
+        </div>
+        <div style="text-align:right;">
+            {{ report.panchanga.tithi }}<br/>{{ report.panchanga.nakshatra }}
+        </div>
+    </div>
+
+    <div class="charts" style="margin-top:2mm;">
+        <div class="chart-box">
+            <div class="chart-cap">Rasi Chart (D-1)</div>
+            <div class="chart-inner">{{ report.d1_svg | safe }}</div>
+        </div>
+        <div class="chart-box">
+            <div class="chart-cap">Navamsa Chart (D-9)</div>
+            <div class="chart-inner">{{ report.d9_svg | safe }}</div>
+        </div>
+    </div>
+
+    <div class="sec" style="margin-top:4mm;">How this domain is read</div>
+    <div style="font-size:8.4pt; line-height:1.55;">{{ report.domain_note }}</div>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PART 1 — THE PROMISE ══════ -->
+<div class="a4">
+    {{ mast("Part 1 — The Promise", "Houses · Significators · Classical Rules") }}
+
+    <div class="sec">Relevant Houses</div>
+    <table class="tbl tight">
+        <thead>
+            <tr><th style="width:20mm;">House</th><th style="width:26mm;">Role</th>
+                <th>Occupants</th></tr>
+        </thead>
+        <tbody>
+        {% for h in report.promise.houses %}
+            <tr>
+                <td class="pl">{{ h.house }}</td>
+                <td>{{ h.role|capitalize }}</td>
+                <td>
+                    {%- if h.is_empty -%}
+                        <span style="color:#6c7488;">No graha occupies this house</span>
+                    {%- else -%}
+                        {% for o in h.occupants %}{{ o.name }} ({{ o.sign }}, {{ o.dignity }}){% if not loop.last %} · {% endif %}{% endfor %}
+                    {%- endif -%}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if report.promise.karakas %}
+    <div class="sec" style="margin-top:4.5mm;">Natural Significators (Karakas)</div>
+    <table class="tbl tight">
+        <thead>
+            <tr><th style="width:26mm;">Karaka</th><th style="width:30mm;">Sign</th>
+                <th class="n" style="width:18mm;">House</th>
+                <th style="width:30mm;">Dignity</th><th>Nakshatra</th></tr>
+        </thead>
+        <tbody>
+        {% for k in report.promise.karakas %}
+            <tr>
+                <td class="pl">{{ k.name }}{% if k.retrograde %} (R){% endif %}</td>
+                <td>{{ k.sign }}</td><td class="n">{{ k.house }}</td>
+                <td>{{ k.dignity }}</td><td>{{ k.nakshatra }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <div class="sec" style="margin-top:4.5mm;">Classical Rules Evaluated</div>
+    <table class="tbl tight">
+        <thead>
+            <tr><th style="width:52mm;">Rule</th><th style="width:23mm;">Status</th>
+                <th class="n" style="width:15mm;">Score</th><th>Citation</th></tr>
+        </thead>
+        <tbody>
+        {% for r in report.promise.rules %}
+            <tr>
+                <td class="pl wrap">{{ r.rule_name }}</td>
+                <td>
+                    <span class="pill {{ 'pill-yes' if r.is_present else 'pill-no' }}">
+                        {{ r.status }}
+                    </span>
+                </td>
+                <td class="n">{{ r.score }}</td>
+                <td class="cite">{{ r.citation }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PROMISE — FACTORS & VERDICT ══════ -->
+<div class="a4">
+    {{ mast("Part 1 — The Promise", "Supporting &amp; Contradicting Factors") }}
+
+    <div class="sec">Supporting Factors</div>
+    {% if report.promise.supporting %}
+        {% for f in report.promise.supporting %}
+        <div class="factor sup">
+            <b>{{ f.label }}</b> — {{ f.detail }}
+            <span class="src">Source: {{ f.source }}</span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="factor">
+            No supporting factor was established from canonical output.
+            <span class="src">Stated rather than substituted with commentary.</span>
+        </div>
+    {% endif %}
+
+    <div class="sec" style="margin-top:4.5mm;">Contradicting Factors</div>
+    {% if report.promise.contradicting %}
+        {% for f in report.promise.contradicting %}
+        <div class="factor con">
+            <b>{{ f.label }}</b> — {{ f.detail }}
+            <span class="src">Source: {{ f.source }}</span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="factor">
+            No contradicting factor was established from canonical output.
+            <span class="src">Absence of a recorded contradiction is not itself a positive indication.</span>
+        </div>
+    {% endif %}
+
+    <div class="sec" style="margin-top:4.5mm;">Promise Verdict</div>
+    <div class="verdict">
+        <div class="verdict-k">Verdict</div>
+        <div class="verdict-v v-{{ report.promise.verdict }}">
+            {{ report.promise.verdict|replace("_", " ") }}
+        </div>
+        <div class="verdict-s">{{ report.promise.verdict_basis }}</div>
+    </div>
+
+    <div class="limit">
+        A verdict states what the evaluated rules and computed dignities show —
+        no more. AstroOS does not convert a promise verdict into an assertion
+        that an event will or will not occur.
+    </div>
+
+    {{ foot() }}
+</div>
+
+<!-- ══════ PART 2 — THE TIMING ══════ -->
+<div class="a4">
+    {{ mast("Part 2 — The Timing", "Vimshottari Windows") }}
+
+    <div class="sec">Method</div>
+    <div style="font-size:8.4pt; line-height:1.55;">{{ report.timing.method }}</div>
+
+    {% if report.timing.current_window %}
+    <div class="sec" style="margin-top:4mm;">Current Period</div>
+    <div class="verdict">
+        <div class="verdict-k">Running Now</div>
+        <div class="verdict-v">
+            {{ report.timing.current_window.mahadasa }} /
+            {{ report.timing.current_window.antardasa }}
+        </div>
+        <div class="verdict-s">
+            {{ report.timing.current_window.start }} — {{ report.timing.current_window.end }}<br/>
+            {{ report.timing.current_window.basis }}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="sec" style="margin-top:4.5mm;">
+        Windows Governed by {{ report.report_title|replace(" Analysis","") }} Significators
+        {% if report.timing.significators %}
+        <span style="font-weight:400; text-transform:none; letter-spacing:0;">
+            ({{ report.timing.significators|join(", ") }})
+        </span>
+        {% endif %}
+    </div>
+    <table class="tbl tight">
+        <thead>
+            <tr><th style="width:22mm;">Mahadasa</th><th style="width:22mm;">Antardasa</th>
+                <th style="width:24mm;">Start</th><th style="width:24mm;">End</th>
+                <th>Basis</th></tr>
+        </thead>
+        <tbody>
+        {% for wnd in report.timing.windows[:20] %}
+            <tr class="{{ 'now' if wnd.is_current else '' }}">
+                <td class="pl">{{ wnd.mahadasa }}</td>
+                <td>{{ wnd.antardasa }}</td>
+                <td>{{ wnd.start }}</td>
+                <td>{{ wnd.end }}</td>
+                <td class="cite">{{ wnd.basis }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if report.timing.total_windows > 20 %}
+    <div class="cite" style="margin-top:2mm;">
+        Showing the first 20 of {{ report.timing.total_windows }} qualifying windows.
+    </div>
+    {% endif %}
+
+    <div class="limit">
+        <b>What this section does not establish.</b> {{ report.timing.limitations }}
+    </div>
+
+    {{ foot() }}
+</div>
+
+</body>
+</html>

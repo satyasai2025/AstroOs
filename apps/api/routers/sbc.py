@@ -20,7 +20,10 @@ from fastapi import APIRouter, Depends
 
 from apps.api.dependencies import get_ephemeris_wrapper
 from apps.api.schemas.sbc import (
+    SBCEventMatchResponse,
     SBCGridPlanetResponse,
+    SBCScanWindowResponse,
+    SBCStancePolicyResponse,
     SBCNatalAttributesResponse,
     SBCProtectionItemResponse,
     SBCRawVedhaHitResponse,
@@ -40,8 +43,41 @@ from apps.api.schemas.ai import AISBCAnalysisRequest, AISBCAnalysisResponse
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.sbc_ai_analyzer import SBCAIAnalyzer
 from apps.api.services.sbc_report_service import SBCReport, SBCReportService
-from apps.api.services.sbc_scan_engine import SBCScanEngine
+from apps.api.services.sbc_scan_engine import SBCScanEngine, group_into_windows
+from packages.shared.disclosed_events import (
+    DisclosedEvent,
+    EventMatch,
+    EventValence,
+    LifeDomain,
+)
+from packages.shared.temporal_stance import StancePolicy, SubjectStatus
 
+
+def _serialise_policy(policy: StancePolicy | None) -> SBCStancePolicyResponse | None:
+    if policy is None:
+        return None
+    return SBCStancePolicyResponse(
+        direction=policy.direction.value,
+        voice=policy.voice.value,
+        may_name_specific_event=policy.may_name_specific_event,
+        requires_invitation_to_confirm=policy.requires_invitation_to_confirm,
+        requires_confidence_qualifier=policy.requires_confidence_qualifier,
+        longevity_formula_allowed=policy.longevity_formula_allowed,
+        prohibited_categories=sorted(c.value for c in policy.prohibited_categories),
+        rationale=policy.rationale,
+    )
+
+
+def _serialise_match(match: EventMatch) -> SBCEventMatchResponse:
+    return SBCEventMatchResponse(
+        event_id=match.event.event_id,
+        domain=match.event.domain.value,
+        description=match.event.description,
+        overlap_days=match.overlap_days,
+        domain_matches=match.domain_matches,
+        matched_sangyas=list(match.matched_sangyas),
+        is_confirmation=match.is_confirmation,
+    )
 
 
 router = APIRouter(prefix="/sbc", tags=["Sarvatobhadra Chakra"])
@@ -239,20 +275,62 @@ async def scan_sbc(
     request: SBCScanRequest,
     engine: SBCScanEngine = Depends(_get_sbc_scan_engine),
 ) -> SBCScanResponse:
+    events = [
+        DisclosedEvent(
+            event_id=e.event_id,
+            domain=LifeDomain(e.domain),
+            occurred_start_utc=e.occurred_start_utc,
+            occurred_end_utc=e.occurred_end_utc,
+            description=e.description,
+            valence=EventValence(e.valence),
+            significance=e.significance,
+        )
+        for e in request.disclosed_events
+    ]
+
     hits = engine.scan(
         request.janma_nakshatra,
         request.start_utc,
         request.end_utc,
         step_days=request.step_days,
+        now_utc=request.now_utc,
+        disclosed_events=events,
+        subject_status=SubjectStatus(request.subject_status),
     )
+    windows = group_into_windows(hits, max_gap_days=request.window_gap_days)
+
     return SBCScanResponse(
         janma_nakshatra=request.janma_nakshatra,
         start_utc=request.start_utc,
         end_utc=request.end_utc,
         step_days=request.step_days,
         hits=[
-            SBCScanHitResponse(moment_utc=h.moment_utc, vedha_result=_serialise(h.report).vedha_result)
+            SBCScanHitResponse(
+                moment_utc=h.moment_utc,
+                vedha_result=_serialise(h.report).vedha_result,
+                temporal_direction=h.temporal_direction.value,
+                tier=h.tier.value,
+                afflicted_sangyas=list(h.afflicted_sangyas),
+                activated_sangyas=list(h.activated_sangyas),
+                policy=_serialise_policy(h.policy),
+                event_matches=[_serialise_match(m) for m in h.event_matches],
+            )
             for h in hits
+        ],
+        windows=[
+            SBCScanWindowResponse(
+                start_utc=w.start_utc,
+                end_utc=w.end_utc,
+                duration_days=w.duration_days,
+                hit_count=len(w.hits),
+                temporal_direction=w.temporal_direction.value,
+                tier=w.tier.value,
+                afflicted_sangyas=list(w.afflicted_sangyas),
+                policy=_serialise_policy(w.policy),
+                event_matches=[_serialise_match(m) for m in w.event_matches],
+                confirmed_by_disclosure=w.is_confirmed_by_disclosure,
+            )
+            for w in windows
         ],
     )
 

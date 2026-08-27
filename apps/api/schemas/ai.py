@@ -92,6 +92,40 @@ class AIResponseSchema(BaseModel):
     version: str
 
 
+class DisclosedEventInput(BaseModel):
+    """A life event the native reported, at the precision they reported it at."""
+
+    event_id: str = Field(description="Caller-supplied stable identifier for this event.")
+    domain: Literal[
+        "health",
+        "mental_wellbeing",
+        "family",
+        "relationship",
+        "career",
+        "finance",
+        "education",
+        "relocation",
+        "legal",
+        "spiritual",
+        "other",
+    ] = Field(description="Life domain the event belongs to.")
+    occurred_start_utc: datetime = Field(description="When the event began (or occurred, if a point in time).")
+    occurred_end_utc: Optional[datetime] = Field(
+        default=None,
+        description="End of the range when the native could only place the event approximately.",
+    )
+    description: str = Field(default="", description="The native's own description of the event.")
+    valence: Literal["difficult", "supportive", "mixed"] = "difficult"
+    significance: int = Field(default=3, ge=1, le=5, description="Native's own sense of magnitude, 1-5.")
+
+    @field_validator("occurred_start_utc", "occurred_end_utc")
+    @classmethod
+    def _require_tz_event(cls, v: Optional[datetime]) -> Optional[datetime]:
+        if v is not None and v.tzinfo is None:
+            return v.replace(tzinfo=timezone.utc)
+        return v
+
+
 class AISBCAnalysisRequest(BaseModel):
     reference_nakshatra: str = Field(default="mrigashira", description="Janma Nakshatra token (e.g. 'mrigashira' or 'uttara_phalguni')")
     transit_date: Optional[datetime] = Field(default=None, description="Active transit datetime in UTC")
@@ -103,8 +137,28 @@ class AISBCAnalysisRequest(BaseModel):
     benefic_vedhas: list[dict[str, Any]] = Field(default_factory=list, description="Current benefic shields")
     active_sangyas: list[dict[str, Any]] = Field(default_factory=list, description="Status of the 10 Sangyas")
     custom_context: Optional[str] = Field(default=None, description="Optional custom user context")
+    subject_status: Literal["living", "deceased_historical"] = Field(
+        default="living",
+        description=(
+            "Who the reading is about. 'deceased_historical' selects research/backtesting "
+            "mode for a documented historical figure; the longevity/Arishta family of "
+            "formulas is available only in that mode and never for a living subject."
+        ),
+    )
+    disclosed_events: list[DisclosedEventInput] = Field(
+        default_factory=list,
+        description=(
+            "Life events the native reported themselves. A past window overlapping one of "
+            "these, in a matching life domain, may be discussed in the native's own terms "
+            "rather than hedged to the domain level."
+        ),
+    )
+    now_utc: Optional[datetime] = Field(
+        default=None,
+        description="Reference 'now' for past/present/future classification. Defaults to current UTC.",
+    )
 
-    @field_validator("transit_date")
+    @field_validator("transit_date", "now_utc")
     @classmethod
     def _require_tz_sbc(cls, v: Optional[datetime]) -> Optional[datetime]:
         if v is not None and v.tzinfo is None:
@@ -161,5 +215,20 @@ class AISBCAnalysisResponse(BaseModel):
     markdown_report: str = ""
     confidence: float = 0.95
     version: str = "2.1.0"
+
+    # ── Temporal stance (see packages/shared/temporal_stance.py) ──────────
+    temporal_direction: Literal["past", "present", "future"] = "present"
+    voice: Literal["retrodictive", "advisory", "prospective"] = "advisory"
+    #: Why this output is phrased the way it is — surfaced so a reader can
+    #: see that a hedged window is hedged by policy, not by vagueness.
+    stance_rationale: str = ""
+    #: Set when a past window lines up with an event the native disclosed.
+    confirmed_by_disclosure: bool = False
+    #: Present when the policy requires the native be invited to confirm or
+    #: correct an inferred retrodiction.
+    confirmation_invitation: str = ""
+    #: Non-empty only if a response template regressed into prohibited
+    #: vocabulary and had to be redacted at runtime; a bug signal, not a feature.
+    policy_redactions: list[str] = Field(default_factory=list)
 
 

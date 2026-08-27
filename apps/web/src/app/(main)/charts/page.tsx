@@ -29,6 +29,7 @@ import AshtakavargaPanel from "@/components/charts/AshtakavargaPanel";
 import JaiminiPanel from "@/components/charts/JaiminiPanel";
 import PlanetExplorerPanel from "@/components/charts/PlanetExplorerPanel";
 import VargaExplorer from "@/components/charts/VargaExplorer";
+import { SBCChakraGrid } from "@/components/charts/SBCChakraGrid";
 import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
@@ -72,7 +73,8 @@ type ViewMode =
   | "ashtakavarga"
   | "jaimini"
   | "planets"
-  | "divisional";
+  | "divisional"
+  | "sbc";
 
 const VALID_VIEWS: ViewMode[] = [
   "kundli",
@@ -89,7 +91,8 @@ const VALID_VIEWS: ViewMode[] = [
   "ashtakavarga",
   "jaimini",
   "planets",
-  "divisional"
+  "divisional",
+  "sbc"
 ];
 
 type DashaSubView = "dashboard" | "timeline" | "tree" | "analysis" | "events" | "reports";
@@ -773,6 +776,14 @@ function ChartsPageContent() {
 
       {view === "divisional" && (
         <div id="panel-divisional" role="tabpanel" aria-label="Divisional charts panel"><VargaExplorer chart={chart} vargas={vargas} transits={result.transits} selectedVarga={selectedVarga} setSelectedVarga={setSelectedVarga} /></div>
+      )}
+
+      {view === "sbc" && (
+        <div id="panel-sbc" role="tabpanel" aria-label="Sarvatobhadra Chakra panel" className="space-y-6">
+          <div className="rounded-2xl border p-4 sm:p-6 shadow-xl backdrop-blur-sm" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}>
+            <SBCChakraGrid />
+          </div>
+        </div>
       )}
     </>
   );

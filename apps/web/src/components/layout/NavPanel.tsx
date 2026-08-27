@@ -205,7 +205,14 @@ function NavPanelInner({
     return Object.fromEntries(NAV_GROUPS.map((g) => [g.label, true]));
   });
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>(() => {
-    return { "chart-management": true, "chart-workspace": true };
+    return {
+      "chart-management": true,
+      "chart-workspace": true,
+      "nakshatra": true,
+      "analysis": true,
+      "technical-systems": true,
+      "research": true,
+    };
   });
 
   const toggleGroup = (label: string) =>
@@ -436,8 +443,8 @@ function NavPanelInner({
               {(groupOpen || collapsed) && (
                 <div className="mt-0.5 flex flex-col gap-0.5">
                   {filteredModules.map((mod) => {
-                    const modOpen = expandedModules[mod.id] ?? false;
                     const hasActiveChild = mod.items.some((item) => isActive(item));
+                    const modOpen = (expandedModules[mod.id] ?? false) || hasActiveChild;
                     const modColor = `var(${mod.color})`;
 
                     return (

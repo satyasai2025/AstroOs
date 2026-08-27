@@ -1,0 +1,77 @@
+{
+  "person_name": "Donald Trump",
+  "chart_id": "WKD-TRUMP-003",
+  "source": "Wikipedia: Donald Trump (infobox birth_date=1946-06-14, birth_place=Queens, New York City, New York, U.S.)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1946-06-14",
+    "time_utc": "10:54:00",
+    "latitude": 40.7282,
+    "longitude": -73.7949,
+    "note": "Birth time from hospital records (Queens, NY); EDTest=10:54am local)"
+  },
+  "rectified_birth_time": {
+    "date": "1946-06-14",
+    "time_utc": "10:54:00",
+    "latitude": 40.7282,
+    "longitude": -73.7949,
+    "source": "Wikidot birth-chart-of-donald-trump (recorded time matches rectified; no discrepancy)"
+  },
+  "birth_data": {
+    "janma_nakshatra": "mrigashira",
+    "nakshatra_pada": 3,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "cancer"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "2016-11-09",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Elected President of the United States"
+    },
+    {
+      "event_date": "2017-01-20",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Inaugurated 45th President of the United States"
+    },
+    {
+      "event_date": "2021-01-06",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Capitol riot / January 6 attack"
+    },
+    {
+      "event_date": "2024-11-05",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Re-elected President of the United States"
+    },
+    {
+      "event_date": "2025-01-20",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Inaugurated 47th President of the United States"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-donald-trump",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

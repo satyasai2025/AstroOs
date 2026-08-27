@@ -28,6 +28,24 @@ from apps.api.services.sbc_vedha_engine import (
     GRAHA_VEDHA_RULES,
     SANGYA_LIFE_AREAS,
 )
+from packages.shared.disclosed_events import (
+    DisclosedEvent,
+    EventMatch,
+    EventValence,
+    LifeDomain,
+    match_events,
+)
+from packages.shared.temporal_stance import (
+    EventSource,
+    StancePolicy,
+    SubjectStatus,
+    TemporalDirection,
+    Voice,
+    classify_direction,
+    redact,
+    resolve_policy,
+    scan_text,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -132,15 +150,261 @@ class SBCAIAnalyzer:
                 )
             )
 
-        # Dispatch based on event type
-        if event_type == "market":
-            return cls._build_market_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
+        # Resolve what this output is allowed to say before deciding how to
+        # say it. A window in the past is a retrodiction the native can check
+        # against their own life; the prescriptive "do NOT do X right now"
+        # templates below are meaningless for it and are not reachable.
+        policy, matches = cls._resolve_stance(req, t_moment, afflicted_points, protected_points)
+
+        if policy.direction is TemporalDirection.PAST:
+            response = cls._build_retrodiction_analysis(
+                ref_nak, moment_str, afflicted_points, protected_points, breakdown_items, policy, matches
+            )
+        elif event_type == "market":
+            response = cls._build_market_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
         elif event_type == "life_events":
-            return cls._build_life_events_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
+            response = cls._build_life_events_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
         elif event_type == "muhurta":
-            return cls._build_muhurta_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
+            response = cls._build_muhurta_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
         else:
-            return cls._build_general_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
+            response = cls._build_general_analysis(ref_nak, moment_str, afflicted_points, protected_points, breakdown_items)
+
+        return cls._apply_policy(response, policy, matches)
+
+    # ── Temporal stance ───────────────────────────────────────────────────
+
+    @classmethod
+    def _resolve_stance(
+        cls,
+        req: AISBCAnalysisRequest,
+        moment: datetime,
+        afflicted: list[dict[str, Any]],
+        protected: list[dict[str, Any]],
+    ) -> tuple[StancePolicy, list[EventMatch]]:
+        """Classify the moment and match it against anything the native disclosed."""
+        events = [
+            DisclosedEvent(
+                event_id=e.event_id,
+                domain=LifeDomain(e.domain),
+                occurred_start_utc=e.occurred_start_utc,
+                occurred_end_utc=e.occurred_end_utc,
+                description=e.description,
+                valence=EventValence(e.valence),
+                significance=e.significance,
+            )
+            for e in req.disclosed_events
+        ]
+
+        sangya_keys = [p["key"] for p in afflicted] + [p["key"] for p in protected]
+        matches = (
+            match_events(events, moment, moment, sangya_keys=sangya_keys, tolerance_days=15.0)
+            if events
+            else []
+        )
+
+        source = (
+            EventSource.USER_DISCLOSED
+            if any(m.is_confirmation for m in matches)
+            else EventSource.SYSTEM_INFERRED
+        )
+        direction = classify_direction(moment, req.now_utc)
+        return resolve_policy(direction, source, SubjectStatus(req.subject_status)), matches
+
+    @classmethod
+    def _apply_policy(
+        cls,
+        response: AISBCAnalysisResponse,
+        policy: StancePolicy,
+        matches: list[EventMatch],
+    ) -> AISBCAnalysisResponse:
+        """Stamp the stance onto the response and enforce its vocabulary rules.
+
+        The templates in this module are authored to comply, so a redaction
+        here means a template regressed — it is recorded on the response and
+        logged rather than silently swallowed. Tests use
+        ``temporal_stance.assert_compliant`` to fail loudly on the same input.
+        """
+        response.temporal_direction = policy.direction.value
+        response.voice = policy.voice.value
+        response.stance_rationale = policy.rationale
+        response.confirmed_by_disclosure = any(m.is_confirmation for m in matches)
+
+        if policy.requires_invitation_to_confirm:
+            response.confirmation_invitation = (
+                "This is what the classical indicators show for that window — not a claim about "
+                "what actually happened. If something significant did occur for you around then, "
+                "telling me lets me calibrate the rest of the reading against it; if nothing did, "
+                "that is a useful correction to this technique's track record."
+            )
+
+        redactions: list[str] = []
+        for field_name, text in cls._policy_scanned_fields(response).items():
+            violations = scan_text(text, policy, field_name=field_name)
+            if violations:
+                redactions.extend(f"{v.field_name}: {v.term}" for v in violations)
+                cls._set_field_text(response, field_name, redact(text, policy))
+
+        if redactions:
+            logger.warning(
+                "SBC analyzer template violated its %s/%s stance policy and was redacted: %s",
+                policy.direction.value,
+                policy.event_source.value,
+                ", ".join(redactions),
+            )
+        response.policy_redactions = redactions
+        return response
+
+    @staticmethod
+    def _policy_scanned_fields(response: AISBCAnalysisResponse) -> dict[str, str]:
+        """Every free-text field a reader actually sees."""
+        fields: dict[str, str] = {
+            "verdict": response.verdict,
+            "the_story": response.the_story,
+            "executive_summary": response.executive_summary,
+            "markdown_report": response.markdown_report,
+        }
+        for i, w in enumerate(response.major_warnings):
+            fields[f"major_warnings[{i}].headline"] = w.headline
+            fields[f"major_warnings[{i}].what_not_to_do"] = w.what_not_to_do
+        for i, s in enumerate(response.safe_zones):
+            fields[f"safe_zones[{i}].description"] = s.description
+        for i, p in enumerate(response.practical_steps):
+            fields[f"practical_steps[{i}].action"] = p.action
+            fields[f"practical_steps[{i}].why"] = p.why
+        for i, b in enumerate(response.sangya_breakdown):
+            fields[f"sangya_breakdown[{i}].interpretation"] = b.interpretation
+        return fields
+
+    @staticmethod
+    def _set_field_text(response: AISBCAnalysisResponse, field_name: str, value: str) -> None:
+        if "[" not in field_name:
+            setattr(response, field_name, value)
+            return
+        collection, _, remainder = field_name.partition("[")
+        index_str, _, attribute = remainder.partition("].")
+        setattr(getattr(response, collection)[int(index_str)], attribute, value)
+
+    @classmethod
+    def _build_retrodiction_analysis(
+        cls,
+        ref_nak: str,
+        moment_str: str,
+        afflicted: list[dict[str, Any]],
+        protected: list[dict[str, Any]],
+        items: list[AISBCSangyaBreakdownItem],
+        policy: StancePolicy,
+        matches: list[EventMatch],
+    ) -> AISBCAnalysisResponse:
+        """Explain a window that has already passed.
+
+        Two shapes, depending on whether the native disclosed something that
+        lines up. With a confirmation, the event is named — repeating back
+        what someone told you withholds nothing. Without one, the window and
+        its life domains are the whole claim, and the native is invited to
+        confirm or correct rather than handed a guess.
+        """
+        confirmations = [m for m in matches if m.is_confirmation]
+        domains = [a["domain"] for a in afflicted]
+        domain_phrase = cls._join_domains(domains) or "no specific life area"
+        shield_phrase = cls._join_domains([p["domain"] for p in protected])
+
+        if confirmations:
+            top = confirmations[0]
+            named = top.event.description or f"the {top.event.domain.value.replace('_', ' ')} event you described"
+            verdict = "Indicators Converge On A Window You Have Already Identified"
+            verdict_badge = "caution"
+            story = (
+                f"Around {moment_str}, the classical indicators converge on {domain_phrase} — "
+                f"the same area as {named}. Reading from {ref_nak} as the reference point, "
+                f"{len(afflicted)} of the ten Sangyas were carrying malefic Vedha simultaneously. "
+                f"The tradition treats that kind of convergence as a genuinely stressed period, "
+                f"which is consistent with what you reported."
+            )
+            quick_chips = ["🔎 Retrospective Reading", "✅ Matches Your Account", f"📍 {len(afflicted)} Points Under Pressure"]
+        else:
+            verdict = "Classically Stressed Window — Retrospective"
+            verdict_badge = "caution"
+            story = (
+                f"Around {moment_str}, the classical indicators converge on {domain_phrase}. "
+                f"Reading from {ref_nak} as the reference point, {len(afflicted)} of the ten Sangyas "
+                f"were carrying malefic Vedha at the same time, which the tradition reads as a "
+                f"period of real difficulty in those areas. What form that took, if anything, "
+                f"the technique does not specify and this reading does not guess."
+            )
+            quick_chips = ["🔎 Retrospective Reading", "❓ Unconfirmed", f"📍 {len(afflicted)} Points Under Pressure"]
+
+        if shield_phrase:
+            story += f" Working in the other direction over the same window: benefic support on {shield_phrase}."
+
+        warnings = [
+            AISBCWarningItem(
+                headline=(
+                    f"The tradition flags {area['domain'].lower()} as the area under pressure in this window."
+                ),
+                what_not_to_do=(
+                    "This window has passed; nothing here is an instruction. It is offered as an "
+                    "explanation of the period, to be checked against your own recollection."
+                ),
+                affected_area=f"{area['name']} ({area['nak']})",
+                severity="caution",
+            )
+            for area in afflicted[:3]
+        ]
+
+        practical_steps = [
+            AISBCPracticalStep(
+                action="Check this window against what you remember of that period.",
+                why=(
+                    "A retrodiction is falsifiable in a way a forecast is not — you already know "
+                    "the outcome, so confirming or correcting it is what tells us whether this "
+                    "technique reads your chart well."
+                ),
+                timing_tip="Correcting a miss is as useful here as confirming a hit.",
+            )
+        ]
+
+        safe_zones = cls._extract_safe_zones(protected)
+        md = cls._render_markdown_report(
+            "🔎 Retrospective Window Analysis",
+            ref_nak,
+            moment_str,
+            verdict,
+            story,
+            warnings,
+            safe_zones,
+            practical_steps,
+            items,
+        )
+
+        return AISBCAnalysisResponse(
+            event_type="retrodiction",
+            title=f"🔎 SBC Retrospective Window ({ref_nak} Reference)",
+            verdict=verdict,
+            verdict_badge=verdict_badge,
+            the_story=story,
+            executive_summary=story,
+            risk_level="high" if len(afflicted) >= 3 else "moderate",
+            quick_chips=quick_chips,
+            major_warnings=warnings,
+            safe_zones=safe_zones,
+            practical_steps=practical_steps,
+            sangya_breakdown=items,
+            predictions=[],
+            protective_shields=[s.benefit for s in safe_zones],
+            actionable_remedies=[p.action for p in practical_steps],
+            markdown_report=md,
+            confidence=0.9,
+            version="2.2.0",
+        )
+
+    @staticmethod
+    def _join_domains(domains: list[str]) -> str:
+        unique = list(dict.fromkeys(d.lower() for d in domains if d))
+        if not unique:
+            return ""
+        if len(unique) == 1:
+            return unique[0]
+        return ", ".join(unique[:-1]) + f" and {unique[-1]}"
 
     @classmethod
     def _build_market_analysis(cls, ref_nak: str, moment_str: str, afflicted, protected, items) -> AISBCAnalysisResponse:

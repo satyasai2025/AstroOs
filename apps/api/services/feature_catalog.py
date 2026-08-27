@@ -127,11 +127,30 @@ FEATURES: tuple[FeatureDef, ...] = (
 DECIDED_MATRIX: dict[str, dict[str, dict[str, bool]]] = {
     # feature_key -> plan_code -> {action: bool}
     "saved_horoscopes": {
-        "FREE":     {"view": True, "create": True},
-        "PRO":      {"view": True, "create": True},
-        "RESEARCH": {"view": True, "create": True},
-        "CUSTOM":   {"view": True, "create": True},
-        # edit/run/export: UNRESOLVED for every plan
+        "FREE":     {"view": True, "create": True, "edit": True},
+        "PRO":      {"view": True, "create": True, "edit": True},
+        "RESEARCH": {"view": True, "create": True, "edit": True},
+        "CUSTOM":   {"view": True, "create": True, "edit": True},
+        # run/export: UNRESOLVED for every plan
+    },
+    # Report downloads. Decided by the report tier architecture:
+    #   Birth Chart Foundation  -> free
+    #   Detailed Birth Report   -> medium paid
+    #   Domain analyses         -> premium
+    #
+    # `export` is the paid gate. FREE carries an explicit export:False rather
+    # than being left out, so a free user gets a clean ACTION_NOT_ALLOWED
+    # instead of falling through the "unresolved" legacy pass — which is what
+    # let the paid report render for a free plan before this cell existed.
+    #
+    # The free Foundation sheet is served by an UNGATED route, so free users
+    # keep it; only the paid tiers hit require_entitlement("reports","export").
+    "reports": {
+        "FREE":     {"view": True, "export": False},
+        "PRO":      {"view": True, "export": True},
+        "RESEARCH": {"view": True, "export": True},
+        "CUSTOM":   {"view": True, "export": True},
+        # create/edit/run: UNRESOLVED — reports are generated, not authored
     },
     "research_projects": {
         "FREE":     {},                       # limit 0/mo -> no access at all

@@ -245,7 +245,9 @@ async def create_project(
             },
         )
 
-    project = await engine.create_project(user_id=_user.id.value, **body.model_dump())
+    dump = body.model_dump()
+    dump.pop("dataset_id", None)
+    project = await engine.create_project(user_id=_user.id.value, **dump)
 
     # ── Phase 4 quota consumption ───────────────────────────────────────────────
     consumed = await quota_svc.consume_quota(

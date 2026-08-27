@@ -197,10 +197,14 @@ class Settings(BaseSettings):
     BATCH_OUTPUT_DIR: str = "data/batch_output"
     """Local directory where batch job result archives (zips) are written."""
 
-    # ── Email / SMTP (password reset) ───────────────────────────────────────
+    # ── Email & Notifications (Phase 7 — Multi-Provider) ────────────────────
+    EMAIL_PROVIDER: str = "mock"
+    """Email delivery backend: 'mock', 'smtp', or 'resend'."""
+    EMAIL_DEFAULT_FROM: str = "AstroOS <noreply@astroos.local>"
+    EMAIL_MAX_RETRIES: int = 3
+    EMAIL_RETRY_BACKOFF_BASE: float = 1.0
+    RESEND_API_KEY: str | None = None
     SMTP_HOST: str | None = None
-    """Left unset (safe local-development default), password-reset emails
-    are logged instead of sent — see apps/api/services/email_service.py."""
     SMTP_PORT: int = 587
     SMTP_USERNAME: str | None = None
     SMTP_PASSWORD: str | None = None
@@ -209,6 +213,22 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "http://localhost:3000"
     """Origin used to build links (e.g. the password-reset link) sent in emails."""
     PASSWORD_RESET_TOKEN_TTL_MINUTES: int = 30
+
+    # ── Payment Gateway & Pricing (Phase 6 & 8) ─────────────────────────────
+    PAYMENT_PROVIDER: str = "mock"
+    """Payment provider backend to use: 'mock', 'stripe', or 'razorpay'."""
+    STRIPE_SECRET_KEY: str | None = None
+    STRIPE_PUBLISHABLE_KEY: str | None = None
+    STRIPE_WEBHOOK_SECRET: str | None = None
+    RAZORPAY_KEY_ID: str | None = None
+    RAZORPAY_KEY_SECRET: str | None = None
+    RAZORPAY_WEBHOOK_SECRET: str | None = None
+    PAYMENT_DEFAULT_CURRENCY: str = "INR"
+    """Default pricing currency: 'INR' (India-first ₹) with multi-currency support."""
+    TAX_RATE_INR_PERCENT: float = 18.0
+    """Applicable GST rate for INR transactions (percentage). Default: 18.0%."""
+    TAX_RATE_USD_PERCENT: float = 0.0
+    """Applicable tax rate for USD transactions (percentage). Default: 0.0%."""
 
     model_config = SettingsConfigDict(
         env_file=".env",

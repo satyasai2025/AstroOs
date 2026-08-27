@@ -44,6 +44,8 @@ const KNOWN_VIEW_REDIRECTS: Record<string, string> = {
   chart: "chart",
   timeline: "timeline",
   predictions: "predictions",
+  sbc: "sbc",
+  tarabala: "tarabala",
 };
 
 export default function ChartDetailPage() {

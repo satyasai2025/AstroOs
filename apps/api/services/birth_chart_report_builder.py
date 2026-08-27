@@ -18,6 +18,7 @@ from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
 from apps.api.services.avastha_engine import AvasthaEngine
 from apps.api.services.badhaka_maraka_engine import BadhakaMarakaEngine
 from apps.api.services.chart_svg_renderer import render_north_indian_svg
+from apps.api.services.dasha_engine import DashaEngine
 from apps.api.services.divisional_engine import DivisionalEngine
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper, datetime_to_jd, jd_to_datetime
 from apps.api.services.pinda_engine import PindaEngine
@@ -132,6 +133,9 @@ class BirthChartReportBuilder:
             divisional_engine=self._divisional_engine, ephemeris_wrapper=self._wrapper,
         )
         self._badhaka_maraka_engine = BadhakaMarakaEngine()
+        # Vimshottari comes from the canonical engine — the builder must not
+        # derive dasha periods itself (report tier spec, "Data Integrity").
+        self._dasha_engine = DashaEngine(self._wrapper)
 
     def build_report_data(
         self,
@@ -309,72 +313,79 @@ class BirthChartReportBuilder:
         )
 
         # ── 4. Vimshottari Dasha Grid ─────────────────────────────────────────
-        nak_span = 360.0 / 27.0
-        deg_in_nak = moon_lon % nak_span
-        frac_passed = deg_in_nak / nak_span
-        frac_left = 1.0 - frac_passed
+        # Sourced from the canonical DashaEngine, NOT recomputed here.
+        #
+        # This block previously derived the whole Vimshottari tree inline. Its
+        # first (partial) mahadasha used a fraction formula that let the
+        # antardashas run far past the mahadasha's own end date — for an
+        # 8 Aug 1912 chart the Mars mahadasha ended 1919 while its antardashas
+        # ran to 2027. It also violated the report-tier rule that builders
+        # assemble canonical output rather than recalculate it.
+        dasha_tree = self._dasha_engine.compute_vimshottari(
+            birth_datetime_utc=birth_dt,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+            max_depth=2,          # mahadasha + antardasha
+        )
 
-        dasha_lord_start = NAKSHATRAS[moon_nak_idx][1]
-        start_idx = DASHA_ORDER.index(dasha_lord_start)
-        
+        def _fmt(d) -> str:
+            return d.strftime("%d %b %Y")
+
+        def _span(days: int) -> str:
+            years, rem = divmod(days, 365)
+            months, day = divmod(rem, 30)
+            return f"{years}Y {months}M {day}D"
+
+        today = datetime.now(timezone.utc).date()
         dasha_timeline = []
-        current_date = birth_dt
-        first_md_years = DASHA_YEARS[dasha_lord_start] * frac_left
-        first_md_days = first_md_years * 365.25
-        first_md_end = current_date + timedelta(days=first_md_days)
-
-        active_antardashas = []
         active_md_lord = ""
         active_md_range = ""
+        active_antardashas: list[dict[str, Any]] = []
 
-        # Build 9 Mahadashas
-        for i in range(9):
-            md_lord = DASHA_ORDER[(start_idx + i) % 9]
-            if i == 0:
-                md_start = current_date
-                md_end = first_md_end
-                md_duration_str = f"{int(first_md_years)}Y {int((first_md_years%1)*12)}M 0D"
-            else:
-                md_start = current_date
-                md_span_days = DASHA_YEARS[md_lord] * 365.25
-                md_end = md_start + timedelta(days=md_span_days)
-                md_duration_str = f"{DASHA_YEARS[md_lord]}Y 0M 0D"
-
-            # Sub-periods
-            antardashas = []
-            ad_start_idx = DASHA_ORDER.index(md_lord)
-            ad_cur = md_start
-            md_total_days = (md_end - md_start).total_seconds() / 86400.0
-
-            for j in range(9):
-                ad_lord = DASHA_ORDER[(ad_start_idx + j) % 9]
-                ad_fraction = DASHA_YEARS[ad_lord] / 120.0
-                ad_days = md_total_days * (ad_fraction if i > 0 else (DASHA_YEARS[ad_lord] / 120.0) / (DASHA_YEARS[md_lord] / 120.0) * (first_md_years / DASHA_YEARS[md_lord]))
-                ad_end = ad_cur + timedelta(days=ad_days)
-                
-                ad_item = {
-                    "lord": ad_lord,
-                    "start": ad_cur.strftime("%d %b %Y"),
-                    "end": ad_end.strftime("%d %b %Y"),
-                    "duration": f"{max(int(ad_days/30.4), 1)}M {int(ad_days%30.4)}D",
+        for md in dasha_tree.mahadashas:
+            antardashas = [
+                {
+                    "lord": ad.lord.capitalize(),
+                    "start": _fmt(ad.start_date),
+                    "end": _fmt(ad.end_date),
+                    "duration": _span(ad.duration_days),
                 }
-                antardashas.append(ad_item)
-                ad_cur = ad_end
-
-            # Pick 2nd or current Mahadasha for the right-side Antardasha box
-            if i == 1 or (i == 0 and len(active_antardashas) == 0):
-                active_md_lord = md_lord
-                active_md_range = f"{md_start.strftime('%d %b %Y')} – {md_end.strftime('%d %b %Y')}"
-                active_antardashas = antardashas
-
+                for ad in md.sub_periods
+            ]
             dasha_timeline.append({
-                "mahadasha": md_lord,
-                "start": md_start.strftime("%d %b %Y"),
-                "end": md_end.strftime("%d %b %Y"),
-                "duration": md_duration_str,
+                "mahadasha": md.lord.capitalize(),
+                "start": _fmt(md.start_date),
+                "end": _fmt(md.end_date),
+                "duration": _span(md.duration_days),
                 "antardashas": antardashas,
             })
-            current_date = md_end
+
+            # The mahadasha actually running now, by date — not a positional
+            # guess. Falls back to the first period for charts whose whole
+            # cycle is still in the future.
+            if md.start_date <= today <= md.end_date:
+                active_md_lord = md.lord.capitalize()
+                active_md_range = f"{_fmt(md.start_date)} – {_fmt(md.end_date)}"
+                # ALL antardasas of the running mahadasa — the report prints
+                # the full sub-cycle as a table, and consumers that want only
+                # the one in progress can filter on `is_current`.
+                active_antardashas = [
+                    {
+                        "lord": a.lord.capitalize(),
+                        "start": _fmt(a.start_date),
+                        "end": _fmt(a.end_date),
+                        "duration": _span(a.duration_days),
+                        "is_current": a.start_date <= today <= a.end_date,
+                    }
+                    for a in md.sub_periods
+                ]
+
+        if not active_md_lord and dasha_timeline:
+            first = dasha_timeline[0]
+            active_md_lord = first["mahadasha"]
+            active_md_range = f"{first['start']} – {first['end']}"
+            active_antardashas = first["antardashas"]
 
         # ── 5. Ashtakavarga & SAV Full 12x7 Matrix ────────────────────────────
         # Real Bhinnashtakavarga per graha (order matches _CLASSICAL_SEVEN:

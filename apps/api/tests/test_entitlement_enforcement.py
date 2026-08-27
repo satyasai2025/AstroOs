@@ -254,6 +254,7 @@ class TestDecidedMatrixSpec:
         for plan_code in ("FREE", "PRO", "RESEARCH", "CUSTOM"):
             assert "view" in DECIDED_MATRIX["saved_horoscopes"][plan_code]
             assert "create" in DECIDED_MATRIX["saved_horoscopes"][plan_code]
+            assert "edit" in DECIDED_MATRIX["saved_horoscopes"][plan_code]
 
     def test_research_projects_free_has_no_access(self):
         assert DECIDED_MATRIX["research_projects"]["FREE"] == {}

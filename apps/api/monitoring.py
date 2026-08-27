@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from prometheus_client import Counter, Histogram, Gauge, generate_latest, CONTENT_TYPE_LATEST
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 
 # Metrics per ADR-PRODUCTION-001
 chart_computation_duration = Histogram(
@@ -33,18 +33,18 @@ def metrics_endpoint(request):
 
 def health_live(request):
     """Liveness probe."""
-    return {"status": "alive"}
+    return JSONResponse({"status": "alive"})
 
 
 def health_ready(request):
     """Readiness probe."""
-    return {
+    return JSONResponse({
         "status": "ready",
         "checks": {
             "database": {"status": "healthy", "latency_ms": 0.0},
             "redis": {"status": "healthy", "latency_ms": 0.0},
         },
-    }
+    })
 
 
 def setup_monitoring_routes(app):

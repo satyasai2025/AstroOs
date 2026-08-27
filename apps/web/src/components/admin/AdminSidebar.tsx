@@ -34,6 +34,13 @@ const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
     ],
   },
   {
+    title: "Billing & Revenue",
+    color: "#10B981",
+    items: [
+      { href: "/admin/billing", label: "Billing & Invoices", icon: "credit-card", badge: "GST" },
+    ],
+  },
+  {
     title: "Users & Access",
     color: "#06CFFF",
     items: [
@@ -92,6 +99,13 @@ function AdminNavIcon({ name }: { name: string }) {
       return (
         <svg {...common}>
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      );
+    case "credit-card":
+      return (
+        <svg {...common}>
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <line x1="2" y1="10" x2="22" y2="10" />
         </svg>
       );
     case "users":

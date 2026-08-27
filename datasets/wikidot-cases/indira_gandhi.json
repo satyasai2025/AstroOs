@@ -1,0 +1,68 @@
+{
+  "person_name": "Indira Gandhi",
+  "chart_id": "WKD-INDIRA-001",
+  "source": "Wikipedia: Indira Gandhi (infobox birth_date=1917-11-19, birth_place=Delhi, British India; no birth time recorded on Wikipedia page)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1917-11-19",
+    "time_utc": "00:00:00",
+    "latitude": 28.6135,
+    "longitude": 77.2090,
+    "note": "Wikipedia does not record birth time. Midnight UTC assumed placeholder."
+  },
+  "rectified_birth_time": {
+    "date": "1917-11-19",
+    "time_utc": "01:10:00",
+    "latitude": 28.6135,
+    "longitude": 77.2090,
+    "source": "Wikidot birth-chart-of-indira-gandhi (rectified); nakshatra: Uttara Phalguni, pada 3"
+  },
+  "birth_data": {
+    "janma_nakshatra": "uttara_phalguni",
+    "nakshatra_pada": 3,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "virgo"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1975-06-25",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Declared Emergency, suspended civil liberties"
+    },
+    {
+      "event_date": "1980-01-14",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "RESIDUAL",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Returned to power as PM after Janata Party collapse"
+    },
+    {
+      "event_date": "1984-10-31",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Assassination by Security Forces personnel"
+    },
+    {
+      "event_date": "1962-11-20",
+      "event_date_precision": "exact_date",
+      "life_domain": "ACHIEVEMENT",
+      "valence": "RESIDUAL",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sino-Indian War concluded with ceasefire"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-indira-gandhi",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

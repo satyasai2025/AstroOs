@@ -28,6 +28,7 @@ from apps.api.dependencies import (
 from apps.api.routers import admin as admin_router
 from apps.api.routers import admin_auth as admin_auth_router
 from apps.api.routers import ai as ai_router
+from apps.api.routers import ai_governed as ai_governed_router
 from apps.api.routers import ai_phase_e as ai_phase_e_router
 from apps.api.routers import ai_settings as ai_settings_router
 from apps.api.routers import ashtakavarga as ashtakavarga_router
@@ -59,15 +60,21 @@ from apps.api.routers import muhurta as muhurta_router
 from apps.api.routers import mundane as mundane_router
 from apps.api.routers import plan as plan_router
 from apps.api.routers import subscription as subscription_router
+from apps.api.routers import payment as payment_router
+from apps.api.routers import notification as notification_router
+from apps.api.routers import dashboard as dashboard_router
 from apps.api.routers import prashna as prashna_router
 from apps.api.routers import report as report_router
 from apps.api.routers import report_full as report_full_router
+from apps.api.routers import reports_tiered as reports_tiered_router
 from apps.api.routers import research as research_router
 from apps.api.routers import search as search_router
 from apps.api.routers import research_tools as research_tools_router
 from apps.api.routers import avastha as avastha_router
 from apps.api.routers import vimsopaka as vimsopaka_router
 from apps.api.routers import collab as collab_router
+from apps.api.routers import latta as latta_router
+from apps.api.routers import sensitive_timeline as sensitive_timeline_router
 from apps.api.routers import sbc as sbc_router
 from apps.api.routers import shadbala as shadbala_router
 from apps.api.routers import statistics as statistics_router
@@ -106,6 +113,7 @@ from apps.api.routers import prediction_confluence as prediction_confluence_rout
 from apps.api.routers import prediction_validation as prediction_validation_router
 from apps.api.routers import experiments as experiments_router
 from apps.api.routers import multi_dasha_confluence as multi_dasha_confluence_router
+from apps.api.routers import unified_event_timing as unified_event_timing_router
 from apps.api.routers import synastry as synastry_router
 from apps.api.routers import rectification as rectification_router
 from apps.api.routers import cohort_validation as cohort_validation_router
@@ -342,6 +350,21 @@ def create_app() -> FastAPI:
     # Subscriptions (Phase 5) — per-route auth; admin ops gated by require_admin.
     app.include_router(subscription_router.router)
 
+    # Payments (Phase 6) — per-route auth/webhook public signature.
+    app.include_router(payment_router.router)
+
+    # Notifications & Emails (Phase 7) — per-route auth/admin controls.
+    app.include_router(notification_router.router)
+
+    # Dashboard & Account Hub (Phase 9) — per-route auth.
+    app.include_router(dashboard_router.router)
+
+    # Tiered Reports & Downloads (Phase 10) — per-route auth & entitlement checks.
+    app.include_router(reports_tiered_router.router)
+
+    # Governed AI & Shastra RAG (Phase 12) — per-route auth.
+    app.include_router(ai_governed_router.router)
+
     app.include_router(
         search_router.router, prefix="/api/v1", dependencies=_authenticated
     )
@@ -390,6 +413,15 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         tarabala_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        latta_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        sensitive_timeline_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        unified_event_timing_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
         technique_router.router, prefix="/api/v1", dependencies=_authenticated
