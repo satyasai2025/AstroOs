@@ -58,6 +58,7 @@ from apps.api.routers import kp as kp_router
 from apps.api.routers import muhurta as muhurta_router
 from apps.api.routers import mundane as mundane_router
 from apps.api.routers import plan as plan_router
+from apps.api.routers import subscription as subscription_router
 from apps.api.routers import prashna as prashna_router
 from apps.api.routers import report as report_router
 from apps.api.routers import report_full as report_full_router
@@ -337,6 +338,9 @@ def create_app() -> FastAPI:
     app.include_router(
         plan_router.router, dependencies=_authenticated
     )
+
+    # Subscriptions (Phase 5) — per-route auth; admin ops gated by require_admin.
+    app.include_router(subscription_router.router)
 
     app.include_router(
         search_router.router, prefix="/api/v1", dependencies=_authenticated

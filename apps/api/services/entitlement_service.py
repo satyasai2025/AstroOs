@@ -35,7 +35,11 @@ from typing import Literal
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.domain.user import User
+from apps.api.models.subscription import SubscriptionStatus
 from apps.api.repositories.plan_repository import PlanRepository
+
+from apps.api.services.subscription_service import SubscriptionService
+from apps.api.repositories.subscription_repository import SubscriptionRepository
 from apps.api.services.feature_catalog import ACTION_COLUMNS
 
 EntitlementStatus = Literal["granted", "denied", "unresolved"]
@@ -88,18 +92,90 @@ class EntitlementService:
     # ── Plan resolution ──────────────────────────────────────────────────────
 
     async def resolve_user_plan(self, user: User):
-        """Return the PlanModel for the user's current plan (default FREE)."""
-        assignment = await PlanRepository.get_user_plan(self._db, user.id.value)
-        if assignment is not None and assignment.plan_id is not None:
-            plan = await PlanRepository.get_by_id(self._db, assignment.plan_id)
-            if plan is not None and plan.is_active:
-                return plan
+        """
+        Return the PlanModel for the user's current plan (default FREE).
+
+        Phase 5 integration: subscription status gates the assignment.
+          - No subscription row  → historical behaviour (user_plans honoured).
+          - active / trialing / past_due_cancelled (within grace, folded by
+            SubscriptionService.compute_effective_status) → subscription's plan;
+            past_due_cancelled is the grace window so grants are kept.
+          - expired, or a lapsed grace window (terminal) → FREE fallback,
+            whatever user_plans says.
+        The decision, including the reason, is observable via
+        ``resolve_subscription_status``.
+        """
+        sub = await SubscriptionRepository.get_by_user(self._db, user.id.value)
+        if sub is None:
+            assignment = await PlanRepository.get_user_plan(self._db, user.id.value)
+            if assignment is not None and assignment.plan_id is not None:
+                plan = await PlanRepository.get_by_id(self._db, assignment.plan_id)
+                if plan is not None and plan.is_active:
+                    return plan
+        else:
+            effective = SubscriptionService.effective_status(sub)
+            if (
+                effective is not None
+                and SubscriptionStatus(effective) is not SubscriptionStatus.EXPIRED
+            ):
+                plan = await PlanRepository.get_by_id(self._db, sub.plan_id)
+                if plan is not None and plan.is_active:
+                    return plan
+            # EXPIRED (stored or folded), or inactive/expired-plan row:
+            # fall through to FREE below.
         default_plan = await PlanRepository.get_by_code(self._db, DEFAULT_PLAN_CODE)
         if default_plan is None:
             raise LookupError(
                 f"Default plan '{DEFAULT_PLAN_CODE}' is not seeded. Run migrations."
             )
         return default_plan
+
+    async def resolve_subscription_status(
+        self, user: User,
+    ) -> tuple[str | None, str]:
+        """
+        Subscription-aware resolution trace for the current user.
+
+        Returns ``(effective_subscription_status_or_None, resolved_plan_code)``
+        where ``resolved_plan_code`` matches what ``resolve_user_plan`` returns
+        (``None`` means no subscription row exists). Used by the router to
+        explain WHY a plan was (or wasn't) applied.
+        """
+        plan = await self.resolve_user_plan(user)
+        sub = await SubscriptionRepository.get_by_user(self._db, user.id.value)
+        effective = (
+            SubscriptionService.effective_status(sub) if sub is not None else None
+        )
+        return effective, plan.plan_code
+
+    async def resolve_effective_entitlement_plan(self, user: User):
+        """
+        Return the PlanModel whose entitlements actually apply to `user` now.
+
+        Phase 5 integration point: subscription lifecycle state overrides the
+        raw user_plans row. Any subscription attached to this user that has
+        already lapsed demotes the effective plan to FREE so the expired user
+        loses premium entitlements immediately (no cron needed).
+
+        Terminal-status subscriptions (expired / past_due_cancelled with no
+        valid window remaining) do not change resolution: either there is no
+        active paid period left, or the FREE fallback below applies naturally.
+        """
+        plan = await self.resolve_user_plan(user)
+        from apps.api.repositories.subscription_repository import SubscriptionRepository
+
+        latest = await SubscriptionRepository.get_latest_for_user(self._db, user.id.value)
+        if latest is None:
+            return plan
+        if not SubscriptionRepository.is_lapsed(latest):
+            return plan
+
+        free = await PlanRepository.get_by_code(self._db, DEFAULT_PLAN_CODE)
+        if free is None:
+            raise LookupError(
+                f"Default plan '{DEFAULT_PLAN_CODE}' is not seeded. Run migrations."
+            )
+        return free
 
 
     # ── Entitlement queries ──────────────────────────────────────────────────

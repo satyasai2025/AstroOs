@@ -181,6 +181,42 @@ class _RepoStub:
         return self._limit
 
 
+class _SubRepoStub:
+    """Async stand-in for SubscriptionRepository.
+
+    Phase 5 added a subscription lookup to EntitlementService. These Phase 2/3
+    tests describe the *no subscription row* world (plan comes from user_plans
+    or the FREE fallback), so the stub returns nothing by default.
+    """
+
+    def __init__(self, subscription=None):
+        self._subscription = subscription
+
+    async def get_by_user(self, db, user_id):
+        return self._subscription
+
+    async def get_latest_for_user(self, db, user_id):
+        return self._subscription
+
+    @staticmethod
+    def is_lapsed(subscription):
+        return False
+
+
+@pytest.fixture(autouse=True)
+def _no_subscription(monkeypatch):
+    stub = _SubRepoStub()
+    monkeypatch.setattr(
+        "apps.api.services.entitlement_service.SubscriptionRepository", stub
+    )
+    # resolve_effective_entitlement_plan re-imports from the source module.
+    monkeypatch.setattr(
+        "apps.api.repositories.subscription_repository.SubscriptionRepository",
+        stub,
+    )
+    return stub
+
+
 @pytest.mark.asyncio
 async def test_resolve_default_plan_is_free(monkeypatch):
     free = _plan("FREE")
@@ -368,3 +404,218 @@ async def test_db_free_has_zero_research_limit_blocks_create(db_session):
         ))
         await db_session.flush()
     assert await svc.can_create(user, "research_projects") is False
+
+# ════════════════════════════════════════════════════════════════════════════
+# 4. Phase 5 — subscription-driven plan resolution (no DB)
+#
+# The chain under test: Subscription -> Plan -> Entitlement -> Quota.
+# resolve_user_plan must prefer the subscription's plan while it still grants,
+# and fall back to FREE the moment it lapses.
+# ════════════════════════════════════════════════════════════════════════════
+
+from datetime import timedelta
+
+from apps.api.models.subscription import SubscriptionStatus
+from apps.api.services.subscription_service import SubscriptionService
+
+_NOW = datetime(2026, 8, 27, 12, 0, tzinfo=timezone.utc)
+
+
+def _sub_row(status, *, plan_id, period_end=None):
+    row = MagicMock()
+    row.status = status
+    row.plan_id = plan_id
+    row.current_period_end = period_end
+    return row
+
+
+class _TwoPlanRepoStub:
+    """PlanRepository stub that distinguishes lookup-by-id from lookup-by-code."""
+
+    def __init__(self, free, paid=None, assignment=None, limit=None):
+        self._free = free
+        self._paid = paid
+        self._assignment = assignment
+        self._limit = limit
+
+    async def get_user_plan(self, db, user_id):
+        return self._assignment
+
+    async def get_by_id(self, db, plan_id):
+        if self._paid is not None and plan_id == self._paid.id:
+            return self._paid
+        if plan_id == self._free.id:
+            return self._free
+        return None
+
+    async def get_by_code(self, db, code):
+        return self._free
+
+    async def get_limit(self, db, plan_id):
+        return self._limit
+
+
+def _wire(monkeypatch, plan_repo, sub_row):
+    monkeypatch.setattr(
+        "apps.api.services.entitlement_service.PlanRepository", plan_repo
+    )
+    stub = _SubRepoStub(subscription=sub_row)
+    monkeypatch.setattr(
+        "apps.api.services.entitlement_service.SubscriptionRepository", stub
+    )
+    monkeypatch.setattr(
+        "apps.api.repositories.subscription_repository.SubscriptionRepository", stub
+    )
+    return stub
+
+
+@pytest.mark.asyncio
+async def test_active_subscription_grants_its_plan(monkeypatch):
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(SubscriptionStatus.ACTIVE.value, plan_id=pro.id)
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "PRO"
+
+
+@pytest.mark.asyncio
+async def test_trialing_subscription_grants_its_plan(monkeypatch):
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(SubscriptionStatus.TRIALING.value, plan_id=pro.id)
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "PRO"
+
+
+@pytest.mark.asyncio
+async def test_past_due_inside_its_period_still_grants(monkeypatch):
+    """past_due is the grace window — the user must not lose access mid-cycle."""
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(
+        SubscriptionStatus.PAST_DUE_CANCELLED.value,
+        plan_id=pro.id,
+        period_end=datetime.now(timezone.utc) + timedelta(days=5),
+    )
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "PRO"
+
+
+@pytest.mark.asyncio
+async def test_expired_subscription_falls_back_to_free(monkeypatch):
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(SubscriptionStatus.EXPIRED.value, plan_id=pro.id)
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "FREE"
+
+
+@pytest.mark.asyncio
+async def test_lapsed_period_demotes_to_free_without_a_cron(monkeypatch):
+    """Still stored as `active`, but the period + grace window are long gone."""
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(
+        SubscriptionStatus.ACTIVE.value,
+        plan_id=pro.id,
+        period_end=datetime.now(timezone.utc) - timedelta(days=90),
+    )
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "FREE"
+
+
+@pytest.mark.asyncio
+async def test_subscription_overrides_a_stale_user_plans_row(monkeypatch):
+    """An expired subscription must beat a leftover PRO assignment."""
+    free, pro = _plan("FREE"), _plan("PRO")
+    assignment = MagicMock()
+    assignment.plan_id = pro.id
+    sub = _sub_row(SubscriptionStatus.EXPIRED.value, plan_id=pro.id)
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro, assignment=assignment), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "FREE"
+
+
+@pytest.mark.asyncio
+async def test_no_subscription_falls_back_to_user_plans(monkeypatch):
+    """Phase 2 behaviour must survive: no subscription row => user_plans wins."""
+    free, pro = _plan("FREE"), _plan("PRO")
+    assignment = MagicMock()
+    assignment.plan_id = pro.id
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro, assignment=assignment), None)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "PRO"
+
+
+@pytest.mark.asyncio
+async def test_inactive_plan_on_a_live_subscription_falls_back(monkeypatch):
+    free = _plan("FREE")
+    retired = _plan("LEGACY", is_active=False)
+    sub = _sub_row(SubscriptionStatus.ACTIVE.value, plan_id=retired.id)
+    _wire(monkeypatch, _TwoPlanRepoStub(free, retired), sub)
+
+    plan = await EntitlementService(None).resolve_user_plan(make_user())
+    assert plan.plan_code == "FREE"
+
+
+@pytest.mark.asyncio
+async def test_resolve_subscription_status_reports_the_trace(monkeypatch):
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(SubscriptionStatus.ACTIVE.value, plan_id=pro.id)
+    _wire(monkeypatch, _TwoPlanRepoStub(free, pro), sub)
+
+    status, code = await EntitlementService(None).resolve_subscription_status(
+        make_user()
+    )
+    assert (status, code) == (SubscriptionStatus.ACTIVE.value, "PRO")
+
+
+@pytest.mark.asyncio
+async def test_resolve_subscription_status_is_none_without_a_row(monkeypatch):
+    free = _plan("FREE")
+    _wire(monkeypatch, _TwoPlanRepoStub(free), None)
+
+    status, code = await EntitlementService(None).resolve_subscription_status(
+        make_user()
+    )
+    assert (status, code) == (None, "FREE")
+
+
+@pytest.mark.asyncio
+async def test_quota_follows_the_subscription_plan(monkeypatch):
+    """The full chain: an active PRO subscription must yield PRO's quotas."""
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(SubscriptionStatus.ACTIVE.value, plan_id=pro.id)
+    _wire(
+        monkeypatch,
+        _TwoPlanRepoStub(free, pro, limit=_limit_row(saved=50, research=1)),
+        sub,
+    )
+
+    limits = await EntitlementService(None).get_plan_limits(make_user())
+    assert limits.plan_code == "PRO"
+    assert limits.saved_horoscopes == 50
+    assert limits.research_projects_monthly == 1
+
+
+@pytest.mark.asyncio
+async def test_quota_drops_back_to_free_when_the_subscription_expires(monkeypatch):
+    free, pro = _plan("FREE"), _plan("PRO")
+    sub = _sub_row(SubscriptionStatus.EXPIRED.value, plan_id=pro.id)
+    _wire(
+        monkeypatch,
+        _TwoPlanRepoStub(free, pro, limit=_limit_row(saved=5, research=0)),
+        sub,
+    )
+
+    limits = await EntitlementService(None).get_plan_limits(make_user())
+    assert limits.plan_code == "FREE"
+    assert limits.saved_horoscopes == 5
+    assert limits.research_projects_monthly == 0

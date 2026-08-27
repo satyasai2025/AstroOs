@@ -39,6 +39,12 @@ class PlanModel(AstroBase):
     user_plans: Mapped[List["UserPlanModel"]] = relationship(
         "UserPlanModel", back_populates="plan",
     )
+    # One-sided read convenience (subscription-side deliberately declares no
+    # mirror property — see apps/api/models/subscription.py's Phase-5 notes),
+    # so no back_populates here; adding one breaks mapper configuration.
+    subscriptions: Mapped[List["SubscriptionModel"]] = relationship(
+        "SubscriptionModel",
+    )
 
     def __repr__(self) -> str:
         return f"<Plan {self.plan_code}: {self.name}>"
