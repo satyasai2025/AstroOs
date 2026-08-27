@@ -73,7 +73,9 @@ class TestJaiminiBundle:
         assert body["chara_dasha"]["system"] == "chara"
         assert body["narayana_dasha"]["system"] == "narayana"
         assert len(body["chara_dasha"]["periods"]) == 12
-        assert len(body["narayana_dasha"]["periods"]) == 12
+        # Narayana Dasha is a TWO-CYCLE walk (144 fixed years → 24 periods),
+        # unlike Chara Dasha's single 12-sign cycle — see jaimini_orchestrator.
+        assert len(body["narayana_dasha"]["periods"]) == 24
 
         assert len(body["yogas"]) == 5
         for yoga in body["yogas"]:

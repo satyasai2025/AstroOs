@@ -47,7 +47,11 @@ def test_yoga_engine_every_result_has_required_fields(real_chart):
     results = engine.evaluate_all(real_chart)
     for r in results:
         assert r.yoga_id.startswith("BPHS-")
-        assert r.rule_version in ("1.0", "1.1", "2.0")
+        # rule_version is a dotted semantic version (e.g. "1.0", "1.1", "1.2",
+        # "2.0") — assert the format, not a frozen allow-list, since engines
+        # bump their rule version as rules are refined.
+        parts = r.rule_version.split(".")
+        assert len(parts) == 2 and all(p.isdigit() for p in parts)
         assert r.source_text == "BPHS"
         assert isinstance(r.trace, tuple)
         # Every result has either satisfied or missing content — never both empty

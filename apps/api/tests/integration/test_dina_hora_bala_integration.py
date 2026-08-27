@@ -39,7 +39,11 @@ def test_exactly_one_planet_scores_dina_points(wrapper):
     assert len(dina_matches) == 1
 
 
-def test_values_always_0_15_or_30(wrapper):
+def test_values_always_0_45_60_or_105(wrapper):
+    # Dina lord = 45, Hora lord = 60, both = 105, neither = 0 — per the
+    # verified PyJHora/JHora.exe reference scale (see dina_hora_bala.py
+    # module docstring; previously this was an unverified 15/15). A result
+    # must never be any other value.
     horoscope_engine = HoroscopeEngine(wrapper)
     calc = DinaHoraBalaCalculator(wrapper)
     for hour in [2, 8, 10, 14, 18, 22]:
@@ -49,7 +53,7 @@ def test_values_always_0_15_or_30(wrapper):
         )
         results = calc.calculate_all(chart.planets, chart.ephemeris, latitude=_LAT, longitude=_LON)
         for r in results:
-            assert r.value_shashtiamsas in (0.0, 15.0, 30.0)
+            assert r.value_shashtiamsas in (0.0, 45.0, 60.0, 105.0)
 
 
 def test_deterministic_across_repeated_calls(wrapper):

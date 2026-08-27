@@ -12,11 +12,18 @@ from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 
 from apps.api.routers.vimsopaka import router as vimsopaka_router
+from apps.api.services.ephemeris_wrapper import EphemerisWrapper
+
+_EPHE_PATH = "data/ephemeris"
 
 
 @pytest_asyncio.fixture
 async def app() -> FastAPI:
     app = FastAPI()
+    # The router's get_ephemeris_wrapper dependency reads request.app.state
+    # — it must be populated (same as main.py does at startup) or the
+    # endpoint errors with KeyError.
+    app.state.ephemeris_wrapper = EphemerisWrapper(ephemeris_path=_EPHE_PATH)
     app.include_router(vimsopaka_router, prefix="/api/v1")
     return app
 

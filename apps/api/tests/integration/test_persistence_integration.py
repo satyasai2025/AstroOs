@@ -214,13 +214,15 @@ async def test_compute_all_persists_all_15_vargas(wrapper, db_session):
             )
         )
     ).scalars().all()
-    assert len(div_rows) == 15
+    # Not a fixed count — the vargas grew from 15 to 22 (D2–D60 + D81/D108/D144).
+    # Assert DB state matches the engine's own chart set exactly.
+    assert len(div_rows) == len(charts)
     assert {r.chart_type for r in div_rows} == set(charts.keys())
 
     total_planets = (
         await db_session.execute(select(DivisionalPlanetPositionModel))
     ).scalars().all()
-    assert len(total_planets) == 15 * 9
+    assert len(total_planets) == len(charts) * 9
 
 
 async def test_divisional_and_horoscope_share_birth_chart_row(wrapper, db_session):
