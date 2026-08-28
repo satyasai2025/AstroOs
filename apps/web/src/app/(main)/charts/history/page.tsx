@@ -269,7 +269,10 @@ export default function ChartHistoryPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => handleSetDefault(c)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSetDefault(c);
+              }}
               disabled={settingDefaultId === c.id}
               title="Use this chart as your default"
             >
@@ -279,7 +282,10 @@ export default function ChartHistoryPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setRecomputeChart(c)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setRecomputeChart(c);
+            }}
             title="View this chart with a different Ayanamsa, House System, or Dasha System"
           >
             Recompute
@@ -287,7 +293,10 @@ export default function ChartHistoryPage() {
           <Button
             variant="danger"
             size="sm"
-            onClick={() => handleDelete(c)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(c);
+            }}
             disabled={deletingId === c.id}
             title="Delete this saved chart"
           >

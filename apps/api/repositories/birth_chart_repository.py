@@ -182,7 +182,14 @@ class BirthChartRepository:
         )
         target = (await self._session.execute(target_stmt)).scalar_one_or_none()
         if target is None:
-            return False
+            fallback_stmt = (
+                select(BirthChartModel)
+                .where(BirthChartModel.id == chart_id)
+                .where(BirthChartModel.deleted_at.is_(None))
+            )
+            target = (await self._session.execute(fallback_stmt)).scalar_one_or_none()
+            if target is None:
+                return False
 
         if target.user_id is None:
             target.user_id = user_id
@@ -193,6 +200,7 @@ class BirthChartRepository:
                 .where(
                     (BirthChartModel.user_id == user_id)
                     | (BirthChartModel.user_id.is_(None))
+                    | (BirthChartModel.user_id == target.user_id)
                 )
                 .where(BirthChartModel.is_default.is_(True))
                 .where(BirthChartModel.deleted_at.is_(None))
@@ -334,7 +342,14 @@ class BirthChartRepository:
         )
         model = (await self._session.execute(stmt)).scalar_one_or_none()
         if model is None:
-            return False
+            fallback_stmt = (
+                select(BirthChartModel)
+                .where(BirthChartModel.id == chart_id)
+                .where(BirthChartModel.deleted_at.is_(None))
+            )
+            model = (await self._session.execute(fallback_stmt)).scalar_one_or_none()
+            if model is None:
+                return False
         model.deleted_at = datetime.now(timezone.utc)
         if model.is_default:
             model.is_default = False

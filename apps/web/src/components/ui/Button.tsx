@@ -138,9 +138,10 @@ export function Button({
     );
   }
 
-  const { onClick, ...buttonRest } = rest as ButtonHTMLAttributes<HTMLButtonElement>;
+  const { onClick, type = "button", ...buttonRest } = rest as ButtonHTMLAttributes<HTMLButtonElement>;
   return (
     <button
+      type={type}
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       style={computedStyle}

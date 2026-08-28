@@ -160,7 +160,13 @@ class ForwardBacktestRunner:
         statistical machinery (Wilson-CI, confusion matrix, leakage audit)
         is delegated to PredictionBacktestEngine.
         """
-        prediction_timestamp = datetime.now(timezone.utc)
+        # In a backtest the predictions are "issued" when the scan begins —
+        # NOT at wall-clock now. Using now() for a fully-past target window
+        # makes every outcome look retrospectively leaked (prediction made
+        # after the event), which would poison the temporal-integrity audit.
+        prediction_timestamp = datetime.combine(
+            target_start, time.min, tzinfo=timezone.utc
+        )
         all_snapshots: list[PredictionSnapshot] = []
         all_outcomes: list[OutcomeRecord] = []
         total_subjects = 0
@@ -168,6 +174,17 @@ class ForwardBacktestRunner:
 
         for member in cohort:
             total_subjects += 1
+
+            # Only outcomes that fall inside the target scan window can serve
+            # as ground truth. An event that already happened before the
+            # prediction was "issued" (at target_start) is not a target, and
+            # feeding it to the leakage audit just produces false positives
+            # ("prediction made after the 1910 event").
+            in_window_outcomes = [
+                o
+                for o in member.outcomes
+                if target_start <= o.observed_date.date() <= target_end
+            ]
 
             # Bind this member's snapshots to the same chart_id namespace as
             # its ground-truth outcomes so the engine can pair them.
@@ -205,12 +222,12 @@ class ForwardBacktestRunner:
                     and snapshot.expected_date_start
                     <= o.observed_date
                     <= snapshot.expected_date_end
-                    for o in member.outcomes
+                    for o in in_window_outcomes
                 )
                 if hit:
                     window_hits += 1
 
-            all_outcomes.extend(member.outcomes)
+            all_outcomes.extend(in_window_outcomes)
 
         cohort_run = PredictionBacktestEngine.evaluate_cohort(
             dataset_name=dataset_name,

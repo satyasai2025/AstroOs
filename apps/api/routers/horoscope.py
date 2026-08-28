@@ -437,6 +437,7 @@ async def delete_chart(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No saved chart with that id, or it isn't yours.",
         )
+    await session.commit()
 
 
 @router.post(
@@ -463,6 +464,7 @@ async def set_default_chart(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No saved chart with that id, or it isn't yours.",
         )
+    await session.commit()
 
 
 @router.post(

@@ -344,3 +344,101 @@ def test_adb_loader_real_smoke_with_limit():
     assert any("below A" in r for r in reasons)
 
 
+# ---------------------------------------------------------------------------
+# Integration regressions: objective mapping + signature missing-key semantics
+# ---------------------------------------------------------------------------
+
+
+def test_objective_mapping_hits_registry_vocabulary():
+    from apps.api.services.forward_scanner import _objective_for
+    from apps.api.services.technique_resolver import TechniqueResolver
+
+    resolver = TechniqueResolver()
+    for event_type, objective in [
+        ("job_change", "career"),
+        ("financial_gain", "wealth"),
+        ("progeny", "childbirth"),
+        ("property", "property_finance"),
+        ("relocation", "event_timing"),
+        ("health", "event_timing"),
+        ("marriage", "marriage"),
+    ]:
+        assert _objective_for(event_type) == objective
+        # The mapped objective must resolve to >=1 technique, else the
+        # orchestrator can never emit windows for this channel.
+        assert resolver.resolve_by_objective(objective), (
+            f"objective '{objective}' (from '{event_type}') resolves empty"
+        )
+
+
+def test_signature_matcher_missing_key_is_unknown_not_veto():
+    """Evidence like '[career] TIM-CAR-DASH-001: ...' carries rule IDs, not
+    key=value facts. A required condition whose key never appears passes as
+    UNKNOWN; only an explicit false value may veto."""
+    from datetime import date
+
+    from apps.api.domain.prediction_orchestration import (
+        PredictionWindowCandidate,
+        PromiseStatus,
+        TemporalResolution,
+    )
+    from apps.api.domain.rules import Condition
+    from apps.api.services.forward_scanner import _match_signature_against_candidate
+    from apps.api.services.forward_signatures import EventSignatureDef
+
+    def _cand(ev_trace):
+        return PredictionWindowCandidate(
+            event_type="job_change",
+            start_date=date(2026, 1, 1),
+            end_date=date(2026, 6, 1),
+            peak_date=date(2026, 3, 1),
+            peak_score=72,
+            promise_status=PromiseStatus.ESTABLISHED,
+            primary_drivers=("Vimshottari Dasha opens the temporal gate",),
+            supporting_factors=(),
+            opposing_factors=(),
+            evidence_trace=ev_trace,
+            resolution_level=TemporalResolution.MACRO_DASHA,
+            deterministic_hash="abc",
+        )
+
+    sig = EventSignatureDef(
+        signature_id="test_sig",
+        event_type="job_change",
+        classical_source="test",
+        guarded_forecast_wording="test",
+        required_conditions=(Condition("tenth_lord_active", "==", True),),
+    )
+
+    # Rule-ID evidence with no key=value facts -> UNKNOWN -> pass.
+    matched, keys = _match_signature_against_candidate(
+        sig, _cand(("[career_elevation_timing] [primary] TIM-CAR-DASH-001: gate",))
+    )
+    assert matched is True
+    assert keys == ()
+
+    # Explicitly false fact must veto.
+    matched, _ = _match_signature_against_candidate(
+        sig, _cand(("[career] tenth_lord_active=False",))
+    )
+    assert matched is False
+
+
+@pytest.mark.skipif(not ADB_CSV.exists(), reason="AstroDatabank CSV not on disk")
+def test_adb_end_to_end_backtest_leakage_free(tmp_path):
+    """Real end-to-end: load 6 AA/A charts, run career forward scan, assert
+    an honest, leakage-free (EXPLORATORY) production-gated report."""
+    from apps.api.services.real_cohort_backtest import run_astrodatabank_backtest
+
+    bundle = run_astrodatabank_backtest(
+        ADB_CSV,
+        dataset_name="adb_e2e_smoke",
+        min_birth_tier="A",
+        limit=6,
+        event_types=["job_change"],
+    )
+    assert bundle.corpus_audit.charts_built == 6
+    assert bundle.gate_verdict.verdict_label == "EXPLORATORY"
+    assert bundle.gate_verdict.production_grade is False
+    # 6 charts can never certify, but must not leak.
+    assert bundle.backtest_report.cohort_run.temporal_leakage_detected is False

@@ -175,6 +175,13 @@ def _match_signature_against_candidate(
     matched_keys: list[str] = []
     required_satisfied = True
     for cond in sig_def.required_conditions:
+        if cond.fact_key not in fact_dict:
+            # Evidence-absent != evidence-false. The orchestrator produced
+            # this window only after its DASHA/PROMISE rules fired at/above
+            # the activation threshold; a condition whose fact key simply
+            # never appears in the evidence trace is UNKNOWN, not a veto.
+            # Only an explicit conflicting value vetoes the window.
+            continue
         if _evaluate_condition(cond, fact_dict):
             matched_keys.append(cond.fact_key)
         else:
