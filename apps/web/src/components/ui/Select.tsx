@@ -39,6 +39,9 @@ export function Select({ label, options = [], value, onChange, placeholder = "Se
       )}
       <button
         type="button"
+        aria-label={label || placeholder || "Select option"}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         onClick={() => !disabled && setOpen((o) => !o)}
         className={`flex items-center justify-between w-full h-10 px-3 rounded-lg bg-white dark:bg-slate-900 border transition shadow-sm text-sm ${
           open

@@ -29,8 +29,12 @@ export function AyanamsaSelectorDropdown() {
 
   return (
     <div className="flex items-center gap-1 rounded-md border border-slate-700/80 bg-slate-900/80 px-2 py-1 text-xs text-slate-200 shadow-sm whitespace-nowrap">
-      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Ayanamsa:</span>
+      <label htmlFor="ayanamsa-selector" className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+        Ayanamsa:
+      </label>
       <select
+        id="ayanamsa-selector"
+        aria-label="Select Ayanamsa System"
         value={currentAyanamsa}
         onChange={handleChange}
         className="bg-transparent font-bold text-cyan-400 focus:outline-none cursor-pointer text-xs"
