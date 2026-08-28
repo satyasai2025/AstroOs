@@ -269,3 +269,78 @@ def test_research_batch_adapter_accepts_clean_case(tmp_path):
     assert members[0].outcomes[0].observed_date.year == 1985
 
 
+
+# ---------------------------------------------------------------------------
+# AstroDatabank CSV adapter helpers + real-file smoke
+# ---------------------------------------------------------------------------
+
+ADB_CSV = Path(r"c:/Users/rkmau/Downloads/astro_data_combined (1).csv")
+
+
+def test_adb_latlon_parser():
+    from apps.api.services.real_cohort_backtest import _parse_adb_latlon
+
+    assert _parse_adb_latlon("45n10") == pytest.approx(45 + 10 / 60, abs=1e-6)
+    assert _parse_adb_latlon("9e10") == pytest.approx(9 + 10 / 60, abs=1e-6)
+    assert _parse_adb_latlon("23s3006") == pytest.approx(
+        -(23 + 30 / 60 + 6 / 3600), abs=1e-6
+    )
+    assert _parse_adb_latlon("97w09") == pytest.approx(-(97 + 9 / 60), abs=1e-6)
+    assert _parse_adb_latlon("garbage") is None
+
+
+def test_adb_jd_conversion():
+    from apps.api.services.real_cohort_backtest import _jd_to_utc_datetime
+    from datetime import datetime, timezone as tz
+
+    # JD 2451544.5 == 2000-01-01 00:00 UTC (canonical check value)
+    assert _jd_to_utc_datetime(2451544.5) == datetime(2000, 1, 1, tzinfo=tz.utc)
+
+
+def test_adb_event_segment_parsing():
+    from apps.api.services.real_cohort_backtest import _parse_event_segment
+
+    # Full text date
+    d, code = _parse_event_segment(
+        "Work : Prize  15 June 1903   (Nobel Prize for Physics)", []
+    )
+    assert d == date(1903, 6, 15)
+    assert "Nobel Prize" in code
+
+    # Julian entry prefers the printed Gregorian parenthetical
+    d, _ = _parse_event_segment(
+        "Death of Child  4 April 1560 Jul.Cal. (14 Apr 1560 greg.)   (Son beheaded)",
+        [],
+    )
+    assert d == date(1560, 4, 14)
+
+    # Year-only text pairs with a structured same-year date
+    d, code = _parse_event_segment(
+        "Death of Mate  1868   (Husband executed)", [(1868, 5, 12)]
+    )
+    assert d == date(1868, 5, 12)
+    assert code.strip().startswith("Death of Mate")
+
+    # Year-only with no structured match -> partial -> rejected
+    assert (
+        _parse_event_segment("Relationship : Marriage  1987   (Sherry Williams)", [])
+        is None
+    )
+
+
+@pytest.mark.skipif(not ADB_CSV.exists(), reason="AstroDatabank CSV not on disk")
+def test_adb_loader_real_smoke_with_limit():
+    from apps.api.services.real_cohort_backtest import load_astrodatabank_csv
+
+    members, audit = load_astrodatabank_csv(ADB_CSV, min_birth_tier="A", limit=5)
+    assert audit.charts_built >= 3  # first rows include B/C ratings → skipped
+    assert len(members) == audit.charts_built
+
+    total_outcomes = sum(len(m.outcomes) for m in members)
+    assert total_outcomes >= 1
+
+    # Skips must be documented, never silent.
+    reasons = {r for _, r in audit.skipped_charts}
+    assert any("below A" in r for r in reasons)
+
+

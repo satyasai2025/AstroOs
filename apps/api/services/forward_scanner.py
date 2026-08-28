@@ -37,6 +37,26 @@ def _make_uncertainty_disclosure_global() -> str:
     )
 
 
+#: Maps Phase-1 signature event_type -> the orchestrator/registry objective
+#: vocabulary (which uses 'career', 'wealth', 'property_finance', ... rather
+#: than the signature names). Without this mapping PredictEventWindows was
+#: called with e.g. 'job_change' and the technique registry returned zero
+#: techniques -> zero windows -> the forward scanner could never fire.
+_EVENT_TYPE_TO_OBJECTIVE: dict[str, str] = {
+    "marriage": "marriage",
+    "job_change": "career",
+    "financial_gain": "wealth",
+    "relocation": "event_timing",
+    "health": "event_timing",
+    "progeny": "childbirth",
+    "property": "property_finance",
+}
+
+
+def _objective_for(event_type: str) -> str:
+    return _EVENT_TYPE_TO_OBJECTIVE.get(event_type, event_type)
+
+
 def _make_uncertainty_disclosure_per_candidate() -> str:
     return (
         "Window bounded by Antardasha transition; peak_score is not a specific "
@@ -241,7 +261,7 @@ class ForwardScanner:
             event_types_evaluated.append(event_type)
 
             orchestrator_windows = self._orchestrator.predict_event_windows(
-                chart, dasha_tree, event_type,  # type: ignore[arg-type]
+                chart, dasha_tree, _objective_for(event_type),  # registry vocab
                 target_start, target_end, profile,
             )
 

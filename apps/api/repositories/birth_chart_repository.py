@@ -174,23 +174,33 @@ class BirthChartRepository:
         target_stmt = (
             select(BirthChartModel)
             .where(BirthChartModel.id == chart_id)
-            .where(BirthChartModel.user_id == user_id)
+            .where(
+                (BirthChartModel.user_id == user_id)
+                | (BirthChartModel.user_id.is_(None))
+            )
             .where(BirthChartModel.deleted_at.is_(None))
         )
         target = (await self._session.execute(target_stmt)).scalar_one_or_none()
         if target is None:
             return False
 
+        if target.user_id is None:
+            target.user_id = user_id
+
         if not target.is_default:
             previous_default_stmt = (
                 select(BirthChartModel)
-                .where(BirthChartModel.user_id == user_id)
+                .where(
+                    (BirthChartModel.user_id == user_id)
+                    | (BirthChartModel.user_id.is_(None))
+                )
                 .where(BirthChartModel.is_default.is_(True))
                 .where(BirthChartModel.deleted_at.is_(None))
             )
             previous_default = (await self._session.execute(previous_default_stmt)).scalar_one_or_none()
-            if previous_default is not None:
+            if previous_default is not None and previous_default.id != target.id:
                 previous_default.is_default = False
+                await self._session.flush()
             target.is_default = True
             await self._session.flush()
         return True
@@ -242,7 +252,10 @@ class BirthChartRepository:
         """
         stmt = (
             select(BirthChartModel)
-            .where(BirthChartModel.user_id == user_id)
+            .where(
+                (BirthChartModel.user_id == user_id)
+                | (BirthChartModel.user_id.is_(None))
+            )
             .where(BirthChartModel.deleted_at.is_(None))
             .order_by(BirthChartModel.created_at.desc())
             .offset(offset)
@@ -256,7 +269,10 @@ class BirthChartRepository:
         stmt = (
             select(func.count())
             .select_from(BirthChartModel)
-            .where(BirthChartModel.user_id == user_id)
+            .where(
+                (BirthChartModel.user_id == user_id)
+                | (BirthChartModel.user_id.is_(None))
+            )
             .where(BirthChartModel.deleted_at.is_(None))
         )
         return (await self._session.execute(stmt)).scalar_one()
@@ -310,7 +326,10 @@ class BirthChartRepository:
         stmt = (
             select(BirthChartModel)
             .where(BirthChartModel.id == chart_id)
-            .where(BirthChartModel.user_id == user_id)
+            .where(
+                (BirthChartModel.user_id == user_id)
+                | (BirthChartModel.user_id.is_(None))
+            )
             .where(BirthChartModel.deleted_at.is_(None))
         )
         model = (await self._session.execute(stmt)).scalar_one_or_none()

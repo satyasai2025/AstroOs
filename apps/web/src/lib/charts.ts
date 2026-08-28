@@ -32,7 +32,15 @@ export function useDeleteChart() {
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: (chartId: string) => api.delete<void>(`/api/v1/horoscope/charts/${chartId}`),
-    onSuccess: () => {
+    onSuccess: (_, chartId) => {
+      queryClient.setQueryData<BirthChartListResponse>(chartKeys.mine, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          total: Math.max(0, old.total - 1),
+          charts: old.charts.filter((c) => c.id !== chartId),
+        };
+      });
       queryClient.invalidateQueries({ queryKey: chartKeys.mine });
     },
   });
@@ -48,7 +56,17 @@ export function useSetDefaultChart() {
   const queryClient = useQueryClient();
   return useMutation<void, Error, string>({
     mutationFn: (chartId: string) => api.post<void>(`/api/v1/horoscope/charts/${chartId}/set-default`, {}),
-    onSuccess: () => {
+    onSuccess: (_, chartId) => {
+      queryClient.setQueryData<BirthChartListResponse>(chartKeys.mine, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          charts: old.charts.map((c) => ({
+            ...c,
+            is_default: c.id === chartId,
+          })),
+        };
+      });
       queryClient.invalidateQueries({ queryKey: chartKeys.mine });
     },
   });

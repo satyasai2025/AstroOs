@@ -32,6 +32,7 @@ Life-domain → PredictionCategory mapping (documented rationale):
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 from dataclasses import dataclass, field
@@ -546,13 +547,16 @@ _ADB_MONTHS = {
     "january": 1, "february": 2, "march": 3, "april": 4, "may": 5,
     "june": 6, "july": 7, "august": 8, "september": 9, "october": 10,
     "november": 11, "december": 12,
+    # Abbreviations as printed in e.g. "(14 Apr 1560 greg.)"
+    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "jun": 6, "jul": 7,
+    "aug": 8, "sep": 9, "sept": 9, "oct": 10, "nov": 11, "dec": 12,
 }
 
 _FULL_DATE_RE = re.compile(
     r"\b(\d{1,2}) (" + "|".join(_ADB_MONTHS) + r") (\d{4})\b", re.I
 )
 _GREG_RE = re.compile(
-    r"\((\d{1,2}) (" + "|".join(_ADB_MONTHS) + r") (\d{4}) greg\.?\)", re.I
+    r"\((\d{1,2}) (" + "|".join(_ADB_MONTHS) + r") (\d{4}) greg", re.I
 )
 _MONTH_YEAR_RE = re.compile(
     r"\b(" + "|".join(_ADB_MONTHS) + r") (\d{4})\b", re.I
@@ -608,11 +612,21 @@ def _parse_adb_latlon(raw: str) -> Optional[float]:
     return val
 
 
-def _jd_to_utc_datetime(jd: float) -> datetime:
-    from datetime import timezone
+_JD_EPOCH = datetime(2000, 1, 1, 12, 0, 0, tzinfo=None)  # J2000.0 = JD 2451545.0
 
-    unix_seconds = (float(jd) - 2440587.5) * 86400.0
-    return datetime.fromtimestamp(unix_seconds, tz=timezone.utc)
+
+def _jd_to_utc_datetime(jd: float) -> datetime:
+    """JD(UT) -> timezone-aware UTC datetime.
+
+    Uses a fixed J2000.0 anchor + timedelta instead of fromtimestamp(),
+    which fails on Windows for pre-1970 (negative-epoch) dates — the
+    AstroDatabank corpus is full of 19th-century and earlier births.
+    """
+    from datetime import timezone, timedelta
+
+    days = float(jd) - 2451545.0
+    naive = _JD_EPOCH + timedelta(days=days)
+    return naive.replace(tzinfo=timezone.utc)
 
 
 
@@ -649,6 +663,12 @@ def _parse_event_segment(
     else:
         return None
     for y, mo, d in struct_dates:
+        if y != want_year or mo == 0 or d == 0:
+            continue
+        if want_month is not None and mo != want_month:
+            continue
+        return date(y, mo, d), sevcode.strip()
+    return None
 
 
 def load_astrodatabank_csv(
@@ -715,11 +735,108 @@ def load_astrodatabank_csv(
                 skipped_charts.append((name, f"chart generation failed: {exc}"))
                 continue
 
-        if y != want_year or mo == 0 or d == 0:
-            continue
-        if want_month is not None and mo != want_month:
-            continue
-        return date(y, mo, d), sevcode.strip()
-    return None
+            charts_built += 1
+            birth = birth_dt.date()
+            struct_dates = sorted({
+                (int(a), int(b), int(c))
+                for v in row
+                for a, b, c in _STRUCT_DATE_RE.findall(v)
+                if (int(a), int(b), int(c))
+                != (birth.year, birth.month, birth.day)
+            })
+
+            outcomes: list[OutcomeRecord] = []
+            for ei, segment in enumerate(col(row, "events").split("|")):
+                segment = segment.strip()
+                if not segment:
+                    continue
+                parsed = _parse_event_segment(segment, struct_dates)
+                if parsed is None:
+                    skipped_events.append((name, f"event {ei}: no usable date"))
+                    continue
+                ev_date, sevcode = parsed
+                if ev_date == birth:
+                    skipped_events.append(
+                        (name, f"event {ei} rejected: event_date==birth_date")
+                    )
+                    continue
+                category = _adb_event_category(sevcode)
+                if category is None:
+                    skipped_events.append(
+                        (name, f"event {ei}: unscored category '{sevcode[:48]}'")
+                    )
+                    continue
+                outcomes.append(
+                    OutcomeRecord(
+                        outcome_id=f"ADB_{charts_built:05d}_ev{ei:02d}",
+                        chart_id=f"ADB_{charts_built:05d}",
+                        subject_name=name,
+                        category=category,
+                        observed_date=datetime(
+                            ev_date.year,
+                            ev_date.month,
+                            ev_date.day,
+                            tzinfo=birth_dt.tzinfo,
+                        ),
+                        actual_outcome_description=segment[:160],
+                        observed_direction=_adb_event_direction(sevcode),
+                        verification_status=OutcomeStatus.VERIFIED_HISTORICAL,
+                        source_reference="AstroDatabank (astro.com) export",
+                    )
+                )
+                key = category.value
+                verified_by_cat[key] = verified_by_cat.get(key, 0) + 1
+
+            members.append(
+                HistoricalCohortMember(
+                    chart=chart,
+                    dasha_tree=tree,
+                    subject_name=name,
+                    outcomes=tuple(outcomes),
+                )
+            )
+
+    audit = CorpusAudit(
+        files_seen=1,
+        charts_built=charts_built,
+        skipped_charts=tuple(skipped_charts),
+        verified_outcomes_by_category=verified_by_cat,
+        unverified_outcomes=0,
+        skipped_events=tuple(skipped_events),
+    )
+    return members, audit
+
+
+def run_astrodatabank_backtest(
+    csv_path: str | Path,
+    dataset_name: str = "astrodatabank_v1",
+    target_start: Optional[date] = None,
+    target_end: Optional[date] = None,
+    event_types: Sequence[str] = ("job_change", "marriage"),
+    min_birth_tier: str = "A",
+    limit: Optional[int] = None,
+    runner: Optional[ForwardBacktestRunner] = None,
+    gate: Optional[ProductionGate] = None,
+    wrapper: Optional[EphemerisWrapper] = None,
+) -> ProductionBacktestReport:
+    """End-to-end: AstroDatabank CSV -> cohort -> forward backtest -> gate."""
+    cohort, audit = load_astrodatabank_csv(
+        csv_path, wrapper=wrapper, min_birth_tier=min_birth_tier, limit=limit
+    )
+    runner = runner or ForwardBacktestRunner()
+    report = runner.run_backtest(
+        cohort=cohort,
+        dataset_name=dataset_name,
+        target_start=target_start or date(1950, 1, 1),
+        target_end=target_end or date(2026, 1, 1),
+        event_types=list(event_types),
+        min_confidence=0.0,
+    )
+    verdict = (gate or ProductionGate()).evaluate(audit)
+    return ProductionBacktestReport(
+        backtest_report=report,
+        gate_verdict=verdict,
+        corpus_audit=audit,
+    )
 
 

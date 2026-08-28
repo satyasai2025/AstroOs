@@ -40,7 +40,7 @@ from apps.api.repositories.plan_repository import PlanRepository
 
 from apps.api.services.subscription_service import SubscriptionService
 from apps.api.repositories.subscription_repository import SubscriptionRepository
-from apps.api.services.feature_catalog import ACTION_COLUMNS
+from apps.api.services.feature_catalog import ACTION_COLUMNS, DECIDED_MATRIX
 
 EntitlementStatus = Literal["granted", "denied", "unresolved"]
 
@@ -185,6 +185,19 @@ class EntitlementService:
         if action not in ACTION_COLUMNS:
             raise ValueError(f"Unknown entitlement action: {action}")
         plan = await self.resolve_user_plan(user)
+        # Check canonical DECIDED_MATRIX first if available
+        if feature_key in DECIDED_MATRIX:
+            matrix_plan = DECIDED_MATRIX[feature_key].get(plan.plan_code, {})
+            if action in matrix_plan:
+                matrix_val = matrix_plan[action]
+                return EntitlementDecision(
+                    "granted" if matrix_val else "denied",
+                    reason=(
+                        f"Plan '{plan.plan_code}' "
+                        f"{'grants' if matrix_val else 'denies'} {action} on '{feature_key}'."
+                    ),
+                )
+
         feature = await PlanRepository.get_feature_by_key(self._db, feature_key)
         if feature is None:
             return EntitlementDecision(
@@ -199,10 +212,6 @@ class EntitlementService:
                 fallback_allowed=self._unresolved_fallback,
             )
         allowed = bool(getattr(row, f"can_{action}"))
-        if not allowed and feature_key in DECIDED_MATRIX:
-            matrix_plan = DECIDED_MATRIX[feature_key].get(plan.plan_code, {})
-            if matrix_plan.get(action) is True:
-                allowed = True
         return EntitlementDecision(
             "granted" if allowed else "denied",
             reason=(

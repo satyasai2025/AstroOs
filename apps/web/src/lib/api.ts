@@ -332,8 +332,14 @@ async function _fetch<T>(
   }
 
   if (res.status === 204) return undefined as T;
-  const json = await res.json();
-  return _normalizeAstroCasing(json) as T;
+  const text = await res.text();
+  if (!text || text.trim() === "") return undefined as T;
+  try {
+    const json = JSON.parse(text);
+    return _normalizeAstroCasing(json) as T;
+  } catch {
+    return text as unknown as T;
+  }
 }
 
 async function _tryRefresh(): Promise<boolean> {
