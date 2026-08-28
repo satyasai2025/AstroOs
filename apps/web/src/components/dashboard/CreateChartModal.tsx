@@ -391,8 +391,13 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   const shownError = validationError ?? errorMessage;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-chart-modal-title"
+    >
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} aria-hidden="true" />
 
       <div
         className="obsidian-card relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden"
@@ -410,7 +415,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
               </svg>
             </div>
             <div>
-              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Create New Chart</h2>
+              <h2 id="create-chart-modal-title" className="text-base font-bold" style={{ color: "var(--text-primary)" }}>Create New Chart</h2>
               <p className="text-xs" style={{ color: "var(--text-secondary)" }}>Create a new chart to begin your astrological analysis.</p>
             </div>
           </div>
@@ -541,8 +546,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Native Name</label>
+                  <label htmlFor="create-chart-name" className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Native Name</label>
                   <input
+                    id="create-chart-name"
+                    aria-label="Native Name"
                     type="text"
                     value={subjectName}
                     onChange={(e) => setSubjectName(e.target.value)}
@@ -572,8 +579,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Birth Date</label>
+                    <label htmlFor="create-chart-date" className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Birth Date</label>
                     <input
+                      id="create-chart-date"
+                      aria-label="Birth Date"
                       type="date"
                       required
                       value={birthDate}
@@ -583,8 +592,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Birth Time</label>
+                    <label htmlFor="create-chart-time" className="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300">Birth Time</label>
                     <input
+                      id="create-chart-time"
+                      aria-label="Birth Time"
                       type="time"
                       step="1"
                       required
@@ -601,7 +612,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
                 <div className="mt-4">
                   <div className="mb-1.5 flex items-center justify-between">
-                    <label className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Birth Place</label>
+                    <label htmlFor="create-chart-place" className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Birth Place</label>
                     <button
                       type="button"
                       onClick={() => setManualOverride((v) => !v)}
@@ -615,24 +626,34 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
                   {manualOverride ? (
                     <div className="grid grid-cols-2 gap-4">
-                      <input
-                        type="number"
-                        step="any"
-                        value={manualLatitude}
-                        onChange={(e) => setManualLatitude(e.target.value)}
-                        className="obsidian-input"
-                        placeholder="Latitude, e.g. 28.6139"
-                        disabled={isPending}
-                      />
-                      <input
-                        type="number"
-                        step="any"
-                        value={manualLongitude}
-                        onChange={(e) => setManualLongitude(e.target.value)}
-                        className="obsidian-input"
-                        placeholder="Longitude, e.g. 77.2090"
-                        disabled={isPending}
-                      />
+                      <div>
+                        <label htmlFor="create-chart-lat" className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Latitude</label>
+                        <input
+                          id="create-chart-lat"
+                          aria-label="Latitude"
+                          type="number"
+                          step="any"
+                          value={manualLatitude}
+                          onChange={(e) => setManualLatitude(e.target.value)}
+                          className="obsidian-input"
+                          placeholder="Latitude, e.g. 28.6139"
+                          disabled={isPending}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="create-chart-lon" className="text-[10px] text-slate-500 uppercase font-bold block mb-1">Longitude</label>
+                        <input
+                          id="create-chart-lon"
+                          aria-label="Longitude"
+                          type="number"
+                          step="any"
+                          value={manualLongitude}
+                          onChange={(e) => setManualLongitude(e.target.value)}
+                          className="obsidian-input"
+                          placeholder="Longitude, e.g. 77.2090"
+                          disabled={isPending}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <BirthPlaceSearch

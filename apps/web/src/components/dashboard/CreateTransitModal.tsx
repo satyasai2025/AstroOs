@@ -435,9 +435,14 @@ export function CreateTransitModal({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="transit-modal-title"
+    >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-md" onClick={onClose} aria-hidden="true" />
 
       <div
         className="obsidian-card relative flex max-h-[95vh] w-full max-w-6xl flex-col overflow-hidden shadow-2xl border"
@@ -467,7 +472,7 @@ export function CreateTransitModal({ open, onClose }: Props) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                <h2 id="transit-modal-title" className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
                   Live Transit (Gochara) Engine
                 </h2>
                 {isLiveClock ? (
@@ -506,8 +511,10 @@ export function CreateTransitModal({ open, onClose }: Props) {
           {/* Date & Time pickers */}
           <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-2 rounded-lg border px-3 py-1.5" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}>
-              <span className="text-xs" style={{ color: "var(--text-muted)" }}>📅 Date:</span>
+              <label htmlFor="transit-date-input" className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>📅 Date:</label>
               <input
+                id="transit-date-input"
+                aria-label="Transit Date"
                 type="date"
                 value={transitDate}
                 onChange={(e) => {
@@ -520,8 +527,10 @@ export function CreateTransitModal({ open, onClose }: Props) {
             </div>
 
             <div className="flex items-center gap-2 rounded-lg border px-3 py-1.5" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-primary)" }}>
-              <span className="text-xs" style={{ color: "var(--text-muted)" }}>⏰ Time:</span>
+              <label htmlFor="transit-time-input" className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>⏰ Time:</label>
               <input
+                id="transit-time-input"
+                aria-label="Transit Time"
                 type="time"
                 value={transitTime}
                 onChange={(e) => {

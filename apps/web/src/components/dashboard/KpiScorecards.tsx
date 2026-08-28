@@ -76,9 +76,9 @@ const RISK_BADGES: Record<HealthRiskLabel, { text: string; bg: string; border: s
 };
 
 function percentColorClasses(value: number): { text: string; bg: string } {
-  if (value >= 66) return { text: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-500" };
-  if (value >= 40) return { text: "text-amber-600 dark:text-amber-400", bg: "bg-amber-500" };
-  return { text: "text-rose-600 dark:text-rose-400", bg: "bg-rose-500" };
+  if (value >= 66) return { text: "text-emerald-700 dark:text-emerald-300", bg: "bg-emerald-500" };
+  if (value >= 40) return { text: "text-amber-700 dark:text-amber-300", bg: "bg-amber-500" };
+  return { text: "text-rose-700 dark:text-rose-300", bg: "bg-rose-500" };
 }
 
 function PercentCard({ label, value, caveat, href }: PercentCardDef) {
@@ -96,7 +96,7 @@ function PercentCard({ label, value, caveat, href }: PercentCardDef) {
       <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
         <div className={`h-full rounded-full transition-all ${barColorClass}`} style={{ width: `${value}%` }} />
       </div>
-      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-400">
+      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-700 dark:text-slate-300">
         {caveat}
       </p>
     </>
@@ -119,11 +119,11 @@ function TextCard({ label, value, caveat }: TextCardDef) {
         <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100">
           {label}
         </span>
-        <p className="mt-1.5 text-sm font-bold leading-snug text-cyan-600 dark:text-cyan-400">
+        <p className="mt-1.5 text-sm font-bold leading-snug text-cyan-700 dark:text-cyan-300">
           {value}
         </p>
       </div>
-      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-400">
+      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-700 dark:text-slate-300">
         {caveat}
       </p>
     </div>
@@ -144,7 +144,7 @@ function RiskCard({ label, value, caveat, href }: RiskCardDef) {
           {value}
         </span>
       </div>
-      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-600 dark:text-slate-400">
+      <p className="mt-2.5 text-[11px] font-medium leading-relaxed text-slate-700 dark:text-slate-300">
         {caveat}
       </p>
     </>

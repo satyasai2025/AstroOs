@@ -19,14 +19,14 @@ interface TableProps<Row> {
 export function Table<Row extends object>({ columns = [], rows = [], onRowClick }: TableProps<Row>) {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm shadow-slate-200/50 dark:shadow-none">
-      <div className="w-full overflow-x-auto min-w-0">
+      <div className="w-full overflow-x-auto min-w-0 focus:outline-none focus:ring-1 focus:ring-cyan-500" tabIndex={0} role="region" aria-label="Table data">
         <table className="w-full text-xs" style={{ minWidth: "max-content", borderCollapse: "collapse", fontFamily: "var(--font-body)" }}>
           <thead>
             <tr className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700/80">
               {columns.map((c) => (
                 <th
                   key={c.key}
-                  className="text-slate-600 dark:text-slate-400 font-semibold text-[11px] uppercase tracking-wider px-3 py-2"
+                  className="text-slate-700 dark:text-slate-200 font-bold text-[11px] uppercase tracking-wider px-3 py-2"
                   style={{
                     textAlign: c.align || "left",
                   }}

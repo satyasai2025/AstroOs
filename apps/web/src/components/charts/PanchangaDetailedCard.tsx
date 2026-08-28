@@ -120,8 +120,8 @@ export function PanchangaDetailedCard({ result, request }: Props) {
               onClick={() => setActiveTab("panchanga")}
               className={`px-2 py-0.5 rounded font-extrabold transition cursor-pointer ${
                 activeTab === "panchanga"
-                  ? "bg-cyan-500 text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-300"
+                  ? "bg-cyan-600 dark:bg-cyan-500 text-slate-950 shadow-xs"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               📜 Panchanga Details
@@ -131,8 +131,8 @@ export function PanchangaDetailedCard({ result, request }: Props) {
               onClick={() => setActiveTab("dasha")}
               className={`px-2 py-0.5 rounded font-extrabold transition cursor-pointer ${
                 activeTab === "dasha"
-                  ? "bg-cyan-500 text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-300"
+                  ? "bg-cyan-600 dark:bg-cyan-500 text-slate-950 shadow-xs"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
               }`}
             >
               ⏳ Dasha Sequence

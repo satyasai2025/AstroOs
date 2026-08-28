@@ -205,42 +205,48 @@ export function ShadbalaGaugesOverview({ result }: Props) {
 
         {/* Footer Total */}
         <div className="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
-          <span className="text-slate-500 dark:text-slate-400 italic text-[10px]">
+          <span className="text-slate-700 dark:text-slate-300 italic text-[10px]">
             * Shadbala values in Rupas (Req threshold ~5.5 R)
           </span>
           <span className="font-bold text-slate-900 dark:text-slate-100 font-mono">
-            Total Strength: <span className="text-cyan-600 dark:text-cyan-400 font-extrabold">{totalRupas}</span> / 54
+            Total Strength: <span className="text-cyan-700 dark:text-cyan-300 font-extrabold">{totalRupas}</span> / 54
           </span>
         </div>
       </div>
 
       {/* ── Interactive Shadbala Details Modal ── */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="shadbala-modal-title"
+        >
           <div className="w-full max-w-2xl rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 text-slate-900 dark:text-slate-100 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
-                <h3 className="text-base font-extrabold text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
+                <h3 id="shadbala-modal-title" className="text-base font-extrabold text-cyan-700 dark:text-cyan-300 flex items-center gap-2">
                   <span>📊</span> Parashari Shadbala Strength Breakdown
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
                   Six-fold planetary strength calculation (Sthana, Dig, Kala, Chesta, Naisargika &amp; Drik Bala)
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-100 text-base font-bold cursor-pointer"
+                className="text-slate-500 hover:text-slate-800 dark:hover:text-slate-100 text-base font-bold cursor-pointer"
+                aria-label="Close"
               >
                 ✕
               </button>
             </div>
 
             {/* Modal Table Breakdown */}
-            <div className="overflow-x-auto max-h-[360px] custom-scrollbar">
+            <div className="overflow-x-auto max-h-[360px] custom-scrollbar focus:outline-none focus:ring-1 focus:ring-cyan-500" tabIndex={0} role="region" aria-label="Shadbala breakdown table">
               <table className="w-full text-left text-xs font-mono">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase text-[10px]">
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-bold uppercase text-[10px]">
                     <th className="py-2 px-2">Planet</th>
                     <th className="py-2 px-2 text-right">Rupas</th>
                     <th className="py-2 px-2 text-right">Virupas</th>
@@ -255,7 +261,7 @@ export function ShadbalaGaugesOverview({ result }: Props) {
                       <td className="py-2 px-2 font-bold text-slate-900 dark:text-slate-200">{p.name}</td>
                       <td className="py-2 px-2 text-right font-extrabold text-cyan-700 dark:text-cyan-300">{p.score} R</td>
                       <td className="py-2 px-2 text-right text-slate-700 dark:text-slate-300">{p.virupas} Virupas</td>
-                      <td className="py-2 px-2 text-right text-slate-500 dark:text-slate-400">{p.required} R</td>
+                      <td className="py-2 px-2 text-right text-slate-700 dark:text-slate-300">{p.required} R</td>
                       <td className="py-2 px-2 text-right font-bold text-slate-900 dark:text-slate-100">{p.ratio}</td>
                       <td className="py-2 px-2 text-center">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${p.colorClass}`}>
@@ -269,13 +275,13 @@ export function ShadbalaGaugesOverview({ result }: Props) {
             </div>
 
             <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-400 text-[11px]">
+              <span className="text-slate-600 dark:text-slate-300 text-[11px]">
                 Note: 1 Rupa = 60 Virupas. Calculated using Swiss Ephemeris astronomical positions.
               </span>
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="px-4 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md transition cursor-pointer"
+                className="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-md transition cursor-pointer"
               >
                 Close Breakdown
               </button>

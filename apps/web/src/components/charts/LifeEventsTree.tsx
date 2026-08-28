@@ -139,10 +139,12 @@ export function LifeEventsTree({ chartId, onEventAdded }: LifeEventsTreeProps) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1">
+            <label htmlFor="life-event-desc" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
               Description (Optional)
             </label>
             <input
+              id="life-event-desc"
+              aria-label="Description"
               type="text"
               className="field-input px-3 py-1.5 text-xs w-full"
               placeholder="Context or notes about this milestone..."
@@ -163,10 +165,10 @@ export function LifeEventsTree({ chartId, onEventAdded }: LifeEventsTreeProps) {
       )}
 
       {isLoading ? (
-        <p className="text-xs py-4 text-center text-slate-400">Loading events…</p>
+        <p className="text-xs py-4 text-center text-slate-700 dark:text-slate-300">Loading events…</p>
       ) : events.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-700/60 p-6 text-center">
-          <p className="text-xs text-slate-400">
+        <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-700 p-6 text-center">
+          <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
             No life events logged for this native yet. Click &quot;+ Add Life Event&quot; to begin correlating milestones.
           </p>
         </div>
@@ -181,25 +183,26 @@ export function LifeEventsTree({ chartId, onEventAdded }: LifeEventsTreeProps) {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-100">{ev.title}</span>
+                      <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{ev.title}</span>
                       <Badge tone={CATEGORY_COLORS[ev.category ?? "other"] ?? "neutral"}>
                         {ev.category ?? "milestone"}
                       </Badge>
-                      <span className="text-[11px] font-mono text-slate-400">
+                      <span className="text-[11px] font-mono text-slate-700 dark:text-slate-300 font-semibold">
                         {new Date(ev.event_date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
                       </span>
                     </div>
                     {ev.description && (
-                      <p className="text-xs text-slate-400 mt-1">{ev.description}</p>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 mt-1">{ev.description}</p>
                     )}
                   </div>
                   <button
                     type="button"
                     onClick={() => handleDelete(ev.id)}
-                    className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 text-xs transition"
+                    className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-500 text-xs transition"
+                    aria-label={`Delete event ${ev.title}`}
                     title="Delete milestone"
                   >
-                    ×
+                    ✕
                   </button>
                 </div>
               </div>

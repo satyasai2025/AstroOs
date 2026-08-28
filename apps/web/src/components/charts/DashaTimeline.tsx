@@ -681,12 +681,11 @@ export function DashaTimeline({
       </div>
 
       {/* Timeline SVG */}
-      <div ref={containerRef} className="overflow-x-auto">
+      <div ref={containerRef} className="overflow-x-auto focus:outline-none focus:ring-1 focus:ring-cyan-500" tabIndex={0} role="region" aria-label="Dasha timeline scrollable view">
         <svg
           ref={svgRef}
           className="w-full"
           style={{ minWidth: 500 }}
-          role="img"
           aria-label={`${dasha.system} Dasha timeline chart showing Mahadasha, Antardasha, and Pratyantar Dasha periods`}
         />
       </div>
@@ -705,7 +704,7 @@ export function DashaTimeline({
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+              <p className="text-xs uppercase tracking-wide text-slate-700 dark:text-slate-300 font-semibold">
                 Current Active Dasha
               </p>
               <p
@@ -725,7 +724,7 @@ export function DashaTimeline({
                   </>
                 )}
               </p>
-              <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-xs text-slate-700 dark:text-slate-300">
                 {activeDasha ? (
                   <>
                     {formatDate(activeDasha.mahadasha.start_date)} —{" "}

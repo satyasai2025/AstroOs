@@ -61,9 +61,9 @@ export function ActiveYogasCard({ result }: Props) {
                   ☸
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                  <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                     {y.name}
-                  </h4>
+                  </p>
                   <p className="text-[10px] text-slate-600 dark:text-slate-400 truncate">
                     {y.description}
                   </p>

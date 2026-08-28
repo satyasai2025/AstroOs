@@ -384,7 +384,7 @@ export default function ChartHistoryPage() {
                 className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
                   activeFilter === "all"
                     ? "border-amber-600 bg-amber-100 text-amber-900 dark:border-amber-500 dark:bg-amber-500/20 dark:text-amber-300 font-bold"
-                    : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400"
                 }`}
               >
                 All Charts
@@ -395,7 +395,7 @@ export default function ChartHistoryPage() {
                 className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
                   activeFilter === "research"
                     ? "border-amber-600 bg-amber-100 text-amber-900 dark:border-amber-500 dark:bg-amber-500/20 dark:text-amber-300 font-bold"
-                    : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400"
                 }`}
               >
                 Research Cases
@@ -406,7 +406,7 @@ export default function ChartHistoryPage() {
                 className={`rounded-full px-3 py-1 text-xs font-semibold border transition ${
                   activeFilter === "recent"
                     ? "border-amber-600 bg-amber-100 text-amber-900 dark:border-amber-500 dark:bg-amber-500/20 dark:text-amber-300 font-bold"
-                    : "border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-slate-400"
                 }`}
               >
                 Recently Saved

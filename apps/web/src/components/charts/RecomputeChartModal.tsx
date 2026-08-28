@@ -228,14 +228,14 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
               Edit Chart Details
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
               Update name, birth date, time, location, or astrological calculation settings.
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition"
+            className="rounded-lg p-1.5 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
             aria-label="Close"
           >
             ✕
@@ -246,10 +246,12 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
         <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto pr-1 flex-1">
           {/* 1. Name Input */}
           <div>
-            <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">
+            <label htmlFor="recompute-name" className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">
               Name / Subject
             </label>
             <input
+              id="recompute-name"
+              aria-label="Name or Subject"
               type="text"
               value={subjectName}
               onChange={(e) => setSubjectName(e.target.value)}
@@ -262,10 +264,12 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
           {/* 2. Date & Time Inputs Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label htmlFor="recompute-date" className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">
                 Birth Date (Local)
               </label>
               <input
+                id="recompute-date"
+                aria-label="Birth Date"
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
@@ -275,10 +279,12 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label htmlFor="recompute-time" className="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">
                 Birth Time (Local)
               </label>
               <input
+                id="recompute-time"
+                aria-label="Birth Time"
                 type="time"
                 step="60"
                 value={birthTime}
@@ -292,7 +298,7 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
           {/* 3. Place Search & Location Details */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label htmlFor="recompute-place" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Birth Place
               </label>
               <button
@@ -307,8 +313,10 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
             {manualCoords ? (
               <div className="grid grid-cols-2 gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-500">Latitude (-90 to 90)</label>
+                  <label htmlFor="recompute-lat" className="text-[10px] uppercase font-bold text-slate-500">Latitude (-90 to 90)</label>
                   <input
+                    id="recompute-lat"
+                    aria-label="Latitude"
                     type="number"
                     step="any"
                     value={manualLat}
@@ -318,8 +326,10 @@ export function RecomputeChartModal({ chart, onClose }: RecomputeChartModalProps
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase font-bold text-slate-500">Longitude (-180 to 180)</label>
+                  <label htmlFor="recompute-lon" className="text-[10px] uppercase font-bold text-slate-500">Longitude (-180 to 180)</label>
                   <input
+                    id="recompute-lon"
+                    aria-label="Longitude"
                     type="number"
                     step="any"
                     value={manualLon}

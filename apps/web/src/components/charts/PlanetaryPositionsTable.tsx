@@ -51,11 +51,11 @@ export function PlanetaryPositionsTable({
   ];
 
   const table = (
-    <div className="w-full overflow-x-auto">
-      <table className="w-full text-left text-sm">
+    <div className="overflow-x-auto w-full focus:outline-none focus:ring-1 focus:ring-cyan-500" tabIndex={0} role="region" aria-label="Planetary positions table">
+      <table className="w-full text-xs text-left" style={{ borderCollapse: "collapse", minWidth: 460 }}>
         <thead>
-          <tr className="border-b border-slate-200 dark:border-slate-800 text-xs uppercase tracking-wide text-slate-700 dark:text-slate-300 font-semibold bg-slate-50/50 dark:bg-slate-800/40">
-            <th className="py-2.5 px-3">Body</th>
+          <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-700 dark:border-slate-800 font-bold uppercase text-[10px] tracking-wider bg-slate-50/50 dark:bg-slate-900/50">
+            <th className="py-2.5 px-3">Graha</th>
             <th className="py-2.5 px-3">Longitude</th>
             <th className="py-2.5 px-3">Nakshatra</th>
             <th className="py-2.5 px-3">Pada</th>
@@ -71,7 +71,7 @@ export function PlanetaryPositionsTable({
             >
               <td className="py-2 px-3 font-semibold text-slate-900 dark:text-slate-100 capitalize">
                 {r.body}
-                {r.retro ? <span className="ml-1 text-xs text-rose-500 font-bold">(R)</span> : null}
+                {r.retro ? <span className="ml-1 text-xs text-rose-700 dark:text-rose-400 font-bold" aria-label="Retrograde">(R)</span> : null}
               </td>
               <td className="py-2 px-3 font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap">{r.longitude}</td>
               <td className="py-2 px-3 text-slate-700 dark:text-slate-300 capitalize">{r.nakshatra}</td>

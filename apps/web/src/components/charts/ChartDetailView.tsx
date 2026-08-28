@@ -138,85 +138,85 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7">
         {/* Card 1: Lagna */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             ♉
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Lagna</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Lagna</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{chart.ascendant.rashi}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{formatDegree(chart.ascendant.rashi_degree)}</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">{formatDegree(chart.ascendant.rashi_degree)}</p>
           </div>
         </div>
 
         {/* Card 2: Moon Sign */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             ♈
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Moon Sign</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Moon Sign</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{moonSign}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{formatDegree(moonDegree)}</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">{formatDegree(moonDegree)}</p>
           </div>
         </div>
 
         {/* Card 3: Sun Sign */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             ♌
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Sun Sign</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Sun Sign</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{sunSign}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">{formatDegree(sunDegree)}</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">{formatDegree(sunDegree)}</p>
           </div>
         </div>
 
         {/* Card 4: Nakshatra */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             ✵
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nakshatra</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Nakshatra</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{moonNakshatra}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">Pada {moonPada}</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300">Pada {moonPada}</p>
           </div>
         </div>
 
         {/* Card 5: Yoga */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             ☸
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Yoga</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Yoga</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{currentYoga}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">Active</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300">Active</p>
           </div>
         </div>
 
         {/* Card 6: Karana */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             ⚙
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Karana</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Karana</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{currentKarana}</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">Active</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300">Active</p>
           </div>
         </div>
 
         {/* Card 7: Tithi */}
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 text-base font-bold flex-shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
             🌙
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tithi</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Tithi</p>
             <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">Shukla Ekadashi</p>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400">Active</p>
+            <p className="text-[10px] text-slate-600 dark:text-slate-300">Active</p>
           </div>
         </div>
       </div>
@@ -235,10 +235,10 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
                   <button
                     type="button"
                     onClick={() => setChartStyle("north")}
-                    className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                    className={`px-2 py-0.5 text-[11px] font-bold rounded transition ${
                       chartStyle === "north"
-                        ? "bg-cyan-500 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                        ? "bg-cyan-600 dark:bg-cyan-500 text-slate-950 shadow-sm"
+                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                     }`}
                     aria-pressed={chartStyle === "north"}
                   >
@@ -247,10 +247,10 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
                   <button
                     type="button"
                     onClick={() => setChartStyle("south")}
-                    className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                    className={`px-2 py-0.5 text-[11px] font-bold rounded transition ${
                       chartStyle === "south"
-                        ? "bg-cyan-500 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                        ? "bg-cyan-600 dark:bg-cyan-500 text-slate-950 shadow-sm"
+                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                     }`}
                     aria-pressed={chartStyle === "south"}
                   >

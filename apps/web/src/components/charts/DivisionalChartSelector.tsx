@@ -58,7 +58,7 @@ export function DivisionalChartSelector({
   return (
     <div className="flex items-center gap-1.5 max-w-full overflow-x-auto min-w-0 py-0.5">
       {/* Primary Varga Pills */}
-      <div className="flex items-center gap-1 overflow-x-auto scrollbar-none min-w-0">
+      <div className="flex items-center gap-1 overflow-x-auto scrollbar-none min-w-0 focus:outline-none focus:ring-1 focus:ring-cyan-500" tabIndex={0} role="region" aria-label="Primary divisional charts">
         {PRIMARY_VARGAS.map((vk) => {
           const isActive = selectedVarga === vk;
           const available = isAvailable(vk);
@@ -73,9 +73,9 @@ export function DivisionalChartSelector({
               title={`${meta?.label || vk} (1/${meta?.divisor || 1})`}
               className={`rounded px-2 py-1 text-xs font-bold transition whitespace-nowrap ${
                 isActive
-                  ? "bg-cyan-500 text-white shadow-sm ring-1 ring-cyan-400"
+                  ? "bg-cyan-600 dark:bg-cyan-500 text-slate-950 font-extrabold shadow-sm ring-1 ring-cyan-400"
                   : available
-                    ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                    ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
                     : "opacity-40 cursor-not-allowed bg-slate-100 dark:bg-slate-800 text-slate-400"
               }`}
             >
@@ -95,10 +95,10 @@ export function DivisionalChartSelector({
             }
           }}
           aria-label="Select higher or micro-divisional varga chart"
-          className={`rounded px-2 py-1 text-xs font-semibold border transition cursor-pointer ${
+          className={`rounded px-2 py-1 text-xs font-bold border transition cursor-pointer ${
             isHigherVargaSelected
-              ? "bg-cyan-500 text-white border-cyan-400 shadow-sm"
-              : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-cyan-500"
+              ? "bg-cyan-600 dark:bg-cyan-500 text-slate-950 border-cyan-400 shadow-sm"
+              : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-cyan-500"
           }`}
         >
           <option value="" disabled={!isHigherVargaSelected}>

@@ -137,12 +137,14 @@ export default function ChartDetailPage() {
   } else if (chartsLoading || analyze.isPending) {
     body = (
       <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+        <h1 className="sr-only">Birth Chart Analysis</h1>
         {chartsLoading ? "Loading chart…" : "Recomputing chart…"}
       </div>
     );
   } else if (!summary) {
     body = (
       <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+        <h1 className="text-base font-bold mb-2" style={{ color: "var(--text-primary)" }}>Chart Not Found</h1>
         <p>No saved chart with that ID, or it isn&apos;t yours.</p>
         <Link href="/charts/history" className="obsidian-btn-primary mt-4 inline-flex text-sm">
           Back to My Charts
@@ -154,12 +156,14 @@ export default function ChartDetailPage() {
       analyze.error instanceof ApiError ? analyze.error.detail : "Could not recompute this chart.";
     body = (
       <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
+        <h1 className="text-base font-bold mb-2">Error Loading Chart</h1>
         {msg}
       </div>
     );
   } else {
     body = (
       <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+        <h1 className="sr-only">Birth Chart Analysis</h1>
         Recomputing chart…
       </div>
     );
