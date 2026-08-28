@@ -102,9 +102,7 @@ from apps.api.routers import research_generalization as research_generalization_
 from apps.api.routers import research_knowledge_state as research_knowledge_state_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
-# Imported for its side effect: registers the /patterns route onto
-# transit_router.router (see routers/transit_patterns.py's docstring).
-from apps.api.routers import transit_patterns as transit_patterns_router  # noqa: F401
+from apps.api.routers import phalita_prediction as phalita_prediction_router
 from apps.api.routers import varshaphal as varshaphal_router
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
@@ -432,6 +430,9 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         prediction_orchestration_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        phalita_prediction_router.router, dependencies=_authenticated
     )
     app.include_router(
         timeline_router.router, prefix="/api/v1", dependencies=_authenticated

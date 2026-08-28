@@ -1,4 +1,4 @@
-﻿"""
+"""
 AstroOS — Mundane Astrology (Medini Jyotisha / Samhita) Router
 Endpoints for Chaitra Shukla Pratipada, Planetary Cabinet, Eclipses, Kurma Chakra, and National Forecasts.
 """
@@ -6,7 +6,7 @@ Endpoints for Chaitra Shukla Pratipada, Planetary Cabinet, Eclipses, Kurma Chakr
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from apps.api.dependencies import get_ephemeris_wrapper
@@ -253,3 +253,56 @@ def get_national_forecast(
         public_health_index=forecast.public_health_index,
         executive_summary=forecast.executive_summary,
     )
+
+
+@router.get("/weather-forecast", status_code=status.HTTP_200_OK)
+def get_sapta_nadi_weather_forecast(
+    target_date: str = Query(..., description="Target date YYYY-MM-DD"),
+) -> Dict[str, Any]:
+    """Computes Sapta-Nadi Chakra weather & precipitation forecast."""
+    try:
+        from datetime import date
+        from apps.api.services.medini_engine import MediniEngine
+
+        t_date = date.fromisoformat(target_date)
+        engine = MediniEngine(ephemeris_path="data/ephemeris")
+        wf = engine.forecast_weather(t_date)
+        return {
+            "status": "SUCCESS",
+            "target_date": wf.target_date.isoformat(),
+            "dominant_nadi": wf.dominant_nadi,
+            "rainfall_probability_pct": wf.rainfall_probability_pct,
+            "rainfall_intensity": wf.rainfall_intensity,
+            "temperature_trend": wf.temperature_trend,
+            "active_water_planets": wf.active_water_planets,
+            "active_fire_planets": wf.active_fire_planets,
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@router.get("/market-forecast", status_code=status.HTTP_200_OK)
+def get_financial_market_forecast(
+    target_date: str = Query(..., description="Target date YYYY-MM-DD"),
+) -> Dict[str, Any]:
+    """Computes Financial Astrology Sentiment Index for Equities (Sensex) & Commodities (Gold)."""
+    try:
+        from datetime import date
+        from apps.api.services.medini_engine import MediniEngine
+
+        t_date = date.fromisoformat(target_date)
+        engine = MediniEngine(ephemeris_path="data/ephemeris")
+        mf = engine.forecast_market(t_date)
+        return {
+            "status": "SUCCESS",
+            "target_date": mf.target_date.isoformat(),
+            "sensex_trend": mf.sensex_trend,
+            "sensex_sentiment_score": mf.sensex_sentiment_score,
+            "gold_trend": mf.gold_trend,
+            "gold_sentiment_score": mf.gold_sentiment_score,
+            "key_drivers": mf.key_drivers,
+            "caution_flag": mf.caution_flag,
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+

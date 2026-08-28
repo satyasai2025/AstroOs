@@ -23,11 +23,11 @@ import pytest
 from apps.api.services.feature_catalog import ACTION_COLUMNS, DECIDED_MATRIX
 
 _REPO_ROOT = Path(__file__).resolve().parents[4]
-_MIGRATION = _REPO_ROOT / "database" / "versions" / "0032_seed_report_entitlements.py"
+_MIGRATION = _REPO_ROOT / "database" / "versions" / "0037_seed_report_entitlements.py"
 
 
 def _load_migration():
-    spec = importlib.util.spec_from_file_location("m0032", _MIGRATION)
+    spec = importlib.util.spec_from_file_location("m0037", _MIGRATION)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -88,8 +88,8 @@ def test_migration_declares_only_known_actions():
 
 def test_migration_follows_the_current_head():
     module = _load_migration()
-    assert module.revision == "0032"
-    assert module.down_revision == "0031", (
-        "0032 must chain off 0031; a reused revision id previously broke the "
+    assert module.revision == "0037"
+    assert module.down_revision == "0036", (
+        "0037 must chain off 0036; a reused revision id previously broke the "
         "whole alembic chain in this project"
     )

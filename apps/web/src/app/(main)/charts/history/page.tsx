@@ -8,7 +8,7 @@ import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
 import { RecomputeChartModal } from "@/components/charts/RecomputeChartModal";
 import { initialsOf, paletteFor } from "@/components/dashboard/DashboardOverview";
-import { Badge, Button, Card, SearchInput, Select, Table, type TableColumn } from "@/components/ui";
+import { Badge, Button, Card, ConfirmationModal, SearchInput, Select, Table, type TableColumn } from "@/components/ui";
 import type { BirthChartSummary } from "@/lib/types";
 
 type SortMode = "recent" | "name" | "oldest";
@@ -53,6 +53,8 @@ export default function ChartHistoryPage() {
   const clearWorkflowResult = useWorkflowStore((s) => s.clear);
   const deleteChart = useDeleteChart();
   const setDefaultChart = useSetDefaultChart();
+  const [chartToDelete, setChartToDelete] = useState<BirthChartSummary | null>(null);
+  const [chartToSetDefault, setChartToSetDefault] = useState<BirthChartSummary | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -133,14 +135,18 @@ export default function ChartHistoryPage() {
         : null;
 
   const handleDelete = (chart: BirthChartSummary) => {
-    if (!window.confirm(`Delete the saved chart for "${chart.subject_name}"? This can't be undone.`)) {
-      return;
-    }
     setDeleteError(null);
-    setDeletingId(chart.id);
-    deleteChart.mutate(chart.id, {
+    setChartToDelete(chart);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!chartToDelete) return;
+    setDeleteError(null);
+    setDeletingId(chartToDelete.id);
+    deleteChart.mutate(chartToDelete.id, {
       onSuccess: () => {
         setDeleteError(null);
+        setChartToDelete(null);
       },
       onError: (err) => {
         setDeleteError(
@@ -152,14 +158,18 @@ export default function ChartHistoryPage() {
   };
 
   const handleSetDefault = (chart: BirthChartSummary) => {
-    if (!window.confirm(`Set "${chart.subject_name}" as your default chart?`)) {
-      return;
-    }
     setDefaultError(null);
-    setSettingDefaultId(chart.id);
-    setDefaultChart.mutate(chart.id, {
+    setChartToSetDefault(chart);
+  };
+
+  const handleConfirmSetDefault = () => {
+    if (!chartToSetDefault) return;
+    setDefaultError(null);
+    setSettingDefaultId(chartToSetDefault.id);
+    setDefaultChart.mutate(chartToSetDefault.id, {
       onSuccess: () => {
         setDefaultError(null);
+        setChartToSetDefault(null);
       },
       onError: (err) => {
         setDefaultError(
@@ -212,7 +222,6 @@ export default function ChartHistoryPage() {
             <Link href={`/charts/${c.id}`} style={{ fontWeight: "var(--weight-medium)" }} className="hover:underline">
               {c.subject_name}
             </Link>
-            {c.is_default && <Badge tone="success">Default</Badge>}
           </div>
         );
       },
@@ -237,7 +246,6 @@ export default function ChartHistoryPage() {
     { key: "lagna_rashi", label: "Lagna", render: (c) => <span style={{ textTransform: "capitalize" }}>{c.lagna_rashi ?? "—"}</span> },
     { key: "moon_nakshatra", label: "Moon Nakshatra", render: (c) => <span style={{ textTransform: "capitalize" }}>{c.moon_nakshatra ?? "—"}</span> },
     { key: "created_at", label: "Saved", render: (c) => formatDateTime(c.created_at), mono: true },
-    { key: "type", label: "Type", render: () => <Badge tone="violet">D1 Chart</Badge> },
     {
       key: "actions",
       label: "",
@@ -246,62 +254,69 @@ export default function ChartHistoryPage() {
         <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
           <Link
             href={`/ai/explain`}
-            className="rounded px-2 py-1 text-[11px] font-medium border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20"
+            className="inline-flex items-center justify-center rounded px-2.5 py-1 text-[11px] font-medium border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition"
             title="Ask AI questions about this chart"
           >
             AI Explain
           </Link>
           <Link
             href={`/charts/transit?chart_id=${c.id}`}
-            className="rounded px-2 py-1 text-[11px] font-medium border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20"
+            className="inline-flex items-center justify-center rounded px-2.5 py-1 text-[11px] font-medium border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 transition"
             title="View transits for this chart"
           >
             Transits
           </Link>
           <Link
             href={`/charts/compare`}
-            className="rounded px-2 py-1 text-[11px] font-medium border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
+            className="inline-flex items-center justify-center rounded px-2.5 py-1 text-[11px] font-medium border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition"
             title="Compare with another chart"
           >
             Compare
           </Link>
-          {!c.is_default && (
-            <Button
-              variant="ghost"
-              size="sm"
+          {c.is_default ? (
+            <span
+              className="inline-flex items-center justify-center min-w-[80px] rounded px-2.5 py-1 text-[11px] font-semibold border border-emerald-500/40 bg-emerald-500/20 text-emerald-300"
+              title="This is your default chart"
+            >
+              ★ Default
+            </span>
+          ) : (
+            <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 handleSetDefault(c);
               }}
               disabled={settingDefaultId === c.id}
+              className="inline-flex items-center justify-center min-w-[80px] rounded px-2.5 py-1 text-[11px] font-medium border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition disabled:opacity-50 cursor-pointer"
               title="Use this chart as your default"
             >
               {settingDefaultId === c.id ? "Setting…" : "Set Default"}
-            </Button>
+            </button>
           )}
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               setRecomputeChart(c);
             }}
+            className="inline-flex items-center justify-center rounded px-2.5 py-1 text-[11px] font-medium border border-slate-700 bg-slate-800/40 text-slate-300 hover:bg-slate-800/80 transition cursor-pointer"
             title="View this chart with a different Ayanamsa, House System, or Dasha System"
           >
             Recompute
-          </Button>
-          <Button
-            variant="danger"
-            size="sm"
+          </button>
+          <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(c);
             }}
             disabled={deletingId === c.id}
+            className="inline-flex items-center justify-center rounded px-2.5 py-1 text-[11px] font-medium border border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 transition disabled:opacity-50 cursor-pointer"
             title="Delete this saved chart"
           >
             {deletingId === c.id ? "Deleting…" : "Delete"}
-          </Button>
+          </button>
         </div>
       ),
     },
@@ -454,6 +469,62 @@ export default function ChartHistoryPage() {
 
       {recomputeChart && (
         <RecomputeChartModal chart={recomputeChart} onClose={() => setRecomputeChart(null)} />
+      )}
+
+      {chartToDelete && (
+        <ConfirmationModal
+          open={!!chartToDelete}
+          title="Delete Saved Chart"
+          description={
+            <span>
+              Are you sure you want to delete the saved chart for{" "}
+              <strong className="font-semibold text-slate-900 dark:text-slate-100">
+                &ldquo;{chartToDelete.subject_name}&rdquo;
+              </strong>
+              ? This action cannot be undone.
+            </span>
+          }
+          confirmLabel="Delete Chart"
+          cancelLabel="Cancel"
+          variant="danger"
+          isLoading={deletingId === chartToDelete.id}
+          error={deleteError}
+          onConfirm={handleConfirmDelete}
+          onClose={() => {
+            if (!deletingId) {
+              setChartToDelete(null);
+              setDeleteError(null);
+            }
+          }}
+        />
+      )}
+
+      {chartToSetDefault && (
+        <ConfirmationModal
+          open={!!chartToSetDefault}
+          title="Set as Default Chart"
+          description={
+            <span>
+              Set{" "}
+              <strong className="font-semibold text-slate-900 dark:text-slate-100">
+                &ldquo;{chartToSetDefault.subject_name}&rdquo;
+              </strong>{" "}
+              as your default chart across AstroOS?
+            </span>
+          }
+          confirmLabel="Set Default"
+          cancelLabel="Cancel"
+          variant="primary"
+          isLoading={settingDefaultId === chartToSetDefault.id}
+          error={defaultError}
+          onConfirm={handleConfirmSetDefault}
+          onClose={() => {
+            if (!settingDefaultId) {
+              setChartToSetDefault(null);
+              setDefaultError(null);
+            }
+          }}
+        />
       )}
     </>
   );

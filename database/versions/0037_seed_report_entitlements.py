@@ -1,7 +1,7 @@
 """Seed report-download entitlements
 
-Revision ID: 0032
-Revises: 0031
+Revision ID: 0037
+Revises: 0036
 Create Date: 2026-08-27
 
 Adds the `reports` x plan x action cells to plan_features.
@@ -30,8 +30,8 @@ from typing import Sequence, Union
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "0032"
-down_revision: Union[str, None] = "0031"
+revision: str = "0037"
+down_revision: Union[str, None] = "0036"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -11,6 +11,7 @@ export { TopNav } from "./TopNav";
 export { Tabs, type TabItem } from "./Tabs";
 export { Breadcrumbs } from "./Breadcrumbs";
 export { Modal } from "./Modal";
+export { ConfirmationModal, type ConfirmationModalProps } from "./ConfirmationModal";
 export { Toast } from "./Toast";
 export { Table, type TableColumn } from "./Table";
 export { Timeline, type TimelineEvent } from "./Timeline";
