@@ -133,3 +133,6 @@ birthdata for research.xlsx
 
 # Database dumps (never commit data)
 backups/
+
+# Git worktrees (feature development isolation)
+.worktrees/
