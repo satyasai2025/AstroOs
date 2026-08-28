@@ -64,10 +64,10 @@ FEATURE_ROWS: list[tuple[str, str, str, str]] = [
 # feature_key -> plan_code -> {action: bool}
 DECISION_ENTITLEMENTS: dict[str, dict[str, dict[str, bool]]] = {
     "saved_horoscopes": {
-        "FREE":     {"view": True, "create": True},
-        "PRO":      {"view": True, "create": True},
-        "RESEARCH": {"view": True, "create": True},
-        "CUSTOM":   {"view": True, "create": True},
+        "FREE":     {"view": True, "create": True, "edit": True},
+        "PRO":      {"view": True, "create": True, "edit": True},
+        "RESEARCH": {"view": True, "create": True, "edit": True},
+        "CUSTOM":   {"view": True, "create": True, "edit": True},
     },
     "research_projects": {
         "PRO":      {"view": True, "create": True},

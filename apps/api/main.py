@@ -109,6 +109,7 @@ from apps.api.routers import varshaphal as varshaphal_router
 from apps.api.routers import visualization as visualization_router
 from apps.api.routers import workflow as workflow_router
 from apps.api.routers import sync as sync_router
+from apps.api.routers import forward_predictions as forward_predictions_router
 from apps.api.routers import prediction_confluence as prediction_confluence_router
 from apps.api.routers import prediction_validation as prediction_validation_router
 from apps.api.routers import experiments as experiments_router
@@ -578,6 +579,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(datasets_router.router)
     app.include_router(sync_router.router, prefix="/api/v1")
+    app.include_router(forward_predictions_router.router, prefix="/api/v1")
     app.include_router(prediction_confluence_router.router, prefix="/api/v1")
     app.include_router(prediction_validation_router.router, prefix="/api/v1")
     app.include_router(knowledge_ingestion_router.router, prefix="/api/v1")

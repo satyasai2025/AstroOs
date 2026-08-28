@@ -142,3 +142,52 @@ async def test_update_d1_summary_unknown_chart_raises(birth_chart_repo):
             lagna_degree=1.0,
             moon_nakshatra="ashwini",
         )
+
+
+async def test_soft_delete_and_set_default(birth_chart_repo, db_session):
+    import uuid
+
+    user_id = uuid.uuid4()
+    c1 = await birth_chart_repo.get_or_create(
+        birth_datetime_utc=_BIRTH_DT,
+        latitude=28.6139,
+        longitude=77.2090,
+        ayanamsa="lahiri",
+        house_system="W",
+        user_id=user_id,
+        subject_name="Chart 1",
+    )
+    c2 = await birth_chart_repo.get_or_create(
+        birth_datetime_utc=datetime(1995, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
+        latitude=19.0760,
+        longitude=72.8777,
+        ayanamsa="lahiri",
+        house_system="W",
+        user_id=user_id,
+        subject_name="Chart 2",
+    )
+
+    # First chart for user should be default
+    row1 = await birth_chart_repo.get_by_id(c1)
+    assert row1.is_default is True
+
+    # Switch default to chart 2
+    ok = await birth_chart_repo.set_default(c2, user_id)
+    assert ok is True
+
+    row1 = await birth_chart_repo.get_by_id(c1)
+    row2 = await birth_chart_repo.get_by_id(c2)
+    assert row1.is_default is False
+    assert row2.is_default is True
+
+    # Soft delete chart 1
+    deleted = await birth_chart_repo.soft_delete(c1, user_id)
+    assert deleted is True
+
+    # Deleted chart should not appear in get_by_id or list_for_user
+    assert await birth_chart_repo.get_by_id(c1) is None
+    active_charts = await birth_chart_repo.list_for_user(user_id)
+    assert len(active_charts) == 1
+    assert active_charts[0].id == c2
+    assert await birth_chart_repo.count_for_user(user_id) == 1
+

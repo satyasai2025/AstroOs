@@ -216,6 +216,14 @@ function _normaliseErrorDetail(detail: unknown): string | undefined {
       .filter((msg): msg is string => Boolean(msg));
     return messages.length > 0 ? messages.join(" ") : undefined;
   }
+  if (detail && typeof detail === "object") {
+    if ("message" in detail && typeof (detail as { message: unknown }).message === "string") {
+      return (detail as { message: string }).message;
+    }
+    if ("detail" in detail && typeof (detail as { detail: unknown }).detail === "string") {
+      return (detail as { detail: string }).detail;
+    }
+  }
   return undefined;
 }
 

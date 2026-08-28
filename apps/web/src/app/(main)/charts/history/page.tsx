@@ -139,6 +139,9 @@ export default function ChartHistoryPage() {
     setDeleteError(null);
     setDeletingId(chart.id);
     deleteChart.mutate(chart.id, {
+      onSuccess: () => {
+        setDeleteError(null);
+      },
       onError: (err) => {
         setDeleteError(
           err instanceof ApiError ? err.detail : "Could not delete this chart. Please retry.",
@@ -149,9 +152,15 @@ export default function ChartHistoryPage() {
   };
 
   const handleSetDefault = (chart: BirthChartSummary) => {
+    if (!window.confirm(`Set "${chart.subject_name}" as your default chart?`)) {
+      return;
+    }
     setDefaultError(null);
     setSettingDefaultId(chart.id);
     setDefaultChart.mutate(chart.id, {
+      onSuccess: () => {
+        setDefaultError(null);
+      },
       onError: (err) => {
         setDefaultError(
           err instanceof ApiError ? err.detail : "Could not set this chart as default. Please retry.",

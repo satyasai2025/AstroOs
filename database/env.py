@@ -61,6 +61,13 @@ target_metadata = AstroBase.metadata
 # ── Database URL from environment (required) ──────────────────────────────────
 DATABASE_URL: str = os.environ.get("DATABASE_URL", "")
 if not DATABASE_URL:
+    try:
+        from apps.api.config import get_settings
+        DATABASE_URL = get_settings().DATABASE_URL
+    except Exception:
+        pass
+
+if not DATABASE_URL:
     raise RuntimeError(
         "DATABASE_URL environment variable is not set. "
         "Migrations require a live PostgreSQL connection."

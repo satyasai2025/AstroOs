@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Card } from "@/components/ui";
 import { getCurrentDashaChain } from "@/lib/kpiScoring";
 import { api } from "@/lib/api";
 import { MultiDashaConfluenceStudio } from "@/components/research/MultiDashaConfluenceStudio";
@@ -10,14 +9,6 @@ import type {
   WorkflowAnalysisRequest,
   DashaTreeResponse,
 } from "@/lib/types";
-
-interface SystemComparison {
-  system: string;
-  label: string;
-  loading: boolean;
-  error: string | null;
-  tree: DashaTreeResponse | null;
-}
 
 const SUPPORTED_SYSTEMS: { id: string; label: string; category: string }[] = [
   { id: "vimshottari", label: "Vimshottari (120y)", category: "Nakshatra" },
@@ -28,11 +19,6 @@ const SUPPORTED_SYSTEMS: { id: string; label: string; category: string }[] = [
   { id: "narayana", label: "Narayana Dasha", category: "Jaimini Sign" },
 ];
 
-/**
- * Multi-Dasha Convergence Tab
- * Enables multi-system comparison (Vimshottari, Yogini, Chara, Ashtottari, etc.)
- * showing current active periods across systems and highlighting confluence.
- */
 export function MultiDashaConvergenceTab({
   result,
   request,
@@ -49,7 +35,6 @@ export function MultiDashaConvergenceTab({
   const [loadingSystems, setLoadingSystems] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Primary active system (from result)
   const primaryDasha = result.dasha;
   const primaryChain = useMemo(
     () => getCurrentDashaChain(primaryDasha.mahadashas),
@@ -91,7 +76,6 @@ export function MultiDashaConvergenceTab({
     }
   };
 
-  // Compare active periods across loaded systems
   const comparisons = useMemo(() => {
     const list: {
       systemId: string;
@@ -128,12 +112,9 @@ export function MultiDashaConvergenceTab({
   return (
     <div className="space-y-4">
       {/* ── System Selector Header ─────────────────────────────────────────── */}
-      <Card>
-        <h4
-          className="mb-2 text-xs font-semibold uppercase tracking-wide"
-          style={{ color: "var(--text-tertiary)" }}
-        >
-          Select Systems to Compare against {primaryDasha.system}
+      <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-4 shadow-sm">
+        <h4 className="mb-2.5 text-xs font-bold uppercase tracking-wider text-slate-200">
+          Compare Active Periods Across Dasha Systems (vs {primaryDasha.system.toUpperCase()})
         </h4>
         <div className="flex flex-wrap gap-2">
           {SUPPORTED_SYSTEMS.map((sys) => {
@@ -147,22 +128,13 @@ export function MultiDashaConvergenceTab({
                 type="button"
                 disabled={isPrimary}
                 onClick={() => toggleSystem(sys.id)}
-                className="rounded-lg px-3 py-1.5 text-xs font-medium transition"
-                style={{
-                  backgroundColor: isPrimary
-                    ? "var(--accent)"
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+                  isPrimary
+                    ? "bg-amber-400 text-slate-900 shadow-xs cursor-default"
                     : isSelected
-                    ? "var(--bg-card-hover, rgba(255,255,255,0.08))"
-                    : "transparent",
-                  color: isPrimary
-                    ? "var(--accent-text)"
-                    : isSelected
-                    ? "var(--text-primary)"
-                    : "var(--text-secondary)",
-                  border: "1px solid var(--border-primary)",
-                  opacity: isPrimary ? 0.9 : 1,
-                  cursor: isPrimary ? "default" : "pointer",
-                }}
+                    ? "bg-slate-800 text-slate-100 border border-slate-700"
+                    : "bg-slate-900/80 text-slate-400 border border-slate-800 hover:bg-slate-800 hover:text-slate-200"
+                }`}
               >
                 {sys.label} {isPrimary ? "(Active)" : isSelected ? "✓" : "+"}
                 {isLoading && " …"}
@@ -170,35 +142,29 @@ export function MultiDashaConvergenceTab({
             );
           })}
         </div>
-      </Card>
+      </div>
 
       {/* ── Active Period Confluence Matrix ────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {comparisons.map((comp) => {
           const md = comp.activeChain[0] ?? null;
           const ad = comp.activeChain[1] ?? null;
           const errorMsg = errors[comp.systemId];
 
           return (
-            <Card key={comp.systemId}>
-              <div className="flex items-center justify-between border-b pb-2 mb-3" style={{ borderColor: "var(--border-primary)" }}>
+            <div key={comp.systemId} className="rounded-xl border border-slate-800 bg-slate-900/90 p-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
                 <div>
-                  <h4
-                    className="text-sm font-bold capitalize"
-                    style={{ color: "var(--accent)" }}
-                  >
+                  <h4 className="text-xs font-bold capitalize text-slate-100">
                     {comp.label}
                   </h4>
-                  <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                  <p className="text-[10px] text-slate-400">
                     {comp.category}
                   </p>
                 </div>
                 {comp.tree && (
-                  <span
-                    className="text-[10px] font-medium"
-                    style={{ color: "var(--text-secondary)" }}
-                  >
-                    Trigger: {comp.tree.trigger_planet}
+                  <span className="text-[11px] font-mono text-slate-400">
+                    Trigger: <strong className="text-slate-200">{comp.tree.trigger_planet}</strong>
                   </span>
                 )}
               </div>
@@ -206,38 +172,34 @@ export function MultiDashaConvergenceTab({
               {comp.tree ? (
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs">
-                    <span style={{ color: "var(--text-secondary)" }}>Active Mahadasha:</span>
-                    <strong style={{ color: "var(--text-primary)" }}>
+                    <span className="text-slate-400">Active Mahadasha:</span>
+                    <strong className="text-slate-100 font-semibold">
                       {md ? `${md.lord} (${md.start_date} → ${md.end_date})` : "—"}
                     </strong>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span style={{ color: "var(--text-secondary)" }}>Active Antardasha:</span>
-                    <strong style={{ color: "var(--text-primary)" }}>
+                    <span className="text-slate-400">Active Antardasha:</span>
+                    <strong className="text-slate-100 font-semibold">
                       {ad ? `${ad.lord} (${ad.start_date} → ${ad.end_date})` : "—"}
                     </strong>
                   </div>
                 </div>
               ) : errorMsg ? (
-                <p className="text-xs" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>
+                <p className="text-xs text-rose-400">
                   {errorMsg}
                 </p>
               ) : (
-                <div className="py-4 text-center">
+                <div className="py-3 text-center">
                   <button
                     type="button"
                     onClick={() => fetchSystemTree(comp.systemId)}
-                    className="rounded-md px-3 py-1.5 text-xs font-semibold"
-                    style={{
-                      background: "var(--accent)",
-                      color: "var(--accent-text)",
-                    }}
+                    className="rounded-lg bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 border border-slate-700 hover:bg-slate-700 transition"
                   >
                     Load {comp.label} Tree
                   </button>
                 </div>
               )}
-            </Card>
+            </div>
           );
         })}
       </div>
@@ -246,17 +208,14 @@ export function MultiDashaConvergenceTab({
       <MultiDashaConfluenceStudio />
 
       {/* ── Multi-Dasha Synthesis Note ────────────────────────────────────── */}
-      <Card>
-        <h4
-          className="mb-1 text-xs font-semibold uppercase tracking-wide"
-          style={{ color: "var(--text-tertiary)" }}
-        >
+      <div className="rounded-xl border border-slate-800 bg-slate-900/90 p-4 shadow-sm">
+        <h4 className="mb-1 text-xs font-bold uppercase tracking-wider text-slate-200">
           Multi-Dasha Convergence Principle
         </h4>
-        <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
+        <p className="text-xs text-slate-400">
           When multiple independent dasha systems (e.g. Nakshatra-based Vimshottari alongside Sign-based Jaimini Chara Dasha) concurrently activate the same house, lord, or significator, the confidence of event manifestation rises significantly.
         </p>
-      </Card>
+      </div>
     </div>
   );
 }

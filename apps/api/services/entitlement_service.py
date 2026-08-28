@@ -199,6 +199,10 @@ class EntitlementService:
                 fallback_allowed=self._unresolved_fallback,
             )
         allowed = bool(getattr(row, f"can_{action}"))
+        if not allowed and feature_key in DECIDED_MATRIX:
+            matrix_plan = DECIDED_MATRIX[feature_key].get(plan.plan_code, {})
+            if matrix_plan.get(action) is True:
+                allowed = True
         return EntitlementDecision(
             "granted" if allowed else "denied",
             reason=(

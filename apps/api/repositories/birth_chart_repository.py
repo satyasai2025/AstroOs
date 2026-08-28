@@ -317,5 +317,7 @@ class BirthChartRepository:
         if model is None:
             return False
         model.deleted_at = datetime.now(timezone.utc)
+        if model.is_default:
+            model.is_default = False
         await self._session.flush()
         return True
