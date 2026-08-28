@@ -27,7 +27,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Optional
 
-from sqlalchemy import String, cast, func, select
+from sqlalchemy import String, cast, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.models.astrology import BirthChartModel
@@ -191,26 +191,31 @@ class BirthChartRepository:
             if target is None:
                 return False
 
-        if target.user_id is None:
-            target.user_id = user_id
+        now = datetime.now(timezone.utc)
+        target_user_id = target.user_id or user_id
 
-        if not target.is_default:
-            previous_default_stmt = (
-                select(BirthChartModel)
-                .where(
-                    (BirthChartModel.user_id == user_id)
-                    | (BirthChartModel.user_id.is_(None))
-                    | (BirthChartModel.user_id == target.user_id)
-                )
-                .where(BirthChartModel.is_default.is_(True))
-                .where(BirthChartModel.deleted_at.is_(None))
+        # Step 1: Explicitly clear any existing default for this user first
+        await self._session.execute(
+            update(BirthChartModel)
+            .where(
+                (BirthChartModel.user_id == user_id)
+                | (BirthChartModel.user_id.is_(None))
+                | (BirthChartModel.user_id == target_user_id)
             )
-            previous_default = (await self._session.execute(previous_default_stmt)).scalar_one_or_none()
-            if previous_default is not None and previous_default.id != target.id:
-                previous_default.is_default = False
-                await self._session.flush()
-            target.is_default = True
-            await self._session.flush()
+            .where(BirthChartModel.is_default.is_(True))
+            .where(BirthChartModel.id != target.id)
+            .values(is_default=False, updated_at=now)
+        )
+        await self._session.flush()
+
+        # Step 2: Set target chart as default and ensure ownership
+        await self._session.execute(
+            update(BirthChartModel)
+            .where(BirthChartModel.id == target.id)
+            .values(user_id=user_id, is_default=True, updated_at=now)
+        )
+        await self._session.flush()
+        await self._session.refresh(target)
         return True
 
     async def update_d1_summary(
