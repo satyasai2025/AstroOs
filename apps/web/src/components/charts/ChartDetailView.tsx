@@ -105,6 +105,34 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
   const currentYoga = yogas?.detected_yogas?.[0]?.name ?? "Siddhi Yoga";
   const currentKarana = "Vanija";
 
+  const RASHIS = [
+    "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+    "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+  ];
+
+  const ascDeg = chart.ascendant.rashi_degree;
+  const isUpperSandhi = ascDeg >= 29.0;
+  const isLowerSandhi = ascDeg <= 1.0;
+  const isSandhi = isUpperSandhi || isLowerSandhi;
+
+  let sandhiSign = "";
+  let sandhiDiffDeg = 0;
+  let sandhiSeconds = 0;
+
+  if (isUpperSandhi) {
+    const curIdx = RASHIS.findIndex((r) => r.toLowerCase() === chart.ascendant.rashi.toLowerCase());
+    sandhiSign = RASHIS[(curIdx + 1) % 12];
+    sandhiDiffDeg = 30.0 - ascDeg;
+    sandhiSeconds = Math.max(1, Math.round(sandhiDiffDeg * 4 * 60));
+  } else if (isLowerSandhi) {
+    const curIdx = RASHIS.findIndex((r) => r.toLowerCase() === chart.ascendant.rashi.toLowerCase());
+    sandhiSign = RASHIS[(curIdx + 11) % 12];
+    sandhiDiffDeg = ascDeg;
+    sandhiSeconds = Math.max(1, Math.round(sandhiDiffDeg * 4 * 60));
+  }
+
+  const sandhiTimeStr = sandhiSeconds < 60 ? `~${sandhiSeconds} seconds` : `~${(sandhiSeconds / 60).toFixed(1)} minutes`;
+
   return (
     <div className="space-y-4">
       {/* ── Top Header Title & Actions Bar ── */}
@@ -115,6 +143,11 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
             <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 font-mono font-bold">
               {chart.ascendant.rashi} Ascendant
             </span>
+            {isSandhi && (
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-semibold flex items-center gap-1">
+                <span>⚠️</span> Cusp / Sandhi ({formatDegree(ascDeg)})
+              </span>
+            )}
           </h1>
           <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">
             {formatDate(request.birth_datetime_utc)} · {request.place_name || `${request.latitude.toFixed(2)}°, ${request.longitude.toFixed(2)}°`} · {request.ayanamsa} Ayanamsa
@@ -134,17 +167,62 @@ export function ChartDetailView({ result, request, onEditDetails }: Props) {
         </div>
       </div>
 
+      {/* ── Cusp / Sandhi Alert Banner (Displayed when Lagna is within 1° of border) ── */}
+      {isSandhi && (
+        <div
+          className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border border-amber-500/40 bg-amber-50/80 dark:bg-amber-950/30 text-xs shadow-xs"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-start gap-2.5 min-w-0">
+            <span className="text-base flex-shrink-0">⚠️</span>
+            <div>
+              <p className="font-bold text-amber-900 dark:text-amber-200 flex items-center gap-2">
+                <span>Lagna Sandhi (Border Degree) Cusp Alert — {formatDegree(ascDeg)}</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300 font-mono">
+                  {((ascDeg / 30) * 100).toFixed(1)}% through {chart.ascendant.rashi}
+                </span>
+              </p>
+              <p className="mt-0.5 text-amber-800/90 dark:text-amber-300/80 leading-relaxed text-[11px]">
+                This birth occurred right at the border of <strong>{chart.ascendant.rashi}</strong> and <strong>{sandhiSign}</strong> ({formatDegree(sandhiDiffDeg)} from boundary). A birth time shift of just <strong>{sandhiTimeStr}</strong> moves the Ascendant into <strong>{sandhiSign}</strong>.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Link
+              href="/charts/rectify"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-xs transition cursor-pointer"
+            >
+              <span>Test {sandhiSign} in Rectification</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* ── Row 1: 7 Panchang & Astrological KPI Cards Grid ── */}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7">
         {/* Card 1: Lagna */}
-        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
-            ♉
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 text-base font-bold flex-shrink-0">
+              ♉
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Lagna</p>
+                {isSandhi && (
+                  <span className="text-[9px] font-bold px-1 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300">
+                    Cusp
+                  </span>
+                )}
+              </div>
+              <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{chart.ascendant.rashi}</p>
+              <p className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">{formatDegree(chart.ascendant.rashi_degree)}</p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Lagna</p>
-            <p className="text-xs font-extrabold text-slate-900 dark:text-slate-100 truncate">{chart.ascendant.rashi}</p>
-            <p className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">{formatDegree(chart.ascendant.rashi_degree)}</p>
+          <div className="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2 border border-slate-200 dark:border-slate-700/60" title={`Lagna progress: ${((ascDeg / 30) * 100).toFixed(1)}%`}>
+            <div className="bg-cyan-500 h-full rounded-full transition-all" style={{ width: `${Math.min(100, Math.max(2, (ascDeg / 30) * 100))}%` }} />
           </div>
         </div>
 

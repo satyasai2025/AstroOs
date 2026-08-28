@@ -273,5 +273,4 @@ class ForwardBacktestRunner:
 
 
 DEFAULT_SCAN_START = date(2000, 1, 1)
-DEFAULT_SCAN_START = date(2000, 1, 1)
 DEFAULT_SCAN_END = date(2030, 12, 31)
