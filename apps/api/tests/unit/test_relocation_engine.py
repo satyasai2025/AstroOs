@@ -145,6 +145,21 @@ def test_house_numbers_are_1_to_12_and_statuses_valid():
         assert house in expected, (p, house, status)
 
 
+def test_location_changed_and_natal_house_facts():
+    eng = RelocationEngine(ayanamsa="tropical")
+    same = _facts(eng, REDFORD_BIRTH, SANTA_MONICA, SANTA_MONICA)
+    moved = _facts(eng, REDFORD_BIRTH, SANTA_MONICA, PROVO)
+    assert same["relocation.location_changed"] is False
+    assert moved["relocation.location_changed"] is True
+    # Relocated to Provo: planet houses differ from natal (R4 evidence).
+    assert moved["relocation.house_changed.count"] >= 1
+    assert moved["relocation.planet.moon.house_changed"] == (
+        moved["relocation.planet.moon.house"] != moved["relocation.planet.moon.natal_house"])
+    # Moon's longitude is invariant under relocation (R1 evidence).
+    assert (moved["relocation.planet.moon.longitude"]
+            == same["relocation.planet.moon.longitude"])
+
+
 def test_whole_sign_house_system_differs_from_placidus():
     plac = RelocationEngine(ayanamsa="tropical", house_system="P")
     whole = RelocationEngine(ayanamsa="tropical", house_system="W")

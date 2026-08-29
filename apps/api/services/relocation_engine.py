@@ -209,8 +209,18 @@ class RelocationEngine:
         mc = _normalize(mc_t - ayanamsa)
         sid_cusps = [_normalize(c - ayanamsa) for c in t_cusps]
 
+        # Natal house framework (same birth instant, birth place) for the
+        # house-change comparison used by Relocated Chart Evaluation (R4).
+        n_cusps, _n_ascmc = swe.houses(jd_ut, birth_lat, birth_lon, b"P")
+        natal_asc = _normalize(_n_ascmc[0] - ayanamsa)
+        natal_cusps = [_normalize(c - ayanamsa) for c in n_cusps]
+
+        self._emit(facts, f"{prefix}.birth_latitude", birth_lat, prefix)
+        self._emit(facts, f"{prefix}.birth_longitude", birth_lon, prefix)
         self._emit(facts, f"{prefix}.target_latitude", target_lat, prefix)
         self._emit(facts, f"{prefix}.target_longitude", target_lon, prefix)
+        self._emit(facts, f"{prefix}.location_changed",
+                   (birth_lat, birth_lon) != (target_lat, target_lon), prefix)
         self._emit(facts, f"{prefix}.coordinate_system", "longitude", prefix)
         self._emit(facts, f"{prefix}.house_system", self._house_system, prefix)
         self._emit(facts, f"{prefix}.evaluated", True, prefix)
@@ -228,26 +238,79 @@ class RelocationEngine:
         self._emit(facts, f"{prefix}.midheaven.label", round(mc, 2), prefix)
         self._emit(facts, f"{prefix}.midheaven.harmonic_family", _harmonic_family(mc), prefix)
 
-        # Planets.
+        # Planets (longitudes are invariant under relocation — R1).
         planets: dict[str, dict] = {}
         for name, pid in _PLANET_IDS.items():
             lon = self._planet_longitude(jd_ut, name, pid)
             if name == "ketu":
                 lon = _normalize(lon + 180.0)
             house = self._relocated_house(lon, asc, sid_cusps)
+            natal_house = self._relocated_house(lon, natal_asc, natal_cusps)
             planets[name] = {
                 "longitude": lon,
                 "house": house,
+                "natal_house": natal_house,
                 "angular_status": _angular_status(house),
             }
-            self._emit_planet(facts, prefix, name, lon, house, asc, mc)
 
-        # Line aggregates.
+        # Line / angular / house-change aggregates.
         in_orb = [p for p, d in planets.items() if self._in_orb(d, asc, mc)]
         major = [p for p, d in planets.items() if self._min_orb(d, asc, mc) <= self.major_line_orb_deg]
+        angular = [p for p, d in planets.items() if d["angular_status"] == "angular"]
+        changed = [p for p, d in planets.items() if d["house"] != d["natal_house"]]
+
+        # Paran crossings: planet pairs simultaneously angular in mundo.
+        paran_pairs: list[tuple[str, str]] = []
+        for i in range(len(angular)):
+            for j in range(i + 1, len(angular)):
+                paran_pairs.append((angular[i], angular[j]))
+        paran_members = {p for pair in paran_pairs for p in pair}
+
+        # Line type per planet (paran overrides natal).
+        line_type = {name: ("paran" if name in paran_members else "natal")
+                     for name in planets}
+
+        # Within-type proximity rank: 1 = closest in-orb line of that type.
+        line_rank: dict[str, int] = {name: 0 for name in planets}
+        for ptype in ("natal", "paran"):
+            group = sorted(
+                (p for p in in_orb if line_type[p] == ptype),
+                key=lambda p: self._min_orb(planets[p], asc, mc),
+            )
+            for idx, name in enumerate(group, start=1):
+                line_rank[name] = idx
+
+        # Emit per-planet facts (rank known only after the full pass).
+        for name in planets:
+            self._emit_planet(facts, prefix, name,
+                              planets[name]["longitude"], planets[name]["house"],
+                              planets[name]["natal_house"], asc, mc,
+                              line_type[name], line_rank[name])
+
         self._emit(facts, f"{prefix}.lines.in_orb_count", len(in_orb), prefix)
         self._emit(facts, f"{prefix}.lines.major_count", len(major), prefix)
         self._emit(facts, f"{prefix}.lines.minor_count", len(in_orb) - len(major), prefix)
+        self._emit(facts, f"{prefix}.lines.natal.count",
+                   sum(1 for p in in_orb if line_type[p] == "natal"), prefix)
+        self._emit(facts, f"{prefix}.lines.natal.planets", ",".join(
+            sorted(p for p in in_orb if line_type[p] == "natal")), prefix)
+        self._emit(facts, f"{prefix}.lines.paran.count",
+                   sum(1 for p in in_orb if line_type[p] == "paran"), prefix)
+        self._emit(facts, f"{prefix}.lines.paran.planets", ",".join(
+            sorted(p for p in in_orb if line_type[p] == "paran")), prefix)
+        self._emit(facts, f"{prefix}.lines.natal.closest",
+                   next((p for p in ("sun", "moon", "mercury", "venus", "mars",
+                                     "jupiter", "saturn", "uranus", "neptune",
+                                     "pluto", "rahu", "ketu")
+                         if line_rank.get(p, 0) == 1 and line_type[p] == "natal"), ""),
+                   prefix)
+
+        # Angular & house-change aggregates (used by Relocated Chart Evaluation).
+        self._emit(facts, f"{prefix}.angular.count", len(angular), prefix)
+        self._emit(facts, f"{prefix}.angular.planets", ",".join(sorted(angular)), prefix)
+        self._emit(facts, f"{prefix}.house_changed.count", len(changed), prefix)
+        self._emit(facts, f"{prefix}.house_changed.planets",
+                   ",".join(sorted(changed)), prefix)
 
         # Midpoints of every planet pair vs the axes.
         names = list(_PLANET_IDS.keys())
@@ -262,18 +325,12 @@ class RelocationEngine:
                 self._emit(facts, f"{key}.mc_orb", round(mc_orb, 4), prefix)
                 self._emit(facts, f"{key}.in_orb", min(asc_orb, mc_orb) <= self.line_orb_deg, prefix)
 
-        # Paran crossings: planet pairs simultaneously angular in mundo.
-        angular_planets = [p for p, d in planets.items() if d["angular_status"] == "angular"]
-        paran_pairs: list[tuple[str, str]] = []
-        for i in range(len(angular_planets)):
-            for j in range(i + 1, len(angular_planets)):
-                paran_pairs.append((angular_planets[i], angular_planets[j]))
+        # Paran facts.
         self._emit(facts, f"{prefix}.paran.count", len(paran_pairs), prefix)
         self._emit(facts, f"{prefix}.paran.planets", ",".join(
             sorted({p for pair in paran_pairs for p in pair})), prefix)
         for a, b in paran_pairs:
             self._emit(facts, f"{prefix}.paran.{a}_{b}.present", True, prefix)
-        paran_members = {p for pair in paran_pairs for p in pair}
 
         # Local-space directions (azimuth of each planet from the birth place).
         self._local_space(facts, prefix, jd_ut, birth_lat, birth_lon)
@@ -298,11 +355,6 @@ class RelocationEngine:
             p for p in ("sun", "mars") if self._in_orb(planets[p], asc, mc)), prefix)
         self._emit(facts, f"{prefix}.map.risk.in_orb",
                    self._in_orb(planets["uranus"], asc, mc), prefix)
-
-        # Line-type per planet (paran overrides natal).
-        for name, d in planets.items():
-            ptype = "paran" if name in paran_members else "natal"
-            self._emit(facts, f"{prefix}.planet.{name}.line_type", ptype, prefix)
 
         return facts
 
@@ -364,12 +416,13 @@ class RelocationEngine:
         return self._min_orb(planet, asc, mc) <= self.line_orb_deg
 
     def _emit_planet(self, facts: list[Fact], prefix: str, name: str,
-                     lon: float, house: int, asc: float, mc: float) -> None:
+                     lon: float, house: int, natal_house: int,
+                     asc: float, mc: float,
+                     line_type: str, line_rank: int) -> None:
         asc_orb = _angular_distance(lon, asc)
         mc_orb = _angular_distance(lon, mc)
         min_orb = min(asc_orb, mc_orb)
         in_orb = min_orb <= self.line_orb_deg
-        rank = 1 if min_orb <= self.major_line_orb_deg else 2
         if abs(asc_orb - mc_orb) < 1e-9:
             axis = "both" if in_orb else "none"
         elif asc_orb <= mc_orb:
@@ -380,6 +433,8 @@ class RelocationEngine:
         base = f"{prefix}.planet.{name}"
         self._emit(facts, f"{base}.longitude", round(lon, 4), prefix)
         self._emit(facts, f"{base}.house", house, prefix)
+        self._emit(facts, f"{base}.natal_house", natal_house, prefix)
+        self._emit(facts, f"{base}.house_changed", house != natal_house, prefix)
         self._emit(facts, f"{base}.angular_status", _angular_status(house), prefix)
         self._emit(facts, f"{base}.angular_cusp_orb", round(min_orb, 4), prefix)
         self._emit(facts, f"{base}.asc_line_orb", round(asc_orb, 4), prefix)
@@ -388,8 +443,10 @@ class RelocationEngine:
         self._emit(facts, f"{base}.mc_line_in_orb", mc_orb <= self.line_orb_deg, prefix)
         self._emit(facts, f"{base}.line_in_orb", in_orb, prefix)
         self._emit(facts, f"{base}.axis", axis, prefix)
-        self._emit(facts, f"{base}.line_rank", rank, prefix)
-        self._emit(facts, f"{base}.line_frequency", "major" if rank == 1 else "minor", prefix)
+        self._emit(facts, f"{base}.line_type", line_type, prefix)
+        self._emit(facts, f"{base}.line_rank", line_rank, prefix)
+        self._emit(facts, f"{base}.line_frequency",
+                   "major" if min_orb <= self.major_line_orb_deg else "minor", prefix)
         self._emit(facts, f"{base}.line_coordinate_system", "longitude", prefix)
         self._emit(facts, f"{base}.in_mundo_angular_status", _angular_status(house), prefix)
 
