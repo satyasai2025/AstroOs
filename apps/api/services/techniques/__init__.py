@@ -21,3 +21,9 @@ from apps.api.services.techniques import panch_mahapurusha as _panch_mahapurusha
 from apps.api.services.techniques import marriage_timing as _marriage_timing  # noqa: F401
 from apps.api.services.techniques import wealth_dhana as _wealth_dhana  # noqa: F401
 from apps.api.services.techniques import timing_events as _timing_events  # noqa: F401
+
+# Astro-Cartography / Relocation fixtures (built on RelocationEngine facts).
+from apps.api.services.techniques import relocated_chart_evaluation as _relocated_chart_evaluation  # noqa: F401
+from apps.api.services.techniques import line_type_hierarchy as _line_type_hierarchy  # noqa: F401
+from apps.api.services.techniques import map_line_reading as _map_line_reading  # noqa: F401
+from apps.api.services.techniques import major_minor_frequencies as _major_minor_frequencies  # noqa: F401

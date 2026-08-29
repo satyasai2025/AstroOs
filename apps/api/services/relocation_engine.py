@@ -334,6 +334,7 @@ class RelocationEngine:
 
         # Local-space directions (azimuth of each planet from the birth place).
         self._local_space(facts, prefix, jd_ut, birth_lat, birth_lon)
+        self._emit(facts, f"{prefix}.local_space.count", len(_PLANET_IDS), prefix)
 
         # Vedic Atmakaraka (highest degree within its sign).
         atmakaraka = max(_VEDIC_PLANETS, key=lambda p: planets[p]["longitude"] % 30.0)
