@@ -27,3 +27,7 @@ from apps.api.services.techniques import relocated_chart_evaluation as _relocate
 from apps.api.services.techniques import line_type_hierarchy as _line_type_hierarchy  # noqa: F401
 from apps.api.services.techniques import map_line_reading as _map_line_reading  # noqa: F401
 from apps.api.services.techniques import major_minor_frequencies as _major_minor_frequencies  # noqa: F401
+from apps.api.services.techniques import location_energy_usage as _location_energy_usage  # noqa: F401
+from apps.api.services.techniques import comfort_zones as _comfort_zones  # noqa: F401
+from apps.api.services.techniques import uranus_instability as _uranus_instability  # noqa: F401
+from apps.api.services.techniques import in_mundo_vs_longitude as _in_mundo_vs_longitude  # noqa: F401

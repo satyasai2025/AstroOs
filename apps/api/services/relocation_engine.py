@@ -163,6 +163,13 @@ def _harmonic_family(angle_lon: float) -> str:
     return "none"
 
 
+def _in_ninth_harmonic(lon: float, angle: float, orb: float) -> bool:
+    """True if `lon` sits within `orb` of a 9th-harmonic multiple (40°) of
+    `angle` — the comfort-zone relation (Moon/Venus to an angular cusp)."""
+    d = _angular_distance(lon, angle)
+    return min(d % 40.0, 40.0 - d % 40.0) <= orb
+
+
 class RelocationEngine:
     """Stateless deterministic relocation fact producer."""
 
@@ -438,6 +445,13 @@ class RelocationEngine:
         self._emit(facts, f"{base}.house_changed", house != natal_house, prefix)
         self._emit(facts, f"{base}.angular_status", _angular_status(house), prefix)
         self._emit(facts, f"{base}.angular_cusp_orb", round(min_orb, 4), prefix)
+        self._emit(facts, f"{base}.ninth_harmonic_asc",
+                   _in_ninth_harmonic(lon, asc, self.line_orb_deg), prefix)
+        self._emit(facts, f"{base}.ninth_harmonic_mc",
+                   _in_ninth_harmonic(lon, mc, self.line_orb_deg), prefix)
+        self._emit(facts, f"{base}.ninth_harmonic_to_angle",
+                   (_in_ninth_harmonic(lon, asc, self.line_orb_deg)
+                    or _in_ninth_harmonic(lon, mc, self.line_orb_deg)), prefix)
         self._emit(facts, f"{base}.asc_line_orb", round(asc_orb, 4), prefix)
         self._emit(facts, f"{base}.mc_line_orb", round(mc_orb, 4), prefix)
         self._emit(facts, f"{base}.asc_line_in_orb", asc_orb <= self.line_orb_deg, prefix)

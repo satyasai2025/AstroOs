@@ -16,16 +16,22 @@ import datetime
 
 import pytest
 
+from apps.api.domain.facts import Fact
 from apps.api.domain.technique import TriggerStatus
+from apps.api.services.fact_registry import FactRegistry
 from apps.api.services.relocation_engine import RelocationEngine
 from apps.api.services.rule_registry import get_rule
 from apps.api.services.technique_engine import TechniqueEngine
 from apps.api.services.technique_registry import get_technique
 from apps.api.services.techniques import (  # noqa: F401
+    comfort_zones,
+    in_mundo_vs_longitude,
     line_type_hierarchy,
+    location_energy_usage,
     major_minor_frequencies,
     map_line_reading,
     relocated_chart_evaluation,
+    uranus_instability,
 )
 
 REDFORD_BIRTH = datetime.datetime(1936, 8, 19, 3, 2, 0)  # 1936-08-18 8:02pm PDT
@@ -42,6 +48,10 @@ def ensure_relocation_fixtures_registered():
     line_type_hierarchy.init_line_type_hierarchy()
     map_line_reading.init_map_line_reading()
     major_minor_frequencies.init_major_minor_frequencies()
+    location_energy_usage.init_location_energy_usage()
+    comfort_zones.init_comfort_zones()
+    uranus_instability.init_uranus_instability()
+    in_mundo_vs_longitude.init_in_mundo_vs_longitude()
     yield
 
 
@@ -141,3 +151,72 @@ def test_missing_all_relocation_facts_reports_insufficient_data():
     assert result.confidence == 0
     for t in result.triggers:
         assert t.status is TriggerStatus.INSUFFICIENT_DATA
+
+
+# ── fixtures 05-08 ────────────────────────────────────────────────────────────
+
+
+@pytest.mark.parametrize("tech_id", [
+    "location_energy_usage",
+    "comfort_zones",
+    "uranus_instability",
+    "in_mundo_vs_longitude",
+])
+def test_relocation_fixtures_05_to_08_registered(tech_id):
+    tech = get_technique(tech_id, 1)
+    assert tech is not None
+    for ref in tech.rule_refs:
+        assert get_rule(ref.rule_id) is not None, ref.rule_id
+
+
+def test_location_energy_usage_requires_supportive_identification():
+    # Without a supportive-location classifier, every rule is INSUFFICIENT_DATA.
+    facts = _registry()
+    result = _result("location_energy_usage", facts)
+    for t in result.triggers:
+        assert t.status is TriggerStatus.INSUFFICIENT_DATA
+
+
+def test_location_energy_usage_live_mode_recommended():
+    facts = _registry()
+    facts.add_fact(Fact("relocation.supportive.identified", True, "context"))
+    facts.add_fact(Fact("relocation.usage.live", True, "context"))
+    facts.add_fact(Fact("relocation.usage.travel", False, "context"))
+    facts.add_fact(Fact("relocation.usage.import", False, "context"))
+    result = _result("location_energy_usage", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    assert by_id["USAGE-LIVE-001"] is TriggerStatus.TRIGGERED
+    assert by_id["USAGE-TRAV-001"] is TriggerStatus.NOT_TRIGGERED
+
+
+def test_comfort_zones_triggers_on_ninth_harmonic():
+    # Honolulu (tropical): Moon is in 9th-harmonic relation to an angle.
+    eng = RelocationEngine(ayanamsa="tropical", house_system="P")
+    facts = eng.build_fact_registry(REDFORD_BIRTH, SANTA_MONICA[0], SANTA_MONICA[1],
+                                    21.3069, -157.8583)
+    assert facts.get_value("relocation.planet.moon.ninth_harmonic_to_angle") is True
+    result = _result("comfort_zones", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    assert by_id["COMFORT-001"] is TriggerStatus.TRIGGERED
+    assert by_id["COMFORT-004"] is TriggerStatus.TRIGGERED  # Moon flavor
+
+
+def test_uranus_instability_flags_angular_uranus():
+    facts = _registry()
+    result = _result("uranus_instability", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    # Provo: Uranus is succedent (not angular) and Saturn-Uranus midpoint is
+    # out of orb → neither risk rule fires; the softening rule needs context.
+    assert by_id["URANUS-001"] is TriggerStatus.NOT_TRIGGERED
+    assert by_id["URANUS-003"] is TriggerStatus.INSUFFICIENT_DATA
+
+
+def test_in_mundo_vs_longitude_longitude_system_active():
+    facts = _registry()
+    result = _result("in_mundo_vs_longitude", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    assert by_id["SYS-001"] is TriggerStatus.TRIGGERED
+    assert by_id["SYS-002"] is TriggerStatus.TRIGGERED
+    assert by_id["SYS-003"] is TriggerStatus.TRIGGERED
+    # R4 needs the caller's consistency preference.
+    assert by_id["SYS-004"] is TriggerStatus.INSUFFICIENT_DATA

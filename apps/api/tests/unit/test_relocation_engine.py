@@ -238,3 +238,17 @@ def test_harmonic_family_classification():
     assert _harmonic_family(108.0) == "fifth"
     assert _harmonic_family(128.5667) == "seventh"
     assert _harmonic_family(145.5) == "seventh"
+
+
+def test_ninth_harmonic_to_angle_facts():
+    from apps.api.services.relocation_engine import _in_ninth_harmonic
+    # 40° off an angle is exactly the 9th harmonic (within orb).
+    assert _in_ninth_harmonic(40.0, 0.0, 6.0) is True
+    assert _in_ninth_harmonic(46.0, 0.0, 6.0) is True
+    assert _in_ninth_harmonic(46.5, 0.0, 6.0) is False
+    assert _in_ninth_harmonic(120.0, 0.0, 6.0) is True
+    assert _in_ninth_harmonic(30.0, 0.0, 6.0) is False
+    # Engine facts: Honolulu puts the Moon in 9th-harmonic relation.
+    eng = RelocationEngine(ayanamsa="tropical", house_system="P")
+    f = _facts(eng, REDFORD_BIRTH, SANTA_MONICA, (21.3069, -157.8583))
+    assert f["relocation.planet.moon.ninth_harmonic_to_angle"] is True
