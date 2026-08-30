@@ -170,6 +170,14 @@ def _in_ninth_harmonic(lon: float, angle: float, orb: float) -> bool:
     return min(d % 40.0, 40.0 - d % 40.0) <= orb
 
 
+def _in_trine_sextile(lon: float, angle: float, orb: float) -> bool:
+    """True if `lon` sits within `orb` of a trine (120°) or sextile (60°)
+    of `angle` — the Sun-shine harmonic relation."""
+    d = _angular_distance(lon, angle)
+    return min(d % 120.0, 120.0 - d % 120.0) <= orb or (
+        min(d % 60.0, 60.0 - d % 60.0) <= orb)
+
+
 class RelocationEngine:
     """Stateless deterministic relocation fact producer."""
 
@@ -321,6 +329,8 @@ class RelocationEngine:
 
         # Midpoints of every planet pair vs the axes.
         names = list(_PLANET_IDS.keys())
+        asc_pairs: list[str] = []
+        mc_pairs: list[str] = []
         for i in range(len(names)):
             for j in range(i + 1, len(names)):
                 a, b = names[i], names[j]
@@ -331,6 +341,18 @@ class RelocationEngine:
                 self._emit(facts, f"{key}.asc_orb", round(asc_orb, 4), prefix)
                 self._emit(facts, f"{key}.mc_orb", round(mc_orb, 4), prefix)
                 self._emit(facts, f"{key}.in_orb", min(asc_orb, mc_orb) <= self.line_orb_deg, prefix)
+                if asc_orb <= self.line_orb_deg:
+                    asc_pairs.append(f"{a}-{b}")
+                if mc_orb <= self.line_orb_deg:
+                    mc_pairs.append(f"{a}-{b}")
+
+        # Midpoint axis aggregates (planetary-picture / isograph evidence).
+        self._emit(facts, f"{prefix}.midpoints.asc.count", len(asc_pairs), prefix)
+        self._emit(facts, f"{prefix}.midpoints.asc.pairs", ",".join(sorted(asc_pairs)), prefix)
+        self._emit(facts, f"{prefix}.midpoints.asc.double", len(asc_pairs) >= 2, prefix)
+        self._emit(facts, f"{prefix}.midpoints.mc.count", len(mc_pairs), prefix)
+        self._emit(facts, f"{prefix}.midpoints.mc.pairs", ",".join(sorted(mc_pairs)), prefix)
+        self._emit(facts, f"{prefix}.midpoints.mc.double", len(mc_pairs) >= 2, prefix)
 
         # Paran facts.
         self._emit(facts, f"{prefix}.paran.count", len(paran_pairs), prefix)
@@ -452,6 +474,9 @@ class RelocationEngine:
         self._emit(facts, f"{base}.ninth_harmonic_to_angle",
                    (_in_ninth_harmonic(lon, asc, self.line_orb_deg)
                     or _in_ninth_harmonic(lon, mc, self.line_orb_deg)), prefix)
+        self._emit(facts, f"{base}.trine_sextile_angle",
+                   (_in_trine_sextile(lon, asc, self.line_orb_deg)
+                    or _in_trine_sextile(lon, mc, self.line_orb_deg)), prefix)
         self._emit(facts, f"{base}.asc_line_orb", round(asc_orb, 4), prefix)
         self._emit(facts, f"{base}.mc_line_orb", round(mc_orb, 4), prefix)
         self._emit(facts, f"{base}.asc_line_in_orb", asc_orb <= self.line_orb_deg, prefix)

@@ -25,12 +25,16 @@ from apps.api.services.technique_engine import TechniqueEngine
 from apps.api.services.technique_registry import get_technique
 from apps.api.services.techniques import (  # noqa: F401
     comfort_zones,
+    harmonic_interpretation,
     in_mundo_vs_longitude,
     line_type_hierarchy,
     location_energy_usage,
     major_minor_frequencies,
     map_line_reading,
+    midpoints_to_angles,
+    paran_crossings,
     relocated_chart_evaluation,
+    sun_angular,
     uranus_instability,
 )
 
@@ -52,6 +56,10 @@ def ensure_relocation_fixtures_registered():
     comfort_zones.init_comfort_zones()
     uranus_instability.init_uranus_instability()
     in_mundo_vs_longitude.init_in_mundo_vs_longitude()
+    paran_crossings.init_paran_crossings()
+    sun_angular.init_sun_angular()
+    midpoints_to_angles.init_midpoints_to_angles()
+    harmonic_interpretation.init_harmonic_interpretation()
     yield
 
 
@@ -220,3 +228,62 @@ def test_in_mundo_vs_longitude_longitude_system_active():
     assert by_id["SYS-003"] is TriggerStatus.TRIGGERED
     # R4 needs the caller's consistency preference.
     assert by_id["SYS-004"] is TriggerStatus.INSUFFICIENT_DATA
+
+
+# ── fixtures 09-12 ────────────────────────────────────────────────────────────
+
+
+@pytest.mark.parametrize("tech_id", [
+    "paran_crossings",
+    "sun_angular",
+    "midpoints_to_angles",
+    "harmonic_interpretation",
+])
+def test_relocation_fixtures_09_to_12_registered(tech_id):
+    tech = get_technique(tech_id, 1)
+    assert tech is not None
+    for ref in tech.rule_refs:
+        assert get_rule(ref.rule_id) is not None, ref.rule_id
+
+
+def test_paran_crossings_provo_crossings_exist_but_out_of_orb():
+    facts = _registry()
+    assert facts.get_value("relocation.paran.count", 0) >= 1
+    assert facts.get_value("relocation.lines.paran.count", 0) == 0
+    result = _result("paran_crossings", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    assert by_id["PARAN-002"] is TriggerStatus.TRIGGERED
+    assert by_id["PARAN-001"] is TriggerStatus.NOT_TRIGGERED
+    # X-marks-the-spot needs a supportive-line classifier.
+    assert by_id["PARAN-003"] is TriggerStatus.INSUFFICIENT_DATA
+
+
+def test_sun_angular_not_angular_at_provo_but_trine_sextile():
+    facts = _registry()
+    result = _result("sun_angular", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    # Provo: Sun not conjunct an angle, but its trine/sextile relation holds.
+    assert by_id["SUN-001"] is TriggerStatus.NOT_TRIGGERED
+    assert by_id["SUN-003"] is TriggerStatus.NOT_TRIGGERED
+    assert by_id["SUN-002"] is TriggerStatus.TRIGGERED
+
+
+def test_midpoints_to_angles_detects_midpoint_in_orb():
+    facts = _registry()
+    result = _result("midpoints_to_angles", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    # Provo: at least one midpoint falls on an angle; count them to assert.
+    asc = facts.get_value("relocation.midpoints.asc.count", 0)
+    mc = facts.get_value("relocation.midpoints.mc.count", 0)
+    assert asc + mc >= 1
+    assert by_id["MID-001"] is TriggerStatus.TRIGGERED
+
+
+def test_harmonic_interpretation_provo_is_seventh():
+    facts = _registry()
+    result = _result("harmonic_interpretation", facts)
+    by_id = {t.rule_id: t.status for t in result.triggers}
+    # Both Provo angle labels carry minutes → 7th-harmonic discipline.
+    assert by_id["HARM-003"] is TriggerStatus.TRIGGERED
+    assert by_id["HARM-001"] is TriggerStatus.NOT_TRIGGERED
+    assert by_id["HARM-002"] is TriggerStatus.NOT_TRIGGERED

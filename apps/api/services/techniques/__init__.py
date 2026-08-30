@@ -31,3 +31,7 @@ from apps.api.services.techniques import location_energy_usage as _location_ener
 from apps.api.services.techniques import comfort_zones as _comfort_zones  # noqa: F401
 from apps.api.services.techniques import uranus_instability as _uranus_instability  # noqa: F401
 from apps.api.services.techniques import in_mundo_vs_longitude as _in_mundo_vs_longitude  # noqa: F401
+from apps.api.services.techniques import paran_crossings as _paran_crossings  # noqa: F401
+from apps.api.services.techniques import sun_angular as _sun_angular  # noqa: F401
+from apps.api.services.techniques import midpoints_to_angles as _midpoints_to_angles  # noqa: F401
+from apps.api.services.techniques import harmonic_interpretation as _harmonic_interpretation  # noqa: F401
