@@ -9,6 +9,7 @@ import { useMyCharts, useActiveChart } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { ActiveChartSelectorModal } from "@/components/layout/ActiveChartSelectorModal";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 import { resolvePlanetContext } from "@/components/charts/planetExplorer/context";
 import { OverviewTab } from "@/components/charts/planetExplorer/OverviewTab";
 import { StructureTab } from "@/components/charts/planetExplorer/StructureTab";
@@ -37,7 +38,7 @@ const TABS: { key: PlanetExplorerTab; label: string }[] = [
 ];
 
 function formatBirthDatetime(iso: string | undefined): string {
-  if (!iso) return "15 Aug 1990, 10:30 AM IST";
+  if (!iso) return "—";
   try {
     const d = new Date(iso);
     return d.toLocaleString("en-US", {
@@ -97,8 +98,8 @@ function PlanetExplorerContent() {
         birth_datetime_utc: target.birth_datetime_utc,
         latitude: target.birth_latitude,
         longitude: target.birth_longitude,
-        ayanamsa: (target.ayanamsa as WorkflowAnalysisRequest["ayanamsa"]) || "lahiri",
-        house_system: (target.house_system as WorkflowAnalysisRequest["house_system"]) || "placidus",
+        ayanamsa: normalizeAyanamsa(target.ayanamsa),
+        house_system: normalizeHouseSystem(target.house_system),
         dasha_system: "vimshottari",
         include_vargas: true,
         subject_name: target.subject_name,

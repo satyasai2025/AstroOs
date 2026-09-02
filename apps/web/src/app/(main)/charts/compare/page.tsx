@@ -8,6 +8,7 @@ import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useWorkflowStore } from "@/lib/store";
 import { ApiError } from "@/lib/api";
 import type { WorkflowAnalysisRequest, WorkflowAnalysisResponse } from "@/lib/types";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 import { CompareChartsModal } from "./components/CompareChartsModal";
 import { ComparisonWorkspace, type ComparedChart } from "./components/ComparisonWorkspace";
 import { useSavedComparisons } from "./hooks/useSavedComparisons";
@@ -31,6 +32,7 @@ function formatDate(iso: string): string {
 function ChartComparePageContent() {
   const storeRequest = useWorkflowStore((s) => s.request);
   const storeResult = useWorkflowStore((s) => s.result);
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const { data: chartsData, isLoading: chartsLoading, isError: chartsErrored } = useMyCharts();
   const analyze = useAnalyzeWorkflow();
   const {
@@ -82,8 +84,8 @@ function ChartComparePageContent() {
           birth_datetime_utc: summary.birth_datetime_utc,
           latitude: summary.birth_latitude,
           longitude: summary.birth_longitude,
-          ayanamsa: summary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-          house_system: summary.house_system as WorkflowAnalysisRequest["house_system"],
+          ayanamsa: normalizeAyanamsa(summary.ayanamsa),
+          house_system: normalizeHouseSystem(summary.house_system),
           dasha_system: "vimshottari",
           include_vargas: false,
           subject_name: summary.subject_name,
@@ -248,11 +250,15 @@ function ChartComparePageContent() {
                 Not Enough Saved Charts
               </h2>
               <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                You need at least 2 saved charts to compare. Generate more from the Dashboard.
+                You need at least 2 saved charts to compare. Generate a new chart to begin comparison.
               </p>
-              <Link href="/dashboard" className="obsidian-btn-primary text-sm">
-                Go to Dashboard
-              </Link>
+              <button
+                type="button"
+                onClick={() => openCreateModal("birth_chart")}
+                className="obsidian-btn-primary text-sm px-4 py-2 cursor-pointer"
+              >
+                + Create New Chart
+              </button>
             </div>
           )}
 

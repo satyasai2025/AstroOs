@@ -36,7 +36,7 @@ class VargaPosition:
     varga_rashi_degree: float
     """Degree within that varga sign (0–30°, normalized)."""
     varga_house_number: int
-    """House number from the varga lagna (1–12)."""
+    """Sign-distance offset from varga lagna sign (1–12). Note: Bhava-mode is D1 only; this is a sign-offset."""
 
     # Flags carried from D1
     is_retrograde: bool
@@ -45,6 +45,12 @@ class VargaPosition:
     """Nakshatra based on D1 sidereal longitude."""
     pada: int
     """Pada (1–4) of that nakshatra."""
+
+    # Lineage governance
+    lineage_basis: str = "D1_ONLY_BHAVA"
+    """Lineage authority: 'D1_ONLY_BHAVA' (Jha canonical doctrine: bhava mapping is valid only for D1)."""
+
+
 
 
 # ── Ascendant in the divisional chart ────────────────────────────────────────
@@ -87,3 +93,14 @@ class VargaChart:
     """Ayanamsa used for sidereal conversion."""
     julian_day: float
     """Julian Day of the birth moment."""
+
+    # Provenance & reproducibility metadata
+    mapping_rule_version: str = "VARMAP-PARASHARA-JHA-v1"
+    """Citation key to verified classical mapping rule in registry."""
+    content_hash: str = ""
+    """SHA-256 canonical hash of this divisional chart."""
+
+    def __post_init__(self) -> None:
+        if isinstance(self.planet_positions, list):
+            object.__setattr__(self, "planet_positions", tuple(self.planet_positions))
+

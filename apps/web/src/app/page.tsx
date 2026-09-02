@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   return (
@@ -128,20 +129,8 @@ export default function Home() {
         </div>
       </main>
 
-      {/* ── Technical Specs Footer Strip ── */}
-      <footer className="relative z-10 mx-auto w-full max-w-6xl border-t border-slate-800 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-        <p className="text-xs font-bold text-slate-400">
-          AstroOS Vedic Research Workstation
-        </p>
-
-        <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold font-mono border border-slate-800 bg-slate-900/80 text-slate-300 shadow-sm">
-          <span>Swiss Ephemeris v2.10</span>
-          <span className="text-cyan-400">·</span>
-          <span>Ayanamsha: Lahiri / Chitra Paksha</span>
-          <span className="text-cyan-400">·</span>
-          <span>True Node Precision</span>
-        </div>
-      </footer>
+      {/* ── Comprehensive AstroOS Footer ── */}
+      <Footer />
     </div>
   );
 }

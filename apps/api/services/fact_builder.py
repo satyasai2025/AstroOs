@@ -341,7 +341,7 @@ class FactBuilder:
             else date.today()
         )
         for md in dasha_tree.mahadashas:
-            if md.start_date <= target <= md.end_date:
+            if md.contains(target):
                 registry.add_fact(Fact(
                     "dasha.current_lord", md.lord, "dasha_engine",
                 ))
@@ -349,7 +349,7 @@ class FactBuilder:
                     "dasha.current_mahadasha", md.lord, "dasha_engine",
                 ))
                 for ad in md.sub_periods:
-                    if ad.start_date <= target <= ad.end_date:
+                    if ad.contains(target):
                         registry.add_fact(Fact(
                             "dasha.antardasha_lord", ad.lord, "dasha_engine",
                         ))

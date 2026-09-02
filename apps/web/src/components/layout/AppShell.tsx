@@ -17,6 +17,7 @@ import { GlobalTopBarPanchangaWidget } from "@/components/layout/GlobalTopBarPan
 import { AyanamsaSelectorDropdown } from "@/components/layout/AyanamsaSelectorDropdown";
 import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
+import { Footer } from "@/components/layout/Footer";
 
 
 import { NAV_SECTIONS, isRouteActive, type NavItem, type NavSection } from "@/config/navConfig";
@@ -196,6 +197,15 @@ export function NavIcon({ name }: { name: string }) {
       return (
         <svg {...common}>
           <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
+        </svg>
+      );
+    case "globe":
+    case "Globe":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+          <path d="M2 12h20" />
         </svg>
       );
     case "database":
@@ -503,6 +513,32 @@ function AppShellInner({
                 onClick={(e) => {
                   e.preventDefault();
                   setQuickActionOpen(false);
+                  router.push("/phalita");
+                }}
+              >
+                <NavIcon name="sparkle" />
+                <span className="font-bold text-cyan-600 dark:text-cyan-400">Phalita MoE Suite</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setQuickActionOpen(false);
+                  router.push("/numerology");
+                }}
+              >
+                <NavIcon name="star" />
+                <span className="font-bold text-amber-600 dark:text-amber-400">Meena Numerology</span>
+              </button>
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded px-2.5 py-1.5 text-left text-xs transition hover:bg-[var(--border-primary)]"
+                style={{ color: "var(--text-primary)" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setQuickActionOpen(false);
                   router.push("/charts/dasha");
                 }}
               >
@@ -692,7 +728,7 @@ function AppShellInner({
       {/* ── Main column ── */}
       <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
         <header
-          className="sticky top-0 z-10 flex w-full max-w-full flex-nowrap items-center justify-between gap-2 border-b px-3 py-2 backdrop-blur-md"
+          className="sticky top-0 z-40 flex w-full max-w-full flex-nowrap items-center justify-between gap-2 border-b px-3 py-2 backdrop-blur-md"
           style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-card)" }}
         >
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -911,6 +947,8 @@ function AppShellInner({
         >
           {children}
         </main>
+        
+        <Footer />
         
         <CommandPalette />
         <ActiveChartSelectorModal isOpen={chartSelectorOpen} onClose={() => setChartSelectorOpen(false)} />

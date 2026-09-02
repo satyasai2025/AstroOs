@@ -43,20 +43,24 @@ class AdaptiveTemporalScanner:
         boundaries: set[date] = {target_start, target_end}
 
         for md in dasha_tree.mahadashas:
+            md_start = md.start_date_only
+            md_end = md.end_date_only
             # If mahadasha overlaps with target range
-            if md.end_date >= target_start and md.start_date <= target_end:
-                if target_start <= md.start_date <= target_end:
-                    boundaries.add(md.start_date)
-                if target_start <= md.end_date <= target_end:
-                    boundaries.add(md.end_date)
+            if md_end >= target_start and md_start <= target_end:
+                if target_start <= md_start <= target_end:
+                    boundaries.add(md_start)
+                if target_start <= md_end <= target_end:
+                    boundaries.add(md_end)
 
                 # Antardashas
                 for ad in md.sub_periods:
-                    if ad.end_date >= target_start and ad.start_date <= target_end:
-                        if target_start <= ad.start_date <= target_end:
-                            boundaries.add(ad.start_date)
-                        if target_start <= ad.end_date <= target_end:
-                            boundaries.add(ad.end_date)
+                    ad_start = ad.start_date_only
+                    ad_end = ad.end_date_only
+                    if ad_end >= target_start and ad_start <= target_end:
+                        if target_start <= ad_start <= target_end:
+                            boundaries.add(ad_start)
+                        if target_start <= ad_end <= target_end:
+                            boundaries.add(ad_end)
 
         sorted_bounds = sorted(boundaries)
         slices: list[TimeSlice] = []

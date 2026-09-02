@@ -55,28 +55,28 @@ admin-approved change.
 | `apps/api/services/shadbala/dina_hora_bala.py` | `1db2fd18430d63f804fdf2e224e15522f47c28071b64940b618d41dcc22b6fae` | Hora-lord algorithm fixed |
 | `apps/api/services/shadbala/varsha_masa_bala.py` | `c548764ec5387a49e44617fc29eca3b3f03ed0378eda49952cce9dce0c54c3b6` | New engine, verified exact vs PyJHora |
 | `apps/api/services/divisional_engine.py` | `d79fbad496540f52bb27da8587a3cbb1073ada4a2306c3bfd418b3ec8dd538c0` | D60 formula fixed |
-| `apps/api/services/dasha_engine.py` | `191a2d5ecc762c788767116f7c97f0888dcb54862c71d68c84d727da56e31cc7` | Chara direction + full Narayana rewrite |
+| `apps/api/services/dasha_engine.py` | `f28bab5c7a607696b710ed2830bfc7a72e1bd134c1791aa0795ded9048139a71` | Strengthened content_hash with full tree signature + tz-awareness enforcement + boundary float-precision guard |
 | `apps/api/services/jaimini_dasha_adapter.py` | `0dfb7ad954e2d6a52ef70ac48c9a5046b448aa747d9c047124e680968b6d32b4` | Verified correct, docstring clarified |
-| `apps/api/services/muhurta_engine.py` | `c3719455479349fd2c5ee8ffc81cec28f447e85a4923c6b57ac1da78a1fa0ff2` | Choghadiya night-sequence direction fixed |
+| `apps/api/services/muhurta_engine.py` | `99469dccaa6d21fda777a3d23f190ed57c128429679a844d414f84c753499183` | Choghadiya night-sequence direction fixed |
 | `apps/api/services/badhaka_maraka_engine.py` | `a2f75a05f72bf8043f8ddd2d91a307320bd489ed215df15ac96a29d935bcd00c` | New engine, verified against classical rule |
 | `apps/api/services/yogas/arishta_yoga.py` | `2ba2968bd1ebe23bc6cde4eb8339c2b93b56823e6b9d659deea35453ae7db20e` | Aspect-vs-conjunction rule fixed |
 | `apps/api/services/yogas/chandra_yoga.py` | `9a212b861e4847533a5f9bae85f5abe703e1d5945cf0dc4649fbdd73914e2c7e` | Chandra-Mangala + Kemadruma fixed |
 | `apps/api/services/prediction_confluence_engine.py` | `6f6a523ff3ef97b70de3592583724b1ac3e3e5f8f345c925d9cc69ccbe990f1f` | Fake SBC transit fallback fixed |
 | `apps/api/schemas/kp.py` | `e6883e5e3840dcc859e6e118a0e193a24e74788b166556eae18bb483bcbdcf7d` | House-system default fixed |
-| `apps/api/services/ephemeris_wrapper.py` | `e1deaf237d1370c7eaa6c55f6cf941504bc337d3c45502cd19b657c114e3c5d3` | Vara sunrise-boundary fix; nakshatra/sub-lord math verified exact |
+| `apps/api/services/ephemeris_wrapper.py` | `8af60e052bafde3c56ae0445d4815f93d017ccf8b3fc6677399d7312d41c46a1` | Hardening audit: removed silent ayanamsa/node fallbacks, added directional Mercury combustion orb (12° direct, 14° retro), Whole-Sign tropical/sidereal cusp consistency, exact nakshatra boundary float-precision guard; verified error-free |
 | `apps/api/services/horoscope_engine.py` | `80727e36fae80d47e428edc8100b0604746b42b9877a2124fc35f3945d60ca65` | node_type threading verified |
 | `apps/api/services/transit_engine.py` | `0cfbd43eb32f91784959245abf102f2e6c863a04abf683abade28534dcff0fcd` | Real house_from_natal_ascendant added |
 | `apps/api/services/transit_patterns.py` | `36c2266b62824556c9d78f5459782fcadd4f378f296c430fcd73db5d182a9cf8` | Rahu/Ketu return-date backward-motion fix |
 | `apps/api/services/transit_timeline_engine.py` | `f4ebb76f8e6a18543f2305fc0ff1c2ff673908983eb204c25a82bda06b7409eb` | Ascendant-house fake-duplicate fixed |
 | `apps/api/services/synastry_engine.py` | `5d26f21a52d2fe4dafc5cbd89cd7ac4523b6d82423eb3c3053515e63c7495e8a` | Graha Maitri/Yoni/Gana/fake-fallback fixed |
-| `apps/api/services/rectification_engine.py` | `8d355b6b0ac66e459fa7007aed2449d973074ba45a9a23c1ff813ede91bb003c` | Fake transit-score constant fixed |
+| `apps/api/services/rectification_engine.py` | `86367c7a40b0f3243acc876238ee4304eec03c184f9a9dd90fd5ea31cc359f2c` | Safe `.contains()` boundary check for DashaPeriod datetime spine compatibility; zero calculation change |
 | `apps/api/services/graha_engine.py` | `7bafd4add72594fe68cd37e1ce515dbc378fcefa4fa6525343fce018f1282e80` | Verified clean |
 | `apps/api/services/house_engine.py` | `6f97e60d5a14240aeec8bffcd272faa7da921571c93291ddeb6933b06217eceb` | Verified clean |
 | `apps/api/services/aspect_engine.py` | `337d16f0cee72bffb6b16dbecc94855a5a563d16f3c42f63ba78de814dd60346` | Verified clean |
 | `apps/api/services/sphuta_drishti_engine.py` | `7590060082d0342e3a795dee0bf2e58955c6901b4ae75bcadc5223a2e0ff2600` | Piecewise discontinuities fixed |
-| `apps/api/services/upagraha_engine.py` | `b0357b462c87615cb85999361d2d198a0599c0195f48518dc5cd48e995fa8dcc` | Verified correct; scope gap disclosed |
+| `apps/api/services/upagraha_engine.py` | `0b6f037437ec2aef36044c22567e53bc78d7ec418848466cab41f3ce2227ebf7` | Added canonical `compute()` returning `UpagrahaResult` with wrapper sunrise-anchoring for JHora report; Arkadoshas & BPHS Upachaya rules preserved |
 | `apps/api/services/sadhu_padhdhati_engine.py` | `836aa1cd601a2ef84067a215c8a79eb89ad684db0b72a2dc1c9943728b3e725a` | Boundary-year + citation bugs fixed |
-| `apps/api/services/kp_engine.py` | `d7cca7a7755400ee2b2535ae78b2b560c15eadae3e5db22ff8785e5b117e0b24` | Verified clean |
+| `apps/api/services/kp_engine.py` | `20d176ebe5641291417dc4955cef2f1a11bd2d4aaa2ceba104c673a3834a7f9b` | Replaced raw `<=` comparisons with `p.contains(now)` and `start_date_only` for DashaPeriod datetime spine compatibility |
 | `apps/api/services/kp_btr_engine.py` | `630c8b955c36404d23868f103bb0e92b717e024d1b381142f3a624e674f66c2a` | Docstring/implementation mismatch fixed |
 | `apps/api/services/kp_decision_tree_engine.py` | `3d324cdd8b5e967553771bf0dd9fd57e0c57655f456e21a9bf101bfc5782b2f6` | Fabricated fallback data fixed |
 | `apps/api/services/kp_rp_engine.py` | `23efef7275f5e3e0e86e32afaa09c02b484678c20ee6cbb30093b4324b0aecde` | Day Lord sunrise-basis fixed |
@@ -109,7 +109,7 @@ admin-approved change.
 | `apps/api/services/dasa_kuta_engine.py` | `b13167c34e2c67130e82bdc2a046a4799db12b000899f01f601523e0e290ddfa` | South Indian 10-Poruthams compatibility system including Rajju & Vedha |
 | `apps/api/services/jaimini_navamsha_synastry.py` | `6bdb0af758b1674990c6d7577dd2fedc4375912cabfe61326db15f8d533f7a67` | Jaimini Upapada Lagna (A12) & D9 Navamsha synastry harmony engine |
 | `apps/api/services/composite_chart_engine.py` | `ad45f1c82581459cabb560fce777d5667cfa6d557027bf07ef7fb22821436e5b` | Shortest-arc circular midpoint composite relationship chart engine |
-| `apps/api/services/mundane_ingress_engine.py` | `747885d32a68c43d7a761543f5ff75deaf6162889c8d20e34afa2c73bf7aae1f` | High-precision Chaitra Shukla Pratipada & 4 cardinal solar ingresses solver |
+| `apps/api/services/mundane_ingress_engine.py` | `9be10eae61e3d2f228dcfcf914f966ba1213694d2216275891e711e474a957e7` | High-precision Chaitra Shukla Pratipada & 4 cardinal solar ingresses solver |
 | `apps/api/services/planetary_cabinet_engine.py` | `b58425c94225689ec362672340820d8c335502a4c8ee0c0c8031ece612d6632f` | Classical 9-minister cosmic governance council (Nava Nayakas) engine |
 | `apps/api/services/mundane_eclipse_engine.py` | `0e54f52970b791a3e6baa32234715555d6fbb52da94bfa7e0fe8d95e59726c65` | Standalone solar & lunar eclipse detection and mundane impact duration engine |
 | `apps/api/services/kurma_chakra_engine.py` | `43fc38c12a7b32ffa32ed77c8705ade00a5eeb612bfd00e8715121cc6e3abbba` | 9-sector celestial tortoise (Kurma Chakra) geopolitical & seismic engine |
@@ -118,6 +118,38 @@ admin-approved change.
 | `apps/api/services/jaimini_upapada_engine.py` | `027be93481146f1fedee1e5570ff310b1fe2999c704477f4d7f33d5db6ac2ec9` | In-depth native Upapada Lagna (UL) 2nd/8th house longevity & stability analysis |
 | `apps/api/services/jaimini_expanded_yogas.py` | `68708de89485ee3897affbb6f0fbea5731a24edc07b275c65081b9f3615b9b90` | Classical Jaimini Raja, Dhana (AK-PK, AmK-DK, AL-A11), Vipareeta, & Moksha yogas |
 | `apps/api/services/jaimini_event_timing_engine.py` | `cbbaf045b8ca0ff4d94d44a55cd81835698c21954102ad1237fa321777943058` | Predictive event-timing synthesizing Jaimini Dashas, Karakas, & Arudhas |
+| `apps/api/services/intelligence/strength_model.py` | `994afb1a61a7f7f8d341230aad9fe0f9c2b0cafff86ff5a830f4cf4194eb0004` | Discrete 1-9 Dignities with Base-2 Exponential Strength Mapping (1.0 to 256.0) |
+| `apps/api/services/intelligence/drishti_model.py` | `06b19b450045ce3f81f185b8edd0e29f214d7233fbfde2aadc64741de73bc77e` | Standard 7th and special Parashari planetary aspects (Mars 4/8, Jup 5/9, Sat 3/10) |
+| `apps/api/services/intelligence/upagraha_rules.py` | `d224c6966e98e5e2747daeebc6254be90c5f98913fbb8032b7ae8845c545e023` | Vinay Jha Gulika (Upachaya boost / 8th Mrityu weight) & Mandi (7th delay) rules |
+| `apps/api/services/intelligence/linked_system.py` | `914bdb8358583a95bf140a1b5cfac482b4f8d79e69d2325aee94252ed4b22c43` | Relational LinkedChartGraph with Sudarshana (Lagna + Chandra Lagna) synthesis |
+| `apps/api/services/intelligence/cognitive_reasoner.py` | `79c23ba6165a7e5dabda6513c6d77ef0db747a599e16e703be45289e00a88326` | 5-Level Vimshottari Dasha confluence evaluator (0 to 9 Cognitive Score) |
+| `apps/api/services/intelligence/events/marriage.py` | `ebd76595ec343780e9b357fbe539dcab0285768fbe7ca5af325f341cba2818fc` | Shastric Marriage Timing & Delay predictor (7th house + Shukra/Guru + Mandi) |
+| `apps/api/services/intelligence/events/career.py` | `53ed8b0174bd495bd9d468893ec1adc4b69a185e0fe754c01373917ef71d75f7` | Career Elevation & Status predictor (10th house + Artha trikonas + Gulika boost) |
+| `apps/api/services/intelligence/events/health.py` | `9d700a46b5a3063def3a929e5b7e87b8659bf0d7ba4ce79f6597cebbd9650ca1` | Health Crisis & Illness predictor (6th/8th house + Marakas + Gulika 8th weight) |
+| `apps/api/services/intelligence/events/accident.py` | `c6e879c6a7a40702b1afa848d3a5d627637f94f47800f9757e6a8c85e02c0b3d` | Accident & Sudden Trauma predictor (8th house + Mars/Rahu + trauma indicators) |
+| `apps/api/services/phalita_core/expert_registry.py` | `afc367d914081845f5277a6146e3c365feabcb896b72fa15cb42b06f512d732e` | 4 Specialized Shastric Experts (Structural, Divisional, Temporal, Upagraha) |
+| `apps/api/services/phalita_core/expert_router.py` | `246fd1e331657a3d3dec751c14c0050ef15efe9d4d530c5bc36d4495dc7df2e4` | Softmax Gating Router for 12-domain adaptive attention weight distribution |
+| `apps/api/services/phalita_core/conflict_resolution.py` | `437d13205763faaeebdee803c516c01baf677b7ef2adaffe40d4f498af4cbc37` | Classical Parashari Conflict Resolution Hierarchy (Temporal Primacy, Delay vs Denial) |
+| `apps/api/services/phalita_core/phalita_moe_orchestrator.py` | `c6ea7d2b2e024e15022992e8080ad78cb0394915e6a4204a486ea9d1e9f0d183` | Master Phalita MoE Consultation Orchestrator emitting consultation verdict |
+| `apps/api/services/phalita_core/domain_significators.py` | `48b73bfdb054e6a9715be6e5d5bfa07cbe12197baf48a5aee22cb2145ea677e0` | Complete 12-Bhava Life Domain Registry & Significator Matrix |
+| `apps/api/services/divisional_vimshottari_engine.py` | `b9cb981d2e84fb40eacb75b8cd362a77a54cf82d5aecbfc067f690deb7b19695` | Independent Divisional (D9, D10, D7, D4, D30) Vimshottari Dasha Engine (updated to `p.contains(target_date)` for datetime spine compatibility) |
+| `apps/api/services/phalita_core/varga_strength_fusion.py` | `47f3541956d6c30b4066ff86afec596a356d66f6de47b0ce3ac355704a25fcaf` | Log-Base-2 Main Strength x Vimshopaka Final Varga Fusion & Neecha Bhanga Engine |
+| `apps/api/services/phalita_core/bhavottama_engine.py` | `8e420b7f1c4096580e47ed85f20e61370b38c718d98ed8b283228dccb8ad2100` | Bhavottama (Kimshukadi) Same-Bhava Detection & Quality Multiplier Engine |
+| `apps/api/services/phalita_core/transit_trigger_engine.py` | `82bf043e102f584ffb047b053c7e776fc25c94070f5f1eb34da847fc9436aeb7` | Transit (Gochara) & Ashtakavarga Rekha Trigger Engine |
+| `apps/api/services/phalita_core/divisional_explorer_service.py` | `4ae30b1af90bfcf4cf79231a4457211e5458665a5f3b6b4c7a00a869b170e102` | Multi-Varga Interactive Explorer & Dual-Dasha Confluence Engine |
+| `apps/api/services/phalita_core/karakamsha_synthesis_engine.py` | `21650dc2450815a1ef1a02d7e1b9f60a4c91f3437392e3cd26253aec59c60fcf` | Karakamsha Lagna & 7-Chara Karaka Jaimini Synthesis Engine |
+| `apps/api/services/phalita_core/historical_backtest_harness.py` | `25aec0b6c3cbbc2bf3fd89cae1911adf7d42bae8ec7e828f5a8a2f2ee6d8c662` | Empirical Benchmark Backtesting & Accuracy Audit Harness (updated to `p.contains(target_d)` for dasha matching; zero scoring changes) |
+| `apps/api/services/phalita_core/canonical_facts_generator.py` | `cbab38bac1e7d56c173f1dc39892250b589246fca9423c94799c84a3362adcf1` | Calculation-Only Canonical Facts Ground Truth Generator (updated to `p.contains(t_date)` for datetime spine compatibility) |
+| `apps/api/services/phalita_core/technique_resolver.py` | `f3861fe366ca4c8e2110c8dcec921bc0bf720512b3c4334140462cc6cab046ca` | Domain-Tailored Shastric Technique Resolution Engine |
+| `apps/api/services/phalita_core/shastric_rule_engine.py` | `25c74af6a6c7bdeae4e77469b73aab4587a5eccada67799f901bea89219ee8aa` | Declarative Shastric Rule Evaluation & Provenance Engine |
+| `apps/api/services/phalita_core/evidence_aggregator.py` | `fb6cc7103b34250940278a324804bc4170a67b0a95cd3bc8f5e1ad466d02210a` | Evidence Aggregator & Provenance Registry |
+| `apps/api/services/phalita_core/prediction_calibrator.py` | `26493daf9637c5cadaff803c706bf228cb02a8125f2c5768e407b41f26d53121` | Calibrated Prediction Engine (Emitting Calibrated Signal Score 0-9) |
+| `apps/api/services/phalita_core/shastric_explanation_narrator.py` | `7cd827d2dc50c7913259b1c6e1c0e0f0b58095af315e911389e242b03a4daa0e` | Grounded AI Shastric Explanation & Citation Narrator |
+| `apps/api/services/phalita_core/shastric_reasoning_pipeline.py` | `e3921a80bedd13fa37d12cb05196807b613f1906dd5fc214ec3c9a44b6b7352b` | Master End-to-End Shastric Reasoning Orchestrator |
+| `apps/api/services/phalita_core/three_tier_validation_framework.py` | `0bdbda49ccdec194c96627e72ba6d3db12111bb89e83964efff4d417586946ce` | 3-Tier Validation Framework (N=5 Regression, N=600 Generalization, N=100 Holdout) |
+
+
+
 
 ## Explicitly NOT frozen (known remaining gaps)
 
@@ -130,3 +162,4 @@ admin-approved change.
 - Any file under `apps/api/services/` not listed above has not yet been
   through this audit process — absence from this list is not a claim of
   correctness, just "not yet checked."
+

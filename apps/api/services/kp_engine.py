@@ -788,7 +788,7 @@ def _get_active_chain(mahadashas: tuple, now: date) -> list[dict[str, Any]]:
     level_names = ["Mahadasha", "Antardasha", "Pratyantardasha", "Sookshmadasha", "Pranadasha"]
     while candidates:
         active = next(
-            (p for p in candidates if p.start_date <= now <= p.end_date),
+            (p for p in candidates if p.contains(now)),
             None,
         )
         if not active:
@@ -820,7 +820,7 @@ def _find_next_significator_period(
         if not periods:
             return None
         for p in periods:
-            if p.start_date < now:
+            if p.start_date_only < now:
                 continue
             if p.lord in sig_set:
                 return {
@@ -835,7 +835,7 @@ def _find_next_significator_period(
         return None
 
     current_idx = next(
-        (i for i, m in enumerate(mahadashas) if m.start_date <= now <= m.end_date),
+        (i for i, m in enumerate(mahadashas) if m.contains(now)),
         0,
     )
 

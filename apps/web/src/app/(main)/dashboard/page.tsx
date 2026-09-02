@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
+import { DashboardErrorBoundary } from "@/components/consultation/ErrorBoundary";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useMyCharts } from "@/lib/charts";
 import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
 import type { BirthChartSummary, WorkflowAnalysisRequest } from "@/lib/types";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -31,8 +33,8 @@ export default function DashboardPage() {
       birth_datetime_utc: chart.birth_datetime_utc,
       latitude: chart.birth_latitude,
       longitude: chart.birth_longitude,
-      ayanamsa: chart.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-      house_system: chart.house_system as WorkflowAnalysisRequest["house_system"],
+      ayanamsa: normalizeAyanamsa(chart.ayanamsa),
+      house_system: normalizeHouseSystem(chart.house_system),
       dasha_system: "vimshottari",
       include_vargas: true,
       subject_name: chart.subject_name,
@@ -44,10 +46,16 @@ export default function DashboardPage() {
       onSuccess: (data) => {
         setResult(data, request);
         try {
-          localStorage.setItem("astroos_last_viewed_chart_id", chart.id);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("astroos_last_viewed_chart_id", chart.id);
+          }
         } catch {
           // ignore
         }
+      },
+      onError: (err) => {
+        autoHydrated.current = false;
+        console.error("Failed to load chart analysis:", err);
       },
     });
   };
@@ -91,26 +99,54 @@ export default function DashboardPage() {
     }
   }, [analyze.isSuccess, analyze.data, lastRequest, setResult, closeCreateModal, router]);
 
-  const errorMessage =
-    analyze.error instanceof ApiError
-      ? analyze.error.detail
-      : analyze.error
-        ? "An unexpected error occurred. Please try again."
-        : null;
+  const errorMessage = (() => {
+    if (!analyze.error) return null;
+    if (analyze.error instanceof ApiError) return analyze.error.detail;
+    const msg = analyze.error.message || String(analyze.error);
+    if (msg.includes("404")) return "Chart calculation endpoint or profile not found (404).";
+    if (msg.includes("timeout")) return "Ephemeris calculation timed out. Please try again.";
+    if (msg.includes("Network") || msg.includes("Failed to fetch")) return "Unable to connect to the backend ephemeris server.";
+    return "An unexpected error occurred during chart generation. Please verify your inputs.";
+  })();
 
   return (
     <>
-      <DashboardOverview
-        activeResult={storeResult}
-        activeSubjectName={storeRequest?.subject_name}
-        onStartNewChart={() => {
+      {/* ♿ Skip Navigation Links for Keyboard & Screen Reader Users */}
+      <nav aria-label="Skip navigation links" className="sr-only focus-within:not-sr-only focus-within:relative focus-within:z-50">
+        <div className="flex flex-wrap gap-2 p-3 bg-cyan-900 text-white rounded-xl shadow-xl font-mono text-xs mb-3">
+          <a href="#main-content" className="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 rounded font-bold">Skip to Main Content</a>
+          <a href="#kpi-scorecards" className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 rounded font-bold">Skip to KPI Scorecards</a>
+          <a href="#panchanga-studio" className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 rounded font-bold">Skip to Panchanga Studio</a>
+          <a href="#recent-charts-section" className="px-3 py-1.5 bg-cyan-700 hover:bg-cyan-600 rounded font-bold">Skip to Recent Charts</a>
+        </div>
+      </nav>
+
+      {/* ♿ Live Status Region for Screen Readers */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {analyze.isPending ? "Calculating horoscope chart and astrological synthesis..." : storeResult ? `Active chart loaded for ${storeRequest?.subject_name || "subject"}.` : ""}
+      </div>
+
+      <DashboardErrorBoundary
+        fallbackTitle="Dashboard Overview Error"
+        fallbackMessage="An unexpected issue occurred while rendering the dashboard overview."
+        onReset={() => {
           clearResult();
           analyze.reset();
-          setLastRequest(null);
-          openCreateModal();
         }}
-        onSelectChart={handleSelectAndLoadChart}
-      />
+      >
+        <DashboardOverview
+          activeResult={storeResult}
+          activeSubjectName={storeRequest?.subject_name}
+          isLoadingChart={analyze.isPending}
+          onStartNewChart={() => {
+            clearResult();
+            analyze.reset();
+            setLastRequest(null);
+            openCreateModal();
+          }}
+          onSelectChart={handleSelectAndLoadChart}
+        />
+      </DashboardErrorBoundary>
 
       <CreateChartModal
         open={createModalOpen}

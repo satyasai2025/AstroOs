@@ -17,6 +17,7 @@ import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useMyCharts } from "@/lib/charts";
 import { useLiveTransit, useTransitPatterns } from "@/lib/transitPatterns";
 import type { BirthChartSummary, TransitPatternsRequest, TransitPlanetResponse, TransitRequest, WorkflowAnalysisRequest } from "@/lib/types";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 
@@ -93,6 +94,7 @@ function TransitAnalysisPageContent() {
   const request = useWorkflowStore((s) => s.request);
   const transitChart = useWorkflowStore((s) => s.transitChart);
   const setResult = useWorkflowStore((s) => s.setResult);
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const analyze = useAnalyzeWorkflow();
   const myCharts = useMyCharts();
   const [autoLoadStarted, setAutoLoadStarted] = useState(false);
@@ -146,8 +148,8 @@ function TransitAnalysisPageContent() {
       birth_datetime_utc: target.birth_datetime_utc,
       latitude: target.birth_latitude,
       longitude: target.birth_longitude,
-      ayanamsa: target.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-      house_system: target.house_system as WorkflowAnalysisRequest["house_system"],
+      ayanamsa: normalizeAyanamsa(target.ayanamsa),
+      house_system: normalizeHouseSystem(target.house_system),
       dasha_system: "vimshottari",
       include_vargas: true,
       subject_name: target.subject_name,
@@ -445,15 +447,25 @@ function TransitAnalysisPageContent() {
                 >
                   Load Chart &amp; Calculate Transits →
                 </button>
-                <Button href="/dashboard" variant="ghost" size="sm">
+                <button
+                  type="button"
+                  onClick={() => openCreateModal("birth_chart")}
+                  className="rounded-lg border border-slate-300 dark:border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition cursor-pointer"
+                >
                   + Create New
-                </Button>
+                </button>
               </div>
             </div>
           ) : (
             <div className="space-y-3 pt-2">
               <p className="text-xs text-slate-400">No saved charts found. Create a birth chart to begin transit exploration.</p>
-              <Button href="/dashboard">Create First Chart</Button>
+              <button
+                type="button"
+                onClick={() => openCreateModal("birth_chart")}
+                className="obsidian-btn-primary text-xs px-4 py-2"
+              >
+                + Create First Chart
+              </button>
             </div>
           )}
         </Card>

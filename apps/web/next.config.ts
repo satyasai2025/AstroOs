@@ -13,6 +13,17 @@ const nextConfig: NextConfig = {
     ];
   },
 
+  // ── Redirects ───────────────────────────────────────────────────────────────
+  async redirects() {
+    return [
+      {
+        source: "/ai/explain",
+        destination: "/phalita",
+        permanent: false,
+      },
+    ];
+  },
+
   // Strict React mode
   reactStrictMode: true,
 

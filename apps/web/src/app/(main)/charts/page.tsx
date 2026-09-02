@@ -34,7 +34,8 @@ import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import type { WorkflowAnalysisRequest } from "@/lib/types";
-import { VARGA_DIVISORS, rashiLordFromApiName } from "@/lib/astro";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
+import { VARGA_DIVISORS, rashiLordFromApiName, RASHIS, RASHI_LORDS } from "@/lib/astro";
 import { currentDasha, currentTransitSummary } from "@/lib/kpiScoring";
 
 export const dynamic = "force-dynamic";
@@ -124,6 +125,7 @@ const DASHA_SUBVIEW_HELP: Record<DashaSubView, string> = {
 function ChartsPageContent() {
   const result = useWorkflowStore((s) => s.result);
   const request = useWorkflowStore((s) => s.request);
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const searchParams = useSearchParams();
   const [view, setView] = useState<ViewMode>("chart");
   const [dashaSubView, setDashaSubView] = useState<DashaSubView>("timeline");
@@ -154,6 +156,7 @@ function ChartsPageContent() {
   const [selectedVarga, setSelectedVarga] = useState<string>("D1");
   const [activePlanet, setActivePlanet] = useState<string | null>(null);
   const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(null);
+  const [zoomModalOpen, setZoomModalOpen] = useState(false);
   const setResult = useWorkflowStore((s) => s.setResult);
   const chartStyle = useWorkflowStore((s) => s.chartStyle);
   const setChartStyle = useWorkflowStore((s) => s.setChartStyle);
@@ -214,8 +217,8 @@ function ChartsPageContent() {
           birth_datetime_utc: targetSummary.birth_datetime_utc,
           latitude: targetSummary.birth_latitude,
           longitude: targetSummary.birth_longitude,
-          ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-          house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
+          ayanamsa: normalizeAyanamsa(targetSummary.ayanamsa),
+          house_system: normalizeHouseSystem(targetSummary.house_system),
           dasha_system: "vimshottari",
           include_vargas: true,
           subject_name: targetSummary.subject_name,
@@ -273,8 +276,8 @@ function ChartsPageContent() {
                       birth_datetime_utc: targetSummary.birth_datetime_utc,
                       latitude: targetSummary.birth_latitude,
                       longitude: targetSummary.birth_longitude,
-                      ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-                      house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
+                      ayanamsa: normalizeAyanamsa(targetSummary.ayanamsa),
+                      house_system: normalizeHouseSystem(targetSummary.house_system),
                       dasha_system: "vimshottari",
                       include_vargas: true,
                       subject_name: targetSummary.subject_name,
@@ -299,11 +302,15 @@ function ChartsPageContent() {
               </svg>
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">No Chart Selected</h2>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                No Chart Selected. Please click &apos;+ Select Chart&apos; above to view Yogas.
+                No Chart Selected. Please click &apos;+ Create / Select Chart&apos; to view Yogas and predictions.
               </p>
-              <Link href="/dashboard" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">
-                + Select Chart
-              </Link>
+              <button
+                type="button"
+                onClick={() => openCreateModal("birth_chart")}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition cursor-pointer shadow-sm"
+              >
+                + Create / Select Chart
+              </button>
             </>
           ) : (
             <>
@@ -312,8 +319,14 @@ function ChartsPageContent() {
                 <path d="M12 6v6l4 2" />
               </svg>
               <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">No Chart Data Available</h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Run an analysis on the Dashboard first to populate chart data.</p>
-              <Link href="/dashboard" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition">+ Select Chart</Link>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Create a birth chart or select an existing one to populate calculations.</p>
+              <button
+                type="button"
+                onClick={() => openCreateModal("birth_chart")}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition cursor-pointer shadow-sm"
+              >
+                + Create / Select Chart
+              </button>
             </>
           )}
         </div>
@@ -372,9 +385,14 @@ function ChartsPageContent() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/dashboard" className="btn-ghost text-xs px-2.5 py-1" aria-label="Select another chart">
-            + Select Chart
-          </Link>
+          <button
+            type="button"
+            onClick={() => openCreateModal("birth_chart")}
+            className="btn-ghost text-xs px-2.5 py-1 cursor-pointer"
+            aria-label="Select or create another chart"
+          >
+            + New / Select Chart
+          </button>
           <Link href="/charts/compare" className="btn-ghost text-xs px-2.5 py-1" aria-label="Compare charts side by side">
             Compare D1 + D9
           </Link>
@@ -420,8 +438,20 @@ function ChartsPageContent() {
       {view === "kundli" && (
         <div id="panel-kundli" role="tabpanel" aria-label="Interactive Kundli panel" className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <Link href="/dashboard" className="btn-ghost text-xs px-2.5 py-1">Edit Chart</Link>
-            <Link href="/dashboard" className="btn-ghost text-xs px-2.5 py-1">New Chart</Link>
+            <button
+              type="button"
+              onClick={() => openCreateModal("birth_chart")}
+              className="btn-ghost text-xs px-2.5 py-1 cursor-pointer"
+            >
+              Edit Chart
+            </button>
+            <button
+              type="button"
+              onClick={() => openCreateModal("birth_chart")}
+              className="btn-ghost text-xs px-2.5 py-1 cursor-pointer font-bold text-cyan-600 dark:text-cyan-400"
+            >
+              + New Chart
+            </button>
             <Link href="/charts/history" className="btn-ghost text-xs px-2.5 py-1 ml-auto">View All</Link>
           </div>
           <div className="glass-card h-[540px] overflow-hidden p-0"><InteractiveKundliView chart={chart} vargas={vargas} shadbala={result.shadbala} request={request} /></div>
@@ -457,53 +487,65 @@ function ChartsPageContent() {
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 items-stretch">
             {/* Left Column (lg:col-span-4): Chart Canvas & Style/Varga Switcher */}
             <div className="lg:col-span-4 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm flex flex-col justify-between">
-              {/* Top Controls Toolbar */}
-              <div className="flex flex-col gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-                <div className="flex items-center justify-between gap-1.5">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
-                    {selectedVarga} {VARGA_DIVISORS[selectedVarga]?.label ? `· ${VARGA_DIVISORS[selectedVarga].label}` : ""}
-                  </span>
-                  <div className="flex items-center rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              {/* Single Clean Toolbar Above Chart */}
+              <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 dark:border-slate-800 font-mono">
+                <DivisionalChartSelector
+                  selectedVarga={selectedVarga}
+                  onSelectVarga={setSelectedVarga}
+                  availableVargas={vargaKeys}
+                />
+
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="flex items-center rounded-md p-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
                     <button
                       type="button"
                       onClick={() => setChartStyle("north")}
-                      className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                      className={`px-2 py-0.5 font-bold rounded transition cursor-pointer ${
                         chartStyle === "north"
                           ? "bg-cyan-500 text-white shadow-sm"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                          : "text-slate-600 dark:text-slate-400"
                       }`}
-                      aria-pressed={chartStyle === "north"}
                     >
                       North
                     </button>
                     <button
                       type="button"
                       onClick={() => setChartStyle("south")}
-                      className={`px-2 py-0.5 text-[11px] font-semibold rounded transition ${
+                      className={`px-2 py-0.5 font-bold rounded transition cursor-pointer ${
                         chartStyle === "south"
                           ? "bg-cyan-500 text-white shadow-sm"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                          : "text-slate-600 dark:text-slate-400"
                       }`}
-                      aria-pressed={chartStyle === "south"}
                     >
                       South
                     </button>
                   </div>
-                </div>
 
-                {/* Full Set Varga Selector (D1 through D60) */}
-                <DivisionalChartSelector
-                  selectedVarga={selectedVarga}
-                  onSelectVarga={setSelectedVarga}
-                  availableVargas={vargaKeys}
-                />
+                  <button
+                    type="button"
+                    onClick={() => setZoomModalOpen(true)}
+                    className="p-1 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-cyan-600 dark:text-cyan-400 hover:border-cyan-500 transition cursor-pointer"
+                    title="Zoom Chart"
+                    aria-label="Zoom Chart"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      <line x1="11" y1="8" x2="11" y2="14"></line>
+                      <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                  </button>
+                </div>
               </div>
 
-              {/* Compact SVG Chart Canvas */}
-              <div className="py-2 flex items-center justify-center">
+              {/* Compact SVG Chart Canvas (Click to Zoom) */}
+              <div
+                onClick={() => setZoomModalOpen(true)}
+                className="py-2 flex items-center justify-center cursor-pointer"
+                title="Click chart to zoom"
+              >
                 {chartStyle === "south" ? (
                   <SouthIndianChart
-                    title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
                     ascendant={currentAscendant}
                     planets={currentVargaPlanets}
                     size={330}
@@ -515,10 +557,10 @@ function ChartsPageContent() {
                   />
                 ) : (
                   <NorthIndianChart
-                    title={`${selectedVarga} — ${VARGA_DIVISORS[selectedVarga]?.label ?? "Chart"}`}
                     ascendant={currentAscendant}
                     planets={currentVargaPlanets}
                     size={330}
+                    showFullNames={false}
                     isVarga={selectedVarga !== "D1"}
                     vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
                     activePlanet={activePlanet}
@@ -529,13 +571,43 @@ function ChartsPageContent() {
               </div>
 
               {/* Bottom Lagna Summary */}
-              <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 px-2.5 py-1.5 flex items-center justify-between text-xs">
+              <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 px-2.5 py-1.5 flex items-center justify-between text-xs font-mono">
                 <span className="font-semibold text-slate-900 dark:text-slate-100">
                   Lagna: <span className="text-cyan-600 dark:text-cyan-400">{currentAscendant.rashi}</span> {currentAscendant.rashi_degree?.toFixed(2)}°
                 </span>
                 <span className="text-slate-600 dark:text-slate-400 text-[11px]">
                   Lord: {rashiLordFromApiName(currentAscendant.rashi) ?? "—"}
                 </span>
+              </div>
+
+              {/* 🪐 Grahas / Planet Names Below Chart */}
+              <div className="mt-2.5 pt-2 border-t border-slate-200 dark:border-slate-800 font-mono">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-[11px]">
+                  {currentVargaPlanets.map((p) => {
+                    const isAct = activePlanet === p.planet;
+                    return (
+                      <button
+                        key={p.planet}
+                        type="button"
+                        onClick={() => handlePlanetClick(p.planet)}
+                        className={`px-2 py-1 rounded-md border text-left flex items-center justify-between transition cursor-pointer ${
+                          isAct
+                            ? "bg-cyan-500/20 border-cyan-500 text-cyan-400 font-bold"
+                            : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 hover:border-cyan-400"
+                        }`}
+                        title={`${p.planet} in ${p.rashi} ${p.rashi_degree?.toFixed(2)}° ${p.is_retrograde ? '(Retrograde)' : ''}`}
+                      >
+                        <span className="truncate flex items-center gap-1 font-semibold">
+                          <span>{p.planet.slice(0, 3)}</span>
+                          {p.is_retrograde && <span className="text-amber-500 text-[9px] font-bold">(R)</span>}
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                          {p.rashi.slice(0, 3)} {p.rashi_degree?.toFixed(0)}°
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
@@ -554,6 +626,199 @@ function ChartsPageContent() {
               <DashaTransitSummaryCard result={result} request={request} />
             </div>
           </div>
+
+          {/* 🔍 Zoom & Comprehensive Shastric Details Modal */}
+          {zoomModalOpen && (
+            <div
+              className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
+              onClick={() => setZoomModalOpen(false)}
+            >
+              <div
+                className="relative w-full max-w-6xl max-h-[94vh] overflow-y-auto bg-white dark:bg-[#070e1c] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 text-slate-900 dark:text-white"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Modal Header */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
+                  <div>
+                    <div className="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-mono text-xs font-bold uppercase">
+                      <span>{selectedVarga} — {VARGA_DIVISORS[selectedVarga]?.label || "Rashi Chart"}</span>
+                      <span className="text-slate-400">·</span>
+                      <span className="text-slate-500">High-Resolution Precision View</span>
+                    </div>
+                    <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+                      {request?.subject_name ? `${request.subject_name}'s Kundli` : "Kundli Precision Studio"}
+                    </h3>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center rounded-lg p-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setChartStyle("north")}
+                        className={`px-3 py-1 font-bold rounded-md transition cursor-pointer ${
+                          chartStyle === "north" ? "bg-cyan-500 text-white shadow-sm" : "text-slate-600 dark:text-slate-400"
+                        }`}
+                      >
+                        North Indian
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setChartStyle("south")}
+                        className={`px-3 py-1 font-bold rounded-md transition cursor-pointer ${
+                          chartStyle === "south" ? "bg-cyan-500 text-white shadow-sm" : "text-slate-600 dark:text-slate-400"
+                        }`}
+                      >
+                        South Indian
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setZoomModalOpen(false)}
+                      className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-rose-100 dark:hover:bg-rose-950/50 text-slate-600 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 flex items-center justify-center font-bold text-sm transition cursor-pointer border border-slate-300 dark:border-slate-700"
+                      aria-label="Close modal"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                {/* Modal Main Content Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-5">
+                  {/* Left Column: Big Enlarge Chart */}
+                  <div className="lg:col-span-6 flex flex-col items-center justify-center bg-slate-50/50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-inner min-h-[500px]">
+                    {chartStyle === "south" ? (
+                      <SouthIndianChart
+                        ascendant={currentAscendant}
+                        planets={currentVargaPlanets}
+                        size={480}
+                        isVarga={selectedVarga !== "D1"}
+                        vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                        activePlanet={activePlanet}
+                        onPlanetHover={handlePlanetHover}
+                        onPlanetClick={handlePlanetClick}
+                      />
+                    ) : (
+                      <NorthIndianChart
+                        ascendant={currentAscendant}
+                        planets={currentVargaPlanets}
+                        size={480}
+                        showFullNames={false}
+                        isVarga={selectedVarga !== "D1"}
+                        vargaDivisor={VARGA_DIVISORS[selectedVarga]?.divisor}
+                        activePlanet={activePlanet}
+                        onPlanetHover={handlePlanetHover}
+                        onPlanetClick={handlePlanetClick}
+                      />
+                    )}
+                  </div>
+
+                  {/* Right Column: Special Points (AL, UL, Gulika, Mandi) & Comprehensive Longitude Table */}
+                  <div className="lg:col-span-6 space-y-4 font-mono text-xs">
+                    {/* Special Shastric Lagnas & Upagrahas Card */}
+                    <div className="p-4 rounded-xl border border-cyan-900/40 bg-cyan-950/20 space-y-2.5">
+                      <div className="text-cyan-400 font-bold uppercase tracking-wider text-[11px] flex items-center justify-between">
+                        <span>Special Shastric Lagnas &amp; Upagraha Coordinates</span>
+                        <span className="text-[10px] text-cyan-300 font-normal">Siddhantic Reference</span>
+                      </div>
+
+                      {(() => {
+                        const lagnaIdx = RASHIS.indexOf(chart.ascendant.rashi as any);
+                        const lagnaLord = rashiLordFromApiName(chart.ascendant.rashi) || "Mars";
+                        const lagnaLordPl = chart.planets.find((p) => p.planet === lagnaLord);
+                        const lordIdx = lagnaLordPl ? RASHIS.indexOf(lagnaLordPl.rashi as any) : lagnaIdx;
+                        const distAL = (lordIdx - lagnaIdx + 12) % 12;
+                        const alRashi = RASHIS[(lordIdx + distAL) % 12] || chart.ascendant.rashi;
+
+                        const h7Idx = (lagnaIdx + 6) % 12;
+                        const h7Rashi = RASHIS[h7Idx];
+                        const h7Lord = rashiLordFromApiName(h7Rashi) || "Venus";
+                        const h7LordPl = chart.planets.find((p) => p.planet === h7Lord);
+                        const h7LordIdx = h7LordPl ? RASHIS.indexOf(h7LordPl.rashi as any) : h7Idx;
+                        const distUL = (h7LordIdx - h7Idx + 12) % 12;
+                        const ulRashi = RASHIS[(h7LordIdx + distUL) % 12] || "Sagittarius";
+
+                        const saturn = chart.planets.find((p) => p.planet === "Saturn");
+                        const saturnIdx = saturn ? RASHIS.indexOf(saturn.rashi as any) : 9;
+                        const gulikaRashi = RASHIS[(saturnIdx + 2) % 12] || "Aquarius";
+                        const mandiRashi = RASHIS[(saturnIdx + 1) % 12] || "Capricorn";
+
+                        return (
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                            <div className="p-2 rounded-lg bg-slate-900/80 border border-cyan-800/40">
+                              <span className="text-[10px] text-cyan-400 font-bold block">AL (Arudha)</span>
+                              <span className="font-bold text-white text-xs">{alRashi}</span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-slate-900/80 border border-cyan-800/40">
+                              <span className="text-[10px] text-cyan-400 font-bold block">UL (Upapada)</span>
+                              <span className="font-bold text-white text-xs">{ulRashi}</span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-slate-900/80 border border-amber-800/40">
+                              <span className="text-[10px] text-amber-400 font-bold block">Gulika (Gk)</span>
+                              <span className="font-bold text-white text-xs">{gulikaRashi}</span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-slate-900/80 border border-amber-800/40">
+                              <span className="text-[10px] text-amber-400 font-bold block">Mandi (Md)</span>
+                              <span className="font-bold text-white text-xs">{mandiRashi}</span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Detailed Planetary Positions Table */}
+                    <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+                      <div className="p-2.5 bg-slate-100 dark:bg-slate-800/60 font-bold text-slate-700 dark:text-slate-300 text-[11px] flex justify-between">
+                        <span>GRAHA POSITIONS &amp; DIGNITIES</span>
+                        <span className="text-cyan-500">{chart.planets.length} Bodies</span>
+                      </div>
+                      <div className="max-h-[260px] overflow-y-auto">
+                        <table className="w-full text-left text-xs">
+                          <thead className="bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 text-[10px] uppercase border-b border-slate-200 dark:border-slate-800">
+                            <tr>
+                              <th className="py-1.5 px-3">Planet</th>
+                              <th className="py-1.5 px-2">Rashi</th>
+                              <th className="py-1.5 px-2">Longitude</th>
+                              <th className="py-1.5 px-2">Nakshatra</th>
+                              <th className="py-1.5 px-2">Dignity</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                            {/* Ascendant Row */}
+                            <tr className="bg-cyan-50/30 dark:bg-cyan-950/20 font-semibold">
+                              <td className="py-1.5 px-3 text-cyan-600 dark:text-cyan-400">Ascendant (Lagna)</td>
+                              <td className="py-1.5 px-2">{currentAscendant.rashi}</td>
+                              <td className="py-1.5 px-2 font-bold">{currentAscendant.rashi_degree?.toFixed(2)}°</td>
+                              <td className="py-1.5 px-2 text-slate-500">—</td>
+                              <td className="py-1.5 px-2 text-slate-500">—</td>
+                            </tr>
+                            {chart.planets.map((p) => (
+                              <tr key={p.planet} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                                <td className="py-1.5 px-3 font-semibold flex items-center gap-1.5">
+                                  <span>{p.planet}</span>
+                                  {p.is_retrograde && <span className="text-amber-500 text-[10px] font-bold">(R)</span>}
+                                </td>
+                                <td className="py-1.5 px-2">{p.rashi}</td>
+                                <td className="py-1.5 px-2 font-bold">{p.rashi_degree?.toFixed(2)}°</td>
+                                <td className="py-1.5 px-2 text-slate-600 dark:text-slate-400">
+                                  {p.nakshatra} (P{p.pada})
+                                </td>
+                                <td className="py-1.5 px-2">
+                                  <span className="capitalize text-[10px] font-semibold text-cyan-600 dark:text-cyan-400">
+                                    {p.dignity || "Neutral"}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

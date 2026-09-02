@@ -44,6 +44,7 @@ from apps.api.routers import divisional as divisional_router
 from apps.api.routers import digital_twin as digital_twin_router
 from apps.api.routers import events as events_router
 from apps.api.routers import event_analysis as event_analysis_router
+from apps.api.routers import excel_export as excel_export_router
 from apps.api.routers import export as export_router
 from apps.api.routers import geocoding as geocoding_router
 from apps.api.routers import governance as governance_router
@@ -100,6 +101,7 @@ from apps.api.routers import research_validity as research_validity_router
 from apps.api.routers import research_replication as research_replication_router
 from apps.api.routers import research_generalization as research_generalization_router
 from apps.api.routers import research_knowledge_state as research_knowledge_state_router
+from apps.api.routers import scholar_blog as scholar_blog_router
 from apps.api.routers import timeline as timeline_router
 from apps.api.routers import transit as transit_router
 from apps.api.routers import phalita_prediction as phalita_prediction_router
@@ -111,6 +113,9 @@ from apps.api.routers import forward_predictions as forward_predictions_router
 from apps.api.routers import prediction_confluence as prediction_confluence_router
 from apps.api.routers import prediction_validation as prediction_validation_router
 from apps.api.routers import experiments as experiments_router
+from apps.api.routers import research_patterns as research_patterns_router
+from apps.api.routers import medical_research as medical_research_router
+from apps.api.routers import archetype_research as archetype_research_router
 from apps.api.routers import multi_dasha_confluence as multi_dasha_confluence_router
 from apps.api.routers import unified_event_timing as unified_event_timing_router
 from apps.api.routers import synastry as synastry_router
@@ -123,8 +128,10 @@ from apps.api.routers import hypothesis_mining as hypothesis_mining_router
 from apps.api.routers import research_data_governance as research_data_governance_router
 from apps.api.routers import knowledge_ingestion as knowledge_ingestion_router
 from apps.api.routers import knowledge_reliability as knowledge_reliability_router
+from apps.api.routers import lifespan as lifespan_router
 from apps.api.routers import ws as ws_router
 from apps.api.routers import yoga as yoga_router
+from apps.api.routers import meena_numerology as meena_numerology_router
 from apps.api.schemas.auth import HealthResponse
 from apps.api.schemas.ephemeris import EphemerisStatusSchema
 from apps.api.services.ephemeris_service import EphemerisService
@@ -312,9 +319,10 @@ def create_app() -> FastAPI:
         request: Request, exc: Exception
     ) -> JSONResponse:
         logger.exception("Unhandled exception: %s", exc)
+        detail_msg = f"Internal error: {exc}" if _settings.ENVIRONMENT == "development" else "An internal error occurred."
         response = JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"detail": "An internal error occurred."},
+            content={"detail": detail_msg},
         )
         # A handler registered for the base `Exception` class runs inside
         # Starlette's ServerErrorMiddleware, which sits OUTSIDE CORSMiddleware
@@ -431,9 +439,7 @@ def create_app() -> FastAPI:
     app.include_router(
         prediction_orchestration_router.router, prefix="/api/v1", dependencies=_authenticated
     )
-    app.include_router(
-        phalita_prediction_router.router, dependencies=_authenticated
-    )
+    app.include_router(phalita_prediction_router.router)
     app.include_router(
         timeline_router.router, prefix="/api/v1", dependencies=_authenticated
     )
@@ -448,6 +454,9 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         export_router.router, prefix="/api/v1", dependencies=_authenticated
+    )
+    app.include_router(
+        excel_export_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(ai_router.router, prefix="/api/v1", dependencies=_authenticated)
     app.include_router(
@@ -508,6 +517,9 @@ def create_app() -> FastAPI:
 
     # Specific research sub-routers (must be mounted before generic research_router)
     app.include_router(experiments_router.router, prefix="/api/v1")
+    app.include_router(research_patterns_router.router)
+    app.include_router(medical_research_router.router)
+    app.include_router(archetype_research_router.router)
     app.include_router(multi_dasha_confluence_router.router, prefix="/api/v1")
     app.include_router(synastry_router.router, prefix="/api/v1")
     app.include_router(mundane_router.router, prefix="/api/v1")
@@ -518,6 +530,7 @@ def create_app() -> FastAPI:
     app.include_router(batch_research_optimization_router.router, prefix="/api/v1")
     app.include_router(hypothesis_mining_router.router, prefix="/api/v1")
     app.include_router(research_data_governance_router.router, prefix="/api/v1")
+    app.include_router(lifespan_router.router, prefix="/api/v1")
 
     # Researcher or Admin — Research Data Office / Statistics surface.
     _researcher = [Depends(require_researcher)]
@@ -543,9 +556,7 @@ def create_app() -> FastAPI:
     app.include_router(research_replication_router.router)
     app.include_router(research_generalization_router.router)
     app.include_router(research_knowledge_state_router.router)
-    app.include_router(
-        benchmark_router.router, prefix="/api/v1", dependencies=_authenticated
-    )
+    app.include_router(scholar_blog_router.router)
     app.include_router(
         digital_twin_router.router, prefix="/api/v1", dependencies=_authenticated
     )
@@ -585,6 +596,8 @@ def create_app() -> FastAPI:
     app.include_router(prediction_validation_router.router, prefix="/api/v1")
     app.include_router(knowledge_ingestion_router.router, prefix="/api/v1")
     app.include_router(knowledge_reliability_router.router, prefix="/api/v1")
+    app.include_router(meena_numerology_router.router, prefix="/api/v1")
+    app.include_router(meena_numerology_router.alias_router, prefix="/api/v1")
 
     # ── Collaboration (RTCollab WebSocket + mDNS session discovery) ───────────
     # Off by default (ENABLE_RTCOLLAB=false) per ASTROOS_PHASE_IV_V2_4_ROADMAP.md

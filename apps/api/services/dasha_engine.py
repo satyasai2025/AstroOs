@@ -27,9 +27,12 @@ Sub-period formula (universal for nakshatra-based systems)
 
 from __future__ import annotations
 
+import hashlib
+import math
 import uuid
 from datetime import date, datetime, timedelta, timezone
 from typing import Sequence
+
 
 from apps.api.domain.dasha import DashaPeriod, DashaTree
 from apps.api.services.divisional_engine import compute_varga_sign
@@ -80,33 +83,30 @@ def _build_nakshatra_periods(
     sequence: list[str],
     period_years: dict[str, int | float],
     total_years: int | float,
-    start_date: date,
-    end_date: date,
+    start_date: date | datetime,
+    end_date: date | datetime,
     level: int,
     max_depth: int,
 ) -> tuple[DashaPeriod, ...]:
     """
     Recursively build a dasha sub-period tree for nakshatra-based systems.
 
-    All dates are anchored from start_date using proportional offsets to
-    prevent cumulative rounding drift.
-
-    Args:
-        start_lord:   Lord whose sub-period sequence begins first.
-        sequence:     Full ordered sequence of lords (cycled from start_lord).
-        period_years: Map of lord → years in the cycle.
-        total_years:  Total years in one complete cycle.
-        start_date:   Inclusive start of the parent period.
-        end_date:     Exclusive end of the parent period.
-        level:        Current tree depth (1 = Mahadasha).
-        max_depth:    Stop recursing at this depth.
+    All boundaries are anchored from start_date using proportional offsets to
+    prevent cumulative rounding drift, carrying exact microsecond precision for
+    levels 4 (Sookshma) and 5 (Prana) when datetime is supplied.
     """
     if level > max_depth:
         return ()
 
-    parent_days = (end_date - start_date).days
-    if parent_days <= 0:
-        return ()
+    is_dt = isinstance(start_date, datetime)
+    if is_dt:
+        parent_seconds = (end_date - start_date).total_seconds()
+        if parent_seconds <= 0:
+            return ()
+    else:
+        parent_days = (end_date - start_date).days
+        if parent_days <= 0:
+            return ()
 
     n = len(sequence)
     start_idx = sequence.index(start_lord)
@@ -118,14 +118,15 @@ def _build_nakshatra_periods(
         lord_years = period_years[lord]
         next_ratio = elapsed_ratio + lord_years / total_years
 
-        p_start = start_date + timedelta(days=round(elapsed_ratio * parent_days))
-        # Clamp the very last sub-period to the exact parent end
-        if i == n - 1:
-            p_end = end_date
+        if is_dt:
+            p_start = start_date + timedelta(seconds=elapsed_ratio * parent_seconds)
+            p_end = end_date if i == n - 1 else start_date + timedelta(seconds=next_ratio * parent_seconds)
+            p_days = max((p_end - p_start).total_seconds() / 86400.0, 0.0)
         else:
-            p_end = start_date + timedelta(days=round(next_ratio * parent_days))
+            p_start = start_date + timedelta(days=round(elapsed_ratio * parent_days))
+            p_end = end_date if i == n - 1 else start_date + timedelta(days=round(next_ratio * parent_days))
+            p_days = max((p_end - p_start).days, 0)
 
-        p_days = max((p_end - p_start).days, 0)
 
         sub = _build_nakshatra_periods(
             lord, sequence, period_years, total_years,
@@ -149,23 +150,27 @@ def _build_sign_periods(
     sign_sequence: list[str],
     sign_years: dict[str, int | float],
     total_years: int | float,
-    start_date: date,
-    end_date: date,
+    start_date: date | datetime,
+    end_date: date | datetime,
     level: int,
     max_depth: int,
 ) -> tuple[DashaPeriod, ...]:
     """
     Recursively build a dasha sub-period tree for sign-based systems
     (Kalachakra, Chara, Narayana).
-
-    Sub-periods follow the same sign sequence cyclically from start_sign.
     """
     if level > max_depth:
         return ()
 
-    parent_days = (end_date - start_date).days
-    if parent_days <= 0:
-        return ()
+    is_dt = isinstance(start_date, datetime)
+    if is_dt:
+        parent_seconds = (end_date - start_date).total_seconds()
+        if parent_seconds <= 0:
+            return ()
+    else:
+        parent_days = (end_date - start_date).days
+        if parent_days <= 0:
+            return ()
 
     n = len(sign_sequence)
     start_idx = sign_sequence.index(start_sign)
@@ -177,13 +182,15 @@ def _build_sign_periods(
         sign_yr = sign_years[sign]
         next_ratio = elapsed_ratio + sign_yr / total_years
 
-        p_start = start_date + timedelta(days=round(elapsed_ratio * parent_days))
-        if i == n - 1:
-            p_end = end_date
+        if is_dt:
+            p_start = start_date + timedelta(seconds=elapsed_ratio * parent_seconds)
+            p_end = end_date if i == n - 1 else start_date + timedelta(seconds=next_ratio * parent_seconds)
+            p_days = max((p_end - p_start).total_seconds() / 86400.0, 0.0)
         else:
-            p_end = start_date + timedelta(days=round(next_ratio * parent_days))
+            p_start = start_date + timedelta(days=round(elapsed_ratio * parent_days))
+            p_end = end_date if i == n - 1 else start_date + timedelta(days=round(next_ratio * parent_days))
+            p_days = max((p_end - p_start).days, 0)
 
-        p_days = max((p_end - p_start).days, 0)
 
         sub = _build_sign_periods(
             sign, sign_sequence, sign_years, total_years,
@@ -202,6 +209,7 @@ def _build_sign_periods(
     return tuple(periods)
 
 
+
 # ── Nakshatra-based balance calculation ───────────────────────────────────────
 
 
@@ -210,19 +218,25 @@ def _nakshatra_balance(
     lord_sequence: list[str],
     period_years: dict[str, int | float],
     total_years: int | float,
-    birth_date: date,
-) -> tuple[str, float, date]:
+    birth_dt: date | datetime,
+) -> tuple[str, float, date | datetime]:
     """
-    Compute the starting lord, remaining balance (years), and the date on
+    Compute the starting lord, remaining balance (years), and the date/datetime on
     which the first Mahadasha began (before birth for partial periods).
 
     Returns:
-        (first_lord, balance_years, first_maha_start_date)
+        (first_lord, balance_years, first_maha_start)
     """
     lon = normalize_degrees(moon_sidereal_lon)
-    nakshatra_idx = int(lon / DEGREES_PER_NAKSHATRA)
+    nak_index_float = lon / DEGREES_PER_NAKSHATRA
+    if math.isclose(nak_index_float, round(nak_index_float), abs_tol=1e-9, rel_tol=0.0):
+        nakshatra_idx = int(round(nak_index_float)) % 27
+        deg_in_nak = 0.0
+    else:
+        nakshatra_idx = int(nak_index_float)
+        deg_in_nak = lon - nakshatra_idx * DEGREES_PER_NAKSHATRA
+
     nakshatra_idx = min(nakshatra_idx, 26)  # clamp edge case
-    deg_in_nak = lon % DEGREES_PER_NAKSHATRA
     fraction_elapsed = deg_in_nak / DEGREES_PER_NAKSHATRA
 
     first_lord = lord_sequence[nakshatra_idx % len(lord_sequence)]
@@ -231,11 +245,16 @@ def _nakshatra_balance(
     # Balance (remaining) years at birth
     balance_years = (1.0 - fraction_elapsed) * first_lord_years
 
-    # Days already elapsed in the first Mahadasha before birth
-    elapsed_days = fraction_elapsed * first_lord_years * DAYS_PER_JULIAN_YEAR
-    first_start = birth_date - timedelta(days=round(elapsed_days))
+    # Time already elapsed in the first Mahadasha before birth
+    if isinstance(birth_dt, datetime):
+        elapsed_seconds = fraction_elapsed * first_lord_years * DAYS_PER_JULIAN_YEAR * 86400.0
+        first_start = birth_dt - timedelta(seconds=elapsed_seconds)
+    else:
+        elapsed_days = fraction_elapsed * first_lord_years * DAYS_PER_JULIAN_YEAR
+        first_start = birth_dt - timedelta(days=round(elapsed_days))
 
     return first_lord, balance_years, first_start
+
 
 
 # ── Narayana Dasha tables and helpers ──────────────────────────────────────────
@@ -557,17 +576,20 @@ class DashaEngine:
         Sub-period ordering within any period: starts from that period's lord
         and cycles through all 9 lords in the canonical sequence.
         """
+        if birth_datetime_utc.tzinfo is None:
+            raise ValueError("birth_datetime_utc must be timezone-aware (UTC)")
+
         max_depth = min(max(max_depth, 1), MAX_SUPPORTED_DEPTH)
         result = self._wrapper.calculate(
-            dt=birth_datetime_utc, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa
+            dt=birth_datetime_utc, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa, house_system=house_system
         )
         moon_sid = self._moon_sidereal(result)
         nak_info = longitude_to_nakshatra(moon_sid)
-        birth_dt_date = birth_datetime_utc.date() if hasattr(birth_datetime_utc, 'date') else birth_datetime_utc
+        birth_dt_date = birth_datetime_utc.date()
 
-        first_lord, _balance, first_start = _nakshatra_balance(
+        first_lord, balance, first_start = _nakshatra_balance(
             moon_sid, VIMSHOTTARI_SEQUENCE, VIMSHOTTARI_DASHA_YEARS,
-            VIMSHOTTARI_TOTAL_YEARS, birth_dt_date,
+            VIMSHOTTARI_TOTAL_YEARS, birth_datetime_utc,
         )
 
         mahadashas = self._build_full_cycle(
@@ -575,6 +597,14 @@ class DashaEngine:
             VIMSHOTTARI_SEQUENCE, VIMSHOTTARI_DASHA_YEARS,
             VIMSHOTTARI_TOTAL_YEARS, max_depth,
         )
+
+        # Strengthened content_hash committing to the exact computed tree boundaries
+        tree_sig = ";".join(
+            f"{m.lord}:{m.start_datetime_utc.isoformat()}:{m.end_datetime_utc.isoformat()}"
+            for m in mahadashas
+        )
+        canon_str = f"vimshottari|{birth_datetime_utc.isoformat()}|{first_lord}|{balance:.6f}|{tree_sig}"
+        c_hash = hashlib.sha256(canon_str.encode("utf-8")).hexdigest()
 
         return DashaTree(
             system="vimshottari",
@@ -585,7 +615,16 @@ class DashaEngine:
             mahadashas=mahadashas,
             max_depth=max_depth,
             total_cycle_years=VIMSHOTTARI_TOTAL_YEARS,
+            balance_at_birth=balance,
+            moon_longitude_at_trigger=moon_sid,
+            ayanamsa_used=result.ayanamsa_value,
+            birth_datetime_utc=birth_datetime_utc,
+            year_convention="365.25_julian",
+            content_hash=c_hash,
         )
+
+
+
 
     def compute_yogini(
         self,
@@ -939,7 +978,7 @@ class DashaEngine:
     def _build_full_cycle(
         self,
         first_lord: str,
-        first_start: date,
+        first_start: date | datetime,
         sequence: list[str],
         period_years: dict[str, int | float],
         total_years: int | float,
@@ -953,11 +992,18 @@ class DashaEngine:
         start_idx = sequence.index(first_lord)
         mahadashas: list[DashaPeriod] = []
         current_start = first_start
+        is_dt = isinstance(first_start, datetime)
 
         for i in range(n):
             lord = sequence[(start_idx + i) % n]
-            lord_days = round(period_years[lord] * DAYS_PER_JULIAN_YEAR)
-            current_end = current_start + timedelta(days=lord_days)
+            if is_dt:
+                lord_seconds = period_years[lord] * DAYS_PER_JULIAN_YEAR * 86400.0
+                current_end = current_start + timedelta(seconds=lord_seconds)
+                lord_duration = lord_seconds / 86400.0
+            else:
+                lord_days = round(period_years[lord] * DAYS_PER_JULIAN_YEAR)
+                current_end = current_start + timedelta(days=lord_days)
+                lord_duration = lord_days
 
             sub = _build_nakshatra_periods(
                 lord, sequence, period_years, total_years,
@@ -967,7 +1013,7 @@ class DashaEngine:
                 lord=lord,
                 start_date=current_start,
                 end_date=current_end,
-                duration_days=lord_days,
+                duration_days=lord_duration,
                 level=1,
                 sub_periods=sub,
             ))
@@ -978,7 +1024,7 @@ class DashaEngine:
     def _build_sign_full_cycle(
         self,
         first_sign: str,
-        first_start: date,
+        first_start: date | datetime,
         sign_sequence: list[str],
         sign_years: dict[str, int | float],
         total_years: int | float,
@@ -989,10 +1035,17 @@ class DashaEngine:
         """
         mahadashas: list[DashaPeriod] = []
         current_start = first_start
+        is_dt = isinstance(first_start, datetime)
 
         for sign in sign_sequence:
-            sign_days = round(sign_years[sign] * DAYS_PER_JULIAN_YEAR)
-            current_end = current_start + timedelta(days=sign_days)
+            if is_dt:
+                sign_seconds = sign_years[sign] * DAYS_PER_JULIAN_YEAR * 86400.0
+                current_end = current_start + timedelta(seconds=sign_seconds)
+                sign_duration = sign_seconds / 86400.0
+            else:
+                sign_days = round(sign_years[sign] * DAYS_PER_JULIAN_YEAR)
+                current_end = current_start + timedelta(days=sign_days)
+                sign_duration = sign_days
 
             sub = _build_sign_periods(
                 sign, sign_sequence, sign_years, total_years,
@@ -1002,13 +1055,14 @@ class DashaEngine:
                 lord=sign,
                 start_date=current_start,
                 end_date=current_end,
-                duration_days=sign_days,
+                duration_days=sign_duration,
                 level=1,
                 sub_periods=sub,
             ))
             current_start = current_end
 
         return tuple(mahadashas)
+
 
     # ── Persistence ──────────────────────────────────────────────────────────
     #

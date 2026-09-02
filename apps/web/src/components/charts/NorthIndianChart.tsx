@@ -214,32 +214,62 @@ export function NorthIndianChart({
     // ── Helper to calculate clean planet positions within house centroids ─────
     const getPlanetOffset = (i: number, count: number, house: number) => {
       const isHouse1 = house === 1;
-      const yShift = isHouse1 ? 6 : 0;
+      const yShift = isHouse1 ? 4 : 0;
       const isCorner = [2, 3, 5, 6, 8, 9, 11, 12].includes(house);
 
       if (count <= 1) {
-        return { offsetX: 0, offsetY: yShift };
-      }
-      if (count === 2) {
-        const offset = isCorner ? 11 : 13;
-        return { offsetX: 0, offsetY: (i === 0 ? -offset : offset) + yShift };
+        // Shift single planets slightly away from outer corners
+        let cx = 0;
+        let cy = yShift;
+        if (house === 11 || house === 9) cx = -6;
+        if (house === 2 || house === 3) cx = 6;
+        if (house === 6 || house === 8) cy = -6;
+        if (house === 12 || house === 2) cy = 6;
+        return { offsetX: cx, offsetY: cy };
       }
 
-      // 3+ planets: 2-column balanced grid
+      if (count === 2) {
+        let cx = 0;
+        if (house === 11 || house === 9) cx = -6;
+        if (house === 2 || house === 3) cx = 6;
+        const offset = isCorner ? 9 : 12;
+        return { offsetX: cx, offsetY: (i === 0 ? -offset : offset) + yShift };
+      }
+
+      // 3+ planets in a house: smart inward clustering
       const col = i % 2 === 0 ? 0 : 1;
       const rowIndex = Math.floor(i / 2);
       const itemsInCol = Math.ceil(count / 2) - (col === 1 && count % 2 !== 0 ? 1 : 0);
-      const colSpacing = isCorner ? (count >= 4 ? 14 : 16) : (count >= 5 ? 24 : 20);
-      const offsetX = col === 0 ? -colSpacing : colSpacing;
+
+      // Inward horizontal bias for corner houses
+      let offsetX = 0;
+      if (house === 11 || house === 9) {
+        // Right corner houses: pull leftward into the house
+        offsetX = col === 0 ? -18 : -4;
+      } else if (house === 2 || house === 3) {
+        // Left corner houses: pull rightward into the house
+        offsetX = col === 0 ? 4 : 18;
+      } else if (house === 6 || house === 8) {
+        // Bottom corner houses
+        offsetX = col === 0 ? -10 : 10;
+      } else {
+        const colSpacing = isCorner ? 10 : 16;
+        offsetX = col === 0 ? -colSpacing : colSpacing;
+      }
 
       let offsetY = 0;
       if (itemsInCol === 1) {
         offsetY = 0;
       } else if (itemsInCol === 2) {
-        offsetY = rowIndex === 0 ? (isCorner ? -13 : -15) : (isCorner ? 13 : 15);
+        offsetY = rowIndex === 0 ? -9 : 9;
       } else {
-        offsetY = (rowIndex - 1) * (isCorner ? 22 : 26);
+        offsetY = (rowIndex - 1) * 16;
       }
+
+      // Vertical adjustments for top/bottom corner houses
+      if (house === 11 || house === 12) offsetY += 3;
+      if (house === 6 || house === 8) offsetY -= 4;
+
       return { offsetX, offsetY: offsetY + yShift };
     };
 
@@ -405,7 +435,8 @@ export function NorthIndianChart({
         ref={svgRef}
         viewBox={`-20 -20 ${size + 40} ${size + 40}`}
         preserveAspectRatio="xMidYMid meet"
-        className="w-full h-auto max-w-[400px] mx-auto block shrink-0"
+        style={{ width: `${size}px`, maxWidth: "100%" }}
+        className="h-auto mx-auto block shrink-0"
         role="img"
         aria-label={`North Indian square chart: ${chartTitle} showing ${ascendant.rashi} ascendant with ${planets.length} planets`}
       />

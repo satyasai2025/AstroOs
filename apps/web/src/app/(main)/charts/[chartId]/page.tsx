@@ -10,6 +10,7 @@ import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useWorkflowStore } from "@/lib/store";
 import { ApiError } from "@/lib/api";
 import type { BirthChartSummary, WorkflowAnalysisRequest } from "@/lib/types";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 
 /**
  * Per-chart detail page. There's no GET-by-chart-id endpoint that returns
@@ -88,8 +89,8 @@ export default function ChartDetailPage() {
       birth_datetime_utc: summary.birth_datetime_utc,
       latitude: summary.birth_latitude,
       longitude: summary.birth_longitude,
-      ayanamsa: summary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-      house_system: summary.house_system as WorkflowAnalysisRequest["house_system"],
+      ayanamsa: normalizeAyanamsa(summary.ayanamsa),
+      house_system: normalizeHouseSystem(summary.house_system),
       dasha_system: "vimshottari",
       include_vargas: true,
       subject_name: summary.subject_name,

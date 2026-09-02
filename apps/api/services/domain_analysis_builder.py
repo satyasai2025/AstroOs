@@ -286,7 +286,7 @@ class DomainAnalysisBuilder:
         for md in tree.mahadashas:
             md_relevant = (not interest) or md.lord.lower() in interest
             for ad in md.sub_periods:
-                is_now = ad.start_date <= today <= ad.end_date
+                is_now = ad.contains(today)
                 ad_relevant = (not interest) or ad.lord.lower() in interest
                 if not (md_relevant or ad_relevant):
                     continue
@@ -307,7 +307,7 @@ class DomainAnalysisBuilder:
                     "start": ad.start_date.strftime("%d %b %Y"),
                     "end": ad.end_date.strftime("%d %b %Y"),
                     "is_current": is_now,
-                    "is_future": ad.start_date > today,
+                    "is_future": ad.start_date_only > today,
                     "basis": " + ".join(reasons) or "Full sequence listed",
                 }
                 windows.append(entry)

@@ -55,25 +55,20 @@ export function AccountMenu({ user }: { user: User }) {
 
       {isOpen && (
         <div
-          className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-lg border shadow-lg"
-          style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-primary)" }}
+          className="absolute right-0 top-full z-[100] mt-2 w-64 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c1527] shadow-2xl"
           role="menu"
         >
-          <div
-            className="flex items-center gap-3 border-b px-4 py-3"
-            style={{ borderColor: "var(--border-primary)" }}
-          >
+          <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 px-4 py-3 bg-slate-50/50 dark:bg-slate-900/50">
             <span
-              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
-              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold text-white bg-cyan-600 shadow-sm"
             >
               {initial}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+              <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">
                 {user.display_name}
               </p>
-              <p className="truncate text-[11px] uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>
+              <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 {user.role}
               </p>
             </div>
@@ -85,27 +80,20 @@ export function AccountMenu({ user }: { user: User }) {
                 key={item.href}
                 href={item.href}
                 role="menuitem"
-                className="flex items-center gap-2.5 px-4 py-2 text-sm transition"
-                style={{ color: "var(--text-secondary)" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "var(--accent)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "var(--text-secondary)";
-                }}
+                className="flex items-center gap-2.5 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
               >
                 <NavIcon name={item.icon} />
-                {item.label}
+                <span>{item.label}</span>
               </Link>
             ))}
           </div>
 
-          <div className="border-t px-2 py-1.5" style={{ borderColor: "var(--border-primary)" }}>
+          <div className="border-t border-slate-200 dark:border-slate-800 p-2 bg-slate-50/30 dark:bg-slate-900/30">
             <button
               type="button"
               onClick={() => logout.mutate()}
               disabled={logout.isPending}
-              className="btn-ghost w-full text-xs"
+              className="w-full rounded-lg border border-slate-300 dark:border-slate-700 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300 dark:hover:border-rose-800 transition-all cursor-pointer"
             >
               {logout.isPending ? "Signing out…" : "Sign out"}
             </button>

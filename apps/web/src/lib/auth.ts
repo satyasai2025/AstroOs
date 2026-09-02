@@ -88,10 +88,19 @@ export function useLogout() {
   const queryClient = useQueryClient();
 
   return useMutation<void, Error, void>({
-    mutationFn: () => api.post<void>("/api/v1/auth/logout", {}),
+    mutationFn: async () => {
+      try {
+        await api.post<void>("/api/v1/auth/logout", {});
+      } catch {
+        // Ignore backend logout errors — local logout must always succeed
+      }
+    },
     onSettled: () => {
       tokenStore.clear();
       queryClient.clear();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
     },
   });
 }

@@ -1,4 +1,4 @@
-﻿"""
+"""
 AstroOS — Mundane Astrology (Medini Jyotisha) Schemas
 """
 
@@ -106,3 +106,27 @@ class NationalForecastResponse(BaseModel):
     political_stability_index: float
     public_health_index: float
     executive_summary: str
+
+
+class SaptaNadiNadiStatusSchema(BaseModel):
+    nadi: str
+    element: str
+    occupying_planets: list[str]
+    status: str
+    analysis: str
+
+
+class RainfallTeleconnectionResponse(BaseModel):
+    target_year: int
+    analogue_year_61: int
+    analogue_year_122: int
+    aridra_pravesha_utc: datetime
+    meghadhipati: str
+    sasyeshadhipati: str
+    active_nadis: list[SaptaNadiNadiStatusSchema]
+    predicted_monsoon_category: str
+    predicted_rainfall_pct_lpa: float
+    sst_teleconnection_coupling: str
+    shastric_analysis: str
+    research_citation: str
+

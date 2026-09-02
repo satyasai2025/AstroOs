@@ -227,8 +227,19 @@ class Settings(BaseSettings):
     """Default pricing currency: 'INR' (India-first ₹) with multi-currency support."""
     TAX_RATE_INR_PERCENT: float = 18.0
     """Applicable GST rate for INR transactions (percentage). Default: 18.0%."""
-    TAX_RATE_USD_PERCENT: float = 0.0
-    """Applicable tax rate for USD transactions (percentage). Default: 0.0%."""
+    # ── Scholar Autonomous Blog & Publishing Engine ──────────────────────────
+    MEDIUM_API_KEY: str | None = None
+    """Integration token for publishing to Medium via REST API v1."""
+    MEDIUM_USER_ID: str | None = None
+    """Optional Medium User ID (resolved dynamically via /v1/me if omitted)."""
+    MEDIUM_PUBLICATION_ID: str | None = None
+    """Optional Medium Publication ID to publish under a publication instead of user profile."""
+    HASHNODE_API_KEY: str | None = None
+    """Personal Access Token for publishing to Hashnode via GraphQL API v2."""
+    HASHNODE_PUBLICATION_ID: str | None = None
+    """Target Hashnode Publication ID (required for Hashnode publishPost mutation)."""
+    SCHOLAR_AUTONOMOUS_PUBLISH: bool = False
+    """Enable automated background publishing cadence for the chronicles series."""
 
     model_config = SettingsConfigDict(
         env_file=".env",

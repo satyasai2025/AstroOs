@@ -1,6 +1,6 @@
 # AstroOS — Vedic Astrology Research Platform
 
-> **v2.5.0 "Jyotish Vidya"** (released) · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
+> **v3.0.0 "Prajna"** (Phase V in development) · **Local-First** — everything runs on your machine (native PostgreSQL, FastAPI, Next.js; Redis optional). Docker/Kubernetes/cloud are out of scope; see [CLAUDE_START_HERE.md](CLAUDE_START_HERE.md).
 
 A production-grade Vedic Astrology Research Platform for scholars, practitioners, and researchers. Built on Swiss Ephemeris with full divisional chart support (D1–D60), multi-tradition Dasha systems, classical Tajika Varshaphal, Jaimini Sutras, Mundane Geopolitical Forecasting, Krishnamurti Paddhati (KP), and a strict Governed Knowledge RAG pipeline.
 
@@ -43,6 +43,25 @@ AstroOS computes Vedic birth charts from geographic coordinates and UTC birth ti
 - **Mundane Forecasting**: Chaitra Shukla Pratipada, Cardinal Solar Ingresses, Planetary Cabinet (Nava Nayakas), Eclipse Analysis, Kurma Chakra 9-Sector Tortoise
 - **Compatibility & Synastry**: Tri-Bhava Kuja Dosha with 10 Pariharas, Dasa Kuta (10 Poruthams), Upapada & D9 Synastry, Midpoint Composite Charts
 - **Governed Knowledge Engine (RAG)**: Hybrid RRF retrieval (PostgreSQL full-text + pgvector), strict Anti-Contamination Invariant, Technique Isolation
+- **Phalita MoE AI Engine (Vinay Jha Architecture)**: 100% Shastric 9-Milestone implementation mapped to Jha's 6 Research Phases (`phalita-moe-ai-model.md`).
+
+### Two-Tier System Architecture
+AstroOS operates as a **Two-Tier Architecture**:
+1. **Tier 1 (AstroOS Platform & Host)**: Local-first research operating system (FastAPI, Next.js, React Native, PostgreSQL, Swiss Ephemeris) providing UI, deterministic calculations, and template/LLM narrative generation.
+2. **Tier 2 (Phalita MoE Deep Learning Engine)**: Quantitative numerical neural pipeline converting Surya Siddhantic mechanics via `TPhalitCore` into signed numerical feature matrices, routed through Dense MLPs and Gated Mixture of Experts for empirical probability prediction.
+
+### Vinay Jha Research Paper Mapping
+| Jha Paper Phase | Jha Conceptual Focus | AstroOS Milestone | Implemented Modules & Sections | Validation Status |
+|---|---|---|---|---|
+| **Phase 1** | TPhalitCore & Classical Rules | **Milestones 1–5** | `sudarshana_chakra_engine.py`, `bhavachalita_engine.py`, `divisional_synthesis_engine.py`, `vpc_engine.py`, `tphalit_core.py` (Sec 4–9) | ✅ 30/30 schema tests pass |
+| **Phase 2** | Long Debug & Wide ML CSV Datasets | **Milestone 6** | `csv_exporter_engine.py`, `deterministic_baseline_engine.py` (Sec 10 & 11) | ✅ 30/30 schema tests pass |
+| **Phase 3** | Dense MLP Baseline Model | **Milestone 7 (Part A)** | `dense_mlp_model.py` (Sec 12) | ✅ 30/30 schema tests pass |
+| **Phase 4** | 12-Group Weight Rectification | **Milestone 7 (Part B)** | `weight_rectification_engine.py` (Sec 13) | ✅ 30/30 schema tests pass |
+| **Phase 5** | Typed Phalita MoE & 4-Quadrant Noise | **Milestone 8** | `typed_moe_model.py`, `noise_diagnostic_engine.py` (Sec 15–18) | ✅ 30/30 schema tests pass |
+| **Phase 6** | System Integration & REST Endpoints | **Milestone 9** | `phalita_prediction.py` (`/api/v1/phalita/*` routes) | ✅ 30/30 schema tests pass |
+| **—** | **OOS Empirical Validation Framework** | **Beyond Jha Paper** | `test_phalit_backtest_real.py`, `test_phalit_oos_validation.py`, [`PHALITA_OOS_VALIDATION_REPORT.md`](PHALITA_OOS_VALIDATION_REPORT.md) | ⚠️ No signal on synthetic data — framework works (AUC=1.00 on embedded signal), real-world predictive validity unproven |
+> ⚠️ **Important distinction**: The 30/30 schema tests prove **code correctness** (implementation faithfully follows Jha's paper). The 7/7 OOS validation tests probe **predictive validity** (does it forecast anything?). On the synthetic event data currently available, the system shows no measurable signal. See [`PHALITA_OOS_VALIDATION_REPORT.md`](PHALITA_OOS_VALIDATION_REPORT.md) for full methodology and results.
+
 
 ---
 

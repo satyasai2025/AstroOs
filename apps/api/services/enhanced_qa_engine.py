@@ -156,7 +156,7 @@ class EnhancedQAResponder:
         stack = list(dasha_tree.mahadashas)
         while stack:
             period = stack.pop(0)
-            if period.start_date <= today <= period.end_date:
+            if period.contains(today):
                 active_periods.append(period)
                 stack = list(period.sub_periods)
             else:

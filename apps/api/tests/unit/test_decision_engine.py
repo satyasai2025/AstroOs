@@ -35,8 +35,10 @@ def test_decision_engine_single_window():
     assert isinstance(win, PhalitaDecisionWindow)
     assert win.decision_tier in ["PRATYAKSHA_PHALA", "SUSHUPTA_BEEJA", "ALPA_PHALA", "SAMANYA_KAL"]
     assert win.confidence_level in ["VERY_HIGH", "HIGH", "MODERATE", "LOW"]
-    assert win.explanation_hi != ""
-    assert win.explanation_en != ""
+    assert win.polarity in ["AUSPICIOUS", "CHALLENGING", "MIXED_POSITIVE", "MIXED_NEGATIVE", "NEUTRAL"]
+    assert win.polarity_logic != ""
+    assert -1.0 <= win.varga_fusion_score <= 1.0
+    assert 1 <= win.scd_annual_house <= 12
 
 
 def test_decision_engine_life_timeline_scan():

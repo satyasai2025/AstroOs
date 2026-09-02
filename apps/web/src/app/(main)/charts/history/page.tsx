@@ -51,6 +51,7 @@ export default function ChartHistoryPage() {
   const { data, isLoading, isError, error } = useMyCharts();
   const [recomputeChart, setRecomputeChart] = useState<BirthChartSummary | null>(null);
   const clearWorkflowResult = useWorkflowStore((s) => s.clear);
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const deleteChart = useDeleteChart();
   const setDefaultChart = useSetDefaultChart();
   const [chartToDelete, setChartToDelete] = useState<BirthChartSummary | null>(null);
@@ -253,11 +254,11 @@ export default function ChartHistoryPage() {
       render: (c) => (
         <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
           <Link
-            href={`/ai/explain`}
+            href={`/phalita`}
             className="inline-flex items-center justify-center rounded px-2.5 py-1 text-[11px] font-medium border border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 transition"
-            title="Ask AI questions about this chart"
+            title="Open Phalita MoE AI Consultation for this chart"
           >
-            AI Explain
+            Phalita MoE
           </Link>
           <Link
             href={`/charts/transit?chart_id=${c.id}`}
@@ -337,9 +338,9 @@ export default function ChartHistoryPage() {
           type="button"
           onClick={() => {
             clearWorkflowResult();
-            router.push("/dashboard");
+            openCreateModal("birth_chart");
           }}
-          className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 shadow-sm transition"
+          className="flex items-center gap-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/50 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-cyan-500/60 hover:text-cyan-600 dark:hover:text-cyan-400 shadow-sm transition cursor-pointer"
         >
           + Create Chart
         </button>

@@ -1,0 +1,293 @@
+{
+  "generated_at": "2026-08-29T10:42:27.541519+00:00",
+  "total_cases_analyzed": 66732,
+  "total_events_analyzed": 40198,
+  "total_features_extracted": 200990,
+  "total_patterns_discovered": 14,
+  "patterns": [
+    {
+      "event_type": "Accident",
+      "pattern_id": "ptn-3dbc8d3a75",
+      "description": "Accident events show a statistically significant link to Moon Rashi of Cancer: 11.9% of 582 studied cases exhibit this pattern, compared with a 8.4% base rate.",
+      "sample_size": 582,
+      "confidence_score": 0.9726,
+      "lift_score": 1.4153,
+      "dimensions": [
+        {
+          "dimension": "moon_rashi",
+          "value": "Cancer",
+          "count": 69,
+          "frequency": 0.1186,
+          "expected_by_chance": 0.0838,
+          "significance": 0.9726,
+          "lift_score": 1.4153
+        }
+      ]
+    },
+    {
+      "event_type": "Accident",
+      "pattern_id": "ptn-5ba00617b2",
+      "description": "Accident events show a statistically significant link to Mahadasha Lord of Jupiter: 19.6% of 582 studied cases exhibit this pattern, compared with a 15.9% base rate.",
+      "sample_size": 582,
+      "confidence_score": 0.9131,
+      "lift_score": 1.2298,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Jupiter",
+          "count": 114,
+          "frequency": 0.1959,
+          "expected_by_chance": 0.1593,
+          "significance": 0.9131,
+          "lift_score": 1.2298
+        }
+      ]
+    },
+    {
+      "event_type": "Marriage",
+      "pattern_id": "ptn-42b7945da3",
+      "description": "Marriage events show a statistically significant link to Mahadasha Lord of Rahu: 22.3% of 4637 studied cases exhibit this pattern, compared with a 15.9% base rate.",
+      "sample_size": 4637,
+      "confidence_score": 1.0,
+      "lift_score": 1.4016,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Rahu",
+          "count": 1034,
+          "frequency": 0.223,
+          "expected_by_chance": 0.1591,
+          "significance": 1.0,
+          "lift_score": 1.4016
+        }
+      ]
+    },
+    {
+      "event_type": "Marriage",
+      "pattern_id": "ptn-e820641920",
+      "description": "Marriage events show a statistically significant link to Mahadasha Lord of Jupiter: 18.4% of 4637 studied cases exhibit this pattern, compared with a 15.9% base rate.",
+      "sample_size": 4637,
+      "confidence_score": 0.9997,
+      "lift_score": 1.1519,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Jupiter",
+          "count": 851,
+          "frequency": 0.1835,
+          "expected_by_chance": 0.1593,
+          "significance": 0.9997,
+          "lift_score": 1.1519
+        }
+      ]
+    },
+    {
+      "event_type": "Hospitalization",
+      "pattern_id": "ptn-e729888a59",
+      "description": "Hospitalization events show a statistically significant link to Moon Rashi of Capricorn: 12.2% of 262 studied cases exhibit this pattern, compared with a 8.1% base rate.",
+      "sample_size": 262,
+      "confidence_score": 0.9082,
+      "lift_score": 1.5093,
+      "dimensions": [
+        {
+          "dimension": "moon_rashi",
+          "value": "Capricorn",
+          "count": 32,
+          "frequency": 0.1221,
+          "expected_by_chance": 0.0809,
+          "significance": 0.9082,
+          "lift_score": 1.5093
+        }
+      ]
+    },
+    {
+      "event_type": "Child Birth",
+      "pattern_id": "ptn-e82d34ff40",
+      "description": "Child Birth events show a statistically significant link to Mahadasha Lord of Moon: 12.7% of 762 studied cases exhibit this pattern, compared with a 8.0% base rate.",
+      "sample_size": 762,
+      "confidence_score": 0.9999,
+      "lift_score": 1.5992,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Moon",
+          "count": 97,
+          "frequency": 0.1273,
+          "expected_by_chance": 0.0796,
+          "significance": 0.9999,
+          "lift_score": 1.5992
+        }
+      ]
+    },
+    {
+      "event_type": "Child Birth",
+      "pattern_id": "ptn-aa0b701312",
+      "description": "Child Birth events show a statistically significant link to Mahadasha Lord of Jupiter: 20.9% of 762 studied cases exhibit this pattern, compared with a 15.9% base rate.",
+      "sample_size": 762,
+      "confidence_score": 0.9959,
+      "lift_score": 1.3101,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Jupiter",
+          "count": 159,
+          "frequency": 0.2087,
+          "expected_by_chance": 0.1593,
+          "significance": 0.9959,
+          "lift_score": 1.3101
+        }
+      ]
+    },
+    {
+      "event_type": "Child Birth",
+      "pattern_id": "ptn-b22b05d034",
+      "description": "Child Birth events show a statistically significant link to Mahadasha Lord of Rahu: 20.0% of 762 studied cases exhibit this pattern, compared with a 15.9% base rate.",
+      "sample_size": 762,
+      "confidence_score": 0.9764,
+      "lift_score": 1.2539,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Rahu",
+          "count": 152,
+          "frequency": 0.1995,
+          "expected_by_chance": 0.1591,
+          "significance": 0.9764,
+          "lift_score": 1.2539
+        }
+      ]
+    },
+    {
+      "event_type": "Child Birth",
+      "pattern_id": "ptn-6af793d1db",
+      "description": "Child Birth events show a statistically significant link to Moon Rashi of Libra: 11.2% of 762 studied cases exhibit this pattern, compared with a 8.4% base rate.",
+      "sample_size": 762,
+      "confidence_score": 0.955,
+      "lift_score": 1.3337,
+      "dimensions": [
+        {
+          "dimension": "moon_rashi",
+          "value": "Libra",
+          "count": 85,
+          "frequency": 0.1115,
+          "expected_by_chance": 0.0836,
+          "significance": 0.955,
+          "lift_score": 1.3337
+        }
+      ]
+    },
+    {
+      "event_type": "Child Birth",
+      "pattern_id": "ptn-7a960dec16",
+      "description": "Child Birth events show a statistically significant link to Mahadasha Lord of Jupiter and Moon Rashi of Libra: 20.9% of 762 studied cases exhibit this pattern, compared with a 15.9% base rate.",
+      "sample_size": 762,
+      "confidence_score": 0.9511,
+      "lift_score": 1.3337,
+      "dimensions": [
+        {
+          "dimension": "mahadasha_lord",
+          "value": "Jupiter",
+          "count": 159,
+          "frequency": 0.2087,
+          "expected_by_chance": 0.1593,
+          "significance": 0.9959,
+          "lift_score": 1.3101
+        },
+        {
+          "dimension": "moon_rashi",
+          "value": "Libra",
+          "count": 85,
+          "frequency": 0.1115,
+          "expected_by_chance": 0.0836,
+          "significance": 0.955,
+          "lift_score": 1.3337
+        }
+      ]
+    },
+    {
+      "event_type": "Awards",
+      "pattern_id": "ptn-c054dcfefb",
+      "description": "Awards events show a statistically significant link to Saturn House of Sa_H1: 16.6% of 187 studied cases exhibit this pattern, compared with a 9.8% base rate.",
+      "sample_size": 187,
+      "confidence_score": 0.9749,
+      "lift_score": 1.6953,
+      "dimensions": [
+        {
+          "dimension": "saturn_house",
+          "value": "Sa_H1",
+          "count": 31,
+          "frequency": 0.1658,
+          "expected_by_chance": 0.0978,
+          "significance": 0.9749,
+          "lift_score": 1.6953
+        }
+      ]
+    },
+    {
+      "event_type": "Promotion",
+      "pattern_id": "ptn-695ce1a88a",
+      "description": "Promotion events show a statistically significant link to Moon Rashi of Taurus: 30.8% of 13 studied cases exhibit this pattern, compared with a 8.3% base rate.",
+      "sample_size": 13,
+      "confidence_score": 0.9315,
+      "lift_score": 3.6939,
+      "dimensions": [
+        {
+          "dimension": "moon_rashi",
+          "value": "Taurus",
+          "count": 4,
+          "frequency": 0.3077,
+          "expected_by_chance": 0.0833,
+          "significance": 0.9315,
+          "lift_score": 3.6939
+        }
+      ]
+    },
+    {
+      "event_type": "Promotion",
+      "pattern_id": "ptn-4bb87287e8",
+      "description": "Promotion events show a statistically significant link to Lagna Rashi of Aries: 30.8% of 13 studied cases exhibit this pattern, compared with a 8.4% base rate.",
+      "sample_size": 13,
+      "confidence_score": 0.9298,
+      "lift_score": 3.6675,
+      "dimensions": [
+        {
+          "dimension": "lagna_rashi",
+          "value": "Aries",
+          "count": 4,
+          "frequency": 0.3077,
+          "expected_by_chance": 0.0839,
+          "significance": 0.9298,
+          "lift_score": 3.6675
+        }
+      ]
+    },
+    {
+      "event_type": "Promotion",
+      "pattern_id": "ptn-c38df005d2",
+      "description": "Promotion events show a statistically significant link to Moon Rashi of Taurus and Lagna Rashi of Aries: 30.8% of 13 studied cases exhibit this pattern, compared with a 8.3% base rate.",
+      "sample_size": 13,
+      "confidence_score": 0.8661,
+      "lift_score": 3.6939,
+      "dimensions": [
+        {
+          "dimension": "moon_rashi",
+          "value": "Taurus",
+          "count": 4,
+          "frequency": 0.3077,
+          "expected_by_chance": 0.0833,
+          "significance": 0.9315,
+          "lift_score": 3.6939
+        },
+        {
+          "dimension": "lagna_rashi",
+          "value": "Aries",
+          "count": 4,
+          "frequency": 0.3077,
+          "expected_by_chance": 0.0839,
+          "significance": 0.9298,
+          "lift_score": 3.6675
+        }
+      ]
+    }
+  ]
+}

@@ -41,7 +41,7 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
   { key: "patterns", label: "Patterns", icon: "sparkle", href: "/research/patterns" },
   { key: "knowledge-base", label: "Knowledge Base", icon: "book", href: "/knowledge" },
   { key: "reports", label: "Reports", icon: "report", href: "/reports/pdf" },
-  { key: "ai-insights", label: "AI Insights", icon: "sparkle", href: "/ai/explain" },
+  { key: "ai-insights", label: "Phalita AI", icon: "sparkle", href: "/phalita" },
   { key: "datasets", label: "Datasets", icon: "database", href: "/research/datasets" },
   { key: "evidence", label: "Evidence", icon: "flask", href: "/research/rules" },
   { key: "settings", label: "Settings", icon: "gear", href: "/settings/profile" },

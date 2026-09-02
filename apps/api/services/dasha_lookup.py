@@ -44,7 +44,7 @@ def find_active_dasha_chain(tree: DashaTree, target_date: date) -> tuple[DashaPe
 
     def _search(periods: tuple[DashaPeriod, ...]) -> tuple[DashaPeriod, ...]:
         for period in periods:
-            if period.start_date <= target_date < period.end_date:
+            if period.contains(target_date):
                 return (period,) + _search(period.sub_periods)
         return ()
 

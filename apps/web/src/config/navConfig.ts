@@ -147,6 +147,7 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/charts?view=houses", label: "House Explorer", subtitle: "Bhava analysis", icon: "house", viewId: "workspace-houses" },
           { href: "/charts?view=divisional", label: "Divisional Charts", subtitle: "D-1 through D-60", icon: "grid", viewId: "workspace-divisional" },
           { href: "/charts?view=relationships-v2", label: "Planet Relationships", subtitle: "Aspect graph", icon: "network", viewId: "workspace-relationships-v2" },
+          { href: "/numerology", label: "Meena Numerology", subtitle: "Life Chapters & Sound Vibration", icon: "sparkle", viewId: "workspace-numerology" },
         ],
       },
       {
@@ -189,8 +190,12 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/timing", label: "Unified Event Timing", subtitle: "Sensitive timelines & convergence", icon: "clock", viewId: "analysis-timing" },
           { href: "/charts/sbc", label: "Sarvatobhadra Chakra (SBC)", subtitle: "9x9 Grid · 112-Pada Vedha Rays", icon: "grid", viewId: "analysis-sbc" },
           { href: "/charts/tarabala", label: "Navatara / Tarabala", subtitle: "27-Tara · 9 Cycles", icon: "star", viewId: "analysis-tarabala" },
+          { href: "/phalita", label: "Phalita MoE Consultation", subtitle: "Canonical 3-Chart & MoE", icon: "sparkle", viewId: "analysis-phalita" },
+          { href: "/medini", label: "Medini Jyotisha", subtitle: "National & Geopolitical Ingress", icon: "globe", viewId: "analysis-medini" },
+          { href: "/muhurta", label: "Muhurta & Panchanga", subtitle: "Auspicious Timing & SSS Mode", icon: "clock", viewId: "analysis-muhurta" },
         ],
       },
+
       {
         id: "technical-systems",
         number: "05",
@@ -204,6 +209,7 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/events", label: "Events Explorer", subtitle: "300+ Life Events & Formulas", icon: "calendar", viewId: "analysis-events" },
           { href: "/charts?view=jaimini", label: "Jaimini", icon: "book" },
           { href: "/predictions", label: "Prediction Chain Explorer", icon: "sparkle" },
+          { href: "/numerology", label: "Meena Numerology", subtitle: "Life Chapters & Timing Map", icon: "sparkle", viewId: "analysis-numerology" },
         ],
       },
       {
@@ -214,10 +220,9 @@ export const NAV_CONFIG: NavGroup[] = [
         icon: "sparkle",
         color: "--section-research",
         items: [
-          { href: "/ai/explain", label: "AI Explain", icon: "sparkle", viewId: "ai-explain", disabled: true, beta: true },
-          { href: "/ai/chat", label: "AI Chat", icon: "chat", viewId: "ai-chat", disabled: true, beta: true },
-          { href: "/ai/confidence", label: "Confidence Scores", icon: "target", viewId: "ai-confidence", disabled: true, beta: true },
-          { href: "/ai/evidence", label: "Evidence Chain", icon: "chain", viewId: "ai-evidence", disabled: true, beta: true },
+          { href: "/phalita", label: "Phalita MoE AI", subtitle: "Canonical 3-Chart & MoE", icon: "sparkle", viewId: "ai-phalita" },
+          { href: "/research/explainability", label: "Prediction Explainability", subtitle: "Factor decomposition & counterfactuals", icon: "target", viewId: "ai-explainability" },
+          { href: "/ai", label: "Governed RAG Copilot", subtitle: "Shastra-grounded AI", icon: "chat", viewId: "ai-copilot" },
         ],
       },
     ],
@@ -245,7 +250,8 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/research/snapshot-manager", label: "Snapshot Manager", icon: "camera", viewId: "research-snapshot-manager" },
           { href: "/research/notebook", label: "Notebook", icon: "document", viewId: "research-notebook" },
           { href: "/research/datasets", label: "Datasets", icon: "grid" },
-          { href: "/research/query-builder", label: "Query Builder", icon: "search" },
+          { href: "/research/scholar", label: "The Empirical Chronicles", subtitle: "Scholar Blog & Auto-Publish", icon: "sparkle" },
+          { href: "/research/publication", label: "Publication Reports", subtitle: "Cryptographic P30 Audit", icon: "document" },
           { href: "/research/events", label: "Event Verification", icon: "document" },
           { href: "/research/rules", label: "Rule Validation", icon: "shield" },
         ],
@@ -343,6 +349,7 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/settings/appearance", label: "Appearance", icon: "palette", viewId: "settings-appearance" },
           { href: "/settings/security", label: "Security", icon: "shield", viewId: "settings-security" },
           { href: "/settings/data", label: "Data", icon: "database", viewId: "settings-data" },
+          { href: "/sitemap", label: "Sitemap & Index", icon: "grid", viewId: "settings-sitemap" },
         ],
       },
       {
@@ -371,9 +378,14 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
       { href: "/charts/birth", label: "Chart Workspace", icon: "compass" },
-      { href: "/ai/explain", label: "AI Explain", icon: "sparkle" },
+      { href: "/phalita", label: "Phalita MoE Consultation", icon: "sparkle" },
+      { href: "/medini", label: "Medini Jyotisha (Mundane)", icon: "globe" },
+      { href: "/muhurta", label: "Muhurta & Panchanga", icon: "clock" },
+      { href: "/numerology", label: "Meena Numerology", icon: "star" },
+      { href: "/research/explainability", label: "Prediction Explainability", icon: "target" },
       { href: "/events", label: "Life Event Explorer", icon: "calendar" },
       { href: "/research/projects", label: "Research Explorer", icon: "search" },
+      { href: "/sitemap", label: "Sitemap & Directory", icon: "grid" },
       { href: "/help", label: "Help & Methodology", icon: "book" },
     ],
   },
@@ -417,4 +429,4 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/settings/profile", label: "System Settings", icon: "settings" },
     ],
   },
-];
+];

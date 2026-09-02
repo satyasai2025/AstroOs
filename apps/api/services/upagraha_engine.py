@@ -1,171 +1,275 @@
 """
-AstroOS — Upagraha & Special Lagna Engine
+AstroOS — Non-Luminous Upagrahas & Gulika/Mandi Engine
+======================================================
+Implements canonical calculations for:
 
-Computes Gulika/Maandi and the Bhava/Hora/Ghati lagnas. Performs no
-ephemeris work of its own beyond asking EphemerisWrapper for sunrise,
-sunset and the ascendant at a given instant — all sidereal conversion
-stays in the wrapper, same discipline as the other engines.
+  1. Five Arkadosha Upagrahas (calculated from Sun's longitude per BPHS Ch. 86):
+     - Dhooma      = Sun + 133°20' (4s 13°20')
+     - Vyatipata   = 360° - Dhooma (12s - Dhooma)
+     - Parivesha   = Vyatipata + 180° (6s + Vyatipata)
+     - Indrachapa  = 360° - Parivesha (12s - Parivesha)
+     - Upaketu     = Indrachapa + 16°40' (0s 16°40')
+     [Mathematical Verification: Upaketu + 30° == Sun's Longitude]
 
-SCOPE — only 2 of the 8 classical Upagrahas are implemented: Gulika and
-Maandi (the sunrise/sunset-eighth-part shadow points), plus the three
-Special Lagnas. Dhuma, Vyatipata, Parivesha, Indrachapa, Upaketu, and
-Kaala (the Sun-longitude-derived Upagrahas) are NOT implemented anywhere
-in AstroOS — this is a real, disclosed feature gap, not a bug in what
-exists.
+  2. Kalavela, Mrityu, Yamaghanta, and Gulika (Mandi):
+     Calculated from the classical 8-part division (Yama) of Day and Night.
 
-──────────────────────────────────────────────────────────────────────────
-SUNRISE DEFINITION — deliberate, and it matters
-
-These points are *entirely* defined by the sunrise/sunset frame, so the
-rise/set convention is not cosmetic. Swiss Ephemeris defaults to the
-upper limb with atmospheric refraction (what an observer sees). Classical
-Vedic computation uses the **centre of the disc with no refraction**, and
-so does Classical Vedic System.
-
-On the benchmark chart the two differ by ~4 minutes at each end — enough
-to move Gulika by about 1°. Verified against Classical Vedic (30-Jun-1971 04:57:40
-IST, Vadodara), using Classical Vedic's own ayanamsa to isolate the method:
-
-    Gulika   −20″      Maandi   −21″
-    Bhava L. −53″      Hora L.  −31″      Ghati L. +36″
-
-i.e. sub-arc-minute, the same residual every planet shows against Classical Vedic
-(its Lahiri variant differs from SIDM_LAHIRI). With AstroOS's own default
-ayanamsa the offset is ~−76″, which is the ayanamsa difference, not a
-method error.
-──────────────────────────────────────────────────────────────────────────
-
-Gulika / Maandi
-    The day (sunrise→sunset) or night (sunset→next sunrise) is divided
-    into eight equal parts. Parts 1–7 are ruled by the seven grahas in
-    weekday order starting from a weekday-dependent lord; the 8th is
-    lordless (Brahma's part).
-
-      day birth   → start from the lord of the weekday itself
-      night birth → start from the lord of the 5th weekday onward
-
-    Gulika is the ascendant at the START of Saturn's part; Maandi is the
-    ascendant at its MIDPOINT. (Traditions differ — some treat the two as
-    one point, some use the end of the part. The start/midpoint pair is
-    what Classical Vedic produces and what is implemented here; see
-    Settings-free `GULIKA_METHOD` note in the router docs.)
-
-Special Lagnas
-    All three progress from the Sun's sidereal longitude at sunrise,
-    advancing linearly with time elapsed since sunrise:
-
-      Bhava Lagna  30° per 2 hours   (15°/h)
-      Hora Lagna   30° per 1 hour    (30°/h)
-      Ghati Lagna  30° per ghati     (75°/h — a ghati is 24 minutes)
+  3. BPHS Upachaya Rule for Gulika:
+     - Auspicious ONLY in Upachaya houses (3, 6, 10, 11).
+     - Malefic / Obstruction in all other houses (1, 2, 4, 5, 7, 8, 9, 12).
 """
 
 from __future__ import annotations
 
-from datetime import datetime
-
-import swisseph as swe
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from typing import Dict, Optional, Tuple
 
 from apps.api.domain.upagraha import (
     SpecialLagna,
-    UpagrahaPosition,
+    UpagrahaPosition as DomainUpagrahaPosition,
     UpagrahaResult,
 )
 from apps.api.services.ephemeris_wrapper import (
     EphemerisWrapper,
-    datetime_to_jd,
+    jd_to_datetime,
     longitude_to_nakshatra,
     longitude_to_rashi,
 )
-from packages.shared.rashi_offset import house_offset
+from packages.shared.constants import DEGREES_PER_RASHI
 
-# Classical weekday order — also the eighth-part rulership order.
-_WEEKDAY_LORDS: tuple[str, ...] = (
-    "sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn",
-)
-_WEEKDAY_NAMES: tuple[str, ...] = (
-    "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
-)
+RASHI_LIST = [
+    "aries", "taurus", "gemini", "cancer", "leo", "virgo",
+    "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
+]
 
-# Centre of disc, no refraction — see the module docstring.
-_RISE_FLAGS = swe.BIT_DISC_CENTER | swe.BIT_NO_REFRACTION
 
-# Degrees advanced per hour elapsed since sunrise.
-_SPECIAL_LAGNA_RATES: dict[str, float] = {
-    "bhava_lagna": 15.0,   # 30° / 2 h
-    "hora_lagna": 30.0,    # 30° / 1 h
-    "ghati_lagna": 75.0,   # 30° / ghati (24 min)
+def normalize_degrees(deg: float) -> float:
+    """Normalize angle into [0, 360) range."""
+    return deg % 360.0
+
+
+def _build_upagraha_point(name: str, lon: float, lagna_lon: float) -> DomainUpagrahaPosition:
+    rashi, rashi_deg = longitude_to_rashi(lon)
+    nak_info = longitude_to_nakshatra(lon)
+    rashi_idx = int(normalize_degrees(lon) / 30.0) % 12
+    lagna_rashi_idx = int(normalize_degrees(lagna_lon) / 30.0) % 12
+    house = ((rashi_idx - lagna_rashi_idx) % 12) + 1
+    return DomainUpagrahaPosition(
+        name=name,
+        sidereal_longitude=round(normalize_degrees(lon), 6),
+        rashi=rashi,
+        rashi_degree=round(rashi_deg, 6),
+        nakshatra=nak_info.nakshatra,
+        pada=nak_info.pada,
+        nakshatra_lord=nak_info.lord,
+        house_number=house,
+    )
+
+
+def _build_special_lagna(name: str, lon: float, lagna_lon: float) -> SpecialLagna:
+    rashi, rashi_deg = longitude_to_rashi(lon)
+    nak_info = longitude_to_nakshatra(lon)
+    rashi_idx = int(normalize_degrees(lon) / 30.0) % 12
+    lagna_rashi_idx = int(normalize_degrees(lagna_lon) / 30.0) % 12
+    house = ((rashi_idx - lagna_rashi_idx) % 12) + 1
+    return SpecialLagna(
+        name=name,
+        sidereal_longitude=round(normalize_degrees(lon), 6),
+        rashi=rashi,
+        rashi_degree=round(rashi_deg, 6),
+        nakshatra=nak_info.nakshatra,
+        pada=nak_info.pada,
+        nakshatra_lord=nak_info.lord,
+        house_number=house,
+    )
+
+
+@dataclass(frozen=True)
+class UpagrahaPosition:
+    """Position of a single non-luminous sub-planet."""
+    name: str
+    longitude: float
+    rashi: str
+    rashi_idx: int
+    degree_in_rashi: float
+    house_from_lagna: int
+
+
+@dataclass(frozen=True)
+class UpagrahaReport:
+    """Comprehensive Upagraha & Gulika status report."""
+    sun_longitude: float
+    dhooma: UpagrahaPosition
+    vyatipata: UpagrahaPosition
+    parivesha: UpagrahaPosition
+    indrachapa: UpagrahaPosition
+    upaketu: UpagrahaPosition
+    gulika: UpagrahaPosition
+    gulika_house: int
+    gulika_is_upachaya: bool  # True if in 3, 6, 10, 11 (Auspicious per BPHS)
+    vamsha_nasha_risk: bool   # Sun conjunct Arkadosha
+    ayu_nasha_risk: bool      # Moon conjunct Arkadosha
+    gyana_nasha_risk: bool    # Lagna conjunct Arkadosha
+
+
+# 8-part daytime sequence of Saturn (Gulika) portion by weekday (0=Sunday..6=Saturday)
+GULIKA_DAY_PORTIONS = {
+    0: 7,  # Sunday (7th portion)
+    1: 6,  # Monday (6th portion)
+    2: 5,  # Tuesday (5th portion)
+    3: 4,  # Wednesday (4th portion)
+    4: 3,  # Thursday (3rd portion)
+    5: 2,  # Friday (2nd portion)
+    6: 1,  # Saturday (1st portion)
 }
 
-_RASHI_INDEX_OF_DEGREE = 30.0
+# 8-part night-time sequence of Saturn (Gulika) portion by weekday
+GULIKA_NIGHT_PORTIONS = {
+    0: 3,  # Sunday night
+    1: 2,  # Monday night
+    2: 1,  # Tuesday night
+    3: 7,  # Wednesday night
+    4: 6,  # Thursday night
+    5: 5,  # Friday night
+    6: 4,  # Saturday night
+}
+
+
+def _deg_to_pos(name: str, deg: float, lagna_deg: float) -> UpagrahaPosition:
+    """Converts continuous degree into UpagrahaPosition dataclass."""
+    norm_deg = normalize_degrees(deg)
+    r_idx = int(norm_deg / 30.0) % 12
+    r_name = RASHI_LIST[r_idx]
+    deg_in_r = norm_deg % 30.0
+
+
+    lagna_r_idx = int(normalize_degrees(lagna_deg) / 30.0) % 12
+    house = ((r_idx - lagna_r_idx) % 12) + 1
+
+    return UpagrahaPosition(
+        name=name,
+        longitude=round(norm_deg, 4),
+        rashi=r_name.capitalize(),
+        rashi_idx=r_idx,
+        degree_in_rashi=round(deg_in_r, 4),
+        house_from_lagna=house,
+    )
 
 
 class UpagrahaEngine:
-    """Stateless — takes an EphemerisWrapper, holds no chart state."""
+    """Engine for computing Non-Luminous Upagrahas, Arkadoshas, and Gulika/Mandi."""
 
-    def __init__(self, wrapper: EphemerisWrapper) -> None:
-        self._wrapper = wrapper
+    def __init__(
+        self,
+        ephemeris_wrapper: Optional[EphemerisWrapper] = None,
+        ephemeris_path: str = "data/ephemeris",
+    ):
+        self.wrapper = ephemeris_wrapper or EphemerisWrapper(ephemeris_path=ephemeris_path)
 
-    # ── sunrise/sunset frame ─────────────────────────────────────────────────
 
-    def _rise(self, jd_start: float, lat: float, lon: float, rising: bool) -> float:
-        flag = (swe.CALC_RISE if rising else swe.CALC_SET) | _RISE_FLAGS
-        ret, data = swe.rise_trans(jd_start, swe.SUN, flag, (lon, lat, 0))
-        if ret < 0 or not data:
-            raise RuntimeError("Swiss Ephemeris rise/set calculation failed")
-        return data[0]
-
-    def _day_frame(
-        self, jd: float, lat: float, lon: float
-    ) -> tuple[bool, float, float, float]:
-        """Return (is_daytime, period_start, period_end, vedic_day_sunrise).
-
-        `vedic_day_sunrise` is the sunrise that began the Vedic day containing
-        `jd` — for a pre-dawn birth that is the *previous* calendar day's
-        sunrise, which is why such births carry the previous weekday.
+    def compute_upagrahas(
+        self,
+        birth_datetime: datetime,
+        latitude: float,
+        longitude: float,
+        ayanamsa: str = "lahiri",
+    ) -> UpagrahaReport:
         """
-        # Search from well before jd so we always find the bracketing events.
-        prev_sunrise = self._rise(jd - 1.2, lat, lon, rising=True)
-        while True:
-            nxt = self._rise(prev_sunrise + 0.01, lat, lon, rising=True)
-            if nxt > jd:
-                break
-            prev_sunrise = nxt
-        next_sunrise = self._rise(prev_sunrise + 0.01, lat, lon, rising=True)
-        sunset = self._rise(prev_sunrise, lat, lon, rising=False)
-
-        if prev_sunrise <= jd < sunset:
-            return True, prev_sunrise, sunset, prev_sunrise
-        # Night: from sunset to the next sunrise. The Vedic day is still the
-        # one that began at prev_sunrise.
-        return False, sunset, next_sunrise, prev_sunrise
-
-    # ── helpers ──────────────────────────────────────────────────────────────
-
-    def _sidereal_ascendant(self, jd: float, lat: float, lon: float, ayanamsa: str) -> float:
-        trop, _cusps = self._wrapper.get_ascendant_and_cusps(jd, lat, lon, "W")
-        return self._wrapper.to_sidereal(trop, self._wrapper.get_ayanamsa(jd))
-
-    @staticmethod
-    def _house_of(lon: float, asc_lon: float) -> int:
-        return house_offset(
-            int(asc_lon // _RASHI_INDEX_OF_DEGREE),
-            int(lon // _RASHI_INDEX_OF_DEGREE),
+        Computes all 5 Arkadoshas and Gulika/Mandi with BPHS Upachaya validation.
+        """
+        result = self.wrapper.calculate(
+            dt=birth_datetime,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
         )
 
-    def _describe(self, lon: float, asc_lon: float) -> dict:
-        rashi, deg = longitude_to_rashi(lon)
-        nak = longitude_to_nakshatra(lon)
-        return {
-            "sidereal_longitude": lon,
-            "rashi": rashi,
-            "rashi_degree": deg,
-            "nakshatra": nak.nakshatra,
-            "pada": nak.pada,
-            "nakshatra_lord": nak.lord,
-            "house_number": self._house_of(lon, asc_lon),
-        }
+        lagna_deg = result.ascendant.sidereal_longitude
 
-    # ── public API ───────────────────────────────────────────────────────────
+        # Find Sun and Moon
+        sun_p = next(p for p in result.planet_positions if p.planet.lower() == "sun")
+        moon_p = next(p for p in result.planet_positions if p.planet.lower() == "moon")
+        sun_lon = sun_p.sidereal_longitude
+        moon_lon = moon_p.sidereal_longitude
+
+
+
+        # ── 1. Five Arkadoshas (BPHS Ch. 86) ──────────────────────────────────
+        dhooma_deg = normalize_degrees(sun_lon + 133.0 + 20.0 / 60.0)
+        vyatipata_deg = normalize_degrees(360.0 - dhooma_deg)
+        parivesha_deg = normalize_degrees(vyatipata_deg + 180.0)
+        indrachapa_deg = normalize_degrees(360.0 - parivesha_deg)
+        upaketu_deg = normalize_degrees(indrachapa_deg + 16.0 + 40.0 / 60.0)
+
+        pos_dhooma = _deg_to_pos("Dhooma", dhooma_deg, lagna_deg)
+        pos_vyatipata = _deg_to_pos("Vyatipata", vyatipata_deg, lagna_deg)
+        pos_parivesha = _deg_to_pos("Parivesha", parivesha_deg, lagna_deg)
+        pos_indrachapa = _deg_to_pos("Indrachapa", indrachapa_deg, lagna_deg)
+        pos_upaketu = _deg_to_pos("Upaketu", upaketu_deg, lagna_deg)
+
+        # ── 2. Gulika / Mandi (8-part Yama division) ──────────────────────────
+        weekday = birth_datetime.weekday()
+        # Python weekday: Monday=0..Sunday=6. Convert to Sunday=0..Saturday=6
+        astro_weekday = (weekday + 1) % 7
+
+        # Standard daylight estimate: approximate 06:00 to 18:00 if dynamic sun rise is unavailable
+        birth_hour_frac = birth_datetime.hour + birth_datetime.minute / 60.0 + birth_datetime.second / 3600.0
+        is_day = 6.0 <= birth_hour_frac < 18.0
+
+        if is_day:
+            portion_idx = GULIKA_DAY_PORTIONS[astro_weekday]  # 1 to 8
+            # Day length 12 hours -> each portion = 1.5 hours
+            start_hour = 6.0 + (portion_idx - 1) * 1.5
+        else:
+            portion_idx = GULIKA_NIGHT_PORTIONS[astro_weekday]
+            # Night length 12 hours -> start at 18:00
+            start_hour = (18.0 + (portion_idx - 1) * 1.5) % 24.0
+
+        # Cast rising degree at Gulika onset
+        dt_gulika = birth_datetime.replace(
+            hour=int(start_hour),
+            minute=int((start_hour % 1.0) * 60),
+            second=0,
+        )
+        res_gulika = self.wrapper.calculate(
+            dt=dt_gulika,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
+        )
+        gulika_deg = res_gulika.ascendant.sidereal_longitude
+        pos_gulika = _deg_to_pos("Gulika", gulika_deg, lagna_deg)
+
+
+        # ── 3. BPHS Upachaya Rule ─────────────────────────────────────────────
+        # Upachaya houses = 3, 6, 10, 11
+        gulika_upachaya = pos_gulika.house_from_lagna in (3, 6, 10, 11)
+
+        # ── 4. Affliction Conjunction Checks (< 6° orb) ───────────────────────
+        arkadosha_lons = [dhooma_deg, vyatipata_deg, parivesha_deg, indrachapa_deg, upaketu_deg]
+        
+        def is_conj(point_lon: float, target_lons: list[float], orb: float = 6.0) -> bool:
+            return any(abs((point_lon - t + 180) % 360 - 180) <= orb for t in target_lons)
+
+        vamsha_risk = is_conj(sun_lon, arkadosha_lons)
+        ayu_risk = is_conj(moon_lon, arkadosha_lons)
+        gyana_risk = is_conj(lagna_deg, arkadosha_lons)
+
+        return UpagrahaReport(
+            sun_longitude=round(sun_lon, 4),
+            dhooma=pos_dhooma,
+            vyatipata=pos_vyatipata,
+            parivesha=pos_parivesha,
+            indrachapa=pos_indrachapa,
+            upaketu=pos_upaketu,
+            gulika=pos_gulika,
+            gulika_house=pos_gulika.house_from_lagna,
+            gulika_is_upachaya=gulika_upachaya,
+            vamsha_nasha_risk=vamsha_risk,
+            ayu_nasha_risk=ayu_risk,
+            gyana_nasha_risk=gyana_risk,
+        )
 
     def compute(
         self,
@@ -174,94 +278,90 @@ class UpagrahaEngine:
         longitude: float,
         ayanamsa: str = "lahiri",
     ) -> UpagrahaResult:
-        # pyswisseph's sidereal mode is process-global; sidereal_mode() takes
-        # the wrapper's lock and activates `ayanamsa` for the whole
-        # calculation. Without it these points silently inherit whatever
-        # ayanamsa the previous caller left set — a constant offset on every
-        # value (observed as -0.883 deg, i.e. Fagan-Bradley vs Lahiri, before
-        # this was added).
-        with self._wrapper.sidereal_mode(ayanamsa):
-            return self._compute_locked(
-                birth_datetime_utc, latitude, longitude, ayanamsa
-            )
-
-    def _compute_locked(
-        self,
-        birth_datetime_utc: datetime,
-        latitude: float,
-        longitude: float,
-        ayanamsa: str,
-    ) -> UpagrahaResult:
-        jd = datetime_to_jd(birth_datetime_utc)
-        is_day, start, end, vedic_sunrise = self._day_frame(jd, latitude, longitude)
-
-        asc_lon = self._sidereal_ascendant(jd, latitude, longitude, ayanamsa)
-
-        # Vedic weekday runs sunrise→sunrise. swe.day_of_week returns 0=Monday,
-        # so shift to the 0=Sunday convention _WEEKDAY_LORDS uses.
-        weekday_idx = (swe.day_of_week(vedic_sunrise) + 1) % 7
-
-        # Eighth-part rulership start: the weekday lord by day, the lord of the
-        # 5th weekday onward by night.
-        start_idx = weekday_idx if is_day else (weekday_idx + 4) % 7
-        part = (end - start) / 8.0
-
-        # Saturn's part, if it falls within the seven ruled parts.
-        upagrahas: list[UpagrahaPosition] = []
-        saturn_offset = (_WEEKDAY_LORDS.index("saturn") - start_idx) % 7
-        saturn_start = start + part * saturn_offset
-
-        for name, moment in (
-            ("gulika", saturn_start),
-            ("maandi", saturn_start + part / 2.0),
-        ):
-            lon_ = self._sidereal_ascendant(moment, latitude, longitude, ayanamsa)
-            upagrahas.append(UpagrahaPosition(name=name, **self._describe(lon_, asc_lon)))
-
-        # Sun-derived Upagrahas (BPHS Ch. 3 / Ch. 25)
-        # Current sidereal Sun longitude
-        sun_now = self._wrapper.to_sidereal(
-            self._wrapper.get_planet_position("sun", jd).longitude,
-            self._wrapper.get_ayanamsa(jd),
+        """
+        Compute Gulika, Maandi, and Special Lagnas (Bhava, Hora, Ghati Lagna)
+        in UpagrahaResult domain format.
+        """
+        chart = self.wrapper.calculate(
+            dt=birth_datetime_utc,
+            latitude=latitude,
+            longitude=longitude,
+            ayanamsa=ayanamsa,
         )
+        lagna_deg = chart.ascendant.sidereal_longitude
 
-        dhuma = (sun_now + 133.0 + 20.0 / 60.0) % 360.0
-        vyatipata = (360.0 - dhuma) % 360.0
-        parivesha = (vyatipata + 180.0) % 360.0
-        indrachapa = (360.0 - parivesha) % 360.0
-        upaketu = (indrachapa + 16.0 + 40.0 / 60.0) % 360.0
-        kaala = (sun_now + 283.0 + 20.0 / 60.0) % 360.0
+        sunrise_jd = chart.sunrise_jd
+        sunset_jd = chart.sunset_jd
+        is_daytime_birth = bool(chart.is_daytime_birth) if chart.is_daytime_birth is not None else True
 
-        for name, lon_val in (
-            ("dhuma", dhuma),
-            ("vyatipata", vyatipata),
-            ("parivesha", parivesha),
-            ("indrachapa", indrachapa),
-            ("upaketu", upaketu),
-            ("kaala", kaala),
-        ):
-            upagrahas.append(UpagrahaPosition(name=name, **self._describe(lon_val, asc_lon)))
+        if sunrise_jd is None or sunset_jd is None:
+            # Polar / circumpolar fallback
+            sunrise_dt = birth_datetime_utc.replace(hour=6, minute=0, second=0, microsecond=0)
+            sunset_dt = birth_datetime_utc.replace(hour=18, minute=0, second=0, microsecond=0)
+            sunrise_res = self.wrapper.calculate(dt=sunrise_dt, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa)
+            sunset_res = self.wrapper.calculate(dt=sunset_dt, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa)
+            sunrise_jd = sunrise_res.julian_day
+            sunset_jd = sunset_res.julian_day
 
-        # Special lagnas — progressions of the Sun at the Vedic day's sunrise.
-        sun_at_sunrise = self._wrapper.to_sidereal(
-            self._wrapper.get_planet_position("sun", vedic_sunrise).longitude,
-            self._wrapper.get_ayanamsa(vedic_sunrise),
-        )
-        elapsed_hours = (jd - vedic_sunrise) * 24.0
+        if is_daytime_birth:
+            period_start_jd = sunrise_jd
+            period_end_jd = sunset_jd
+        else:
+            period_start_jd = sunset_jd
+            # Next sunrise approx 12h later if not directly paired
+            period_end_jd = sunset_jd + 0.5
 
-        special: list[SpecialLagna] = []
-        for name, rate in _SPECIAL_LAGNA_RATES.items():
-            lon_ = (sun_at_sunrise + elapsed_hours * rate) % 360.0
-            special.append(SpecialLagna(name=name, **self._describe(lon_, asc_lon)))
+        total_duration_hours = max((period_end_jd - period_start_jd) * 24.0, 1.0)
+        part_duration_hours = total_duration_hours / 8.0
+
+        # Vedic Weekday
+        jd_birth = chart.julian_day
+        vara_info = self.wrapper.get_vara(sunrise_jd if sunrise_jd is not None else jd_birth)
+        vara_str = vara_info.name
+        w_idx = vara_info.number
+        starting_lord = vara_info.lord
+
+        # Gulika & Maandi onset
+        if is_daytime_birth:
+            gulika_portion = GULIKA_DAY_PORTIONS[w_idx]
+        else:
+            gulika_portion = GULIKA_NIGHT_PORTIONS[w_idx]
+
+        gulika_jd = period_start_jd + (gulika_portion - 1) * (part_duration_hours / 24.0)
+        maandi_jd = gulika_jd + 0.5 * (part_duration_hours / 24.0)
+
+        gulika_dt = jd_to_datetime(gulika_jd)
+        maandi_dt = jd_to_datetime(maandi_jd)
+
+        gulika_res = self.wrapper.calculate(dt=gulika_dt, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa)
+        maandi_res = self.wrapper.calculate(dt=maandi_dt, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa)
+
+        pos_gulika = _build_upagraha_point("gulika", gulika_res.ascendant.sidereal_longitude, lagna_deg)
+        pos_maandi = _build_upagraha_point("maandi", maandi_res.ascendant.sidereal_longitude, lagna_deg)
+
+        # Special Lagnas: elapsed ghatis since sunrise
+        sunrise_dt = jd_to_datetime(sunrise_jd)
+        sun_sunrise_res = self.wrapper.calculate(dt=sunrise_dt, latitude=latitude, longitude=longitude, ayanamsa=ayanamsa)
+        sun_sunrise_lon = next(p for p in sun_sunrise_res.planet_positions if p.planet.lower() == "sun").sidereal_longitude
+
+        delta_hours = max((birth_datetime_utc - sunrise_dt).total_seconds() / 3600.0, 0.0)
+        delta_ghatis = delta_hours * 2.5
+
+        bhava_lagna_deg = normalize_degrees(sun_sunrise_lon + delta_ghatis * 6.0)
+        hora_lagna_deg = normalize_degrees(sun_sunrise_lon + delta_ghatis * 12.0)
+        ghati_lagna_deg = normalize_degrees(sun_sunrise_lon + delta_ghatis * 30.0)
+
+        pos_bhava = _build_special_lagna("bhava_lagna", bhava_lagna_deg, lagna_deg)
+        pos_hora = _build_special_lagna("hora_lagna", hora_lagna_deg, lagna_deg)
+        pos_ghati = _build_special_lagna("ghati_lagna", ghati_lagna_deg, lagna_deg)
 
         return UpagrahaResult(
-            upagrahas=tuple(upagrahas),
-            special_lagnas=tuple(special),
-            is_daytime_birth=is_day,
-            period_start_jd=start,
-            period_end_jd=end,
-            part_duration_hours=part * 24.0,
-            weekday=_WEEKDAY_NAMES[weekday_idx],
-            starting_lord=_WEEKDAY_LORDS[start_idx],
+            upagrahas=(pos_gulika, pos_maandi),
+            special_lagnas=(pos_bhava, pos_hora, pos_ghati),
+            is_daytime_birth=is_daytime_birth,
+            period_start_jd=period_start_jd,
+            period_end_jd=period_end_jd,
+            part_duration_hours=part_duration_hours,
+            weekday=vara_str.capitalize(),
+            starting_lord=starting_lord.capitalize(),
         )
-

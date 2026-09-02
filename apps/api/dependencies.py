@@ -19,7 +19,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from fastapi import Request as _Request
 
 from apps.api.config import Settings, get_settings
-from apps.api.domain.user import User, UserRole
+from apps.api.domain.user import User, UserId, UserRole, UserStatus
+
 from apps.api.repositories.ai_settings_repository import AISettingsRepository
 from apps.api.repositories.dataset_repository import DatasetRepository
 from apps.api.repositories.event_repository import EventRepository
@@ -319,12 +320,38 @@ async def get_geocoding_service(request: Request):
 
 
 # ── Auth Guard ────────────────────────────────────────────────────────────────
+#
+# DEV_BYPASS_AUTH=true  → skips all token verification in local development.
+# This env var is NEVER set in production; it is checked at runtime so there
+# is zero overhead in prod even if the code path exists.
+
+import os as _os
+from datetime import datetime as _datetime
+from uuid import UUID as _UUID
+
+
+def _dev_user() -> "User":
+    """Return a synthetic admin user for local dev when DEV_BYPASS_AUTH=true."""
+    return User(
+        id=UserId(value=_UUID("00000000-0000-0000-0000-000000000001")),
+        email="dev@astroos.local",
+        display_name="Dev User",
+        hashed_password="",
+        role=UserRole.ADMIN,
+        status=UserStatus.ACTIVE,
+        created_at=_datetime(2024, 1, 1),
+        updated_at=_datetime(2024, 1, 1),
+    )
 
 
 async def get_current_user_from_bearer(
     request: Request,
     auth_service: AuthService = Depends(get_auth_service),
 ) -> User:
+    # ── Local development auth bypass ────────────────────────────────────────
+    if _os.environ.get("DEV_BYPASS_AUTH", "").lower() == "true":
+        return _dev_user()
+
     auth_header = request.headers.get("Authorization", "")
     if not auth_header.startswith("Bearer "):
         raise HTTPException(

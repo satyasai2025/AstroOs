@@ -32,7 +32,7 @@ export function CommandPalette() {
 
   const commands = [
     { label: "Dashboard", path: "/dashboard", section: "Navigation" },
-    { label: "AI Insights", path: "/ai/explain", section: "Navigation" },
+    { label: "Phalita MoE AI", path: "/phalita", section: "Navigation" },
     { label: "Research Patterns", path: "/research/patterns", section: "Navigation" },
     { label: "Chart Library", path: "/charts/history", section: "Navigation" },
     { label: "Transits", path: "/charts/transit", section: "Navigation" },

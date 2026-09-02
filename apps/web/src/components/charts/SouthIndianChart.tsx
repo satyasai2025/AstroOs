@@ -127,11 +127,13 @@ export function SouthIndianChart({
       <svg
         viewBox={`-20 -20 ${size + 40} ${size + 40}`}
         preserveAspectRatio="xMidYMid meet"
-        className="w-full h-auto max-w-[400px] mx-auto block shrink-0 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800"
         style={{
+          width: `${size}px`,
+          maxWidth: "100%",
           backgroundColor: "var(--chart-bg, #ffffff)",
           fontFamily: "var(--font-inter, sans-serif)",
         }}
+        className="h-auto mx-auto block shrink-0 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800"
       >
         {/* Background */}
         <rect

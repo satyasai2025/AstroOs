@@ -140,6 +140,29 @@ export type DashaSystemCode =
   | "chara"
   | "narayana";
 
+export function normalizeHouseSystem(val?: string | null): HouseSystemCode {
+  if (!val) return "W";
+  const str = String(val).trim().toUpperCase();
+  if (str === "W" || str === "WHOLE_SIGN" || str === "WHOLE SIGN" || str === "WHOLESIGN") return "W";
+  if (str === "P" || str === "PLACIDUS") return "P";
+  if (str === "K" || str === "KOCH") return "K";
+  if (str === "E" || str === "EQUAL") return "E";
+  return "W";
+}
+
+export function normalizeAyanamsa(val?: string | null): AyanamsaCode {
+  if (!val) return "lahiri";
+  const str = String(val).trim().toLowerCase();
+  if (str === "lahiri" || str.includes("lahiri") || str.includes("chitra paksha")) return "lahiri";
+  if (str === "kp" || str.includes("kp") || str.includes("krishnamurti")) return "kp";
+  if (str === "raman" || str.includes("raman")) return "raman";
+  if (str === "yukteshwar" || str.includes("yukteshwar")) return "yukteshwar";
+  if (str === "fagan_bradley" || str.includes("fagan") || str.includes("bradley")) return "fagan_bradley";
+  if (str === "true_chitra" || str.includes("true_chitra") || str.includes("true chitra")) return "true_chitra";
+  if (str === "true_pushya" || str.includes("true_pushya") || str.includes("true pushya")) return "true_pushya";
+  return "lahiri";
+}
+
 export interface WorkflowAnalysisRequest {
   birth_datetime_utc: string;
   latitude: number;

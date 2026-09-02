@@ -163,6 +163,9 @@ class PanchangaResult:
     ayanamsa_deg: float
 
 
+from typing import Optional, Sequence
+
+
 @dataclass(frozen=True)
 class EphemerisResult:
     """Full ephemeris result for a given moment and location."""
@@ -170,8 +173,8 @@ class EphemerisResult:
     ayanamsa_value: float
     ayanamsa_system: str
     ascendant: Ascendant
-    house_cusps: list[HouseCusp]
-    planet_positions: list[SiderealPosition]
+    house_cusps: tuple[HouseCusp, ...]
+    planet_positions: tuple[SiderealPosition, ...]
     panchanga: PanchangaResult
     # Added in Module 9 Phase 0 (Foundation Extension) — needed by Kala
     # Bala's Nathonnata/Ayana/Tribhaga sub-components. Defaults keep
@@ -179,3 +182,16 @@ class EphemerisResult:
     sunrise_jd: Optional[float] = None   # Julian Day of sunrise on the birth date, at the birth location
     sunset_jd: Optional[float] = None    # Julian Day of sunset on the birth date, at the birth location
     is_daytime_birth: Optional[bool] = None  # True if birth falls between sunrise and sunset
+    # Provenance & reproducibility metadata
+    ephemeris_version: str = "SwissEphemeris"
+    se_flags: int = 0
+    time_scale: str = "UT"
+    conventions_hash: str = ""
+    content_hash: str = ""
+
+    def __post_init__(self) -> None:
+        if isinstance(self.house_cusps, list):
+            object.__setattr__(self, "house_cusps", tuple(self.house_cusps))
+        if isinstance(self.planet_positions, list):
+            object.__setattr__(self, "planet_positions", tuple(self.planet_positions))
+

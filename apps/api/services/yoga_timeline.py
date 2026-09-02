@@ -92,7 +92,7 @@ def _flatten_periods(
     full_name = " / ".join((*ancestor_names, current_name)) if ancestor_names else current_name
 
     if level <= max_depth and period.lord in involved_planets:
-        is_current = period.start_date <= today <= period.end_date
+        is_current = period.contains(today)
         activations.append(YogaActivation(
             yoga_id="",  # filled in by caller
             planet=period.lord,

@@ -75,7 +75,12 @@ export function useSetDefaultChart() {
 import { useCallback, useMemo } from "react";
 import { useWorkflowStore } from "./store";
 import { useAnalyzeWorkflow } from "./workflow";
-import type { BirthChartSummary, WorkflowAnalysisRequest } from "./types";
+import {
+  normalizeAyanamsa,
+  normalizeHouseSystem,
+  type BirthChartSummary,
+  type WorkflowAnalysisRequest,
+} from "./types";
 
 /**
  * Global Active Chart Hook.
@@ -93,8 +98,8 @@ export function useActiveChart() {
         birth_datetime_utc: chart.birth_datetime_utc,
         latitude: chart.birth_latitude,
         longitude: chart.birth_longitude,
-        ayanamsa: (chart.ayanamsa || "lahiri") as WorkflowAnalysisRequest["ayanamsa"],
-        house_system: (chart.house_system || "placidus") as WorkflowAnalysisRequest["house_system"],
+        ayanamsa: normalizeAyanamsa(chart.ayanamsa),
+        house_system: normalizeHouseSystem(chart.house_system),
         dasha_system: "vimshottari",
         include_vargas: true,
         subject_name: chart.subject_name,
@@ -104,6 +109,13 @@ export function useActiveChart() {
       };
       const data = await analyze.mutateAsync(req);
       setResult(data, req);
+      try {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("astroos_last_viewed_chart_id", chart.id);
+        }
+      } catch {
+        // ignore
+      }
       return data;
     },
     [analyze, setResult]

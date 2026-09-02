@@ -1,8 +1,9 @@
 """
-AstroOS — Database Backup & Restore Manager
+AstroOS — Database & Codebase Backup Manager
 
 Features:
-- Automated compressed (.dump) backups with timestamping and SHA256 checksums.
+- Automated compressed (.dump) database backups with timestamping and SHA256 checksums.
+- Automated full Git repository bundle (.bundle) code backups preserving all commits, branches, and tags.
 - Automatic PostgreSQL binary discovery (Windows, Linux, macOS).
 - Reads database configuration directly from `.env`.
 - Retention policy management (prunes older backups automatically).
@@ -11,11 +12,12 @@ Features:
 - Pre-operation safety snapshots before running migrations or imports.
 
 Usage:
-  python scripts/backup_manager.py backup [--db astroos_db] [--dir D:/AstroOS_Backups]
+  python scripts/backup_manager.py backup [--all] [--db astroos_db] [--dir D:/AstroOS_Backups]
+  python scripts/backup_manager.py backup-code [--dir D:/AstroOS_Backups/codebase]
   python scripts/backup_manager.py list
   python scripts/backup_manager.py restore [BACKUP_FILE_OR_LATEST] [--db astroos_db]
   python scripts/backup_manager.py snapshot [--name before_migration]
-  python scripts/backup_manager.py schedule [--interval-hours 6]
+  python scripts/backup_manager.py schedule [--interval-hours 4]
 """
 
 from __future__ import annotations
@@ -128,6 +130,59 @@ def get_default_backup_dir() -> Path:
     return get_repo_root() / "backups"
 
 
+def run_codebase_backup(
+    backup_dir: Path | None = None,
+    retention: int = 15,
+    tag: str = "",
+) -> Path:
+    """Create a full self-contained Git bundle backup of the entire AstroOS codebase."""
+    root = get_repo_root()
+    target_dir = (backup_dir or get_default_backup_dir()) / "codebase"
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    suffix = f"_{tag}" if tag else ""
+    bundle_filename = f"AstroOS_code_{ts}{suffix}.bundle"
+    bundle_path = target_dir / bundle_filename
+
+    print(f"[*] Starting codebase bundle backup...")
+    print(f"[*] Destination: {bundle_path}")
+
+    cmd = ["git", "bundle", "create", str(bundle_path), "--all"]
+    result = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"Git bundle creation failed:\n{result.stderr}")
+
+    size_mb = bundle_path.stat().st_size / (1024 * 1024)
+    sha256 = calculate_sha256(bundle_path)
+
+    meta_path = target_dir / f"AstroOS_code_{ts}{suffix}.meta.json"
+    metadata = {
+        "type": "git_bundle",
+        "timestamp": ts,
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "size_mb": round(size_mb, 2),
+        "sha256": sha256,
+        "tag": tag or "scheduled",
+    }
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=2)
+
+    print(f"[+] Codebase bundle created successfully!")
+    print(f"    File: {bundle_path.name} ({size_mb:.2f} MB)")
+    print(f"    SHA256: {sha256[:16]}...")
+
+    # Retention enforcement
+    bundles = sorted(target_dir.glob("AstroOS_code_*.bundle"), key=lambda x: x.stat().st_mtime, reverse=True)
+    if len(bundles) > retention:
+        for old in bundles[retention:]:
+            old.unlink(missing_ok=True)
+            old.with_suffix(".meta.json").unlink(missing_ok=True)
+            print(f"    - Pruned old codebase bundle: {old.name}")
+
+    return bundle_path
+
+
 def run_backup(
     dbname: str | None = None,
     backup_dir: Path | None = None,
@@ -215,7 +270,7 @@ def apply_retention_policy(target_dir: Path, dbname: str, keep_count: int = 15) 
 
 
 def list_backups(backup_dir: Path | None = None) -> list[dict]:
-    """List all available backup dumps and their metadata."""
+    """List all available backup dumps, code bundles, and their metadata."""
     target_dir = backup_dir or get_default_backup_dir()
     if not target_dir.exists():
         print(f"[!] Backup directory does not exist: {target_dir}")
@@ -224,22 +279,37 @@ def list_backups(backup_dir: Path | None = None) -> list[dict]:
     dumps = sorted(target_dir.glob("*.dump"), key=lambda x: x.stat().st_mtime, reverse=True)
     results = []
     print(f"\n================================================================================")
-    print(f" AVAILABLE BACKUPS in {target_dir}")
+    print(f" AVAILABLE DATABASE BACKUPS in {target_dir}")
     print(f"================================================================================")
-    print(f"{'Filename':<42} {'Size':<10} {'Created (Local)':<22}")
+    print(f"{'Filename':<42} {'Size':<12} {'Created (Local)':<22}")
     print(f"--------------------------------------------------------------------------------")
     for d in dumps:
         size_kb = d.stat().st_size / 1024
         size_str = f"{size_kb/1024:.2f} MB" if size_kb > 1024 else f"{size_kb:.1f} KB"
         mtime = datetime.fromtimestamp(d.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
-        print(f"{d.name:<42} {size_str:<10} {mtime:<22}")
+        print(f"{d.name:<42} {size_str:<12} {mtime:<22}")
         results.append({
             "path": str(d),
             "filename": d.name,
             "size_bytes": d.stat().st_size,
             "modified": mtime,
         })
-    print(f"================================================================================\n")
+    print(f"================================================================================")
+
+    code_dir = target_dir / "codebase"
+    if code_dir.exists():
+        bundles = sorted(code_dir.glob("*.bundle"), key=lambda x: x.stat().st_mtime, reverse=True)
+        if bundles:
+            print(f"\n================================================================================")
+            print(f" AVAILABLE CODEBASE BUNDLES in {code_dir}")
+            print(f"================================================================================")
+            print(f"{'Filename':<42} {'Size':<12} {'Created (Local)':<22}")
+            print(f"--------------------------------------------------------------------------------")
+            for b in bundles:
+                size_mb = b.stat().st_size / (1024 * 1024)
+                mtime = datetime.fromtimestamp(b.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+                print(f"{b.name:<42} {size_mb:.2f} MB     {mtime:<22}")
+            print(f"================================================================================\n")
     return results
 
 
@@ -298,7 +368,7 @@ def run_restore(
     print(f"[+] Restore completed successfully into '{target_db}' from {backup_path.name}!")
 
 
-def schedule_windows_task(interval_hours: int = 6) -> None:
+def schedule_windows_task(interval_hours: int = 4) -> None:
     """Create or update a Windows Scheduled Task for automated backups."""
     if platform.system() != "Windows":
         print("[!] Automated Windows Task scheduling is only supported on Windows.")
@@ -332,15 +402,20 @@ def schedule_windows_task(interval_hours: int = 6) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="AstroOS Database Backup & Restore Manager")
+    parser = argparse.ArgumentParser(description="AstroOS Database & Codebase Backup Manager")
     subparsers = parser.add_subparsers(dest="action", help="Action to perform")
 
-    p_backup = subparsers.add_parser("backup", help="Run database backup")
+    p_backup = subparsers.add_parser("backup", help="Run database & codebase backup")
     p_backup.add_argument("--db", type=str, default=None, help="Target database name")
-    p_backup.add_argument("--all", action="store_true", help="Backup both astroos_db and astroos")
+    p_backup.add_argument("--all", action="store_true", help="Backup databases AND codebase bundle")
     p_backup.add_argument("--dir", type=str, default=None, help="Backup destination directory")
     p_backup.add_argument("--retention", type=int, default=15, help="Number of backups to retain")
     p_backup.add_argument("--tag", type=str, default="", help="Optional tag label")
+
+    p_code = subparsers.add_parser("backup-code", help="Create Git bundle backup of codebase")
+    p_code.add_argument("--dir", type=str, default=None, help="Backup directory")
+    p_code.add_argument("--retention", type=int, default=15, help="Number of bundles to retain")
+    p_code.add_argument("--tag", type=str, default="", help="Optional tag label")
 
     p_list = subparsers.add_parser("list", help="List available backups")
     p_list.add_argument("--dir", type=str, default=None, help="Backup directory")
@@ -354,7 +429,7 @@ def main():
     p_snap.add_argument("--name", type=str, default="pre_op", help="Snapshot tag name")
 
     p_sched = subparsers.add_parser("schedule", help="Register automated backup schedule")
-    p_sched.add_argument("--interval-hours", type=int, default=6, help="Interval in hours")
+    p_sched.add_argument("--interval-hours", type=int, default=4, help="Interval in hours")
 
     args = parser.parse_args()
 
@@ -366,8 +441,16 @@ def main():
                     run_backup(dbname=db, backup_dir=target_dir, retention=args.retention, tag=args.tag)
                 except Exception as e:
                     print(f"[!] Failed to back up '{db}': {e}")
+            try:
+                run_codebase_backup(backup_dir=target_dir, retention=args.retention, tag=args.tag)
+            except Exception as e:
+                print(f"[!] Failed to back up codebase bundle: {e}")
         else:
             run_backup(dbname=args.db, backup_dir=target_dir, retention=args.retention, tag=args.tag)
+
+    elif args.action == "backup-code":
+        target_dir = Path(args.dir) if args.dir else None
+        run_codebase_backup(backup_dir=target_dir, retention=args.retention, tag=args.tag)
 
     elif args.action == "list":
         target_dir = Path(args.dir) if args.dir else None
@@ -379,6 +462,7 @@ def main():
 
     elif args.action == "snapshot":
         run_backup(tag=args.name)
+        run_codebase_backup(tag=args.name)
 
     elif args.action == "schedule":
         schedule_windows_task(interval_hours=args.interval_hours)

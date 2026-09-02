@@ -64,6 +64,7 @@ interface DashboardOverviewProps {
    * store this session, if any — powers the two chart-specific widgets. */
   activeResult?: WorkflowAnalysisResponse | null;
   activeSubjectName?: string | null;
+  isLoadingChart?: boolean;
   onStartNewChart: () => void;
   onSelectChart?: (chart: BirthChartSummary) => void;
 }
@@ -376,7 +377,13 @@ function QuickAction({
 }
 
 
-export function DashboardOverview({ activeResult, activeSubjectName, onStartNewChart, onSelectChart }: DashboardOverviewProps) {
+export function DashboardOverview({
+  activeResult,
+  activeSubjectName,
+  isLoadingChart,
+  onStartNewChart,
+  onSelectChart,
+}: DashboardOverviewProps) {
   const hasSession = typeof window !== "undefined" && !!tokenStore.getAccess();
   const { data: user } = useCurrentUser();
   const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
@@ -385,7 +392,27 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
 
   const handleLoadActiveChartClick = () => {
     if (chartsData && chartsData.charts.length > 0) {
-      setIsPickerOpen(true);
+      let targetChart: BirthChartSummary | null = null;
+      try {
+        const lastViewedId =
+          typeof window !== "undefined"
+            ? localStorage.getItem("astroos_last_viewed_chart_id")
+            : null;
+        if (lastViewedId) {
+          targetChart = chartsData.charts.find((c) => c.id === lastViewedId) || null;
+        }
+      } catch {
+        // ignore
+      }
+      if (!targetChart) {
+        targetChart =
+          chartsData.charts.find((c) => c.is_default) || chartsData.charts[0] || null;
+      }
+      if (targetChart && onSelectChart) {
+        onSelectChart(targetChart);
+      } else {
+        setIsPickerOpen(true);
+      }
     } else {
       onStartNewChart();
     }
@@ -462,7 +489,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
   const recentLogs = activityLogs?.logs ?? [];
 
   return (
-    <div className="space-y-3">
+    <div id="main-content" className="space-y-3">
       {/* Title + New Chart button */}
       <div className="mb-3 flex items-center justify-between">
         <div>
@@ -522,7 +549,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
           Health Risk, Wealth, Dasha, Transit) — only for a chart actually
           loaded this session; no placeholder/demo chart is substituted. */}
       {activeResult && (
-        <div className="mb-3">
+        <div id="kpi-scorecards" className="mb-3">
           <h2 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
             Chart KPI Scorecards
           </h2>
@@ -587,18 +614,30 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
                 <p className="text-xs font-semibold text-slate-900 dark:text-slate-200">No chart loaded</p>
                 <p className="text-[11px] text-slate-600 dark:text-slate-400">Open or generate a chart to see its current dasha &amp; transits</p>
               </div>
-              <button
-                type="button"
-                onClick={handleLoadActiveChartClick}
-                className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-2.5 py-1 text-xs font-medium shadow-sm transition"
-              >
-                Load Active Chart
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handleLoadActiveChartClick}
+                  disabled={chartsLoading || isLoadingChart}
+                  className="rounded-md border border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 px-3 py-1.5 text-xs font-semibold shadow-sm transition cursor-pointer disabled:opacity-50"
+                >
+                  {isLoadingChart ? "Loading Chart…" : "Load Active Chart"}
+                </button>
+                {chartsData && chartsData.charts.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setIsPickerOpen(true)}
+                    className="rounded-md border border-slate-300 dark:border-slate-600 bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 px-2.5 py-1.5 text-xs font-medium shadow-sm transition cursor-pointer"
+                  >
+                    Select Chart…
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </Card>
 
-        <div className="flex flex-col">
+        <div id="panchanga-studio" className="flex flex-col">
           <DashboardPanchangaStudioCard
             result={
               activeResult ||
@@ -642,7 +681,7 @@ export function DashboardOverview({ activeResult, activeSubjectName, onStartNewC
 
       {/* Recent Charts + Research Activity + Quick Actions */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <Card>
+        <Card id="recent-charts-section">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-xs font-semibold uppercase tracking-wide text-cyan-700 dark:text-cyan-400">
               Recent Charts

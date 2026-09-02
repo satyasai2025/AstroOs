@@ -662,8 +662,14 @@ export const NAKSHATRAS: NakshatraDef[] = [
 
 // ── Lookup Helpers ─────────────────────────────────────────────────────────────
 
+function normalizeNakName(s: string): string {
+  return s.toLowerCase().replace(/[\s_-]+/g, "");
+}
+
 export function getNakshatraByName(name: string): NakshatraDef | undefined {
-  return NAKSHATRAS.find((n) => n.name.toLowerCase() === name.toLowerCase());
+  if (!name) return undefined;
+  const target = normalizeNakName(name);
+  return NAKSHATRAS.find((n) => normalizeNakName(n.name) === target);
 }
 
 export function getNakshatraByLongitude(siderealDeg: number): NakshatraDef {
@@ -699,8 +705,13 @@ export function getNavamshaByLongitude(siderealDeg: number): { navamsha: string;
 // ── Tara Bala Calculation ──────────────────────────────────────────────────────
 
 export function calculateTaraBala(birthNakshatra: string, targetNakshatra: string): TaraBalaResult {
-  const birthIdx = NAKSHATRAS.findIndex((n) => n.name.toLowerCase() === birthNakshatra.toLowerCase());
-  const targetIdx = NAKSHATRAS.findIndex((n) => n.name.toLowerCase() === targetNakshatra.toLowerCase());
+  if (!birthNakshatra || !targetNakshatra) {
+    return { category: "Unknown", lord: "Unknown", favorable: false, description: "Unknown nakshatra" };
+  }
+  const bNorm = normalizeNakName(birthNakshatra);
+  const tNorm = normalizeNakName(targetNakshatra);
+  const birthIdx = NAKSHATRAS.findIndex((n) => normalizeNakName(n.name) === bNorm);
+  const targetIdx = NAKSHATRAS.findIndex((n) => normalizeNakName(n.name) === tNorm);
   if (birthIdx === -1 || targetIdx === -1) {
     return { category: "Unknown", lord: "Unknown", favorable: false, description: "Unknown nakshatra" };
   }

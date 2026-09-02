@@ -43,48 +43,47 @@ class MundaneIngressEngine:
     def find_chaitra_shukla_pratipada(self, year: int, ayanamsa: str = "lahiri") -> MundaneIngressMoment:
         """
         Solves the exact instant of the New Moon (Amavasya ending / Shukla Pratipada start)
-        occurring in Pisces/Aries prior to or during the Sun's transit near 0° Aries.
+        initiating Chaitra Masa (first Sun-Moon conjunction occurring while Sun is in sidereal Pisces / Meena).
         """
-        # Initial search window: March 15 to April 25 of the given year
-        t_start = datetime(year, 3, 10, 0, 0, tzinfo=timezone.utc)
-        t_end = datetime(year, 4, 25, 0, 0, tzinfo=timezone.utc)
-
-        best_dt = t_start
-        min_diff = 360.0
-
-        # Step 1: 12-hour coarse scan
+        t_start = datetime(year, 3, 1, 0, 0, tzinfo=timezone.utc)
+        t_end = datetime(year, 4, 28, 0, 0, tzinfo=timezone.utc)
         cur = t_start
+        step = timedelta(hours=3)
+        best_dt = t_start
+
         while cur <= t_end:
-            s_long, m_long = self._get_sun_moon_longitudes(cur, ayanamsa)
-            diff = (m_long - s_long) % 360.0
+            res1 = self._wrapper.calculate(cur, 0.0, 0.0, ayanamsa)
+            s1 = next(p for p in res1.planet_positions if p.planet.lower() == "sun").sidereal_longitude
+            m1 = next(p for p in res1.planet_positions if p.planet.lower() == "moon").sidereal_longitude
+            diff1 = (m1 - s1) % 360.0
 
-            # Near New Moon (diff close to 0 or 360) and Sun is in late Pisces or early Aries (330° to 30°)
-            if (diff < 15.0 or diff > 345.0) and (s_long >= 325.0 or s_long <= 35.0):
-                ang_diff = diff if diff < 180.0 else (360.0 - diff)
-                if ang_diff < min_diff:
-                    min_diff = ang_diff
-                    best_dt = cur
-            cur += timedelta(hours=12)
+            nxt = cur + step
+            res2 = self._wrapper.calculate(nxt, 0.0, 0.0, ayanamsa)
+            s2 = next(p for p in res2.planet_positions if p.planet.lower() == "sun").sidereal_longitude
+            m2 = next(p for p in res2.planet_positions if p.planet.lower() == "moon").sidereal_longitude
+            diff2 = (m2 - s2) % 360.0
 
-        # Step 2: Bisection / Newton refinement to sub-second precision
-        left = best_dt - timedelta(hours=18)
-        right = best_dt + timedelta(hours=18)
-
-        for _ in range(30):
-            mid = left + (right - left) / 2
-            s_long, m_long = self._get_sun_moon_longitudes(mid, ayanamsa)
-            diff = (m_long - s_long) % 360.0
-            if diff > 180.0:
-                diff -= 360.0
-
-            if abs(diff) < 0.00005:  # ~0.18 arcsecond precision
+            # Conjunction occurs when diff crosses 0°/360° and Sun is in sidereal Pisces (>= 330°) or early Aries (<= 15°)
+            in_pisces_or_aries = (s1 >= 330.0 or s1 <= 15.0)
+            if (diff1 > 340.0 and diff2 < 20.0) and in_pisces_or_aries:
+                left = cur
+                right = nxt
+                for _ in range(30):
+                    mid = left + (right - left) / 2
+                    s_m, m_m = self._get_sun_moon_longitudes(mid, ayanamsa)
+                    d = (m_m - s_m) % 360.0
+                    if d > 180.0:
+                        d -= 360.0
+                    if abs(d) < 0.00005:  # ~0.18 arcsecond precision
+                        best_dt = mid
+                        break
+                    if d < 0:
+                        left = mid
+                    else:
+                        right = mid
                 best_dt = mid
                 break
-
-            if diff < 0:
-                left = mid
-            else:
-                right = mid
+            cur = nxt
 
         s_final, m_final = self._get_sun_moon_longitudes(best_dt, ayanamsa)
         weekday_idx = best_dt.weekday()  # 0=Monday, 6=Sunday

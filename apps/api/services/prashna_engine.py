@@ -1104,12 +1104,12 @@ class PrashnaEngine:
         dasha_tree = self._dasha.compute_vimshottari(dt, lat, lon, ayanamsa, max_depth=2)
         query_date = dt.date()
         active_maha = next(
-            (m for m in dasha_tree.mahadashas if m.start_date <= query_date <= m.end_date),
+            (m for m in dasha_tree.mahadashas if m.contains(query_date)),
             dasha_tree.mahadashas[0] if dasha_tree.mahadashas else None,
         )
         dasha_maha = active_maha.lord.capitalize() if active_maha else moon_lords["star_lord"].capitalize()
         active_antar = (
-            next((s for s in active_maha.sub_periods if s.start_date <= query_date <= s.end_date),
+            next((s for s in active_maha.sub_periods if s.contains(query_date)),
                  active_maha.sub_periods[0] if active_maha.sub_periods else None)
             if active_maha else None
         )

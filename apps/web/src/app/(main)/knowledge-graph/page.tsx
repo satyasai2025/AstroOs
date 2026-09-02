@@ -7,6 +7,7 @@ import { useWorkflowStore } from "@/lib/store";
 import { useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import type { WorkflowAnalysisRequest, WorkflowAnalysisResponse } from "@/lib/types";
+import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 import { HouseDependencyNetwork } from "@/components/charts/HouseDependencyNetwork";
 import PlanetRelationshipGraph2 from "@/components/charts/PlanetRelationshipGraph2";
 import { TransitTimeline } from "@/components/charts/TransitTimeline";
@@ -462,8 +463,8 @@ export default function KnowledgeGraphPage() {
       birth_datetime_utc: targetSummary.birth_datetime_utc,
       latitude: targetSummary.birth_latitude,
       longitude: targetSummary.birth_longitude,
-      ayanamsa: targetSummary.ayanamsa as WorkflowAnalysisRequest["ayanamsa"],
-      house_system: targetSummary.house_system as WorkflowAnalysisRequest["house_system"],
+      ayanamsa: normalizeAyanamsa(targetSummary.ayanamsa),
+      house_system: normalizeHouseSystem(targetSummary.house_system),
       dasha_system: "vimshottari",
       include_vargas: true,
       subject_name: targetSummary.subject_name,

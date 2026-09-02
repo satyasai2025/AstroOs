@@ -1,20 +1,30 @@
 """
-AstroOS — TPhalitCore: Deterministic Classical Vedic Astrological Feature Vectorizer
-=====================================================================================
+AstroOS — TPhalitCore: Canonical Vedic Astrological Feature Vectorizer
+=====================================================================
 
-Implements the fundamental principle:
-"AI ko kachcha ganita nahi, vyakhyayita phalita khilana chahiye."
-(Convert raw astronomical coordinates into deterministic, signed numerical features [-1.0, +1.0]).
-
-Guaranteed Invariants:
-1. Zero Hallucination: 100% deterministic mathematical calculations from classical shastras
-   (BPHS, Jaimini Upadesha, Laghu Parashari, Sarvato-Bhadra Chakra).
-2. Tri-Lagna Triangulation: Synthesizes Lagna, Chandra Lagna, and Surya Lagna dignities.
-3. Main Strength (9 to 1 scale): Uccha (+1.0), Moolatrikona (+0.8), Swakshetra (+0.6),
-   Paramamitra (+0.4), Mitra (+0.2), Sama (0.0), Shatru (-0.2), Atishatru (-0.4), Neecha (-1.0).
-4. Varga Vimshopaka integration: Composite harmonic weighting (D1-D60).
-5. 5-Level Vimshottari Dasha Confluence & Sadharmi planetary interactions.
-6. Domain-Specific Event Signatures: Career, Marriage, Health, Wealth, Relocation.
+Canonical Specification from Vinay Ji's 78-Document Knowledge Base:
+1. "AI ko kachcha ganita nahi, vyakhyayita phalita khilana chahiye."
+   (Translates raw astronomical coordinates into signed numerical features [-1.0, +1.0]).
+2. Planetary Main Strength (0-60 Base-2 Logarithmic Scale):
+   - Exalted (Uchcha): 60
+   - Moolatrikona (MT): 45
+   - Own Sign (Svagrihi): 30
+   - Great Friend (Adhi-Mitra): 22
+   - Friend (Mitra): 15
+   - Neutral (Sama): 8
+   - Enemy (Shatru): 4
+   - Great Enemy (Adhi-Shatru): 2
+   - Debilitated (Neecha): 0 (Neechabhanga upgrades to 30)
+   (Shadbala is strictly a tie-breaker).
+3. Start Page House Hierarchies:
+   - House Placement (Good -> Bad): 1 > 9 > 5 > 10 > 4 > 7 >> 3 > 11 > 2 > 6 > 8 > 12
+   - House Lordship (Benefic -> Malefic): 1 > 9 > 5 > 10 > 4 > 7 >> 2 > 8 > 12 > 3 > 6 > 11 (11L is primary functional malefic).
+4. Panchadha Maitree (5-Fold Friendship):
+   - Natural friends from Moolatrikona (2, 12, 5, 9, 4, 8, Exaltation) + Tatkalika (2, 3, 4, 10, 11, 12).
+5. Sudarshana Chakra (SC) Triangulation:
+   - Lagna Kundali (LK), Surya Kundali (SK), Chandra Kundali (CK).
+   - Special SC Rule: If Sun & Moon conjunct, discard LK, evaluate identical SK+CK.
+6. 128-Dimensional Signed Feature Vector for Tabular ML & MoE.
 """
 
 from __future__ import annotations
@@ -90,6 +100,51 @@ MOOLATRIKONA: Dict[str, Tuple[int, float, float]] = {
     "saturn": (10, 0.0, 20.0),  # Aquarius 0-20°
 }
 
+# Canonical 0–60 Base-2 Logarithmic Main Strength Scale (Vinay Ji Start Page & BPHS)
+MAIN_STRENGTH_SCALE = {
+    "UCHCHA": 60,
+    "MOOLATRIKONA": 45,
+    "SVAGRIHI": 30,
+    "ADHI_MITRA": 22,
+    "MITRA": 15,
+    "SAMA": 8,
+    "SHATRU": 4,
+    "ADHI_SHATRU": 2,
+    "NEECHA": 0,
+}
+
+# House Placement Score: 1 > 9 > 5 > 10 > 4 > 7 >> 3 > 11 > 2 > 6 > 8 > 12 (Mapped to [-1.0, +1.0])
+HOUSE_PLACEMENT_WEIGHTS: Dict[int, float] = {
+    1: 1.00,
+    9: 0.90,
+    5: 0.80,
+    10: 0.70,
+    4: 0.60,
+    7: 0.50,
+    3: 0.10,
+    11: 0.25,
+    2: -0.20,
+    6: -0.50,
+    8: -0.80,
+    12: -1.00,
+}
+
+# House Lordship Score: 1 > 9 > 5 > 10 > 4 > 7 >> 2 > 8 > 12 > 3 > 6 > 11 (11L is most malefic)
+HOUSE_LORDSHIP_WEIGHTS: Dict[int, float] = {
+    1: 1.00,
+    9: 0.90,
+    5: 0.80,
+    10: 0.70,
+    4: 0.60,
+    7: 0.50,
+    2: 0.00,
+    8: -0.40,
+    12: -0.60,
+    3: -0.70,
+    6: -0.85,
+    11: -1.00,
+}
+
 # Natural Friends, Neutrals, Enemies (Naisargika Sambandha - BPHS 3.55-58)
 NATURAL_RELATIONS: Dict[str, Dict[str, List[str]]] = {
     "sun": {
@@ -141,21 +196,23 @@ NATURAL_RELATIONS: Dict[str, Dict[str, List[str]]] = {
 
 
 # ---------------------------------------------------------------------------
-# Numerical Feature Struct
+# Output Dataclasses
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
 class TPhalitPlanetFeature:
     """Signed numerical features for a single planet."""
     name: str
-    main_strength_score: float      # [-1.0 (Neecha) to +1.0 (Paramoccha)]
-    main_strength_rank: int         # [1 to 9 scale]
+    main_strength_raw: int          # [0 to 60 logarithmic scale]
+    main_strength_score: float      # [-1.0 (Neecha) to +1.0 (Uchcha)]
+    main_strength_category: str     # UCHCHA, MOOLATRIKONA, SVAGRIHI, etc.
     rashi_idx: int                  # [0 to 11]
     bhava_from_lagna: int           # [1 to 12]
     bhava_from_moon: int            # [1 to 12]
     bhava_from_sun: int             # [1 to 12]
+    placement_score: float          # [-1.0 to +1.0] from Start Page hierarchy
+    functional_lordship_score: float# [-1.0 to +1.0] from Start Page hierarchy
     tri_lagna_benefic_score: float  # [-1.0 to +1.0]
-    functional_nature: float        # [+1.0 Benefic, -1.0 Malefic, 0.0 Neutral]
     is_retrograde: bool
     is_combust: bool
     has_neechabhanga: bool
@@ -192,6 +249,7 @@ class TPhalitDashaFeature:
     md_strength: float              # [-1.0 to +1.0]
     ad_strength: float              # [-1.0 to +1.0]
     sadharmi_relation: float        # Mutual relationship score [-1.0 to +1.0]
+    concordance_ratio: float        # [0.0 to 1.0] Majority agreement across 3 levels
     domain_fructification: Dict[str, float]  # Signed potential by domain
 
 
@@ -207,7 +265,7 @@ class TPhalitFeatureVector:
 
 
 # ---------------------------------------------------------------------------
-# Core Feature Extraction Class
+# Core Feature Extraction Engine
 # ---------------------------------------------------------------------------
 
 class TPhalitCore:
@@ -221,11 +279,18 @@ class TPhalitCore:
         planet: str,
         pos: SiderealPosition,
         chart: D1Chart,
-    ) -> Tuple[float, int, bool, float]:
-        """Compute the 9-to-1 Main Strength (Dignity) score mapped to [-1.0, +1.0]."""
+    ) -> Tuple[int, float, str, bool, float]:
+        """
+        Compute Main Strength (Mukhya Bala) on the canonical 0-60 Base-2 Logarithmic Scale.
+        Returns: (raw_score [0..60], normalized_score [-1.0..+1.0], category, has_neechabhanga, nb_score)
+        """
         p_name = planet.lower()
         rashi_idx = get_rashi_idx(pos.rashi)
         deg = float(pos.rashi_degree)
+
+        # Helper to convert 0..60 scale into normalized [-1.0, +1.0] where 30 (Svagrihi) is baseline 0.0
+        def norm(raw: int) -> float:
+            return (raw - 30) / 30.0
 
         # 1. Check Exaltation / Debilitation
         if p_name in DEEP_EXALTATION:
@@ -234,36 +299,46 @@ class TPhalitCore:
 
             if rashi_idx == ex_rashi:
                 dist = abs(deg - ex_deg)
-                score = 1.0 - (dist / 60.0) * 0.2
-                return (max(0.8, score), 9, False, 0.0)
+                raw = int(60 - (dist / 30.0) * 10)  # 60 at exact peak down to 50 in sign
+                return (raw, norm(raw), "UCHCHA", False, 0.0)
 
             if rashi_idx == deb_rashi:
                 has_nb, nb_score = self._check_neechabhanga(p_name, deb_rashi, chart)
                 if has_nb:
-                    return (-0.2 + 0.9 * nb_score, 6, True, nb_score)
+                    # Neechabhanga upgrades planet to Svagrihi-level baseline (30) + bonus
+                    raw = int(30 + 15 * nb_score)
+                    return (raw, norm(raw), "NEETHA_BHANGA", True, nb_score)
                 dist = abs(deg - ex_deg)
-                score = -1.0 + (dist / 60.0) * 0.2
-                return (min(-0.8, score), 1, False, 0.0)
+                raw = int((dist / 30.0) * 4)  # 0 at exact deb down to 4 in sign
+                return (raw, norm(raw), "NEECHA", False, 0.0)
 
         # 2. Check Moolatrikona
         if p_name in MOOLATRIKONA:
             mt_rashi, mt_start, mt_end = MOOLATRIKONA[p_name]
             if rashi_idx == mt_rashi and mt_start <= deg <= mt_end:
-                return (0.8, 8, False, 0.0)
+                raw = 45
+                return (raw, norm(raw), "MOOLATRIKONA", False, 0.0)
 
         # 3. Check Swakshetra (Own Sign)
         if RASHI_LORDS.get(rashi_idx) == p_name:
-            return (0.6, 7, False, 0.0)
+            raw = 30
+            return (raw, norm(raw), "SVAGRIHI", False, 0.0)
 
-        # 4. Temporal + Natural Relationship (Tatkalika + Naisargika Mitra)
+        # 4. Panchadha Maitree (5-Fold Relationship)
         sign_lord = RASHI_LORDS.get(rashi_idx)
         if not sign_lord:
-            return (0.0, 4, False, 0.0)
+            return (8, norm(8), "SAMA", False, 0.0)
 
-        rel_score = self._compute_panchadha_maitri(p_name, sign_lord, pos, chart)
-        score_map = {2: (0.4, 6), 1: (0.2, 5), 0: (0.0, 4), -1: (-0.2, 3), -2: (-0.4, 2)}
-        score, rank = score_map.get(rel_score, (0.0, 4))
-        return (score, rank, False, 0.0)
+        rel_val = self._compute_panchadha_maitri(p_name, sign_lord, pos, chart)
+        rel_map = {
+            2: (22, "ADHI_MITRA"),
+            1: (15, "MITRA"),
+            0: (8, "SAMA"),
+            -1: (4, "SHATRU"),
+            -2: (2, "ADHI_SHATRU"),
+        }
+        raw, cat = rel_map.get(rel_val, (8, "SAMA"))
+        return (raw, norm(raw), cat, False, 0.0)
 
     def _compute_panchadha_maitri(
         self,
@@ -284,6 +359,7 @@ class TPhalitCore:
         if not lord_pos:
             return natural_val
 
+        # Tatkalika: Planets in 2, 3, 4, 10, 11, 12 from each other are temporal friends (+1)
         diff = (get_rashi_idx(lord_pos.rashi) - get_rashi_idx(pos.rashi)) % 12
         temporal_val = 1 if diff in (1, 2, 3, 9, 10, 11) else -1
         return natural_val + temporal_val
@@ -295,21 +371,28 @@ class TPhalitCore:
         ex_lord = RASHI_LORDS.get(ex_rashi)
         lagna_rashi = get_rashi_idx(chart.ascendant.rashi)
 
+        moon_p = next((p for p in chart.planets if p.planet.lower() == "moon"), None)
+        moon_rashi = get_rashi_idx(moon_p.rashi) if moon_p else lagna_rashi
+
         criteria_met = 0
+
+        # Rule 1: Lord of debilitation sign is in Kendra from Lagna or Moon
         if deb_lord:
             deb_lord_p = next((p for p in chart.planets if p.planet.lower() == deb_lord), None)
             if deb_lord_p:
-                dist_lagna = (get_rashi_idx(deb_lord_p.rashi) - lagna_rashi) % 12
-                if dist_lagna in (0, 3, 6, 9):
+                dl_rashi = get_rashi_idx(deb_lord_p.rashi)
+                if (dl_rashi - lagna_rashi) % 12 in (0, 3, 6, 9) or (dl_rashi - moon_rashi) % 12 in (0, 3, 6, 9):
                     criteria_met += 1
 
+        # Rule 2: Lord of exaltation sign is in Kendra from Lagna or Moon
         if ex_lord:
             ex_lord_p = next((p for p in chart.planets if p.planet.lower() == ex_lord), None)
             if ex_lord_p:
-                dist_lagna = (get_rashi_idx(ex_lord_p.rashi) - lagna_rashi) % 12
-                if dist_lagna in (0, 3, 6, 9):
+                el_rashi = get_rashi_idx(ex_lord_p.rashi)
+                if (el_rashi - lagna_rashi) % 12 in (0, 3, 6, 9) or (el_rashi - moon_rashi) % 12 in (0, 3, 6, 9):
                     criteria_met += 1
 
+        # Rule 3: Planet is aspected by or conjunct with its dispositor
         if deb_lord:
             deb_lord_p = next((p for p in chart.planets if p.planet.lower() == deb_lord), None)
             cur_p = next((p for p in chart.planets if p.planet.lower() == planet), None)
@@ -326,7 +409,10 @@ class TPhalitCore:
         self,
         chart: D1Chart,
     ) -> Dict[str, Dict[str, Any]]:
-        """Compute Tri-Lagna (Lagna, Surya Lagna, Chandra Lagna) references."""
+        """
+        Compute Sudarshana Chakra Tri-Lagna (Lagna, Surya Lagna, Chandra Lagna) references.
+        Special Rule: If Sun & Moon are conjunct (same sign), LK is discarded and SK+CK is evaluated.
+        """
         lagna_rashi = get_rashi_idx(chart.ascendant.rashi)
 
         moon_p = next((p for p in chart.planets if p.planet.lower() == "moon"), None)
@@ -335,10 +421,13 @@ class TPhalitCore:
         sun_p = next((p for p in chart.planets if p.planet.lower() == "sun"), None)
         sun_rashi = get_rashi_idx(sun_p.rashi) if sun_p else lagna_rashi
 
+        is_amavasya_sc = (moon_rashi == sun_rashi)
+
         return {
-            "lagna": {"rashi_idx": lagna_rashi, "lord": RASHI_LORDS.get(lagna_rashi)},
+            "lagna": {"rashi_idx": lagna_rashi, "lord": RASHI_LORDS.get(lagna_rashi), "is_discarded": is_amavasya_sc},
             "chandra_lagna": {"rashi_idx": moon_rashi, "lord": RASHI_LORDS.get(moon_rashi)},
             "surya_lagna": {"rashi_idx": sun_rashi, "lord": RASHI_LORDS.get(sun_rashi)},
+            "is_amavasya_sc": is_amavasya_sc,
         }
 
     def compute_active_yogas(self, chart: D1Chart) -> List[TPhalitYogaFeature]:
@@ -365,7 +454,7 @@ class TPhalitCore:
         if "sun" in p_map and "mercury" in p_map:
             if get_rashi_idx(p_map["sun"].rashi) == get_rashi_idx(p_map["mercury"].rashi):
                 dist = abs(float(p_map["sun"].rashi_degree) - float(p_map["mercury"].rashi_degree))
-                strength = 0.6 if dist > 3.0 else 0.3
+                strength = 0.6 if dist > 3.0 else 0.3  # Reduced if severely combust
                 yogas.append(TPhalitYogaFeature(
                     yoga_name="Budhaditya Yoga",
                     category="DHANA",
@@ -373,8 +462,8 @@ class TPhalitCore:
                     is_cancelled=False,
                 ))
 
-        # 3. Vipareeta Raja Yoga (Harsha, Sarala, Vimala)
-        dusthana_houses = (5, 7, 11) # 0-indexed: 6th=5, 8th=7, 12th=11
+        # 3. Vipareeta Raja Yoga (Harsha, Sarala, Vimala per 7 canonical rules)
+        dusthana_houses = (5, 7, 11)  # 0-indexed: 6th=5, 8th=7, 12th=11
         dusthana_lords = [RASHI_LORDS.get((lagna_rashi + h) % 12) for h in dusthana_houses]
 
         for idx, lord_name in enumerate(dusthana_lords):
@@ -386,7 +475,7 @@ class TPhalitCore:
                     yogas.append(TPhalitYogaFeature(
                         yoga_name=yoga_title,
                         category="VRY",
-                        signed_strength=0.70,
+                        signed_strength=0.80,
                         is_cancelled=False,
                     ))
 
@@ -419,7 +508,7 @@ class TPhalitCore:
         target_date: date,
         chart: D1Chart,
     ) -> Optional[TPhalitDashaFeature]:
-        """Compute 5-level Dasha Confluence and Sadharmi interaction."""
+        """Compute 3-level Dasha Confluence (MD + AD + PD) & Sadharmi interaction."""
         if not dasha_tree:
             return None
 
@@ -429,13 +518,20 @@ class TPhalitCore:
 
         md_period: Optional[DashaPeriod] = None
         ad_period: Optional[DashaPeriod] = None
+        pd_lord: Optional[str] = None
 
         for md in periods:
-            if md.start_date <= target_date <= md.end_date:
+            if md.contains(target_date):
                 md_period = md
                 for ad in md.sub_periods:
-                    if ad.start_date <= target_date <= ad.end_date:
+                    if ad.contains(target_date):
                         ad_period = ad
+                        # Check Pratyantardasha (PD) if available in sub_periods
+                        if hasattr(ad, "sub_periods") and ad.sub_periods:
+                            for pd in ad.sub_periods:
+                                if pd.contains(target_date):
+                                    pd_lord = pd.lord.lower()
+                                    break
                         break
                 break
 
@@ -449,8 +545,8 @@ class TPhalitCore:
         md_pos = p_map.get(md_lord)
         ad_pos = p_map.get(ad_lord)
 
-        md_strength, _, _, _ = self.compute_planet_strength(md_lord, md_pos, chart) if md_pos else (0.0, 4, False, 0.0)
-        ad_strength, _, _, _ = self.compute_planet_strength(ad_lord, ad_pos, chart) if ad_pos else (0.0, 4, False, 0.0)
+        _, md_norm, _, _, _ = self.compute_planet_strength(md_lord, md_pos, chart) if md_pos else (8, 0.0, "SAMA", False, 0.0)
+        _, ad_norm, _, _, _ = self.compute_planet_strength(ad_lord, ad_pos, chart) if ad_pos else (8, 0.0, "SAMA", False, 0.0)
 
         # Sadharmi Relationship: Mutual angle between MD lord & AD lord
         sadharmi_rel = 0.0
@@ -467,6 +563,15 @@ class TPhalitCore:
             elif diff in (1, 11):      # 2/12 Dwirdwadashesha -> Loss/Expense
                 sadharmi_rel = -0.5
 
+        # 3-Level Concordance (Majority Rule)
+        pd_norm = 0.0
+        if pd_lord and pd_lord in p_map:
+            _, pd_norm, _, _, _ = self.compute_planet_strength(pd_lord, p_map[pd_lord], chart)
+
+        positive_count = sum(1 for s in (md_norm, ad_norm, pd_norm) if s > 0.1)
+        negative_count = sum(1 for s in (md_norm, ad_norm, pd_norm) if s < -0.1)
+        concordance = max(positive_count, negative_count) / 3.0
+
         lagna_rashi = get_rashi_idx(chart.ascendant.rashi)
         h10_lord = RASHI_LORDS.get((lagna_rashi + 9) % 12, "")
         h7_lord = RASHI_LORDS.get((lagna_rashi + 6) % 12, "")
@@ -474,19 +579,20 @@ class TPhalitCore:
         h11_lord = RASHI_LORDS.get((lagna_rashi + 10) % 12, "")
 
         domain_potentials = {
-            "career": self._score_domain_activation(md_lord, ad_lord, [h10_lord, "sun", "saturn", "mars"], md_strength, ad_strength, sadharmi_rel),
-            "marriage": self._score_domain_activation(md_lord, ad_lord, [h7_lord, "venus", "jupiter"], md_strength, ad_strength, sadharmi_rel),
-            "finance": self._score_domain_activation(md_lord, ad_lord, [h2_lord, h11_lord, "jupiter", "mercury"], md_strength, ad_strength, sadharmi_rel),
-            "health": self._score_health_activation(md_lord, ad_lord, lagna_rashi, md_strength, ad_strength, sadharmi_rel),
+            "career": self._score_domain_activation(md_lord, ad_lord, [h10_lord, "sun", "saturn", "mars"], md_norm, ad_norm, sadharmi_rel),
+            "marriage": self._score_domain_activation(md_lord, ad_lord, [h7_lord, "venus", "jupiter"], md_norm, ad_norm, sadharmi_rel),
+            "finance": self._score_domain_activation(md_lord, ad_lord, [h2_lord, h11_lord, "jupiter", "mercury"], md_norm, ad_norm, sadharmi_rel),
+            "health": self._score_health_activation(md_lord, ad_lord, lagna_rashi, md_norm, ad_norm, sadharmi_rel),
         }
 
         return TPhalitDashaFeature(
             mahadasha_lord=md_lord,
             antardasha_lord=ad_lord,
-            pratyantardasha_lord=None,
-            md_strength=md_strength,
-            ad_strength=ad_strength,
+            pratyantardasha_lord=pd_lord,
+            md_strength=md_norm,
+            ad_strength=ad_norm,
             sadharmi_relation=sadharmi_rel,
+            concordance_ratio=concordance,
             domain_fructification=domain_potentials,
         )
 
@@ -503,7 +609,7 @@ class TPhalitCore:
         is_md_sig = md_lord in significators
         is_ad_sig = ad_lord in significators
 
-        weight = 0.20
+        weight = 0.25
         if is_md_sig and is_ad_sig:
             weight = 1.0
         elif is_ad_sig:
@@ -553,26 +659,30 @@ class TPhalitCore:
         planet_features: Dict[str, TPhalitPlanetFeature] = {}
         for pos in chart.planets:
             p_name = pos.planet.lower()
-            str_score, str_rank, has_nb, nb_str = self.compute_planet_strength(p_name, pos, chart)
+            raw_str, norm_str, cat, has_nb, nb_str = self.compute_planet_strength(p_name, pos, chart)
 
             p_r_idx = get_rashi_idx(pos.rashi)
             b_lagna = ((p_r_idx - lagna_rashi) % 12) + 1
             b_moon = ((p_r_idx - moon_rashi) % 12) + 1
             b_sun = ((p_r_idx - sun_rashi) % 12) + 1
 
-            fn = self._compute_functional_nature(p_name, lagna_rashi)
-            tri_score = (str_score + (0.5 if b_lagna in (1, 4, 5, 7, 9, 10) else -0.3)) / 1.5
+            placement_score = HOUSE_PLACEMENT_WEIGHTS.get(b_lagna, 0.0)
+            lordship_score = self._compute_functional_lordship_score(p_name, lagna_rashi)
+
+            tri_score = (norm_str + placement_score + HOUSE_PLACEMENT_WEIGHTS.get(b_moon, 0.0)) / 3.0
 
             planet_features[p_name] = TPhalitPlanetFeature(
                 name=p_name,
-                main_strength_score=str_score,
-                main_strength_rank=str_rank,
+                main_strength_raw=raw_str,
+                main_strength_score=norm_str,
+                main_strength_category=cat,
                 rashi_idx=p_r_idx,
                 bhava_from_lagna=b_lagna,
                 bhava_from_moon=b_moon,
                 bhava_from_sun=b_sun,
+                placement_score=placement_score,
+                functional_lordship_score=lordship_score,
                 tri_lagna_benefic_score=max(-1.0, min(1.0, tri_score)),
-                functional_nature=fn,
                 is_retrograde=bool(pos.is_retrograde),
                 is_combust=bool(pos.is_combust),
                 has_neechabhanga=has_nb,
@@ -594,7 +704,7 @@ class TPhalitCore:
             )
             occ_score = max(-1.0, min(1.0, occ_score))
 
-            tot_str = 0.6 * lord_str + 0.4 * occ_score
+            tot_str = 0.5 * lord_str + 0.3 * occ_score + 0.2 * HOUSE_PLACEMENT_WEIGHTS.get(b_num, 0.0)
             bhava_features[b_num] = TPhalitBhavaFeature(
                 bhava_num=b_num,
                 rashi_idx=r_idx,
@@ -628,11 +738,11 @@ class TPhalitCore:
             if pf:
                 raw_vec.extend([
                     pf.main_strength_score,
-                    float(pf.main_strength_rank) / 9.0,
+                    float(pf.main_strength_raw) / 60.0,
                     float(pf.rashi_idx) / 11.0,
                     float(pf.bhava_from_lagna) / 12.0,
-                    pf.tri_lagna_benefic_score,
-                    pf.functional_nature,
+                    pf.placement_score,
+                    pf.functional_lordship_score,
                     1.0 if pf.is_retrograde else 0.0,
                     1.0 if pf.is_combust else 0.0,
                 ])
@@ -655,13 +765,14 @@ class TPhalitCore:
                 dasha_feat.md_strength,
                 dasha_feat.ad_strength,
                 dasha_feat.sadharmi_relation,
+                dasha_feat.concordance_ratio,
                 dasha_feat.domain_fructification["career"],
                 dasha_feat.domain_fructification["marriage"],
                 dasha_feat.domain_fructification["finance"],
                 dasha_feat.domain_fructification["health"],
             ])
         else:
-            raw_vec.extend([0.0] * 7)
+            raw_vec.extend([0.0] * 8)
 
         while len(raw_vec) < 128:
             raw_vec.append(0.0)
@@ -676,17 +787,17 @@ class TPhalitCore:
             raw_vector=raw_vec,
         )
 
-    def _compute_functional_nature(self, planet: str, lagna_rashi: int) -> float:
-        """Compute functional benefic/malefic nature per Laghu Parashari."""
-        trikonas = [0, 4, 8]
-        dusthanas = [5, 7, 11]
+    def _compute_functional_lordship_score(self, planet: str, lagna_rashi: int) -> float:
+        """Compute functional lordship score from Start Page hierarchy (11L is most malefic)."""
+        owned_houses: List[int] = []
+        for h in range(1, 13):
+            r_idx = (lagna_rashi + h - 1) % 12
+            if RASHI_LORDS.get(r_idx) == planet:
+                owned_houses.append(h)
 
-        trikona_lords = [RASHI_LORDS.get((lagna_rashi + t) % 12) for t in trikonas]
-        dusthana_lords = [RASHI_LORDS.get((lagna_rashi + d) % 12) for d in dusthanas]
+        if not owned_houses:
+            return 0.0
 
-        score = 0.0
-        if planet in trikona_lords:
-            score += 0.8
-        if planet in dusthana_lords:
-            score -= 0.7
-        return max(-1.0, min(1.0, score))
+        scores = [HOUSE_LORDSHIP_WEIGHTS.get(h, 0.0) for h in owned_houses]
+        return sum(scores) / len(scores)
+

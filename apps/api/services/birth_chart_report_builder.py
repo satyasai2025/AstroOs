@@ -364,7 +364,7 @@ class BirthChartReportBuilder:
             # The mahadasha actually running now, by date — not a positional
             # guess. Falls back to the first period for charts whose whole
             # cycle is still in the future.
-            if md.start_date <= today <= md.end_date:
+            if md.contains(today):
                 active_md_lord = md.lord.capitalize()
                 active_md_range = f"{_fmt(md.start_date)} – {_fmt(md.end_date)}"
                 # ALL antardasas of the running mahadasa — the report prints
@@ -376,7 +376,7 @@ class BirthChartReportBuilder:
                         "start": _fmt(a.start_date),
                         "end": _fmt(a.end_date),
                         "duration": _span(a.duration_days),
-                        "is_current": a.start_date <= today <= a.end_date,
+                        "is_current": a.contains(today),
                     }
                     for a in md.sub_periods
                 ]

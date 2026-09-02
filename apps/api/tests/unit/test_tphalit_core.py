@@ -48,9 +48,10 @@ def sample_dasha_tree():
 def test_tphalit_core_planet_dignity(sample_rajayoga_chart):
     core = TPhalitCore()
     sun_pos = next(p for p in sample_rajayoga_chart.planets if p.planet == "sun")
-    score, rank, has_nb, _ = core.compute_planet_strength("sun", sun_pos, sample_rajayoga_chart)
+    raw, score, cat, has_nb, _ = core.compute_planet_strength("sun", sun_pos, sample_rajayoga_chart)
 
-    assert rank == 9
+    assert raw == 60
+    assert cat == "UCHCHA"
     assert score >= 0.8
     assert not has_nb
 

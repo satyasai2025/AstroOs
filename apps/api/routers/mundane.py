@@ -21,15 +21,59 @@ from apps.api.schemas.mundane import (
     MundaneEclipseSchema,
     NationalForecastResponse,
     PlanetaryCabinetResponse,
+    RainfallTeleconnectionResponse,
+    SaptaNadiNadiStatusSchema,
 )
 from apps.api.services.ephemeris_wrapper import EphemerisWrapper
 from apps.api.services.kurma_chakra_engine import KurmaChakraEngine
+from apps.api.services.medini_teleconnection_engine import MediniTeleconnectionEngine
 from apps.api.services.mundane_analysis_engine import MundaneAnalysisEngine
 from apps.api.services.mundane_eclipse_engine import MundaneEclipseEngine
 from apps.api.services.mundane_ingress_engine import MundaneIngressEngine
 from apps.api.services.planetary_cabinet_engine import PlanetaryCabinetEngine
 
-router = APIRouter(prefix="/research/mundane", tags=["Research: Mundane Astrology & Geopolitics"])
+router = APIRouter(
+    prefix="/research/mundane",
+    tags=["Experimental Samhita Research — Not a Weather Forecasting Engine"],
+)
+
+
+@router.get("/rainfall-teleconnection/{year}", response_model=RainfallTeleconnectionResponse, status_code=status.HTTP_200_OK)
+def get_rainfall_teleconnection_forecast(
+    year: int,
+    ayanamsa: str = Query(default="lahiri"),
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> RainfallTeleconnectionResponse:
+    """Computes Vinay Jha's 61-Year Waveform Teleconnection & Sapta-Nadi Monsoon Forecast."""
+    engine = MediniTeleconnectionEngine(wrapper)
+    res = engine.compute_teleconnection_forecast(year, ayanamsa)
+
+    nadis_schema = [
+        SaptaNadiNadiStatusSchema(
+            nadi=n.nadi,
+            element=n.element,
+            occupying_planets=list(n.occupying_planets),
+            status=n.status,
+            analysis=n.analysis,
+        )
+        for n in res.active_nadis
+    ]
+
+    return RainfallTeleconnectionResponse(
+        target_year=res.target_year,
+        analogue_year_61=res.analogue_year_61,
+        analogue_year_122=res.analogue_year_122,
+        aridra_pravesha_utc=res.aridra_pravesha_utc,
+        meghadhipati=res.meghadhipati,
+        sasyeshadhipati=res.sasyeshadhipati,
+        active_nadis=nadis_schema,
+        predicted_monsoon_category=res.predicted_monsoon_category,
+        predicted_rainfall_pct_lpa=res.predicted_rainfall_pct_lpa,
+        sst_teleconnection_coupling=res.sst_teleconnection_coupling,
+        shastric_analysis=res.shastric_analysis,
+        research_citation=res.research_citation,
+    )
+
 
 
 @router.post("/chaitra-pratipada", response_model=IngressChartResponse, status_code=status.HTTP_200_OK)

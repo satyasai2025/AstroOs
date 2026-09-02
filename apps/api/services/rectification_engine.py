@@ -292,10 +292,10 @@ class RectificationEngine:
             return active
 
         for md in dasha_tree.periods:
-            if md.start_date <= target_date <= md.end_date:
+            if hasattr(md, "contains") and md.contains(target_date):
                 active.append(md.lord.lower())
                 for ad in md.sub_periods:
-                    if ad.start_date <= target_date <= ad.end_date:
+                    if hasattr(ad, "contains") and ad.contains(target_date):
                         active.append(ad.lord.lower())
                         break
                 break

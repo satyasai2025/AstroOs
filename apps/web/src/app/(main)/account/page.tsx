@@ -8,10 +8,12 @@ import {
   fetchDashboardSummary,
 } from "@/lib/billing";
 import { useCurrentUser } from "@/lib/auth";
+import { useWorkflowStore } from "@/lib/store";
 import { Badge, Button, Card, Icon } from "@/components/ui";
 
 export default function AccountDashboardPage() {
   const { data: user } = useCurrentUser();
+  const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"overview" | "charts" | "billing" | "security">("overview");
@@ -108,9 +110,13 @@ export default function AccountDashboardPage() {
                 />
               </div>
               <div className="flex items-center justify-between text-[11px] pt-1">
-                <Link href="/charts/birth" className="text-cyan-400 hover:underline font-medium">
+                <button
+                  type="button"
+                  onClick={() => openCreateModal("birth_chart")}
+                  className="text-cyan-400 hover:underline font-medium cursor-pointer"
+                >
                   + Calculate New Chart
-                </Link>
+                </button>
                 <Link href="/charts/history" className="text-slate-400 hover:text-white">
                   View All &rarr;
                 </Link>

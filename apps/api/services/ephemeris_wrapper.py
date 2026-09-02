@@ -204,8 +204,14 @@ def longitude_to_nakshatra(lon: float) -> NakshatraInfo:
     Each pada spans 3°20' = 360/108 degrees.
     """
     lon = _normalize(lon)
-    nak_index = int(lon / DEGREES_PER_NAKSHATRA)
-    nak_deg = lon - nak_index * DEGREES_PER_NAKSHATRA
+    nak_index_float = lon / DEGREES_PER_NAKSHATRA
+    if math.isclose(nak_index_float, round(nak_index_float), abs_tol=1e-9, rel_tol=0.0):
+        nak_index = int(round(nak_index_float)) % 27
+        nak_deg = 0.0
+    else:
+        nak_index = int(nak_index_float)
+        nak_deg = lon - nak_index * DEGREES_PER_NAKSHATRA
+
     pada = int(nak_deg / (DEGREES_PER_NAKSHATRA / PADAS_PER_NAKSHATRA)) + 1
     pada = min(pada, 4)  # guard against floating point edge
 
@@ -401,9 +407,10 @@ class EphemerisWrapper:
     ) -> None:
         import os
         self._path = os.path.abspath(ephemeris_path)
-        self._ayanamsa = ayanamsa
-        self._node_type = node_type if node_type in SWEPH_NODE_IDS else DEFAULT_NODE_TYPE
-        self._lock = threading.Lock()
+        if node_type not in SWEPH_NODE_IDS:
+            raise ValueError(f"Invalid node_type: {node_type!r}. Valid options: {list(SWEPH_NODE_IDS.keys())}")
+        self._node_type = node_type
+        self._lock = threading.RLock()
         swe.set_ephe_path(self._path)
         self._set_ayanamsa(ayanamsa)
 
@@ -424,17 +431,24 @@ class EphemerisWrapper:
         what calculate() already does for other reasons.
         """
         if planet == "rahu":
-            key = node_type if node_type in SWEPH_NODE_IDS else self._node_type
+            key = node_type if node_type is not None else self._node_type
+            if key not in SWEPH_NODE_IDS:
+                raise ValueError(f"Invalid node_type: {key!r}. Valid options: {list(SWEPH_NODE_IDS.keys())}")
             return SWEPH_NODE_IDS[key]
         return SWEPH_PLANET_IDS[planet]
 
     # ── Ayanamsa ──────────────────────────────────────────────────────────────
 
-    def _set_ayanamsa(self, ayanamsa: str) -> None:
+    def _set_ayanamsa(self, ayanamsa: str | AyanamsaSystem) -> None:
         """Configure the sidereal mode for Swiss Ephemeris."""
-        sid_id = _AYANAMSA_IDS.get(ayanamsa, swe.SIDM_LAHIRI)
+        key = ayanamsa.value if hasattr(ayanamsa, "value") else str(ayanamsa).lower()
+        sid_id = _AYANAMSA_IDS.get(key)
+        if sid_id is None:
+            raise ValueError(f"Unknown ayanamsa system: {ayanamsa!r}. Valid options: {list(_AYANAMSA_IDS.keys())}")
         swe.set_sid_mode(sid_id, 0, 0)
-        self._ayanamsa = ayanamsa
+        self._ayanamsa = key
+
+
 
     def get_ayanamsa(self, jd: float) -> float:
         """Return ayanamsa value in degrees for the given Julian Day."""
@@ -647,20 +661,26 @@ class EphemerisWrapper:
         planet: str,
         planet_lon: float,
         sun_lon: float,
+        is_retrograde: bool = False,
     ) -> tuple[bool, Optional[float]]:
         """
         Check if a planet is combust (within combustion orb of Sun).
 
         Returns (is_combust, orb_degrees).
         Sun and nodes are never combust.
+        Mercury orb is 12° when direct, 14° when retrograde.
         """
         if planet in ("sun", "rahu", "ketu"):
             return False, None
-        orb_limit = _COMBUSTION_ORBS.get(planet)
+        if planet == "mercury":
+            orb_limit = 14.0 if is_retrograde else 12.0
+        else:
+            orb_limit = _COMBUSTION_ORBS.get(planet)
         if orb_limit is None:
             return False, None
         orb = _angular_distance(planet_lon, sun_lon)
         return orb <= orb_limit, round(orb, 6)
+
 
     # ── Panchanga ─────────────────────────────────────────────────────────────
 
@@ -684,9 +704,14 @@ class EphemerisWrapper:
         _TITHI_NAMES = [
             "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami",
             "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami",
-            "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima/Amavasya",
+            "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi",
         ]
-        name = _TITHI_NAMES[display_number - 1]
+        if tithi_number == 15:
+            name = "Purnima"
+        elif tithi_number == 30:
+            name = "Amavasya"
+        else:
+            name = _TITHI_NAMES[display_number - 1]
 
         return TithiInfo(
             number=tithi_number,
@@ -878,13 +903,20 @@ class EphemerisWrapper:
         )
 
         # ── Sidereal house cusps ──────────────────────────────────────────────
+        # DOCTRINE_DECISION: In Whole-Sign mode ('W'), HouseCusp.longitude and
+        # sidereal_longitude represent sign boundaries (0° of the respective sign),
+        # not the rising degree. The exact rising degree (Ascendant) is recorded
+        # exclusively in EphemerisResult.ascendant.
         # In Whole Sign, house 1 = Lagna sign, each subsequent sign = next house
         if house_system.upper() == "W":
+
             lagna_rashi_index = _RASHI_LIST.index(asc_rashi)
             house_cusps = [
                 HouseCusp(
                     house_number=i + 1,
-                    longitude=cusp_tropicals[i] if i < len(cusp_tropicals) else 0.0,
+                    longitude=_normalize(
+                        (lagna_rashi_index + i) * DEGREES_PER_RASHI + ayanamsa_val
+                    ),
                     sidereal_longitude=_normalize(
                         (lagna_rashi_index + i) * DEGREES_PER_RASHI
                     ),
@@ -955,7 +987,9 @@ class EphemerisWrapper:
                 planet,
                 trop_pos.longitude,
                 sun_tropical,
+                is_retrograde=trop_pos.is_retrograde,
             )
+
 
             dignity = _compute_dignity(planet, rashi, rashi_deg)
 

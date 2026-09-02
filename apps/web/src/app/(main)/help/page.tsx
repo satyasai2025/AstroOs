@@ -7,7 +7,7 @@ import { Card, Icon, type IconName } from "@/components/ui";
 interface FeatureGuide {
   id: string;
   title: string;
-  category: "core" | "predictive" | "technical" | "life" | "research" | "settings";
+  category: "core" | "predictive" | "technical" | "life" | "research" | "settings" | "muhurta";
   categoryLabel: string;
   route: string;
   icon: IconName;
@@ -114,6 +114,39 @@ const FEATURE_GUIDES: FeatureGuide[] = [
   },
 
   // ── 2. PREDICTIVE & TIMING ──
+  {
+    id: "phalita-dashboard",
+    title: "Phalita Canonical Dashboard & Shastric MoE Engine",
+    category: "predictive",
+    categoryLabel: "Predictive & Timing",
+    route: "/phalita",
+    icon: "sparkle",
+    tagline: "Canonical 3-Chart synthesis, D-10 Varga explorer, Tajika Varshaphala (VPC), and 4-Expert MoE consultation.",
+    whatIsIt:
+      "The pinnacle predictive and consultation engine of AstroOS. Combines classical Parashari, Jaimini, and Tajika Neelakanthi principles with deterministic Shastric rule reasoning, 4-Expert Mixture-of-Experts (MoE) attention gating, Sudarshana Tri-Lagna synthesis, and a 3-Tier validation audit (Regression, Empirical Generalization, and Blind Holdout).",
+    howToUse: [
+      "Navigate to '/phalita' directly or choose 'Phalita MoE Consultation' from the Predictive Analysis sidebar menu.",
+      "Tab 1 (3-Chart Synthesis): Review the D1 Vishamabhava table (Madhya & Sandhi degrees) alongside the Sudarshana Tri-Lagna matrix (Lagna, Chandra, Surya).",
+      "Tab 2 (D10 Divisional): Explore interactive D-Varga Diamond charts with live Vimshopaka strength and compare D1 vs D(n) Vimshottari dasha sub-periods.",
+      "Tab 3 (VPC Solar Return): Inspect Varsha Pravesha charts, Muntha progression meter, Tajika aspects, Sahams, and annual forecast timeline with quick Year Jump.",
+      "Tab 4 (Noise Diagnostics): Analyze signal-to-noise ratio, 4-quadrant noise attribution, and predictive calibration gauges.",
+      "Tab 5 (Cognitive MoE): Select any of the 12 life domains (Career, Wealth, Health, Marriage, etc.) for live 4-expert gating and Parashari conflict arbitration.",
+      "Tab 6 (Reasoning & Audit): Inspect the 6-stage grounded AI reasoning pipeline, classical rule citations, and verified 3-Tier validation benchmarks.",
+    ],
+    keyInputs: [
+      "Birth Date & Exact Time (or Active Chart from library)",
+      "Birth Coordinates (Latitude, Longitude)",
+      "Target Evaluation Date / Age for Solar Return (VPC) and Dasha timing",
+      "Life Domain (12 canonical bhavas)",
+    ],
+    howToInterpret: [
+      "Sudarshana Convergence (3/3): When Lagna, Moon, and Sun charts simultaneously support an outcome, manifestation is virtually guaranteed.",
+      "Cognitive Score (0 to 9): >=6.5 indicates Strong Auspicious Support; 5.0–6.4 indicates Probable Catalyst; <3.5 indicates Structural Obstruction/Delay.",
+      "Muntha in Kendras/Trikonas (1, 4, 7, 9, 10, 11): Brings elevation and achievements during that annual solar return year.",
+      "3-Tier Audit Status: Confirms 100% deterministic regression fidelity against benchmark cases with zero holdout leakage.",
+    ],
+    proTip: "Use the Year Jump dropdown on Tab 3 to instantly compute and analyze Varshaphala annual charts across consecutive years of life.",
+  },
   {
     id: "dasha-analysis",
     title: "Vimshottari Dasha Explorer",
@@ -521,10 +554,82 @@ const FEATURE_GUIDES: FeatureGuide[] = [
     ],
     proTip: "Developers can add custom HTML/CSS Jinja2 report templates to apps/api/templates/reports/ which will automatically appear as 'Active ✓' in the Report Templates Directory.",
   },
+
+  // ── 6. MUHURTA & PANCHANGA ──
+  {
+    id: "muhurta-panchanga",
+    title: "Muhurta & Panchanga — Auspicious Timing Engine",
+    category: "predictive",
+    categoryLabel: "Muhurta & Panchanga",
+    route: "/muhurta",
+    icon: "clock",
+    tagline: "Real-time 5-Limb Panchanga, Choghadiya, Hora, Tarabala, Chandrabala, and Activity Suitability Playbook powered by Swiss Ephemeris.",
+    whatIsIt:
+      "The Muhurta module calculates the complete classical Panchanga (5-limb almanac) for any given date, time, and geographic location using Swiss Ephemeris. It computes Tithi (lunar day), Vara (weekday), Nakshatra (star), Yoga (luni-solar combination), and Karana (half-tithi) along with their precise ending times. It also generates 16 Choghadiya slots, 24 Planetary Horas, and classifies the suitability of 8 major life activities (marriage, housewarming, business, travel, surgery, education, puja, etc.).",
+    howToUse: [
+      "Step 1 — Set your Location: Click '📍 Change Location' button. Type any city name in the search box (e.g. 'Varanasi', 'Mumbai', 'London'). Click directly on a search result to instantly apply it. Alternatively click '📡 Use Current GPS Location' to auto-detect via your device's GPS.",
+      "Step 2 — Set Date & Time: Use the Date field to select the day you want to evaluate. Use the Time field to set the specific hour and minute. Click 'Now ⚡' to instantly sync to today's current local time.",
+      "Step 3 — Choose Ayanamsa System: In the top-right corner, click '🪐 Lahiri (Chitra Paksha)' (default, used by Rashtriya Panchang), '📐 KP (Krishnamurti)' (for KP system practitioners), or '📜 Raman' (B.V. Raman school). Note: Only Nakshatra and Yoga end-times differ between these systems. Tithi, Karana, and Vara are always identical.",
+      "Step 4 — Read the 5 Panchanga Limbs: Each card shows the name, current percentage completion, and precise ending time (IST). The Panchanga resets at the next limb boundary automatically.",
+      "Step 5 — Check Choghadiya: Scroll to the 'Choghadiya' section. Day slots run from sunrise to sunset (8 periods). Night slots run from sunset to next sunrise (8 periods). Use 'Amrit', 'Shubh', and 'Labh' slots for auspicious work. Avoid 'Kaal' and 'Rog'.",
+      "Step 6 — Check Activity Suitability Playbook: Scroll to the bottom. Each of 8 activities (Marriage, Housewarming, Business, Property, Travel, Medical, Education, Puja) shows a percentage score and verdict (Uttama/Madhyama/Avoid) based on the current Panchanga constellation.",
+    ],
+    keyInputs: [
+      "Location (City Search or GPS Coordinates)",
+      "Date & Time (for any past, present, or future moment)",
+      "Ayanamsa System (Lahiri / KP / Raman)",
+    ],
+    howToInterpret: [
+      "TITHI (Lunar Day): Each tithi spans 12° of Moon–Sun angular separation. Tithi #1–15 = Shukla Paksha (waxing, bright fortnight). Tithi #16–30 = Krishna Paksha (waning, dark fortnight). Auspicious tithis for general work: 2, 3, 5, 6, 7, 10, 11, 12, 13. Avoid Rikta (4, 9, 14) and Amavasya (#30) for new beginnings.",
+      "NAKSHATRA (Lunar Star): The 27 nakshatras are grouped by quality — Dhruva (Fixed): ideal for long-term foundations like construction, marriage, planting. Chara (Movable): ideal for travel, commerce, vehicles. Kshipra/Laghu (Swift): ideal for surgery, short journeys, haircuts. Mridu (Gentle): ideal for arts, music, romance, learning. Tikshna (Sharp): avoid for auspicious work; use for separation, enemies. Ugra (Fierce): avoid for celebrations.",
+      "YOGA (Luni-Solar Combination): (Sun longitude + Moon longitude) ÷ 13.33°. 27 Yogas, 9 auspicious and 18 mixed/malefic. Auspicious Yogas: Priti (#2), Ayushman (#3), Saubhagya (#4), Shobhana (#5), Sukarma (#7), Dhriti (#8), Dhruva (#12), Harshana (#14), Siddhi (#16), Siddha (#21), Sadhya (#22), Shubha (#23). Malefic Yogas to avoid: Vishkambha (#1), Atiganda (#6), Shula (#9), Ganda (#10), Vyaghata (#13), Vajra (#15), Vyatipata (#17), Parigha (#19), Vaidhriti (#27).",
+      "KARANA (Half-Tithi): Each tithi has 2 karanas. The 7 movable karanas cycle 8 times: Bava, Balava, Kaulava, Taitila, Gara, Vanija, Vishti. Note: Vishti / Bhadra is inauspicious — avoid starting any important event during Vishti. Kimstughna, Shakuni, Chatushpada, Naga are fixed karanas at specific lunar positions.",
+      "VARA (Weekday): Day lord from sunrise (not civil midnight). Auspicious varas: Monday (Moon, emotions), Wednesday (Mercury, intellect), Thursday (Jupiter, wisdom), Friday (Venus, arts & pleasure). Use Sunday (Sun) for authority and Agni-related rituals. Avoid Saturday (Saturn) for new ventures unless specifically for Saturn-related matters.",
+      "CHOGHADIYA: Each day is divided into 8 equal parts from sunrise to sunset (day), and 8 from sunset to next sunrise (night). Lords cycle: Sun→Venus→Mercury→Moon→Saturn→Jupiter→Mars. Amrit (Jupiter) = most auspicious. Shubh (Venus) = auspicious. Labh (Mercury) = good for business, gains. Chal (Venus) = movement, travel. Kaal (Saturn) = strictly avoid for new ventures. Rog (Mars) = health caution. Udveg (Sun) = government matters only. Avoid Kaal and Rog for muhurta.",
+      "HORA (Planetary Hour): A hora is 1/12th of the day or night. Each hora is ruled by a planet in the classical Chaldean order (Saturn→Jupiter→Mars→Sun→Venus→Mercury→Moon). Use Solar Horas (Sun) for authority, fame. Lunar Horas for public contact, emotions. Jupiter Horas for education, religion. Venus Horas for arts, romance. Mercury Horas for communication, finance.",
+      "TARABALA: Counts the distance from your natal Janma Nakshatra to the current Nakshatra in sets of 9. Favorable positions (2nd, 4th, 6th, 8th, 9th from natal star): proceed with plans. Unfavorable (1st Janma, 3rd Vipat, 5th Pratyari, 7th Naidhana): caution or delay.",
+      "CHANDRABALA: Counts the Moon's current Rashi from your natal Moon sign. Auspicious positions: 1, 3, 6, 7, 10, 11 from natal Moon. Critical to avoid: 8th (Ashtama Chandra) — the transit Moon in the 8th from natal Moon. Activities during Ashtama Chandra often face hidden obstacles.",
+      "PANCHAKA DOSHA: Sum of (Tithi + Weekday + Nakshatra + Lagna) modulo 9. Remainder 0 = no dosha (clean). Remainder 1 = Roga Panchaka (sickness risk). Remainder 2 = Agni Panchaka (fire risk, avoid construction). Remainder 4 = Raja Panchaka (administrative matter caution). Remainder 6 = Mrityu Panchaka (death-related, avoid health and surgery muhurtas). Remainder 8 = Chor Panchaka (theft risk, avoid property matters).",
+    ],
+    proTip: "For critical muhurtas (marriages, surgeries, business launches): You need at minimum — Shubha Tithi + Auspicious Nakshatra + Good Vara + Yoga free of Vishkambha/Ganda/Vaidhriti + no Vishti Karana + Tarabala good + Chandrabala good + Panchaka dosha-free. Use the Activity Suitability cards as a quick pre-check. A score above 75 is considered Uttama; 50–75 is Madhyama (conditional); below 50 is avoid.",
+  },
+  {
+    id: "panchanga-reading",
+    title: "How to Read a Panchanga: Classical Interpretation Guide",
+    category: "predictive",
+    categoryLabel: "Muhurta & Panchanga",
+    route: "/muhurta",
+    icon: "calendar",
+    tagline: "Step-by-step Shastric guide to evaluating a Panchanga for event selection and daily guidance.",
+    whatIsIt:
+      "A practical classical interpretation manual compiled from Muhurta Chintamani, Muhurta Martanda, and Brihat Samhita. Explains the hierarchical weight of each Panchanga limb, when exceptions are permissible, and how multiple good factors compensate for one defect.",
+    howToUse: [
+      "Open the Muhurta page (/muhurta) and set your target date, time, and location.",
+      "Read each Panchanga card from left to right: Tithi → Vara → Nakshatra → Yoga → Karana.",
+      "Check the Activity Suitability Playbook at the bottom for your specific intended activity.",
+      "Cross-check Tarabala and Chandrabala panels using your natal Nakshatra and Moon sign.",
+      "Review Choghadiya for the current hour's planetary quality.",
+    ],
+    keyInputs: [
+      "Your Natal Nakshatra (for Tarabala)",
+      "Your Natal Moon Sign/Rashi (for Chandrabala)",
+      "Your intended activity type (marriage, travel, surgery, etc.)",
+    ],
+    howToInterpret: [
+      "PRIORITY ORDER (Classical Weight): In case of conflict, classical texts give this hierarchy: 1) Avoid Vishti Karana (Bhadra) is the highest-priority disqualifier. 2) Then avoid Malefic Yoga (Vishkambha, Ganda, Vaidhriti, Vyatipata). 3) Then ensure Nakshatra quality matches the activity. 4) Then check Tithi group. 5) Vara (weekday) is the least binding but still important.",
+      "FIVE-LIMB DEFECT RULE: Classical texts state that if 3 or more Panchanga limbs are excellent, a defect in one or two remaining limbs is tolerable (exceptions apply — Vishti Karana defect is NOT forgivable for marriage Muhurta).",
+      "SHUBHA PANCHANGA (Auspicious): Tithi in groups Nanda (1,6,11), Bhadra (2,7,12), Jaya (3,8,13) + Chara/Dhruva Nakshatra + Good Vara + Auspicious Yoga + Non-Vishti Karana = proceed confidently.",
+      "ASHUBHA PANCHANGA (Inauspicious): Rikta Tithi (4,9,14,30) + Tikshna/Ugra Nakshatra + Vishti Karana + Malefic Yoga = abort or postpone.",
+      "SPECIAL NOTE ON ABHIJIT MUHURTA: The Abhijit window (midday solar window, approximately 48 minutes centered on solar noon) is universally auspicious for almost all activities and can override moderate defects in individual Panchanga limbs. The exact timing is shown as the Abhijit Muhurta card on the Muhurta page.",
+      "BRAHMA MUHURTA: The 48-minute window approximately 1.5 hours before sunrise. Highly auspicious for spiritual practices, meditation, starting studies, and taking medicines. Not used for worldly inauguration events.",
+    ],
+    proTip: "The classical texts Muhurta Chintamani and Brihat Samhita emphasize that the Tithi-Vara combination is a primary indicator of quality. For example: Monday + Chaturthi Krishna, or Thursday + Panchami Shukla are especially powerful because both the day lord (Moon/Jupiter) and the Tithi lord are benefic.",
+  },
 ];
 
 const CATEGORIES = [
   { id: "all", label: "All Topics" },
+  { id: "muhurta", label: "🕰 Muhurta & Panchanga" },
   { id: "core", label: "Core Charts & Kundli" },
   { id: "predictive", label: "Predictive & Timing" },
   { id: "technical", label: "Technical Systems (KP/Jaimini)" },

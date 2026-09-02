@@ -12,9 +12,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class PlanBase(BaseModel):
-    plan_code: str = Field(..., example="FREE")
-    name: str = Field(..., example="Free")
-    description: Optional[str] = Field(default=None, example="Personal astrology essentials.")
+    plan_code: str = Field(..., json_schema_extra={"example": "FREE"})
+    name: str = Field(..., json_schema_extra={"example": "Free"})
+    description: Optional[str] = Field(default=None, json_schema_extra={"example": "Personal astrology essentials."})
     is_active: bool = Field(default=True)
 
 
@@ -39,10 +39,10 @@ class PlanResponse(PlanBase):
 
 
 class FeatureBase(BaseModel):
-    feature_key: str = Field(..., example="saved_horoscopes")
-    name: str = Field(..., example="Saved Horoscopes")
+    feature_key: str = Field(..., json_schema_extra={"example": "saved_horoscopes"})
+    name: str = Field(..., json_schema_extra={"example": "Saved Horoscopes"})
     description: Optional[str] = Field(default=None)
-    category: str = Field(default="core", example="core")
+    category: str = Field(default="core", json_schema_extra={"example": "core"})
     is_system: bool = Field(default=True)
 
 
@@ -105,15 +105,15 @@ class EntitlementDecisionResponse(BaseModel):
 
 class PlanLimitsResponse(BaseModel):
     plan_code: str
-    saved_horoscopes: Optional[int] = Field(default=None, example=5)
-    research_projects_monthly: Optional[int] = Field(default=None, example=1)
+    saved_horoscopes: Optional[int] = Field(default=None, json_schema_extra={"example": 5})
+    research_projects_monthly: Optional[int] = Field(default=None, json_schema_extra={"example": 1})
     extra: dict[str, Optional[int]] = Field(default_factory=dict)
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class UserPlanAssignment(BaseModel):
-    plan_code: str = Field(..., example="PRO")
+    plan_code: str = Field(..., json_schema_extra={"example": "PRO"})
     expires_at: Optional[datetime] = Field(default=None)
     auto_renew: bool = Field(default=False)
 

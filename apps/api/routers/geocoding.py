@@ -4,12 +4,8 @@ AstroOS — Geocoding Router (v2 Phase A Stabilization)
 Endpoints
 ---------
 GET /api/v1/geocode/search?query=...   — birth-place name search
-GET /api/v1/geocode/timezone?...       — resolve IANA timezone + UTC
-                                          offset + DST for a coordinate
-                                          on a specific date
-
-No business logic lives here — both endpoints delegate to
-GeocodingService.
+GET /api/v1/geocode/timezone?...       — resolve IANA timezone + UTC offset + DST
+GET /api/v1/geocode/ip                 — detect approximate location from IP
 """
 
 from __future__ import annotations
@@ -59,6 +55,24 @@ async def search_places(
             )
             for r in results
         ]
+    )
+
+
+@router.get(
+    "/ip",
+    response_model=PlaceResultResponse,
+    summary="Detect approximate location via IP geolocation",
+)
+async def detect_ip_location(
+    service: GeocodingService = Depends(get_geocoding_service),
+) -> PlaceResultResponse:
+    res = await service.detect_ip_location()
+    return PlaceResultResponse(
+        display_name=res.display_name,
+        latitude=res.latitude,
+        longitude=res.longitude,
+        country=res.country,
+        state=res.state,
     )
 
 

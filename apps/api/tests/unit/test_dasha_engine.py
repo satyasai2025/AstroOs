@@ -10,7 +10,7 @@ Lahiri ayanamsa.
 
 from __future__ import annotations
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 import pytest
 
@@ -260,7 +260,8 @@ class TestVimshottariDasha:
 
     def test_mahadasha_1_starts_at_or_before_birth(self):
         tree = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON)
-        assert tree.mahadashas[0].start_date <= REF_DATE
+        assert tree.mahadashas[0].start_datetime_utc <= REF_DT
+
 
     def test_max_depth_clamped(self):
         tree = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON, max_depth=99)
@@ -273,6 +274,52 @@ class TestVimshottariDasha:
         kp_lords = [m.lord for m in t_kp.mahadashas]
         # Same set of lords, but may start at a different point in the cycle
         assert sorted(lahiri_lords) == sorted(kp_lords)
+
+    def test_validate_tiling_invariant(self):
+        """DashaTree.validate_tiling() must confirm complete, gapless partition across all levels."""
+        tree = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON, max_depth=3)
+        assert tree.validate_tiling() is True
+
+    def test_year_convention_attribute(self):
+        """DashaTree must record the canonical year convention."""
+        tree = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON)
+        assert tree.year_convention == "365.25_julian"
+
+    def test_tz_awareness_raises_value_error(self):
+        """Passing naive datetime must raise ValueError."""
+        naive_dt = datetime(1995, 1, 1, 12, 0, 0)
+        with pytest.raises(ValueError, match="must be timezone-aware"):
+            ENGINE.compute_vimshottari(naive_dt, REF_LAT, REF_LON)
+
+    def test_content_hash_deterministic_and_sensitive(self):
+        """content_hash must be non-empty, identical for same inputs, different for 1s offset."""
+        tree1 = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON)
+        tree2 = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON)
+        tree_shifted = ENGINE.compute_vimshottari(REF_DT + timedelta(seconds=1), REF_LAT, REF_LON)
+
+        assert len(tree1.content_hash) == 64
+        assert tree1.content_hash == tree2.content_hash
+        assert tree1.content_hash != tree_shifted.content_hash
+
+    def test_boundary_inclusivity_at_exact_nakshatra_cusp(self):
+        """A Moon at exact nakshatra boundary (0.0 offset) assigns the incoming lord with 100% balance."""
+        first_lord, balance, first_start = _nakshatra_balance(
+            0.0, VIMSHOTTARI_SEQUENCE, VIMSHOTTARI_DASHA_YEARS, VIMSHOTTARI_TOTAL_YEARS, REF_DT
+        )
+        assert first_lord == "ketu"
+        assert pytest.approx(balance, rel=1e-6) == 7.0
+        assert first_start == REF_DT
+
+        # Bharani start at 13.333333333333334°
+        first_lord_bh, balance_bh, first_start_bh = _nakshatra_balance(
+            40.0 / 3.0, VIMSHOTTARI_SEQUENCE, VIMSHOTTARI_DASHA_YEARS, VIMSHOTTARI_TOTAL_YEARS, REF_DT
+        )
+        assert first_lord_bh == "venus"
+        assert pytest.approx(balance_bh, rel=1e-6) == 20.0
+        assert first_start_bh == REF_DT
+
+
+
 
     def test_antardasha_lord_sequence_starts_from_maha_lord(self):
         tree = ENGINE.compute_vimshottari(REF_DT, REF_LAT, REF_LON, max_depth=2)
@@ -550,3 +597,43 @@ class TestCrossSystemConsistency:
             tree = compute_fn(REF_DT, REF_LAT, REF_LON, max_depth=1)
             for m in tree.mahadashas:
                 assert isinstance(m.lord, str) and m.lord
+
+
+# ── Consumer API Boundary & Access Invariant ───────────────────────────────────
+
+
+def test_no_raw_dasha_period_inequality_in_services():
+    """
+    CI Governance Guard: Ensure all downstream consumers use `DashaPeriod.contains()`,
+    `start_datetime_utc`, or `start_date_only` rather than raw inequality chaining
+    (e.g., `p.start_date <= target <= p.end_date`) which can trigger TypeErrors
+    against high-precision timezone-aware datetime spines.
+    """
+    import os
+    import re
+    from pathlib import Path
+
+    services_dir = Path(__file__).resolve().parents[2] / "services"
+    # Match patterns like `period.start_date <= ... <= period.end_date` on dasha periods
+    raw_comparison_pattern = re.compile(
+        r"\b(md|ad|pd|sk|pr|period|m|s|p|maha|antar)\.start_date\s*<=\s*[^=\n]+\s*<=?\s*\w+\.end_date"
+    )
+
+    violations = []
+    for root, _, files in os.walk(services_dir):
+        for f in files:
+            if not f.endswith(".py"):
+                continue
+            path = Path(root) / f
+            # dasha_engine.py itself builds boundaries; exclude it
+            if path.name in ("dasha_engine.py", "dasha_lookup.py"):
+                continue
+            content = path.read_text(encoding="utf-8")
+            for line_idx, line in enumerate(content.splitlines(), start=1):
+                if raw_comparison_pattern.search(line):
+                    violations.append(f"{path.name}:{line_idx}: {line.strip()}")
+
+    assert not violations, (
+        f"Found raw DashaPeriod boundary comparison(s). Use `period.contains(...)` instead:\n"
+        + "\n".join(violations)
+    )

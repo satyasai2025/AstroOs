@@ -1,0 +1,684 @@
+# rules_registry.yaml — AstroOS Governance Registry
+# Freeze discipline: this file is the source of truth for kernel weights,
+# Bhanga conditions, and canonical claims. Changes via PR only.
+# Last expanded: 2026-09-01 from 77 Vinay Jha wikidot canonical docs.
+registry_version: "REGISTRY-v1.1"
+registry_hash_field: "sha256:computed-at-load"
+
+status_vocab:
+  VERIFIED_SOURCE:                   "Directly transcribed from source text with citation"
+  DOCTRINE_DECISION:                 "Implementation/lineage decision in the spirit of tradition, not literally in classical verse text"
+  UNVERIFIED_PENDING_CITATION_AUDIT: "Encoded rule structure with path verification; pending literal verse/scholar audit"
+  UNVERIFIED:                        "Encoded but not yet reviewed — excluded from primary benchmark"
+
+gating_states:
+  PROMISE_ABSENT:          "determinate zero — slice not evaluable; occurrence = doctrine counterexample (DOCTRINE_DECISION)"
+  DEFER_PROMISE_NOT_CLEAR: "indeterminate — ambiguous chart / layers disagree (existing tier)"
+  REASONABLE:              "3+ classical layers confirming confluence (existing tier)"
+  HIGH:                    "5+ classical layers confirming confluence (existing tier)"
+
+rules:
+
+  # ── FOUNDATION RULES ──────────────────────────────────────────────────────
+
+  - rule_id: JHA-1A
+    domain: all
+    statement: >
+      D1 Bhavachalita (unequal house division per SSS/BPHS) is the ONLY valid chart
+      for Bhava phala and Bhavesha phala. Rasi chart is used ONLY for mathematical
+      computations: aspects, dignity, exaltation, divisional creation. Reading Rasi
+      chart as Bhava chart is 'a crude shortcut' that corrupts predictions.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "bhaavachalita.md"
+      url: "http://vedicastrology.wikidot.com/bhaavachalita"
+      excerpt: >
+        "Rasi Chart is used for mathematical purposes only… while bhava chart is
+        for bhava phala and bhavesha phala." — VJ (bhaavachalita.md line 57)
+    formula:
+      type: chart_selection_rule
+      d1_purpose: bhava_phala
+      rasi_purpose: math_only
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  - rule_id: JHA-1B
+    domain: all
+    statement: >
+      Ayanamsa: Shri Surya Siddhanta (SSS) is the gold standard. Lahiri is the
+      closest acceptable approximation for software. Tropical/Western ayanamsa is
+      categorically wrong for Vedic Jyotisha.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "ayanamsha-vs-precession.md"
+      url: "http://vedicastrology.wikidot.com/ayanamsha-vs-precession"
+    formula:
+      type: ayanamsa_selection
+      gold_standard: "surya_siddhanta"
+      software_default: "lahiri"
+      rejected: ["tropical", "western"]
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  - rule_id: JHA-1C
+    domain: general
+    statement: >
+      7 Chara Karakas always: AK (Atmakaraka), AmK (Amatyakaraka), BK (Bhratikaraka),
+      MK (Matrukaraka), PK (Puttrakaraka), GK (Gnatikaraka), DK (Darakaraka).
+      8 Karakas (adding Pitrukaraka) is a modern corruption explicitly rejected by Jha.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "1C"
+    formula:
+      type: karaka_rule
+      scheme: "7_karakas"
+      sequence: [AK, AmK, BK, MK, PK, GK, DK]
+      rejected_8th: "Pitrukaraka"
+    weight_prior: {mean: 1.00, sd: 0.01, basis: lineage}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  - rule_id: JHA-1C-TIEBREAK
+    domain: general
+    statement: >
+      Graha Yuddha tiebreaker: If two planets share the exact same degree, the loser
+      of the planetary war is discarded and Rahu steps in as the 7th replacement Karaka.
+    status: DOCTRINE_DECISION
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "1C"
+      note: "UNVERIFIED in primary 77 docs — configurable fallback flag"
+    formula:
+      type: tiebreaker_rule
+      trigger: "graha_yuddha_same_degree"
+      replacement: "rahu"
+    weight_prior: {mean: 0.80, sd: 0.20, basis: doctrine_decision}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  # ── STEP 1: CHART SELECTION ───────────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP1
+    domain: all
+    statement: >
+      Always take THREE charts minimum for any prediction:
+      (1) D1 SSS Bhavachalita, (2) Relevant divisional for domain,
+      (3) VPC (Varsha Pravesha Chakra / Annual Solar Return).
+      Add MPC if narrowing to month. In absence of DAC, use Sudarshana Chakra.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      url: "http://vedicastrology.wikidot.com/how-to-make-correct-predictions"
+      excerpt: >
+        "Take three charts at first: (1) D1 (SSS bhaavachalita), (2) relevant
+        divisional (eg, D10 for achievements or career, D24 for Vidyaa), and (3) VPC" — VJ
+    formula:
+      type: chart_selection_rule
+      minimum_charts: 3
+      mandatory: [D1_bhavachalita, relevant_divisional, VPC]
+      optional: [MPC]
+      divisional_map:
+        career_status: D10
+        marriage_spouse: D9
+        children: D7
+        education: D24
+        disease_death: D30
+        property_vehicle:
+          divisional: D4
+          doctrine_note: "DOCTRINE_DECISION: Jha assigns property/vehicle to D4; vehicles conventionally D16 in standard Parashara."
+        spirituality:
+          divisional: D20
+          doctrine_note: "DOCTRINE_DECISION: Standard Parashari D20 used for upasana/spirituality."
+        longevity:
+          divisional: D60
+          doctrine_note: "DOCTRINE_DECISION: D60 used for high-precision lifespan verification only when birth time verified against 5-10 events."
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  # ── STEP 2: DASHA IDENTIFICATION ─────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP2
+    domain: all
+    statement: >
+      Find running Vimshottari dashas at 5 levels for BOTH D1 and the relevant
+      divisional chart independently. DAC (Dasha Arambha Chakra) requires millisecond
+      birth accuracy; practical substitute is Sudarshana Chakra.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      excerpt: >
+        "find out the five Vimshottari planets of D1 and relevant divisional" — VJ
+    formula:
+      type: dasha_rule
+      levels: 5
+      systems: [vimshottari]
+      applies_to: [D1, relevant_divisional]
+      separately_computed: true
+      dac_substitute: sudarshana_chakra
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [timing_window]
+
+  # ── STEP 3: MAIN STRENGTH (LOG-BASE-2) ───────────────────────────────────
+
+  - rule_id: JHA-2-STEP3
+    domain: all
+    statement: >
+      Main Strength uses logarithmic base-2 scale: 9=Exalted, 8=Moolatrikona,
+      7=Svagrihi, 6=Atimitra (fast friend), 5=Mitra (friend), 4=Sama (neutral),
+      3=Shatru (enemy), 2=Atishatru (bitter enemy), 1=Neecha (debilitated).
+      Formula: Raw Strength = 2^(Dignity-1). Each step is DOUBLE the previous.
+      Exalted vs Debilitated = 256× difference. Shadbala used ONLY as tiebreaker
+      when two planets have IDENTICAL main strength.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      url: "http://vedicastrology.wikidot.com/how-to-make-correct-predictions"
+      bphs_ref: "BPHS Ishta-kashta-vivechana chapter, verses 7-9"
+      excerpt: >
+        "main strength is scaled on a logarithmic scale of base two (cf BPHS)…
+        an exalted planet is roughly 30 times stronger than an atishatrugrihi planet" — VJ
+    formula:
+      type: strength_formula
+      scale: log_base_2
+      mapping:
+        exalted: 9
+        moolatrikona: 8
+        svagrihi: 7
+        atimitra: 6
+        mitra: 5
+        sama: 4
+        shatru: 3
+        atishatru: 2
+        neecha: 1
+      raw_strength_formula: "2^(dignity - 1)"
+      range: [1.0, 256.0]
+      shadbala_use: tiebreaker_only
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  # ── STEP 4: FINAL VARGA STRENGTH ─────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP4
+    domain: all
+    statement: >
+      Final Varga Strength = Main Strength × Vimshopaka Weight of divisional.
+      Vimshopaka weights (Shodash-varga, max 20): D1=3.5, D2=1, D3=1, D4=0.5,
+      D7=0.5, D9=3, D10=0.5, D12=0.5, D16=2, D20=0.5, D24=0.5, D27=0.5,
+      D30=1, D40=0.5, D45=0.5, D60=4.
+      D60 only if birth time verified against 5-10 significant life events.
+      Divisional should NOT override D1 unless its Final Strength exceeds D1's.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "varga-categories-and-vargottama.md"
+      url: "http://vedicastrology.wikidot.com/varga-categories-and-vargottama"
+      also: "how-to-make-correct-predictions.md"
+      excerpt: >
+        "multiply Main Strength with Vimshopaka Strength of the divisional
+        to get final strength." — VJ
+    formula:
+      type: strength_formula
+      computation: "main_strength * vimshopaka_weight"
+      vimshopaka_shodash:
+        D1: 3.5
+        D2: 1.0
+        D3: 1.0
+        D4: 0.5
+        D7: 0.5
+        D9: 3.0
+        D10: 0.5
+        D12: 0.5
+        D16: 2.0
+        D20: 0.5
+        D24: 0.5
+        D27: 0.5
+        D30: 1.0
+        D40: 0.5
+        D45: 0.5
+        D60: 4.0
+      d60_condition: "birth_time_verified_against_min_5_events"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  # ── STEP 5: SUDARSHANA CHAKRA ─────────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP5
+    domain: all
+    statement: >
+      Sudarshana Chakra = synthesis of Lagna Kundali (LK) + Surya Kundali (SK)
+      + Chandra Kundali (CK). EXCEPTION: If Sun OR Moon is in Lagna → use LK ONLY.
+      Method: Add house lordships of each planet across all 3 charts to determine
+      functional beneficence/maleficence.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      excerpt: >
+        "If Sun or Moon is in lagna, then only Lagna Chakra should be used, otherwise
+        Surya Kundali and Chandra Kundali should also be analyzed." — VJ
+    formula:
+      type: sudarshana_rule
+      components: [lagna_kundali, surya_kundali, chandra_kundali]
+      exception: "sun_or_moon_in_lagna → use_lk_only"
+      method: "sum_house_lordships_across_all_3"
+      net_positive: "functional_benefic"
+      net_negative: "functional_malefic"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  # ── STEP 6: BHAVOTTAMA DETECTION ─────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP6
+    domain: all
+    statement: >
+      Bhavottama = planet occupying the SAME BHAVA (house number) across multiple
+      divisional charts. NOT same sign (= Rashi Vargottama — different concept).
+      Kimshukadi Yogas in BPHS are Bhavottama, NOT Rashi-Vargottama.
+      Good dignity in same Bhava → amplified yoga. Debilitation in same Bhava →
+      compounded malefic results.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "varga-categories-and-vargottama.md"
+      url: "http://vedicastrology.wikidot.com/varga-categories-and-vargottama"
+      excerpt: >
+        "These Kimshukadi yogas are actually what is often called Bhavottama…
+        the so-called Vargottama defined by them is wrong and non-classical." — VJ
+    formula:
+      type: bhavottama_rule
+      definition: "same_bhava_number_across_divisionals"
+      NOT_this: "same_rashi_sign (= rashi_vargottama)"
+      amplified_if: "good_dignity_in_that_bhava"
+      compounded_malefic_if: "debilitated_in_that_bhava"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  # ── STEP 7: ARUDHA LAGNA ──────────────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP7
+    domain: all
+    statement: >
+      AL (Arudha Lagna) = Arudha of 1st house = world's perception of the native.
+      UL (Upapada Lagna) = Arudha of 12th house = perception of spouse.
+      D1 shows inner natal reality. AL shows worldly perception. Both must be
+      analyzed — they can give opposite pictures.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "Step 7"
+    formula:
+      type: arudha_rule
+      AL: "arudha_of_1H"
+      UL: "arudha_of_12H"
+      D1_shows: "inner_natal_reality"
+      AL_shows: "worldly_perception"
+      analyze_both: true
+    weight_prior: {mean: 0.90, sd: 0.10, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  # ── STEP 8: TRANSIT (GOCHARA) ─────────────────────────────────────────────
+
+  - rule_id: JHA-2-STEP8
+    domain: all
+    statement: >
+      Transit ALONE cannot promise an event. Transit ONLY triggers what is already
+      promised in the natal chart. Method: (1) Identify natal promise via dasha +
+      divisional confirmation. (2) Transit activates the house/lord.
+      (3) Check Ashtakavarga rekhas — higher rekhas = stronger trigger.
+      Moon transit = day-level timing.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "Step 8"
+      also: "how-to-make-correct-predictions.md"
+    formula:
+      type: transit_rule
+      standalone_prediction: false
+      role: "trigger_only"
+      confirmation_required: true
+      ashtakavarga_rekhas: "strength_modifier"
+      moon_transit: "day_level_timing"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [timing_window]
+
+  # ── STEP 9: MPC (MONTHLY NARROWING) ──────────────────────────────────────
+
+  - rule_id: JHA-2-STEP9
+    domain: all
+    statement: >
+      VPC narrows prediction to the year. MPC (Masa Pravesha Chakra = monthly solar
+      return) narrows to the exact month. Both use same analysis method as VPC.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      excerpt: >
+        "VPC narrows to the year; MPC or Maasa Pravesha Chakra too" — VJ
+    formula:
+      type: timing_rule
+      VPC_scope: "year"
+      MPC_scope: "month"
+      method: "same_as_VPC"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [timing_window]
+
+  # ── STEP 10: SYNTHESIS & CONFIDENCE ──────────────────────────────────────
+
+  - rule_id: JHA-2-STEP10
+    domain: all
+    statement: >
+      Combine ALL layers. Confidence gate: 3+ layers confirming = reasonable prediction.
+      5+ layers confirming = high confidence. Fewer than 3 = 'promise not clear yet'.
+      Emitted strictly as qualitative confidence tier vocabulary, avoiding numeric
+      probability collision with CAL-POLICY-2.0.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "Step 10"
+    formula:
+      type: confidence_gate
+      minimum_for_prediction: 3
+      high_confidence_threshold: 5
+      confidence_tiers:
+        below_minimum: "defer_promise_not_clear"
+        moderate_agreement: "reasonable"
+        strong_agreement: "high"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [event_likelihood]
+
+  # ── SPECIAL TOPICS ────────────────────────────────────────────────────────
+
+  - rule_id: JHA-3A
+    domain: health
+    statement: >
+      Death prediction: 4-stage gate — (1) Three mathematical lifespans: Amshayu,
+      Pindayu, Nisargayu → average gives candidate period. (2) Maraka planets in D1:
+      lords of 2H, 6H, 7H, 8H, 12H. (3) Confirm in D30 (Trishamsha — ultimate
+      maleficence chart). (4) Cross-reference VPC (year) + MPC (month).
+      KEY: Saturn conjunct/aspecting a Maraka absorbs and becomes the ultimate killer.
+      KEY: A planet rarely kills in its OWN sub-period — kills in sub-period of its
+      relative/enemy Maraka.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "prediction-of-death.md"
+      also: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "3A"
+    empirical_status:
+      workstream: B
+      auc_gate_full: 0.5354
+      verdict: NO_SIGNAL
+      prereg_hash: "prereg-1a2b3c"
+    formula:
+      type: multiplicative_gate
+      stages: [tri_lifespan, d1_maraka, d30_confirm, vpc_mpc_timing]
+      maraka_houses: [2, 6, 7, 8, 12]
+      saturn_rule: "saturn_conjunct_or_aspect_maraka → saturn_becomes_killer"
+      anti_self_kill: "planet_rarely_kills_in_own_sub_period"
+    weight_prior:
+      mean: 1.00
+      sd: 0.05
+      sub_weights:
+        lord2: {mean: 1.00, sd: 0.05, basis: source}
+        lord7: {mean: 1.00, sd: 0.05, basis: source}
+        saturn: {mean: 0.85, sd: 0.10, basis: lineage}
+        rahu: {mean: 0.70, sd: 0.15, basis: doctrine_decision}
+    precedence_tier: 2
+    produces_finding_types: [event_likelihood, timing_window]
+
+  - rule_id: JHA-3B
+    domain: health
+    statement: >
+      Maraka bhanga (cancellation) conditions. UNVERIFIED — source doc on detailed
+      Maraka cancellation rules not present in available 77-doc snapshot.
+      Do NOT use in primary benchmark until source-verified.
+    status: UNVERIFIED
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      note: "Source doc missing — jyotirvidya.wetpaint.com was deleted. Mark UNVERIFIED per protocol."
+    formula:
+      type: cancellation_set
+      conditions:
+        - id: JHA-3B-1
+          activation_fn: "bhanga_jupiter_aspect_on_maraka_lord"
+          on_activation: {cancel_discount: 0.30}
+          citation: {doc: "JHA_PREDICTION_FRAMEWORK.md", section: "3B-1"}
+      combination: "product over active cancellations"
+    weight_prior: {mean: 0.50, sd: 0.20, basis: scholar}
+    precedence_tier: 3
+    produces_finding_types: [conflict_note]
+
+  - rule_id: JHA-3C
+    domain: all
+    statement: >
+      Karakamsha: Step 1 = Find Atmakaraka (AK = planet with highest degree in D1).
+      Step 2 = Note AK's exact degree (excluding sign).
+      Two valid methods: Method A = AK's sign in D1 as Karakamsha Lagna.
+      Method B = AK's Navamsha sign (D9) as Lagna in D9.
+      Read for spiritual + material destiny.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "karakamsha.md"
+      url: "http://vedicastrology.wikidot.com/karakamsha"
+    formula:
+      type: karakamsha_rule
+      AK_definition: "planet_with_highest_degree_in_D1"
+      method_A: "AK_sign_in_D1_as_karakamsha_lagna"
+      method_B: "AK_navamsha_sign_D9_as_lagna_in_D9"
+    weight_prior: {mean: 0.90, sd: 0.10, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  - rule_id: JHA-3D
+    domain: all
+    statement: >
+      Debilitation Cancellation (Neecha Bhanga): Debilitated planet conjunct its
+      own sign lord → Debilitation cancelled → planet becomes Neutral (dignity 4 = Sama).
+      Modified Main Strength then applies for further Vargottama calculations.
+      NOTE: Non-exhaustive, single-condition per available source snapshot. Full
+      multi-condition Neecha Bhanga taxonomy not present in 77-doc archive.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "3D"
+      note: "Non-exhaustive single condition per source snapshot"
+    formula:
+      type: cancellation_rule
+      trigger: "neecha_planet_conjunct_own_sign_lord"
+      result: "neecha_cancelled → dignity_reset_to_4_sama"
+    weight_prior: {mean: 1.00, sd: 0.05, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  - rule_id: JHA-3E
+    domain: mundane
+    statement: >
+      Mundane (Medini) base chart: Meru World Chart cast at lat≈0°, lon=37°18'E
+      (Mt Kenya/Meru). Year start = Chaitra Shukla Pratipada (first Sun-Moon
+      conjunction in late sidereal Pisces). Adhika Masa: first CSP = civil year
+      start; note Nija Chaitra separately.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "general-principles.md"
+      url: "http://vedicastrology.wikidot.com/general-principles"
+      excerpt: >
+        "cast from location of Meru (lat≈0, lon 37:18E)… year start at Chaitra
+        Shukla Pratipada" — VJ
+    formula:
+      type: mundane_base_chart
+      meru_lat: 0.0
+      meru_lon: 37.3
+      year_start: "chaitra_shukla_pratipada"
+      adhika_masa: "first_CSP_is_civil_year_start"
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [state_level, timing_window]
+
+  - rule_id: JHA-UPAGRAHA-YAMA
+    domain: general
+    statement: >
+      Gulika & Maandi derived from 8-part (Yama) division of day (sunrise→sunset)
+      and night (sunset→sunrise) from weekday starting lord per BPHS Ch. 86.
+      Auspicious ONLY in Upachaya houses (3, 6, 10, 11); malefic/obstruction in all
+      other 8 houses.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "non-luminous-upagrahas-and-gulika-or-mandi-etc.md"
+      url: "http://vedicastrology.wikidot.com/non-luminous-upagrahas-and-gulika-or-mandi-etc"
+      bphs_ref: "BPHS Ch. 86 (Upagraha Adhyaya)"
+    formula:
+      type: upagraha_rule
+      division: "8_part_yama"
+      upachaya_benefic_houses: [3, 6, 10, 11]
+      afflicted_houses: [1, 2, 4, 5, 7, 8, 9, 12]
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  # ── EXPLICIT REJECTIONS (WHAT JHA'S FRAMEWORK DOES NOT INCLUDE) ──────────
+
+  - rule_id: JHA-REJECT-BHRIGU-BINDU
+    domain: general
+    statement: >
+      Bhrigu Bindu is NOT part of Jha's framework. It belongs to Bhrigu Nadi
+      tradition. Do NOT add under 'Jha's framework' label.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "4 — What Jha Does NOT Include"
+    formula:
+      type: rejection_rule
+      rejected_technique: "bhrigu_bindu"
+      belongs_to: "bhrigu_nadi_tradition"
+    weight_prior: null
+    precedence_tier: 1
+    produces_finding_types: []
+
+  - rule_id: JHA-REJECT-ARGALA
+    domain: general
+    statement: >
+      Argala is NOT part of Jha's Parashari framework. It belongs to Jaimini
+      (separate system) and is not used by Jha.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "JHA_PREDICTION_FRAMEWORK.md"
+      section: "4"
+    formula:
+      type: rejection_rule
+      rejected_technique: "argala"
+      belongs_to: "jaimini_system"
+    weight_prior: null
+    precedence_tier: 1
+    produces_finding_types: []
+
+  - rule_id: JHA-REJECT-SHADBALA-PRIMARY
+    domain: general
+    statement: >
+      Shadbala MUST NOT be used as primary strength indicator. It is a tiebreaker
+      ONLY when two planets have identical Main Strength. Main Strength is
+      logarithmic; Shadbala is linear — they cannot be compared directly.
+    status: VERIFIED_SOURCE
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      excerpt: >
+        "use Shadbala ONLY when the main strength of two competing planets are same" — VJ
+    formula:
+      type: rejection_rule
+      rejected_use: "shadbala_as_primary_strength"
+      allowed_use: "tiebreaker_only_when_main_strength_equal"
+    weight_prior: null
+    precedence_tier: 1
+    produces_finding_types: []
+
+  # ── CAREER ────────────────────────────────────────────────────────────────
+
+  - rule_id: JHA-1A-CAREER
+    domain: career
+    statement: >
+      10th-lord condition in D1 Bhavachalita and D10 governs career viability baseline.
+    status: VERIFIED_SOURCE
+    source_ref: {doc: "JHA_PREDICTION_FRAMEWORK.md", section: "1A"}
+    formula:
+      type: scoring_rule
+      inputs: [lord10.dignity, lord10.house, d10_lord10.dignity]
+      form: "w_base * dignity_score(lord10) * confirm_factor(d10_lord10)"
+      output_range: [0.0, 1.0]
+    weight_prior: {mean: 0.80, sd: 0.15, basis: scholar}
+    precedence_tier: 2
+    produces_finding_types: [state_level]
+
+  # ── 7 KARAKAS (CANONICAL) ────────────────────────────────────────────────
+
+  - rule_id: JHA-7K
+    domain: general
+    statement: >
+      7 Chara Karakas with Graha Yuddha loser replacement by Rahu as fallback.
+      (Alias for JHA-1C + JHA-1C-TIEBREAK — kept for backward compatibility.)
+    status: DOCTRINE_DECISION
+    source_ref: {doc: "JHA_PREDICTION_FRAMEWORK.md", section: "1C"}
+    formula:
+      type: karaka_rule
+      scheme: "7_karakas"
+      tiebreaker_replacement: "rahu"
+    weight_prior: {mean: 1.00, sd: 0.01, basis: lineage}
+    precedence_tier: 1
+    produces_finding_types: [state_level]
+
+  # ── DESHA-KAALA-PAATRA COHORT ELIGIBILITY ─────────────────────────────────
+
+  - rule_id: JHA-DKP-1
+    domain: all
+    statement: >
+      Desha-Kaala-Paatra (Context-Age-Maturity): Slices outside biological/social
+      maturity windows are non-evaluable for specific domain events.
+    applies_at: COHORT_ELIGIBILITY
+    status: UNVERIFIED_PENDING_CITATION_AUDIT
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      secondary_framework: "JHA_PREDICTION_FRAMEWORK.md"
+      note: "Shastras express the structural principle of biological/social maturity; specific numeric bounds are implementation parameters under DOCTRINE_DECISION."
+    logic:
+      marriage_age_range: [18, 55]
+      career_elevation_age_range: [18, 70]
+      childbirth_age_range: [18, 48]
+      parameters_status: DOCTRINE_DECISION
+    weight_prior: {mean: 1.00, sd: 0.00, basis: lineage}
+    precedence_tier: 1
+    produces_finding_types: [eligibility_filter]
+
+  # ── MULTIPLICATIVE SHATRIC GATING ─────────────────────────────────────────
+
+  - rule_id: JHA-GATE-1
+    domain: all
+    statement: >
+      Phalita is multiplicative: Natal promise in D1 is the non-negotiable seed (Beeja).
+      If Natal Gate is 0, the event is PROMISE_ABSENT (determinate zero, slice excluded).
+      If non-zero, factors combine into categorical confluence tiers.
+    applies_at: SCORING
+    status: UNVERIFIED_PENDING_CITATION_AUDIT
+    source_ref:
+      doc: "how-to-make-correct-predictions.md"
+      excerpt: >
+        "Due to high Vimshopaka of D1, divisional charts should NOT be used unless
+        their current Vimshottari planets have very high strengths with respect to
+        the current Vimshottari planets of D1." — VJ
+    formula:
+      type: gating_relation
+      gating_rule: "Gate(Natal) == 0 => PROMISE_ABSENT (determinate zero); else combine confluence tiers"
+      states:
+        - PROMISE_ABSENT
+        - DEFER_PROMISE_NOT_CLEAR
+        - REASONABLE
+        - HIGH
+    weight_prior: {mean: 1.00, sd: 0.00, basis: source}
+    precedence_tier: 1
+    produces_finding_types: [gating_verdict]
+

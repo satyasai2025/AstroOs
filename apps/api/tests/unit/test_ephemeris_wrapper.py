@@ -456,3 +456,45 @@ def test_calculate_kp_ayanamsa():
 
     # KP and Lahiri ayanamsa values differ slightly
     assert abs(result_lahiri.ayanamsa_value - result_kp.ayanamsa_value) > 0.001
+
+
+def test_invalid_ayanamsa_raises_value_error():
+    """Passing an invalid or typo'd ayanamsa must raise ValueError, not silently fallback."""
+    wrapper = EphemerisWrapper(_EPHE_PATH)
+    dt = datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+    with pytest.raises(ValueError, match="Unknown ayanamsa system"):
+        wrapper.calculate(dt=dt, latitude=0.0, longitude=0.0, ayanamsa="lahiri ")
+
+
+def test_invalid_node_type_raises_value_error():
+    """Passing an invalid node_type must raise ValueError, not silently fallback."""
+    with pytest.raises(ValueError, match="Invalid node_type"):
+        EphemerisWrapper(_EPHE_PATH, node_type="invalid_node")
+
+
+def test_mercury_combustion_directional_orb():
+    """Mercury combustion orb is 12° when direct and 14° when retrograde."""
+    wrapper = EphemerisWrapper(_EPHE_PATH)
+    # 13° distance: combust when retrograde (limit 14°), not combust when direct (limit 12°)
+    combust_direct, orb_d = wrapper.is_combust("mercury", 13.0, 0.0, is_retrograde=False)
+    combust_retro, orb_r = wrapper.is_combust("mercury", 13.0, 0.0, is_retrograde=True)
+
+    assert not combust_direct, "Mercury at 13° separation should NOT be combust when direct (orb limit 12°)"
+    assert combust_retro, "Mercury at 13° separation MUST be combust when retrograde (orb limit 14°)"
+
+
+def test_whole_sign_cusps_cross_field_invariant():
+    """Whole Sign cusps must satisfy sidereal == (tropical - ayanamsa) % 360."""
+    wrapper = EphemerisWrapper(_EPHE_PATH)
+    dt = datetime(1995, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+    result = wrapper.calculate(dt=dt, latitude=28.6139, longitude=77.2090, house_system="W")
+
+    assert isinstance(result.house_cusps, tuple), "house_cusps must be an immutable tuple"
+    assert isinstance(result.planet_positions, tuple), "planet_positions must be an immutable tuple"
+
+    for cusp in result.house_cusps:
+        expected_sid = (cusp.longitude - result.ayanamsa_value) % 360.0
+        assert abs(cusp.sidereal_longitude - expected_sid) < 1e-5, (
+            f"House {cusp.house_number}: sidereal ({cusp.sidereal_longitude}) != tropical ({cusp.longitude}) - ayanamsa"
+        )
+

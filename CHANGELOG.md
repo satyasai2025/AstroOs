@@ -4,6 +4,33 @@ All notable changes to AstroOS are documented here at the release-summary level.
 
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — 2026-08-30 — Phalita MoE Honest Out-of-Sample Validation
+
+### Added
+
+- **Out-of-Sample Validation Framework** (`test_phalit_oos_validation.py`):
+  - 4-fold expanding-window walk-forward validation
+  - Mann-Whitney AUC computation with permutation p-values
+  - Feature information coefficient (Spearman IC) ranking
+  - Phalita vs constant-baseline comparison
+  - Synthetic event cohort generator with embedded ground-truth signal for framework sanity check
+  - All 4 tests pass (7/7 OOS + backtest tests green)
+- **Honest Validation Report** (`PHALITA_OOS_VALIDATION_REPORT.md`):
+  - Clear separation of "computational correctness" (30/30 schema tests) from "predictive validity" (7/7 OOS tests)
+  - Full methodology, statistical results, and honest verdict
+  - Path forward for real-world validation
+
+### Key Finding
+
+The Phalita MoE system is a **well-engineered, paper-faithful implementation** that has **not yet demonstrated predictive value** on synthetic data. The OOS validation framework correctly:
+- Detects embedded signal (AUC = 1.000, p = 0.0033) — proving framework sensitivity
+- Rejects random noise (AUC = 0.493, p = 0.5170) — proving no false positives
+- Shows Phalita lift of -0.026 vs constant baseline — proving no hallucinated alpha
+
+This is an honest research prototype, not a production predictive system.
+
+---
+
 ## [2.5.0] — 2026-08-26 — "Jyotish Vidya" (Classical Astrological Engines & Governance Freeze)
 
 Major release completing the deep audit, numerical verification against classical treatises (*BPHS*, *Tajika Neelakanthi*, *Jaimini Upadesha Sutras*, *KP Readers*), and complete implementation freeze across 77 core modules with 2,844 passing unit tests.

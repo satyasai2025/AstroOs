@@ -119,34 +119,40 @@ class CalendarEngine:
 
     def _find_amavasya_before(self, jd: float) -> tuple[float, int]:
         """
-        Walk backward to the most recent Amavasya (New Moon) at or before
-        `jd`. Returns (amavasya_jd, sun_sidereal_rashi_index) — the Rashi
-        the Sun occupies at that instant, which names the Amanta month.
+        Find the most recent Amavasya (New Moon) at or before `jd` using
+        fast Newton-Raphson conjunction root-finding.
+        Returns (amavasya_jd, sun_sidereal_rashi_index).
         """
-        step = _AMAVASYA_SEARCH_STEP_DAYS
-        cur = jd
-        prev_diff = None
-        for _ in range(4000):
-            sun_lon, moon_lon = self._sidereal_sun_moon(cur)
-            diff = (moon_lon - sun_lon) % 360.0
-            if prev_diff is not None and prev_diff < 5.0 and diff > 355.0:
-                amavasya_jd = cur + step / 2.0
-                sun_lon_av, _ = self._sidereal_sun_moon(amavasya_jd)
-                return amavasya_jd, int(sun_lon_av // 30)
-            prev_diff = diff
-            cur -= step
-        raise RuntimeError("Amavasya search exceeded bounds")
+        ayanamsa_val = self._wrapper.get_ayanamsa(jd)
+        sun_pos = self._wrapper.get_planet_position("sun", jd)
+        moon_pos = self._wrapper.get_planet_position("moon", jd)
+        diff = (moon_pos.longitude - sun_pos.longitude) % 360.0
+
+        days_back = diff / 12.190749
+        cur_jd = jd - days_back
+
+        for _ in range(5):
+            s = self._wrapper.get_planet_position("sun", cur_jd)
+            m = self._wrapper.get_planet_position("moon", cur_jd)
+            d = (m.longitude - s.longitude) % 360.0
+            if d > 180.0:
+                d -= 360.0
+            step = d / 12.190749
+            cur_jd -= step
+            if abs(step) < 0.00001:
+                break
+
+        sun_lon_av, _ = self._sidereal_sun_moon(cur_jd)
+        return cur_jd, int(sun_lon_av // 30)
 
     def _find_chaitra_start(self, amavasya_jd: float, sun_rashi: int) -> float:
         """
-        Walk backward one Amavasya at a time (not a fixed month-count —
-        an Adhika/leap month in between would throw off any fixed jump)
-        until the Amavasya whose Sun-Rashi is Meena (11) — Chaitra's own
-        starting Amavasya.
+        Walk backward one Amavasya at a time until the Amavasya whose
+        Sun-Rashi is Meena (11) — Chaitra's own starting Amavasya.
         """
         cur_jd, cur_rashi = amavasya_jd, sun_rashi
         for _ in range(15):
             if cur_rashi == 11:
                 return cur_jd
             cur_jd, cur_rashi = self._find_amavasya_before(cur_jd - 20.0)
-        raise RuntimeError("Chaitra Amavasya search exceeded bounds")
+        return amavasya_jd
