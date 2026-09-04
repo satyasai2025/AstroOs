@@ -60,6 +60,50 @@ const POPULAR_DESTINATIONS = [
   { name: "Mumbai, India", lat: 19.0760, lon: 72.8777 },
 ];
 
+function TargetCoordinatesTooltip() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative inline-flex items-center group">
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
+        aria-label="What are Target Coordinates?"
+        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700/80 hover:bg-violet-500 hover:text-white dark:hover:bg-violet-600 text-slate-600 dark:text-slate-300 text-[10px] font-bold cursor-help transition"
+      >
+        ?
+      </button>
+
+      {/* Tooltip Popup */}
+      <div
+        className={`absolute bottom-full mb-2 right-0 sm:left-1/2 sm:-translate-x-1/2 z-50 w-72 sm:w-84 p-3.5 bg-slate-900/95 text-slate-100 text-xs rounded-xl shadow-2xl border border-slate-700/80 backdrop-blur-md pointer-events-none transition-all duration-150 ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+        }`}
+      >
+        <div className="font-bold text-violet-400 mb-1.5 flex items-center gap-1.5">
+          <span>📍</span> What are Target Coordinates?
+        </div>
+        <p className="text-[11px] leading-relaxed text-slate-300">
+          <strong>Target Coordinates (Latitude &amp; Longitude)</strong> represent the exact geographic position of your destination city. Relocation astrology is <em>not country-based</em>, because a single country can span thousands of kilometers and multiple different lagna/bhava alignments.
+        </p>
+        <div className="mt-2 pt-2 border-t border-slate-800 text-[10px] space-y-1 text-slate-400">
+          <div>
+            <strong className="text-slate-200">• Core Zone (≤ 1.0° orb / ~110 km):</strong> Direct and intense manifestation of planetary lines and relocated kendras.
+          </div>
+          <div>
+            <strong className="text-slate-200">• Active Zone (1.0° - 3.0° orb / ~300 km):</strong> Moderate background influence across regional suburbs.
+          </div>
+        </div>
+        <div className="text-[9px] text-slate-500 mt-1.5 font-mono">
+          Tip: Enter any city name to automatically resolve its coordinates.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function RelocationStudio() {
   const { activeSummary, myCharts, selectChart, isLoading: isLoadingCharts } = useActiveChart();
 
@@ -292,14 +336,27 @@ export function RelocationStudio() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
-            <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
-              <span className="text-slate-500 dark:text-slate-400 font-mono">Target Lat: </span>
-              <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLat.toFixed(4)}°</span>
+          <div className="pt-1">
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 font-mono">
+                  Target Coordinates
+                </span>
+                <TargetCoordinatesTooltip />
+              </div>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
+                Core radius: ≤ 1.0° (~110 km)
+              </span>
             </div>
-            <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
-              <span className="text-slate-500 dark:text-slate-400 font-mono">Target Lon: </span>
-              <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLon.toFixed(4)}°</span>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+                <span className="text-slate-500 dark:text-slate-400 font-mono">Latitude: </span>
+                <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLat.toFixed(4)}°</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+                <span className="text-slate-500 dark:text-slate-400 font-mono">Longitude: </span>
+                <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLon.toFixed(4)}°</span>
+              </div>
             </div>
           </div>
         </Card>
@@ -352,7 +409,10 @@ export function RelocationStudio() {
                   Astronomical horizon orientation at {targetSearchText}
                 </p>
               </div>
-              <Badge tone="cyan">Target Coordinates</Badge>
+              <div className="flex items-center gap-1.5">
+                <Badge tone="cyan">Target Coordinates</Badge>
+                <TargetCoordinatesTooltip />
+              </div>
             </div>
 
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
