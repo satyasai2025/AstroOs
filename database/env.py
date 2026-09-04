@@ -79,7 +79,8 @@ if "asyncpg" in DATABASE_URL:
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+# Escape % signs for configparser interpolation
+config.set_main_option("sqlalchemy.url", DATABASE_URL.replace("%", "%%"))
 
 
 def run_migrations_offline() -> None:
