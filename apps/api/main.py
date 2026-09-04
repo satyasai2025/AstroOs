@@ -627,6 +627,15 @@ def create_app() -> FastAPI:
         ephe_svc: EphemerisService = request.app.state.ephemeris_service
         ephe_status = ephe_svc.get_status()
 
+        # Touch Supabase database to keep free-tier active and prevent 7-day inactivity pause
+        try:
+            from apps.api.dependencies import _async_session_factory
+            from sqlalchemy import text
+            async with _async_session_factory() as session:
+                await session.execute(text("SELECT 1"))
+        except Exception as e:
+            logger.warning("DB ping in healthz failed: %s", e)
+
         return HealthResponse(
             status="ok",
             version=_settings.APP_VERSION,
