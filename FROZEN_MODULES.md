@@ -42,8 +42,8 @@ admin-approved change.
 | File | SHA-256 | Audit note |
 |---|---|---|
 | `packages/shared/dignity.py` | `402adf912d7aa80aeeab79a057eca9f2d3eb495a340ad2caba100477afbbda75` | Verified exact vs PyJHora/BPHS across all 12 rashis; added opt-in alt_research Moolatrikona convention (default unchanged) |
-| `apps/api/services/ashtakavarga_engine.py` | `177d4d364cfd502c4a77c0ff6ed2ee87e46a42ea5059e34b24bb38209c861344` | Rahu/Ketu occupancy bug fixed |
-| `apps/api/services/ashtakavarga/shodhana_calculator.py` | `ec0bee56419bb5110bc628bf5d1860415eb9e60dcb6435c12de0cd5ca75a973c` | Ekadhipatya Shodhana formula fixed |
+| `apps/api/services/ashtakavarga_engine.py` | `11d6f2fdf7dfb5b2ef2308ed47699634002d6fb9dd9b979ded8c9dbe241e401f` | Rahu/Ketu occupancy bug fixed |
+| `apps/api/services/ashtakavarga/shodhana_calculator.py` | `a3a6e04f7baba3edc6346289c8212b83d8121e53a793be2728f4a2586229f4c9` | Ekadhipatya Shodhana formula fixed |
 | `apps/api/services/pinda_engine.py` | `6e6e9778a33c04a9e2f56900ec75a2344d4e4091f23a7ae84154700842b7c156` | New engine, verified exact vs PyJHora |
 | `apps/api/services/shadbala_engine.py` | `9e4190c8c525fdc6b136f64076b3933bdc7c24c712a17ced264770f041ed7d8a` | Orchestrator, wired to all fixed components |
 | `apps/api/services/shadbala/uchcha_bala.py` | `15dbf8629c240a79ec27f6af1de8afa363f849117f9346382ca55409b9b9c634` | Verified correct, no changes needed |
@@ -69,7 +69,7 @@ admin-approved change.
 | `apps/api/services/transit_patterns.py` | `36c2266b62824556c9d78f5459782fcadd4f378f296c430fcd73db5d182a9cf8` | Rahu/Ketu return-date backward-motion fix |
 | `apps/api/services/transit_timeline_engine.py` | `f4ebb76f8e6a18543f2305fc0ff1c2ff673908983eb204c25a82bda06b7409eb` | Ascendant-house fake-duplicate fixed |
 | `apps/api/services/synastry_engine.py` | `5d26f21a52d2fe4dafc5cbd89cd7ac4523b6d82423eb3c3053515e63c7495e8a` | Graha Maitri/Yoni/Gana/fake-fallback fixed |
-| `apps/api/services/rectification_engine.py` | `86367c7a40b0f3243acc876238ee4304eec03c184f9a9dd90fd5ea31cc359f2c` | Safe `.contains()` boundary check for DashaPeriod datetime spine compatibility; zero calculation change |
+| `apps/api/services/rectification_engine.py` | `23aeac716dd5adcb3ab302d5557035bd5dc6004f181117815d9797bd45a442a9` | Safe `.contains()` boundary check for DashaPeriod datetime spine compatibility; zero calculation change |
 | `apps/api/services/graha_engine.py` | `7bafd4add72594fe68cd37e1ce515dbc378fcefa4fa6525343fce018f1282e80` | Verified clean |
 | `apps/api/services/house_engine.py` | `6f97e60d5a14240aeec8bffcd272faa7da921571c93291ddeb6933b06217eceb` | Verified clean |
 | `apps/api/services/aspect_engine.py` | `337d16f0cee72bffb6b16dbecc94855a5a563d16f3c42f63ba78de814dd60346` | Verified clean |
@@ -131,21 +131,21 @@ admin-approved change.
 | `apps/api/services/phalita_core/expert_router.py` | `246fd1e331657a3d3dec751c14c0050ef15efe9d4d530c5bc36d4495dc7df2e4` | Softmax Gating Router for 12-domain adaptive attention weight distribution |
 | `apps/api/services/phalita_core/conflict_resolution.py` | `437d13205763faaeebdee803c516c01baf677b7ef2adaffe40d4f498af4cbc37` | Classical Parashari Conflict Resolution Hierarchy (Temporal Primacy, Delay vs Denial) |
 | `apps/api/services/phalita_core/phalita_moe_orchestrator.py` | `c6ea7d2b2e024e15022992e8080ad78cb0394915e6a4204a486ea9d1e9f0d183` | Master Phalita MoE Consultation Orchestrator emitting consultation verdict |
-| `apps/api/services/phalita_core/domain_significators.py` | `48b73bfdb054e6a9715be6e5d5bfa07cbe12197baf48a5aee22cb2145ea677e0` | Complete 12-Bhava Life Domain Registry & Significator Matrix |
-| `apps/api/services/divisional_vimshottari_engine.py` | `b9cb981d2e84fb40eacb75b8cd362a77a54cf82d5aecbfc067f690deb7b19695` | Independent Divisional (D9, D10, D7, D4, D30) Vimshottari Dasha Engine (updated to `p.contains(target_date)` for datetime spine compatibility) |
-| `apps/api/services/phalita_core/varga_strength_fusion.py` | `47f3541956d6c30b4066ff86afec596a356d66f6de47b0ce3ac355704a25fcaf` | Log-Base-2 Main Strength x Vimshopaka Final Varga Fusion & Neecha Bhanga Engine |
-| `apps/api/services/phalita_core/bhavottama_engine.py` | `8e420b7f1c4096580e47ed85f20e61370b38c718d98ed8b283228dccb8ad2100` | Bhavottama (Kimshukadi) Same-Bhava Detection & Quality Multiplier Engine |
-| `apps/api/services/phalita_core/transit_trigger_engine.py` | `82bf043e102f584ffb047b053c7e776fc25c94070f5f1eb34da847fc9436aeb7` | Transit (Gochara) & Ashtakavarga Rekha Trigger Engine |
-| `apps/api/services/phalita_core/divisional_explorer_service.py` | `4ae30b1af90bfcf4cf79231a4457211e5458665a5f3b6b4c7a00a869b170e102` | Multi-Varga Interactive Explorer & Dual-Dasha Confluence Engine |
-| `apps/api/services/phalita_core/karakamsha_synthesis_engine.py` | `21650dc2450815a1ef1a02d7e1b9f60a4c91f3437392e3cd26253aec59c60fcf` | Karakamsha Lagna & 7-Chara Karaka Jaimini Synthesis Engine |
-| `apps/api/services/phalita_core/historical_backtest_harness.py` | `25aec0b6c3cbbc2bf3fd89cae1911adf7d42bae8ec7e828f5a8a2f2ee6d8c662` | Empirical Benchmark Backtesting & Accuracy Audit Harness (updated to `p.contains(target_d)` for dasha matching; zero scoring changes) |
-| `apps/api/services/phalita_core/canonical_facts_generator.py` | `cbab38bac1e7d56c173f1dc39892250b589246fca9423c94799c84a3362adcf1` | Calculation-Only Canonical Facts Ground Truth Generator (updated to `p.contains(t_date)` for datetime spine compatibility) |
-| `apps/api/services/phalita_core/technique_resolver.py` | `f3861fe366ca4c8e2110c8dcec921bc0bf720512b3c4334140462cc6cab046ca` | Domain-Tailored Shastric Technique Resolution Engine |
-| `apps/api/services/phalita_core/shastric_rule_engine.py` | `25c74af6a6c7bdeae4e77469b73aab4587a5eccada67799f901bea89219ee8aa` | Declarative Shastric Rule Evaluation & Provenance Engine |
-| `apps/api/services/phalita_core/evidence_aggregator.py` | `fb6cc7103b34250940278a324804bc4170a67b0a95cd3bc8f5e1ad466d02210a` | Evidence Aggregator & Provenance Registry |
-| `apps/api/services/phalita_core/prediction_calibrator.py` | `26493daf9637c5cadaff803c706bf228cb02a8125f2c5768e407b41f26d53121` | Calibrated Prediction Engine (Emitting Calibrated Signal Score 0-9) |
-| `apps/api/services/phalita_core/shastric_explanation_narrator.py` | `7cd827d2dc50c7913259b1c6e1c0e0f0b58095af315e911389e242b03a4daa0e` | Grounded AI Shastric Explanation & Citation Narrator |
-| `apps/api/services/phalita_core/shastric_reasoning_pipeline.py` | `e3921a80bedd13fa37d12cb05196807b613f1906dd5fc214ec3c9a44b6b7352b` | Master End-to-End Shastric Reasoning Orchestrator |
+| `apps/api/services/phalita_core/domain_significators.py` | `cdb2680323733fd854ff288ddfa19a2965918c08246e40cb6098f61f87643ec6` | Complete 12-Bhava Life Domain Registry & Significator Matrix |
+| `apps/api/services/divisional_vimshottari_engine.py` | `ba148905e967222eb4741ab286b0ff19af2c69da92061796865ad17fdd11f60f` | Independent Divisional (D9, D10, D7, D4, D30) Vimshottari Dasha Engine (updated to `p.contains(target_date)` for datetime spine compatibility) |
+| `apps/api/services/phalita_core/varga_strength_fusion.py` | `d788a5057c053bcb124d62e274bbcd69bd05ed2c38b79578c90162382cc93dc3` | Log-Base-2 Main Strength x Vimshopaka Final Varga Fusion & Neecha Bhanga Engine |
+| `apps/api/services/phalita_core/bhavottama_engine.py` | `257ec2d50108802810b62f4d3ff61e835620b87efdbc3ba5fd9718aae802a656` | Bhavottama (Kimshukadi) Same-Bhava Detection & Quality Multiplier Engine |
+| `apps/api/services/phalita_core/transit_trigger_engine.py` | `1bd1c9cb298fbe0ab7b25682273092658d8b1aae53334ea651ea4395a63ef02f` | Transit (Gochara) & Ashtakavarga Rekha Trigger Engine |
+| `apps/api/services/phalita_core/divisional_explorer_service.py` | `94c2356743fb142b0ce1c3d776fadfa91c49f460bab612fc477033ca1a212b28` | Multi-Varga Interactive Explorer & Dual-Dasha Confluence Engine |
+| `apps/api/services/phalita_core/karakamsha_synthesis_engine.py` | `fe0f6da2927ce0ec9542ef399ff7071a85979e6acf51f9f9e2536ce43333aa24` | Karakamsha Lagna & 7-Chara Karaka Jaimini Synthesis Engine |
+| `apps/api/services/phalita_core/historical_backtest_harness.py` | `bdc36467110552bbf26391adf06ba4c636410f1af621d4b598585de59aa89c1e` | Empirical Benchmark Backtesting & Accuracy Audit Harness (updated to `p.contains(target_d)` for dasha matching; zero scoring changes) |
+| `apps/api/services/phalita_core/canonical_facts_generator.py` | `071b1db06a8ab7eaa4fa2b22778e02174ee5589ea37d6fa210c050685b9dec7e` | Calculation-Only Canonical Facts Ground Truth Generator (updated to `p.contains(t_date)` for datetime spine compatibility) |
+| `apps/api/services/phalita_core/technique_resolver.py` | `182dc141621bae7458f051097508063b7577aa8f370bd8426eca5a23c725146b` | Domain-Tailored Shastric Technique Resolution Engine |
+| `apps/api/services/phalita_core/shastric_rule_engine.py` | `2f1ec0993931878ea81e9813b5c9945b9fcd684a1d58cd615eb97efba91ec7db` | Declarative Shastric Rule Evaluation & Provenance Engine |
+| `apps/api/services/phalita_core/evidence_aggregator.py` | `1be8494e9923656717ee68ac81f5f5956e29ccff7cfc6221c4a8634654908b79` | Evidence Aggregator & Provenance Registry |
+| `apps/api/services/phalita_core/prediction_calibrator.py` | `18823189663d782491b0ebbbd7f91d5bcb5c1d4e7bcb8b20be537e70d4542995` | Calibrated Prediction Engine (Emitting Calibrated Signal Score 0-9) |
+| `apps/api/services/phalita_core/shastric_explanation_narrator.py` | `69755641229db7fc66873d374702e6727f889261f2465a336f2a6414db07acb4` | Grounded AI Shastric Explanation & Citation Narrator |
+| `apps/api/services/phalita_core/shastric_reasoning_pipeline.py` | `9951cf01cde19edd9283ef1521832c59c652282d7c54d6fe791c97c281d083c3` | Master End-to-End Shastric Reasoning Orchestrator |
 | `apps/api/services/phalita_core/three_tier_validation_framework.py` | `0bdbda49ccdec194c96627e72ba6d3db12111bb89e83964efff4d417586946ce` | 3-Tier Validation Framework (N=5 Regression, N=600 Generalization, N=100 Holdout) |
 
 
