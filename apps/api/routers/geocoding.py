@@ -77,6 +77,26 @@ async def detect_ip_location(
 
 
 @router.get(
+    "/reverse",
+    response_model=PlaceResultResponse,
+    summary="Reverse geocode coordinates into a human-readable place name and address",
+)
+async def reverse_geocode(
+    latitude: float = Query(..., ge=-90.0, le=90.0),
+    longitude: float = Query(..., ge=-180.0, le=180.0),
+    service: GeocodingService = Depends(get_geocoding_service),
+) -> PlaceResultResponse:
+    res = await service.reverse_geocode(latitude, longitude)
+    return PlaceResultResponse(
+        display_name=res.display_name,
+        latitude=res.latitude,
+        longitude=res.longitude,
+        country=res.country,
+        state=res.state,
+    )
+
+
+@router.get(
     "/timezone",
     response_model=TimezoneResolutionResponse,
     summary="Resolve IANA timezone, UTC offset, and DST state for a coordinate + date",

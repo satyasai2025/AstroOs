@@ -224,7 +224,22 @@ export function RelocationStudio() {
         const lon = parseFloat(pos.coords.longitude.toFixed(4));
         setTargetLat(lat);
         setTargetLon(lon);
-        setTargetSearchText(`Current GPS Location (${lat}°, ${lon}°)`);
+
+        // Reverse geocode coordinates to exact locality, city, and pincode (like Amazon/Maps)
+        let resolvedName = `Current GPS Location (${lat}°, ${lon}°)`;
+        try {
+          const rev = await api.get<PlaceResultResponse>(
+            `/api/v1/geocode/reverse?latitude=${lat}&longitude=${lon}`
+          );
+          if (rev && rev.display_name) {
+            resolvedName = rev.display_name;
+            setTargetPlace(rev);
+          }
+        } catch (revErr) {
+          console.warn("Reverse geocoding failed, using coordinates string:", revErr);
+        }
+
+        setTargetSearchText(resolvedName);
         setGpsLoading(false);
         handleAnalyze({ target_lat: lat, target_lon: lon });
         return;

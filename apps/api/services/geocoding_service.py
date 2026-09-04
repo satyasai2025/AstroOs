@@ -318,6 +318,72 @@ class GeocodingService:
             state="Delhi",
         )
 
+    def _find_nearest_offline_city(self, lat: float, lon: float) -> Optional[PlaceResult]:
+        """Find the closest offline city within reasonable regional radius."""
+        best = None
+        min_dist_sq = float("inf")
+        for name, c_lat, c_lon, state, country in _OFFLINE_CITIES:
+            dist_sq = (lat - c_lat) ** 2 + (lon - c_lon) ** 2
+            if dist_sq < min_dist_sq:
+                min_dist_sq = dist_sq
+                best = (name, c_lat, c_lon, state, country)
+
+        # Within ~1.5 degrees (~160 km)
+        if best and min_dist_sq < 2.25:
+            name, c_lat, c_lon, state, country = best
+            return PlaceResult(
+                display_name=f"{name}, {state}, {country}",
+                latitude=lat,
+                longitude=lon,
+                country=country,
+                state=state,
+            )
+        return None
+
+    async def reverse_geocode(self, latitude: float, longitude: float) -> PlaceResult:
+        """Reverse geocode coordinates into a human-readable place name and address."""
+        reverse_url = self._provider_url.replace("/search", "/reverse")
+        if not reverse_url.endswith("/reverse"):
+            reverse_url = "https://nominatim.openstreetmap.org/reverse"
+
+        try:
+            response = await self._client.get(
+                reverse_url,
+                params={
+                    "lat": latitude,
+                    "lon": longitude,
+                    "format": "jsonv2",
+                    "addressdetails": 1,
+                },
+                headers={"User-Agent": self._user_agent},
+                timeout=_SEARCH_TIMEOUT_SECONDS,
+            )
+            if response.status_code == 200:
+                data = response.json()
+                display_name = data.get("display_name")
+                address = data.get("address", {})
+                if display_name:
+                    return PlaceResult(
+                        display_name=display_name,
+                        latitude=latitude,
+                        longitude=longitude,
+                        country=address.get("country"),
+                        state=address.get("state"),
+                    )
+        except Exception as exc:
+            logger.warning("Reverse geocoding (Nominatim) failed: %s", exc)
+
+        # Fallback: find nearest offline city
+        nearest = self._find_nearest_offline_city(latitude, longitude)
+        if nearest:
+            return nearest
+
+        return PlaceResult(
+            display_name=f"Current Coordinates ({latitude:.4f}°, {longitude:.4f}°)",
+            latitude=latitude,
+            longitude=longitude,
+        )
+
     def resolve_timezone(
         self, latitude: float, longitude: float, local_date: date
     ) -> TimezoneResolution:
