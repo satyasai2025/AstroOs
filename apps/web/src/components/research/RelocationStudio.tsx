@@ -100,6 +100,7 @@ export function RelocationStudio() {
   const [targetLon, setTargetLon] = useState<number>(-74.0060);
   const [ayanamsa, setAyanamsa] = useState<string>("lahiri");
   const [selectedMotive, setSelectedMotive] = useState<string>("all");
+  const [isCustomCoords, setIsCustomCoords] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -361,21 +362,70 @@ export function RelocationStudio() {
                   Target Coordinates
                 </span>
                 <CoordinatesHelpButton onClick={() => setIsCoordsModalOpen(true)} />
+                <button
+                  type="button"
+                  onClick={() => setIsCustomCoords(!isCustomCoords)}
+                  className="text-[10px] text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 font-mono underline ml-1 cursor-pointer font-bold"
+                >
+                  {isCustomCoords ? "✓ Done" : "✎ Custom Lat/Lon"}
+                </button>
               </div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                 Core radius: ≤ 1.0° (~110 km)
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400 font-mono">Latitude: </span>
-                <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLat.toFixed(4)}°</span>
+
+            {isCustomCoords ? (
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-2.5 rounded-lg bg-violet-500/10 border border-violet-500/30">
+                  <label className="text-[10px] font-mono text-violet-600 dark:text-violet-400 font-bold block mb-1">
+                    Custom Latitude (-90° to +90°):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.0001"
+                    min="-90"
+                    max="90"
+                    value={targetLat}
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value) || 0;
+                      setTargetLat(val);
+                      setTargetSearchText(`Custom Coordinates (${val.toFixed(2)}°, ${targetLon.toFixed(2)}°)`);
+                    }}
+                    className="w-full px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs focus:ring-1 focus:ring-violet-500 focus:outline-hidden"
+                  />
+                </div>
+                <div className="p-2.5 rounded-lg bg-violet-500/10 border border-violet-500/30">
+                  <label className="text-[10px] font-mono text-violet-600 dark:text-violet-400 font-bold block mb-1">
+                    Custom Longitude (-180° to +180°):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.0001"
+                    min="-180"
+                    max="180"
+                    value={targetLon}
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value) || 0;
+                      setTargetLon(val);
+                      setTargetSearchText(`Custom Coordinates (${targetLat.toFixed(2)}°, ${val.toFixed(2)}°)`);
+                    }}
+                    className="w-full px-2 py-1 rounded bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-mono font-bold text-slate-900 dark:text-slate-100 text-xs focus:ring-1 focus:ring-violet-500 focus:outline-hidden"
+                  />
+                </div>
               </div>
-              <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400 font-mono">Longitude: </span>
-                <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLon.toFixed(4)}°</span>
+            ) : (
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400 font-mono">Latitude: </span>
+                  <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLat.toFixed(4)}°</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400 font-mono">Longitude: </span>
+                  <span className="font-mono font-medium text-slate-900 dark:text-slate-200">{targetLon.toFixed(4)}°</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </Card>
       </div>
