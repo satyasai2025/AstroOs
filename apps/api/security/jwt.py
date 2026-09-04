@@ -24,8 +24,21 @@ from apps.api.config import get_settings
 _settings = get_settings()
 
 
-def _load_key(path: str) -> str:
+def _load_key(path: str, env_var: Optional[str] = None) -> str:
+    import os
+    if env_var:
+        val = os.getenv(env_var)
+        if val:
+            return val.replace("\\n", "\n")
+
     key_path = Path(path)
+    if not key_path.exists():
+        try:
+            from apps.api.security.generate_keys import generate_rsa_key_pair
+            generate_rsa_key_pair()
+        except Exception:
+            pass
+
     if not key_path.exists():
         raise FileNotFoundError(
             f"JWT key not found at '{path}'. "
@@ -35,11 +48,11 @@ def _load_key(path: str) -> str:
 
 
 def _private_key() -> str:
-    return _load_key(_settings.JWT_PRIVATE_KEY_PATH)
+    return _load_key(_settings.JWT_PRIVATE_KEY_PATH, "JWT_PRIVATE_KEY")
 
 
 def _public_key() -> str:
-    return _load_key(_settings.JWT_PUBLIC_KEY_PATH)
+    return _load_key(_settings.JWT_PUBLIC_KEY_PATH, "JWT_PUBLIC_KEY")
 
 
 def _utc_now() -> datetime:

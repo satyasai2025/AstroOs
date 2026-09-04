@@ -1,0 +1,29 @@
+.git
+.venv
+.pytest_cache
+.ruff_cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude heavy frontend assets from API container
+node_modules
+apps/web
+apps/desktop
+apps/mobile
+apps/office-addin
+
+# Exclude offline research test batches (72 batches = 90MB)
+data/shastric_rules/batches
+data/research_batches
+data/research_sandbox
+data/rsall
+data/benchmark
+
+# Exclude local scratch & backups
+scratch
+backups
+outputs
+tests
+benchmark
