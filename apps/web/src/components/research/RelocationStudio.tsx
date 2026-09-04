@@ -450,15 +450,20 @@ export function RelocationStudio() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <span>📊</span> Life Domain Relocation Suitability
+                  <span>📊</span> 6 Life Domains Relocation Suitability
                 </h2>
                 <p className="text-xs text-slate-500 font-mono mt-0.5">
-                  How moving to {targetSearchText} impacts various life spheres based on active Shastric techniques
+                  Synthesized from all {result.techniques.length} Shastric relocation techniques into 6 actionable life spheres for {targetSearchText}
                 </p>
               </div>
-              <Badge tone="cyan">
-                {result.techniques.filter((t) => t.is_matched).length} Techniques Active
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Badge tone="cyan">
+                  {result.techniques.filter((t) => t.is_matched).length} of {result.techniques.length} Techniques Active
+                </Badge>
+                <Badge tone="violet">
+                  6 Life Domains
+                </Badge>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -656,11 +661,14 @@ export function RelocationStudio() {
           <Card className="p-6">
             <details className="group">
               <summary className="cursor-pointer list-none flex items-center justify-between">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center flex-wrap gap-2">
                   <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                    🔬 Technical Shastric &amp; Astro-Cartography Evidence (All 12 Evaluated Techniques)
+                    🔬 Shastric &amp; Astro-Cartography Evidence Audit
                   </span>
-                  <Badge tone="neutral">Researcher Audit</Badge>
+                  <Badge tone="violet">{result.techniques.length} Techniques Evaluated</Badge>
+                  <span className="text-xs text-violet-500 dark:text-violet-400 font-mono">
+                    (Click to inspect all {result.techniques.length} individual mathematical techniques)
+                  </span>
                 </div>
                 <span className="text-xs text-slate-400 font-mono transition-transform group-open:rotate-180">
                   ▼
