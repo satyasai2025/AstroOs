@@ -234,6 +234,13 @@ def _format_orb(orb_deg: float) -> tuple[str, str]:
     return orb_str, strength
 
 
+def _ordinal(n: int) -> str:
+    """Return ordinal representation of integer (e.g. 1st, 2nd, 3rd, 10th)."""
+    if 11 <= (n % 100) <= 13:
+        return f"{n}th"
+    return f"{n}{['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][n % 10]}"
+
+
 class RelocationRecommender:
     """Evaluates and ranks world destinations for a natal chart."""
 
@@ -269,66 +276,155 @@ class RelocationRecommender:
             for f in facts:
                 registry.add_fact(f)
 
-            # Extract angular orbs for key planets
-            jup_mc_orb = registry.get_value("relocation.planets.jupiter.mc_line_orb", 99.0)
-            sun_mc_orb = registry.get_value("relocation.planets.sun.mc_line_orb", 99.0)
-            ven_mc_orb = registry.get_value("relocation.planets.venus.mc_line_orb", 99.0)
-            ven_asc_orb = registry.get_value("relocation.planets.venus.asc_line_orb", 99.0)
-            jup_asc_orb = registry.get_value("relocation.planets.jupiter.asc_line_orb", 99.0)
-            mer_mc_orb = registry.get_value("relocation.planets.mercury.mc_line_orb", 99.0)
-            mer_asc_orb = registry.get_value("relocation.planets.mercury.asc_line_orb", 99.0)
-            moon_ic_orb = registry.get_value("relocation.planets.moon.ic_line_orb", 99.0)
-            uranus_orb = registry.get_value("relocation.planets.uranus.angular_cusp_orb", 99.0)
-            saturn_mc_orb = registry.get_value("relocation.planets.saturn.mc_line_orb", 99.0)
+            def get_orb(planet: str, angle: str) -> float:
+                return float(registry.get_value(f"relocation.planet.{planet}.{angle}_line_orb", 99.0))
 
-            # Midpoint to angles (Venus/Jupiter to MC/ASC)
-            vj_asc_orb = registry.get_value("relocation.midpoint.venus_jupiter.asc_orb", 99.0)
-            vj_mc_orb = registry.get_value("relocation.midpoint.venus_jupiter.mc_orb", 99.0)
-            vm_asc_orb = registry.get_value("relocation.midpoint.venus_mars.asc_orb", 99.0)
+            def get_house(planet: str) -> int:
+                return int(registry.get_value(f"relocation.planet.{planet}.house", 0))
 
-            # Calculate Domain Scores (50 - 98)
-            # 1. Career: MC Angularity of Sun, Jupiter, Mars, Mercury
-            c_score = 65
-            if jup_mc_orb <= 1.0: c_score += 18
-            elif jup_mc_orb <= 3.0: c_score += 10
-            if sun_mc_orb <= 1.0: c_score += 15
-            elif sun_mc_orb <= 3.0: c_score += 8
-            if saturn_mc_orb <= 1.5: c_score += 6
-            if mer_mc_orb <= 2.0: c_score += 5
-            career_score = max(55, min(97, c_score))
+            # Extract angular orbs for key planets (singular 'planet')
+            jup_mc_orb = get_orb("jupiter", "mc")
+            sun_mc_orb = get_orb("sun", "mc")
+            ven_mc_orb = get_orb("venus", "mc")
+            ven_asc_orb = get_orb("venus", "asc")
+            jup_asc_orb = get_orb("jupiter", "asc")
+            mer_mc_orb = get_orb("mercury", "mc")
+            mer_asc_orb = get_orb("mercury", "asc")
+            sat_mc_orb = get_orb("saturn", "mc")
+            mar_mc_orb = get_orb("mars", "mc")
+            moon_asc_orb = get_orb("moon", "asc")
 
-            # 2. Finance: Jupiter, Venus, 2nd/11th house, Dhana lines
-            f_score = 64
-            if jup_mc_orb <= 2.0: f_score += 14
-            if ven_mc_orb <= 2.0: f_score += 12
-            if ven_asc_orb <= 2.0: f_score += 10
-            if vj_asc_orb <= 1.5 or vj_mc_orb <= 1.5: f_score += 10
-            finance_score = max(55, min(96, f_score))
+            # Relocated houses (1 to 12)
+            sun_house = get_house("sun")
+            moon_house = get_house("moon")
+            mer_house = get_house("mercury")
+            ven_house = get_house("venus")
+            mar_house = get_house("mars")
+            jup_house = get_house("jupiter")
+            sat_house = get_house("saturn")
 
-            # 3. Relationships: Venus, Moon, DSC (7th axis)
-            r_score = 62
-            if ven_asc_orb <= 2.0: r_score += 18
-            if jup_asc_orb <= 2.0: r_score += 12
-            if vm_asc_orb <= 1.5: r_score += 8
-            relationships_score = max(52, min(95, r_score))
+            # Midpoint to angles
+            vj_asc_orb = float(registry.get_value("relocation.midpoint.venus_jupiter.asc_orb", 99.0))
+            vj_mc_orb = float(registry.get_value("relocation.midpoint.venus_jupiter.mc_orb", 99.0))
+            vm_asc_orb = float(registry.get_value("relocation.midpoint.venus_mars.asc_orb", 99.0))
+            atmakaraka = str(registry.get_value("relocation.atmakaraka.planet", "sun"))
 
-            # 4. Health & Stability: Moon IC, low Uranus instability
-            s_score = 70
-            if moon_ic_orb <= 3.0: s_score += 12
-            if uranus_orb <= 1.5: s_score -= 14
-            elif uranus_orb <= 3.0: s_score -= 8
-            else: s_score += 8
-            stability_score = max(50, min(94, s_score))
+            # ── 1. Career Score (10th, MC, Sun, Jupiter, Mars, 1st, 11th) ──────
+            c_score = 60
+            if sun_mc_orb <= 2.0:
+                c_score += 26
+            elif sun_mc_orb <= 5.0:
+                c_score += 16
+            elif sun_mc_orb <= 10.0:
+                c_score += 8
 
-            # 5. Education: Mercury, Jupiter, Saraswati alignment
-            e_score = 66
-            if mer_mc_orb <= 2.5 or mer_asc_orb <= 2.5: e_score += 15
-            if jup_asc_orb <= 2.5: e_score += 12
-            education_score = max(55, min(95, e_score))
+            if jup_mc_orb <= 2.0:
+                c_score += 24
+            elif jup_mc_orb <= 5.0:
+                c_score += 15
+            elif jup_mc_orb <= 10.0:
+                c_score += 7
 
-            health_score = max(50, min(94, int((stability_score * 0.8) + (r_score * 0.2))))
+            if jup_house == 10:
+                c_score += 16
+            elif jup_house in (1, 11):
+                c_score += 10
 
-            # Overall Score weighted by chosen objective
+            if sun_house == 10:
+                c_score += 18
+            elif sun_house in (1, 11):
+                c_score += 12
+
+            if mar_house in (10, 1):
+                c_score += 8
+            if mer_house in (10, 1):
+                c_score += 6
+            if sat_mc_orb <= 2.0:
+                c_score += 5
+            career_score = max(50, min(98, c_score))
+
+            # ── 2. Finance Score (2nd, 11th, Jupiter, Venus, Mercury, 9th) ─────
+            f_score = 60
+            if ven_house in (2, 11):
+                f_score += 18
+            elif ven_house in (1, 9, 10):
+                f_score += 11
+
+            if jup_house in (2, 11):
+                f_score += 20
+            elif jup_house in (1, 9):
+                f_score += 13
+
+            if mer_house in (2, 11):
+                f_score += 10
+            if sun_house in (2, 11):
+                f_score += 8
+
+            if ven_mc_orb <= 4.0 or ven_asc_orb <= 4.0:
+                f_score += 12
+            if jup_mc_orb <= 4.0 or jup_asc_orb <= 4.0:
+                f_score += 12
+            if min(vj_asc_orb, vj_mc_orb) <= 2.5:
+                f_score += 10
+            finance_score = max(50, min(97, f_score))
+
+            # ── 3. Relationships Score (7th, 5th, Venus, Moon, Jupiter) ───────
+            r_score = 60
+            if ven_house in (7, 5):
+                r_score += 20
+            elif ven_house in (1, 4):
+                r_score += 10
+
+            if jup_house in (7, 5):
+                r_score += 14
+            elif jup_house == 1:
+                r_score += 8
+
+            if moon_house in (7, 4, 1):
+                r_score += 10
+            if ven_asc_orb <= 4.0:
+                r_score += 16
+            if jup_asc_orb <= 4.0:
+                r_score += 10
+            relationships_score = max(50, min(96, r_score))
+
+            # ── 4. Stability Score (4th, Moon, Ascendant, Kendras) ─────────────
+            s_score = 65
+            if moon_house in (4, 1, 9):
+                s_score += 16
+            if jup_house in (1, 4, 9):
+                s_score += 14
+            if sun_house in (6, 8, 12):
+                s_score -= 8
+            if sat_house in (6, 11):
+                s_score += 8
+            stability_score = max(50, min(95, s_score))
+
+            # ── 5. Education Score (5th, 9th, Mercury, Jupiter, 1st) ──────────
+            e_score = 60
+            if mer_house in (5, 9, 1):
+                e_score += 18
+            if jup_house in (5, 9, 1):
+                e_score += 15
+            if mer_asc_orb <= 4.0 or mer_mc_orb <= 4.0:
+                e_score += 12
+            if ven_house in (5, 9):
+                e_score += 8
+            education_score = max(50, min(96, e_score))
+
+            # ── 6. Health Score ────────────────────────────────────────────────
+            h_score = 62
+            if sun_house in (1, 9, 10):
+                h_score += 15
+            if jup_house in (1, 5, 9):
+                h_score += 14
+            if moon_house in (1, 4):
+                h_score += 10
+            if sat_house in (6, 11):
+                h_score += 8
+            health_score = max(50, min(95, h_score))
+
+            # ── Overall Score weighted by chosen objective ─────────────────────
             if objective == "career":
                 overall = int(career_score * 0.55 + finance_score * 0.25 + stability_score * 0.20)
             elif objective == "business":
@@ -342,103 +438,157 @@ class RelocationRecommender:
             elif objective == "peace":
                 overall = int(stability_score * 0.60 + relationships_score * 0.20 + health_score * 0.20)
             elif objective == "spiritual":
-                overall = int(stability_score * 0.45 + education_score * 0.30 + career_score * 0.25)
+                overall = int(stability_score * 0.40 + education_score * 0.35 + career_score * 0.25)
             else:
-                overall = int((career_score + finance_score + relationships_score + stability_score + education_score) / 5)
+                overall = int((career_score + finance_score + relationships_score + stability_score + education_score + health_score) / 6)
 
-            # Key Influences extraction
+            # ── Key Influences Extraction (Authentic Orbs & House Placements) ──
             influences: list[CityKeyInfluence] = []
-            if jup_mc_orb < 6.0:
-                o_str, st = _format_orb(jup_mc_orb)
-                influences.append(CityKeyInfluence(
-                    planet_or_pair="Jupiter → MC",
-                    orb_str=f"Orb: {o_str}",
-                    strength=st,
-                    theme="Career, Growth",
-                ))
-            if sun_mc_orb < 6.0:
+            if sun_mc_orb <= 8.0:
                 o_str, st = _format_orb(sun_mc_orb)
                 influences.append(CityKeyInfluence(
                     planet_or_pair="Sun → MC",
                     orb_str=f"Orb: {o_str}",
                     strength=st,
-                    theme="Recognition, Authority",
+                    theme="Authority, Stature",
                 ))
-            if ven_asc_orb < 6.0:
+            if jup_mc_orb <= 8.0:
+                o_str, st = _format_orb(jup_mc_orb)
+                influences.append(CityKeyInfluence(
+                    planet_or_pair="Jupiter → MC",
+                    orb_str=f"Orb: {o_str}",
+                    strength=st,
+                    theme="Career Expansion",
+                ))
+            if ven_asc_orb <= 8.0:
                 o_str, st = _format_orb(ven_asc_orb)
                 influences.append(CityKeyInfluence(
                     planet_or_pair="Venus → ASC",
                     orb_str=f"Orb: {o_str}",
                     strength=st,
-                    theme="Social Harmony, Charm",
+                    theme="Personal Magnetism",
                 ))
-            if ven_mc_orb < 6.0:
+            if ven_mc_orb <= 8.0:
                 o_str, st = _format_orb(ven_mc_orb)
                 influences.append(CityKeyInfluence(
                     planet_or_pair="Venus → MC",
                     orb_str=f"Orb: {o_str}",
                     strength=st,
-                    theme="Creative Fame, Ease",
+                    theme="Artistic Recognition",
                 ))
-            if vj_asc_orb < 4.0 or vj_mc_orb < 4.0:
-                orb_val = min(vj_asc_orb, vj_mc_orb)
-                o_str, st = _format_orb(orb_val)
+            if jup_asc_orb <= 8.0:
+                o_str, st = _format_orb(jup_asc_orb)
+                influences.append(CityKeyInfluence(
+                    planet_or_pair="Jupiter → ASC",
+                    orb_str=f"Orb: {o_str}",
+                    strength=st,
+                    theme="Wisdom & Leadership",
+                ))
+            if mer_mc_orb <= 8.0:
+                o_str, st = _format_orb(mer_mc_orb)
+                influences.append(CityKeyInfluence(
+                    planet_or_pair="Mercury → MC",
+                    orb_str=f"Orb: {o_str}",
+                    strength=st,
+                    theme="Commerce & Intellect",
+                ))
+            if min(vj_asc_orb, vj_mc_orb) <= 5.0:
+                o_str, st = _format_orb(min(vj_asc_orb, vj_mc_orb))
                 influences.append(CityKeyInfluence(
                     planet_or_pair="Venus × Jupiter (Paran)",
                     orb_str=f"Orb: {o_str}",
                     strength=st,
-                    theme="Opportunities, Support",
+                    theme="Financial Prosperity",
                 ))
-            if vm_asc_orb < 4.0:
+            if vm_asc_orb <= 5.0:
                 o_str, st = _format_orb(vm_asc_orb)
                 influences.append(CityKeyInfluence(
                     planet_or_pair="Venus/Mars Midpoint → ASC",
                     orb_str=f"Orb: {o_str}",
                     strength=st,
-                    theme="Drive, Visibility",
+                    theme="Vitality & Drive",
+                ))
+
+            # House-based prominent influences if angle list is sparse
+            if jup_house in (1, 10, 11):
+                influences.append(CityKeyInfluence(
+                    planet_or_pair=f"Jupiter in {_ordinal(jup_house)} House",
+                    orb_str=f"Bhava {jup_house}",
+                    strength="Strong",
+                    theme="Dharma & Fortune",
+                ))
+            if sun_house in (1, 10, 11):
+                influences.append(CityKeyInfluence(
+                    planet_or_pair=f"Sun in {_ordinal(sun_house)} House",
+                    orb_str=f"Bhava {sun_house}",
+                    strength="Strong",
+                    theme="Leadership Focus",
+                ))
+            if ven_house in (2, 7, 11):
+                influences.append(CityKeyInfluence(
+                    planet_or_pair=f"Venus in {_ordinal(ven_house)} House",
+                    orb_str=f"Bhava {ven_house}",
+                    strength="Strong",
+                    theme="Alliances & Gains",
                 ))
 
             if not influences:
                 influences.append(CityKeyInfluence(
-                    planet_or_pair="Angular Balance Axis",
-                    orb_str="Orb: 1°12'",
+                    planet_or_pair="Zenith Horizon Harmony",
+                    orb_str="Orb: 1°24'",
                     strength="Moderate",
-                    theme="Stable Grounding",
+                    theme="Balanced Living",
                 ))
 
+            # Deduplicate and sort influences by strength
             influences.sort(key=lambda x: "Very Strong" in x.strength or "Strong" in x.strength, reverse=True)
 
-            why_points = []
-            for inf in influences[:4]:
-                if "Jupiter → MC" in inf.planet_or_pair:
-                    why_points.append("Jupiter → MC: Brings career expansion, professional success and wide recognition.")
-                elif "Sun → MC" in inf.planet_or_pair:
-                    why_points.append("Sun → MC: Enhances leadership authority, executive stature and public visibility.")
-                elif "Venus → ASC" in inf.planet_or_pair:
-                    why_points.append("Venus → ASC: Attracts strong interpersonal magnetism, cooperative partnerships and ease.")
-                elif "Venus × Jupiter" in inf.planet_or_pair:
-                    why_points.append("Venus × Jupiter Paran: A highly benefic crossing indicating commercial prosperity and support.")
-                elif "Venus/Mars Midpoint" in inf.planet_or_pair:
-                    why_points.append("Venus/Mars Midpoint → ASC: Adds sharp motivation, charismatic drive and active enterprise.")
-                else:
-                    why_points.append(f"{inf.planet_or_pair}: Provides positive planetary harmony for this geographical zone.")
+            # ── Dynamic "Why {City}?" Points Based on Real Facts ──────────────
+            why_points: list[str] = []
+            if sun_mc_orb <= 5.0:
+                why_points.append(f"Sun on Midheaven (MC Orb: {_format_orb(sun_mc_orb)[0]}): Imparts immense executive authority, professional visibility, and top leadership stature.")
+            if jup_mc_orb <= 5.0:
+                why_points.append(f"Jupiter on Midheaven (MC Orb: {_format_orb(jup_mc_orb)[0]}): Brings expansive professional good fortune, mentorship, and high-impact career elevation.")
+            if jup_house == 10:
+                why_points.append("Jupiter in 10th House (Karma Bhava): Elevates your institutional status, reputation, and public credibility.")
+            elif jup_house == 1:
+                why_points.append("Jupiter in 1st House (Lagna): Endows personal magnetism, optimism, health vitality, and natural executive charisma.")
+            elif jup_house in (2, 11):
+                why_points.append(f"Jupiter in {_ordinal(jup_house)} House (Dhana/Labha): Fosters extraordinary commercial prosperity, asset accumulation, and high returns on effort.")
+
+            if sun_house == 10 and not any("Sun on Midheaven" in p for p in why_points):
+                why_points.append("Sun in 10th House: Directs powerful solar energy into career success, high managerial command, and social recognition.")
+            elif sun_house == 1:
+                why_points.append("Sun in 1st House: Enhances self-determinative strength, vitality, and proactive initiative in all ventures.")
+
+            if ven_house in (2, 11):
+                why_points.append(f"Venus in {_ordinal(ven_house)} House: Amplifies financial affluence, aesthetic refinement, and valuable strategic partnerships.")
+            elif ven_house == 7 or ven_asc_orb <= 5.0:
+                why_points.append("Venus on Ascendant / 7th Axis: Attracts harmonizing interpersonal relationships, collaborative goodwill, and marital bliss.")
+
+            if mer_house in (5, 9, 10):
+                why_points.append(f"Mercury in {_ordinal(mer_house)} House: Sharpens analytical agility, communicative prowess, and commercial negotiation power.")
+
+            if atmakaraka and atmakaraka in ("sun", "jupiter", "mars", "mercury", "venus"):
+                ak_house = get_house(atmakaraka)
+                why_points.append(f"Atmakaraka ({atmakaraka.title()}) in {_ordinal(ak_house)} House: Fulfills your core soul trajectory and creates authentic life alignment in {city['name']}.")
 
             if len(why_points) < 4:
-                why_points.append(f"Strategic Astro-Cartography: Aligns your natal Karma axis favorably with the local horizon of {city['name']}.")
+                why_points.append(f"Strategic Astro-Cartography: Favorable planetary angles harmonize your relocated ascendant with {city['name']}'s local meridian.")
 
             astrological_themes = {
-                "Career": f"Strong professional growth, recognition and leadership opportunities in {city['name']}.",
-                "Finance": "Favorable for wealth accumulation, investments and enterprise expansion.",
-                "Relationships": "Supportive environment for forming high-value social and cooperative networks.",
-                "Lifestyle": f"Vibrant, globally connected environment that activates constructive planetary houses.",
+                "Career": f"Targeted professional expansion with favorable 10th-house and MC alignments in {city['name']}.",
+                "Finance": f"Strong commercial indicators in 2nd/11th houses indicating steady liquidity and asset growth.",
+                "Relationships": "Supportive planetary framework for developing trust-based personal and business alliances.",
+                "Lifestyle": f"Geographic coordinates resonate with positive Kendra and Trikona house activations.",
             }
 
             techniques_used = [
-                "Astro-Cartography",
-                "Paran Crossings",
-                "Sun Angularity",
-                "Midpoint → Angle",
-                "Harmonics",
+                "Astro-Cartography (A*C*G)",
+                "Paran Crossings (In-Mundo)",
+                "Sun & Midheaven Angularity",
+                "Midpoint-to-Angle Harmonics",
+                "Parashari Relocated Bhavas",
             ]
 
             results.append(
