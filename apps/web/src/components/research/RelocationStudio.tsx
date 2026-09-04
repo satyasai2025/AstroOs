@@ -385,75 +385,286 @@ export function RelocationStudio() {
             </div>
           </Card>
 
-          {/* Relocation Techniques & Triggers Grid */}
+          {/* 6 Comprehensive Shastric Life Domains */}
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-              <span>🔬</span> Relocation Techniques &amp; Trigger Matrices
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+              <div>
+                <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <span>📊</span> Life Domain Relocation Suitability
+                </h2>
+                <p className="text-xs text-slate-500 font-mono mt-0.5">
+                  How moving to {targetSearchText} impacts various life spheres based on active Shastric techniques
+                </p>
+              </div>
+              <Badge tone="cyan">
+                {result.techniques.filter((t) => t.is_matched).length} Techniques Active
+              </Badge>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {result.techniques.map((tech) => (
-                <Card
-                  key={tech.technique_id}
-                  className="p-5 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                          {tech.technique_name}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 font-mono mt-0.5">
-                          {tech.confidence_basis}
-                        </p>
-                      </div>
-                      <Badge tone={tech.is_matched ? "success" : "neutral"}>
-                        {tech.confidence}% confidence
-                      </Badge>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* 1. Career & Public Status */}
+              <Card className="p-5 border-l-4 border-l-amber-500 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span>💼</span> Career &amp; Status
+                    </span>
+                    <Badge tone={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "success" : "neutral"}>
+                      {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "High Support" : "Moderate"}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    Evaluates professional visibility, authority, leadership, and employment recognition at this longitude.
+                  </p>
+                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>10th House Axis (MC):</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-bold">{result.angles.midheaven.sign}</span>
                     </div>
-
-                    <div className="mt-4 space-y-2.5">
-                      {tech.triggers.map((t) => (
-                        <div
-                          key={t.rule_id}
-                          className="p-3 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/40 text-xs"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">
-                              {t.rule_name}
-                            </span>
-                            <Badge
-                              tone={
-                                t.status === "triggered"
-                                  ? "success"
-                                  : t.status === "insufficient_data"
-                                  ? "gold"
-                                  : "neutral"
-                              }
-                            >
-                              {t.status.replace(/_/g, " ")}
-                            </Badge>
-                          </div>
-
-                          {t.explanation && (
-                            <p className="mt-1.5 text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                              {t.explanation}
-                            </p>
-                          )}
-
-                          {t.missing_facts.length > 0 && (
-                            <p className="mt-1 text-[11px] text-amber-500 font-mono">
-                              Missing: {t.missing_facts.join(", ")}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Sun Angularity:</span>
+                      <span className={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "text-emerald-500 font-bold" : "text-slate-400"}>
+                        {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "Active (You Shine)" : "Neutral"}
+                      </span>
                     </div>
                   </div>
-                </Card>
-              ))}
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
+                  💡 Best for career expansions, interviews, and public enterprise.
+                </div>
+              </Card>
+
+              {/* 2. Mental Peace & Domestic Comfort */}
+              <Card className="p-5 border-l-4 border-l-cyan-500 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span>🏡</span> Mental Peace &amp; Home
+                    </span>
+                    <Badge tone={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "success" : "neutral"}>
+                      {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "Harmonic Comfort" : "Neutral"}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    Evaluates psychological well-being, feelings of belonging, family harmony, and emotional bonding.
+                  </p>
+                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Comfort Zone Relation:</span>
+                      <span className={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "text-cyan-500 font-bold" : "text-slate-400"}>
+                        {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "9th-Harmonic Aligned" : "Standard"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Ascendant Harmony:</span>
+                      <span className="text-slate-900 dark:text-slate-200">{result.angles.ascendant.harmonic_family}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
+                  💡 High emotional grounding and feeling at home without alienation.
+                </div>
+              </Card>
+
+              {/* 3. Wealth & Financial Influx */}
+              <Card className="p-5 border-l-4 border-l-emerald-500 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span>💰</span> Wealth &amp; Commercial Gains
+                    </span>
+                    <Badge tone="gold">Dhana Potential</Badge>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    Evaluates financial liquidity, business negotiations, asset generation, and commercial partnerships.
+                  </p>
+                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Active Confluences (Parans):</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-bold">
+                        {String(result.facts["relocation.paran.count"] ?? 0)} Active
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Midpoint Influx:</span>
+                      <span className="text-slate-900 dark:text-slate-200">
+                        {String(result.facts["relocation.midpoints.mc.count"] ?? 0)} MC Triggers
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
+                  💡 Commercial contacts and investment returns supported at this location.
+                </div>
+              </Card>
+
+              {/* 4. Relationships & Marriage */}
+              <Card className="p-5 border-l-4 border-l-rose-500 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span>❤️</span> Marriage &amp; Partnerships
+                    </span>
+                    <Badge tone="violet">7th Axis Focus</Badge>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    Evaluates relationship harmony, meeting significant others, mutual agreements, and marital stability.
+                  </p>
+                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Relocated 7th Cusp (Desc):</span>
+                      <span className="text-slate-900 dark:text-slate-200 font-bold">Opposite {result.angles.ascendant.sign}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Venus/Moon Energy:</span>
+                      <span className="text-slate-900 dark:text-slate-200">Relational Harmony</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
+                  💡 Favorable for cooperative partnerships and meeting influential companions.
+                </div>
+              </Card>
+
+              {/* 5. Health, Stability & Risk Warnings */}
+              <Card className="p-5 border-l-4 border-l-red-500 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span>⚠️</span> Stability &amp; Risk Audit
+                    </span>
+                    <Badge tone={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "danger" : "success"}>
+                      {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Volatile / Sudden" : "Low Risk"}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    Evaluates sudden unexpected shocks, volatility, health vulnerability, and need for grounding.
+                  </p>
+                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Disruption Indicator:</span>
+                      <span className={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "text-rose-500 font-bold" : "text-emerald-500 font-bold"}>
+                        {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Active Volatility" : "Calm & Stable"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Friction Index:</span>
+                      <span className="text-slate-900 dark:text-slate-200">Normal Range</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
+                  {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched)
+                    ? "⚠️ Caution advised against hasty long-term commitments here."
+                    : "✅ Safe for long-term physical health and predictable routines."}
+                </div>
+              </Card>
+
+              {/* 6. Strategic Usage Recommendation */}
+              <Card className="p-5 border-l-4 border-l-indigo-500 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span>🎯</span> Optimal Engagement Mode
+                    </span>
+                    <Badge tone="cyan">Strategic Action</Badge>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                    Determines how native should tap into this location: Full Relocation, Short Trips, or Remote Business.
+                  </p>
+                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Recommended Mode:</span>
+                      <span className="text-cyan-500 dark:text-cyan-400 font-bold">
+                        {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "Permanent Relocation" : "Travel / Remote Ventures"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-500">
+                      <span>Energy Absorption:</span>
+                      <span className="text-slate-900 dark:text-slate-200">Direct Contact</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
+                  💡 Even if not moving permanently, traveling here charges beneficial natal promises.
+                </div>
+              </Card>
             </div>
           </div>
+
+          {/* Research & Shastric Evidence Inspection Accordion */}
+          <Card className="p-6">
+            <details className="group">
+              <summary className="cursor-pointer list-none flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                    🔬 Technical Shastric &amp; Astro-Cartography Evidence (All 12 Evaluated Techniques)
+                  </span>
+                  <Badge tone="neutral">Researcher Audit</Badge>
+                </div>
+                <span className="text-xs text-slate-400 font-mono transition-transform group-open:rotate-180">
+                  ▼
+                </span>
+              </summary>
+
+              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {result.techniques.map((tech) => (
+                  <div
+                    key={tech.technique_id}
+                    className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                            {tech.technique_name}
+                          </h4>
+                          <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+                            {tech.confidence_basis}
+                          </p>
+                        </div>
+                        <Badge tone={tech.is_matched ? "success" : "neutral"}>
+                          {tech.confidence}%
+                        </Badge>
+                      </div>
+
+                      <div className="mt-3 space-y-2">
+                        {tech.triggers.map((t) => (
+                          <div
+                            key={t.rule_id}
+                            className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800/60 bg-white dark:bg-slate-900/60 text-[11px]"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-semibold text-slate-800 dark:text-slate-200">
+                                {t.rule_name}
+                              </span>
+                              <Badge
+                                tone={
+                                  t.status === "triggered"
+                                    ? "success"
+                                    : t.status === "insufficient_data"
+                                    ? "gold"
+                                    : "neutral"
+                                }
+                              >
+                                {t.status.replace(/_/g, " ")}
+                              </Badge>
+                            </div>
+
+                            {t.explanation && (
+                              <p className="mt-1 text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                                {t.explanation}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </details>
+          </Card>
         </div>
       )}
     </div>

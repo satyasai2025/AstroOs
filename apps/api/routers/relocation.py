@@ -28,10 +28,18 @@ from apps.api.services.technique_engine import TechniqueEngine
 from apps.api.services.technique_resolver import TechniqueResolver
 # Importing this registers the bundled relocation technique fixtures.
 from apps.api.services.techniques import (  # noqa: F401
+    comfort_zones,
     harmonic_interpretation,
+    in_mundo_vs_longitude,
+    line_type_hierarchy,
+    location_energy_usage,
+    major_minor_frequencies,
+    map_line_reading,
     midpoints_to_angles,
     paran_crossings,
+    relocated_chart_evaluation,
     sun_angular,
+    uranus_instability,
 )
 
 logger = logging.getLogger(__name__)
@@ -39,9 +47,17 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/relocation", tags=["relocation"])
 
 _RELOCATION_TECHNIQUE_IDS = (
-    "paran_crossings",
+    "relocated_chart_evaluation",
+    "comfort_zones",
     "sun_angular",
+    "paran_crossings",
     "midpoints_to_angles",
+    "uranus_instability",
+    "map_line_reading",
+    "line_type_hierarchy",
+    "major_minor_frequencies",
+    "location_energy_usage",
+    "in_mundo_vs_longitude",
     "harmonic_interpretation",
 )
 
