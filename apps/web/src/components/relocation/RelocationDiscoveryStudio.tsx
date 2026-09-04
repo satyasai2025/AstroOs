@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { api } from "@/lib/api";
 import { useActiveChart, chartKeys } from "@/lib/charts";
@@ -91,6 +91,10 @@ export function RelocationDiscoveryStudio() {
   const [selectedCityId, setSelectedCityId] = useState<string | null>(null);
   const [dossierTab, setDossierTab] = useState<"overview" | "astro" | "techniques" | "map">("overview");
 
+  // Deep inspector transition target
+  const [inspectTarget, setInspectTarget] = useState<{ lat: number; lon: number; name: string } | null>(null);
+  const dossierRef = useRef<HTMLDivElement>(null);
+
   // Modal state
   const [isCreateChartModalOpen, setIsCreateChartModalOpen] = useState<boolean>(false);
 
@@ -99,6 +103,13 @@ export function RelocationDiscoveryStudio() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleSelectCity = (cityId: string, scrollToDossier = false) => {
+    setSelectedCityId(cityId);
+    if (scrollToDossier && dossierRef.current) {
+      dossierRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   // Sync active chart
   useEffect(() => {
@@ -245,7 +256,7 @@ export function RelocationDiscoveryStudio() {
 
       {viewMode === "inspect" ? (
         /* If user switches to Inspect mode, show our dedicated Custom/GPS Inspector */
-        <RelocationStudio />
+        <RelocationStudio initialTarget={inspectTarget ?? undefined} />
       ) : (
         /* Full Discovery & Recommendation Experience (Matching Mockup) */
         <div className="space-y-6">
@@ -390,7 +401,7 @@ export function RelocationDiscoveryStudio() {
                     return (
                       <div
                         key={city.id}
-                        onClick={() => setSelectedCityId(city.id)}
+                        onClick={() => handleSelectCity(city.id, false)}
                         className={`rounded-2xl border transition p-3.5 flex flex-col justify-between gap-3 cursor-pointer ${
                           isSelected
                             ? "bg-amber-500/5 dark:bg-slate-900 border-amber-500 ring-2 ring-amber-500/20 shadow-md"
@@ -443,22 +454,29 @@ export function RelocationDiscoveryStudio() {
 
                         {/* Domain Mini Scores & Key Influences */}
                         <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 text-[10px] font-mono">
-                          <div className="flex items-center gap-2.5 text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
                             <span>Career <strong className="text-slate-800 dark:text-slate-200">{city.domain_scores.career}</strong></span>
                             <span>Finance <strong className="text-slate-800 dark:text-slate-200">{city.domain_scores.finance}</strong></span>
                             <span>Stability <strong className="text-slate-800 dark:text-slate-200">{city.domain_scores.stability}</strong></span>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedCityId(city.id);
-                            }}
-                            className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold text-[11px] cursor-pointer flex items-center gap-1 transition"
-                          >
-                            View Details →
-                          </button>
+                          <div className="flex items-center gap-2">
+                            {isSelected && (
+                              <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold font-mono hidden sm:inline">
+                                ● Viewing
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectCity(city.id, true);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold text-[11px] cursor-pointer flex items-center gap-1 transition shrink-0"
+                            >
+                              View Details →
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
@@ -469,9 +487,13 @@ export function RelocationDiscoveryStudio() {
 
             {/* Right Column: Selected City Detailed Dossier (7 Cols) */}
             {activeCity ? (
-              <div className="lg:col-span-7 space-y-4">
+              <div
+                ref={dossierRef}
+                id="selected-city-dossier"
+                className="lg:col-span-7 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-5.5rem)] lg:overflow-y-auto space-y-4 scrollbar-thin scroll-mt-20"
+              >
                 {/* Hero Header Card */}
-                <Card className="overflow-hidden p-0">
+                <Card className="overflow-hidden p-0 shadow-md">
                   <div className="relative h-44 w-full">
                     <Image
                       src={activeCity.image_url}
@@ -483,12 +505,16 @@ export function RelocationDiscoveryStudio() {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                     <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
                       <div>
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/30 text-amber-300 text-[10px] font-mono font-bold mb-1 border border-amber-500/40">
+                          <span>📍</span> Selected City Dossier
+                        </div>
                         <h2 className="text-2xl font-black text-white flex items-center gap-2">
                           {activeCity.name}
                         </h2>
                         <p className="text-xs text-slate-200 flex items-center gap-1.5 mt-0.5 font-medium">
                           <span>{activeCity.flag}</span>
                           <span>{activeCity.country}</span>
+                          <span className="text-slate-400 font-mono">({activeCity.latitude.toFixed(2)}°, {activeCity.longitude.toFixed(2)}°)</span>
                         </p>
                       </div>
 
@@ -544,159 +570,264 @@ export function RelocationDiscoveryStudio() {
 
                     <button
                       type="button"
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[11px] text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-mono cursor-pointer"
+                      onClick={() => {
+                        setInspectTarget({
+                          lat: activeCity.latitude,
+                          lon: activeCity.longitude,
+                          name: `${activeCity.name}, ${activeCity.country}`,
+                        });
+                        setViewMode("inspect");
+                      }}
+                      className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-[11px] text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white font-mono cursor-pointer flex items-center gap-1 transition shadow-2xs"
                     >
-                      🔖 Add to Compare
+                      <span>🔍</span> Deep Inspect →
                     </button>
                   </div>
 
                   {/* Tab Body */}
                   <div className="p-6 space-y-6">
-                    {/* Relocation Profile Progress Bars */}
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
-                          Relocation Profile
-                        </span>
-                        <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">Score out of 100</span>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 font-mono text-xs">
+                    {dossierTab === "overview" && (
+                      <div className="space-y-6">
+                        {/* Relocation Profile Progress Bars */}
                         <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-600 dark:text-slate-400">Career</span>
-                            <span className="text-cyan-600 dark:text-cyan-400 font-bold">{activeCity.domain_scores.career}</span>
-                          </div>
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                            <div className="bg-cyan-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.career}%` }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-600 dark:text-slate-400">Finance</span>
-                            <span className="text-amber-600 dark:text-amber-400 font-bold">{activeCity.domain_scores.finance}</span>
-                          </div>
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                            <div className="bg-amber-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.finance}%` }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-600 dark:text-slate-400">Relationships</span>
-                            <span className="text-rose-600 dark:text-rose-400 font-bold">{activeCity.domain_scores.relationships}</span>
-                          </div>
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                            <div className="bg-rose-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.relationships}%` }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-600 dark:text-slate-400">Health</span>
-                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">{activeCity.domain_scores.health}</span>
-                          </div>
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                            <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.health}%` }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-600 dark:text-slate-400">Education</span>
-                            <span className="text-purple-600 dark:text-purple-400 font-bold">{activeCity.domain_scores.education}</span>
-                          </div>
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                            <div className="bg-purple-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.education}%` }} />
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-slate-600 dark:text-slate-400">Stability</span>
-                            <span className="text-indigo-600 dark:text-indigo-400 font-bold">{activeCity.domain_scores.stability}</span>
-                          </div>
-                          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                            <div className="bg-indigo-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.stability}%` }} />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Callout Card */}
-                      <div className="mt-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-900 dark:text-purple-300 flex items-center gap-2">
-                        <span className="text-amber-500 text-sm">⭐</span>
-                        <span>
-                          Excellent for <strong>{activeObjectiveLabel.toLowerCase()}</strong>, professional visibility, and long-term expansion.
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Key Astrological Influences */}
-                    <div>
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono mb-3">
-                        Key Astrological Influences
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {activeCity.key_influences.map((inf, i) => (
-                          <div
-                            key={i}
-                            className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between"
-                          >
-                            <div className="space-y-0.5">
-                              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 block">
-                                {inf.planet_or_pair}
-                              </span>
-                              <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono block">
-                                {inf.orb_str} · {inf.strength}
-                              </span>
-                            </div>
-                            <Badge tone="gold">{inf.theme}</Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Why this city? */}
-                    <div>
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono mb-3">
-                        Why {activeCity.name}?
-                      </h3>
-                      <div className="space-y-2.5">
-                        {activeCity.why_points.map((point, i) => (
-                          <div key={i} className="flex items-start gap-3 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-mono text-[10px] font-bold">
-                              {i + 1}
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono">
+                              Relocation Profile
                             </span>
-                            <span>{point}</span>
+                            <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">Score out of 100</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Astrological Themes & Techniques */}
-                    <div className="pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono mb-2">Astrological Themes</h4>
-                        <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
-                          <li>💼 <strong>Career:</strong> {activeCity.astrological_themes.Career}</li>
-                          <li>💰 <strong>Finance:</strong> {activeCity.astrological_themes.Finance}</li>
-                          <li>❤️ <strong>Relationships:</strong> {activeCity.astrological_themes.Relationships}</li>
-                          <li>🌐 <strong>Lifestyle:</strong> {activeCity.astrological_themes.Lifestyle}</li>
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono mb-2">Techniques Used</h4>
-                        <div className="space-y-1.5 text-xs font-mono text-emerald-600 dark:text-emerald-400">
-                          {activeCity.techniques_used.map((t, i) => (
-                            <div key={i} className="flex items-center gap-1.5">
-                              <span>☑</span>
-                              <span>{t}</span>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 font-mono text-xs">
+                            <div>
+                              <div className="flex justify-between mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">Career</span>
+                                <span className="text-cyan-600 dark:text-cyan-400 font-bold">{activeCity.domain_scores.career}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div className="bg-cyan-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.career}%` }} />
+                              </div>
                             </div>
-                          ))}
+
+                            <div>
+                              <div className="flex justify-between mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">Finance</span>
+                                <span className="text-amber-600 dark:text-amber-400 font-bold">{activeCity.domain_scores.finance}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div className="bg-amber-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.finance}%` }} />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">Relationships</span>
+                                <span className="text-rose-600 dark:text-rose-400 font-bold">{activeCity.domain_scores.relationships}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div className="bg-rose-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.relationships}%` }} />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">Health</span>
+                                <span className="text-emerald-600 dark:text-emerald-400 font-bold">{activeCity.domain_scores.health}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.health}%` }} />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">Education</span>
+                                <span className="text-purple-600 dark:text-purple-400 font-bold">{activeCity.domain_scores.education}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div className="bg-purple-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.education}%` }} />
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="flex justify-between mb-1">
+                                <span className="text-slate-600 dark:text-slate-400">Stability</span>
+                                <span className="text-indigo-600 dark:text-indigo-400 font-bold">{activeCity.domain_scores.stability}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                                <div className="bg-indigo-500 h-full rounded-full" style={{ width: `${activeCity.domain_scores.stability}%` }} />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Callout Card */}
+                          <div className="mt-4 p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-900 dark:text-purple-300 flex items-center gap-2">
+                            <span className="text-amber-500 text-sm">⭐</span>
+                            <span>
+                              Excellent for <strong>{activeObjectiveLabel.toLowerCase()}</strong>, professional visibility, and long-term expansion.
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Key Astrological Influences */}
+                        <div>
+                          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono mb-3">
+                            Key Astrological Influences
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {activeCity.key_influences.map((inf, i) => (
+                              <div
+                                key={i}
+                                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between"
+                              >
+                                <div className="space-y-0.5">
+                                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100 block">
+                                    {inf.planet_or_pair}
+                                  </span>
+                                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono block">
+                                    {inf.orb_str} · {inf.strength}
+                                  </span>
+                                </div>
+                                <Badge tone="gold">{inf.theme}</Badge>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Why this city? */}
+                        <div>
+                          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 font-mono mb-3">
+                            Why {activeCity.name}?
+                          </h3>
+                          <div className="space-y-2.5">
+                            {activeCity.why_points.map((point, i) => (
+                              <div key={i} className="flex items-start gap-3 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-mono text-[10px] font-bold">
+                                  {i + 1}
+                                </span>
+                                <span>{point}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
+
+                    {dossierTab === "astro" && (
+                      <div className="space-y-6">
+                        {/* Geographic & Celestial Coordinates Card */}
+                        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 space-y-2 text-xs">
+                          <h4 className="font-bold text-slate-800 dark:text-slate-200 font-mono uppercase tracking-wider text-[11px]">
+                            Geographic Coordinates &amp; Celestial Horizon
+                          </h4>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+                            <div>
+                              <span className="text-slate-400 block text-[10px]">Latitude</span>
+                              <span className="font-bold text-slate-700 dark:text-slate-300">{activeCity.latitude}° N</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block text-[10px]">Longitude</span>
+                              <span className="font-bold text-slate-700 dark:text-slate-300">{activeCity.longitude}° E</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block text-[10px]">Country Code</span>
+                              <span className="font-bold text-slate-700 dark:text-slate-300 uppercase">{activeCity.country_code}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block text-[10px]">House System</span>
+                              <span className="font-bold text-slate-700 dark:text-slate-300">Placidus / Bhavachalita</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Astrological Themes Grid */}
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono uppercase tracking-wider mb-3">
+                            In-Depth Astrological Themes
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 space-y-1">
+                              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                                <span>💼</span> Career &amp; Professional Stature
+                              </span>
+                              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                {activeCity.astrological_themes.Career}
+                              </p>
+                            </div>
+                            <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 space-y-1">
+                              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                                <span>💰</span> Finance &amp; Commercial Prosperity
+                              </span>
+                              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                {activeCity.astrological_themes.Finance}
+                              </p>
+                            </div>
+                            <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 space-y-1">
+                              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                                <span>❤️</span> Relationships &amp; Partnerships
+                              </span>
+                              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                {activeCity.astrological_themes.Relationships}
+                              </p>
+                            </div>
+                            <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 space-y-1">
+                              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                                <span>🌐</span> Lifestyle &amp; Domestic Stability
+                              </span>
+                              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                {activeCity.astrological_themes.Lifestyle}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {dossierTab === "techniques" && (
+                      <div className="space-y-6">
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 font-mono uppercase tracking-wider mb-3">
+                            Applied Relocation Techniques &amp; Evidence
+                          </h4>
+                          <div className="space-y-2">
+                            {activeCity.techniques_used.map((t, i) => (
+                              <div
+                                key={i}
+                                className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 flex items-center justify-between gap-3 text-xs"
+                              >
+                                <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-medium">
+                                  <span className="text-emerald-500 font-bold">✓</span>
+                                  <span>{t}</span>
+                                </div>
+                                <span className="text-[11px] font-mono text-slate-400">Validated</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Action Card: Open in Deep Inspector */}
+                        <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-3">
+                          <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-400">
+                            <span>🔬</span> Deep Astrodynes &amp; Rules Inspector
+                          </div>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Want to inspect the raw house cusp degrees, planetary angular status matrix, and exact rules triggered for {activeCity.name}?
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setInspectTarget({
+                                lat: activeCity.latitude,
+                                lon: activeCity.longitude,
+                                name: `${activeCity.name}, ${activeCity.country}`,
+                              });
+                              setViewMode("inspect");
+                            }}
+                            className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition shadow-md"
+                          >
+                            <span>📍</span> Open {activeCity.name} in Single-City Inspector →
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </Card>
               </div>

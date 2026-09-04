@@ -75,7 +75,15 @@ function CoordinatesHelpButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-export function RelocationStudio() {
+export interface RelocationStudioProps {
+  initialTarget?: {
+    lat: number;
+    lon: number;
+    name: string;
+  };
+}
+
+export function RelocationStudio({ initialTarget }: RelocationStudioProps = {}) {
   const { activeSummary, myCharts, selectChart, isLoading: isLoadingCharts } = useActiveChart();
   const queryClient = useQueryClient();
   const analyzeWorkflow = useAnalyzeWorkflow();
@@ -87,11 +95,13 @@ export function RelocationStudio() {
   const [birthLon, setBirthLon] = useState<number>(77.2090);
   const [birthPlaceName, setBirthPlaceName] = useState<string>("New Delhi, India");
 
-  // Target relocation state (defaults to Birthplace Baseline until user selects new location or clicks GPS)
-  const [targetSearchText, setTargetSearchText] = useState<string>("New Delhi, India (Birthplace Baseline)");
+  // Target relocation state (defaults to Birthplace Baseline or initialTarget)
+  const [targetSearchText, setTargetSearchText] = useState<string>(
+    initialTarget ? initialTarget.name : "New Delhi, India (Birthplace Baseline)"
+  );
   const [targetPlace, setTargetPlace] = useState<PlaceResultResponse | null>(null);
-  const [targetLat, setTargetLat] = useState<number>(28.6139);
-  const [targetLon, setTargetLon] = useState<number>(77.2090);
+  const [targetLat, setTargetLat] = useState<number>(initialTarget ? initialTarget.lat : 28.6139);
+  const [targetLon, setTargetLon] = useState<number>(initialTarget ? initialTarget.lon : 77.2090);
   const [ayanamsa, setAyanamsa] = useState<string>("lahiri");
   const [selectedMotive, setSelectedMotive] = useState<string>("all");
   const [showOnlyMotive, setShowOnlyMotive] = useState<boolean>(true);
@@ -112,6 +122,19 @@ export function RelocationStudio() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Sync initialTarget if provided dynamically
+  useEffect(() => {
+    if (initialTarget) {
+      setTargetLat(initialTarget.lat);
+      setTargetLon(initialTarget.lon);
+      setTargetSearchText(initialTarget.name);
+      handleAnalyze({
+        target_lat: initialTarget.lat,
+        target_lon: initialTarget.lon,
+      });
+    }
+  }, [initialTarget?.lat, initialTarget?.lon]);
 
   const handleAnalyze = async (override?: {
     birth_utc?: string;
