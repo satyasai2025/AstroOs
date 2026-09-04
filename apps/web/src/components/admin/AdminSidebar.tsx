@@ -49,12 +49,19 @@ const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
     ],
   },
   {
-    title: "Content",
+    title: "Content & Shastras",
     color: "#F5A623",
     items: [
       { href: "/admin/literature", label: "Classical Literature", icon: "book" },
       { href: "/admin/yoga-rules", label: "Yoga Rules", icon: "settings" },
       { href: "/admin/bphs", label: "BPHS Slokas", icon: "scroll" },
+    ],
+  },
+  {
+    title: "Campaigns & Dispatches",
+    color: "#EC4899",
+    items: [
+      { href: "/admin/campaigns", label: "Festival & Transit Dispatches", icon: "mail", badge: "Personalized" },
     ],
   },
   {
@@ -174,6 +181,13 @@ function AdminNavIcon({ name }: { name: string }) {
         <svg {...common}>
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           <path d="M9 12l2 2 4-4" />
+        </svg>
+      );
+    case "mail":
+      return (
+        <svg {...common}>
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
         </svg>
       );
     default:

@@ -63,6 +63,7 @@ from apps.api.routers import plan as plan_router
 from apps.api.routers import subscription as subscription_router
 from apps.api.routers import payment as payment_router
 from apps.api.routers import notification as notification_router
+from apps.api.routers import newsletter as newsletter_router
 from apps.api.routers import dashboard as dashboard_router
 from apps.api.routers import prashna as prashna_router
 from apps.api.routers import report as report_router
@@ -363,6 +364,7 @@ def create_app() -> FastAPI:
 
     # Notifications & Emails (Phase 7) — per-route auth/admin controls.
     app.include_router(notification_router.router)
+    app.include_router(newsletter_router.router, prefix="/api/v1")
 
     # Dashboard & Account Hub (Phase 9) — per-route auth.
     app.include_router(dashboard_router.router)
