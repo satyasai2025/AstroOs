@@ -49,24 +49,13 @@ const HARMONIC_LABELS: Record<string, string> = {
   seventh: "7th harmonic — discipline / relationship focus",
 };
 
-const POPULAR_DESTINATIONS = [
-  { name: "New York, USA", lat: 40.7128, lon: -74.0060 },
-  { name: "London, UK", lat: 51.5074, lon: -0.1278 },
-  { name: "Dubai, UAE", lat: 25.2048, lon: 55.2708 },
-  { name: "Singapore", lat: 1.3521, lon: 103.8198 },
-  { name: "Tokyo, Japan", lat: 35.6762, lon: 139.6503 },
-  { name: "Sydney, Australia", lat: -33.8688, lon: 151.2093 },
-  { name: "Toronto, Canada", lat: 43.6532, lon: -79.3832 },
-  { name: "Mumbai, India", lat: 19.0760, lon: 72.8777 },
-];
-
-const MOTIVE_OPTIONS = [
-  { id: "all", label: "General Audit", icon: "🌐" },
-  { id: "career", label: "Career & Business", icon: "💼" },
-  { id: "mental_peace", label: "Peace of Mind & Home", icon: "🏡" },
-  { id: "wealth", label: "Wealth & Finance", icon: "💰" },
-  { id: "marriage", label: "Marriage & Love", icon: "❤️" },
-  { id: "health_risk", label: "Health & Stability", icon: "🛡️" },
+const MOTIVE_SELECT_OPTIONS: SelectOption[] = [
+  { value: "all", label: "🌐 General / Holistic Audit (All Spheres)" },
+  { value: "career", label: "💼 Career & Professional Growth" },
+  { value: "mental_peace", label: "🏡 Peace of Mind & Domestic Comfort" },
+  { value: "wealth", label: "💰 Wealth & Financial Accumulation" },
+  { value: "marriage", label: "❤️ Marriage, Love & Partnerships" },
+  { value: "health_risk", label: "🛡️ Health, Safety & Stability" },
 ];
 
 function CoordinatesHelpButton({ onClick }: { onClick: () => void }) {
@@ -145,12 +134,6 @@ export function RelocationStudio() {
     setTargetSearchText(place.display_name);
     setTargetLat(place.latitude);
     setTargetLon(place.longitude);
-  };
-
-  const handleDestinationPreset = (dest: { name: string; lat: number; lon: number }) => {
-    setTargetSearchText(dest.name);
-    setTargetLat(dest.lat);
-    setTargetLon(dest.lon);
   };
 
   const handleAnalyze = async () => {
@@ -299,60 +282,17 @@ export function RelocationStudio() {
             />
           </div>
 
+          {/* Moving Motive Dropdown */}
           <div>
-            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block mb-1.5 font-mono">
-              Quick World Destinations:
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {POPULAR_DESTINATIONS.map((dest) => (
-                <button
-                  key={dest.name}
-                  type="button"
-                  onClick={() => handleDestinationPreset(dest)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-mono transition border ${
-                    targetSearchText === dest.name
-                      ? "bg-violet-500/20 text-violet-400 border-violet-500/40 font-bold"
-                      : "bg-slate-100 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-violet-500/50"
-                  }`}
-                >
-                  {dest.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Moving Motive / Priority */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 font-mono">
-                Your Primary Motive (Optional):
-              </span>
-              {selectedMotive !== "all" && (
-                <button
-                  type="button"
-                  onClick={() => setSelectedMotive("all")}
-                  className="text-[10px] text-violet-500 hover:underline font-mono"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {MOTIVE_OPTIONS.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => setSelectedMotive(m.id)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-mono transition border ${
-                    selectedMotive === m.id
-                      ? "bg-violet-600 text-white border-violet-600 font-bold shadow-sm"
-                      : "bg-slate-100 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-violet-500/50"
-                  }`}
-                >
-                  <span className="mr-1">{m.icon}</span> {m.label}
-                </button>
-              ))}
-            </div>
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-mono">
+              Your Primary Moving Motive (Optional)
+            </label>
+            <Select
+              options={MOTIVE_SELECT_OPTIONS}
+              value={selectedMotive}
+              onChange={(val) => setSelectedMotive(val)}
+              placeholder="Select motive..."
+            />
           </div>
 
           <div className="pt-1">
