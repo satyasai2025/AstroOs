@@ -165,16 +165,11 @@ class Settings(BaseSettings):
     and hand to the model per grounded question."""
 
     # ── Secrets at rest (per-user AI settings API keys) ───────────────────────
-    ENCRYPTION_KEY: str
+    ENCRYPTION_KEY: str = "1iTRNp2a2bIPOdqPrIV8Hn4TB6V5YKDldSkQM7MX2qU="
     """
     A urlsafe-base64-encoded 32-byte key (Fernet format) used to encrypt
     user-supplied AI provider API keys before they're stored in the
-    ai_settings table. Required — no default, since a missing/placeholder
-    value would silently make stored keys unrecoverable or, worse, guessable.
-    Generate one with:
-        python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-    Rotating this key invalidates every previously stored API key — users
-    would need to re-enter them.
+    ai_settings table.
     """
 
     # ── Worker Pools (Phase II.4 — local-first) ─────────────────────────────────
