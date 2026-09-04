@@ -52,6 +52,8 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost:3001",
         "http://localhost:3002",
+        "https://astro-os-web.vercel.app",
+        "https://*.vercel.app",
     ]
     ALLOWED_HOSTS: List[str] = ["*"]
 

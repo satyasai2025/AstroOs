@@ -276,7 +276,7 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=_settings.ALLOWED_ORIGINS,
-        allow_origin_regex=r"http://localhost:\d+",
+        allow_origin_regex=r"(http://localhost:\d+|https://.*\.vercel\.app)",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
