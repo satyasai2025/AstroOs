@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
-import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
 import { DashboardErrorBoundary } from "@/components/consultation/ErrorBoundary";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useMyCharts } from "@/lib/charts";
-import { ApiError } from "@/lib/api";
 import { useWorkflowStore } from "@/lib/store";
 import type { BirthChartSummary, WorkflowAnalysisRequest } from "@/lib/types";
 import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
@@ -18,14 +16,9 @@ export default function DashboardPage() {
   const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
   const setResult = useWorkflowStore((s) => s.setResult);
   const clearResult = useWorkflowStore((s) => s.clear);
-  const createModalOpen = useWorkflowStore((s) => s.createModalOpen);
-  const createModalInitialType = useWorkflowStore((s) => s.createModalInitialType);
   const openCreateModal = useWorkflowStore((s) => s.openCreateModal);
-  const closeCreateModal = useWorkflowStore((s) => s.closeCreateModal);
   const storeResult = useWorkflowStore((s) => s.result);
   const storeRequest = useWorkflowStore((s) => s.request);
-  const [lastRequest, setLastRequest] =
-    useState<WorkflowAnalysisRequest | null>(null);
   const autoHydrated = useRef(false);
 
   const handleSelectAndLoadChart = (chart: BirthChartSummary) => {
@@ -85,29 +78,6 @@ export default function DashboardPage() {
     }
   }, [chartsLoading, chartsData, storeResult, storeRequest]);
 
-  // A newly-generated chart is saved and navigated to its detail page
-  useEffect(() => {
-    if (analyze.isSuccess && analyze.data && lastRequest) {
-      setResult(analyze.data, lastRequest);
-      closeCreateModal();
-      try {
-        localStorage.setItem("astroos_last_viewed_chart_id", analyze.data.chart_id);
-      } catch {
-        // ignore
-      }
-      router.push(`/charts/${analyze.data.chart_id}`);
-    }
-  }, [analyze.isSuccess, analyze.data, lastRequest, setResult, closeCreateModal, router]);
-
-  const errorMessage = (() => {
-    if (!analyze.error) return null;
-    if (analyze.error instanceof ApiError) return analyze.error.detail;
-    const msg = analyze.error.message || String(analyze.error);
-    if (msg.includes("404")) return "Chart calculation endpoint or profile not found (404).";
-    if (msg.includes("timeout")) return "Ephemeris calculation timed out. Please try again.";
-    if (msg.includes("Network") || msg.includes("Failed to fetch")) return "Unable to connect to the backend ephemeris server.";
-    return "An unexpected error occurred during chart generation. Please verify your inputs.";
-  })();
 
   return (
     <>
@@ -141,24 +111,11 @@ export default function DashboardPage() {
           onStartNewChart={() => {
             clearResult();
             analyze.reset();
-            setLastRequest(null);
             openCreateModal();
           }}
           onSelectChart={handleSelectAndLoadChart}
         />
       </DashboardErrorBoundary>
-
-      <CreateChartModal
-        open={createModalOpen}
-        onClose={closeCreateModal}
-        onSubmit={(request) => {
-          setLastRequest(request);
-          analyze.mutate(request);
-        }}
-        isPending={analyze.isPending}
-        errorMessage={errorMessage}
-        initialChartType={createModalInitialType as ChartTypeId | null}
-      />
     </>
   );
 }

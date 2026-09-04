@@ -961,7 +961,16 @@ function AppShellInner({
             analyze.mutate(req, {
               onSuccess: (res) => {
                 setResult(res, req);
-                router.push("/charts/birth");
+                if (res.chart_id) {
+                  try {
+                    localStorage.setItem("astroos_last_viewed_chart_id", res.chart_id);
+                  } catch {
+                    // ignore
+                  }
+                  router.push(`/charts/${res.chart_id}`);
+                } else {
+                  router.push("/charts/birth");
+                }
               },
             });
           }}

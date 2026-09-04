@@ -38,6 +38,15 @@ export function BirthPlaceSearch({ value, onChange, onSelect, disabled }: Props)
           onChange(e.target.value);
           setIsOpen(true);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (results.length > 0) {
+              onSelect(results[0]);
+              setIsOpen(false);
+            }
+          }
+        }}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setIsOpen(false)}
         placeholder="Search a city, e.g. Pune, Maharashtra, India"
@@ -68,9 +77,13 @@ export function BirthPlaceSearch({ value, onChange, onSelect, disabled }: Props)
                       onSelect(place);
                       setIsOpen(false);
                     }}
-                    className="block w-full px-4 py-2 text-left text-xs font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                    onTouchStart={() => {
+                      onSelect(place);
+                      setIsOpen(false);
+                    }}
+                    className="block w-full px-4 py-2 text-left text-xs font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                   >
-                    {place.display_name}
+                    📍 {place.display_name}
                   </button>
                 </li>
               ))}

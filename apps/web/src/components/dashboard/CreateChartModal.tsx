@@ -14,7 +14,7 @@ import {
   HOUSE_SYSTEM_OPTIONS,
   resolveAstrologicalAlignment
 } from "@/lib/chart-alignment";
-import { useTimezoneResolution } from "@/lib/geocoding";
+import { usePlaceSearch, useTimezoneResolution } from "@/lib/geocoding";
 import type {
   AyanamsaCode,
   DashaSystemCode,
@@ -239,6 +239,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
   const effectiveLatitude = manualOverride ? (manualCoordsValid ? manualLatNum : null) : resolvedPlace?.latitude ?? null;
   const effectiveLongitude = manualOverride ? (manualCoordsValid ? manualLonNum : null) : resolvedPlace?.longitude ?? null;
 
+  const placeSearchQuery = usePlaceSearch(placeSearchText);
   const tzQuery = useTimezoneResolution(effectiveLatitude, effectiveLongitude, birthDate || null);
 
   const locationResolved = effectiveLatitude !== null && effectiveLongitude !== null;
@@ -257,7 +258,7 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
   // ── Redirect to dedicated Transit Chart creation modal ────────────────────
   // When user selects "Transit Chart", render the dedicated transit modal
-  if (chartType === "transit_chart") {
+  if (chartType === "transit_chart" && step > 1) {
     return <CreateTransitModal open={open} onClose={onClose} />;
   }
 
@@ -279,6 +280,10 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
 
   function handleContinue() {
     setValidationError(null);
+    if (step === 1) {
+      setStep(2);
+      return;
+    }
     if (step === 2 && chartType === "import_chart") {
       if (!importResult?.request) {
         setValidationError("Import a .jhd file to continue.");
@@ -287,20 +292,51 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       return setStep(3);
     }
     if (step === 2) {
-      if (!birthDate || !birthTime) {
-        setValidationError("Birth date and time are both required.");
+      if (!birthDate) {
+        setValidationError("Birth date is required. Please select a valid date.");
         return;
       }
-      if (effectiveLatitude === null || effectiveLongitude === null) {
-        setValidationError(
-          manualOverride
-            ? "Enter valid latitude (-90 to 90) and longitude (-180 to 180)."
-            : "Search for and select a birth place.",
-        );
+      if (!birthTime) {
+        setValidationError("Birth time is required. Please enter a valid time.");
         return;
       }
+
+      let currentLat = effectiveLatitude;
+      let currentLon = effectiveLongitude;
+
+      // If user typed a location but hasn't explicitly clicked a dropdown item,
+      // auto-resolve from the top result of the geocode query:
+      if (!manualOverride && (currentLat === null || currentLon === null)) {
+        if (placeSearchText.trim().length >= 2) {
+          const results = placeSearchQuery.data?.results;
+          if (results && results.length > 0) {
+            const topMatch = results[0];
+            setResolvedPlace(topMatch);
+            setPlaceSearchText(topMatch.display_name);
+            currentLat = topMatch.latitude;
+            currentLon = topMatch.longitude;
+          } else if (placeSearchQuery.isLoading) {
+            setValidationError("Looking up location coordinates... please click Continue again in a moment.");
+            return;
+          } else {
+            setValidationError(
+              `Could not confirm coordinates for "${placeSearchText}". Please click a suggested place from the dropdown or switch to "Enter coordinates manually".`
+            );
+            return;
+          }
+        } else {
+          setValidationError("Please search for and select a birth place, or enter coordinates manually.");
+          return;
+        }
+      }
+
+      if (manualOverride && (currentLat === null || currentLon === null)) {
+        setValidationError("Enter valid latitude (-90 to 90) and longitude (-180 to 180).");
+        return;
+      }
+
+      setStep(3);
     }
-    setStep((s) => Math.min(3, s + 1));
   }
 
   function submitAfterDuplicateCheck(req: WorkflowAnalysisRequest) {
@@ -340,7 +376,11 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
       return;
     }
     if (!tzQuery.data || effectiveLatitude === null || effectiveLongitude === null) {
-      setValidationError("Timezone could not be resolved for this location yet.");
+      if (tzQuery.isLoading) {
+        setValidationError("Still resolving timezone for this location. Please wait a moment and try again.");
+      } else {
+        setValidationError("Timezone could not be resolved for this location. Please verify birth place coordinates.");
+      }
       return;
     }
     const birthDatetimeUtc = localToUtcIso(birthDate, birthTime, tzQuery.data.utc_offset_minutes);
@@ -876,7 +916,13 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
             )}
 
             {shownError && (
-              <p className="mt-4 text-xs" style={{ color: "var(--obsidian-status-danger, #ef4444)" }}>{shownError}</p>
+              <div
+                role="alert"
+                className="mt-4 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-600 dark:text-rose-400 leading-relaxed font-medium"
+              >
+                <span className="text-sm">⚠️</span>
+                <span>{shownError}</span>
+              </div>
             )}
           </div>
         </div>
@@ -903,11 +949,8 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
               <button
                 type="button"
                 onClick={handleContinue}
-                disabled={
-                  step === 2 &&
-                  (chartType === "import_chart" ? !importResult?.request : !canContinueFromDetails)
-                }
-                className="obsidian-btn-primary text-sm"
+                disabled={isPending}
+                className="obsidian-btn-primary text-sm flex items-center gap-1.5 cursor-pointer"
               >
                 Continue →
               </button>
@@ -918,10 +961,9 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                 disabled={
                   isPending ||
                   checkExisting.isPending ||
-                  !!duplicateMatch?.exists ||
-                  (chartType === "import_chart" ? !importResult?.request : !canSubmit)
+                  !!duplicateMatch?.exists
                 }
-                className="obsidian-btn-primary text-sm"
+                className="obsidian-btn-primary text-sm flex items-center gap-1.5 cursor-pointer"
               >
                 {isPending ? (
                   <>
@@ -930,6 +972,11 @@ export function CreateChartModal({ open, onClose, onSubmit, isPending, errorMess
                   </>
                 ) : checkExisting.isPending ? (
                   "Checking…"
+                ) : tzQuery.isLoading ? (
+                  <>
+                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
+                    Resolving Timezone…
+                  </>
                 ) : (
                   "Create Chart"
                 )}
