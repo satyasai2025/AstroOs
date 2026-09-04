@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { api } from "@/lib/api";
-import { useActiveChart } from "@/lib/charts";
+import { useActiveChart, chartKeys } from "@/lib/charts";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAnalyzeWorkflow } from "@/lib/workflow";
+import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
 import { Card, Button, Badge, Select, Modal, type SelectOption } from "@/components/ui";
 import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
-import type { PlaceResultResponse } from "@/lib/types";
+import type { PlaceResultResponse, WorkflowAnalysisRequest } from "@/lib/types";
 
 interface Trigger {
   rule_id: string;
@@ -74,6 +77,8 @@ function CoordinatesHelpButton({ onClick }: { onClick: () => void }) {
 
 export function RelocationStudio() {
   const { activeSummary, myCharts, selectChart, isLoading: isLoadingCharts } = useActiveChart();
+  const queryClient = useQueryClient();
+  const analyzeWorkflow = useAnalyzeWorkflow();
 
   // Birth state
   const [selectedChartId, setSelectedChartId] = useState<string>("");
@@ -82,23 +87,62 @@ export function RelocationStudio() {
   const [birthLon, setBirthLon] = useState<number>(77.2090);
   const [birthPlaceName, setBirthPlaceName] = useState<string>("New Delhi, India");
 
-  // Target relocation state
-  const [targetSearchText, setTargetSearchText] = useState<string>("New York, USA");
+  // Target relocation state (defaults to Birthplace Baseline until user selects new location or clicks GPS)
+  const [targetSearchText, setTargetSearchText] = useState<string>("New Delhi, India (Birthplace Baseline)");
   const [targetPlace, setTargetPlace] = useState<PlaceResultResponse | null>(null);
-  const [targetLat, setTargetLat] = useState<number>(40.7128);
-  const [targetLon, setTargetLon] = useState<number>(-74.0060);
+  const [targetLat, setTargetLat] = useState<number>(28.6139);
+  const [targetLon, setTargetLon] = useState<number>(77.2090);
   const [ayanamsa, setAyanamsa] = useState<string>("lahiri");
   const [selectedMotive, setSelectedMotive] = useState<string>("all");
   const [showOnlyMotive, setShowOnlyMotive] = useState<boolean>(true);
   const [isCustomCoords, setIsCustomCoords] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [gpsLoading, setGpsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RelocationAnalyzeResponse | null>(null);
 
   // Modals state
   const [isCoordsModalOpen, setIsCoordsModalOpen] = useState<boolean>(false);
   const [selectedDomainForModal, setSelectedDomainForModal] = useState<string | null>(null);
+  const [isCreateChartModalOpen, setIsCreateChartModalOpen] = useState<boolean>(false);
+
+  const handleAnalyze = async (override?: {
+    birth_utc?: string;
+    birth_lat?: number;
+    birth_lon?: number;
+    target_lat?: number;
+    target_lon?: number;
+    ayanamsa?: string;
+  }) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const bUtc = override?.birth_utc ?? birthUtc;
+      const bLat = override?.birth_lat ?? birthLat;
+      const bLon = override?.birth_lon ?? birthLon;
+      const tLat = override?.target_lat ?? targetLat;
+      const tLon = override?.target_lon ?? targetLon;
+      const ay = override?.ayanamsa ?? ayanamsa;
+
+      const data = await api.post<RelocationAnalyzeResponse>(
+        "/api/v1/relocation/analyze",
+        {
+          birth_utc: bUtc,
+          birth_lat: bLat,
+          birth_lon: bLon,
+          target_lat: tLat,
+          target_lon: tLon,
+          ayanamsa: ay,
+        },
+      );
+      setResult(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Analysis failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Sync with user's active/default chart
   useEffect(() => {
@@ -107,11 +151,34 @@ export function RelocationStudio() {
       setBirthUtc(activeSummary.birth_datetime_utc);
       setBirthLat(activeSummary.birth_latitude);
       setBirthLon(activeSummary.birth_longitude);
-      setBirthPlaceName(activeSummary.place_name || "Birth Location");
-      if (activeSummary.ayanamsa) {
-        setAyanamsa(activeSummary.ayanamsa.toLowerCase());
+      const placeName = activeSummary.place_name || "Birth Location";
+      setBirthPlaceName(placeName);
+      const ay = activeSummary.ayanamsa ? activeSummary.ayanamsa.toLowerCase() : "lahiri";
+      setAyanamsa(ay);
+
+      // Default target to active birthplace baseline if currently showing baseline
+      if (targetSearchText.includes("Baseline") || targetSearchText === "New York, USA") {
+        setTargetLat(activeSummary.birth_latitude);
+        setTargetLon(activeSummary.birth_longitude);
+        setTargetSearchText(`${placeName} (Birthplace Baseline)`);
+        handleAnalyze({
+          birth_utc: activeSummary.birth_datetime_utc,
+          birth_lat: activeSummary.birth_latitude,
+          birth_lon: activeSummary.birth_longitude,
+          target_lat: activeSummary.birth_latitude,
+          target_lon: activeSummary.birth_longitude,
+          ayanamsa: ay,
+        });
+      } else {
+        handleAnalyze({
+          birth_utc: activeSummary.birth_datetime_utc,
+          birth_lat: activeSummary.birth_latitude,
+          birth_lon: activeSummary.birth_longitude,
+          ayanamsa: ay,
+        });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSummary]);
 
   // Chart dropdown options
@@ -135,38 +202,98 @@ export function RelocationStudio() {
     setTargetSearchText(place.display_name);
     setTargetLat(place.latitude);
     setTargetLon(place.longitude);
+    handleAnalyze({ target_lat: place.latitude, target_lon: place.longitude });
   };
 
-  const handleAnalyze = async () => {
-    setLoading(true);
+  const handleUseCurrentLocation = async () => {
+    setGpsLoading(true);
     setError(null);
-    try {
-      const data = await api.post<RelocationAnalyzeResponse>(
-        "/api/v1/relocation/analyze",
-        {
-          birth_utc: birthUtc,
-          birth_lat: birthLat,
-          birth_lon: birthLon,
-          target_lat: targetLat,
-          target_lon: targetLon,
-          ayanamsa,
-        },
-      );
-      setResult(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Analysis failed");
-    } finally {
-      setLoading(false);
+
+    // Strategy 1: Browser Geolocation
+    if (typeof window !== "undefined" && navigator.geolocation) {
+      try {
+        const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: false,
+            timeout: 5000,
+            maximumAge: 300000,
+          });
+        });
+
+        const lat = parseFloat(pos.coords.latitude.toFixed(4));
+        const lon = parseFloat(pos.coords.longitude.toFixed(4));
+        setTargetLat(lat);
+        setTargetLon(lon);
+        setTargetSearchText(`Current GPS Location (${lat}°, ${lon}°)`);
+        setGpsLoading(false);
+        handleAnalyze({ target_lat: lat, target_lon: lon });
+        return;
+      } catch (geoErr) {
+        console.warn("Browser GPS failed or blocked, trying IP fallback...", geoErr);
+      }
     }
+
+    // Strategy 2: Fast IP Geolocation Fallback
+    try {
+      const ipLoc = await api.get<PlaceResultResponse>("/api/v1/geocode/ip");
+      if (ipLoc && ipLoc.latitude != null && ipLoc.longitude != null) {
+        const lat = parseFloat(ipLoc.latitude.toFixed(4));
+        const lon = parseFloat(ipLoc.longitude.toFixed(4));
+        setTargetLat(lat);
+        setTargetLon(lon);
+        setTargetSearchText(ipLoc.display_name || `Current Location (${lat}°, ${lon}°)`);
+        setGpsLoading(false);
+        handleAnalyze({ target_lat: lat, target_lon: lon });
+        return;
+      }
+    } catch (ipErr) {
+      console.warn("IP Geolocation fallback failed:", ipErr);
+    }
+
+    setGpsLoading(false);
+    setError("Could not detect GPS location automatically. Please search city name or enter custom coordinates.");
   };
 
-  // Run analysis automatically when chart or target changes if ready
-  useEffect(() => {
-    if (birthUtc && birthLat != null && targetLat != null) {
-      handleAnalyze();
+  const handleResetToBirthLocation = () => {
+    setTargetLat(birthLat);
+    setTargetLon(birthLon);
+    setTargetSearchText(`${birthPlaceName} (Birthplace Baseline)`);
+    handleAnalyze({ target_lat: birthLat, target_lon: birthLon });
+  };
+
+  const handleCreateChartSubmit = async (req: WorkflowAnalysisRequest) => {
+    try {
+      const res = await analyzeWorkflow.mutateAsync(req);
+      await queryClient.invalidateQueries({ queryKey: chartKeys.mine });
+      setIsCreateChartModalOpen(false);
+      if (res.chart_id) {
+        setSelectedChartId(res.chart_id);
+      }
+      setBirthUtc(req.birth_datetime_utc);
+      setBirthLat(req.latitude);
+      setBirthLon(req.longitude);
+      const newPlace = req.place_name || req.subject_name || "New Birth Location";
+      setBirthPlaceName(newPlace);
+      const newAy = req.ayanamsa ? req.ayanamsa.toLowerCase() : "lahiri";
+      setAyanamsa(newAy);
+
+      // Default target to new birthplace baseline and analyze
+      setTargetLat(req.latitude);
+      setTargetLon(req.longitude);
+      setTargetSearchText(`${newPlace} (Birthplace Baseline)`);
+
+      handleAnalyze({
+        birth_utc: req.birth_datetime_utc,
+        birth_lat: req.latitude,
+        birth_lon: req.longitude,
+        target_lat: req.latitude,
+        target_lon: req.longitude,
+        ayanamsa: newAy,
+      });
+    } catch (err) {
+      console.error("Failed to create new birth chart:", err);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChartId]);
+  };
 
   return (
     <div className="space-y-6">
@@ -209,18 +336,37 @@ export function RelocationStudio() {
                 1. Natal Birth Chart
               </span>
             </div>
-            {activeSummary && (
-              <Badge tone="gold">
-                {activeSummary.subject_name}
-              </Badge>
-            )}
+            <div className="flex items-center gap-2">
+              {activeSummary && (
+                <Badge tone="gold">
+                  {activeSummary.subject_name}
+                </Badge>
+              )}
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setIsCreateChartModalOpen(true)}
+                className="text-xs h-7 px-2.5 font-mono cursor-pointer flex items-center gap-1"
+              >
+                <span>+</span> New Chart
+              </Button>
+            </div>
           </div>
 
           {chartOptions.length > 0 ? (
             <div>
-              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                Select Saved User Chart
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+                  Select Saved User Chart
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsCreateChartModalOpen(true)}
+                  className="text-xs text-cyan-600 dark:text-cyan-400 hover:underline font-mono flex items-center gap-1 cursor-pointer"
+                >
+                  <span>+</span> New Profile Form
+                </button>
+              </div>
               <Select
                 options={chartOptions}
                 value={selectedChartId}
@@ -229,8 +375,16 @@ export function RelocationStudio() {
               />
             </div>
           ) : (
-            <div className="p-3 rounded-lg border border-amber-500/30 bg-amber-500/10 text-xs text-amber-300">
-              No saved birth charts found. Using default baseline coordinates.
+            <div className="p-3 rounded-lg border border-amber-500/30 bg-amber-500/10 text-xs text-amber-300 flex items-center justify-between">
+              <span>No saved birth charts found.</span>
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => setIsCreateChartModalOpen(true)}
+                className="text-xs h-7 px-2.5"
+              >
+                + Create New Chart
+              </Button>
             </div>
           )}
 
@@ -267,15 +421,39 @@ export function RelocationStudio() {
             <span className="text-sm font-semibold text-violet-500 dark:text-violet-400">
               2. Relocation Target Destination
             </span>
-            <Badge tone="violet">
-              Target Horizon
-            </Badge>
+            <div className="flex items-center gap-1.5">
+              <Badge tone="violet">
+                Target Horizon
+              </Badge>
+            </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-              Search Target City / Location
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+                Search Target City / Location
+              </label>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  disabled={gpsLoading}
+                  className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400 hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50 font-medium"
+                  title="Detect and use your current live GPS coordinates"
+                >
+                  <span>📍</span> {gpsLoading ? "Detecting..." : "Current Location (GPS)"}
+                </button>
+                <span className="text-slate-300 dark:text-slate-700">|</span>
+                <button
+                  type="button"
+                  onClick={handleResetToBirthLocation}
+                  className="text-[11px] font-mono text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:underline flex items-center gap-1 cursor-pointer"
+                  title="Reset target location to your birth place baseline"
+                >
+                  <span>🏠</span> Birth Place
+                </button>
+              </div>
+            </div>
             <BirthPlaceSearch
               value={targetSearchText}
               onChange={setTargetSearchText}
@@ -380,7 +558,7 @@ export function RelocationStudio() {
       <div className="flex items-center justify-between gap-4">
         <Button
           variant="primary"
-          onClick={handleAnalyze}
+          onClick={() => handleAnalyze()}
           disabled={loading}
           className="font-bold flex items-center gap-2"
         >
@@ -1209,6 +1387,16 @@ export function RelocationStudio() {
           </div>
         </Modal>
       )}
+
+      {/* Create New Natal Chart Modal */}
+      <CreateChartModal
+        open={isCreateChartModalOpen}
+        onClose={() => setIsCreateChartModalOpen(false)}
+        onSubmit={handleCreateChartSubmit}
+        isPending={analyzeWorkflow.isPending}
+        errorMessage={analyzeWorkflow.error?.message ?? null}
+        initialChartType="birth_chart"
+      />
     </div>
   );
 }
