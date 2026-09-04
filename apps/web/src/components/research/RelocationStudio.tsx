@@ -89,6 +89,7 @@ export function RelocationStudio() {
   const [targetLon, setTargetLon] = useState<number>(-74.0060);
   const [ayanamsa, setAyanamsa] = useState<string>("lahiri");
   const [selectedMotive, setSelectedMotive] = useState<string>("all");
+  const [showOnlyMotive, setShowOnlyMotive] = useState<boolean>(true);
   const [isCustomCoords, setIsCustomCoords] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -290,7 +291,12 @@ export function RelocationStudio() {
             <Select
               options={MOTIVE_SELECT_OPTIONS}
               value={selectedMotive}
-              onChange={(val) => setSelectedMotive(val)}
+              onChange={(val) => {
+                setSelectedMotive(val);
+                if (val !== "all") {
+                  setShowOnlyMotive(true);
+                }
+              }}
               placeholder="Select motive..."
             />
           </div>
@@ -458,237 +464,275 @@ export function RelocationStudio() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
               <div>
                 <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <span>📊</span> 6 Life Domains Relocation Suitability
+                  <span>📊</span> {selectedMotive !== "all" && showOnlyMotive ? "Focused Motive Relocation Audit" : "6 Life Domains Relocation Suitability"}
                 </h2>
                 <p className="text-xs text-slate-500 font-mono mt-0.5">
-                  Synthesized from all {result.techniques.length} Shastric relocation techniques into 6 actionable life spheres for {targetSearchText}
+                  {selectedMotive !== "all" && showOnlyMotive
+                    ? `Showing focused ${MOTIVE_SELECT_OPTIONS.find((m) => m.value === selectedMotive)?.label.split(" ")[1] ?? "Motive"} audit for ${targetSearchText}. Click "All 6 Domains" to inspect every sphere.`
+                    : `Synthesized from all ${result.techniques.length} Shastric relocation techniques into 6 actionable life spheres for ${targetSearchText}`}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {selectedMotive !== "all" && (
+                  <div className="inline-flex rounded-lg border border-slate-200 dark:border-slate-800 p-0.5 bg-slate-100 dark:bg-slate-900 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setShowOnlyMotive(true)}
+                      className={`px-2.5 py-1 rounded-md font-mono text-xs transition cursor-pointer ${
+                        showOnlyMotive
+                          ? "bg-violet-600 text-white font-bold shadow-xs"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                      }`}
+                    >
+                      🎯 Focused Motive
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowOnlyMotive(false)}
+                      className={`px-2.5 py-1 rounded-md font-mono text-xs transition cursor-pointer ${
+                        !showOnlyMotive
+                          ? "bg-violet-600 text-white font-bold shadow-xs"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                      }`}
+                    >
+                      🌐 All 6 Domains
+                    </button>
+                  </div>
+                )}
                 <Badge tone="cyan">
                   {result.techniques.filter((t) => t.is_matched).length} of {result.techniques.length} Techniques Active
                 </Badge>
-                <Badge tone="violet">
-                  6 Life Domains
-                </Badge>
+                {(!showOnlyMotive || selectedMotive === "all") && (
+                  <Badge tone="violet">6 Life Domains</Badge>
+                )}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className={`grid gap-4 ${showOnlyMotive && selectedMotive !== "all" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}`}>
               {/* 1. Career & Public Status */}
-              <Card
-                className={`p-5 border-l-4 border-l-amber-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
-                  selectedMotive === "career" ? "ring-2 ring-amber-500/80 bg-amber-500/5 shadow-md" : ""
-                }`}
-                onClick={() => setSelectedDomainForModal("career")}
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      <span>💼</span> Career &amp; Status
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {selectedMotive === "career" && (
-                        <Badge tone="gold">🎯 Motive</Badge>
-                      )}
-                      <Badge tone={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "success" : "neutral"}>
-                        {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "High Support" : "Moderate"}
-                      </Badge>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                    Evaluates professional visibility, authority, leadership, and employment recognition at this longitude.
-                  </p>
-                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>10th House Axis (MC):</span>
-                      <span className="text-slate-900 dark:text-slate-200 font-bold">{result.angles.midheaven.sign}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Sun Angularity:</span>
-                      <span className={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "text-emerald-500 font-bold" : "text-slate-400"}>
-                        {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "Active (You Shine)" : "Neutral"}
+              {(!showOnlyMotive || selectedMotive === "all" || selectedMotive === "career") && (
+                <Card
+                  className={`p-5 border-l-4 border-l-amber-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                    selectedMotive === "career" ? "ring-2 ring-amber-500/80 bg-amber-500/5 shadow-md" : ""
+                  }`}
+                  onClick={() => setSelectedDomainForModal("career")}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>💼</span> Career &amp; Status
                       </span>
+                      <div className="flex items-center gap-1">
+                        {selectedMotive === "career" && (
+                          <Badge tone="gold">🎯 Motive</Badge>
+                        )}
+                        <Badge tone={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "success" : "neutral"}>
+                          {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "High Support" : "Moderate"}
+                        </Badge>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      Evaluates professional visibility, authority, leadership, and employment recognition at this longitude.
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>10th House Axis (MC):</span>
+                        <span className="text-slate-900 dark:text-slate-200 font-bold">{result.angles.midheaven.sign}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Sun Angularity:</span>
+                        <span className={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "text-emerald-500 font-bold" : "text-slate-400"}>
+                          {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "Active (You Shine)" : "Neutral"}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
-                  <span>💡 Best for career expansions &amp; authority.</span>
-                  <span className="text-amber-500 dark:text-amber-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
-                </div>
-              </Card>
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                    <span>💡 Best for career expansions &amp; authority.</span>
+                    <span className="text-amber-500 dark:text-amber-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
+                  </div>
+                </Card>
+              )}
 
               {/* 2. Mental Peace & Domestic Comfort */}
-              <Card
-                className={`p-5 border-l-4 border-l-cyan-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
-                  selectedMotive === "mental_peace" ? "ring-2 ring-cyan-500/80 bg-cyan-500/5 shadow-md" : ""
-                }`}
-                onClick={() => setSelectedDomainForModal("mental_peace")}
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      <span>🏡</span> Mental Peace &amp; Home
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {selectedMotive === "mental_peace" && (
-                        <Badge tone="cyan">🎯 Motive</Badge>
-                      )}
-                      <Badge tone={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "success" : "neutral"}>
-                        {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "Harmonic Comfort" : "Neutral"}
-                      </Badge>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                    Evaluates psychological well-being, feelings of belonging, family harmony, and emotional bonding.
-                  </p>
-                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Comfort Zone Relation:</span>
-                      <span className={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "text-cyan-500 font-bold" : "text-slate-400"}>
-                        {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "9th-Harmonic Aligned" : "Standard"}
+              {(!showOnlyMotive || selectedMotive === "all" || selectedMotive === "mental_peace") && (
+                <Card
+                  className={`p-5 border-l-4 border-l-cyan-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                    selectedMotive === "mental_peace" ? "ring-2 ring-cyan-500/80 bg-cyan-500/5 shadow-md" : ""
+                  }`}
+                  onClick={() => setSelectedDomainForModal("mental_peace")}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>🏡</span> Mental Peace &amp; Home
                       </span>
+                      <div className="flex items-center gap-1">
+                        {selectedMotive === "mental_peace" && (
+                          <Badge tone="cyan">🎯 Motive</Badge>
+                        )}
+                        <Badge tone={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "success" : "neutral"}>
+                          {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "Harmonic Comfort" : "Neutral"}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Ascendant Harmony:</span>
-                      <span className="text-slate-900 dark:text-slate-200">{result.angles.ascendant.harmonic_family}</span>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      Evaluates psychological well-being, feelings of belonging, family harmony, and emotional bonding.
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Comfort Zone Relation:</span>
+                        <span className={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "text-cyan-500 font-bold" : "text-slate-400"}>
+                          {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "9th-Harmonic Aligned" : "Standard"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Ascendant Harmony:</span>
+                        <span className="text-slate-900 dark:text-slate-200">{result.angles.ascendant.harmonic_family}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
-                  <span>💡 Emotional grounding &amp; home feeling.</span>
-                  <span className="text-cyan-500 dark:text-cyan-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
-                </div>
-              </Card>
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                    <span>💡 Emotional grounding &amp; home feeling.</span>
+                    <span className="text-cyan-500 dark:text-cyan-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
+                  </div>
+                </Card>
+              )}
 
               {/* 3. Wealth & Financial Influx */}
-              <Card
-                className={`p-5 border-l-4 border-l-emerald-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
-                  selectedMotive === "wealth" ? "ring-2 ring-emerald-500/80 bg-emerald-500/5 shadow-md" : ""
-                }`}
-                onClick={() => setSelectedDomainForModal("wealth")}
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      <span>💰</span> Wealth &amp; Gains
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {selectedMotive === "wealth" && (
-                        <Badge tone="success">🎯 Motive</Badge>
-                      )}
-                      <Badge tone="gold">Dhana Potential</Badge>
+              {(!showOnlyMotive || selectedMotive === "all" || selectedMotive === "wealth") && (
+                <Card
+                  className={`p-5 border-l-4 border-l-emerald-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                    selectedMotive === "wealth" ? "ring-2 ring-emerald-500/80 bg-emerald-500/5 shadow-md" : ""
+                  }`}
+                  onClick={() => setSelectedDomainForModal("wealth")}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>💰</span> Wealth &amp; Gains
+                      </span>
+                      <div className="flex items-center gap-1">
+                        {selectedMotive === "wealth" && (
+                          <Badge tone="success">🎯 Motive</Badge>
+                        )}
+                        <Badge tone="gold">Dhana Potential</Badge>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      Evaluates financial liquidity, business negotiations, asset generation, and commercial partnerships.
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Active Confluences (Parans):</span>
+                        <span className="text-slate-900 dark:text-slate-200 font-bold">
+                          {String(result.facts["relocation.paran.count"] ?? 0)} Active
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Midpoint Influx:</span>
+                        <span className="text-slate-900 dark:text-slate-200">
+                          {String(result.facts["relocation.midpoints.mc.count"] ?? 0)} MC Triggers
+                        </span>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                    Evaluates financial liquidity, business negotiations, asset generation, and commercial partnerships.
-                  </p>
-                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Active Confluences (Parans):</span>
-                      <span className="text-slate-900 dark:text-slate-200 font-bold">
-                        {String(result.facts["relocation.paran.count"] ?? 0)} Active
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Midpoint Influx:</span>
-                      <span className="text-slate-900 dark:text-slate-200">
-                        {String(result.facts["relocation.midpoints.mc.count"] ?? 0)} MC Triggers
-                      </span>
-                    </div>
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                    <span>💡 Commercial contacts &amp; investments.</span>
+                    <span className="text-emerald-500 dark:text-emerald-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                   </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
-                  <span>💡 Commercial contacts &amp; investments.</span>
-                  <span className="text-emerald-500 dark:text-emerald-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
-                </div>
-              </Card>
+                </Card>
+              )}
 
               {/* 4. Relationships & Marriage */}
-              <Card
-                className={`p-5 border-l-4 border-l-rose-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
-                  selectedMotive === "marriage" ? "ring-2 ring-rose-500/80 bg-rose-500/5 shadow-md" : ""
-                }`}
-                onClick={() => setSelectedDomainForModal("marriage")}
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      <span>❤️</span> Marriage &amp; Partnerships
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {selectedMotive === "marriage" && (
-                        <Badge tone="violet">🎯 Motive</Badge>
-                      )}
-                      <Badge tone="violet">7th Axis Focus</Badge>
+              {(!showOnlyMotive || selectedMotive === "all" || selectedMotive === "marriage") && (
+                <Card
+                  className={`p-5 border-l-4 border-l-rose-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                    selectedMotive === "marriage" ? "ring-2 ring-rose-500/80 bg-rose-500/5 shadow-md" : ""
+                  }`}
+                  onClick={() => setSelectedDomainForModal("marriage")}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>❤️</span> Marriage &amp; Partnerships
+                      </span>
+                      <div className="flex items-center gap-1">
+                        {selectedMotive === "marriage" && (
+                          <Badge tone="violet">🎯 Motive</Badge>
+                        )}
+                        <Badge tone="violet">7th Axis Focus</Badge>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      Evaluates relationship harmony, meeting significant others, mutual agreements, and marital stability.
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Relocated 7th Cusp (Desc):</span>
+                        <span className="text-slate-900 dark:text-slate-200 font-bold">Opposite {result.angles.ascendant.sign}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Venus/Moon Energy:</span>
+                        <span className="text-slate-900 dark:text-slate-200">Relational Harmony</span>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                    Evaluates relationship harmony, meeting significant others, mutual agreements, and marital stability.
-                  </p>
-                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Relocated 7th Cusp (Desc):</span>
-                      <span className="text-slate-900 dark:text-slate-200 font-bold">Opposite {result.angles.ascendant.sign}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Venus/Moon Energy:</span>
-                      <span className="text-slate-900 dark:text-slate-200">Relational Harmony</span>
-                    </div>
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                    <span>💡 Cooperative bonds &amp; romance.</span>
+                    <span className="text-rose-500 dark:text-rose-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                   </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
-                  <span>💡 Cooperative bonds &amp; romance.</span>
-                  <span className="text-rose-500 dark:text-rose-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
-                </div>
-              </Card>
+                </Card>
+              )}
 
               {/* 5. Health, Stability & Risk Warnings */}
-              <Card
-                className={`p-5 border-l-4 border-l-red-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
-                  selectedMotive === "health_risk" ? "ring-2 ring-red-500/80 bg-red-500/5 shadow-md" : ""
-                }`}
-                onClick={() => setSelectedDomainForModal("health_risk")}
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      <span>⚠️</span> Stability &amp; Risk Audit
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {selectedMotive === "health_risk" && (
-                        <Badge tone="danger">🎯 Motive</Badge>
-                      )}
-                      <Badge tone={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "danger" : "success"}>
-                        {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Volatile / Sudden" : "Low Risk"}
-                      </Badge>
-                    </div>
-                  </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                    Evaluates sudden unexpected shocks, volatility, health vulnerability, and need for grounding.
-                  </p>
-                  <div className="mt-3 space-y-1.5 text-[11px] font-mono">
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Disruption Indicator:</span>
-                      <span className={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "text-rose-500 font-bold" : "text-emerald-500 font-bold"}>
-                        {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Active Volatility" : "Calm & Stable"}
+              {(!showOnlyMotive || selectedMotive === "all" || selectedMotive === "health_risk") && (
+                <Card
+                  className={`p-5 border-l-4 border-l-red-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                    selectedMotive === "health_risk" ? "ring-2 ring-red-500/80 bg-red-500/5 shadow-md" : ""
+                  }`}
+                  onClick={() => setSelectedDomainForModal("health_risk")}
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                        <span>⚠️</span> Stability &amp; Risk Audit
                       </span>
+                      <div className="flex items-center gap-1">
+                        {selectedMotive === "health_risk" && (
+                          <Badge tone="danger">🎯 Motive</Badge>
+                        )}
+                        <Badge tone={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "danger" : "success"}>
+                          {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Volatile / Sudden" : "Low Risk"}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-slate-500">
-                      <span>Friction Index:</span>
-                      <span className="text-slate-900 dark:text-slate-200">Normal Range</span>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+                      Evaluates sudden unexpected shocks, volatility, health vulnerability, and need for grounding.
+                    </p>
+                    <div className="mt-3 space-y-1.5 text-[11px] font-mono">
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Disruption Indicator:</span>
+                        <span className={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "text-rose-500 font-bold" : "text-emerald-500 font-bold"}>
+                          {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Active Volatility" : "Calm & Stable"}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-slate-500">
+                        <span>Friction Index:</span>
+                        <span className="text-slate-900 dark:text-slate-200">Normal Range</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
-                  <span>
-                    {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched)
-                      ? "⚠️ Caution: High volatility."
-                      : "✅ Safe for physical health."}
-                  </span>
-                  <span className="text-rose-500 dark:text-rose-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
-                </div>
-              </Card>
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                    <span>
+                      {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched)
+                        ? "⚠️ Caution: High volatility."
+                        : "✅ Safe for physical health."}
+                    </span>
+                    <span className="text-rose-500 dark:text-rose-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
+                  </div>
+                </Card>
+              )}
 
               {/* 6. Strategic Usage Recommendation */}
               <Card
@@ -724,6 +768,18 @@ export function RelocationStudio() {
                 </div>
               </Card>
             </div>
+
+            {showOnlyMotive && selectedMotive !== "all" && (
+              <div className="flex items-center justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowOnlyMotive(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 text-xs font-mono text-violet-600 dark:text-violet-400 hover:border-violet-500/50 shadow-xs transition cursor-pointer flex items-center gap-2"
+                >
+                  <span>▾</span> View All 6 Life Domains (Career, Wealth, Peace, Marriage)
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Research & Shastric Evidence Inspection Accordion */}
