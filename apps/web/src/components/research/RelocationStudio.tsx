@@ -107,6 +107,12 @@ export function RelocationStudio() {
   const [selectedDomainForModal, setSelectedDomainForModal] = useState<string | null>(null);
   const [isCreateChartModalOpen, setIsCreateChartModalOpen] = useState<boolean>(false);
 
+  // Hydration safety
+  const [mounted, setMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleAnalyze = async (override?: {
     birth_utc?: string;
     birth_lat?: number;
@@ -309,6 +315,15 @@ export function RelocationStudio() {
       console.error("Failed to create new birth chart:", err);
     }
   };
+
+  if (!mounted) {
+    return (
+      <div className="p-12 text-center text-slate-400 text-xs font-mono space-y-2">
+        <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+        <p>Loading Relocation Inspector...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

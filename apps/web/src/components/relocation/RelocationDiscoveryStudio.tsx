@@ -94,6 +94,12 @@ export function RelocationDiscoveryStudio() {
   // Modal state
   const [isCreateChartModalOpen, setIsCreateChartModalOpen] = useState<boolean>(false);
 
+  // Hydration safety
+  const [mounted, setMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Sync active chart
   useEffect(() => {
     if (activeSummary) {
@@ -175,6 +181,27 @@ export function RelocationDiscoveryStudio() {
       console.error("Failed to create new birth chart:", err);
     }
   };
+
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+              <span>🧭</span> Relocation &amp; Astro-Cartography Studio
+            </h1>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed max-w-4xl">
+              Find the best places in the world aligned with your chart, using Astro-Cartography, Paran Crossings, Sun Angularity, Midpoint-to-Angle and Harmonic techniques.
+            </p>
+          </div>
+        </div>
+        <div className="p-12 text-center text-slate-400 text-xs font-mono space-y-2">
+          <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
+          <p>Loading Relocation Studio...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
