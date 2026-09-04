@@ -64,3 +64,27 @@ def test_relocation_analyze_422_on_bad_coords():
     bad = dict(PROVO_BODY, target_lat=95.0)
     response = client.post("/api/v1/relocation/analyze", json=bad)
     assert response.status_code == 422
+
+
+def test_relocation_recommend_happy_path():
+    client = TestClient(app)
+    req = {
+        "birth_utc": "1990-01-01T12:00:00Z",
+        "birth_lat": 28.6139,
+        "birth_lon": 77.2090,
+        "ayanamsa": "lahiri",
+        "objective": "career",
+        "region": "worldwide",
+    }
+    response = client.post("/api/v1/relocation/recommend", json=req)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["objective"] == "career"
+    assert len(data["cities"]) > 5
+    top_city = data["cities"][0]
+    assert "overall_score" in top_city
+    assert "domain_scores" in top_city
+    assert "key_influences" in top_city
+    assert "why_points" in top_city
+    assert top_city["overall_score"] >= 50
+

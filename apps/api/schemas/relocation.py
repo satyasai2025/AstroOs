@@ -59,3 +59,52 @@ class RelocationAnalyzeResponse(BaseModel):
     angles: dict[str, RelocationAngleSchema]
     techniques: list[RelocationTechniqueSchema]
     facts: dict[str, Any] = Field(default_factory=dict)
+
+
+class RelocationRecommendRequest(BaseModel):
+    birth_utc: datetime = Field(description="ISO 8601 UTC birth datetime")
+    birth_lat: float = Field(ge=-90.0, le=90.0)
+    birth_lon: float = Field(ge=-180.0, le=180.0)
+    ayanamsa: str = "lahiri"
+    house_system: str = "P"
+    objective: str = Field(default="career", description="career, business, wealth, marriage, education, peace, spiritual, general")
+    region: str = Field(default="worldwide", description="worldwide, asia, europe, north_america, middle_east, oceania, india")
+
+
+class CityKeyInfluence(BaseModel):
+    planet_or_pair: str
+    orb_str: str
+    strength: str
+    theme: str
+
+
+class CityDomainScores(BaseModel):
+    career: int
+    finance: int
+    relationships: int
+    health: int
+    education: int
+    stability: int
+
+
+class RecommendedCity(BaseModel):
+    id: str
+    name: str
+    country: str
+    country_code: str
+    flag: str
+    image_url: str
+    latitude: float
+    longitude: float
+    overall_score: int
+    domain_scores: CityDomainScores
+    key_influences: list[CityKeyInfluence]
+    why_points: list[str]
+    astrological_themes: dict[str, str]
+    techniques_used: list[str]
+
+
+class RelocationRecommendResponse(BaseModel):
+    objective: str
+    region: str
+    cities: list[RecommendedCity]

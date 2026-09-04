@@ -193,6 +193,7 @@ export const NAV_CONFIG: NavGroup[] = [
           { href: "/phalita", label: "Phalita MoE Consultation", subtitle: "Canonical 3-Chart & MoE", icon: "sparkle", viewId: "analysis-phalita" },
           { href: "/medini", label: "Medini Jyotisha", subtitle: "National & Geopolitical Ingress", icon: "globe", viewId: "analysis-medini" },
           { href: "/muhurta", label: "Muhurta & Panchanga", subtitle: "Auspicious Timing & SSS Mode", icon: "clock", viewId: "analysis-muhurta" },
+          { href: "/relocation", label: "Relocation & Astro-Cartography", subtitle: "Find Best Locations & World Lines", icon: "compass", viewId: "analysis-relocation" },
         ],
       },
 
@@ -416,7 +417,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { href: "/research/reverse-search", label: "Reverse Search", icon: "search" },
       { href: "/research/patterns", label: "Pattern Discovery", icon: "sparkle" },
       { href: "/research/dashboard", label: "Research Statistics", icon: "bar" },
-      { href: "/research/relocation", label: "Relocation Studio", icon: "compass" },
+      { href: "/relocation", label: "Relocation Studio", icon: "compass" },
       { href: "/knowledge", label: "Knowledge Base", icon: "book" },
       { href: "/knowledge/bphs", label: "Classical References", icon: "book" },
     ],

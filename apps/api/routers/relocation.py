@@ -19,9 +19,12 @@ from apps.api.schemas.relocation import (
     RelocationAnalyzeRequest,
     RelocationAnalyzeResponse,
     RelocationAngleSchema,
+    RelocationRecommendRequest,
+    RelocationRecommendResponse,
     RelocationTechniqueSchema,
     RelocationTriggerSchema,
 )
+from apps.api.services.relocation_recommender import RelocationRecommender
 from apps.api.services.fact_registry import FactRegistry
 from apps.api.services.relocation_engine import RelocationEngine
 from apps.api.services.technique_engine import TechniqueEngine
@@ -149,3 +152,10 @@ def analyze_relocation(body: RelocationAnalyzeRequest) -> RelocationAnalyzeRespo
             ),
         },
     )
+
+
+@router.post("/recommend", response_model=RelocationRecommendResponse)
+def recommend_relocation(body: RelocationRecommendRequest) -> RelocationRecommendResponse:
+    recommender = RelocationRecommender(ayanamsa=body.ayanamsa, house_system=body.house_system)
+    return recommender.recommend(body)
+
