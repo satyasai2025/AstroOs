@@ -1,0 +1,125 @@
+id: aspect.special.strength
+name: Aspect Strength Hierarchy
+aliases:
+  - Drishti Strength
+  - Aspect Priority
+  - Aspect Strength Rules
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: special
+
+statement: >
+  The strength hierarchy of aspects, from strongest to weakest, is:
+  (1) Graha special aspects (from dignified grahas), (2) Graha standard
+  7th aspects, (3) Rashi drishti aspects. Within graha aspects, strength
+  is modified by the aspecting graha's dignity, retrograde status, and
+  combustion state.
+
+conditions:
+  - entity: graha.aspecting
+    role: subject
+    notes: >
+      The aspecting graha's own condition determines the intrinsic
+      strength of its aspect. A well-dignified graha casts a stronger
+      aspect than a debilitated one.
+  - entity: aspect.type
+    role: subject
+    notes: >
+      Special aspects carry additional weight over standard 7th aspects
+      from the same graha. Rashi drishti is structurally weaker than
+      graha drishti.
+
+effects:
+  - description: >
+      Exalted (ucca) grahas cast the strongest aspects. A graha in
+      exaltation applies maximum force to its aspectual targets.
+    intensity: strong
+    notes: >
+      Mangala exalted in Makara or Guru exalted in Karka, for example,
+      produce particularly powerful aspects.
+  - description: >
+      Grahas in own sign (svakshetra) cast strong aspects, second
+      only to exalted.
+    intensity: strong
+    notes: >
+      The graha's comfort and authority in its own sign amplifies
+      aspectual influence.
+  - description: >
+      Grahas in friendly sign cast moderately strong aspects.
+    intensity: moderate
+    notes: >
+      Supportive environment without full authority.
+  - description: >
+      Grahas in neutral sign cast standard-strength aspects — neither
+      enhanced nor diminished.
+    intensity: moderate
+    notes: >
+      The default aspect strength with no modification.
+  - description: >
+      Grahas in enemy sign cast weakened aspects.
+    intensity: mild
+    notes: >
+      Hostile environment reduces aspectual force.
+  - description: >
+      Debilitated (nicha) grahas cast the weakest aspects.
+    intensity: mild
+    notes: >
+      The graha's incapacity in debilitation directly limits its
+      ability to project aspectual influence.
+
+exceptions:
+  - condition: >
+      Retrograde (vakri) grahas modify aspect strength — they intensify
+      the aspect, though the direction of influence may shift.
+    reason: >
+      Retrograde grahas are considered strengthened in Vedic astrology
+      for aspect purposes, though effects manifest differently than
+      direct-motion aspects.
+  - condition: >
+      Combust (astangata) grahas — when a graha is within a specified
+      degree range of Surya, its aspectual capacity is diminished.
+    reason: >
+      Surya's overwhelming brilliance suppresses the combust graha's
+      independent ability to cast aspects. The exact orb varies by graha.
+  - condition: >
+      Multiple aspects converging on the same house — when a house
+      receives aspects from several grahas, the combined effect may
+      override individual strength hierarchies.
+    reason: >
+      Quantity and quality of convergent aspects create emergent
+      effects not predictable from individual aspect strengths alone.
+  - condition: >
+      Special aspects carry inherent additional weight over standard
+      7th aspects from the same graha.
+    reason: >
+      BPHS treats special aspects (5th/9th for Guru, 3rd/10th for
+      Shani, 4th/8th for Mangala) as having greater intrinsic force
+      than the universal 7th aspect.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Aspect strength is
+      governed by the dignity of the aspecting graha and the type of
+      aspect (standard vs. special). Combustion and retrograde status
+      modify aspect strength.
+    confidence: high
+
+notes: >
+  This hierarchy provides the framework for comparing aspect strength
+  across different grahas and aspect types. In practice, multiple
+  factors interact simultaneously — a debilitated graha's special
+  aspect may be weaker than a well-dignified graha's standard 7th
+  aspect. The hierarchy is a starting framework, not an absolute rule.
+  Context (house ownership, functional role for the ascendant, and
+  dasha timing) always modifies the evaluation.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

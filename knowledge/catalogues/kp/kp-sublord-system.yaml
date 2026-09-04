@@ -1,0 +1,58 @@
+id: kp.core.sublord-system
+name: KP Sub-lord Theory
+aliases: ["Krishnamurti Paddhati Sub-lord", "KP Sub-division", "Sub-lord System"]
+category: kp
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: kp
+statement: >
+  Each nakshatra of 13°20' is divided into 9 sub-parts of unequal duration,
+  each ruled by one of the 9 grahas. The sub-lord is the ruler of the sub-division
+  in which a planet or cusp falls. The sub-lord determines the precise timing and
+  nature of events, overriding sign and nakshatra lordships for event prediction.
+  The Vimshottari Dasha periods are based on these sub-divisions, and the sub-lord
+  at the time of an event determines whether the promise in the birth chart will
+  fructify.
+
+conditions:
+  - entity: graha.any
+    role: subject
+    detail: "Every planet occupies a sub-division within its nakshatra, and its sub-lord governs event timing"
+
+  - entity: bhava.cusp
+    role: subject
+    detail: "Each cuspal sub-lord defines the nature of events ruled by that house"
+
+  - entity: nakshatra.division
+    role: framework
+    detail: "Nakshatra of 13°20' is divided into 9 unequal sub-parts, totaling 249 sub-divisions across the zodiac"
+
+effects:
+  - description: "Sub-lord determines the exact timing of event fructification through Vimshottari Dasha periods"
+    intensity: strong
+  - description: "Sub-lord refines sign and nakshatra predictions to pinpoint specific outcomes"
+    intensity: strong
+  - description: "Sub-lord linkage between cuspal sub-lord and planetary sub-lord determines event manifestation"
+    intensity: strong
+
+sources:
+  - ref: source.kp-system
+    claim: "KP Sub-lord theory: Each nakshatra is divided into 9 sub-parts ruled by the 9 grahas. The sub-lord determines the exact timing of events."
+    confidence: high
+
+notes: >
+  The sub-division pattern follows Vimshottari Dasha proportions: if a nakshatra
+  is ruled by the Sun, its 9 sub-parts are in the same ratio as Vimshottari periods
+  (Sun 6 : Moon 10 : Mars 7 ... Ketu 7). This produces unequal sub-divisions.
+  There are 249 sub-divisions in the zodiac, each with a unique sub-lord that
+  determines the precise nature of events. The sub-lord is the single most important
+  factor in KP event prediction, superseding sign and nakshatra lordship.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

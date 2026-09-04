@@ -1,0 +1,65 @@
+# ontology/glossary/drishti.yaml
+
+id: term.drishti
+name: Dṛṣṭi
+aliases:
+  - Drishti
+  - Aspect
+  - Planetary Aspect
+  - दृष्टि
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    dṛṣṭi — from dṛś (to see, to observe). Literally "sight,
+    glance, or aspect." The angular relationship by which one
+    graha influences the bhava or graha it aspects.
+  english: >
+    The aspect of a planet — its "glance" upon other houses or
+    planets. All grahas aspect the 7th house from their position
+    (full aspect). Additionally, Mars aspects the 4th and 8th;
+    Jupiter aspects the 5th and 9th; Saturn aspects the 3rd
+    and 10th; Rahu and Ketu aspect the 5th and 9th or 7th
+    (depending on tradition).
+  technical: >
+    Drishti is computed by angular distance in the zodiac. All
+    grahas have a 7th-house aspect (180 degrees). Special aspects
+    (visesha drishti) apply to Mars (4th/8th, 90/240 deg),
+    Jupiter (5th/9th, 120/240 deg), and Saturn (3rd/10th,
+    60/270 deg). Drishti strength depends on the aspecting
+    graha's dignity and the aspected graha's receptivity.
+
+usage:
+  primary: "Determination of planetary influence across houses and on other grahas"
+  secondary: "Evaluation of aspectual strength for event timing in dashas"
+
+related_concepts:
+  - ref: term.graha
+    relationship: "Each graha has specific special aspects in addition to the universal 7th-house aspect"
+  - ref: term.argala
+    relationship: "Argala (intervention) is a separate system from drishti with different rules"
+  - ref: term.bhava
+    relationship: "A bhava receives influences both from grahas occupying it and grahas aspecting it"
+
+sources:
+  - ref: source.BPHS
+    chapter: 26
+    verse: 1-10
+    claim: "Saptamaṃ sampūrṇa-dṛṣṭiḥ — the 7th is a full aspect"
+    confidence: high
+
+notes: >
+  Parashari drishti differs from Western aspect theory in
+  that it uses whole-sign aspects (not orb-based), and only
+  specific planets have special aspects beyond the 7th. Modern
+  and Western adaptations often combine both systems.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

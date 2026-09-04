@@ -1,0 +1,224 @@
+# knowledge/sources/vedicastrology_wikidot/primary_text_verification.yaml
+#
+# PRIMARY-TEXT VERIFICATION RESULTS for claims ingested from
+# VedicAstrology.Wikidot (an INFORMAL_TRADITION / UNREVIEWED source).
+#
+# Each entry records what was checked against an actual classical text, which
+# text and verse, and what the verdict is. This file exists because several
+# claims were previously classified from SECONDARY sources only (web search,
+# commentaries, model recall) and at least one of those classifications was
+# WRONG — see CORRECTION-01 below. Secondary-source consensus is not primary
+# evidence, and absence of evidence was mistakenly treated as evidence of
+# absence.
+#
+# Sources consulted (both are transcriptions of classical texts, not blogs):
+#   - BPHS: Brihat Parashara Hora Shastra, R. Santhanam English translation
+#     (Ranjan Publications, 1984), full text scan at archive.org
+#     (brihatparasarahorashastrabyr.santhanam). Chapter/verse numbering is
+#     edition-dependent — the Santhanam numbering is used throughout.
+#   - Phaladeepika: Mantreswara, Devanagari source text at
+#     sanskritdocuments.org/doc_z_misc_sociology_astrology/phaladIpika.html
+#
+# NOTHING in this file promotes any Wikidot claim to CANONICAL or SUPPORTED.
+# Verifying that a verse EXISTS is a provenance finding, not an empirical
+# validation of the claim's predictive truth. Empirical status remains
+# governed by validation_requirements.yaml and the knowledge-reliability
+# lifecycle.
+
+verifications:
+
+  # ── VERIFIED, and acted upon in code ──────────────────────────────────────
+  - verification_id: PTV-BPHS-CH28-V6
+    topic: "Kashta Phala is the arithmetic complement of Ishta Phala"
+    text: "Brihat Parashara Hora Shastra"
+    chapter: 28
+    chapter_title: "Ishta and Kashta Bala"
+    verse: 6
+    edition: "R. Santhanam English translation, p. 230"
+    quotation: >
+      "ISHTA AND KASHTA (BENEFICE AND MALEFIC TENDENCIES): Reduce 1 from each
+      of Cheshta Rasmi and Uchcha Rasmi. Then multiply the products by 10 and
+      add together. Half of the sum will represent the Ishta Phala (benefice
+      tendency) of the planet. Reduce Ishta Phala from 60 to obtain the
+      planet's Kashta Phala (or malefic tendency)."
+    verdict: VERIFIED_EXPLICIT
+    finding: >
+      BPHS states Kashta = 60 - Ishta explicitly. The widely-circulated
+      variant Kashta = sqrt((60 - Uchcha) * (60 - Chesta)), common in
+      secondary literature and astrology software, is NOT what the primary
+      text says.
+    code_impact: >
+      apps/api/services/shadbala/saravali_summary.py previously used the
+      sqrt-complement variant in its inline fallback, disagreeing with
+      apps/api/services/shadbala/ishta_kashta_bala.py for every input where
+      Uchcha != Chesta (divergence up to the full 60-point Shashtiamsa scale).
+      Fixed to 60 - Ishta. Locked by
+      apps/api/tests/unit/test_ishta_kashta_consistency.py.
+
+  # ── CORRECTION of an earlier WRONG classification ─────────────────────────
+  - verification_id: PTV-BPHS-CH28-V7-9
+    correction_of: "Earlier NOT_SUPPORTED rating of the 9-step strength scale"
+    topic: "The 60-45-30-22-15-8-4-2-0 dignity scale"
+    text: "Brihat Parashara Hora Shastra"
+    chapter: 28
+    chapter_title: "Ishta and Kashta Bala"
+    verse: "7-9"
+    section_heading: "ISHTA KASHTA SAPTAVARGAJA PHALA"
+    edition: "R. Santhanam English translation, pp. 230-231"
+    quotation: >
+      "60, 45, 30, 22, 15, 8, 4, 2 and 0 are the Subhankas (or Subha Griha
+      Pankthis or benefice points) due to a planet's placement respectively in
+      exaltation, Moola-Trikona, own sign, extreme friend's sign, friend's
+      sign, equals sign, enemy's sign, bitter enemy's sign and debilitation
+      sign. If Subhanka is deducted from 60, Asubhanka (or Asubha Pankthi or
+      inauspicious points) will emerge. O Brahmin, in other Vargas, these are
+      halved."
+    verdict: VERIFIED_EXPLICIT
+    finding: >
+      The 9-value scale IS in BPHS, in the chapter titled "Ishta and Kashta
+      Bala", under a section literally headed "ISHTA KASHTA SAPTAVARGAJA
+      PHALA". The Wikidot chunk citing "Ishta-Kashta-adhyaya, verses 9-10"
+      was therefore substantially correct on attribution.
+    correction_note: >
+      This claim was classified NOT_SUPPORTED across three earlier audit
+      passes on the grounds of "zero corroboration in any source". That was an
+      ERROR of method, not a source error: the BPHS chapter in question was
+      never actually reached (the relevant chapter range is scan-only on
+      sanskritdocuments.org), and absence of evidence was written up as
+      evidence of absence. Recorded here so the mistaken rating is not
+      inherited by later readers of this corpus.
+    still_unverified: >
+      The source's characterisation of this scale as "base-2 logarithmic" is
+      an INTERPRETATION, not verse text — BPHS gives the values as a plain
+      table with no such description. Also note this is a DIGNITY-based table
+      (Saptavargaja), distinct from the astronomical Ishta/Kashta computation
+      of verse 6; conflating the two is a live risk.
+
+  # ── Misattribution corrected: source text is Phaladeepika, not BPHS ───────
+  - verification_id: PTV-PHALADEEPIKA-V57
+    topic: "Harsha, Sarala and Vimala Yogas (the Vipareeta Raja Yoga triad)"
+    text: "Phaladeepika (Mantreswara)"
+    verse: 57
+    edition: "Devanagari source text, sanskritdocuments.org"
+    quotation_devanagari: >
+      हर्षो दुष्कृतिरित्यथापि सरलो निर्भाग्यदुर्योगकौ ।
+      योगा द्वादश ते दरिद्र विमले प्रोक्ता विपश्चिज्जनैः ॥ ५७॥
+    quotation_iast: >
+      harṣo duṣkṛtir ityathāpi saralo nirbhāgya-duryogakau /
+      yogā dvādaśa te daridra vimale proktā vipaścij-janaiḥ
+    translation: >
+      "Harsha, and likewise Dushkriti, Sarala, Nirbhagya, and Duryoga — these
+      twelve yogas, [ending in] Daridra [and] Vimala, are declared by the wise."
+    verdict: VERIFIED_EXPLICIT
+    finding: >
+      Harsha, Sarala and Vimala are explicitly named together in Phaladeepika
+      verse 57, as part of a set of twelve yogas.
+    contradicts: >
+      Multiple secondary sources (and an earlier audit pass in this project)
+      attribute these three yogas to "BPHS Chapter 36". That attribution is
+      WRONG for this edition: the full text of BPHS chapters 34-45
+      (125,670 characters, Santhanam translation) was searched and contains
+      ZERO occurrences of "Harsha", "Sarala", "Vimala", or "Vipareeta".
+      BPHS Chapter 36 ("Many Other Yogas") lists an entirely different set
+      (Gaja Kesari, Amala, Parvata, Kahala, Chamara, Shankha, Bheri, Mridanga,
+      Srinatha, Sarada, Matsya, Koorma, Khadga, Lakshmi, Kusuma, Kalanidhi,
+      Kalpadruma, Trimurthi, Lagnadhi).
+    partial: >
+      The per-yoga house-lord definitions (Harsha = 6th lord in 8th/12th,
+      Sarala = 8th lord in 6th/12th, Vimala = 12th lord in 6th/8th) are
+      reported consistently by secondary sources but were NOT isolated to a
+      specific verse in the text captured here. Treat the naming as verified
+      and the individual definitions as PARTIALLY_SUPPORTED.
+
+  # ── Supports Wikidot candidate rule 2 ─────────────────────────────────────
+  - verification_id: PTV-BPHS-CH39-V28
+    topic: "Debilitated lord of a Trika house aspecting the Lagna forms a Raja Yoga"
+    relates_to_chunk: "CHK-VIPAREETRAJAYOGA-vipareet-raja-yoga-0001"
+    text: "Brihat Parashara Hora Shastra"
+    chapter: 39
+    chapter_title: "Raja Yoga"
+    verse: 28
+    edition: "R. Santhanam English translation"
+    quotation: >
+      "Even if one among Ari's [6th], Randhr's [8th], and Vyaya's [12th] lords
+      being in debilitation gives a drishti to Lagn, there will be a Raj Yog."
+    verdict: PARTIALLY_SUPPORTED
+    finding: >
+      The SUBSTANCE of the Wikidot claim — a debilitated 6th/8th/12th lord
+      aspecting the Lagna produces a Raja Yoga — is explicitly attested.
+    caveats: >
+      (a) The text calls it "Raj Yog" generically, NOT "Vipareeta Raja Yoga"
+      by name, and it sits in the general Raja Yoga chapter rather than in the
+      Harsha/Sarala/Vimala framework. (b) Only the English rendering was
+      obtained; the Devanagari for this verse was not captured.
+      Upgraded from the earlier AMBIGUOUS rating on the strength of this
+      locatable citation.
+
+  # ── Still unsupported after primary-text search ───────────────────────────
+  - verification_id: PTV-VRY-MALEFIC-3-6
+    topic: "A natural malefic aspecting/conjoining the 3rd or 6th house forms VRY"
+    relates_to_chunk: "CHK-VIPAREETRAJAYOGA-vipareet-raja-yoga-0000"
+    verdict: NOT_SUPPORTED
+    searched: >
+      Full text of BPHS chapters 34-45 (Santhanam) and the Phaladeepika
+      twelve-yoga passage around verse 57. Zero matches for this construction.
+    finding: >
+      No primary-text basis found. Note this is "no evidence found", not
+      "disproven" — the claim may exist in a text or recension not searched.
+      The Wikidot page attributes it to "BPHS — Rajayoga chapter" without a
+      verse number.
+    caution: >
+      This construction is easily confused with the unrelated Upachaya
+      doctrine (3rd/6th benefit from malefic influence), which IS classical
+      but is not Vipareeta Raja Yoga.
+
+  # ── Relevant to the OPEN Sun/Moon Chesta issue (no code change made) ──────
+  - verification_id: PTV-BPHS-CH28-V3-4
+    topic: "Cheshta Kendra for the Sun and the Moon"
+    text: "Brihat Parashara Hora Shastra"
+    chapter: 28
+    verse: "3-4"
+    edition: "R. Santhanam English translation, p. 230"
+    quotation: >
+      "CHESHTA RASMI: ... Add 3 Rashis to Sayana Sun (i.e. Sun with
+      Ayanamsa), which will be the Cheshta Kendra for the Sun. The sidereal
+      longitude of the Sun should be deducted from the Moon to get the Moon's
+      Cheshta Kendra."
+    verdict: VERIFIED_EXPLICIT
+    finding: >
+      BPHS DOES define a Cheshta basis for both luminaries. AstroOS currently
+      has three mutually inconsistent behaviours for this, none matching the
+      verse:
+        1. services/shadbala/chesta_bala.py     — excludes Sun/Moon entirely
+        2. services/shadbala/ishta_kashta_bala.py — therefore emits nothing for them
+        3. services/shadbala/saravali_summary.py — substitutes Ayana Bala for
+           the Sun and Paksha Bala for the Moon
+    status: OPEN
+    action_taken: NONE
+    note: >
+      Deliberately NOT acted upon. Recorded as an open issue for a separately
+      scoped task; changing luminary Chesta handling is a calculation change
+      affecting Shadbala totals, not just Ishta/Kashta.
+
+  # ── Open question about the Ishta formula itself ──────────────────────────
+  - verification_id: PTV-ISHTA-RASMI-BASIS
+    topic: "Ishta Phala is derived from Rasmis (rays), not from Balas directly"
+    text: "Brihat Parashara Hora Shastra"
+    chapter: 28
+    verse: "2-6"
+    verdict: DISCREPANCY_NOTED
+    finding: >
+      BPHS verses 2-5 define Uchcha Rasmi and Cheshta Rasmi as "rays" on a
+      0-8 scale (v. 5: "Deduct from 8 the Subha Rasmi to obtain inauspicious
+      rays"), and verse 6 derives Ishta Phala from those Rasmis. AstroOS —
+      in BOTH implementations — instead computes Ishta = sqrt(Uchcha Bala *
+      Chesta Bala) from the 0-60 Shashtiamsa Balas. The sqrt-of-Balas form is
+      near-universal in secondary literature but is not literally verse 6.
+    status: OPEN
+    action_taken: NONE
+    note: >
+      The verse-6 arithmetic is partly garbled in the available OCR
+      ("multiply the products by JO" — presumably 10), so the exact intended
+      computation could not be reconstructed with confidence. Requires a
+      cleaner edition before any code change is contemplated. The Ishta
+      formula was explicitly left untouched when the Kashta formula was fixed.

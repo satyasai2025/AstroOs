@@ -1,0 +1,232 @@
+# catalogues/nakshatras/rohini.yaml
+
+id: nakshatra.rohini
+name: Rohini
+aliases:
+  - रोहिणी
+  - The Growing One
+  - The Red One
+  - The Chariot
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Rohini
+devanagari: रोहिणी
+meaning: >-
+  "The Growing One" or "The Red One" — from root "roh" (to grow, to ascend)
+
+# === RULER ===
+
+ruler:
+  ref: graha.chandra
+  system: vimshottari
+  notes: >
+    Chandra rules Rohini, giving this nakshatra its qualities of
+    beauty, nourishment, fertility, and sensuality. Chandra's
+    influence makes Rohini one of the most auspicious nakshatras.
+
+# === DEITY ===
+
+deity:
+  name: Brahma (Prajapati)
+  description: >
+    The Creator god Brahma, in his aspect as Prajapati (Lord of
+    Creation). Brahma created Rohini as his most beautiful
+    creation, which led to his infatuation with this nakshatra.
+  attributes:
+    - Creation
+    - Fertility
+    - Beauty
+    - Nourishment
+    - Abundance
+    - Artistic expression
+
+# === SHAKTI ===
+
+shakti:
+  name: Rohana Shakti
+  meaning: "The power to grow and manifest"
+  power: >
+    To bring things into being, to nourish growth, to manifest
+    desires into reality. This is a creative, generative shakti.
+
+# === ASTRONOMICAL ===
+
+star:
+  name: Aldebaran (Alpha Tauri)
+  magnitude: 0.85
+  notes: >
+    Rohini is associated with the bright star Aldebaran, one of
+    the brightest stars in the sky and the brightest in Taurus.
+    It is a red giant star, which aligns with the "Red One"
+    meaning of Rohini.
+
+# === POSITION ===
+
+starting_degree: 10.0
+ending_degree: 23.333
+rashi_span:
+  - ref: rashi.vrishabham
+    notes: Rohini is entirely within Vrishabha (Taurus)
+
+# === PADAS ===
+
+padas:
+  - pada: 1
+    degrees: "10° - 13°20'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.vrishabham
+    notes: "Taurus navamsha — grounded, materially oriented"
+  - pada: 2
+    degrees: "13°20' - 16°40'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.mithunam
+    notes: "Gemini navamsha — communicative, intellectual"
+  - pada: 3
+    degrees: "16°40' - 20°"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.karkam
+    notes: "Cancer navamsha — nurturing, emotional"
+  - pada: 4
+    degrees: "20° - 23°20'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.simham
+    notes: "Leo navamsha — creative, expressive"
+
+# === NATURE ===
+
+nature:
+  temperament: >
+    Stable, nurturing, sensuous, artistic. Rohini natives are
+    known for their beauty, charm, creativity, and ability to
+    attract and accumulate material comforts. They are drawn to
+    luxury, art, and the finer things in life.
+  guna: Sattvic
+  gana: Deva
+  yoni: Serpent
+  yoni_notes: >
+    The Serpent yoni represents hidden power, kundalini energy,
+    and the ability to shed old skins and renew. It also indicates
+    a strong connection to nature and the earth.
+  nadis: Madhya
+  vasya: Manushya
+
+# === KARAKATVAS ===
+
+karakatvas:
+  - concept: Beauty and Sensuality
+    notes: >
+      Rohini is the nakshatra of beauty, both physical and
+      aesthetic. Natives often have attractive features and
+      a refined sense of beauty.
+  - concept: Fertility and Growth
+    notes: >
+      As the "Growing One," Rohini signifies fertility, growth,
+      and the ability to manifest desires into physical form.
+  - concept: Art and Creativity
+    notes: >
+      Rohini is strongly connected to artistic expression,
+      music, dance, and visual arts.
+  - concept: Wealth and Accumulation
+    notes: >
+      Rohini natives often have an ability to attract and
+      accumulate material wealth, especially through artistic
+      or creative pursuits.
+  - concept: Chariots and Vehicles
+    notes: >
+      The chariot symbolism connects to travel, transportation,
+      and vehicles. Rohini can indicate ownership of vehicles.
+  - concept: Agriculture and Nourishment
+    notes: >
+      The Prajapati connection links Rohini to agriculture,
+      food production, and nourishment of others.
+
+# === COMPATIBILITY ===
+
+compatible_nakshatras:
+  - ref: nakshatra.ashvini
+    notes: "Same Deva gana; complementary qualities"
+  - ref: nakshatra.krittika
+    notes: "Same Vrishabha span; fire and earth harmony"
+  - ref: nakshatra.mrigashira
+    notes: "Adjacent nakshatras; natural connection"
+  - ref: nakshatra.pushya
+    notes: "Compatible gana; both nourishing"
+  - ref: nakshatra.hasta
+    notes: "Compatible; Deva gana; creative alignment"
+  - ref: nakshatra.swati
+    notes: "Compatible; independence and beauty"
+
+incompatible_nakshatras:
+  - ref: nakshatra.ardra
+    notes: "Tamasic nature conflicts with Rohini's sattvic quality"
+  - ref: nakshatra.ashlesha
+    notes: "Rakshasa gana; secretive nature clashes"
+  - ref: nakshatra.moola
+    notes: "Destructive nature conflicts with Rohini's creative quality"
+  - ref: nakshatra.jyeshtha
+    notes: "Authoritarian nature conflicts"
+
+# === RELATIONS ===
+
+relations:
+  - ref: graha.chandra
+    type: ruled_by
+    notes: "Chandra rules Rohini"
+  - ref: rashi.vrishabham
+    type: associated_with
+    notes: "Rohini is entirely within Vrishabha"
+  - ref: bhava.4
+    type: associated_with
+    notes: "Rohini relates to the 4th house (happiness, comfort, home)"
+  - ref: bhava.2
+    type: associated_with
+    notes: "Rohini relates to wealth and accumulation"
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    chapter: 8
+    verse: 1
+    claim: >
+      "Rohini vṛṣabhe tiṣṭhet — Rohini resides in Vrishabha."
+    confidence: high
+  - ref: source.saravali
+    chapter: 5
+    verse: 25
+    claim: >
+      "Rohini candra-saṃyuktā — Rohini is associated with Chandra."
+    confidence: high
+  - ref: source.phaladeepika
+    chapter: 5
+    verse: 8
+    claim: >
+      "Rohini-jātaḥ saundarye — One born in Rohini is beautiful."
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Rohini is considered one of the most auspicious nakshatras,
+  second only to Pushya in traditional ranking. The combination
+  of Chandra's gentle influence, Brahma's creative power, and
+  the earthy stability of Vrishabha makes Rohini an exceptionally
+  fortunate nakshatra for material comfort, beauty, and creative
+  expression. The main challenge is attachment to luxury and
+  sensory pleasures, which can lead to complacency if not balanced
+  with spiritual practice. The Serpent yoni adds depth and hidden
+  power to the otherwise gentle Rohini energy. In marriage
+  compatibility, Rohini is highly sought after for its association
+  with beauty, fidelity, and nurturing qualities.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with full nakshatra attributes"
+    author: "Chief Jyotish Knowledge Architect"

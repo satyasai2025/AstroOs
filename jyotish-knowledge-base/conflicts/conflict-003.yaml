@@ -1,0 +1,145 @@
+# conflicts/conflict-003.yaml
+
+id: conflict.003
+name: Surya's Neutral Sign Classification — Internal Discrepancy
+topic: Whether Vrischika and Makara should be friend/enemy or neutral for Surya
+domain: graha
+status: resolved
+confidence: medium
+version: 1.0
+last_verified: 2026-07-15
+
+# === POSITIONS ===
+
+positions:
+  - tradition: "BPHS (Standard Reading)"
+    source:
+      ref: source.BPHS
+      chapter: 2
+      verses: 20–25
+    position: >
+      Surya's neutral signs are Mithuna (Gemini), Kanya (Virgo),
+      Vrischika (Scorpio), and Makara (Capricorn). All four are
+      listed as sama (neutral) for Surya.
+    arguments:
+      - "This is the standard reading of BPHS manuscripts"
+      - "Most printed editions follow this list"
+    adherents:
+      - Mainstream Parashari tradition
+      - Motilal Banarsidass edition
+
+  - tradition: "Logical Consistency School"
+    source:
+      ref: source.phaladeepika
+      chapter: 2
+      verses: 40–45
+    position: >
+      Surya's neutral signs should only be Mithuna and Kanya.
+      Vrischika is owned by Mangala (friend of Surya), so it should
+      be friendly. Makara is owned by Shani (enemy of Surya), so it
+      should be enemy. The BPHS list is internally inconsistent.
+    arguments:
+      - "Friendship/enmity logic requires consistent application"
+      - "A sign owned by a friend should be friendly, not neutral"
+      - "A sign owned by an enemy should be enemy, not neutral"
+      - "Phaladeepika provides the logically consistent alternative"
+    adherents:
+      - Mantreshwara (Phaladeepika)
+      - Some scholarly commentators
+      - Practitioners who prioritize logical consistency
+
+  - tradition: "Pragmatic Exception School"
+    source:
+      ref: source.saravali
+      chapter: 1
+      verses: 55–60
+    position: >
+      Neutrality can override friendship/enmity based on other
+      factors. Vrischika is a water sign while Surya is fire, which
+      creates natural incompatibility despite the friendly ruler.
+      Makara, while owned by enemy Shani, has an exaltation point
+      for Mangala (friend) which tempers the enmity.
+    arguments:
+      - "Graha-rashi relationships are multi-dimensional, not purely logical"
+      - "Element, quality, and other factors modify simple ownership logic"
+      - "The BPHS list may reflect a broader, more nuanced understanding"
+    adherents:
+      - Traditional commentators
+      - Practitioners who accept the BPHS list as-is
+
+# === ANALYSIS ===
+
+analysis: >
+  This is a classic case of textual vs. logical consistency. The
+  BPHS list creates a tension: if Surya is friend with Mangala,
+  then Vrischika (owned by Mangala) should logically be friendly
+  to Surya. Similarly, if Surya is enemy with Shani, then Makara
+  (owned by Shani) should be enemy.
+
+  Possible explanations:
+  1. Copyist error in the BPHS manuscript tradition
+  2. Broader criteria than simple lord-based friendship
+  3. Regional variation in the manuscript tradition
+
+  The Phaladeepika's correction is logically cleaner and is preferred
+  by many modern practitioners.
+
+# === EVIDENCE ===
+
+evidence:
+  for_bphs:
+    - "The standard manuscript reading is consistent across South Indian recensions"
+    - "Saravali and other classical texts mostly follow BPHS here"
+  for_phaladeepika:
+    - "Logical consistency supports Mantreshwara's correction"
+    - "Vrischika (Mangala's sign) is friendly to Surya in other contexts"
+    - "Makara (Shani's sign) is enemy to Surya in other contexts"
+  for_pragmatic:
+    - "Surya (fire) in Vrischika (water) produces a combustive tension"
+    - "Surya in Makara can produce favorable results if Mangala is strong"
+
+# === RESOLUTION ===
+
+resolution_status: resolved
+resolution: >
+  Most modern practitioners and commentators accept the Phaladeepika's
+  correction: Mithuna and Kanya are neutral; Vrischika is friendly;
+  Makara is enemy. This is both logically consistent and practically
+  validated by chart reading experience. The BPHS list likely
+  reflects a scribal variant.
+
+recommended_position: >
+  In the knowledge base, list Surya's neutral signs as Mithuna and
+  Kanya. Classify Vrischika as friendly (not neutral). Classify
+  Makara as enemy (not neutral). Document the BPHS alternative as
+  a textual variant and explain the reasoning for the correction.
+
+weight_of_evidence: >
+  The logical consistency argument is strong. The Phaladeepika's
+  position is supported by Mantreshwara (a primary classical source).
+  The pragmatic school's argument is weaker, acknowledging that
+  there is no known classical principle that would override lord-based
+  friendship/enmity in this context.
+
+# === RELATED ===
+
+related_conflicts:
+  - ref: conflict.002
+    topic: "Surya's nature as benefic or malefic"
+
+notes: >
+  This resolution affects Surya's dignity calculations for all
+  subsequent analysis. It is also relevant to the methodology of
+  graha friendship and enmity classification more broadly.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial conflict entry documenting BPHS-Phaladeepika disagreement"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.1
+    date: 2026-07-15
+    change: "Resolved: adopted Phaladeepika's correction; documented BPHS variant"
+    author: "Chief Jyotish Knowledge Architect"

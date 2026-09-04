@@ -1,0 +1,92 @@
+# knowledge/sources/vedicastrology_wikidot/ashtakavarga_sudarshana_chakra.yaml
+#
+# Extracted knowledge items from:
+#   http://vedicastrology.wikidot.com/ashtaka-varga
+#   http://vedicastrology.wikidot.com/sudarshana-chakra
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+
+page_title: "Ashtaka Varga / Sudarshana Chakra"
+page_url: "http://vedicastrology.wikidot.com/ashtaka-varga ; http://vedicastrology.wikidot.com/sudarshana-chakra"
+technique_mapping:
+  best_fit_technique_key: ashtakavarga
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
+  note: >
+    Maps conceptually to "Ashtakavarga" and "Sudarshana Chakra" techniques. No existing
+    TechniqueModel.technique_key found via grep of apps/api/models/technique.py usage
+    for either. technique_source_link: if TechniqueModel rows for
+    technique_key="ashtakavarga" and/or technique_key="sudarshana_chakra" are created
+    later, wire these items to them via TechniqueSourceModel(source_type="notes").
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/ashtaka-varga"
+    page_title: "Ashtaka Varga"
+    section: "Two Ways of Using AshtakaVarga"
+    title: "Ashtakavarga (AV) should be used only as a fallback, not as a standalone predictive tool"
+    claim: >
+      The author states AV should only be consulted "when the standard method does
+      not give a clear-cut result," citing BPHS as the source of this precedence
+      rule, and explicitly states "used in isolation as standalone tool, AV seldom
+      works correctly" — contrasting this with what the page calls the common
+      practice of using AV as a standalone predictive tool.
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: "BPHS (claimed; exact verse not cited on page)"
+    related_concepts: ["ashtakavarga", "bindu", "rekha", "gochara"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/ashtaka-varga"
+    page_title: "Ashtaka Varga"
+    section: "Two Ways of Using AshtakaVarga"
+    title: "Dasha-period predictions should use DAC, or SC+VPC+Vimshottari, before falling back to AV"
+    claim: >
+      IF a prediction concerns the results of a specific dasha period (rather than
+      whole-life themes), THEN the author claims BPHS states (in two places, per the
+      page) that either DAC (Dashaa Aarambha Chakra) should be used, or — since DAC
+      is deemed impractical for precision reasons — SC (Sudarshana Chakra) combined
+      with SC-dasha, VPC (Varsha Pravesha Chakra, both "so-called Tajik" annual-return
+      and SC-type variants), and Vimshottari Dasha should be used together; only if
+      the result remains uncertain after this combination should Ashtakavarga (AV)
+      be consulted.
+    item_type: RULE
+    condition_summary: "Prediction target is the result of a specific dasha period (not whole-of-life)."
+    conclusion_summary: >
+      Use DAC if practical, else combine SC + SC-dasha + VPC (annual return) +
+      Vimshottari; only fall back to Ashtakavarga if that combination is still
+      inconclusive.
+    requires_validation: true
+    suggested_validation_approach: >
+      Cross-reference the "stated twice in BPHS" claim against a critical edition;
+      backtest the DAC-vs-SC+VPC+Vimshottari precedence via the existing
+      benchmark_engine before treating as anything beyond an unverified methodology
+      opinion.
+    referenced_classical_source: "BPHS (claimed twice; exact verses not cited on page)"
+    related_concepts: ["dasha-aarambha-chakra", "sudarshana-chakra", "varsha-pravesha-chakra", "vimshottari", "ashtakavarga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/sudarshana-chakra"
+    page_title: "Sudarshana Chakra"
+    section: "Sudarshana Chakra versus Graha-Chakras"
+    title: "Sudarshana Chakra combines Lagna, Surya, and Chandra Kundalis with unequal house weighting"
+    claim: >
+      Per the page's reading of BPHS's Varga-vivechana-adhyaya, Sudarshana Chakra
+      (SC) should be constructed from all seven classical grahas each treated as a
+      Lagna (eight total charts: Lagna Kundali (LK) with all 12 houses significant,
+      Chandra Kundali (CK) with 5 significant houses [1,2,4,9,11 from Moon], Surya
+      Kundali (SK) with 3 significant houses, Shani with 2, and the remaining four
+      planets with 1 significant house each) — with LK+CK+SK claimed as the most
+      important trio, and the author cautioning that treating all 12 houses of SK/CK
+      as equally significant "will find wrong phalaadesha [predictions] in many cases."
+    item_type: METHODOLOGY_CLAIM
+    referenced_classical_source: "BPHS — Varga-vivechana-adhyaya"
+    related_concepts: ["sudarshana-chakra", "lagna-kundali", "surya-kundali", "chandra-kundali"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

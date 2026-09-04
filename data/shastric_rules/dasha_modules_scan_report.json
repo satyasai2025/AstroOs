@@ -1,0 +1,3184 @@
+{
+  "A75_AshtottariDasha_code": {
+    "label": "A75_AshtottariDasha (Code Module)",
+    "center_offset": 527224,
+    "window_slice": "525224..529224",
+    "utf16_count": 0,
+    "utf16_strings": [],
+    "ascii_count": 252,
+    "ascii_strings": [
+      {
+        "offset": 525228,
+        "text": "A27_BhaavaDrishti"
+      },
+      {
+        "offset": 525248,
+        "text": "frmMaitri"
+      },
+      {
+        "offset": 525260,
+        "text": "frmVarshphal"
+      },
+      {
+        "offset": 525276,
+        "text": "frmVarshMaasPhalas"
+      },
+      {
+        "offset": 525296,
+        "text": "A30_GrahSpashtVarsh"
+      },
+      {
+        "offset": 525316,
+        "text": "A31_Avasthaadi"
+      },
+      {
+        "offset": 525332,
+        "text": "A32_DrawBhaavVarsh"
+      },
+      {
+        "offset": 525352,
+        "text": "A33_SunriseVarsh"
+      },
+      {
+        "offset": 525372,
+        "text": "A34_SambandhVarsh"
+      },
+      {
+        "offset": 525392,
+        "text": "A35_MaitriVarsh"
+      },
+      {
+        "offset": 525408,
+        "text": "A36_VarshMaasphal"
+      },
+      {
+        "offset": 525428,
+        "text": "frmVarshSambandh"
+      },
+      {
+        "offset": 525448,
+        "text": "frmBala"
+      },
+      {
+        "offset": 525456,
+        "text": "A38_Bala"
+      },
+      {
+        "offset": 525468,
+        "text": "frmBhaavabala"
+      },
+      {
+        "offset": 525484,
+        "text": "frmSwitchboardEng"
+      },
+      {
+        "offset": 525504,
+        "text": "A39_BalaVarshMaasPhal"
+      },
+      {
+        "offset": 525528,
+        "text": "A40_BalVarsh"
+      },
+      {
+        "offset": 525544,
+        "text": "A41_ShodashaVargVarsh"
+      },
+      {
+        "offset": 525568,
+        "text": "A42_DrigBalaVarsh"
+      },
+      {
+        "offset": 525588,
+        "text": "A43_CheshtaaBalaVarsh"
+      },
+      {
+        "offset": 525612,
+        "text": "A44_16VivechanVarsh"
+      },
+      {
+        "offset": 525632,
+        "text": "A48_DrigBhaavaVarsha"
+      },
+      {
+        "offset": 525656,
+        "text": "A49_VakrodayastVarsh"
+      },
+      {
+        "offset": 525680,
+        "text": "A52_Yogajphal"
+      },
+      {
+        "offset": 525700,
+        "text": "A51_BhaaveshSthaan"
+      },
+      {
+        "offset": 525720,
+        "text": "frmPhalaadesh"
+      },
+      {
+        "offset": 525736,
+        "text": "frmYogaHelp"
+      },
+      {
+        "offset": 525748,
+        "text": "D02_Suryodaya"
+      },
+      {
+        "offset": 525764,
+        "text": "Panc02"
+      },
+      {
+        "offset": 525772,
+        "text": "PancVati"
+      },
+      {
+        "offset": 525784,
+        "text": "A45_ShodashDrishti"
+      },
+      {
+        "offset": 525804,
+        "text": "A46_DrigBhaava16"
+      },
+      {
+        "offset": 525824,
+        "text": "A47_DrigBala16"
+      },
+      {
+        "offset": 525840,
+        "text": "frmDrishti16"
+      },
+      {
+        "offset": 525856,
+        "text": "frmArgala"
+      },
+      {
+        "offset": 525868,
+        "text": "frmShodashPada"
+      },
+      {
+        "offset": 525884,
+        "text": "frmAshtakavarga"
+      },
+      {
+        "offset": 525900,
+        "text": "A53_UchchaadiGochar"
+      },
+      {
+        "offset": 525920,
+        "text": "frmAshtakvargDetail"
+      },
+      {
+        "offset": 525940,
+        "text": "frmAshtakKundlis"
+      },
+      {
+        "offset": 525960,
+        "text": "Pic17_DrawSarvashtaka"
+      },
+      {
+        "offset": 525984,
+        "text": "Pic18_DrawSuryashtaka"
+      },
+      {
+        "offset": 526008,
+        "text": "Pic19_DrawChandrashtaka"
+      },
+      {
+        "offset": 526032,
+        "text": "Pic20_DrawKujaashtaka"
+      },
+      {
+        "offset": 526056,
+        "text": "Pic21_DrawBudhaashtaka"
+      },
+      {
+        "offset": 526080,
+        "text": "Pic22_DrawGurvaashtaka"
+      },
+      {
+        "offset": 526104,
+        "text": "frmSudarshan"
+      },
+      {
+        "offset": 526120,
+        "text": "Pic23_DrawShukraashtaka"
+      },
+      {
+        "offset": 526144,
+        "text": "Pic24_DrawShanyaashtaka"
+      },
+      {
+        "offset": 526168,
+        "text": "Pic25_DrawLagnaashtaka"
+      },
+      {
+        "offset": 526192,
+        "text": "A54_ShodhanAshtakvarg"
+      },
+      {
+        "offset": 526216,
+        "text": "frmPhalSthaan"
+      },
+      {
+        "offset": 526232,
+        "text": "A55_Bhaavaphal"
+      },
+      {
+        "offset": 526248,
+        "text": "frmBhaavaphal"
+      },
+      {
+        "offset": 526264,
+        "text": "A56_SarvatobhadrPlanets"
+      },
+      {
+        "offset": 526288,
+        "text": "frmSBPic"
+      },
+      {
+        "offset": 526300,
+        "text": "frmSarvatobhadrPhal"
+      },
+      {
+        "offset": 526320,
+        "text": "A57_TithiPratyantara"
+      },
+      {
+        "offset": 526344,
+        "text": "frmPratyantar"
+      },
+      {
+        "offset": 526360,
+        "text": "frmPraana"
+      },
+      {
+        "offset": 526372,
+        "text": "frmSukshma"
+      },
+      {
+        "offset": 526384,
+        "text": "frmNoticePratyantar"
+      },
+      {
+        "offset": 526404,
+        "text": "A58_Gochargrah"
+      },
+      {
+        "offset": 526420,
+        "text": "frmPlanetarium"
+      },
+      {
+        "offset": 526436,
+        "text": "frmHelpPlanetarium"
+      },
+      {
+        "offset": 526456,
+        "text": "A59_AnalyseEvent"
+      },
+      {
+        "offset": 526476,
+        "text": "frmEventAnalysis"
+      },
+      {
+        "offset": 526496,
+        "text": "A60_ShodashVargExtra"
+      },
+      {
+        "offset": 526520,
+        "text": "frmShodash3"
+      },
+      {
+        "offset": 526532,
+        "text": "lbl34"
+      },
+      {
+        "offset": 526540,
+        "text": "A61_VargAllSixty"
+      },
+      {
+        "offset": 526560,
+        "text": "A62_Yogas"
+      },
+      {
+        "offset": 526572,
+        "text": "frmSambandh"
+      },
+      {
+        "offset": 526584,
+        "text": "frmVarshaHelp"
+      },
+      {
+        "offset": 526600,
+        "text": "Pic26_HoraVarsh"
+      },
+      {
+        "offset": 526616,
+        "text": "Pic27_Dreskan"
+      },
+      {
+        "offset": 526632,
+        "text": "Pic28_Chaturthaamsh"
+      },
+      {
+        "offset": 526652,
+        "text": "Pic29_Saptamaamsh"
+      },
+      {
+        "offset": 526672,
+        "text": "Pic31_Dashamaamsh"
+      },
+      {
+        "offset": 526692,
+        "text": "Pic30_Navams"
+      },
+      {
+        "offset": 526708,
+        "text": "Pic32_Dvadasams"
+      },
+      {
+        "offset": 526724,
+        "text": "Pic33_Shodashaamsh"
+      },
+      {
+        "offset": 526744,
+        "text": "Pic34_Vimshaamsh"
+      },
+      {
+        "offset": 526764,
+        "text": "Pic35_Chaubees"
+      },
+      {
+        "offset": 526780,
+        "text": "Pic36_Saptvimshaamsh"
+      },
+      {
+        "offset": 526804,
+        "text": "Pic37_Trinsams"
+      },
+      {
+        "offset": 526820,
+        "text": "Pic38_Khavedaamsh"
+      },
+      {
+        "offset": 526840,
+        "text": "Pic39_Akshavedaamsh"
+      },
+      {
+        "offset": 526860,
+        "text": "Pic40_Shashtyamsh"
+      },
+      {
+        "offset": 526880,
+        "text": "frmVarshShodashButtons"
+      },
+      {
+        "offset": 526904,
+        "text": "A64_DrawKundleePlanetarium"
+      },
+      {
+        "offset": 526932,
+        "text": "frmGocharNow"
+      },
+      {
+        "offset": 526948,
+        "text": "D13_Native"
+      },
+      {
+        "offset": 526960,
+        "text": "A65_DrawSudarshanaChakra"
+      },
+      {
+        "offset": 526988,
+        "text": "frmKaalachakra"
+      },
+      {
+        "offset": 527004,
+        "text": "frmCharaDasha"
+      },
+      {
+        "offset": 527020,
+        "text": "A66_YoginiModule"
+      },
+      {
+        "offset": 527040,
+        "text": "frmDashaaYogini"
+      },
+      {
+        "offset": 527056,
+        "text": "A67_ComputeDates"
+      },
+      {
+        "offset": 527076,
+        "text": "frmDashaaYogini2"
+      },
+      {
+        "offset": 527096,
+        "text": "A68_LeapCompute"
+      },
+      {
+        "offset": 527112,
+        "text": "A69_Bhaves_CharDasa"
+      },
+      {
+        "offset": 527132,
+        "text": "C03_EOT"
+      },
+      {
+        "offset": 527140,
+        "text": "A71_VimshottariProc"
+      },
+      {
+        "offset": 527160,
+        "text": "A72_VargaExtras"
+      },
+      {
+        "offset": 527176,
+        "text": "A73_VarshPratyantar"
+      },
+      {
+        "offset": 527196,
+        "text": "frmVarshaPD"
+      },
+      {
+        "offset": 527208,
+        "text": "A74_KCDmodule"
+      },
+      {
+        "offset": 527224,
+        "text": "A75_AshtottariDasha"
+      },
+      {
+        "offset": 527244,
+        "text": "A77_Varshaphal"
+      },
+      {
+        "offset": 527260,
+        "text": "A13_GrahDisplay"
+      },
+      {
+        "offset": 527276,
+        "text": "A80_Shodashphal"
+      },
+      {
+        "offset": 527292,
+        "text": "frmKCDDashaAD"
+      },
+      {
+        "offset": 527308,
+        "text": "frmKCDDashaPD"
+      },
+      {
+        "offset": 527324,
+        "text": "A81_KCD_subs"
+      },
+      {
+        "offset": 527340,
+        "text": "A82_VargaCharts"
+      },
+      {
+        "offset": 527356,
+        "text": "A83_PhalSthaan"
+      },
+      {
+        "offset": 527376,
+        "text": "A84_ShodashVargaCharts"
+      },
+      {
+        "offset": 527400,
+        "text": "A85_DrgGrahNow"
+      },
+      {
+        "offset": 527416,
+        "text": "A86_GocharGrahChakra"
+      },
+      {
+        "offset": 527440,
+        "text": "frmData"
+      },
+      {
+        "offset": 527448,
+        "text": "C05_Budh"
+      },
+      {
+        "offset": 527460,
+        "text": "C06_Guru"
+      },
+      {
+        "offset": 527472,
+        "text": "C04_Kuj"
+      },
+      {
+        "offset": 527480,
+        "text": "C08_Shani"
+      },
+      {
+        "offset": 527492,
+        "text": "C01_GrahSpashta"
+      },
+      {
+        "offset": 527508,
+        "text": "C07_Shukr"
+      },
+      {
+        "offset": 527520,
+        "text": "C03_Chandr"
+      },
+      {
+        "offset": 527532,
+        "text": "A88_ShodashaVargaNow"
+      },
+      {
+        "offset": 527556,
+        "text": "A29_GrahNow"
+      },
+      {
+        "offset": 527568,
+        "text": "frmDrawIndia"
+      },
+      {
+        "offset": 527584,
+        "text": "A89_DrigPlace"
+      },
+      {
+        "offset": 527600,
+        "text": "D01_Native"
+      },
+      {
+        "offset": 527612,
+        "text": "D02_Native"
+      },
+      {
+        "offset": 527624,
+        "text": "D03_Native"
+      },
+      {
+        "offset": 527636,
+        "text": "D04_Native"
+      },
+      {
+        "offset": 527648,
+        "text": "D05_Native"
+      },
+      {
+        "offset": 527660,
+        "text": "D06_Native"
+      },
+      {
+        "offset": 527672,
+        "text": "D07_Native"
+      },
+      {
+        "offset": 527684,
+        "text": "D08_Native"
+      },
+      {
+        "offset": 527696,
+        "text": "D09_Native"
+      },
+      {
+        "offset": 527708,
+        "text": "D10_Native"
+      },
+      {
+        "offset": 527720,
+        "text": "D72_FillComboFiles"
+      },
+      {
+        "offset": 527740,
+        "text": "D11_Native"
+      },
+      {
+        "offset": 527752,
+        "text": "D12_Native"
+      },
+      {
+        "offset": 527764,
+        "text": "lbl31"
+      },
+      {
+        "offset": 527772,
+        "text": "D14_Native"
+      },
+      {
+        "offset": 527784,
+        "text": "D15_Native"
+      },
+      {
+        "offset": 527796,
+        "text": "D16_Native"
+      },
+      {
+        "offset": 527808,
+        "text": "D17_Native"
+      },
+      {
+        "offset": 527820,
+        "text": "D18_Native"
+      },
+      {
+        "offset": 527832,
+        "text": "D19_Native"
+      },
+      {
+        "offset": 527844,
+        "text": "D20_Native"
+      },
+      {
+        "offset": 527856,
+        "text": "D21_Native"
+      },
+      {
+        "offset": 527868,
+        "text": "D22_Native"
+      },
+      {
+        "offset": 527880,
+        "text": "D23_Native"
+      },
+      {
+        "offset": 527892,
+        "text": "D24_Native"
+      },
+      {
+        "offset": 527904,
+        "text": "D25_Native"
+      },
+      {
+        "offset": 527916,
+        "text": "D26_Native"
+      },
+      {
+        "offset": 527928,
+        "text": "D27_Native"
+      },
+      {
+        "offset": 527940,
+        "text": "D28_Native"
+      },
+      {
+        "offset": 527952,
+        "text": "D29_Native"
+      },
+      {
+        "offset": 527964,
+        "text": "D30_Native"
+      },
+      {
+        "offset": 527976,
+        "text": "D31_Native"
+      },
+      {
+        "offset": 527988,
+        "text": "D32_Native"
+      },
+      {
+        "offset": 528000,
+        "text": "D33_Native"
+      },
+      {
+        "offset": 528012,
+        "text": "D34_Native"
+      },
+      {
+        "offset": 528024,
+        "text": "D35_Native"
+      },
+      {
+        "offset": 528036,
+        "text": "D36_Native"
+      },
+      {
+        "offset": 528048,
+        "text": "D37_Native"
+      },
+      {
+        "offset": 528060,
+        "text": "D38_Native"
+      },
+      {
+        "offset": 528072,
+        "text": "D39_Native"
+      },
+      {
+        "offset": 528084,
+        "text": "D40_Native"
+      },
+      {
+        "offset": 528096,
+        "text": "D41_Native"
+      },
+      {
+        "offset": 528108,
+        "text": "D42_Native"
+      },
+      {
+        "offset": 528120,
+        "text": "D43_Native"
+      },
+      {
+        "offset": 528132,
+        "text": "D44_Native"
+      },
+      {
+        "offset": 528144,
+        "text": "D45_Native"
+      },
+      {
+        "offset": 528156,
+        "text": "D46_Native"
+      },
+      {
+        "offset": 528168,
+        "text": "D47_Native"
+      },
+      {
+        "offset": 528180,
+        "text": "D48_Native"
+      },
+      {
+        "offset": 528192,
+        "text": "D49_Native"
+      },
+      {
+        "offset": 528204,
+        "text": "D50_Native"
+      },
+      {
+        "offset": 528216,
+        "text": "D51_Native"
+      },
+      {
+        "offset": 528228,
+        "text": "D52_Native"
+      },
+      {
+        "offset": 528240,
+        "text": "D53_Native"
+      },
+      {
+        "offset": 528252,
+        "text": "D54_Native"
+      },
+      {
+        "offset": 528264,
+        "text": "D55_Native"
+      },
+      {
+        "offset": 528276,
+        "text": "D56_Native"
+      },
+      {
+        "offset": 528288,
+        "text": "D57_Native"
+      },
+      {
+        "offset": 528300,
+        "text": "D58_Native"
+      },
+      {
+        "offset": 528312,
+        "text": "D59_Native"
+      },
+      {
+        "offset": 528324,
+        "text": "D60_Native"
+      },
+      {
+        "offset": 528336,
+        "text": "D62_Native"
+      },
+      {
+        "offset": 528348,
+        "text": "D63_Native"
+      },
+      {
+        "offset": 528360,
+        "text": "D64_Native"
+      },
+      {
+        "offset": 528372,
+        "text": "D65_Native"
+      },
+      {
+        "offset": 528384,
+        "text": "D66_Native"
+      },
+      {
+        "offset": 528396,
+        "text": "D67_Native"
+      },
+      {
+        "offset": 528408,
+        "text": "D68_Native"
+      },
+      {
+        "offset": 528420,
+        "text": "D69_Native"
+      },
+      {
+        "offset": 528432,
+        "text": "D70_Native"
+      },
+      {
+        "offset": 528444,
+        "text": "D71_Native"
+      },
+      {
+        "offset": 528456,
+        "text": "D61_Native"
+      },
+      {
+        "offset": 528468,
+        "text": "A63_Mapping"
+      },
+      {
+        "offset": 528480,
+        "text": "frmMapHelp"
+      },
+      {
+        "offset": 528492,
+        "text": "frmMapp"
+      },
+      {
+        "offset": 528500,
+        "text": "frmNewPlace"
+      },
+      {
+        "offset": 528512,
+        "text": "A91_FormCapture"
+      },
+      {
+        "offset": 528528,
+        "text": "Kundalee"
+      },
+      {
+        "offset": 528540,
+        "text": "frmPrintPicture"
+      },
+      {
+        "offset": 528556,
+        "text": "A92_SambandhMDstart"
+      },
+      {
+        "offset": 528576,
+        "text": "A93_SambandhADstart"
+      },
+      {
+        "offset": 528596,
+        "text": "A94_SambandhPDstart"
+      },
+      {
+        "offset": 528616,
+        "text": "A95_SambandhSDstart"
+      },
+      {
+        "offset": 528636,
+        "text": "A96_SambandhPrDstart"
+      },
+      {
+        "offset": 528660,
+        "text": "frmAbout"
+      },
+      {
+        "offset": 528672,
+        "text": "frmDrik"
+      },
+      {
+        "offset": 528680,
+        "text": "frmAV_GocharChart"
+      },
+      {
+        "offset": 528700,
+        "text": "frmVargottam"
+      },
+      {
+        "offset": 528716,
+        "text": "frmMapNGA"
+      },
+      {
+        "offset": 528728,
+        "text": "B51_HalfDayMedini"
+      },
+      {
+        "offset": 528748,
+        "text": "PancVatiElection"
+      },
+      {
+        "offset": 528768,
+        "text": "E30_BeejVapana"
+      },
+      {
+        "offset": 528784,
+        "text": "frmDisplayElection"
+      },
+      {
+        "offset": 528804,
+        "text": "E29_Agnyaadhan"
+      },
+      {
+        "offset": 528820,
+        "text": "E02_AharganPhalElection"
+      },
+      {
+        "offset": 528844,
+        "text": "E26_Akshaarambha"
+      },
+      {
+        "offset": 528864,
+        "text": "E28_AnnaPraashana"
+      },
+      {
+        "offset": 528884,
+        "text": "E07_Ayanamsha"
+      },
+      {
+        "offset": 528900,
+        "text": "E13_Chandr"
+      },
+      {
+        "offset": 528912,
+        "text": "E22_Dviraagaman"
+      },
+      {
+        "offset": 528928,
+        "text": "E01_GrahSpast"
+      },
+      {
+        "offset": 528944,
+        "text": "frmMuhurt"
+      },
+      {
+        "offset": 528956,
+        "text": "E20_Grihaarambh"
+      },
+      {
+        "offset": 528972,
+        "text": "E21_GrihPravesh"
+      },
+      {
+        "offset": 528988,
+        "text": "E31_HalPravahan"
+      },
+      {
+        "offset": 529004,
+        "text": "E18_KarnVedh"
+      },
+      {
+        "offset": 529020,
+        "text": "E32_LandSell"
+      },
+      {
+        "offset": 529036,
+        "text": "E33_Mokadamaa"
+      },
+      {
+        "offset": 529052,
+        "text": "E23_Mundan"
+      },
+      {
+        "offset": 529064,
+        "text": "E25_Naamkaran"
+      },
+      {
+        "offset": 529080,
+        "text": "E24_Navaann"
+      },
+      {
+        "offset": 529092,
+        "text": "E14_Parvaadi"
+      },
+      {
+        "offset": 529108,
+        "text": "E03_PrevAharElection"
+      },
+      {
+        "offset": 529132,
+        "text": "E12_RaviMisr"
+      },
+      {
+        "offset": 529148,
+        "text": "E04_Samchaar"
+      },
+      {
+        "offset": 529164,
+        "text": "E15_SiddhaadiYog"
+      },
+      {
+        "offset": 529184,
+        "text": "E19_Upnayan"
+      },
+      {
+        "offset": 529196,
+        "text": "E17_Vivaah"
+      },
+      {
+        "offset": 529208,
+        "text": "E27_VratUdyapan"
+      }
+    ]
+  },
+  "A66_YoginiModule_code": {
+    "label": "A66_YoginiModule (Code Module)",
+    "center_offset": 527020,
+    "window_slice": "525020..529020",
+    "utf16_count": 0,
+    "utf16_strings": [],
+    "ascii_count": 251,
+    "ascii_strings": [
+      {
+        "offset": 525020,
+        "text": "A19_Ashtakvarga"
+      },
+      {
+        "offset": 525036,
+        "text": "frmSarvatobhadraChakra"
+      },
+      {
+        "offset": 525060,
+        "text": "A21_Sudarshanchakra"
+      },
+      {
+        "offset": 525080,
+        "text": "A22_Sarvatobhadr"
+      },
+      {
+        "offset": 525100,
+        "text": "A24_Dasha108"
+      },
+      {
+        "offset": 525116,
+        "text": "A26_DashaaDesired108"
+      },
+      {
+        "offset": 525140,
+        "text": "frmDashaAshtottari"
+      },
+      {
+        "offset": 525160,
+        "text": "frmHelp"
+      },
+      {
+        "offset": 525168,
+        "text": "frmYogaphal"
+      },
+      {
+        "offset": 525180,
+        "text": "frmDashaphal"
+      },
+      {
+        "offset": 525196,
+        "text": "A50_Dashaphal_120"
+      },
+      {
+        "offset": 525216,
+        "text": "frmDrishti"
+      },
+      {
+        "offset": 525228,
+        "text": "A27_BhaavaDrishti"
+      },
+      {
+        "offset": 525248,
+        "text": "frmMaitri"
+      },
+      {
+        "offset": 525260,
+        "text": "frmVarshphal"
+      },
+      {
+        "offset": 525276,
+        "text": "frmVarshMaasPhalas"
+      },
+      {
+        "offset": 525296,
+        "text": "A30_GrahSpashtVarsh"
+      },
+      {
+        "offset": 525316,
+        "text": "A31_Avasthaadi"
+      },
+      {
+        "offset": 525332,
+        "text": "A32_DrawBhaavVarsh"
+      },
+      {
+        "offset": 525352,
+        "text": "A33_SunriseVarsh"
+      },
+      {
+        "offset": 525372,
+        "text": "A34_SambandhVarsh"
+      },
+      {
+        "offset": 525392,
+        "text": "A35_MaitriVarsh"
+      },
+      {
+        "offset": 525408,
+        "text": "A36_VarshMaasphal"
+      },
+      {
+        "offset": 525428,
+        "text": "frmVarshSambandh"
+      },
+      {
+        "offset": 525448,
+        "text": "frmBala"
+      },
+      {
+        "offset": 525456,
+        "text": "A38_Bala"
+      },
+      {
+        "offset": 525468,
+        "text": "frmBhaavabala"
+      },
+      {
+        "offset": 525484,
+        "text": "frmSwitchboardEng"
+      },
+      {
+        "offset": 525504,
+        "text": "A39_BalaVarshMaasPhal"
+      },
+      {
+        "offset": 525528,
+        "text": "A40_BalVarsh"
+      },
+      {
+        "offset": 525544,
+        "text": "A41_ShodashaVargVarsh"
+      },
+      {
+        "offset": 525568,
+        "text": "A42_DrigBalaVarsh"
+      },
+      {
+        "offset": 525588,
+        "text": "A43_CheshtaaBalaVarsh"
+      },
+      {
+        "offset": 525612,
+        "text": "A44_16VivechanVarsh"
+      },
+      {
+        "offset": 525632,
+        "text": "A48_DrigBhaavaVarsha"
+      },
+      {
+        "offset": 525656,
+        "text": "A49_VakrodayastVarsh"
+      },
+      {
+        "offset": 525680,
+        "text": "A52_Yogajphal"
+      },
+      {
+        "offset": 525700,
+        "text": "A51_BhaaveshSthaan"
+      },
+      {
+        "offset": 525720,
+        "text": "frmPhalaadesh"
+      },
+      {
+        "offset": 525736,
+        "text": "frmYogaHelp"
+      },
+      {
+        "offset": 525748,
+        "text": "D02_Suryodaya"
+      },
+      {
+        "offset": 525764,
+        "text": "Panc02"
+      },
+      {
+        "offset": 525772,
+        "text": "PancVati"
+      },
+      {
+        "offset": 525784,
+        "text": "A45_ShodashDrishti"
+      },
+      {
+        "offset": 525804,
+        "text": "A46_DrigBhaava16"
+      },
+      {
+        "offset": 525824,
+        "text": "A47_DrigBala16"
+      },
+      {
+        "offset": 525840,
+        "text": "frmDrishti16"
+      },
+      {
+        "offset": 525856,
+        "text": "frmArgala"
+      },
+      {
+        "offset": 525868,
+        "text": "frmShodashPada"
+      },
+      {
+        "offset": 525884,
+        "text": "frmAshtakavarga"
+      },
+      {
+        "offset": 525900,
+        "text": "A53_UchchaadiGochar"
+      },
+      {
+        "offset": 525920,
+        "text": "frmAshtakvargDetail"
+      },
+      {
+        "offset": 525940,
+        "text": "frmAshtakKundlis"
+      },
+      {
+        "offset": 525960,
+        "text": "Pic17_DrawSarvashtaka"
+      },
+      {
+        "offset": 525984,
+        "text": "Pic18_DrawSuryashtaka"
+      },
+      {
+        "offset": 526008,
+        "text": "Pic19_DrawChandrashtaka"
+      },
+      {
+        "offset": 526032,
+        "text": "Pic20_DrawKujaashtaka"
+      },
+      {
+        "offset": 526056,
+        "text": "Pic21_DrawBudhaashtaka"
+      },
+      {
+        "offset": 526080,
+        "text": "Pic22_DrawGurvaashtaka"
+      },
+      {
+        "offset": 526104,
+        "text": "frmSudarshan"
+      },
+      {
+        "offset": 526120,
+        "text": "Pic23_DrawShukraashtaka"
+      },
+      {
+        "offset": 526144,
+        "text": "Pic24_DrawShanyaashtaka"
+      },
+      {
+        "offset": 526168,
+        "text": "Pic25_DrawLagnaashtaka"
+      },
+      {
+        "offset": 526192,
+        "text": "A54_ShodhanAshtakvarg"
+      },
+      {
+        "offset": 526216,
+        "text": "frmPhalSthaan"
+      },
+      {
+        "offset": 526232,
+        "text": "A55_Bhaavaphal"
+      },
+      {
+        "offset": 526248,
+        "text": "frmBhaavaphal"
+      },
+      {
+        "offset": 526264,
+        "text": "A56_SarvatobhadrPlanets"
+      },
+      {
+        "offset": 526288,
+        "text": "frmSBPic"
+      },
+      {
+        "offset": 526300,
+        "text": "frmSarvatobhadrPhal"
+      },
+      {
+        "offset": 526320,
+        "text": "A57_TithiPratyantara"
+      },
+      {
+        "offset": 526344,
+        "text": "frmPratyantar"
+      },
+      {
+        "offset": 526360,
+        "text": "frmPraana"
+      },
+      {
+        "offset": 526372,
+        "text": "frmSukshma"
+      },
+      {
+        "offset": 526384,
+        "text": "frmNoticePratyantar"
+      },
+      {
+        "offset": 526404,
+        "text": "A58_Gochargrah"
+      },
+      {
+        "offset": 526420,
+        "text": "frmPlanetarium"
+      },
+      {
+        "offset": 526436,
+        "text": "frmHelpPlanetarium"
+      },
+      {
+        "offset": 526456,
+        "text": "A59_AnalyseEvent"
+      },
+      {
+        "offset": 526476,
+        "text": "frmEventAnalysis"
+      },
+      {
+        "offset": 526496,
+        "text": "A60_ShodashVargExtra"
+      },
+      {
+        "offset": 526520,
+        "text": "frmShodash3"
+      },
+      {
+        "offset": 526532,
+        "text": "lbl34"
+      },
+      {
+        "offset": 526540,
+        "text": "A61_VargAllSixty"
+      },
+      {
+        "offset": 526560,
+        "text": "A62_Yogas"
+      },
+      {
+        "offset": 526572,
+        "text": "frmSambandh"
+      },
+      {
+        "offset": 526584,
+        "text": "frmVarshaHelp"
+      },
+      {
+        "offset": 526600,
+        "text": "Pic26_HoraVarsh"
+      },
+      {
+        "offset": 526616,
+        "text": "Pic27_Dreskan"
+      },
+      {
+        "offset": 526632,
+        "text": "Pic28_Chaturthaamsh"
+      },
+      {
+        "offset": 526652,
+        "text": "Pic29_Saptamaamsh"
+      },
+      {
+        "offset": 526672,
+        "text": "Pic31_Dashamaamsh"
+      },
+      {
+        "offset": 526692,
+        "text": "Pic30_Navams"
+      },
+      {
+        "offset": 526708,
+        "text": "Pic32_Dvadasams"
+      },
+      {
+        "offset": 526724,
+        "text": "Pic33_Shodashaamsh"
+      },
+      {
+        "offset": 526744,
+        "text": "Pic34_Vimshaamsh"
+      },
+      {
+        "offset": 526764,
+        "text": "Pic35_Chaubees"
+      },
+      {
+        "offset": 526780,
+        "text": "Pic36_Saptvimshaamsh"
+      },
+      {
+        "offset": 526804,
+        "text": "Pic37_Trinsams"
+      },
+      {
+        "offset": 526820,
+        "text": "Pic38_Khavedaamsh"
+      },
+      {
+        "offset": 526840,
+        "text": "Pic39_Akshavedaamsh"
+      },
+      {
+        "offset": 526860,
+        "text": "Pic40_Shashtyamsh"
+      },
+      {
+        "offset": 526880,
+        "text": "frmVarshShodashButtons"
+      },
+      {
+        "offset": 526904,
+        "text": "A64_DrawKundleePlanetarium"
+      },
+      {
+        "offset": 526932,
+        "text": "frmGocharNow"
+      },
+      {
+        "offset": 526948,
+        "text": "D13_Native"
+      },
+      {
+        "offset": 526960,
+        "text": "A65_DrawSudarshanaChakra"
+      },
+      {
+        "offset": 526988,
+        "text": "frmKaalachakra"
+      },
+      {
+        "offset": 527004,
+        "text": "frmCharaDasha"
+      },
+      {
+        "offset": 527020,
+        "text": "A66_YoginiModule"
+      },
+      {
+        "offset": 527040,
+        "text": "frmDashaaYogini"
+      },
+      {
+        "offset": 527056,
+        "text": "A67_ComputeDates"
+      },
+      {
+        "offset": 527076,
+        "text": "frmDashaaYogini2"
+      },
+      {
+        "offset": 527096,
+        "text": "A68_LeapCompute"
+      },
+      {
+        "offset": 527112,
+        "text": "A69_Bhaves_CharDasa"
+      },
+      {
+        "offset": 527132,
+        "text": "C03_EOT"
+      },
+      {
+        "offset": 527140,
+        "text": "A71_VimshottariProc"
+      },
+      {
+        "offset": 527160,
+        "text": "A72_VargaExtras"
+      },
+      {
+        "offset": 527176,
+        "text": "A73_VarshPratyantar"
+      },
+      {
+        "offset": 527196,
+        "text": "frmVarshaPD"
+      },
+      {
+        "offset": 527208,
+        "text": "A74_KCDmodule"
+      },
+      {
+        "offset": 527224,
+        "text": "A75_AshtottariDasha"
+      },
+      {
+        "offset": 527244,
+        "text": "A77_Varshaphal"
+      },
+      {
+        "offset": 527260,
+        "text": "A13_GrahDisplay"
+      },
+      {
+        "offset": 527276,
+        "text": "A80_Shodashphal"
+      },
+      {
+        "offset": 527292,
+        "text": "frmKCDDashaAD"
+      },
+      {
+        "offset": 527308,
+        "text": "frmKCDDashaPD"
+      },
+      {
+        "offset": 527324,
+        "text": "A81_KCD_subs"
+      },
+      {
+        "offset": 527340,
+        "text": "A82_VargaCharts"
+      },
+      {
+        "offset": 527356,
+        "text": "A83_PhalSthaan"
+      },
+      {
+        "offset": 527376,
+        "text": "A84_ShodashVargaCharts"
+      },
+      {
+        "offset": 527400,
+        "text": "A85_DrgGrahNow"
+      },
+      {
+        "offset": 527416,
+        "text": "A86_GocharGrahChakra"
+      },
+      {
+        "offset": 527440,
+        "text": "frmData"
+      },
+      {
+        "offset": 527448,
+        "text": "C05_Budh"
+      },
+      {
+        "offset": 527460,
+        "text": "C06_Guru"
+      },
+      {
+        "offset": 527472,
+        "text": "C04_Kuj"
+      },
+      {
+        "offset": 527480,
+        "text": "C08_Shani"
+      },
+      {
+        "offset": 527492,
+        "text": "C01_GrahSpashta"
+      },
+      {
+        "offset": 527508,
+        "text": "C07_Shukr"
+      },
+      {
+        "offset": 527520,
+        "text": "C03_Chandr"
+      },
+      {
+        "offset": 527532,
+        "text": "A88_ShodashaVargaNow"
+      },
+      {
+        "offset": 527556,
+        "text": "A29_GrahNow"
+      },
+      {
+        "offset": 527568,
+        "text": "frmDrawIndia"
+      },
+      {
+        "offset": 527584,
+        "text": "A89_DrigPlace"
+      },
+      {
+        "offset": 527600,
+        "text": "D01_Native"
+      },
+      {
+        "offset": 527612,
+        "text": "D02_Native"
+      },
+      {
+        "offset": 527624,
+        "text": "D03_Native"
+      },
+      {
+        "offset": 527636,
+        "text": "D04_Native"
+      },
+      {
+        "offset": 527648,
+        "text": "D05_Native"
+      },
+      {
+        "offset": 527660,
+        "text": "D06_Native"
+      },
+      {
+        "offset": 527672,
+        "text": "D07_Native"
+      },
+      {
+        "offset": 527684,
+        "text": "D08_Native"
+      },
+      {
+        "offset": 527696,
+        "text": "D09_Native"
+      },
+      {
+        "offset": 527708,
+        "text": "D10_Native"
+      },
+      {
+        "offset": 527720,
+        "text": "D72_FillComboFiles"
+      },
+      {
+        "offset": 527740,
+        "text": "D11_Native"
+      },
+      {
+        "offset": 527752,
+        "text": "D12_Native"
+      },
+      {
+        "offset": 527764,
+        "text": "lbl31"
+      },
+      {
+        "offset": 527772,
+        "text": "D14_Native"
+      },
+      {
+        "offset": 527784,
+        "text": "D15_Native"
+      },
+      {
+        "offset": 527796,
+        "text": "D16_Native"
+      },
+      {
+        "offset": 527808,
+        "text": "D17_Native"
+      },
+      {
+        "offset": 527820,
+        "text": "D18_Native"
+      },
+      {
+        "offset": 527832,
+        "text": "D19_Native"
+      },
+      {
+        "offset": 527844,
+        "text": "D20_Native"
+      },
+      {
+        "offset": 527856,
+        "text": "D21_Native"
+      },
+      {
+        "offset": 527868,
+        "text": "D22_Native"
+      },
+      {
+        "offset": 527880,
+        "text": "D23_Native"
+      },
+      {
+        "offset": 527892,
+        "text": "D24_Native"
+      },
+      {
+        "offset": 527904,
+        "text": "D25_Native"
+      },
+      {
+        "offset": 527916,
+        "text": "D26_Native"
+      },
+      {
+        "offset": 527928,
+        "text": "D27_Native"
+      },
+      {
+        "offset": 527940,
+        "text": "D28_Native"
+      },
+      {
+        "offset": 527952,
+        "text": "D29_Native"
+      },
+      {
+        "offset": 527964,
+        "text": "D30_Native"
+      },
+      {
+        "offset": 527976,
+        "text": "D31_Native"
+      },
+      {
+        "offset": 527988,
+        "text": "D32_Native"
+      },
+      {
+        "offset": 528000,
+        "text": "D33_Native"
+      },
+      {
+        "offset": 528012,
+        "text": "D34_Native"
+      },
+      {
+        "offset": 528024,
+        "text": "D35_Native"
+      },
+      {
+        "offset": 528036,
+        "text": "D36_Native"
+      },
+      {
+        "offset": 528048,
+        "text": "D37_Native"
+      },
+      {
+        "offset": 528060,
+        "text": "D38_Native"
+      },
+      {
+        "offset": 528072,
+        "text": "D39_Native"
+      },
+      {
+        "offset": 528084,
+        "text": "D40_Native"
+      },
+      {
+        "offset": 528096,
+        "text": "D41_Native"
+      },
+      {
+        "offset": 528108,
+        "text": "D42_Native"
+      },
+      {
+        "offset": 528120,
+        "text": "D43_Native"
+      },
+      {
+        "offset": 528132,
+        "text": "D44_Native"
+      },
+      {
+        "offset": 528144,
+        "text": "D45_Native"
+      },
+      {
+        "offset": 528156,
+        "text": "D46_Native"
+      },
+      {
+        "offset": 528168,
+        "text": "D47_Native"
+      },
+      {
+        "offset": 528180,
+        "text": "D48_Native"
+      },
+      {
+        "offset": 528192,
+        "text": "D49_Native"
+      },
+      {
+        "offset": 528204,
+        "text": "D50_Native"
+      },
+      {
+        "offset": 528216,
+        "text": "D51_Native"
+      },
+      {
+        "offset": 528228,
+        "text": "D52_Native"
+      },
+      {
+        "offset": 528240,
+        "text": "D53_Native"
+      },
+      {
+        "offset": 528252,
+        "text": "D54_Native"
+      },
+      {
+        "offset": 528264,
+        "text": "D55_Native"
+      },
+      {
+        "offset": 528276,
+        "text": "D56_Native"
+      },
+      {
+        "offset": 528288,
+        "text": "D57_Native"
+      },
+      {
+        "offset": 528300,
+        "text": "D58_Native"
+      },
+      {
+        "offset": 528312,
+        "text": "D59_Native"
+      },
+      {
+        "offset": 528324,
+        "text": "D60_Native"
+      },
+      {
+        "offset": 528336,
+        "text": "D62_Native"
+      },
+      {
+        "offset": 528348,
+        "text": "D63_Native"
+      },
+      {
+        "offset": 528360,
+        "text": "D64_Native"
+      },
+      {
+        "offset": 528372,
+        "text": "D65_Native"
+      },
+      {
+        "offset": 528384,
+        "text": "D66_Native"
+      },
+      {
+        "offset": 528396,
+        "text": "D67_Native"
+      },
+      {
+        "offset": 528408,
+        "text": "D68_Native"
+      },
+      {
+        "offset": 528420,
+        "text": "D69_Native"
+      },
+      {
+        "offset": 528432,
+        "text": "D70_Native"
+      },
+      {
+        "offset": 528444,
+        "text": "D71_Native"
+      },
+      {
+        "offset": 528456,
+        "text": "D61_Native"
+      },
+      {
+        "offset": 528468,
+        "text": "A63_Mapping"
+      },
+      {
+        "offset": 528480,
+        "text": "frmMapHelp"
+      },
+      {
+        "offset": 528492,
+        "text": "frmMapp"
+      },
+      {
+        "offset": 528500,
+        "text": "frmNewPlace"
+      },
+      {
+        "offset": 528512,
+        "text": "A91_FormCapture"
+      },
+      {
+        "offset": 528528,
+        "text": "Kundalee"
+      },
+      {
+        "offset": 528540,
+        "text": "frmPrintPicture"
+      },
+      {
+        "offset": 528556,
+        "text": "A92_SambandhMDstart"
+      },
+      {
+        "offset": 528576,
+        "text": "A93_SambandhADstart"
+      },
+      {
+        "offset": 528596,
+        "text": "A94_SambandhPDstart"
+      },
+      {
+        "offset": 528616,
+        "text": "A95_SambandhSDstart"
+      },
+      {
+        "offset": 528636,
+        "text": "A96_SambandhPrDstart"
+      },
+      {
+        "offset": 528660,
+        "text": "frmAbout"
+      },
+      {
+        "offset": 528672,
+        "text": "frmDrik"
+      },
+      {
+        "offset": 528680,
+        "text": "frmAV_GocharChart"
+      },
+      {
+        "offset": 528700,
+        "text": "frmVargottam"
+      },
+      {
+        "offset": 528716,
+        "text": "frmMapNGA"
+      },
+      {
+        "offset": 528728,
+        "text": "B51_HalfDayMedini"
+      },
+      {
+        "offset": 528748,
+        "text": "PancVatiElection"
+      },
+      {
+        "offset": 528768,
+        "text": "E30_BeejVapana"
+      },
+      {
+        "offset": 528784,
+        "text": "frmDisplayElection"
+      },
+      {
+        "offset": 528804,
+        "text": "E29_Agnyaadhan"
+      },
+      {
+        "offset": 528820,
+        "text": "E02_AharganPhalElection"
+      },
+      {
+        "offset": 528844,
+        "text": "E26_Akshaarambha"
+      },
+      {
+        "offset": 528864,
+        "text": "E28_AnnaPraashana"
+      },
+      {
+        "offset": 528884,
+        "text": "E07_Ayanamsha"
+      },
+      {
+        "offset": 528900,
+        "text": "E13_Chandr"
+      },
+      {
+        "offset": 528912,
+        "text": "E22_Dviraagaman"
+      },
+      {
+        "offset": 528928,
+        "text": "E01_GrahSpast"
+      },
+      {
+        "offset": 528944,
+        "text": "frmMuhurt"
+      },
+      {
+        "offset": 528956,
+        "text": "E20_Grihaarambh"
+      },
+      {
+        "offset": 528972,
+        "text": "E21_GrihPravesh"
+      },
+      {
+        "offset": 528988,
+        "text": "E31_HalPravahan"
+      },
+      {
+        "offset": 529004,
+        "text": "E18_KarnVedh"
+      }
+    ]
+  },
+  "frmDashaAshtottari_form": {
+    "label": "frmDashaAshtottari (Form Definition)",
+    "center_offset": 1291604,
+    "window_slice": "1289604..1293604",
+    "utf16_count": 7,
+    "utf16_strings": [
+      {
+        "offset": 1289617,
+        "text": "1&'"
+      },
+      {
+        "offset": 1290605,
+        "text": "1&'"
+      },
+      {
+        "offset": 1291122,
+        "text": "1&'"
+      },
+      {
+        "offset": 1291768,
+        "text": "1&'"
+      },
+      {
+        "offset": 1292214,
+        "text": "1&'"
+      },
+      {
+        "offset": 1292771,
+        "text": "1&'"
+      },
+      {
+        "offset": 1293337,
+        "text": "1&'"
+      }
+    ],
+    "ascii_count": 137,
+    "ascii_strings": [
+      {
+        "offset": 1289613,
+        "text": "Form1"
+      },
+      {
+        "offset": 1289651,
+        "text": "cmdClose"
+      },
+      {
+        "offset": 1289664,
+        "text": "&H I D E"
+      },
+      {
+        "offset": 1289697,
+        "text": "Arial"
+      },
+      {
+        "offset": 1289711,
+        "text": "Pic"
+      },
+      {
+        "offset": 1289742,
+        "text": "cmdPrint"
+      },
+      {
+        "offset": 1289755,
+        "text": "PRINT"
+      },
+      {
+        "offset": 1289785,
+        "text": "Arial%7"
+      },
+      {
+        "offset": 1289793,
+        "text": "Before clicking here, connect printer and switch it ON."
+      },
+      {
+        "offset": 1289858,
+        "text": "Label1"
+      },
+      {
+        "offset": 1289869,
+        "text": "c`gr~ ikjk'kj gksjk 'kkL= vuqlkj"
+      },
+      {
+        "offset": 1289931,
+        "text": "1DevMithila"
+      },
+      {
+        "offset": 1290048,
+        "text": "frmBiodata"
+      },
+      {
+        "offset": 1290063,
+        "text": "BIODATA (you can paste images, or video/audio links or weblinks or Excel tables)"
+      },
+      {
+        "offset": 1290157,
+        "text": "Form1"
+      },
+      {
+        "offset": 1290191,
+        "text": "txtBio"
+      },
+      {
+        "offset": 1290201,
+        "text": "RichTextLib.RichTextBox"
+      },
+      {
+        "offset": 1290230,
+        "text": "W!_("
+      },
+      {
+        "offset": 1290237,
+        "text": "-LB"
+      },
+      {
+        "offset": 1290246,
+        "text": "!C4"
+      },
+      {
+        "offset": 1290262,
+        "text": "!C4"
+      },
+      {
+        "offset": 1290349,
+        "text": "Arial Unicode MS"
+      },
+      {
+        "offset": 1290375,
+        "text": "mnuSaveRTF"
+      },
+      {
+        "offset": 1290390,
+        "text": "SAVE as RTF"
+      },
+      {
+        "offset": 1290411,
+        "text": "mnuSaveTxt"
+      },
+      {
+        "offset": 1290426,
+        "text": "SAVE as TXT"
+      },
+      {
+        "offset": 1290467,
+        "text": "RQ2%"
+      },
+      {
+        "offset": 1290480,
+        "text": ";:O"
+      },
+      {
+        "offset": 1290544,
+        "text": "frmADBerror"
+      },
+      {
+        "offset": 1290560,
+        "text": "ADB Time Error Check"
+      },
+      {
+        "offset": 1290601,
+        "text": "Form1"
+      },
+      {
+        "offset": 1290640,
+        "text": "ArialF"
+      },
+      {
+        "offset": 1290656,
+        "text": "Text4"
+      },
+      {
+        "offset": 1290696,
+        "text": "Text3"
+      },
+      {
+        "offset": 1290736,
+        "text": "Text2"
+      },
+      {
+        "offset": 1290776,
+        "text": "Text1"
+      },
+      {
+        "offset": 1290819,
+        "text": "Arial"
+      },
+      {
+        "offset": 1290833,
+        "text": "Label1"
+      },
+      {
+        "offset": 1290844,
+        "text": "SUN                           MOON                   ASC  (LAGN)"
+      },
+      {
+        "offset": 1290954,
+        "text": "Arial"
+      },
+      {
+        "offset": 1291064,
+        "text": "frmSudarshan"
+      },
+      {
+        "offset": 1291081,
+        "text": "SUDARSHANA  CHAKRA"
+      },
+      {
+        "offset": 1291118,
+        "text": "Form1"
+      },
+      {
+        "offset": 1291156,
+        "text": "txtVargaNum"
+      },
+      {
+        "offset": 1291203,
+        "text": "Arial"
+      },
+      {
+        "offset": 1291217,
+        "text": "cmdSudarshanPhala"
+      },
+      {
+        "offset": 1291239,
+        "text": "&oxZQy"
+      },
+      {
+        "offset": 1291270,
+        "text": "1DevMithila%7"
+      },
+      {
+        "offset": 1291284,
+        "text": "Before clicking here, connect printer and switch it ON."
+      },
+      {
+        "offset": 1291349,
+        "text": "cmdPrint"
+      },
+      {
+        "offset": 1291362,
+        "text": "PRINT"
+      },
+      {
+        "offset": 1291383,
+        "text": "Before clicking here, connect printer and switch it ON."
+      },
+      {
+        "offset": 1291448,
+        "text": "Label1"
+      },
+      {
+        "offset": 1291459,
+        "text": "oxZ"
+      },
+      {
+        "offset": 1291487,
+        "text": "1DevMithila"
+      },
+      {
+        "offset": 1291514,
+        "text": "[`O"
+      },
+      {
+        "offset": 1291521,
+        "text": "=)6ttU|rEd"
+      },
+      {
+        "offset": 1291534,
+        "text": "&CH"
+      },
+      {
+        "offset": 1291539,
+        "text": "cz:O"
+      },
+      {
+        "offset": 1291604,
+        "text": "frmDashaAshtottari"
+      },
+      {
+        "offset": 1291627,
+        "text": "ASHTOTTARI    ANTAR-DASHA : This table is based on exact True Tithi,time in Yr:Mon:Date:Hr: Min: Sec"
+      },
+      {
+        "offset": 1291749,
+        "text": "]t?c"
+      },
+      {
+        "offset": 1291764,
+        "text": "Form1"
+      },
+      {
+        "offset": 1291800,
+        "text": "cmdDAC"
+      },
+      {
+        "offset": 1291811,
+        "text": "n'kkjEHk"
+      },
+      {
+        "offset": 1291844,
+        "text": "1DevMithila%%"
+      },
+      {
+        "offset": 1291858,
+        "text": "Chart of Dashaa starting time (exact)"
+      },
+      {
+        "offset": 1291905,
+        "text": "cmdPrint"
+      },
+      {
+        "offset": 1291918,
+        "text": "PRINT"
+      },
+      {
+        "offset": 1291939,
+        "text": "Before clicking here, connect printer and switch it ON."
+      },
+      {
+        "offset": 1292004,
+        "text": "cmdHide"
+      },
+      {
+        "offset": 1292016,
+        "text": "&HIDE"
+      },
+      {
+        "offset": 1292046,
+        "text": "Arial"
+      },
+      {
+        "offset": 1292061,
+        "text": "bL@7"
+      },
+      {
+        "offset": 1292071,
+        "text": "CSl"
+      },
+      {
+        "offset": 1292082,
+        "text": "-IF"
+      },
+      {
+        "offset": 1292092,
+        "text": "$:O"
+      },
+      {
+        "offset": 1292156,
+        "text": "frmSBC_page2"
+      },
+      {
+        "offset": 1292173,
+        "text": "SBC  Page-2"
+      },
+      {
+        "offset": 1292210,
+        "text": "Form1"
+      },
+      {
+        "offset": 1292249,
+        "text": "1DevMithilaF"
+      },
+      {
+        "offset": 1292271,
+        "text": "Command1"
+      },
+      {
+        "offset": 1292284,
+        "text": "HELP"
+      },
+      {
+        "offset": 1292313,
+        "text": "Arial"
+      },
+      {
+        "offset": 1292327,
+        "text": "chkExcludeVowels"
+      },
+      {
+        "offset": 1292348,
+        "text": "vokafNr Lojksa dks gVk;sa"
+      },
+      {
+        "offset": 1292397,
+        "text": "txt3"
+      },
+      {
+        "offset": 1292433,
+        "text": "txt2"
+      },
+      {
+        "offset": 1292469,
+        "text": "txt1"
+      },
+      {
+        "offset": 1292505,
+        "text": "cmdSBC2"
+      },
+      {
+        "offset": 1292517,
+        "text": "SBC2"
+      },
+      {
+        "offset": 1292546,
+        "text": "Arial"
+      },
+      {
+        "offset": 1292560,
+        "text": "cmdShatpad"
+      },
+      {
+        "offset": 1292575,
+        "text": "Shatpad"
+      },
+      {
+        "offset": 1292607,
+        "text": "Arial"
+      },
+      {
+        "offset": 1292621,
+        "text": "M15"
+      },
+      {
+        "offset": 1292716,
+        "text": "frmStartChakraDashaa"
+      },
+      {
+        "offset": 1292741,
+        "text": "Start"
+      },
+      {
+        "offset": 1292767,
+        "text": "Form1"
+      },
+      {
+        "offset": 1292805,
+        "text": "Text1"
+      },
+      {
+        "offset": 1292834,
+        "text": "Start"
+      },
+      {
+        "offset": 1292842,
+        "text": "Chakra-"
+      },
+      {
+        "offset": 1292857,
+        "text": "if Birth in"
+      },
+      {
+        "offset": 1292874,
+        "text": "tri ="
+      },
+      {
+        "offset": 1292882,
+        "text": "Lagna"
+      },
+      {
+        "offset": 1292891,
+        "text": "Dina ="
+      },
+      {
+        "offset": 1292900,
+        "text": "Lagne"
+      },
+      {
+        "offset": 1292910,
+        "text": "Sandhy"
+      },
+      {
+        "offset": 1292920,
+        "text": "Dvitiya"
+      },
+      {
+        "offset": 1292949,
+        "text": "Microsoft Sans Serif"
+      },
+      {
+        "offset": 1292978,
+        "text": "ListStart"
+      },
+      {
+        "offset": 1293018,
+        "text": "Lagna"
+      },
+      {
+        "offset": 1293025,
+        "text": "Dvitiya"
+      },
+      {
+        "offset": 1293034,
+        "text": "Surya"
+      },
+      {
+        "offset": 1293041,
+        "text": "Chandra"
+      },
+      {
+        "offset": 1293050,
+        "text": "Mangala"
+      },
+      {
+        "offset": 1293059,
+        "text": "Budha"
+      },
+      {
+        "offset": 1293066,
+        "text": "Brihaspati"
+      },
+      {
+        "offset": 1293078,
+        "text": "Shukra"
+      },
+      {
+        "offset": 1293086,
+        "text": "Shani"
+      },
+      {
+        "offset": 1293093,
+        "text": "Rahu"
+      },
+      {
+        "offset": 1293099,
+        "text": "Ketu"
+      },
+      {
+        "offset": 1293105,
+        "text": "Mesha!"
+      },
+      {
+        "offset": 1293163,
+        "text": "Arial Narrow,"
+      },
+      {
+        "offset": 1293189,
+        "text": "s>OB"
+      },
+      {
+        "offset": 1293215,
+        "text": ">!:O"
+      },
+      {
+        "offset": 1293280,
+        "text": "frmPlaces"
+      },
+      {
+        "offset": 1293294,
+        "text": "PLACES  :  DETAILS"
+      },
+      {
+        "offset": 1293333,
+        "text": "Form1"
+      },
+      {
+        "offset": 1293371,
+        "text": "txtDST"
+      },
+      {
+        "offset": 1293410,
+        "text": "Arial3."
+      },
+      {
+        "offset": 1293418,
+        "text": "DST : Daylight Saving Time for Summer in Hour."
+      },
+      {
+        "offset": 1293474,
+        "text": "Text1"
+      },
+      {
+        "offset": 1293512,
+        "text": "MS Sans Serif"
+      },
+      {
+        "offset": 1293534,
+        "text": "Text2"
+      },
+      {
+        "offset": 1293572,
+        "text": "MS Sans Serif"
+      },
+      {
+        "offset": 1293594,
+        "text": "Text3"
+      }
+    ]
+  },
+  "frmDashaaYogini_form": {
+    "label": "frmDashaaYogini (Form Definition)",
+    "center_offset": 1349796,
+    "window_slice": "1347796..1351796",
+    "utf16_count": 1,
+    "utf16_strings": [
+      {
+        "offset": 1349893,
+        "text": "1&'"
+      }
+    ],
+    "ascii_count": 137,
+    "ascii_strings": [
+      {
+        "offset": 1347798,
+        "text": "e'k% 1]4]7]10 d"
+      },
+      {
+        "offset": 1347814,
+        "text": "Lokeh"
+      },
+      {
+        "offset": 1347821,
+        "text": "]tks blh"
+      },
+      {
+        "offset": 1347831,
+        "text": "e ls mRrjksRrj cyh gksrs gSa"
+      },
+      {
+        "offset": 1347860,
+        "text": "lokZf/kd"
+      },
+      {
+        "offset": 1347871,
+        "text": "cyh d"
+      },
+      {
+        "offset": 1347877,
+        "text": "Unzs'k n'kes'k@jkT;s'k gS"
+      },
+      {
+        "offset": 1347903,
+        "text": "Af=dks.ks'k gSa yXus'k]i"
+      },
+      {
+        "offset": 1347928,
+        "text": "es'k]uoes'k] tks blh"
+      },
+      {
+        "offset": 1347950,
+        "text": "e ls"
+      },
+      {
+        "offset": 1347957,
+        "text": "mRrjksRrj cyh gksrs gSa"
+      },
+      {
+        "offset": 1347981,
+        "text": "lokZf/kd cyh f=dks.ks'k gS uoes'k"
+      },
+      {
+        "offset": 1348015,
+        "text": "A yXu dh x.kuk d"
+      },
+      {
+        "offset": 1348032,
+        "text": "Unz vkSj"
+      },
+      {
+        "offset": 1348043,
+        "text": "f=dks.k nksuksa esa gSAvr% yXus'k 4]7]10 vFkok 5]9 d"
+      },
+      {
+        "offset": 1348096,
+        "text": "Lokeh ls lEc) gks rks 'kqHk;ksx"
+      },
+      {
+        "offset": 1348131,
+        "text": "cusxkA i"
+      },
+      {
+        "offset": 1348140,
+        "text": "es'k d"
+      },
+      {
+        "offset": 1348147,
+        "text": "pkjksa d"
+      },
+      {
+        "offset": 1348157,
+        "text": "Unz'k ls pkj izdkj d"
+      },
+      {
+        "offset": 1348178,
+        "text": ";ksx ( blh izdkj uoes'k&d"
+      },
+      {
+        "offset": 1348205,
+        "text": "Unzs'k d"
+      },
+      {
+        "offset": 1348217,
+        "text": "pkj ;ksx ( ,oa yXus'k d"
+      },
+      {
+        "offset": 1348241,
+        "text": "4]7]10 d"
+      },
+      {
+        "offset": 1348251,
+        "text": "Lokeh ls ;ksx % bl izdkj d"
+      },
+      {
+        "offset": 1348279,
+        "text": "Unzs'k vkSj f=dks.ks'k"
+      },
+      {
+        "offset": 1348306,
+        "text": ";ksx ls d"
+      },
+      {
+        "offset": 1348317,
+        "text": "y 11 izdkj d"
+      },
+      {
+        "offset": 1348330,
+        "text": ";ksx curs gSa] tks pkj lEcU/kksa d"
+      },
+      {
+        "offset": 1348366,
+        "text": "fygkt ls vUrr% 44"
+      },
+      {
+        "offset": 1348387,
+        "text": "izdkj d"
+      },
+      {
+        "offset": 1348395,
+        "text": ";ksx cukrs gSaAlEcU/k pkj izdkj d"
+      },
+      {
+        "offset": 1348430,
+        "text": "gksrs gSa %"
+      },
+      {
+        "offset": 1348446,
+        "text": "ijLij LFkku ifjorZu"
+      },
+      {
+        "offset": 1348467,
+        "text": "nks"
+      },
+      {
+        "offset": 1348473,
+        "text": "xzg ,d nwljs dh jkf'k;ksa esa gksa] ;g lcls cyoku lEcU/k gS"
+      },
+      {
+        "offset": 1348537,
+        "text": "Hkkos'k"
+      },
+      {
+        "offset": 1348545,
+        "text": "f\"V lEcU/k"
+      },
+      {
+        "offset": 1348558,
+        "text": "% dksbZ xzg ftl jkf'"
+      },
+      {
+        "offset": 1348580,
+        "text": "k esa gks mld"
+      },
+      {
+        "offset": 1348594,
+        "text": "bZ'k }kjk"
+      },
+      {
+        "offset": 1348606,
+        "text": "\"V gks (iw.kZ"
+      },
+      {
+        "offset": 1348621,
+        "text": "f\"V gks rks ;g lEcU/k LFkku&ifjorZu lEcU/k"
+      },
+      {
+        "offset": 1348668,
+        "text": "rqY; cyoku gksrk gS fdUrq ;g lEcU/k lnSo ,drjQk gksrk gS %"
+      },
+      {
+        "offset": 1348729,
+        "text": "';xzg dk"
+      },
+      {
+        "offset": 1348741,
+        "text": "\"Vkxzg ij izHkko rHkh iM+rk gS tc ijLij"
+      },
+      {
+        "offset": 1348782,
+        "text": "f\"V lEcU/k Hkh gks("
+      },
+      {
+        "offset": 1348804,
+        "text": ";qfr lEcU/k"
+      },
+      {
+        "offset": 1348821,
+        "text": "gh Hkko esa vusd xzg gksa"
+      },
+      {
+        "offset": 1348852,
+        "text": "f\"V lEcU/k % nks xzgksa dh ,d nwljs ij vPNh [kklh"
+      },
+      {
+        "offset": 1348905,
+        "text": "f\"V gks ( iw.kZ"
+      },
+      {
+        "offset": 1348922,
+        "text": "f\"V gks rks ;g lEcU/k ;qfr lEcU/k ls Hkh vf/kd cyoku gksrk gS]"
+      },
+      {
+        "offset": 1348986,
+        "text": "vU;Fkk ;g lcls detksj lEcU/k gSA ;qfr lEcU/k Hkkopfyr&d"
+      },
+      {
+        "offset": 1349042,
+        "text": ".Myh ls ns[ksa"
+      },
+      {
+        "offset": 1349057,
+        "text": "yXu"
+      },
+      {
+        "offset": 1349063,
+        "text": "dh ifjHkk\"kk"
+      },
+      {
+        "offset": 1349077,
+        "text": "kfUro`Rr ls dh tkrh gS]vr% lkjs }kn'k Hkko nh?kZo`Rrh;"
+      },
+      {
+        "offset": 1349133,
+        "text": "kfUro`Rr d"
+      },
+      {
+        "offset": 1349150,
+        "text": "Hkkx gSaAfLFkj jkf'kp"
+      },
+      {
+        "offset": 1349172,
+        "text": "}kjk d"
+      },
+      {
+        "offset": 1349180,
+        "text": "oy mPp&uhp]eS=h&oSj]"
+      },
+      {
+        "offset": 1349201,
+        "text": "f\"V vkfn ns[kh tkuh pkfg,]"
+      },
+      {
+        "offset": 1349229,
+        "text": "Hkkoksa dk Qy Hkkopfyr }kjk gh mfpr gS]fdUrq Hkkopfyr cukus esa d\"V ls cpus d"
+      },
+      {
+        "offset": 1349310,
+        "text": "fy, nh?kZdky ls fLFkj jkf'kp"
+      },
+      {
+        "offset": 1349339,
+        "text": "}kjk Qykns'k djus dh LFkwy ijEijk cgqr ls yksxksa us"
+      },
+      {
+        "offset": 1349395,
+        "text": "pyk j[kh gSA"
+      },
+      {
+        "offset": 1349408,
+        "text": ",d ls vf/kd xzg fdlh ,d gh Hkko esa gksa rks muesa ;qfr lEcU/k gksrk"
+      },
+      {
+        "offset": 1349479,
+        "text": "gSA"
+      },
+      {
+        "offset": 1349501,
+        "text": "cmdArgala"
+      },
+      {
+        "offset": 1349515,
+        "text": "vxZyk]vk:<+ in"
+      },
+      {
+        "offset": 1349554,
+        "text": "1DevMithila"
+      },
+      {
+        "offset": 1349574,
+        "text": "cmdYogaHelp"
+      },
+      {
+        "offset": 1349590,
+        "text": "O;k[;k"
+      },
+      {
+        "offset": 1349621,
+        "text": "1DevMithila"
+      },
+      {
+        "offset": 1349641,
+        "text": "cmdClose"
+      },
+      {
+        "offset": 1349654,
+        "text": "&CLOSE"
+      },
+      {
+        "offset": 1349685,
+        "text": "Arial"
+      },
+      {
+        "offset": 1349796,
+        "text": "frmDashaaYogini"
+      },
+      {
+        "offset": 1349816,
+        "text": "YOGINI  DASHAAS : This table is based on Mean Tithi"
+      },
+      {
+        "offset": 1349889,
+        "text": "Form1"
+      },
+      {
+        "offset": 1349927,
+        "text": "txtYoginiDAC"
+      },
+      {
+        "offset": 1349963,
+        "text": "Use Yogini"
+      },
+      {
+        "offset": 1349976,
+        "text": "Dasha Onset time"
+      },
+      {
+        "offset": 1349995,
+        "text": "of JHora-7.66 in"
+      },
+      {
+        "offset": 1350014,
+        "text": "SSS mode of"
+      },
+      {
+        "offset": 1350028,
+        "text": "Vinay Jha, with"
+      },
+      {
+        "offset": 1350046,
+        "text": "that time make"
+      },
+      {
+        "offset": 1350063,
+        "text": "Dasharambh"
+      },
+      {
+        "offset": 1350076,
+        "text": "Chart in Kundalee"
+      },
+      {
+        "offset": 1350113,
+        "text": "Arial"
+      },
+      {
+        "offset": 1350127,
+        "text": "chkDashaNow"
+      },
+      {
+        "offset": 1350162,
+        "text": "ON = current Vimshottari Dashaas Onset time ; OFF = Vimshottari Onset Time according to numbers filled in boxes here."
+      },
+      {
+        "offset": 1350289,
+        "text": "cmdPrDsubstract"
+      },
+      {
+        "offset": 1350335,
+        "text": "Arial%\""
+      },
+      {
+        "offset": 1350343,
+        "text": "Previous Praana Dashaa Start Chart"
+      },
+      {
+        "offset": 1350387,
+        "text": "cmdPrDadd"
+      },
+      {
+        "offset": 1350427,
+        "text": "Arial%"
+      },
+      {
+        "offset": 1350435,
+        "text": "Next Praana Dashaa Start Chart"
+      },
+      {
+        "offset": 1350475,
+        "text": "txtPrDNumber"
+      },
+      {
+        "offset": 1350525,
+        "text": "2DevMithila3<"
+      },
+      {
+        "offset": 1350539,
+        "text": "PD: Type in the number of Pratyantar Dashaa, zero for first."
+      },
+      {
+        "offset": 1350609,
+        "text": "cmdSDsubstract"
+      },
+      {
+        "offset": 1350654,
+        "text": "Arial%$"
+      },
+      {
+        "offset": 1350662,
+        "text": "Previous Sookshma Dashaa Start Chart"
+      },
+      {
+        "offset": 1350708,
+        "text": "cmdSDadd"
+      },
+      {
+        "offset": 1350747,
+        "text": "Arial%"
+      },
+      {
+        "offset": 1350755,
+        "text": "Next Sookshma Dashaa Start Chart"
+      },
+      {
+        "offset": 1350797,
+        "text": "txtSDNumber"
+      },
+      {
+        "offset": 1350846,
+        "text": "2DevMithila3<"
+      },
+      {
+        "offset": 1350860,
+        "text": "PD: Type in the number of Pratyantar Dashaa, zero for first."
+      },
+      {
+        "offset": 1350930,
+        "text": "cmdPDsubstract"
+      },
+      {
+        "offset": 1350975,
+        "text": "Arial%&"
+      },
+      {
+        "offset": 1350983,
+        "text": "Previous Pratyantar Dashaa Start Chart"
+      },
+      {
+        "offset": 1351031,
+        "text": "cmdADsubstract"
+      },
+      {
+        "offset": 1351076,
+        "text": "Arial%!"
+      },
+      {
+        "offset": 1351084,
+        "text": "Previous Antar Dashaa Start Chart"
+      },
+      {
+        "offset": 1351127,
+        "text": "cmdMDsubstract"
+      },
+      {
+        "offset": 1351172,
+        "text": "Arial%!"
+      },
+      {
+        "offset": 1351180,
+        "text": "Previous Mahaa Dashaa Start Chart"
+      },
+      {
+        "offset": 1351223,
+        "text": "cmdPDadd"
+      },
+      {
+        "offset": 1351262,
+        "text": "Arial%\""
+      },
+      {
+        "offset": 1351270,
+        "text": "Next Pratyantar Dashaa Start Chart"
+      },
+      {
+        "offset": 1351314,
+        "text": "cmdADadd"
+      },
+      {
+        "offset": 1351353,
+        "text": "Arial%"
+      },
+      {
+        "offset": 1351361,
+        "text": "Next Antar Dashaa Start Chart"
+      },
+      {
+        "offset": 1351400,
+        "text": "cmdMDadd"
+      },
+      {
+        "offset": 1351439,
+        "text": "Arial%"
+      },
+      {
+        "offset": 1351447,
+        "text": "Next Mahaa Dashaa Start Chart"
+      },
+      {
+        "offset": 1351486,
+        "text": "txtPDNumber"
+      },
+      {
+        "offset": 1351535,
+        "text": "2DevMithila3<"
+      },
+      {
+        "offset": 1351549,
+        "text": "PD: Type in the number of Pratyantar Dashaa, zero for first."
+      },
+      {
+        "offset": 1351619,
+        "text": "txtADNumber"
+      },
+      {
+        "offset": 1351638,
+        "text": "q%;"
+      },
+      {
+        "offset": 1351668,
+        "text": "2DevMithila37"
+      },
+      {
+        "offset": 1351682,
+        "text": "AD: Type in the number of Antar Dashaa, zero for first."
+      },
+      {
+        "offset": 1351747,
+        "text": "cmdMahaDashaLagna"
+      },
+      {
+        "offset": 1351769,
+        "text": "n'kkjEHk"
+      }
+    ]
+  }
+}

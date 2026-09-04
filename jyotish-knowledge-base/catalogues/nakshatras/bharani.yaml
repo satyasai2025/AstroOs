@@ -1,0 +1,96 @@
+# catalogues/nakshatras/bharani.yaml
+
+id: nakshatra.bharani
+name: Bharani
+aliases:
+  - Bharani
+  - भरणी
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Bharani
+devanagari: भरणी
+meaning: "The bearer; the one who carries"
+
+ruler:
+  ref: graha.shukra
+  system: vimshottari
+
+deity:
+  name: Yama
+  description: The god of death, dharma, and justice who judges the souls of the departed
+  attributes:
+    - justice
+    - dharma
+    - death
+    - judgment
+
+shakti:
+  name: Apabharani
+  meaning: "to cleanse and remove"
+  power: "the power of bearing away or cleansing"
+
+star:
+  name: 41 Arietis
+
+starting_degree: 13.333
+ending_degree: 26.667
+rashi_span:
+  - ref: rashi.mesham
+
+padas:
+  - pada: 1
+    degrees: "13°20' - 16°40'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.mesham
+  - pada: 2
+    degrees: "16°40' - 20°00'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.vrishabham
+  - pada: 3
+    degrees: "20°00' - 23°20'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.mithunam
+  - pada: 4
+    degrees: "23°20' - 26°40'"
+    rashi: rashi.mesham
+    navamsha_rashi: rashi.karkam
+
+nature:
+  temperament: Bearer of burdens
+  guna: rajasic
+  gana: manushya
+  yoni: elephant
+  nadi: madhya
+
+karakatvas:
+  - concept: Bearing burdens
+  - concept: Cleansing
+  - concept: Death and transformation
+
+compatible_nakshatras:
+  - ref: nakshatra.magha
+  - ref: nakshatra.purvaphalguni
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "General description of Bharani nakshatra and its attributes"
+    confidence: high
+
+notes: >
+  Bharani is the second nakshatra, ruled by Shukra and presided over
+  by Yama, the god of death and dharma. Its shakti is the power of
+  bearing away or cleansing (apabharani), reflecting themes of
+  purification through confronting limitations and mortality.
+  Natives of this nakshatra often exhibit endurance, responsibility,
+  and a capacity to carry heavy karmic burdens.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

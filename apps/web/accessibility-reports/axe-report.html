@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AstroOS Accessibility & Test Audit Report</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f19; color: #e2e8f0; margin: 0; padding: 2rem; }
+    .container { max-width: 1200px; margin: auto; }
+    h1 { color: #f8fafc; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .card { background: #131b2e; border-radius: 8px; padding: 1.25rem; border: 1px solid #1e293b; }
+    .card .val { font-size: 2rem; font-weight: bold; margin-top: 0.5rem; }
+    .card.pass .val { color: #10b981; }
+    .card.fail .val { color: #f59e0b; }
+    .card.err .val { color: #ef4444; }
+    .step-card { background: #131b2e; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #1e293b; overflow: hidden; }
+    .step-header { padding: 1rem; background: #1e293b; display: flex; justify-content: space-between; align-items: center; }
+    .step-body { padding: 1rem; }
+    .badge { padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .badge-passed { background: #065f46; color: #34d399; }
+    .badge-failed { background: #78350f; color: #fbbf24; }
+    .badge-error { background: #7f1d1d; color: #f87171; }
+    .badge-impact-critical { background: #b91c1c; color: #fee2e2; }
+    .badge-impact-serious { background: #c2410c; color: #ffedd5; }
+    .badge-impact-moderate { background: #b45309; color: #fef3c7; }
+    .badge-impact-minor { background: #374151; color: #e5e7eb; }
+    .violation { background: #0b0f19; border-radius: 6px; padding: 0.75rem; margin-top: 0.5rem; border-left: 4px solid #f59e0b; }
+    code { background: #020617; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: #93c5fd; }
+    pre { background: #020617; padding: 0.75rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; color: #f1f5f9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🪐 AstroOS — Accessibility & Flow Audit Report</h1>
+    <p style="color: #94a3b8;">Generated on 8/22/2026, 5:11:51 PM</p>
+
+    <div class="summary-cards">
+      <div class="card"><div class="label">Total Scanned Steps</div><div class="val">9</div></div>
+      <div class="card pass"><div class="label">Clean / Passed</div><div class="val">6</div></div>
+      <div class="card fail"><div class="label">Steps with Violations</div><div class="val">3</div></div>
+      <div class="card err"><div class="label">Errors / Crashes</div><div class="val">0</div></div>
+      <div class="card"><div class="label">Total A11y Violations</div><div class="val">3</div></div>
+    </div>
+
+    <h2>Step by Step Results</h2>
+    
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>01. Homepage</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/</span>
+              </div>
+              <span class="badge badge-failed">failed</span>
+            </div>
+            <div class="step-body">
+              
+                <div class="violation">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
+                    <span class="badge badge-impact-serious">serious</span>
+                  </div>
+                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
+                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (1):</p>
+                  <pre>Target: .hover\:underline
+HTML: &lt;a class=&quot;text-xs font-extrabold px-3 py-1.5 rounded-lg text-black dark:text-white hover:underline transition&quot; href=&quot;/login&quot;&gt;Sign In&lt;/a&gt;</pre>
+                </div>
+              
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>02. Dashboard Overview</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
+              </div>
+              <span class="badge badge-passed">passed</span>
+            </div>
+            <div class="step-body">
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>Tab: Dashboard (/dashboard)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
+              </div>
+              <span class="badge badge-passed">passed</span>
+            </div>
+            <div class="step-body">
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>Tab: My Charts (/charts/history)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts/history</span>
+              </div>
+              <span class="badge badge-passed">passed</span>
+            </div>
+            <div class="step-body">
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>Tab: Compare Charts (/charts/compare)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts/compare</span>
+              </div>
+              <span class="badge badge-passed">passed</span>
+            </div>
+            <div class="step-body">
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>Tab: Import Chart (/charts/import)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/charts/import</span>
+              </div>
+              <span class="badge badge-failed">failed</span>
+            </div>
+            <div class="step-body">
+              
+                <div class="violation">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
+                    <span class="badge badge-impact-serious">serious</span>
+                  </div>
+                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
+                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (4):</p>
+                  <pre>Target: code:nth-child(1)
+HTML: &lt;code class=&quot;text-amber-600 dark:text-amber-400 font-mono&quot;&gt;subject_name&lt;/code&gt;</pre><pre>Target: code:nth-child(2)
+HTML: &lt;code class=&quot;text-amber-600 dark:text-amber-400 font-mono&quot;&gt;birth_datetime_utc&lt;/code&gt;</pre><pre>Target: code:nth-child(3)
+HTML: &lt;code class=&quot;text-amber-600 dark:text-amber-400 font-mono&quot;&gt;latitude&lt;/code&gt;</pre>
+                </div>
+              
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>Tab: Nakshatra Module (/nakshatra)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/nakshatra</span>
+              </div>
+              <span class="badge badge-failed">failed</span>
+            </div>
+            <div class="step-body">
+              
+                <div class="violation">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong>Elements must meet minimum color contrast ratio thresholds (<code>color-contrast</code>)</strong>
+                    <span class="badge badge-impact-serious">serious</span>
+                  </div>
+                  <p style="margin: 0.4rem 0; font-size: 0.9rem;">Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds <a href="https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright" target="_blank" style="color: #38bdf8;">More info</a></p>
+                  <p style="font-size: 0.8rem; color: #94a3b8;">Affected nodes (225):</p>
+                  <pre>Target: .mb-4:nth-child(1) > .mt-1
+HTML: &lt;p class=&quot;mt-1 text-sm&quot; style=&quot;color: var(--text-secondary);&quot;&gt;Complete reference of all 27 lunar mansions with lords, deities, classifications, and padas&lt;/p&gt;</pre><pre>Target: .text-slate-900.dark\:text-slate-100.shadow-slate-200\/50:nth-child(1) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\:text-slate-400
+HTML: &lt;span class=&quot;text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase&quot;&gt;Total Nakshatras&lt;/span&gt;</pre><pre>Target: .text-slate-900.dark\:text-slate-100.shadow-slate-200\/50:nth-child(2) > div:nth-child(1) > .tracking-wider.text-slate-500.dark\:text-slate-400
+HTML: &lt;span class=&quot;text-xs font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase&quot;&gt;Total Padas&lt;/span&gt;</pre>
+                </div>
+              
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>08. Astrology Calculation Form (Inputs)</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
+              </div>
+              <span class="badge badge-passed">passed</span>
+            </div>
+            <div class="step-body">
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+            </div>
+          </div>
+        
+
+          <div class="step-card">
+            <div class="step-header">
+              <div>
+                <strong>09. Calculation Results &amp; Chart Output</strong>
+                <span style="color: #94a3b8; font-size: 0.85rem; margin-left: 0.75rem;">http://localhost:3000/dashboard</span>
+              </div>
+              <span class="badge badge-passed">passed</span>
+            </div>
+            <div class="step-body">
+              <p style="color: #10b981;">✓ 0 accessibility violations found.</p>
+            </div>
+          </div>
+        
+  </div>
+</body>
+</html>

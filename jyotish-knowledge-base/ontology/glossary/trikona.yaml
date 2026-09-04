@@ -1,0 +1,72 @@
+# ontology/glossary/trikona.yaml
+
+id: term.trikona
+name: Trikoṇa
+aliases:
+  - Trikona
+  - Trinal House
+  - Triangle
+  - त्रिकोण
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    trikoṇa — from tri (three) + koṇa (corner, angle,
+    triangle). Literally "triangle." In jyotisha, the three
+    trinal houses of the chart: the 1st (lagna/tanu), 5th
+    (putra), and 9th (dharma).
+  english: >
+    The three trinal houses (1, 5, 9) forming a triangle in
+    the chart. Trikonas are the most auspicious houses,
+    representing dharma, fortune, and grace. Together with
+    kendra houses they form the kona-kendra relationship —
+    the structural backbone of chart strength. Also called
+    Lakshmisthanas (Lakshmi's places).
+  technical: >
+    Trikona houses are one of the three house groupings
+    (kendra, trikona, dusthana). A graha placed in trikona
+    gains the strength of fortune and dharmic support. The
+    trikona lords' mutual relationships determine much of
+    the chart's auspiciousness. A graha owning both a kendra
+    and a trikona becomes the most powerful functional
+    benefic (kona-kendra pathi). The 5th and 9th are
+    considered the best trikonas; the 1st is shared with
+    kendra.
+
+usage:
+  primary: "Assessment of fortune and dharma — trikona placement confers grace and prosperity"
+  secondary: "Identification of kona-kendra pathi for determining the strongest functional benefic"
+
+related_concepts:
+  - ref: term.kendra
+    relationship: "A graha owning both a kendra and a trikona becomes a kona-kendra pathi, the strongest benefic"
+  - ref: term.bhava
+    relationship: "Trikonas are bhavas 1, 5, and 9 — the most auspicious subset of bhavas"
+  - ref: term.dusthana
+    relationship: "Trikonas (auspicious) stand in contrast to dusthanas (challenging) in chart assessment"
+
+sources:
+  - ref: source.BPHS
+    chapter: 1
+    verse: 30-35
+    claim: "Kona-sthānāni bhāgyasthānāni — trikona houses are houses of fortune"
+    confidence: high
+
+notes: >
+  Trikonas are considered the most auspicious houses in the
+  chart, representing divine grace, dharma, and fortune. The
+  1st house is both a kendra and a trikona, making the
+  lagna lord inherently powerful. A graha that owns both a
+  kendra and a trikona (kona-kendra pathi) becomes the
+  strongest functional benefic, capable of bestowing the
+  best results during its dasha period.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

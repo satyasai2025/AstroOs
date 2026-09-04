@@ -1,0 +1,94 @@
+# ontology/glossary/atmakaraka.yaml
+
+id: term.atmakaraka
+name: Atmakāraka
+aliases:
+  - Atma Karaka
+  - Soul Significator
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+# === DEFINITION ===
+
+definition:
+  sanskrit: >
+    ātmakāraka — from ātman (self, soul) + kāraka (significator).
+    The graha with the greatest longitude in the natal chart.
+  english: >
+    In Jaimini astrology, the graha with the highest longitude (most
+    advanced in the zodiac) becomes the Atmakāraka — the primary
+    soul indicator for the native's life path. It represents the
+    soul's primary desire and karmic lesson.
+
+# === CHARA KARAKA SYSTEM ===
+
+chara_karaka_system:
+  total_karakas: 8
+  ordering: "Descending by longitude"
+  karakas:
+    - rank: 1
+      name: "Atmakāraka (AK)"
+      signification: "Soul, self, life purpose"
+    - rank: 2
+      name: "Amātyakāraka (AmK)"
+      signification: "Career, intellect"
+    - rank: 3
+      name: "Bhrātṛkāraka (BK)"
+      signification: "Siblings, courage"
+    - rank: 4
+      name: "Mātṛkāraka (MK)"
+      signification: "Mother, emotions"
+    - rank: 5
+      name: "Pitṛkāraka (PiK)"
+      signification: "Father, knowledge"
+    - rank: 6
+      name: "Putrakāraka (PK)"
+      signification: "Children, creativity"
+    - rank: 7
+      name: "Jñātikāraka (JK)"
+      signification: "Obstacles, enemies"
+    - rank: 8
+      name: "Dārakāraka (DK)"
+      signification: "Spouse, partnerships"
+
+# === RELATED CONCEPTS ===
+
+related_concepts:
+  - ref: term.lagna
+    relationship: "Lagna = self in Parashari; Atmakaraka = soul in Jaimini"
+  - ref: graha.surya
+    relationship: "Surya is natural atmakaraka in Parashari"
+  - ref: varga.navamsha
+    relationship: "Atmakaraka in D-9 determines Karakamsha"
+
+# === SOURCES ===
+
+sources:
+  - ref: source.jaimini-sutras
+    chapter: 1
+    verse: 1
+    claim: "Sūryād grahaḥ kalādhikayā ātmakārakaḥ"
+    confidence: high
+  - ref: source.phaladeepika
+    chapter: 6
+    verse: 1
+    claim: "Ātmakāraka ātmānaṃ darśayati"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  The Atmakaraka is a Jaimini concept. In Parashari, Surya serves
+  as the natural atmakaraka. The two usages are complementary
+  but distinct.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

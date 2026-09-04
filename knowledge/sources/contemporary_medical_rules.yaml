@@ -1,0 +1,101 @@
+# AstroOS — Contemporary Clinical & Medical Jyotish Rules
+# ==========================================================
+# Provenance: Clinical Medical Astrology Practitioner Synthesis & Case Studies
+# Domain: Oncology, Genetic Nerve Mutations, Surgical Resilience, Chronicity
+
+source_metadata:
+  source_id: "contemporary_clinical_medical_astrology"
+  title: "Clinical Oncology, Genetic Mutations & Surgical Resilience"
+  reliability_tier: "INFORMAL_TRADITION"
+  evidence_level: "PRACTITIONER_HYPOTHESIS"
+  description: "Rules for modern clinical conditions including Neurofibromatosis, Cancer/Malignancy, Surgical Interventions, and Dasha Management."
+
+rules:
+  - rule_id: "MED-ONCO-001"
+    name: "Rahu-Jupiter Axis Malignancy & Tumor Proliferation"
+    category: "medical_oncology"
+    astrological_signature:
+      primary_driver: "Rahu-Jupiter mutual aspect / conjunction / dusthana placement (6, 8, 12)"
+      mechanism: "Rahu causes mutagenic cellular disruption; Jupiter causes uncontrolled expansion/growths"
+    clinical_outcomes:
+      - "Abnormal cellular proliferation"
+      - "Tumor formation & malignancy"
+      - "Metastasis and specialized oncology hospitalization (Rahu in 12th)"
+
+  - rule_id: "MED-GEN-002"
+    name: "Genetic Nerve Mutation & Neurofibromatosis"
+    category: "medical_genetics"
+    astrological_signature:
+      primary_driver: "Debilitated Mercury (in Pisces / 3rd house) afflicted by Ketu (in 3rd, 6th, or 8th)"
+      mechanism: "Mercury governs neural architecture; Ketu introduces rare genetic mutations"
+    clinical_outcomes:
+      - "Neurofibromatosis"
+      - "Peripheral Nerve Sheath Tumors (MPNST)"
+      - "Nervous system cellular anomalies"
+
+  - rule_id: "MED-SURG-003"
+    name: "Exalted Mars 8/8 BAV: Surgical Resilience & Yuddha Jeevana"
+    category: "medical_resilience"
+    astrological_signature:
+      primary_driver: "Mars exalted in Lagna with maximum Bhinnashtakavarga strength (8/8 bindus)"
+      mechanism: "Mars governs physical constitution, pain threshold, fighting spirit, and immune surge"
+    clinical_outcomes:
+      - "Extraordinary pain tolerance"
+      - "Survival through aggressive chemotherapy and invasive surgeries"
+      - "Physical resilience during life-threatening crises"
+
+  - rule_id: "MED-HOUSE-004"
+    name: "3rd-8th House Parivartana: Lifelong Physical Struggle"
+    category: "medical_chronicity"
+    astrological_signature:
+      primary_driver: "Mutual exchange (Parivartana) between 3rd and 8th house lords"
+      mechanism: "Links active physical effort (3rd) with deep-seated chronic suffering (8th)"
+    clinical_outcomes:
+      - "Lifelong active fight against chronic disease"
+      - "Continuous clinical and physical endurance"
+
+  - rule_id: "MED-YOGA-005"
+    name: "Shoola Yoga: Severe Karmic Hospitalization"
+    category: "medical_karma"
+    astrological_signature:
+      primary_driver: "Planets clustered in 3 signs connected to 8th or 12th lords"
+      mechanism: "Concentrates severe karmic physical trials on bodily integrity"
+    clinical_outcomes:
+      - "Prolonged clinical hospitalization"
+      - "Intensive medical care"
+
+  - rule_id: "MED-DREK-006"
+    name: "Drekkana Modifiers: Ayudha (Surgery) & Sarpa (Metastasis)"
+    category: "medical_varga"
+    astrological_signature:
+      primary_driver: "Planets in Ayudha Drekkana (Moon, Mars, Saturn, Jupiter) OR Sarpa Drekkana (6th/10th)"
+    clinical_outcomes:
+      - "Ayudha Drekkana: Invasive surgical cuts, cutting-edge clinical procedures"
+      - "Sarpa Drekkana: Creeping insidious disease spread, recurrence, and metastasis"
+
+  - rule_id: "MED-D30-007"
+    name: "D30 Trimshamsha: Deep Cellular & Tissue Malignancy"
+    category: "medical_varga"
+    astrological_signature:
+      primary_driver: "Affliction to Venus (tissues), Jupiter (growth), and Rahu in D30 Trimshamsha"
+    clinical_outcomes:
+      - "Tissue-level malignancy confirmation"
+      - "Deep genetic and cellular weakness"
+
+  - rule_id: "MED-SAHAM-008"
+    name: "Sensitive Points: Roga & Mrityu Sahams"
+    category: "medical_sahams"
+    astrological_signature:
+      primary_driver: "Affliction to Mrityu Saham with weak Mercury/Jupiter; Punyakarma Saham in 8th"
+    clinical_outcomes:
+      - "Acute clinical crisis manifestation"
+      - "Punyakarma in 8th: Past karma converting fatal outcome into chronic endurance"
+
+  - rule_id: "MED-DASHA-009"
+    name: "Dasha Trajectory: Acute Malignancy vs Fortified Clinical Management"
+    category: "medical_timing"
+    astrological_signature:
+      primary_driver: "Rahu-Jupiter period (escalation/diagnosis) transitioning into Rahu-Saturn (management)"
+    clinical_outcomes:
+      - "Rahu-Jupiter: Rapid tumor proliferation, acute diagnosis window"
+      - "Rahu-Saturn: Fortified institutional defense, structured clinical therapy, survival management"

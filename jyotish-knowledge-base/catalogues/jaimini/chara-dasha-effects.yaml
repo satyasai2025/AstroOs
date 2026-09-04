@@ -1,0 +1,102 @@
+id: jaimini.chara-dasha-effects
+name: Chara Dasha Period Effects
+aliases:
+  - Chara Dasha Results
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  General effects of Chara Dasha periods based on the
+  characteristics of the dasha lord (the sign whose dasha is running).
+
+# === EFFECTS BY SIGN AS DASHA LORD ===
+effects:
+  rashi.mesham:
+    general: "Period of initiative, courage, new beginnings"
+    positive: "Action-oriented, leadership, breakthroughs"
+    negative: "Impulsiveness, conflicts, accidents"
+    karaka: "Mars-like energy; physical activity prominent"
+
+  rashi.vrishabham:
+    general: "Period of stability, wealth, pleasures"
+    positive: "Financial gains, comfort, family harmony"
+    negative: "Stubbornness, over-indulgence, delays"
+    karaka: "Venus-like energy; beauty and luxury prominent"
+
+  rashi.mithunam:
+    general: "Period of communication, learning, versatility"
+    positive: "Intellectual growth, travel, social connections"
+    negative: "Restlessness, scattered energy, misunderstandings"
+    karaka: "Mercury-like energy; communication prominent"
+
+  rashi.karkam:
+    general: "Period of emotional depth, home, nurturing"
+    positive: "Domestic happiness, property gains, emotional fulfillment"
+    negative: "Mood swings, home disputes, emotional turmoil"
+    karaka: "Moon-like energy; emotions prominent"
+
+  rashi.simham:
+    general: "Period of authority, creativity, self-expression"
+    positive: "Recognition, creative success, leadership"
+    negative: "Ego clashes, arrogance, power struggles"
+    karaka: "Sun-like energy; authority prominent"
+
+  rashi.kanyam:
+    general: "Period of analysis, service, health"
+    positive: "Health improvements, analytical success, service"
+    negative: "Worry, health concerns, critical nature"
+    karaka: "Mercury-like energy; analysis prominent"
+
+  rashi.tulanam:
+    general: "Period of balance, partnerships, beauty"
+    positive: "Relationship harmony, artistic success, balance"
+    negative: "Indecision, relationship conflicts, superficiality"
+    karaka: "Venus-like energy; relationships prominent"
+
+  rashi.vrishchikam:
+    general: "Period of transformation, depth, research"
+    positive: "Deep insights, transformation, research success"
+    negative: "Obsession, secrecy, upheaval"
+    karaka: "Mars-like energy; intensity prominent"
+
+  rashi.dhanus:
+    general: "Period of expansion, philosophy, travel"
+    positive: "Spiritual growth, educational success, travel"
+    negative: "Overconfidence, reckless expansion, philosophical conflicts"
+    karaka: "Jupiter-like energy; wisdom prominent"
+
+  rashi.makaram:
+    general: "Period of discipline, structure, career"
+    positive: "Career advancement, discipline, long-term achievements"
+    negative: "Delays, restrictions, hard work without recognition"
+    karaka: "Saturn-like energy; discipline prominent"
+
+  rashi.kumbham:
+    general: "Period of innovation, friendships, humanitarianism"
+    positive: "Innovative success, social connections, future planning"
+    negative: "Detachment, unconventional behavior, alienation"
+    karaka: "Saturn-like energy; innovation prominent"
+
+  rashi.meenam:
+    general: "Period of spirituality, compassion, imagination"
+    positive: "Spiritual growth, creative success, compassion"
+    negative: "Confusion, escapism, spiritual delusion"
+    karaka: "Jupiter-like energy; spirituality prominent"
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  These are general effects. The actual results depend on the
+  specific chart, including the Atmakaraka's position, the
+  dignity of the dasha lord, and transits during the period.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial Chara Dasha effects entry"
+    author: "Chief Jyotish Knowledge Architect"

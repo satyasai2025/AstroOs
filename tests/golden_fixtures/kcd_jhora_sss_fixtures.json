@@ -1,0 +1,155 @@
+{
+  "calibration_mode": "JHora-7.66_SSS_Vinay_Jha",
+  "cases": [
+    {
+      "case_id": "KCD_JH_01_SAVYA_DIRECT",
+      "description": "Savya direct progression - Ashwini Pada 1 (Mesha Navamsha)",
+      "birth_details": {
+        "date": "1990-01-01",
+        "time": "12:00:00",
+        "lat": 28.6139,
+        "lon": 77.209,
+        "tz": "Asia/Kolkata"
+      },
+      "moon_longitude": 1.5,
+      "nakshatra_number": 1,
+      "nakshatra_name": "Ashwini",
+      "pada": 1,
+      "navamsha_sign": "mesha",
+      "cycle_type": "savya",
+      "deha_rashi": "aries",
+      "jeeva_rashi": "sagittarius",
+      "expected_sequence": [
+        "aries",
+        "taurus",
+        "gemini",
+        "cancer",
+        "leo",
+        "virgo",
+        "libra",
+        "scorpio",
+        "sagittarius"
+      ],
+      "gatis_present": [],
+      "jhora_sss_mode_verified": true
+    },
+    {
+      "case_id": "KCD_JH_02_SIMHAVALOKANA_PISCES_SCORPIO",
+      "description": "Savya with Simhavalokana Leap (Pisces -> Scorpio) - Ashwini Pada 2 (Vrishabha Navamsha)",
+      "birth_details": {
+        "date": "1992-04-14",
+        "time": "08:15:00",
+        "lat": 13.0827,
+        "lon": 80.2707,
+        "tz": "Asia/Kolkata"
+      },
+      "moon_longitude": 4.5,
+      "nakshatra_number": 1,
+      "nakshatra_name": "Ashwini",
+      "pada": 2,
+      "navamsha_sign": "vrishabha",
+      "cycle_type": "savya",
+      "deha_rashi": "capricorn",
+      "jeeva_rashi": "gemini",
+      "expected_sequence": [
+        "capricorn",
+        "aquarius",
+        "pisces",
+        "scorpio",
+        "libra",
+        "virgo",
+        "cancer",
+        "leo",
+        "gemini"
+      ],
+      "gatis_present": [
+        {
+          "from": "pisces",
+          "to": "scorpio",
+          "type": "simhavalokana"
+        },
+        {
+          "from": "virgo",
+          "to": "cancer",
+          "type": "manduka"
+        },
+        {
+          "from": "cancer",
+          "to": "leo",
+          "type": "markati"
+        }
+      ],
+      "jhora_sss_mode_verified": true
+    },
+    {
+      "case_id": "KCD_JH_03_SIMHAVALOKANA_SAGITTARIUS_ARIES",
+      "description": "Savya with Simhavalokana Leap (Sagittarius -> Aries) - Ashwini Pada 3 (Mithuna Navamsha)",
+      "birth_details": {
+        "date": "1985-10-24",
+        "time": "14:30:00",
+        "lat": 28.6139,
+        "lon": 77.209,
+        "tz": "Asia/Kolkata"
+      },
+      "moon_longitude": 8.0,
+      "nakshatra_number": 1,
+      "nakshatra_name": "Ashwini",
+      "pada": 3,
+      "navamsha_sign": "mithuna",
+      "cycle_type": "savya",
+      "deha_rashi": "taurus",
+      "jeeva_rashi": "gemini",
+      "expected_sequence": [
+        "taurus",
+        "aries",
+        "pisces",
+        "aquarius",
+        "capricorn",
+        "sagittarius",
+        "aries",
+        "taurus",
+        "gemini"
+      ],
+      "gatis_present": [
+        {
+          "from": "sagittarius",
+          "to": "aries",
+          "type": "simhavalokana"
+        }
+      ],
+      "jhora_sss_mode_verified": true
+    },
+    {
+      "case_id": "KCD_JH_04_APASAVYA_REVERSE",
+      "description": "Apasavya reverse cycle with inverted Deha and Jeeva - Rohini Pada 1 (Mesha Navamsha)",
+      "birth_details": {
+        "date": "1975-08-15",
+        "time": "18:00:00",
+        "lat": 19.076,
+        "lon": 72.8777,
+        "tz": "Asia/Kolkata"
+      },
+      "moon_longitude": 41.5,
+      "nakshatra_number": 4,
+      "nakshatra_name": "Rohini",
+      "pada": 1,
+      "navamsha_sign": "mesha",
+      "cycle_type": "apasavya",
+      "deha_rashi": "sagittarius",
+      "jeeva_rashi": "aries",
+      "expected_sequence": [
+        "aries",
+        "taurus",
+        "gemini",
+        "cancer",
+        "leo",
+        "virgo",
+        "libra",
+        "scorpio",
+        "sagittarius"
+      ],
+      "gatis_present": [],
+      "jhora_sss_mode_verified": true
+    }
+  ]
+}

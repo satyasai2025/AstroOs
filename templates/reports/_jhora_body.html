@@ -1,0 +1,142 @@
+{#
+    AstroOS — Body table and Vimshottari tables (print-legible sizing).
+
+    FONT FLOOR: nothing below 8pt for content, 7.5pt for footers/captions.
+    The first draft ran 6–7pt to squeeze in a nested 9x9 antardasa grid; that
+    is unreadable once printed, and the tier spec requires "readable font
+    sizes when printed". The grid was dropped rather than the type size —
+    the spec only asks the Basic sheet for "compact current Dasha
+    information", not the full 81-period tree.
+#}
+
+{% macro jhora_body_styles() %}
+<style>
+    /* ── Body table ─────────────────────────────────────────────────── */
+    table.jbody { width: 100%; border-collapse: collapse; }
+    table.jbody th {
+        font-size: 7.5pt; letter-spacing: .06em; text-transform: uppercase;
+        color: #fff; background: var(--navy); font-weight: 600;
+        padding: 1.9mm 1.6mm; text-align: left; white-space: nowrap;
+    }
+    table.jbody td {
+        font-size: 8.6pt; padding: 1.75mm 1.6mm;
+        border-bottom: 1px solid var(--rule); white-space: nowrap;
+    }
+    table.jbody tbody tr:nth-child(even) { background: var(--tint); }
+    table.jbody td.mono {
+        font-family: "Consolas", "DejaVu Sans Mono", monospace;
+        font-size: 8.2pt;
+    }
+    table.jbody td.n { text-align: right; font-variant-numeric: tabular-nums; }
+    .jname { font-weight: 700; color: var(--navy); }
+    .jkar  { font-weight: 600; color: var(--gold); font-size: 8pt; }
+    tr.jderived .jname { font-weight: 600; }
+    tr.jsplit td { border-top: 1.5px solid var(--navy); }
+
+    /* ── Vimshottari tables ─────────────────────────────────────────── */
+    table.jdasha { width: 100%; border-collapse: collapse; }
+    table.jdasha th {
+        font-size: 7.5pt; letter-spacing: .06em; text-transform: uppercase;
+        color: #fff; background: var(--navy); font-weight: 600;
+        padding: 1.9mm 1.6mm; text-align: left;
+    }
+    table.jdasha td {
+        font-size: 8.6pt; padding: 1.75mm 1.6mm;
+        border-bottom: 1px solid var(--rule);
+    }
+    table.jdasha tbody tr:nth-child(even) { background: var(--tint); }
+    table.jdasha td.n { text-align: right; font-variant-numeric: tabular-nums; }
+    .jmd { font-weight: 700; color: var(--navy); }
+    tr.jnow td { background: #fdf6e0 !important; }
+    tr.jnow .jmd { color: var(--gold); }
+</style>
+{% endmacro %}
+
+
+{% macro jhora_body_table(rows) %}
+<table class="jbody">
+    <thead>
+        <tr>
+            <th style="width:34mm;">Body</th>
+            <th style="width:32mm;">Longitude</th>
+            <th style="width:36mm;">Nakshatra</th>
+            <th style="width:14mm;" class="n">Pada</th>
+            <th style="width:16mm;">Rasi</th>
+            <th style="width:20mm;">Navamsa</th>
+            <th style="width:16mm;" class="n">House</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for r in rows %}
+        <tr class="{{ 'jderived' if r.is_derived else '' }}{{ ' jsplit' if r.first_derived else '' }}">
+            <td>
+                <span class="jname">{{ r.name }}</span>
+                {%- if r.karaka and r.karaka != "—" %}
+                <span class="jkar">— {{ r.karaka }}</span>
+                {%- endif %}
+                {%- if r.retro_symbol and r.retro_symbol != "—" %}
+                <span class="jkar">(R)</span>
+                {%- endif %}
+            </td>
+            <td class="mono">{{ r.longitude_jhora }}</td>
+            <td>{{ r.nakshatra }}</td>
+            <td class="n">{{ r.pada }}</td>
+            <td>{{ r.rashi_abbr }}</td>
+            <td>{{ r.navamsa_abbr or "—" }}</td>
+            <td class="n">{{ r.house or "—" }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}
+
+
+{#  Mahadasa sequence — one readable row per period, current one highlighted. #}
+{% macro jhora_mahadasha_table(timeline, active_lord="") %}
+<table class="jdasha">
+    <thead>
+        <tr>
+            <th style="width:38mm;">Mahadasa Lord</th>
+            <th style="width:48mm;">Start</th>
+            <th style="width:48mm;">End</th>
+            <th>Duration</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for md in timeline %}
+        <tr class="{{ 'jnow' if md.mahadasha == active_lord else '' }}">
+            <td class="jmd">{{ md.mahadasha }}</td>
+            <td>{{ md.start }}</td>
+            <td>{{ md.end }}</td>
+            <td>{{ md.duration }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}
+
+
+{#  Antardasas of ONE mahadasa — the running one, per the spec's
+    "compact current Dasha information". #}
+{% macro jhora_antardasha_table(antardashas, md_lord="") %}
+<table class="jdasha">
+    <thead>
+        <tr>
+            <th style="width:38mm;">Antardasa Lord</th>
+            <th style="width:48mm;">Start</th>
+            <th style="width:48mm;">End</th>
+            <th>Duration</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for ad in antardashas %}
+        <tr>
+            <td class="jmd">{{ md_lord }} / {{ ad.lord }}</td>
+            <td>{{ ad.start }}</td>
+            <td>{{ ad.end }}</td>
+            <td>{{ ad.duration }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}

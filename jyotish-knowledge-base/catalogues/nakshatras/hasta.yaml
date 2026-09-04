@@ -1,0 +1,102 @@
+# catalogues/nakshatras/hasta.yaml
+
+id: nakshatra.hasta
+name: Hasta
+aliases:
+  - Hastham
+  - हस्त
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Hastā
+devanagari: हस्त
+meaning: "The hand; the palm"
+
+ruler:
+  ref: graha.chandra
+  system: vimshottari
+
+deity:
+  name: Savitar
+  description: The solar deity of creative impulse, who shapes and forms with his golden hands
+  attributes:
+    - creativity
+    - craftsmanship
+    - shaping
+    - divine hands
+
+shakti:
+  name: Hasti
+  meaning: "to place in hand"
+  power: "the power to place things in one's hands, to create and to manifest through skill"
+
+star:
+  name: Algorab
+  alt_name: Delta Corvi
+
+starting_degree: 150.000
+ending_degree: 163.333
+rashi_span:
+  - ref: rashi.kanyam
+
+padas:
+  - pada: 1
+    degrees: "10°00' - 13°20'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.simham
+  - pada: 2
+    degrees: "13°20' - 16°40'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.kanyam
+  - pada: 3
+    degrees: "16°40' - 20°00'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.tulanam
+  - pada: 4
+    degrees: "20°00' - 23°20'"
+    rashi: rashi.kanyam
+    navamsha_rashi: rashi.vrishchikam
+
+nature:
+  temperament: Skillful, creative
+  guna: sattvic
+  gana: deva
+  yoni: buffalo
+  nadi: madhya
+
+karakatvas:
+  - concept: Craftsmanship and dexterity
+  - concept: Creative skill and artistry
+  - concept: Healing through touch
+  - concept: Performance and magic
+
+compatible_nakshatras:
+  - ref: nakshatra.hasta
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Hasta is the thirteenth nakshatra, ruled by Chandra, presided over by Savitar"
+    confidence: high
+
+notes: >
+  Hasta is the thirteenth nakshatra, entirely within Kanya (10° to
+  23°20' Kanya). Ruled by Chandra in the Vimshottari system, it is
+  presided over by Savitar, the solar creative deity. Its shakti is
+  the power to place things in one's hands. All four padas reside in
+  Kanya with navamsha progression through Simha-Kanya-Tula-Vrishchika.
+  As a deva-gana, sattvic nakshatra with a skillful temperament, it
+  bestows craftsmanship, artistic dexterity, and the capacity to
+  manifest through the creative power of the hands. Its name literally
+  means "hand," reflecting its deep connection to manual skill and
+  creative expression.
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed navamsha_rashi reference that used a non-canonical ID (rashi.tulam) instead of the canonical rashi.tulanam", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

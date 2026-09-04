@@ -1,0 +1,84 @@
+id: jaimini.atmakaraka-role
+name: Atmakaraka's Role in Jaimini
+aliases:
+  - AK Role
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  The Atmakaraka (AK) is the single most important factor in Jaimini
+  astrology. It represents the soul's primary desire and life purpose.
+  Its placement, conjunctions, aspects, and dignity determine the
+  native's fundamental life direction.
+
+# === KEY PRINCIPLES ===
+principles:
+  - principle: "The Atmakaraka's sign becomes the Lagna in the Karakamsha chart"
+    source: source.jaimini-sutras
+  - principle: "The Atmakaraka's placement in a house indicates the soul's focus"
+    source: source.jaimini-sutras
+  - principle: "Conjunctions with the Atmakaraka modify the soul's expression"
+    source: source.jaimini-sutras
+  - principle: "The Atmakaraka's dignity (exaltation, own sign, etc.) affects life quality"
+    source: source.jaimini-sutras
+
+# === HOUSE PLACEMENT EFFECTS ===
+house_effects:
+  - house: 1
+    effect: "Soul focused on self-development, identity, and personal growth"
+  - house: 2
+    effect: "Soul focused on wealth, family, speech, and values"
+  - house: 3
+    effect: "Soul focused on courage, siblings, and self-effort"
+  - house: 4
+    effect: "Soul focused on mother, home, property, and inner peace"
+  - house: 5
+    effect: "Soul focused on children, creativity, and intelligence"
+  - house: 6
+    effect: "Soul focused on service, overcoming obstacles, and litigation"
+  - house: 7
+    effect: "Soul focused on marriage, partnerships, and public dealings"
+  - house: 8
+    effect: "Soul focused on transformation, longevity, and hidden matters"
+  - house: 9
+    effect: "Soul focused on fortune, dharma, and higher learning"
+  - house: 10
+    effect: "Soul focused on career, authority, and public image"
+  - house: 11
+    effect: "Soul focused on gains, friendships, and fulfillment of desires"
+  - house: 12
+    effect: "Soul focused on spirituality, losses, and liberation"
+
+# === DIGNITY EFFECTS ===
+dignity_effects:
+  - dignity: exalted
+    effect: "Soul has strong capacity; native is spiritually advanced"
+  - dignity: own_sign
+    effect: "Soul is self-sufficient; native is confident and capable"
+  - dignity: friendly
+    effect: "Soul has support; native is cooperative and diplomatic"
+  - dignity: neutral
+    effect: "Soul is balanced; native is adaptable"
+  - dignity: enemy
+    effect: "Soul faces challenges; native must overcome obstacles"
+  - dignity: debilitated
+    effect: "Soul is weak; native faces significant life lessons"
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  The Atmakaraka concept is the heart of Jaimini astrology. In practice,
+  the AK's dasha period (in whichever dasha system is used) is considered
+  a major life phase. The AK's conjunctions and aspects provide crucial
+  information about the soul's journey.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial Atmakaraka role entry"
+    author: "Chief Jyotish Knowledge Architect"

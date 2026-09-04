@@ -1,0 +1,70 @@
+id: source.phaladeepika
+name: Phaladeepika
+aliases:
+  - Phaladīpikā
+  - Phaladeepika of Mantreshwara
+  - Light on Results
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Mantreshwara
+date:
+  approximate: "1300 CE"
+  confidence: low
+language:
+  original: Sanskrit
+tradition: Classical
+system: Parashari Jyotish
+
+edition:
+  primary:
+    editor: V. Subrahmanya Sastri
+    publisher: Motilal Banarsidass
+    year: 1963
+    language: Sanskrit, English
+    notes: "Original Sanskrit text with English translation and commentary. Multiple reprint editions available."
+
+chapter_structure:
+  total_chapters: 28
+  key_chapters:
+    - chapter: 1
+      topic: "Lagna and Bhava determination"
+      verses: 16
+      relevance: "Methods for determining the strength of the lagna and bhavas"
+    - chapter: 8
+      topic: "Graha effects in the 12 bhavas"
+      verses: 20
+      relevance: "Detailed effects of each graha when placed in each of the 12 houses"
+    - chapter: 15
+      topic: "Yogas and their results"
+      verses: 22
+      relevance: "Classification of Raja Yogas, Dhana Yogas, and other combinations"
+    - chapter: 20
+      topic: "Dasha interpretation"
+      verses: 18
+      relevance: "Vimshottari and other Dasha systems for timing events"
+    - chapter: 26
+      topic: "Karakatva (Significations) of Grahas"
+      verses: 14
+      relevance: "Defines the natural significations of each graha for interpretive purposes"
+
+related_texts:
+  - ref: source.BPHS
+    relationship: "Mantreshwara follows the Parashari system and frequently cites principles from the Parashara tradition"
+  - ref: source.saravali
+    relationship: "Continues and refines the interpretative tradition established by Saravali; similar comprehensive structure"
+  - ref: source.uttara-kalamrita
+    relationship: "Both texts represent the mature classical tradition; Uttara Kalamrita sometimes clarifies or supplements Phaladeepika"
+
+significance: "Phaladeepika (Light on Results) is one of the most popular and practical Jyotish texts among modern practitioners. Its 28 chapters provide a systematic, verse-by-verse exposition of Parashari horoscopy with a strong emphasis on practical prediction. The text is particularly valued for its lucid presentation of bhava interpretation, its comprehensive yoga catalog, and its clear Dasha timing principles. Mantreshwara's work is considered the culmination of the classical Parashari textual tradition."
+
+notes: "Little is known about Mantreshwara beyond the text itself. He is believed to have lived in south India, possibly in the Andhra region, based on linguistic and cultural references in the work. The date of ~1300 CE is traditional; some scholars place him as late as 1500 CE. Multiple commentaries on Phaladeepika exist, with those by N. Subrahmanyam Sastri and by G.S. Kapoor being among the most studied."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

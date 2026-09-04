@@ -1,0 +1,100 @@
+# catalogues/nakshatras/magha.yaml
+
+id: nakshatra.magha
+name: Magha
+aliases:
+  - Maaghaa
+  - मघा
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Maghā
+devanagari: मघा
+meaning: "The mighty; the great one"
+
+ruler:
+  ref: graha.ketu
+  system: vimshottari
+
+deity:
+  name: Pitris
+  description: The divine ancestors, the forefathers who bestow lineage blessings and karmic inheritance
+  attributes:
+    - ancestry
+    - authority
+    - lineage
+    - tradition
+
+shakti:
+  name: Magha
+  meaning: "to honor"
+  power: "the power to honor, to bestow ancestral wealth and royal authority"
+
+star:
+  name: Regulus
+  alt_name: Alpha Leonis
+
+starting_degree: 106.667
+ending_degree: 120.000
+rashi_span:
+  - ref: rashi.simham
+
+padas:
+  - pada: 1
+    degrees: "0°00' - 3°20'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.simham
+  - pada: 2
+    degrees: "3°20' - 6°40'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.kanyam
+  - pada: 3
+    degrees: "6°40' - 10°00'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.tulanam
+  - pada: 4
+    degrees: "10°00' - 13°20'"
+    rashi: rashi.simham
+    navamsha_rashi: rashi.vrishchikam
+
+nature:
+  temperament: Royal, authoritative
+  guna: rajasic
+  gana: rakshasa
+  yoni: rat
+  nadi: madhya
+
+karakatvas:
+  - concept: Royalty and authority
+  - concept: Ancestral honors
+  - concept: Power and position
+  - concept: Paternal lineage
+
+compatible_nakshatras:
+  - ref: nakshatra.magha
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Magha is the tenth nakshatra, ruled by Ketu, presided over by the Pitris"
+    confidence: high
+
+notes: >
+  Magha is the tenth nakshatra, the first in Simha, spanning 0° to
+  13°20' Simha. Ruled by Ketu in the Vimshottari system, it is
+  presided over by the Pitris (ancestors). Its shakti is the power to
+  honor. All four padas reside in Simha with navamsha progression
+  through Simha-Kanya-Tula-Vrishchika. As a rakshasa-gana, rajasic
+  nakshatra with a royal temperament, it bestows authority, ancestral
+  blessings, and the capacity for commanding leadership. Its star
+  Regulus is one of the royal stars of the ancient world.
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed navamsha_rashi reference that used a non-canonical ID (rashi.tulam) instead of the canonical rashi.tulanam", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

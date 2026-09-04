@@ -1,0 +1,98 @@
+id: nakshatra._index
+name: "Nakshatra Catalogue Index"
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+description: "Complete index of all 27 nakshatras (lunar mansions) in Vedic astrology"
+count: 27
+nakshatras:
+  - { id: nakshatra.ashvini, name: Ashvini, sequential: 1 }
+  - { id: nakshatra.bharani, name: Bharani, sequential: 2 }
+  - { id: nakshatra.krittika, name: Krittika, sequential: 3 }
+  - { id: nakshatra.rohini, name: Rohini, sequential: 4 }
+  - { id: nakshatra.mrigashira, name: Mrigashira, sequential: 5 }
+  - { id: nakshatra.ardra, name: Ardra, sequential: 6 }
+  - { id: nakshatra.punarvasu, name: Punarvasu, sequential: 7 }
+  - { id: nakshatra.pushya, name: Pushya, sequential: 8 }
+  - { id: nakshatra.ashlesha, name: Ashlesha, sequential: 9 }
+  - { id: nakshatra.magha, name: Magha, sequential: 10 }
+  - { id: nakshatra.purvaphalguni, name: Purvaphalguni, sequential: 11 }
+  - { id: nakshatra.uttaraphalguni, name: Uttaraphalguni, sequential: 12 }
+  - { id: nakshatra.hasta, name: Hasta, sequential: 13 }
+  - { id: nakshatra.chitra, name: Chitra, sequential: 14 }
+  - { id: nakshatra.swati, name: Swati, sequential: 15 }
+  - { id: nakshatra.vishakha, name: Vishakha, sequential: 16 }
+  - { id: nakshatra.anuradha, name: Anuradha, sequential: 17 }
+  - { id: nakshatra.jyeshtha, name: Jyeshtha, sequential: 18 }
+  - { id: nakshatra.moola, name: Moola, sequential: 19 }
+  - { id: nakshatra.purvashadha, name: Purvashadha, sequential: 20 }
+  - { id: nakshatra.uttarashadha, name: Uttarashadha, sequential: 21 }
+  - { id: nakshatra.shravana, name: Shravana, sequential: 22 }
+  - { id: nakshatra.dhanishta, name: Dhanishta, sequential: 23 }
+  - { id: nakshatra.shatabhisha, name: Shatabhisha, sequential: 24 }
+  - { id: nakshatra.purvabhadrapada, name: Purvabhadrapada, sequential: 25 }
+  - { id: nakshatra.uttarabhadrapada, name: Uttarabhadrapada, sequential: 26 }
+  - { id: nakshatra.revati, name: Revati, sequential: 27 }
+vimshottari_order:
+  - ashvini
+  - bharani
+  - krittika
+  - rohini
+  - mrigashira
+  - ardra
+  - punarvasu
+  - pushya
+  - ashlesha
+  - magha
+  - purvaphalguni
+  - uttaraphalguni
+  - hasta
+  - chitra
+  - swati
+  - vishakha
+  - anuradha
+  - jyeshtha
+  - moola
+  - purvashadha
+  - uttarashadha
+  - shravana
+  - dhanishta
+  - shatabhisha
+  - purvabhadrapada
+  - uttarabhadrapada
+  - revati
+rulers:
+  ashvini: ketu
+  bharani: shukra
+  krittika: surya
+  rohini: chandra
+  mrigashira: mangala
+  ardra: rahu
+  punarvasu: guru
+  pushya: shani
+  ashlesha: budha
+  magha: ketu
+  purvaphalguni: shukra
+  uttaraphalguni: surya
+  hasta: chandra
+  chitra: mangala
+  swati: rahu
+  vishakha: guru
+  anuradha: shani
+  jyeshtha: budha
+  moola: ketu
+  purvashadha: shukra
+  uttarashadha: surya
+  shravana: chandra
+  dhanishta: mangala
+  shatabhisha: rahu
+  purvabhadrapada: guru
+  uttarabhadrapada: shani
+  revati: budha
+sources:
+  - { ref: source.BPHS, claim: "All 27 nakshatras as listed in Brihat Parashara Hora Shastra", confidence: high }
+notes: "This index contains all 27 nakshatras in their sequential order from Ashvini (0° Mesha) to Revati (30° Meena). The vimshottari_order lists them in the order used for Vimshottari Dasha calculations. The rulers map each nakshatra to its Vimshottari dasha ruler."
+history:
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue index with all 27 nakshatras", author: "Chief Jyotish Knowledge Architect" }

@@ -1,0 +1,73 @@
+# ontology/glossary/varna.yaml
+
+id: term.varna
+name: Varṇa
+aliases:
+  - Varna
+  - Caste
+  - Classification
+  - वर्ण
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    varṇa — from varṇ (to classify, to colour). Literally
+    "classification, type, or colour." In jyotisha, one of
+    the eight koota (compatibility factors) in the ashtakoota
+    system, and also a classification of grahas by social
+    hierarchy.
+  english: >
+    A dual concept in jyotisha: (1) The social classification
+    of grahas into four varnas — Brahmana (Jupiter, Venus),
+    Kshatriya (Sun, Mars), Vaishya (Mercury, Moon), Shudra
+    (Saturn). (2) One of the eight compatibility factors
+    (koota) in marriage matching, carrying 1 point out of
+    36. The boy's varna must be equal to or higher than the
+    girl's for full compatibility.
+  technical: >
+    In graha classification: Jupiter/Venus are Brahmana
+    (priestly), Sun/Mars are Kshatriya (warrior), Mercury/
+    Moon are Vaishya (merchant), Saturn is Shudra (servant).
+    Rahu and Ketu follow Saturn. In ashtakoota matching, the
+    varna koota compares the varna of the boy's and girl's
+    moon rashis: same varna = full point; boy higher = full
+    point; boy lower = no point.
+
+usage:
+  primary: "Pre-marital compatibility assessment through varna matching (1 of 36 points)"
+  secondary: "Classification of grahas by functional nature and social archetype"
+
+related_concepts:
+  - ref: term.graha
+    relationship: "Each graha is assigned a varna classification that reflects its social archetype"
+  - ref: term.nakshatra
+    relationship: "Nakshatras carry varna assignments that influence compatibility analysis"
+  - ref: term.bhakoot
+    relationship: "Varna and bhakoot are both rashi-based kootas in the ashtakoota system"
+
+sources:
+  - ref: source.BPHS
+    chapter: 2
+    verse: 15-20
+    claim: "Describes the varna classification of grahas and their functional nature"
+    confidence: high
+
+notes: >
+  Varna matching is considered less critical than gana or
+  bhakoot in modern practice, carrying only 1 out of 36
+  points. Some traditions give it more weight as a measure
+  of spiritual compatibility. The graha varna classification
+  reflects ancient social archetypes: Jupiter/Venus as the
+  priestly class (knowledge), Sun/Mars as the warrior class
+  (authority), Mercury/Moon as the merchant class (trade),
+  and Saturn as the servant class (service).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

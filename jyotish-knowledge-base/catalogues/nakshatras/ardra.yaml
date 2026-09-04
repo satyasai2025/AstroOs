@@ -1,0 +1,99 @@
+# catalogues/nakshatras/ardra.yaml
+
+id: nakshatra.ardra
+name: Ardra
+aliases:
+  - Ārdrā
+  - आर्द्रा
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Ārdrā
+devanagari: आर्द्रा
+meaning: "The moist one; the tear drop"
+
+ruler:
+  ref: graha.rahu
+  system: vimshottari
+
+deity:
+  name: Rudra
+  description: The fierce form of Shiva, the storm god who destroys and transforms through tears and rain
+  attributes:
+    - storm
+    - destruction
+    - transformation
+    - tears
+
+shakti:
+  name: Rudra Shakti
+  meaning: "to moisten"
+  power: "the power to moisten, to bring the tears of transformation and destruction"
+
+star:
+  name: Betelgeuse
+  alt_name: Al Mucayyam
+
+starting_degree: 50.000
+ending_degree: 63.333
+rashi_span:
+  - ref: rashi.mithunam
+
+padas:
+  - pada: 1
+    degrees: "6°40' - 10°00'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.makaram
+  - pada: 2
+    degrees: "10°00' - 13°20'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.kumbham
+  - pada: 3
+    degrees: "13°20' - 16°40'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.meenam
+  - pada: 4
+    degrees: "16°40' - 20°00'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.mesham
+
+nature:
+  temperament: Stormy, intense
+  guna: tamasic
+  gana: manushya
+  yoni: dog
+  nadi: adi
+
+karakatvas:
+  - concept: Storm and upheaval
+  - concept: Destruction preceding creation
+  - concept: Deep emotional catharsis
+  - concept: Transformation through suffering
+
+compatible_nakshatras:
+  - ref: nakshatra.ardra
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Ardra is the sixth nakshatra, ruled by Rahu, presided over by Rudra"
+    confidence: high
+
+notes: >
+  Ardra is the sixth nakshatra, entirely within Mithuna (6°40' to 20°
+  Mithuna). Ruled by Rahu in the Vimshottari system, it is presided
+  over by Rudra, the fierce storm form of Shiva. Its shakti is the
+  power to moisten through tears of transformation. All four padas
+  reside in Mithuna with navamsha progression through Makara-Kumbha-
+  Meena-Mesha. As a manushya-gana, tamasic nakshatra with a stormy
+  temperament, it brings upheaval, destruction, and the painful but
+  necessary transformation that follows.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,166 @@
+# catalogues/grahas/ketu.yaml
+
+id: graha.ketu
+name: Ketu
+aliases:
+  - South Lunar Node
+  - Dragon's Tail
+  - Shikhi
+  - Dhvaja
+  - Dvaja
+category: graha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Ketu
+devanagari: "केतु"
+meaning: "The banner; the comet; the tail of the demon"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: null
+  sidereal_period_days: 6793.00
+  retrograde:
+    occurs: true
+    typical_duration_days: null
+    typical_frequency: "Always retrograde"
+  notes: >
+    Ketu is not a physical body but a mathematical point — the
+    lunar node where the Moon's orbit crosses the ecliptic
+    from north to south. It is always retrograde and completes
+    one zodiac cycle in approximately 18.6 years, occupying the
+    exact opposite point from Rahu.
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: neuter
+  nature: natural malefic
+  caste: chandala
+  element: ether
+  direction: southeast
+  color: multi
+  gem: cats_eye
+  metal: iron
+  grain: horse_gram
+  body_parts:
+    - feet
+    - navel
+    - digestive_system
+  animal: dog
+  deity: ganesha
+  quality: tamasic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: null
+    degrees: null
+    notes: "Ketu has no exaltation as a shadow graha; some traditions associate it with Dhanus"
+  debilitation:
+    sign: null
+    degrees: null
+    notes: "Ketu has no debilitation as a shadow graha"
+  moolatrikona:
+    sign: null
+    notes: "Ketu has no moolatrikona as a shadow graha"
+  own_signs: []
+  own_signs_notes: "Ketu has no own signs; acts as co-lord of Meena or Vrishchika in some systems alongside Shukra and Mangala"
+  friendly_signs:
+    - mesha
+    - vrishchika
+    - dhanus
+    - meena
+  neutral_signs:
+    - vrishabha
+    - tula
+    - makara
+    - kumbha
+  inimical_signs:
+    - simha
+    - karka
+    - mithuna
+    - kanya
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - ashvini
+    - magha
+    - moola
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.mangala
+    - graha.guru
+    - graha.budha
+  enemies:
+    - graha.surya
+    - graha.chandra
+  neutrals:
+    - graha.shukra
+    - graha.shani
+    - graha.rahu
+  notes: "Relationships vary by text; Ketu behaves similarly to Mangala in many respects"
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 7
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Spirituality (Moksha)"
+    - "Detachment (Vairagya)"
+    - "Hidden knowledge"
+  traditional:
+    - "Liberation"
+    - "Occult sciences"
+    - "Sudden losses"
+  modern:
+    - "Psychic sensitivity"
+    - "Research depth"
+    - "Technological breakthroughs"
+  confidence: medium
+  notes: "Ketu is a shadow graha; its karakatvas vary by tradition and planetary associations"
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, nature, and attributes of Ketu"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Attributes and significations of Ketu as the lunar node"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Ketu is the severed headless body of the demon Svarbhanu and
+  represents the moksha (liberation) kartaka among the grahas.
+  As a shadow graha with no physical form, Ketu governs
+  spirituality, detachment, past-life karma, and hidden
+  knowledge. It is associated with sharp wisdom, healing,
+  and sudden flashes of insight. Whereas Rahu pursues worldly
+  desires, Ketu liberates from them. Its 7-year dasha often
+  coincides with spiritual growth, upheaval, or withdrawal
+  from material life. Ketu rules the three nakshatras known
+  for their sharp, healing, or destructive energies.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,449 @@
+{
+  "cases": [
+    {
+      "person": {
+        "name": "Avriel Shull",
+        "gender": "Female",
+        "dob": "1931-02-10",
+        "tob": "04:48",
+        "place": "Indianapolis",
+        "country": "Indiana",
+        "latitude": 39.7667,
+        "longitude": -86.15,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1931-02-10",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Holly Williams",
+        "gender": "Female",
+        "dob": "1981-03-12",
+        "tob": "13:11",
+        "place": "Cullman",
+        "country": "Alabama",
+        "latitude": 34.1667,
+        "longitude": -86.85,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1981-03-12",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Pete Knight",
+        "gender": "Male",
+        "dob": "1929-11-18",
+        "tob": "11:35",
+        "place": "Noblesville",
+        "country": "Indiana",
+        "latitude": 40.05,
+        "longitude": -86.0167,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1929-11-18",
+          "category": "Family & Relations / Relationship / Number of Marriages",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Number of Marriages"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Number of Marriages"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Lucy Dahl",
+        "gender": "Female",
+        "dob": "1965-08-04",
+        "tob": "07:23",
+        "place": "Oxford",
+        "country": "England",
+        "latitude": 51.7667,
+        "longitude": -1.25,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1965-08-04",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1965-08-04",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Divorce dates"
+        },
+        {
+          "type": "Other",
+          "event_date": "1965-08-04",
+          "category": "Family & Relations / Relationship / Number of Divorces",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Number of Divorces"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Number of Divorces"
+        },
+        {
+          "type": "Other",
+          "event_date": "1965-08-04",
+          "category": "Family & Relations / Relationship / Number of Marriages",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Number of Marriages"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Number of Marriages"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Louis Edward Curdes",
+        "gender": "Male",
+        "dob": "1919-11-02",
+        "tob": "22:00",
+        "place": "Fort Wayne",
+        "country": "Indiana",
+        "latitude": 41.1333,
+        "longitude": -85.1333,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1919-11-02",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Enrique Peña Nieto",
+        "gender": "Male",
+        "dob": "1966-07-20",
+        "tob": "12:20",
+        "place": "Mexico City",
+        "country": "Mexico",
+        "latitude": 19.4,
+        "longitude": -99.15,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Other",
+          "event_date": "1966-07-20",
+          "category": "Other",
+          "verified": false,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Begin significant relationship"
+        },
+        {
+          "type": "Marriage",
+          "event_date": "1966-07-20",
+          "category": "Other",
+          "verified": false,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1966-07-20",
+          "category": "Family & Relations / Relationship / Number of Marriages",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Number of Marriages"
+          ],
+          "verified": false,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Number of Marriages"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Hans Ehrenberg",
+        "gender": "Male",
+        "dob": "1883-06-04",
+        "tob": "03:51",
+        "place": "Altona",
+        "country": "Germany",
+        "latitude": 53.5667,
+        "longitude": 9.8,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1883-06-04",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Eugen Rosenstock-Huessy",
+        "gender": "Male",
+        "dob": "1888-07-05",
+        "tob": "23:52",
+        "place": "Berlin",
+        "country": "Germany",
+        "latitude": 52.4833,
+        "longitude": 13.35,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1888-07-05",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1888-07-05",
+          "category": "Family & Relations / Relationship / Marriage >15 Yrs",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Marriage >15 Yrs"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Marriage >15 Yrs"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Jacques Presser",
+        "gender": "Male",
+        "dob": "1899-02-24",
+        "tob": "05:40",
+        "place": "Amsterdam",
+        "country": "Netherlands",
+        "latitude": 52.3667,
+        "longitude": 4.9,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1899-02-24",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1899-02-24",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Other Relationship"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "John Sentamu",
+        "gender": "Male",
+        "dob": "1949-06-10",
+        "tob": "00:15",
+        "place": "Kampala",
+        "country": "Uganda",
+        "latitude": 0.3167,
+        "longitude": 32.4167,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1949-06-10",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1949-06-10",
+          "category": "Family & Relations / Relationship / Marriage >15 Yrs",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Marriage >15 Yrs"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Marriage >15 Yrs"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Étienne Balsan",
+        "gender": "Male",
+        "dob": "1878-02-11",
+        "tob": "09:51",
+        "place": "Paris",
+        "country": "France",
+        "latitude": 48.8667,
+        "longitude": 2.3333,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1878-02-11",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1878-02-11",
+          "category": "Family & Relations / Relationship / Mate - Noted",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Mate - Noted"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Mate - Noted"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    },
+    {
+      "person": {
+        "name": "Maureen McCormick",
+        "gender": "Female",
+        "dob": "1956-08-05",
+        "tob": "22:24",
+        "place": "Los Angeles",
+        "country": "California",
+        "latitude": 34.05,
+        "longitude": -118.25,
+        "timezone": "UTC",
+        "source": "AstroOS public dataset import"
+      },
+      "ayanamsa": "lahiri",
+      "house_system": "P",
+      "life_events": [
+        {
+          "type": "Marriage",
+          "event_date": "1956-08-05",
+          "category": "Other",
+          "verified": true,
+          "source": "AstroOS public dataset import",
+          "description": "Relationship / Marriage"
+        },
+        {
+          "type": "Other",
+          "event_date": "1956-08-05",
+          "category": "Family & Relations / Relationship / Marriage >15 Yrs",
+          "category_path": [
+            "Family & Relations",
+            "Relationship",
+            "Marriage >15 Yrs"
+          ],
+          "verified": true,
+          "source": "AstroOS public dataset import (category tag)",
+          "description": "Family & Relations / Relationship / Marriage >15 Yrs"
+        }
+      ],
+      "source_batch": "astroos-public-dataset-import-relationship-only"
+    }
+  ],
+  "generate_ids": true
+}

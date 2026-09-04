@@ -1,0 +1,41 @@
+id: yoga.chandra.maha-bhagya
+name: Maha Bhagya Yoga
+aliases: ["Great Fortune Yoga"]
+category: yoga
+type: chandra
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "For a day-born male: Sun, Moon, and Jupiter are all in Kendra houses (1st, 4th, 7th, or 10th). For a night-born female: Sun, Moon, and Jupiter are all in odd houses (1st, 3rd, 5th, 7th, 9th, or 11th)"
+      entity: yoga.chandra.maha-bhagya
+      role: subject
+      notes: "The gender and time of birth (day/night) determine which version of the yoga applies. Day birth = Sun is above horizon; Night birth = Sun is below horizon. All three planets must be in the specified houses simultaneously. The yoga is strongest when none of the three is debilitated."
+
+effects:
+  positive:
+    - "Extraordinary fortune and luck throughout life"
+    - "Wealth, fame, and recognition"
+    - "Happy and prosperous marriage"
+    - "Children who bring honor"
+    - "High social status and respect"
+    - "Success in virtually all endeavors"
+  negative: []
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 20
+
+notes: "One of the rarest and most powerful yogas in Jyotish. The combination of the three most benefic and luminous planets (Sun, Moon, Jupiter) in strong houses creates an extraordinary fortune. The separate conditions for day-born males and night-born females reflect the ancient principle that nature's laws operate differently based on the native's fundamental orientation. This yoga is rarely found in full form."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

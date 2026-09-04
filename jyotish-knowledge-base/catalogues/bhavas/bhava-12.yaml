@@ -1,0 +1,111 @@
+# catalogues/bhavas/bhava-12.yaml
+
+id: bhava.12
+name: Vyaya Bhava
+aliases:
+  - 12th House
+  - Loss House
+  - Moksha House
+  - व्यय भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Vyaya
+number: 12
+meaning: "Loss; expenditure; liberation; isolation"
+
+natural_karaka:
+  ref: graha.ketu
+  notes: "Ketu and Shani are natural karakas for the 12th house; Ketu for liberation, Shani for isolation and suffering"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana. The 12th house is the house of moksha (spiritual liberation)"
+
+karakatvas:
+  classical:
+    - concept: Loss and expenditure (Vyaya)
+      source: source.BPHS
+    - concept: Sleep and dreams (Nidra)
+      source: source.BPHS
+    - concept: Spiritual liberation (Moksha)
+      source: source.BPHS
+    - concept: Foreign lands and exile
+      source: source.BPHS
+    - concept: Isolation and solitude
+      source: source.BPHS
+  traditional:
+    - concept: Loss
+    - concept: Expenses
+    - concept: Foreign lands
+    - concept: Sleep
+    - concept: Liberation
+    - concept: Isolation
+    - concept: Expenses
+
+conditions:
+  strong_when:
+    - Benefic occupation indicates spiritual growth and peaceful exile
+    - Strong lord in Kendra or Trikona
+    - Jupiter or Ketu present for spiritual liberation
+  weak_when:
+    - Afflicted by multiple malefics
+    - Lord debilitated or combust
+    - Strong malefic influence causing excessive losses
+  afflicted_when:
+    - Multiple malefics occupying the 12th house
+    - Lord in enemy sign or debilitated
+    - Papa kartari yoga
+
+effects:
+  positive:
+    - Spiritual growth and path to liberation
+    - Peaceful foreign residence or travel
+    - Successful research and behind-the-scenes work
+    - Restful sleep and dream life
+  negative:
+    - Excessive financial losses and expenses
+    - Isolation, loneliness, or confinement
+    - Sleep disorders and psychological isolation
+    - Wasteful expenditure and hidden enemies
+
+related_bhavas:
+  - bhava: 11
+    relationship: gains
+    notes: "The 11th house (Labha Bhava) shows gains; the 12th shows what is spent or lost from those gains"
+  - bhava: 8
+    relationship: obstacles
+    notes: "The 8th house (Randhra Bhava) shows obstacles and transformation; the 12th shows the aftermath and liberation"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    chapter: 33
+    verse: 70-80
+    claim: "Loss, expenditure, foreign lands, sleep, and liberation are significations of the 12th house"
+    confidence: high
+
+notes: >
+  The 12th house (Vyaya Bhava) is the last house in the
+  chart, representing the conclusion of the material cycle
+  and the transition toward spiritual liberation. As a
+  Dusthana (difficult house), it indicates losses and
+  expenses, but also holds the highest spiritual potential.
+  Ketu as natural karaka reinforces the theme of dissolution
+  and moksha. The 12th house also governs foreign lands,
+  sleep, and the subconscious mind. Its interpretation
+  depends heavily on the condition of its lord and
+  occupying grahas.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

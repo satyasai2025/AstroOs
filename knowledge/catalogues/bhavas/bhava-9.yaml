@@ -1,0 +1,105 @@
+# catalogues/bhavas/bhava-9.yaml
+
+id: bhava.9
+name: Dharma Bhava
+aliases:
+  - 9th House
+  - Fortune House
+  - Religion House
+  - धर्म भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Dharma
+number: 9
+meaning: "Dharma; righteousness; fortune; religion"
+
+natural_karaka:
+  ref: graha.guru
+  notes: "Guru is the primary natural karaka for fortune and dharma; Surya is also a karaka for father and divine light"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana. Considered the most auspicious house"
+
+karakatvas:
+  classical:
+    - concept: Fortune and luck (Bhagya)
+      source: source.BPHS
+    - concept: Religion and dharma
+      source: source.BPHS
+    - concept: Guru and spiritual preceptor
+      source: source.BPHS
+    - concept: Father (Pitri)
+      source: source.BPHS
+    - concept: Long travels and foreign cultures
+      source: source.BPHS
+  traditional:
+    - concept: Fortune
+    - concept: Religion
+    - concept: Dharma
+    - concept: Guru
+    - concept: Father
+    - concept: Long travels
+
+conditions:
+  strong_when:
+    - Strong lord in Kendra or Trikona
+    - Benefics occupying or aspecting the house
+    - Strong Guru
+  weak_when:
+    - Afflicted by malefics
+    - Lord in Dusthana
+    - Guru weak or afflicted
+  afflicted_when:
+    - Malefics occupying the 9th house
+    - Lord in enemy sign or debilitated
+    - Papa kartari yoga
+
+effects:
+  positive:
+    - Good fortune and favorable life circumstances
+    - Strong religious and spiritual inclination
+    - Supportive relationship with father
+    - Successful long journeys and cross-cultural experiences
+  negative:
+    - Loss of faith and ethical direction
+    - Difficulties with father or paternal figures
+    - Obstacles in long travels
+    - Lack of divine grace and protection
+
+related_bhavas:
+  - bhava: 5
+    relationship: Trikona
+    notes: "The 9th is the third Trikona (trinal) house — together with bhava.1 and bhava.5 forms the Lakshmi Sthanam"
+  - bhava: 1
+    relationship: foundation
+    notes: "The 9th from the 1st shows dharma; the 9th from the 9th (bhava.5) shows the fortune of fortune"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Fortune, religion, guru, father, and long travels are significations of the 9th house"
+    confidence: high
+
+notes: >
+  The 9th house (Dharma Bhava) is considered the most auspicious house
+  in the horoscope. As a Trikona (trinal) house, it represents dharma,
+  good fortune, and divine grace. It governs religion, spiritual
+  preceptors, father, and long-distance travel. Guru as natural
+  karaka reinforces the expansive, benevolent nature of this
+  bhava. The 9th lord (Bhagyapati) is a key indicator of fortune
+  and ethical living.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

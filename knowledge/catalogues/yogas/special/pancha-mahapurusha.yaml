@@ -1,0 +1,40 @@
+id: yoga.special.pancha-mahapurusha
+name: Pancha Mahapurusha Yoga
+aliases: ["Five Great Person Yogas"]
+category: yoga
+type: special
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Mars, Mercury, Jupiter, Venus, or Saturn is placed in own sign (Swakshetra) or exaltation (Ucha) in a Kendra house (1st, 4th, 7th, or 10th) from the Lagna"
+      entity: yoga.special.pancha-mahapurusha
+      role: subject
+      notes: "Each planet forms its own named yoga: Mars = Ruchaka, Mercury = Bhadra, Jupiter = Hamsa, Venus = Malavya, Saturn = Shasha. The planet must be in Kendra from Lagna (not from Moon). The yoga is strongest in the 1st house, followed by 10th, 7th, and 4th in descending order of strength."
+
+effects:
+  positive:
+    - "Ruchaka (Mars): Military leadership, physical courage, commanding presence, athletic ability"
+    - "Bhadra (Mercury): Scholarly achievement, business acumen, eloquence, longevity"
+    - "Hamsa (Jupiter): Spiritual wisdom, teaching ability, philosophical bent, noble character"
+    - "Malavya (Venus): Artistic talent, luxury, beauty, cultural refinement, relationship harmony"
+    - "Shasha (Saturn): Political power, authority through position, discipline, organizational ability"
+  negative: []
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 35
+
+notes: "The five (Pancha) great (Maha) person (Purusha) yogas. Each produces a person of extraordinary capability in the domain of the planet involved. The five yogas are: (1) Ruchaka Yoga - Mars in Aries/Scorpio/Capricorn in Kendra; (2) Bhadra Yoga - Mercury in Gemini/Virgo in Kendra; (3) Hamsa Yoga - Jupiter in Sagittarius/Pisces/Cancer in Kendra; (4) Malavya Yoga - Venus in Taurus/Libra/Pisces in Kendra; (5) Shasha Yoga - Saturn in Capricorn/Aquarius/Libra in Kendra. This is one of the most important and widely recognized special yoga combinations in Jyotish."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

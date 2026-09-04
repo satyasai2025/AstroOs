@@ -1,0 +1,60 @@
+id: kp.core.cuspal-houses
+name: KP Cuspal House System
+aliases: ["KP Bhava Chalit", "KP Cusp-based Houses", "Krishnamurti Bhava"]
+category: kp
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: kp
+statement: >
+  In KP, houses extend from cusp to cusp rather than following the whole-sign
+  (Rashi) system. Each house begins at its cusp (the exact degree where the
+  house boundary is calculated) and extends to the cusp of the next house.
+  A planet's house placement is determined by where it falls between cusps,
+  not by which Rashi it occupies. The cuspal sub-lord (not the Rashi lord)
+  governs the house's event domain. Cusps are calculated using the Placidus
+  (or equal arc) system and are sensitive to time and place of birth.
+
+conditions:
+  - entity: bhava.cusp
+    role: subject
+    detail: "Cusp is the exact ascending degree of each house boundary, calculated from birth data"
+
+  - entity: graha.placement
+    role: framework
+    detail: "A planet is placed in a house based on its cusp-to-cusp range, not its Rashi"
+
+effects:
+  - description: "Cuspal position may differ from Rashi position, changing house ownership of planets"
+    intensity: strong
+  - description: "The cusp sub-lord defines the house event, overriding the Rashi lord"
+    intensity: strong
+  - description: "Planets near cusps (within 5 degrees before or after) act as co-rulers of adjacent houses"
+    intensity: moderate
+  - description: "Occupation and ownership are both determined by cusp ranges, not Rashi boundaries"
+    intensity: strong
+
+sources:
+  - ref: source.kp-system
+    claim: "KP Cuspal house system: Houses extend from cusp to cusp (not whole-sign). Cusp calculation and interpretation."
+    confidence: high
+
+notes: >
+  The KP cuspal house system uses Placidus house cusps. Key rules: (1) A
+  planet occupies the house in which its longitude falls, measured from
+  cusp to cusp. (2) A planet rules the house whose cusp falls in its
+  Rashi — this may be different from the house it occupies. (3) When
+  occupation and ownership differ, both roles are considered. (4) Planets
+  within approximately 5 degrees before a cusp act as ruling planets of
+  the house whose cusp is approaching; those within approximately 5 degrees
+  after a cusp may also influence the previous house. (5) The cuspal
+  sub-lord is the single most critical factor — it determines whether
+  the house's promise will be fulfilled.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

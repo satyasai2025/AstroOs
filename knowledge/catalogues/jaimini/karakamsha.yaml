@@ -1,0 +1,135 @@
+# Jaimini Karakamsha Chart
+# The soul-purpose chart: Atmakaraka's D-9 position becomes the Lagna.
+# Source: Jaimini Sutras Chapter 1
+
+id: jaimini.karakamsha.chart
+name: Karakamsha
+aliases: ["Karakamsha Chart", "Atmakaraka Navamsha Lagna", "Soul Chart"]
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: jaimini
+type: divisional-chart
+basis: atmakaraka-navamsha
+
+statement: >
+  The Karakamsha chart is constructed by taking the Navamsha (D-9)
+  position of the Atmakaraka as the Lagna. This special chart reveals
+  the soul's purpose, karmic direction, and spiritual trajectory of
+  the native. It is one of the foundational analytical tools in the
+  Jaimini system.
+
+conditions:
+  - entity: graha.atmakaraka
+    role: subject
+    notes: >
+      The Atmakaraka is the graha with the highest degrees in the
+      birth chart (excluding Rahu in most traditions). Its Navamsha
+      (D-9) position determines the Karakamsha Lagna.
+  - entity: divisional.d9
+    role: dependency
+    notes: >
+      The Navamsha chart is used to identify the exact rashi occupied
+      by the Atmakaraka. This rashi becomes the Lagna of the
+      Karakamsha chart.
+
+construction_method: |
+  Step 1: Identify the Atmakaraka (AK) from the Rashi chart.
+    - The graha with the highest degrees (within its sign) is the AK.
+    - Rahu is excluded from AK consideration in the standard method.
+    - In case of a tie, the graha with higherlongitude wins.
+
+  Step 2: Locate the Atmakaraka's position in the D-9 (Navamsha).
+    - Find which rashi the AK occupies in the Navamsha chart.
+
+  Step 3: Use that D-9 rashi as the Lagna of the Karakamsha chart.
+    - All other graha positions from the D-9 are retained.
+    - The chart uses the same D-9 positions but re-referenced from
+      the AK's Navamsha rashi as Lagna.
+
+  Step 4: Analyze the Karakamsha chart using standard bhava and
+    graha principles, but interpreted through the lens of soul
+    purpose and karmic direction.
+
+effects:
+  - description: >
+      Reveals the native's soul purpose and the direction of their
+      spiritual and karmic evolution in this lifetime.
+    intensity: strong
+  - description: >
+      Identifies the bhava (house) themes most relevant to the
+      native's deepest life purpose and destined achievements.
+    intensity: strong
+  - description: >
+      Shows the nature of obstacles and support systems along the
+      soul's path, as indicated by grahas in the Karakamsha chart.
+    intensity: moderate
+  - description: >
+      Provides insight into past-life karmas that are being worked
+      out in the current incarnation.
+    intensity: moderate
+
+interpretation_principles: |
+  1. The Lagna of Karakamsha represents the soul itself.
+  2. The lord of the Karakamsha Lagna indicates the primary mode
+     of soul expression.
+  3. Planets in the Karakamsha Lagna influence the soul's nature
+     directly.
+  4. The 7th from Karakamsha shows partnerships and relationships
+     relevant to soul growth.
+  5. The 10th from Karakamsha reveals the soul's karmic duty
+     (dharma) and career direction.
+  6. The 12th from Karakamsha indicates moksha (liberation)
+     potential and spiritual renunciation.
+  7. Atmakaraka's conjunction or aspect in the Karakamsha chart
+     intensifies its karmic significance.
+
+cross_references:
+  - ref: jaimini.chara-karakas.system
+    relationship: "Atmakaraka is the foundational chara karaka that determines the Karakamsha Lagna"
+  - ref: divisional.d9
+    relationship: "Navamsha chart provides the graha positions used in the Karakamsha construction"
+  - ref: jaimini.chara-dasha.rules
+    relationship: "Chara Dasha timing uses Atmakaraka as starting point, complementing Karakamsha analysis"
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras Chapter 1 establish the Karakamsha as the chart
+      where the Atmakaraka's Navamsha position becomes the Lagna,
+      used for analyzing soul purpose and karmic direction.
+    confidence: high
+  - ref: source.jaimini-upadesha-sutras
+    claim: >
+      The Upadesha Sutras elaborate on Karakamsha interpretation
+      principles and the relationship between AK position and
+      soul evolution.
+    confidence: high
+
+notes: |
+  The Karakamsha chart is unique to the Jaimini system and has no
+  direct equivalent in Parashari Jyotish. While Parashari uses
+  divisional charts for specific life areas (D-10 for career, D-7
+  for children, etc.), the Karakamsha is a re-referenced chart
+  built from the D-9 positions.
+
+  Key distinction: The Karakamsha is NOT the same as the Navamsha
+  chart. It is a separate analytical chart derived from the
+  Navamsha. The Navamsha shows marriage and general strength;
+  the Karakamsha shows soul purpose.
+
+  Some traditions distinguish between:
+  - Karakamsha Lagna (KL): The AK's D-9 position as Lagna
+  - Pada of AK: The specific pada of the AK's nakshatra in D-9
+  - AK in rashi chart: The AK's position in the birth chart itself
+
+  All three are used together for comprehensive soul analysis.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

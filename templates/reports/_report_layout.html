@@ -1,0 +1,74 @@
+{# Shared base layout for all report templates. #}
+{% import "_report_macros.html" as rm %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}AstroOS Report{% endblock %}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+            @bottom-center { content: counter(page); }
+        }
+        body {
+            font-family: 'Times New Roman', serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #1f2937;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #b45309;
+            padding-bottom: 0.75em;
+            margin-bottom: 1.5em;
+        }
+        .header h1 { font-size: 22pt; color: #b45309; margin: 0 0 0.25em 0; }
+        .header .subject { font-size: 11pt; color: #6b7280; }
+        .section { margin-bottom: 1.5em; page-break-inside: avoid; }
+        .section-title {
+            font-size: 16pt;
+            color: #b45309;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.3em;
+            margin: 0 0 0.5em 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5em 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.4em 0.6em;
+            text-align: left;
+            font-size: 10pt;
+        }
+        th { background: #fef3c7; font-weight: bold; }
+        table.kv th { width: 35%; background: #f9fafb; }
+        ul.value-list { margin: 0.25em 0; padding-left: 1.25em; }
+        ul.citation-list { margin: 0.25em 0; padding-left: 0; list-style: none; }
+        ul.citation-list li { margin-bottom: 0.75em; }
+        .citation-tag {
+            display: inline-block;
+            background: #fef3c7;
+            border-radius: 3px;
+            padding: 0 0.4em;
+            font-size: 9pt;
+        }
+        .citation-snippet { color: #6b7280; font-size: 10pt; margin-top: 0.2em; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{% block heading %}{{ report.title }}{% endblock %}</h1>
+        <div class="subject">Subject: {{ report.subject_name }}</div>
+    </div>
+    {% for section in report.sections %}
+    <div class="section">
+        <h2 class="section-title">{{ section.title }}</h2>
+        {{ rm.render_section(section) | safe }}
+    </div>
+    {% endfor %}
+</body>
+</html>

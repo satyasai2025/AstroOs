@@ -1,0 +1,31 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,test_id,divisional_type,planet,tropical_longitude_deg,expected_divisional_rashi,expected_divisional_house,source_reference,notes
+ASTRO-REC-BMDIV-000001,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-001,navamsha,sun,0.000000,aries,1,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 0 degrees = 1st Navamsha = Aries
+ASTRO-REC-BMDIV-000002,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-002,navamsha,sun,30.000000,aries,1,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 30 degrees = same as 0 degrees in D9 = Aries
+ASTRO-REC-BMDIV-000003,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-003,navamsha,sun,60.000000,aries,1,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 60 degrees = same as 0 degrees in D9 = Aries
+ASTRO-REC-BMDIV-000004,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-004,navamsha,sun,10.000000,aries,1,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 10 degrees = 3rd pada = still in Aries D9
+ASTRO-REC-BMDIV-000005,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-005,navamsha,sun,15.000000,taurus,2,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 15 degrees = transition to Taurus D9
+ASTRO-REC-BMDIV-000006,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-006,navamsha,sun,180.000000,aries,1,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 180 degrees = Libra sign but D9 = Aries
+ASTRO-REC-BMDIV-000007,ASTRO-BM-DIV-v0.1.0,reference,1,false,D9-007,navamsha,sun,270.000000,aries,1,Classical D9 formula: (longitude * 9 / 30) mod 12,Sun at 270 degrees = Capricorn sign but D9 = Aries
+ASTRO-REC-BMDIV-000008,ASTRO-BM-DIV-v0.1.0,reference,1,false,D10-001,dashamsha,sun,0.000000,aries,1,Classical D10 formula: (longitude * 10 / 30) mod 12,Sun at 0 degrees = 1st D10 = Aries
+ASTRO-REC-BMDIV-000009,ASTRO-BM-DIV-v0.1.0,reference,1,false,D10-002,dashamsha,sun,36.000000,taurus,2,Classical D10 formula: (longitude * 10 / 30) mod 12,Sun at 36 degrees = 2nd D10 = Taurus
+ASTRO-REC-BMDIV-000010,ASTRO-BM-DIV-v0.1.0,reference,1,false,D10-003,dashamsha,sun,72.000000,gemini,3,Classical D10 formula: (longitude * 10 / 30) mod 12,Sun at 72 degrees = 3rd D10 = Gemini
+ASTRO-REC-BMDIV-000011,ASTRO-BM-DIV-v0.1.0,reference,1,false,D10-004,dashamsha,sun,180.000000,aries,1,Classical D10 formula: (longitude * 10 / 30) mod 12,Sun at 180 degrees = 6th D10 = Libra (but D10 pattern repeats)
+ASTRO-REC-BMDIV-000012,ASTRO-BM-DIV-v0.1.0,reference,1,false,D12-001,dwadashamsha,sun,0.000000,aries,1,Classical D12 formula: (longitude * 12 / 30) mod 12 = longitude mod 30,Sun at 0 degrees = D12 = Aries (same as sign)
+ASTRO-REC-BMDIV-000013,ASTRO-BM-DIV-v0.1.0,reference,1,false,D12-002,dwadashamsha,sun,15.000000,aries,1,Classical D12 formula: (longitude * 12 / 30) mod 12 = longitude mod 30,Sun at 15 degrees = D12 = Aries (same as sign)
+ASTRO-REC-BMDIV-000014,ASTRO-BM-DIV-v0.1.0,reference,1,false,D12-003,dwadashamsha,sun,30.000000,taurus,2,Classical D12 formula: (longitude * 12 / 30) mod 12 = longitude mod 30,Sun at 30 degrees = D12 = Taurus (same as sign)
+ASTRO-REC-BMDIV-000015,ASTRO-BM-DIV-v0.1.0,reference,1,false,D12-004,dwadashamsha,sun,359.000000,pisces,12,Classical D12 formula: (longitude * 12 / 30) mod 12 = longitude mod 30,Sun at 359 degrees = D12 = Pisces (same as sign)
+ASTRO-REC-BMDIV-000016,ASTRO-BM-DIV-v0.1.0,reference,1,false,BOUNDARY-001,navamsha,sun,359.999999,pisces,12,Classical D9 boundary: 359.999999 = Pisces (12th sign),Sun at 359.999999 degrees — boundary case: should be Pisces D9
+ASTRO-REC-BMDIV-000017,ASTRO-BM-DIV-v0.1.0,reference,1,false,BOUNDARY-002,dashamsha,sun,359.999999,pisces,12,Classical D10 boundary: 359.999999 = Pisces (12th sign),Sun at 359.999999 degrees — boundary case: should be Pisces D10
+ASTRO-REC-BMDIV-000018,ASTRO-BM-DIV-v0.1.0,reference,1,false,BOUNDARY-003,dwadashamsha,sun,359.999999,pisces,12,Classical D12 boundary: 359.999999 = Pisces (12th sign),Sun at 359.999999 degrees — boundary case: should be Pisces D12
+ASTRO-REC-BMDIV-000019,ASTRO-BM-DIV-v0.1.0,reference,1,false,BOUNDARY-004,navamsha,sun,0.000001,aries,1,Classical D9 boundary: 0.000001 = Aries (1st sign),Sun at 0.000001 degrees — boundary case: should be Aries D9
+ASTRO-REC-BMDIV-000020,ASTRO-BM-DIV-v0.1.0,reference,1,false,BOUNDARY-005,dashamsha,sun,0.000001,aries,1,Classical D10 boundary: 0.000001 = Aries (1st sign),Sun at 0.000001 degrees — boundary case: should be Aries D10
+ASTRO-REC-BMDIV-000021,ASTRO-BM-DIV-v0.1.0,reference,1,false,D3-001,drekkana,sun,0.000000,aries,1,Classical D3 formula: (longitude * 3 / 30) mod 12,Sun at 0 degrees = D3 = Aries (1st drekkana)
+ASTRO-REC-BMDIV-000022,ASTRO-BM-DIV-v0.1.0,reference,1,false,D3-002,drekkana,sun,10.000000,aries,1,Classical D3 formula: (longitude * 3 / 30) mod 12,Sun at 10 degrees = 1st drekkana = Aries
+ASTRO-REC-BMDIV-000023,ASTRO-BM-DIV-v0.1.0,reference,1,false,D3-003,drekkana,sun,20.000000,aries,1,Classical D3 formula: (longitude * 3 / 30) mod 12,Sun at 20 degrees = 3rd drekkana = Aries
+ASTRO-REC-BMDIV-000024,ASTRO-BM-DIV-v0.1.0,reference,1,false,D3-004,drekkana,sun,30.000000,taurus,2,Classical D3 formula: (longitude * 3 / 30) mod 12,Sun at 30 degrees = 1st drekkana of Taurus
+ASTRO-REC-BMDIV-000025,ASTRO-BM-DIV-v0.1.0,reference,1,false,D4-001,chaturthamsha,sun,0.000000,aries,1,Classical D4 formula: (longitude * 4 / 30) mod 12,Sun at 0 degrees = D4 = Aries
+ASTRO-REC-BMDIV-000026,ASTRO-BM-DIV-v0.1.0,reference,1,false,D4-002,chaturthamsha,sun,7.500000,aries,1,Classical D4 formula: (longitude * 4 / 30) mod 12,Sun at 7.5 degrees = 1st chaturthamsha = Aries
+ASTRO-REC-BMDIV-000027,ASTRO-BM-DIV-v0.1.0,reference,1,false,D4-003,chaturthamsha,sun,15.000000,taurus,2,Classical D4 formula: (longitude * 4 / 30) mod 12,Sun at 15 degrees = transition to Taurus D4
+ASTRO-REC-BMDIV-000028,ASTRO-BM-DIV-v0.1.0,reference,1,false,D7-001,saptamamsha,sun,0.000000,aries,1,Classical D7 formula: (longitude * 7 / 30) mod 12,Sun at 0 degrees = D7 = Aries
+ASTRO-REC-BMDIV-000029,ASTRO-BM-DIV-v0.1.0,reference,1,false,D7-002,saptamamsha,sun,4.285714,aries,1,Classical D7 formula: (longitude * 7 / 30) mod 12,Sun at 4.285714 degrees (360/7/12) = 1st saptamamsha
+ASTRO-REC-BMDIV-000030,ASTRO-BM-DIV-v0.1.0,reference,1,false,D7-003,saptamamsha,sun,8.571429,aries,1,Classical D7 formula: (longitude * 7 / 30) mod 12,Sun at 8.571429 degrees = 2nd saptamamsha = still Aries

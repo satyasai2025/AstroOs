@@ -1,0 +1,65 @@
+# catalogues/rashis/_index.yaml
+
+id: index.rashis
+name: Rashi Catalogue
+category: index
+status: active
+version: 1.0
+last_verified: 2026-07-15
+
+description: >
+  Complete index of all 12 zodiac signs (rashis) in the
+  Jyotish knowledge base. Each rashi has a unique ID of
+  the form rashi.<name>.
+
+rashis:
+  - id: rashi.mesham
+    name: Mesham
+    western: Aries
+    file: mesham.yaml
+  - id: rashi.vrishabham
+    name: Vrishabham
+    western: Taurus
+    file: vrishabham.yaml
+  - id: rashi.mithunam
+    name: Mithunam
+    western: Gemini
+    file: mithunam.yaml
+  - id: rashi.karkam
+    name: Karkam
+    western: Cancer
+    file: karkam.yaml
+  - id: rashi.simham
+    name: Simham
+    western: Leo
+    file: simham.yaml
+  - id: rashi.kanyam
+    name: Kanyam
+    western: Virgo
+    file: kanyam.yaml
+  - id: rashi.tulanam
+    name: Tulanam
+    western: Libra
+    file: tulanam.yaml
+  - id: rashi.vrishchikam
+    name: Vrishchikam
+    western: Scorpio
+    file: vrishchikam.yaml
+  - id: rashi.dhanus
+    name: Dhanus
+    western: Sagittarius
+    file: dhanus.yaml
+  - id: rashi.makaram
+    name: Makaram
+    western: Capricorn
+    file: makaram.yaml
+  - id: rashi.kumbham
+    name: Kumbham
+    western: Aquarius
+    file: kumbham.yaml
+  - id: rashi.meenam
+    name: Meenam
+    western: Pisces
+    file: meenam.yaml
+
+count: 12

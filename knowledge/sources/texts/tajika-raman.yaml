@@ -1,0 +1,41 @@
+id: source.tajika-raman
+name: Tajika (Raman Compilation)
+aliases:
+  - Tajika Raman Edition
+  - Raman's Tajika
+  - Tajika System of Annual Horoscopy
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Various (original); B.V. Raman (compiler and translator)
+date:
+  approximate: "~1200-1600 CE (original texts); 1988 (compilation)"
+  confidence: high
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: B.V. Raman
+  publisher: Motilal Banarsidass Publishers
+  year: 1988
+  language: en
+  notes: "Compilation of various Tajika texts with English translation and explanatory notes."
+
+relationship_to_primary:
+  primary_text: source.tajika-nihanti
+  type: compilation
+  notes: "Compilation drawing on the Tajika Nihanti and related Tajika traditions."
+
+notes: "B.V. Raman's compilation of the Tajika system covers the principles of annual horoscopy (Varshaphala) derived from the Tajika (Persian-Indian synthesis) tradition. Includes translation of key Tajika texts with commentary."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

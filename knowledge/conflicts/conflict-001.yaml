@@ -1,0 +1,157 @@
+# conflicts/conflict-001.yaml
+
+id: conflict.001
+name: Lagna vs Bhava 1 — House System Distinction
+topic: Whether the Lagna (exact rising degree) and Bhava 1 (first house) are identical or distinct
+domain: bhava
+status: partially-resolved
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+# === POSITIONS ===
+
+positions:
+  - tradition: Parashari
+    source:
+      ref: source.BPHS
+      chapter: 1
+      verses: 1–15
+    position: >
+      Lagna and Bhava 1 are treated as identical. The Lagna is
+      the first house; all houses follow in sequence from the
+      Lagna degree. The whole-sign house system is used, meaning
+      the rashi containing the Lagna degree constitutes the entire
+      first house.
+    arguments:
+      - "BPHS does not distinguish between the Lagna point and Bhava 1"
+      - "All classical yoga definitions assume whole-sign placement"
+      - "Yoga conditions (e.g., 'planet in 1st') refer to the whole sign"
+    adherents:
+      - Classical Parashari tradition
+      - Traditional commentators (Somanatha, Bhatta)
+
+  - tradition: "KP System"
+    source:
+      ref: source.kp-system
+    position: >
+      The Lagna is the exact rising degree at the moment of birth.
+      Bhava 1 extends from the Lagna cusp to the 2nd-house cusp.
+      The sub-lord and cuspal system requires precise degree-based
+      house boundaries, not whole-sign placement.
+    arguments:
+      - "K.S. Krishnamurti explicitly distinguishes cusp from sign"
+      - "KP sub-lord system requires degree-accurate house boundaries"
+      - "Event timing depends on precise cusp degrees, not signs"
+    adherents:
+      - KP System practitioners
+      - Some modern Jyotish practitioners
+
+  - tradition: "Jaimini"
+    source:
+      ref: source.jaimini-sutras
+    position: >
+      The Lagna is used for Chara Dasha calculations while Bhava 1
+      is used for house significations. They are related but serve
+      different functions in chart interpretation.
+    arguments:
+      - "Chara Dasha calculation uses exact Lagna degree, not whole sign"
+      - "House significations use the whole-sign approach"
+      - "Jaimini Sutras reference both concepts in distinct contexts"
+    adherents:
+      - Jaimini tradition
+      - Sanjay Rath commentary tradition
+
+# === ANALYSIS ===
+
+analysis: >
+  The distinction between Lagna and Bhava 1 is a function of the
+  house system used. Parashari uses the whole-sign system, where
+  Lagna rashi = entire Bhava 1. KP uses a cuspal system where the
+  Lagna cusp initiates a bounded house. Jaimini uses both depending
+  on context.
+
+  The whole-sign system is older and forms the basis of all classical
+  yoga definitions. The cuspal system is a 20th-century innovation
+  enabling finer timing. Both have internal consistency within their
+  respective systems. The conflict is therefore system-dependent,
+  not a disagreement about facts.
+
+# === EVIDENCE ===
+
+evidence:
+  for_parashari:
+    - "All BPHS yoga definitions assume whole-sign placement"
+    - "Classical commentators uniformly use whole-sign houses"
+    - "The terms 'Lagna' and 'Bhava 1' are used interchangeably in classical texts"
+  for_kp:
+    - "KP predictive accuracy depends on cuspal sub-lords"
+    - "Degree-based house boundaries allow finer timing than signs"
+  for_jaimini:
+    - "Jaimini Sutras use Lagna degree for Chara Dasha calculation"
+    - "Karakamsha system relies on exact Lagna degree"
+
+# === RESOLUTION ===
+
+resolution_status: partially-resolved
+resolution: >
+  The positions are system-dependent, not contradictory. Both are
+  valid within their respective frameworks.
+
+recommended_position: >
+  Default to Parashari whole-sign definitions for classical yoga
+  definitions and house significations. Document KP cuspal definitions
+  as an alternative system. For Jaimini-specific concepts, follow
+  Jaimini conventions. In the knowledge base, tag each claim with
+  its system: system: parashari, system: kp, or system: jaimini.
+
+weight_of_evidence: >
+  The weight of classical textual evidence strongly favors the
+  Parashari whole-sign position (older, textually supported).
+  The KP position is supported by practical predictive evidence
+  from modern practice. Jaimini's contextual approach is supported
+  by the internal consistency of the Jaimini system.
+
+# === RELATED ===
+
+related_conflicts: []
+notes: >
+  This conflict has practical implications for chart computation,
+  dasha timing, and predictive accuracy. Knowledge base entries
+  defaulting to Parashari should note when KP or Jaimini conventions
+  would produce different results.
+
+# === CROSS-REFERENCES (Phase 6) ===
+
+cross_references:
+  ontology:
+    - entity_id: "BHAVA-1 .. BHAVA-12"
+      file: apps/api/domain/ontology.py
+      note: >
+        OntologyEntity has no separate "Lagna" entity_type distinct from
+        "Bhava" — the ontology conflates Lagna and Bhava 1 by construction,
+        implementing the recommended Parashari default from this conflict.
+  rule_engine:
+    - reference: "house_number computation"
+      file: apps/api/services/ephemeris_wrapper.py:684
+      snippet: "house_number = ((rashi_idx - lagna_rashi_index) % 12) + 1"
+      note: >
+        House number is derived purely from rashi offset from the Lagna's
+        rashi (whole-sign), not from cuspal degree boundaries. Confirms
+        the codebase implements the Parashari whole-sign position
+        end-to-end; no KP cuspal house system exists in the Rule Engine
+        or Fact Layer. The KP and Jaimini positions documented above
+        remain undocumented alternatives, not implemented paths.
+  validation_status: "Confirmed 2026-07-16 — code matches recommended_position."
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial conflict entry documenting three house-system traditions"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.1
+    date: 2026-07-16
+    change: "Phase 6 — added Ontology and Rule Engine cross-references; verified the codebase implements the Parashari whole-sign default recommended in this record"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,40 @@
+id: yoga.chandra.kapata
+name: Kedara Yoga
+aliases: ["Agriculture/Property Yoga"]
+category: yoga
+type: chandra
+subcategory: nakshatra-based
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "All planets (Sun through Saturn, excluding Rahu and Ketu) are placed in Kendra (1st, 4th, 7th, or 10th) from the Moon"
+      entity: yoga.chandra.kapata
+      role: subject
+      notes: "All seven classical planets must be in angular positions from the Moon. This is an extremely rare configuration. The yoga does not apply when considering Rahu and Ketu. The specific Kendra placement of each planet further modifies the results."
+
+effects:
+  positive:
+    - "Wealth through property and land"
+    - "Agricultural prosperity"
+    - "Real estate holdings and development"
+    - "Stable and grounded financial foundation"
+    - "Property-related business success"
+  negative: []
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 28
+
+notes: "Part of the Moon-based (Chandra) yoga system. The name 'Kedara' means 'field' or 'cultivated land' in Sanskrit, reflecting the agricultural and property-related nature of the wealth indicated. When all planets cluster in Kendra houses from the Moon, the native's entire life energy is directed toward building material foundations. This is one of the rarest yoga configurations due to the requirement of all seven planets in angular houses from the Moon."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

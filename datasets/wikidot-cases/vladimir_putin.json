@@ -1,0 +1,59 @@
+﻿{
+  "person_name": "Vladimir Putin",
+  "chart_id": "WKD-PUTIN-010",
+  "source": "Wikipedia: Vladimir Putin (infobox birth_date=1952-10-07, birth_place=Leningrad, Russian SFSR, Soviet Union)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1952-10-07",
+    "time_utc": "06:30:00",
+    "latitude": 59.9311,
+    "longitude": 30.3609,
+    "note": "Birth time 9:30am MSK = 06:30 UTC; Rodden Rating AA (birth certificate)"
+  },
+  "rectified_birth_time": {
+    "date": "1952-10-07",
+    "time_utc": "06:30:00",
+    "latitude": 59.9311,
+    "longitude": 30.3609,
+    "source": "Wikidot birth-chart-of-vladimir-putin (recorded matches); nakshatra: Dhanishtha, pada 4; ascendant: Scorpio"
+  },
+  "birth_data": {
+    "janma_nakshatra": "dhanishtha",
+    "nakshatra_pada": 4,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "scorpio"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1999-12-31",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Became Acting President of Russia after Yeltsin resignation"
+    },
+    {
+      "event_date": "2000-05-07",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Inaugurated as President of Russia (first term)"
+    },
+    {
+      "event_date": "2022-02-24",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Ordered full-scale invasion of Ukraine"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-vladimir-putin",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

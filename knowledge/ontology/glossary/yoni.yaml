@@ -1,0 +1,74 @@
+# ontology/glossary/yoni.yaml
+
+id: term.yoni
+name: Yoni
+aliases:
+  - Yoni
+  - Animal Type
+  - Animal Instinct
+  - योनि
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    yoni — from yu (to join, to generate) + the suffix -ni.
+    Literally "womb, source, origin, or place of birth." In
+    jyotisha, each nakshatra is assigned an animal yoni that
+    represents the primal instinct and sexual temperament of
+    the native.
+  english: >
+    One of the 14 animal types (yoni) assigned to the 27
+    nakshatras in the ashtakoota compatibility system. Each
+    yoni represents a primal temperament and instinctual
+    nature. Compatibility is assessed by comparing the yoni
+    of the bride and groom: same yoni is best, enemy yonis
+    are worst. The 14 yonis are: Horse, Elephant, Sheep,
+    Snake, Jackal, Peacock, Cat, Mongoose, Tiger, Hare,
+    Buffalo, Deer, Monkey, Dog.
+  technical: >
+    Yoni carries 4 points out of 36 in the ashtakoota system.
+    Each nakshatra has a fixed yoni and a fixed yoni partner:
+    some yonis are enemies of each other (e.g., cat-mongoose,
+    tiger- buffalo), while others are friendly or same. The
+    maximum 4 points are awarded when both partners share the
+    same yoni; the minimum is for enemy yoni combinations.
+    Yoni represents the sexual and instinctual compatibility
+    between partners.
+
+usage:
+  primary: "Pre-marital compatibility assessment through nakshatra yoni matching (4 of 36 points)"
+  secondary: "Assessment of primal temperament and instinctual nature based on birth nakshatra"
+
+related_concepts:
+  - ref: term.nakshatra
+    relationship: "Each nakshatra has a fixed yoni assignment that determines instinctual nature"
+  - ref: term.bhakoot
+    relationship: "Yoni and bhakoot are both factors in the ashtakoota system, but yoni is nakshatra-based while bhakoot is rashi-based"
+  - ref: term.gana
+    relationship: "Gana (temperament type) works alongside yoni in assessing overall compatibility"
+
+sources:
+  - ref: source.BPHS
+    chapter: 2
+    verse: 25-35
+    claim: "Describes the yoni classification of nakshatras and their compatibility patterns"
+    confidence: high
+
+notes: >
+  Yoni matching is weighted at 4 points (tied with Gana at
+  6 as among the most important factors). The yoni system
+  reflects ancient observations about primal compatibility
+  between different temperamental types. Each nakshatra has
+  exactly one yoni animal, and each yoni animal has a
+  defined enemy partner — these pairings determine the
+  lowest compatibility scores.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

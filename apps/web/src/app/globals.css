@@ -1,0 +1,536 @@
+/*
+ * AstroOS v2.3 — Global Styles + Design Tokens
+ * Colors matched to Figma "Design AstroOS v2.3 Infographic"
+ * Typography: Outfit (headings) / Inter (body) / JetBrains Mono (code)
+ *
+ * Design-system adoption: the canonical token source is now
+ * src/styles/design-system/*.css (ported from the "AstroOS v2.3
+ * Infographic" kit). The :root block below re-points every pre-existing
+ * variable name at its kit equivalent so the ~150 existing `var(--old-name)`
+ * call sites across the app pick up the new values without a rewrite.
+ */
+
+@import "../styles/design-system/colors.css";
+@import "../styles/design-system/spacing.css";
+@import "../styles/design-system/radius.css";
+@import "../styles/design-system/shadows.css";
+@import "../styles/design-system/typography.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ── Typography (Figma spec: Outfit / Inter / JetBrains Mono) ── */
+  --font-outfit: "Outfit", system-ui, sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --font-noto-serif: "Noto Serif Devanagari", Georgia, serif;
+
+  /* ── Canvas / Background (aliased to kit tokens) ── */
+  --bg-primary: var(--bg-navy-950);
+  --bg-secondary: var(--bg-navy-900);
+  --bg-card: var(--bg-surface-800);
+  --bg-card-hover: var(--bg-surface-700);
+  --bg-input: var(--bg-surface-800);
+
+  /* ── Surface (from Figma) ── */
+  --obsidian-canvas: var(--bg-navy-950);
+  --obsidian-surface: var(--bg-surface-800);
+  --obsidian-surface-elevated: var(--bg-surface-600);
+  --obsidian-surface-hover: var(--bg-surface-600);
+
+  /* ── Borders (kit already defines --border-focus directly, no re-declare needed) ── */
+  --border-primary: var(--border-default);
+  --border-hover: var(--border-strong);
+  --obsidian-border: var(--border-default);
+  --obsidian-border-strong: var(--border-strong);
+
+  /* ── Text (kit already defines --text-primary/--text-secondary directly, no re-declare needed) ── */
+  --text-muted: var(--text-tertiary);
+  --obsidian-text-primary: var(--text-primary);
+  --obsidian-text-secondary: var(--text-secondary);
+  --obsidian-text-muted: var(--text-tertiary);
+
+  /* ── Primary Accent: Cyan (Figma primary) ── */
+  --accent: var(--cyan-400);
+  --accent-hover: var(--cyan-600);
+  --accent-text: var(--text-inverse);
+  --obsidian-accent-primary: var(--cyan-400);
+  --obsidian-accent-primary-soft: var(--cyan-glow-soft);
+  --obsidian-accent-primary-hover: rgba(6, 207, 255, 0.20);
+
+  /* ── Secondary Accent: Gold (Figma secondary) ── */
+  --obsidian-accent-secondary: var(--gold-400);
+  --obsidian-accent-secondary-soft: var(--gold-glow-soft);
+
+  /* ── Tertiary Accent: Violet (Figma tertiary) ── */
+  --obsidian-accent-tertiary: #a78bfa;
+  --obsidian-accent-tertiary-soft: var(--violet-glow-soft);
+
+  /* ── Chart colors ── */
+  --chart-bg: var(--bg-surface-800);
+  --chart-border: rgba(249, 115, 22, 0.5);
+  --chart-text: #fdba74;
+  --chart-planet: #fb923c;
+  --chart-ascendant: #f87171;
+
+  /* ── Status colors (aliased to kit semantic tokens) ── */
+  --status-success: var(--success-400);
+  --status-success-bg: rgba(16, 185, 129, 0.10);
+  --status-warning: var(--warning-400);
+  --status-warning-bg: rgba(245, 166, 35, 0.10);
+  --status-danger: var(--danger-400);
+  --status-danger-bg: rgba(244, 63, 94, 0.10);
+  --obsidian-status-success: var(--success-400);
+  --obsidian-status-success-bg: rgba(16, 185, 129, 0.10);
+  --obsidian-status-warning: var(--warning-400);
+  --obsidian-status-warning-bg: rgba(245, 166, 35, 0.10);
+  --obsidian-status-error: var(--danger-400);
+  --obsidian-status-error-bg: rgba(244, 63, 94, 0.10);
+  --obsidian-status-info: var(--cyan-400);
+  --obsidian-status-info-bg: var(--cyan-glow-soft);
+
+  /* ── Badge High-Contrast Tokens (Dark Mode) ── */
+  --badge-violet-fg: #ddd6fe;
+  --badge-violet-bg: rgba(139, 92, 246, 0.25);
+  --badge-violet-border: rgba(167, 139, 250, 0.5);
+
+  --badge-success-fg: #6ee7b7;
+  --badge-success-bg: rgba(6, 78, 59, 0.4);
+  --badge-success-border: rgba(5, 150, 105, 0.4);
+
+  --badge-cyan-fg: #67e8f9;
+  --badge-cyan-bg: rgba(8, 81, 98, 0.4);
+  --badge-cyan-border: rgba(8, 145, 178, 0.4);
+
+  --badge-gold-fg: #fcd34d;
+  --badge-gold-bg: rgba(69, 26, 3, 0.4);
+  --badge-gold-border: rgba(217, 119, 6, 0.4);
+
+  --badge-danger-fg: #fda4af;
+  --badge-danger-bg: rgba(76, 5, 25, 0.4);
+  --badge-danger-border: rgba(225, 29, 72, 0.4);
+
+  /* ── Per-section accents ── */
+  --section-charts: var(--cyan-400);
+  --section-charts-hover: var(--cyan-600);
+  --section-analysis: var(--cyan-400);
+  --section-analysis-hover: var(--cyan-600);
+  --section-research: var(--violet-400);
+  --section-research-hover: var(--violet-600);
+  --section-ai: var(--violet-400);
+  --section-ai-hover: var(--violet-600);
+  --section-system: var(--text-tertiary);
+  --section-system-hover: #475569;
+
+  /* ── Glow Effects (aliased to kit's two-layer glow tokens) ── */
+  --obsidian-glow-cyan: var(--glow-cyan);
+  --obsidian-glow-gold: var(--glow-gold);
+  --obsidian-glow-violet: var(--glow-violet);
+
+  /* ── Spacing (aliased to kit's 8px scale, same px values) ── */
+  --space-1: var(--space-0_5);
+  --space-2: var(--space-1);
+  --space-3: var(--space-1_5);
+  --space-4: var(--space-2);
+  --space-5: var(--space-2_5);
+  --space-6: var(--space-3);
+  --space-8: var(--space-4);
+  --space-10: var(--space-5);
+  --space-12: var(--space-6);
+
+  /* ── Transitions (aliased to kit durations) ── */
+  --transition-fast: var(--duration-fast) var(--ease-out);
+  --transition-base: var(--duration-base) var(--ease-out);
+  --transition-slow: var(--duration-slow) var(--ease-out);
+}
+
+:root.light,
+html.light {
+  /* ── Canvas / Background (Light Mode) ── */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-input: #ffffff;
+
+  /* ── Surface (Light Mode) ── */
+  --obsidian-canvas: #f8fafc;
+  --obsidian-surface: #ffffff;
+  --obsidian-surface-elevated: #f1f5f9;
+  --obsidian-surface-hover: #e2e8f0;
+
+  /* ── Borders (Light Mode) ── */
+  --border-primary: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --obsidian-border: #e2e8f0;
+  --obsidian-border-strong: #cbd5e1;
+
+  /* ── Text (Light Mode) ── */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #475569;
+  --text-tertiary: #475569;
+  --obsidian-text-primary: #0f172a;
+  --obsidian-text-secondary: #475569;
+  --obsidian-text-muted: #475569;
+
+  /* ── Chart colors (Light Mode) ── */
+  --chart-bg: #ffffff;
+  --chart-border: rgba(249, 115, 22, 0.6);
+  --chart-text: #ea580c;
+  --chart-planet: #c2410c;
+  --chart-ascendant: #ef4444;
+
+  /* ── Accents Soft (Light Mode) ── */
+  --obsidian-accent-primary-soft: rgba(6, 182, 212, 0.12);
+  --obsidian-accent-secondary-soft: rgba(245, 158, 11, 0.12);
+  --obsidian-accent-tertiary: #6d28d9;
+  --obsidian-accent-tertiary-soft: rgba(139, 92, 246, 0.12);
+
+  /* ── Badge High-Contrast Tokens (Light Mode) ── */
+  --badge-violet-fg: #4c1d95;
+  --badge-violet-bg: #ede9fe;
+  --badge-violet-border: rgba(109, 40, 217, 0.4);
+
+  --badge-success-fg: #064e3b;
+  --badge-success-bg: #d1fae5;
+  --badge-success-border: rgba(5, 150, 105, 0.4);
+
+  --badge-cyan-fg: #0c4a6e;
+  --badge-cyan-bg: #cffaff;
+  --badge-cyan-border: rgba(8, 145, 178, 0.4);
+
+  --badge-gold-fg: #451a03;
+  --badge-gold-bg: #fef3c7;
+  --badge-gold-border: rgba(217, 119, 6, 0.4);
+
+  --badge-danger-fg: #4c0519;
+  --badge-danger-bg: #ffe4e6;
+  --badge-danger-border: rgba(225, 29, 72, 0.4);
+}
+
+/* ── Base Typography & Form Inputs ── */
+@layer base {
+  html, body {
+    @apply antialiased;
+    overflow-x: hidden;
+    max-width: 100vw;
+    font-family: var(--font-inter);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-outfit);
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+  select,
+  textarea {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-800 rounded-lg placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors;
+  }
+
+  label {
+    @apply text-slate-700 dark:text-slate-300 font-medium;
+  }
+}
+
+/* ── Component Classes ── */
+@layer components {
+  .obsidian-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all;
+    background: var(--accent);
+    color: #020617;
+    box-shadow: var(--obsidian-glow-cyan);
+  }
+
+  .obsidian-btn-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 24px rgba(41, 184, 212, 0.40);
+  }
+
+  .obsidian-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all;
+    background: var(--obsidian-surface-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+  }
+  .obsidian-btn-secondary:hover {
+    background: var(--obsidian-surface-hover);
+    border-color: var(--border-hover);
+  }
+
+  .obsidian-input {
+    @apply w-full rounded-lg px-3 py-2 text-sm transition-all outline-none bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-800 placeholder:text-slate-400 dark:placeholder:text-slate-500;
+  }
+  .obsidian-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--obsidian-accent-primary-soft);
+  }
+  .obsidian-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .obsidian-card {
+    @apply rounded-xl transition-all bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800;
+  }
+  .obsidian-card:hover {
+    border-color: var(--border-hover);
+  }
+
+  .obsidian-card-glow {
+    @apply rounded-xl transition-all bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800;
+  }
+  .obsidian-card-glow:hover {
+    border-color: var(--accent);
+    box-shadow: var(--obsidian-glow-cyan);
+  }
+
+  .obsidian-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider;
+  }
+  .obsidian-badge-primary {
+    @apply obsidian-badge;
+    background: var(--obsidian-accent-primary-soft);
+    color: var(--accent);
+  }
+  .obsidian-badge-gold {
+    @apply obsidian-badge;
+    background: var(--obsidian-accent-secondary-soft);
+    color: var(--obsidian-accent-secondary);
+  }
+  .obsidian-badge-violet {
+    @apply obsidian-badge;
+    background: var(--obsidian-accent-tertiary-soft);
+    color: var(--obsidian-accent-tertiary);
+  }
+
+  .obsidian-nav-module {
+    @apply flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors;
+  }
+  .obsidian-nav-module:hover {
+    background: var(--obsidian-surface-hover);
+  }
+
+  .obsidian-nav-active-dot {
+    @apply absolute left-0 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .obsidian-glow-cyan {
+    box-shadow: var(--obsidian-glow-cyan);
+  }
+  .obsidian-glow-gold {
+    box-shadow: var(--obsidian-glow-gold);
+  }
+  .obsidian-glow-violet {
+    box-shadow: var(--obsidian-glow-violet);
+  }
+
+  /* ── Legacy aliases ── */
+  .field-input {
+    @apply obsidian-input;
+  }
+  .field-label {
+    @apply mb-1 block text-xs font-medium text-slate-700 dark:text-slate-300;
+  }
+  .glass-card {
+    @apply obsidian-card;
+  }
+  .btn-primary {
+    @apply obsidian-btn-primary;
+  }
+  .btn-ghost {
+    @apply obsidian-btn-secondary;
+  }
+  .text-error {
+    color: var(--status-danger);
+  }
+
+  select.obsidian-input,
+  select.field-input {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-800;
+  }
+  select.obsidian-input option,
+  select.field-input option {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100;
+  }
+
+  .obsidian-icon-bg {
+    @apply flex items-center justify-center rounded-lg;
+    background: var(--obsidian-accent-primary-soft);
+    color: var(--accent);
+  }
+
+  .obsidian-divider {
+    @apply w-full;
+    height: 1px;
+    background: var(--border-primary);
+  }
+
+  .obsidian-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── btn-ghost / obsidian-btn-ghost (ghost button variant) ── */
+  .btn-ghost,
+  .obsidian-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-primary);
+  }
+  .btn-ghost:hover,
+  .obsidian-btn-ghost:hover {
+    background: var(--obsidian-surface-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .theme-toggle {
+    @apply flex h-8 w-8 items-center justify-center rounded-lg transition-colors;
+    color: var(--text-secondary);
+  }
+  .theme-toggle:hover {
+    background: var(--obsidian-surface-hover);
+    color: var(--text-primary);
+  }
+}
+
+/* ── Universal Sleek Custom Scrollbars ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.4);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 10px;
+  border: 1px solid transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+/* Custom Scrollbar Utility Classes */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-primary) transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4;
+}
+
+/* ── Smooth page transitions ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ── Glow pulse for live indicators ── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(41, 184, 212, 0.25); }
+  50% { box-shadow: 0 0 14px rgba(41, 184, 212, 0.50); }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ── DevTools overrides ── */
+.__next_radix_portal__ {
+  z-index: 9999 !important;
+}
+
+/* ── Print: continuous report output ── */
+@media print {
+  /* Hide UI chrome — nav, sidebars, buttons */
+  nav,
+  aside,
+  header,
+  footer,
+  [data-sidebar],
+  .print\:hidden,
+  .no-print,
+  button:not(.print-include) {
+    display: none !important;
+  }
+
+  /* Light-mode base for ink-friendly output */
+  body,
+  html {
+    background: #fff !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+  }
+
+  /* Remove card shadows and borders that look odd on paper */
+  .card,
+  [class*="obsidian-card"],
+  [class*="bg-slate"] {
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+  }
+
+  /* Ensure text is readable */
+  [style*="color: var(--text"] {
+    color: #374151 !important;
+  }
+
+  /* Content area takes full width */
+  main,
+  .print-area {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+    box-shadow: none !important;
+  }
+
+  /* Avoid page breaks inside key sections */
+  .card,
+  section,
+  .print-area .card,
+  table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 15mm;
+  }
+}

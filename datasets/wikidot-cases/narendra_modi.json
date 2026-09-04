@@ -1,0 +1,59 @@
+{
+  "person_name": "Narendra Modi",
+  "chart_id": "WKD-MODI-002",
+  "source": "Wikipedia: Narendra Modi (infobox birth_date=1950-09-17, birth_place=Vadnagar, Gujarat, India; no birth time recorded on Wikipedia page)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1950-09-17",
+    "time_utc": "00:00:00",
+    "latitude": 23.7878,
+    "longitude": 72.6353,
+    "note": "Wikipedia does not record birth time. Midnight UTC assumed placeholder."
+  },
+  "rectified_birth_time": {
+    "date": "1950-09-17",
+    "time_utc": "11:00:00",
+    "latitude": 23.7878,
+    "longitude": 72.6353,
+    "source": "Wikidot birth-chart-of-narendra-modi (rectified); nakshatra: Anuradha, pada 2; ascendant: Scorpio"
+  },
+  "birth_data": {
+    "janma_nakshatra": "anuradha",
+    "nakshatra_pada": 2,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "scorpio"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "2001-10-07",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sworn in as Chief Minister of Gujarat"
+    },
+    {
+      "event_date": "2014-05-26",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sworn in as Prime Minister of India"
+    },
+    {
+      "event_date": "2019-05-30",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "RESIDUAL",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Second term as Prime Minister begins"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-narendra-modi",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

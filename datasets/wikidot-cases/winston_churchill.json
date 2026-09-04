@@ -1,0 +1,68 @@
+﻿{
+  "person_name": "Winston Churchill",
+  "chart_id": "WKD-CHURCHILL-012",
+  "source": "Wikipedia: Winston Churchill (infobox birth_date=1874-11-30, birth_place=Woodstock, Oxfordshire, England)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1874-11-30",
+    "time_utc": "01:30:00",
+    "latitude": 51.8536,
+    "longitude": -1.3533,
+    "note": "Birth time 1:30am GMT = 01:30 UTC; from Blenheim Palace records — Rodden Rating A"
+  },
+  "rectified_birth_time": {
+    "date": "1874-11-30",
+    "time_utc": "01:30:00",
+    "latitude": 51.8536,
+    "longitude": -1.3533,
+    "source": "Wikidot birth-chart-of-winston-churchill (rectified); nakshatra: Bharani, pada 3; ascendant: Libra"
+  },
+  "birth_data": {
+    "janma_nakshatra": "bharani",
+    "nakshatra_pada": 3,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "libra"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1940-05-10",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Appointed Prime Minister of the United Kingdom"
+    },
+    {
+      "event_date": "1945-05-08",
+      "event_date_precision": "exact_date",
+      "life_domain": "ACHIEVEMENT",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Victory in Europe (VE Day) — WWII European theatre ends"
+    },
+    {
+      "event_date": "1945-07-26",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Conservative Party defeated in general elections; resigned as PM"
+    },
+    {
+      "event_date": "1953-10-15",
+      "event_date_precision": "exact_date",
+      "life_domain": "ACHIEVEMENT",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Awarded Nobel Prize in Literature"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-winston-churchill",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

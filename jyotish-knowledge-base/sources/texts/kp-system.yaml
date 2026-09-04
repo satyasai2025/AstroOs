@@ -1,0 +1,52 @@
+# sources/texts/kp-system.yaml
+
+id: source.kp-system
+name: Krishnamurti Paddhati
+aliases:
+  - KP System
+  - KP Astrology
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: K.S. Krishnamurti
+date:
+  approximate: "1941"
+  confidence: high
+
+language:
+  original: English
+
+tradition: KP
+system: KP Jyotish
+
+edition:
+  primary:
+    author: "K.S. Krishnamurti"
+    year: "1941 onwards"
+    language: English
+
+related_texts:
+  - ref: source.kp-reader
+    relationship: "The KP Reader is the primary reference work for this system."
+  - ref: source.BPHS
+    relationship: "KP is based on BPHS but adds the sub-lord and cuspal house system."
+
+significance: >
+  The Krishnamurti Paddhati (KP) is a modern system that refines
+  classical Parashari Jyotish by introducing the sub-lord system
+  (subdivisions of nakshatras) and the cuspal house system for more
+  precise event timing.
+
+notes: >
+  KP maintains the foundational principles of BPHS but adds the
+  cuspal house system and sub-lord theory. Classified as a modern
+  development of Parashari Jyotish.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

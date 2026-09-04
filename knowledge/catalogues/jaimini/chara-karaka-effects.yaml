@@ -1,0 +1,120 @@
+id: jaimini.chara-karaka-effects
+name: Chara Karaka Effects by Planet
+aliases:
+  - Chara Karaka Planet Effects
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Effects when different grahas become specific chara karakas.
+  Each graha brings its natural qualities to the karaka role.
+
+# === EFFECTS BY GRAHA AS KARAKA ===
+effects:
+  graha.surya:
+    as_ak: "Strong self-identity, leadership, government connections"
+    as_amk: "Career in government or authority positions"
+    as_bk: "Courageous siblings, strong self-effort"
+    as_mk: "Mother is authoritative; property matters prominent"
+    as_pik: "Father is influential; good fortune and dharma"
+    as_pk: "Children are intelligent and creative"
+    as_gk: "Obstacles come through authority figures"
+    as_dk: "Spouse is authoritative and confident"
+
+  graha.chandra:
+    as_ak: "Emotionally sensitive soul; focus on mind and feelings"
+    as_amk: "Career involves nurturing, counseling, or public service"
+    as_bk: "Siblings are supportive and caring"
+    as_mk: "Mother is very important; strong domestic life"
+    as_pik: "Father is emotionally connected; good fortune through mother"
+    as_pk: "Children are nurturing and emotionally sensitive"
+    as_gk: "Obstacles related to emotions or mother"
+    as_dk: "Spouse is caring and emotionally supportive"
+
+  graha.mangala:
+    as_ak: "Soul driven by courage and action; fighter mentality"
+    as_amk: "Career in military, engineering, or competitive fields"
+    as_bk: "Strong, courageous siblings"
+    as_mk: "Mother is strong-willed; property disputes possible"
+    as_pik: "Father is courageous; fortune through effort"
+    as_pk: "Children are energetic and courageous"
+    as_gk: "Obstacles through conflicts or accidents"
+    as_dk: "Spouse is passionate and energetic"
+
+  graha.budha:
+    as_ak: "Soul driven by intellect and communication"
+    as_amk: "Career in communication, commerce, or education"
+    as_bk: "Siblings are intelligent and communicative"
+    as_mk: "Mother is intellectual; home environment is communicative"
+    as_pik: "Father is scholarly; fortune through education"
+    as_pk: "Children are intelligent and communicative"
+    as_gk: "Obstacles through misunderstandings or legal matters"
+    as_dk: "Spouse is intelligent and communicative"
+
+  graha.guru:
+    as_ak: "Soul driven by wisdom and spirituality"
+    as_amk: "Career in teaching, counseling, or spiritual guidance"
+    as_bk: "Siblings are wise and spiritual"
+    as_mk: "Mother is spiritual; home is a place of learning"
+    as_pik: "Father is a teacher or spiritual guide; strong fortune"
+    as_pk: "Children are wise and spiritual"
+    as_gk: "Obstacles through excessive idealism or teachers"
+    as_dk: "Spouse is wise and spiritually inclined"
+
+  graha.shukra:
+    as_ak: "Soul driven by beauty, love, and luxury"
+    as_amk: "Career in arts, entertainment, or luxury goods"
+    as_bk: "Siblings are artistic and charming"
+    as_mk: "Mother is artistic; home is beautiful"
+    as_pik: "Father is artistic; fortune through beauty and charm"
+    as_pk: "Children are artistic and charming"
+    as_gk: "Obstacles through relationships or luxury"
+    as_dk: "Spouse is beautiful and charming"
+
+  graha.shani:
+    as_ak: "Soul driven by discipline and hard work"
+    as_amk: "Career in service, administration, or structured fields"
+    as_bk: "Siblings are disciplined but may face delays"
+    as_mk: "Mother may face hardships; property requires effort"
+    as_pik: "Father may be absent or strict; fortune comes late"
+    as_pk: "Children may come late or face delays"
+    as_gk: "Obstacles through delays, Saturn-like figures"
+    as_dk: "Spouse is mature and disciplined"
+
+  graha.rahu:
+    as_ak: "Soul driven by unconventional paths; foreign connections"
+    as_amk: "Career in technology, foreign companies, or unusual fields"
+    as_bk: "Siblings may be unconventional or foreign-based"
+    as_mk: "Mother may be from different background; foreign property"
+    as_pik: "Father may be unconventional; fortune through foreign lands"
+    as_pk: "Children may be unconventional or adopted"
+    as_gk: "Obstacles through confusion or foreign elements"
+    as_dk: "Spouse may be from different culture or background"
+
+  graha.ketu:
+    as_ak: "Soul driven by spirituality; detachment from material life"
+    as_amk: "Career in spirituality, healing, or research"
+    as_bk: "Siblings may be spiritual or detached"
+    as_mk: "Mother is spiritual; home environment is ascetic"
+    as_pik: "Father is spiritual; fortune through past life merit"
+    as_pk: "Children may be spiritual or detached"
+    as_gk: "Obstacles through spiritual confusion or detachment"
+    as_dk: "Spouse may be spiritual or detached"
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  These are general effects. The actual results depend on the
+  specific chart, including house placement, conjunctions, aspects,
+  and the overall strength of the graha.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial chara karaka effects entry"
+    author: "Chief Jyotish Knowledge Architect"

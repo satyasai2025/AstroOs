@@ -1,0 +1,40 @@
+id: source.phaladeepika-raman
+name: Phaladeepika (Raman Translation)
+aliases:
+  - Phaladeepika Raman Edition
+  - Raman's Phaladeepika
+category: source
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+author: Mantreswara (original); B.V. Raman (translator)
+date:
+  approximate: "~1575 CE (original); 1987 (translation)"
+  confidence: high
+language:
+  original: sa
+  translations:
+    - language: en
+tradition: vedic
+
+edition:
+  editor: B.V. Raman
+  publisher: Motilal Banarsidass Publishers
+  year: 1987
+  language: en
+  notes: "English translation with original Sanskrit verses. Third revised edition."
+
+relationship_to_primary:
+  primary_text: source.phaladeepika
+  type: translation
+  notes: "Standard English translation of Mantreswara's Phaladeepika."
+
+notes: "B.V. Raman's translation of Phaladeepika (meaning 'Light on the Fruits of Astrology') is the definitive English edition of this influential 16th-century text."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,34 @@
+id: source.vishnu-dharmottara
+name: Vishnu Dharmottara Purana (Astrological Sections)
+aliases:
+  - Vishnudharmottara Purana
+  - विष्णुधर्मोत्तर पुराण
+category: source
+status: active
+confidence: medium
+version: 1.0
+last_verified: 2026-07-16
+
+author: Anonymous
+date:
+  approximate: "400-700 CE"
+  confidence: low
+
+language:
+  original: Sanskrit
+
+tradition: Puranic
+
+related_texts:
+  - ref: source.matansa
+    relationship: "Both are Puranic texts with astrological references."
+
+significance: "The Vishnu Dharmottara Purana is a supplementary Puranic text containing sections on astrology and astronomy alongside its broader coverage of dharma, iconography, and the arts. It provides comparative and historical context for the Puranic-tradition strand of Jyotish alongside the Matsya Purana."
+
+notes: "Secondary source for classical Jyotish. Useful for comparative and historical study rather than as a primary technical reference."
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial catalogue entry — fills a gap where the source was declared in sources/texts/_index.yaml and referenced by matansa.yaml since Phase 2B, but the record itself was never created"
+    author: "Chief Jyotish Knowledge Architect"

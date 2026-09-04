@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AstroOS — Design Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --bg-navy-950: #070C1A;
+      --bg-navy-900: #06091A;
+      --bg-surface-800: #0D1528;
+      --bg-surface-700: #0F1A2E;
+      --bg-surface-600: #111E35;
+
+      --border-subtle: rgba(255,255,255,0.07);
+      --border-default: rgba(255,255,255,0.07);
+      --border-strong: rgba(255,255,255,0.14);
+      --border-focus: rgba(41,184,212,0.55);
+
+      --text-primary: #E4EAF8;
+      --text-secondary: #9AA6C3;
+      --text-tertiary: #5C6E8A;
+      --text-inverse: #070C1A;
+
+      /* Calibrated: instrument teal, not neon */
+      --cyan-300: #7DCCDC;
+      --cyan-400: #29B8D4;
+      --cyan-500: #29B8D4;
+      --cyan-600: #1A8FA3;
+      --cyan-glow: 0 0 16px rgba(41,184,212,0.30), 0 0 40px rgba(41,184,212,0.08);
+      --cyan-glow-soft: rgba(41,184,212,0.08);
+
+      --gold-400: #F5A623;
+      --gold-glow: 0 0 16px rgba(245,166,35,0.28), 0 0 40px rgba(245,166,35,0.08);
+      --gold-glow-soft: rgba(245,166,35,0.08);
+
+      --violet-400: #8B5CF6;
+      --violet-glow: 0 0 16px rgba(139,92,246,0.28), 0 0 40px rgba(139,92,246,0.08);
+      --violet-glow-soft: rgba(139,92,246,0.08);
+
+      --success-400: #10B981;
+      --danger-400: #F43F5E;
+      --warning-400: #F5A623;
+
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.45);
+      --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.05);
+
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+
+      --font-display: 'Outfit', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-vedic: 'Noto Serif Devanagari', Georgia, serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-navy-950);
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 272px;
+      flex-shrink: 0;
+      background: var(--bg-surface-800);
+      border-right: 1px solid var(--border-default);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+    .main {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    /* ── Sidebar Brand ── */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .brand-icon {
+      width: 36px; height: 36px;
+      background: var(--cyan-glow-soft);
+      color: var(--cyan-400);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-primary);
+    }
+    .brand-name span { color: var(--cyan-400); }
+    .brand-sub {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin-top: 1px;
+    }
+
+    /* ── Nav ── */
+    .nav { flex: 1; overflow-y: auto; padding: 12px 8px; }
+    .nav-group-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 8px 8px 4px;
+      font-family: var(--font-mono);
+    }
+    .nav-module {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background 150ms;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 1px;
+    }
+    .nav-module:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+    .nav-module.active {
+      background: var(--cyan-glow-soft);
+      color: var(--cyan-400);
+      position: relative;
+    }
+    .nav-module.active::before {
+      content: '';
+      position: absolute; left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 3px; height: 14px;
+      background: var(--cyan-400);
+      border-radius: 0 2px 2px 0;
+    }
+    .nav-icon {
+      width: 15px; height: 15px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .nav-item-sub {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+    .nav-module-num {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-tertiary);
+      opacity: 0.6;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 16px;
+      font-family: var(--font-mono);
+    }
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+    }
+
+    /* ── KPI Cards ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .kpi-card {
+      background: var(--bg-surface-800);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      display: flex; flex-direction: column; gap: 8px;
+      box-shadow: var(--shadow-md);
+      min-width: 0;
+    }
+    .kpi-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .kpi-value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .kpi-delta {
+      font-size: 11px;
+      display: flex; align-items: center; gap: 4px;
+      color: var(--success-400);
+      font-weight: 600;
+    }
+    .kpi-delta.down { color: var(--danger-400); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-surface-800);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      box-shadow: var(--shadow-md);
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 16px; height: 40px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: filter 120ms, transform 100ms;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--cyan-400); color: #04141a; }
+    .btn-gold { background: var(--gold-400); color: #1c1305; }
+    .btn-violet { background: var(--violet-400); color: #160c2e; }
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-default);
+    }
+    .btn-danger {
+      background: rgba(244,63,94,0.12);
+      color: var(--danger-400);
+      border: 1px solid rgba(244,63,94,0.35);
+    }
+    .btn-sm { padding: 6px 12px; height: 32px; font-size: 12px; }
+
+    /* ── Inputs ── */
+    .input {
+      width: 100%;
+      background: var(--bg-surface-800);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 150ms, box-shadow 150ms;
+    }
+    .input:focus {
+      border-color: var(--cyan-400);
+      box-shadow: 0 0 0 2px var(--cyan-glow-soft);
+    }
+    .input::placeholder { color: var(--text-tertiary); }
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .badge-cyan { background: var(--cyan-glow-soft); color: var(--cyan-400); }
+    .badge-gold { background: var(--gold-glow-soft); color: var(--gold-400); }
+    .badge-violet { background: var(--violet-glow-soft); color: var(--violet-400); }
+    .badge-success { background: rgba(16,185,129,0.1); color: var(--success-400); }
+    .badge-danger { background: rgba(244,63,94,0.1); color: var(--danger-400); }
+
+    /* ── Color Swatches ── */
+    .swatch-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .swatch-dot {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+    }
+    .swatch-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      text-align: center;
+    }
+
+    /* ── Typography ── */
+    .vedic-term {
+      font-family: var(--font-vedic);
+      font-size: 15px;
+      color: var(--gold-400);
+    }
+    .mono-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Table ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      border-bottom: 1px solid var(--border-default);
+    }
+    .data-table td {
+      padding: 9px 12px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .data-table tr:hover td { color: var(--text-primary); background: rgba(255,255,255,0.02); }
+    .planet-name { color: var(--text-primary); font-weight: 500; }
+    .dignity-exalted { color: var(--success-400); }
+    .dignity-debilitated { color: var(--danger-400); }
+    .dignity-own { color: var(--cyan-400); }
+
+    /* ── Accent bar ── */
+    .accent-bar {
+      height: 2px;
+      background: var(--cyan-400);
+      border-radius: 1px;
+      margin-bottom: 20px;
+      opacity: 0.4;
+    }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: var(--border-default); margin: 28px 0; }
+
+    /* ── Grid ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+    /* ── Status dots ── */
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-active { background: var(--success-400); box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+    .status-pending { background: var(--warning-400); }
+    .status-error { background: var(--danger-400); }
+
+    /* ── Nav footer ── */
+    .nav-footer {
+      border-top: 1px solid var(--border-default);
+      padding: 12px 16px;
+    }
+    .nav-footer-text {
+      font-size: 9px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">ॐ</div>
+        <div>
+          <div class="brand-name">ASTRO<span>OS</span></div>
+          <div class="brand-sub">Vedic Research Platform</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-group-label">Charts &amp; Analysis</div>
+
+        <div class="nav-module active">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-6 2 2-6 6-2Z"/></svg>
+          <div>
+            <div>Chart Workspace</div>
+            <div class="nav-item-sub">Kundli · Planets · Houses</div>
+          </div>
+          <span class="nav-module-num">04</span>
+        </div>
+
+        <div class="nav-module">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/><path d="M10 7v6M7 10h6"/></svg>
+          <div>
+            <div>Analysis</div>
+            <div class="nav-item-sub">Dasha · Transit · Yogas</div>
+          </div>
+          <span class="nav-module-num">05</span>
+        </div>
+
+        <div class="nav-module">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="m12 3 2.6 6.2L21 10l-5 4.3L17.4 21 12 17.5 6.6 21 8 14.3 3 10l6.4-.8L12 3Z"/></svg>
+          <div>
+            <div>Nakshatra</div>
+            <div class="nav-item-sub">27 Stars · Padas · Tara</div>
+          </div>
+          <span class="nav-module-num">05</span>
+        </div>
+
+        <div class="nav-group-label" style="margin-top:12px">Intelligence</div>
+
+        <div class="nav-module">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M11 8v6M8 11h6"/></svg>
+          <div>
+            <div>Research</div>
+            <div class="nav-item-sub">Search · Patterns · Graph</div>
+          </div>
+          <span class="nav-module-num">07</span>
+        </div>
+
+        <div class="nav-module">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"/><path d="M4 5.5v16"/></svg>
+          <div>
+            <div>Knowledge Base</div>
+            <div class="nav-item-sub">BPHS · Saravali · Rules</div>
+          </div>
+          <span class="nav-module-num">08</span>
+        </div>
+
+        <div class="nav-group-label" style="margin-top:12px">Life &amp; Reports</div>
+
+        <div class="nav-module">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <div>
+            <div>Life Events</div>
+            <div class="nav-item-sub">Marriage · Career · Health</div>
+          </div>
+          <span class="nav-module-num">09</span>
+        </div>
+      </nav>
+
+      <div class="nav-footer">
+        <div class="nav-footer-text">AstroOS v2.3 · Lakshmi Release</div>
+      </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <main class="main">
+
+      <!-- Page header -->
+      <div>
+        <div class="section-title">Chart Workspace</div>
+        <div class="page-title">Executive Overview</div>
+        <div class="page-sub">Active chart · Vimshotarri Dasha · Current transits</div>
+      </div>
+
+      <!-- KPI row — no blur blobs, flat cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Charts</div>
+          <div class="kpi-value" style="color:var(--cyan-400)">248</div>
+          <div class="kpi-delta">↑ 12 this month</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Research Cases</div>
+          <div class="kpi-value" style="color:var(--gold-400)">1,847</div>
+          <div class="kpi-delta">↑ 340 added</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Pattern Matches</div>
+          <div class="kpi-value" style="color:var(--violet-400)">92</div>
+          <div class="kpi-delta down">↓ 3 from last run</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Rules Validated</div>
+          <div class="kpi-value">41</div>
+          <div class="kpi-delta">↑ 7 new</div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:28px">
+        <!-- Planet table -->
+        <div class="card">
+          <div class="card-title">Planetary Positions</div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Planet</th>
+                <th>Rashi</th>
+                <th>Nakshatra</th>
+                <th>Dignity</th>
+                <th>Str</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="planet-name">☉ Sun</span></td>
+                <td>Makara</td>
+                <td>Sravana</td>
+                <td><span class="dignity-exalted">Exalted</span></td>
+                <td><span class="mono-label">9.2</span></td>
+              </tr>
+              <tr>
+                <td><span class="planet-name">☽ Moon</span></td>
+                <td>Mithuna</td>
+                <td>Mrigashira</td>
+                <td><span class="dignity-own">Own</span></td>
+                <td><span class="mono-label">7.8</span></td>
+              </tr>
+              <tr>
+                <td><span class="planet-name">♂ Mars</span></td>
+                <td>Karka</td>
+                <td>Pushya</td>
+                <td>Friendly</td>
+                <td><span class="mono-label">6.5</span></td>
+              </tr>
+              <tr>
+                <td><span class="planet-name">♃ Jupiter</span></td>
+                <td>Karka</td>
+                <td>Pushya</td>
+                <td><span class="dignity-own">Own</span></td>
+                <td><span class="mono-label">5.8</span></td>
+              </tr>
+              <tr>
+                <td><span class="planet-name">♀ Venus</span></td>
+                <td>Vrischika</td>
+                <td>Anuradha</td>
+                <td><span class="dignity-debilitated">Enemy</span></td>
+                <td><span class="mono-label">3.1</span></td>
+              </tr>
+              <tr>
+                <td><span class="planet-name">♄ Saturn</span></td>
+                <td>Kumbha</td>
+                <td>Shatabhisha</td>
+                <td><span class="dignity-own">Own</span></td>
+                <td><span class="mono-label">6.0</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <!-- Panchanga card -->
+          <div class="card">
+            <div class="card-title">Panchanga</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div>
+                <div class="field-label">Tithi</div>
+                <div style="color:var(--text-primary);font-size:13px">Tritiya · Shukla</div>
+                <div class="mono-label">15.4% complete</div>
+              </div>
+              <div>
+                <div class="field-label">Nakshatra</div>
+                <div style="color:var(--text-primary);font-size:13px">Pushya</div>
+                <div class="mono-label">Lord: Saturn</div>
+              </div>
+              <div>
+                <div class="field-label">Yoga</div>
+                <div style="color:var(--text-primary);font-size:13px">Vyaghata</div>
+                <div class="mono-label">55.0% complete</div>
+              </div>
+              <div>
+                <div class="field-label">Vara</div>
+                <div style="color:var(--text-primary);font-size:13px">Buddha</div>
+                <div class="mono-label">Lord: Moon</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sanskrit font test -->
+          <div class="card">
+            <div class="card-title">Vedic Terms (Noto Serif Devanagari)</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <span class="vedic-term">लग्न</span>
+                <span style="color:var(--text-tertiary);font-size:12px">Lagna — Ascendant</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <span class="vedic-term">दशा</span>
+                <span style="color:var(--text-tertiary);font-size:12px">Dasha — Planetary period</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <span class="vedic-term">नक्षत्र</span>
+                <span style="color:var(--text-tertiary);font-size:12px">Nakshatra — Lunar mansion</span>
+              </div>
+              <div style="display:flex;align-items:baseline;gap:10px">
+                <span class="vedic-term">षड्बल</span>
+                <span style="color:var(--text-tertiary);font-size:12px">Shadbala — Six-fold strength</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Color palette -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">Accent Palette — Research Workstation</div>
+        <div class="swatch-row">
+          <div class="swatch">
+            <div class="swatch-dot" style="background:#29B8D4;border-color:rgba(41,184,212,0.3)"></div>
+            <div class="swatch-label">Cyan<br>#29B8D4</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-dot" style="background:#1A8FA3;border-color:rgba(26,143,163,0.3)"></div>
+            <div class="swatch-label">Cyan-600<br>#1A8FA3</div>
+          </div>
+          <div class="swatch" style="margin-left:12px">
+            <div class="swatch-dot" style="background:#F5A623;border-color:rgba(245,166,35,0.3)"></div>
+            <div class="swatch-label">Gold<br>#F5A623</div>
+          </div>
+          <div class="swatch" style="margin-left:12px">
+            <div class="swatch-dot" style="background:#8B5CF6;border-color:rgba(139,92,246,0.3)"></div>
+            <div class="swatch-label">Violet<br>#8B5CF6</div>
+          </div>
+          <div class="swatch" style="margin-left:12px">
+            <div class="swatch-dot" style="background:#0D1528;border-color:rgba(255,255,255,0.1)"></div>
+            <div class="swatch-label">Surface<br>#0D1528</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-dot" style="background:#070C1A;border-color:rgba(255,255,255,0.08)"></div>
+            <div class="swatch-label">Canvas<br>#070C1A</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">Buttons — Flat fills, no default glow</div>
+        <div class="btn-row">
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-gold">Gold</button>
+          <button class="btn btn-violet">Violet</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-danger">Danger</button>
+          <button class="btn btn-primary btn-sm">Sm Primary</button>
+          <button class="btn btn-secondary btn-sm">Sm Secondary</button>
+        </div>
+      </div>
+
+      <!-- Badges + Inputs -->
+      <div class="two-col" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-title">Badges</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <span class="badge badge-cyan">Exalted</span>
+            <span class="badge badge-gold">Vimshottari</span>
+            <span class="badge badge-violet">Research</span>
+            <span class="badge badge-success">Active</span>
+            <span class="badge badge-danger">Debilitated</span>
+          </div>
+
+          <div style="margin-top:16px">
+            <div class="card-title">Status Indicators</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary)">
+                <span class="status-dot status-active"></span>
+                Backend connected · Port 8001
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary)">
+                <span class="status-dot status-pending"></span>
+                Ephemeris cache warming
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary)">
+                <span class="status-dot status-error"></span>
+                AI service offline
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Form Controls</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <label class="field-label">Date of Birth</label>
+              <input class="input" type="text" placeholder="DD / MM / YYYY" />
+            </div>
+            <div>
+              <label class="field-label">Place of Birth</label>
+              <input class="input" type="text" placeholder="City, Country" />
+            </div>
+            <div>
+              <label class="field-label">Ayanamsa System</label>
+              <input class="input" type="text" value="Lahiri (23°51')" readonly style="cursor:default" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:16px 0;font-size:11px;color:var(--text-tertiary);font-family:var(--font-mono)">
+        AstroOS Research Workstation · Design Preview · Static file — no backend required
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

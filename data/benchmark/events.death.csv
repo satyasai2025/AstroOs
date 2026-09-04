@@ -1,0 +1,6 @@
+case_id,name,event_type,date,precision,source,source_url,verified_by,verified,notes
+RSALL_000016,Twins 1980/6/08 No.2,death,1982-05-01,day,Velma Ritter quotes B.C. in MH; 10/1983,MH 10/1983,AK,TRUE,Drowned in family pool; age one and a half
+RSALL_000039,Twins 1968/11/19 No.1,death,1972-03-23,day,Mollie Sommer quotes B.C. in MH; 1/1985,MH 1/1985,AK,TRUE,Hit by neighbor's car; age four
+RSALL_000091,Accident Taric,death,1963-12-09,day,Dorothy Kovach quotes B.C. on email,ACT 2/2001,AK,TRUE,Plane exploded in Elkton MD; age four months
+RSALL_000101,Accident Josh,death,1994-04-12,day,Ed Dearborn quotes B.C.,B.C. archive,AK,TRUE,Strangulation; age 3
+RSALL_000078,Accident,death,1971-01-04,day,Dr. M. Millard quotes private case in AA 5/72,AA 5/72,AK,TRUE,Run over by school bus; fatal

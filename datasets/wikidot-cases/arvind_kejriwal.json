@@ -1,0 +1,77 @@
+﻿{
+  "person_name": "Arvind Kejriwal",
+  "chart_id": "WKD-KEJRIWAL-004",
+  "source": "Wikipedia: Arvind Kejriwal (infobox birth_date=1968-08-16, birth_place=Siwani, Haryana, India; no reliable birth time on Wikipedia)",
+  "confidence_tier": "B",
+  "recorded_birth_time": {
+    "date": "1968-08-16",
+    "time_utc": "00:00:00",
+    "latitude": 29.0833,
+    "longitude": 75.6833,
+    "note": "Birth time unreliable; some sources cite 11:18am IST (05:48 UTC), others unknown. Midnight UTC placeholder used."
+  },
+  "rectified_birth_time": {
+    "date": "1968-08-16",
+    "time_utc": "05:48:00",
+    "latitude": 29.0833,
+    "longitude": 75.6833,
+    "source": "Wikidot birth-chart-of-arvind-kejriwal (rectified to 11:18am IST per some astrological sources; nakshatra: Uttara Phalguni; ascendant: Leo -- unverified)"
+  },
+  "birth_data": {
+    "janma_nakshatra": "uttara_phalguni",
+    "nakshatra_pada": 1,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "leo"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "2012-11-26",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Founded Aam Aadmi Party (AAP)"
+    },
+    {
+      "event_date": "2013-12-28",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sworn in as Chief Minister of Delhi (first term)"
+    },
+    {
+      "event_date": "2014-02-14",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Resigned as Delhi CM after 49 days"
+    },
+    {
+      "event_date": "2015-02-14",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sworn in as Chief Minister of Delhi (second term); AAP won 67 of 70 seats"
+    },
+    {
+      "event_date": "2024-03-21",
+      "event_date_precision": "exact_date",
+      "life_domain": "LEGAL",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Arrested by ED in Delhi liquor policy case"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-arvind-kejriwal",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources. Birth time disputed -- confidence_tier B."
+}

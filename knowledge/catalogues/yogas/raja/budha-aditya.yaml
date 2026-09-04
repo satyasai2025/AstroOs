@@ -1,0 +1,42 @@
+id: yoga.raja.budha-aditya
+name: Budha Aditya Yoga
+aliases: ["Mercury-Sun Yoga"]
+category: yoga
+type: raja
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Sun and Mercury are in conjunction in a house"
+      entity: yoga.raja.budha-aditya
+      role: subject
+      notes: "Both planets should be in the same sign. The yoga is stronger when Mercury is not combust. If Mercury is combust (within approximately 14 degrees of Sun), the results are significantly reduced."
+
+effects:
+  positive:
+    - "Sharp intellect and analytical ability"
+    - "Educational achievement and academic excellence"
+    - "Strong communication and oratory skills"
+    - "Success in administrative and government-related work"
+    - "Good memory and learning capacity"
+  negative:
+    - "When Mercury is combust, communication may suffer"
+    - "Ego conflicts between self-expression and logical reasoning"
+  intensity: moderate
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 7
+
+notes: "Mercury (Budha) represents intelligence and communication; the Sun (Aditya) represents authority and soul. Their conjunction merges intellectual acuity with authoritative expression. This yoga is extremely common since Mercury is never more than 28 degrees from the Sun, so the quality of the conjunction (combust vs. non-combust, sign dignity) is crucial."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

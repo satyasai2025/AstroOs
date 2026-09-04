@@ -1,0 +1,48 @@
+name: AstroOS CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  audit-and-typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm --filter @workspace/web exec playwright install --with-deps chromium
+
+      - name: Verify TypeScript Types
+        run: pnpm --filter @workspace/web typecheck
+
+      - name: Build Web Application
+        run: pnpm --filter @workspace/web build
+
+      - name: Run Playwright Health Crawler with Server Wait
+        run: npx start-server-and-test "pnpm --filter @workspace/web start" http://localhost:3000 "node apps/web/scripts/crawl-site.js"
+
+      - name: Upload Crawler Reports & Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crawler-reports
+          path: apps/web/crawler-reports/
+          retention-days: 14

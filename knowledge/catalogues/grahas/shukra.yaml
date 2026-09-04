@@ -1,0 +1,159 @@
+# catalogues/grahas/shukra.yaml
+
+id: graha.shukra
+name: Shukra
+aliases:
+  - Venus
+  - Shukracharya
+  - Bhargava
+  - Ushanas
+  - Kavi
+category: graha
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Shukra
+devanagari: "शुक्र"
+meaning: "The bright, pure one; the seed; the teacher of the asuras"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: 583.92
+  sidereal_period_days: 224.70
+  retrograde:
+    occurs: true
+    typical_duration_days: 42
+    typical_frequency: "Approximately every 19 months"
+  notes: "Retrograde for approximately 40-44 days roughly every 18-19 months"
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: female
+  nature: natural benefic
+  caste: brahmin
+  element: water
+  direction: southeast
+  color: white
+  gem: diamond
+  metal: silver
+  grain: rice
+  body_parts:
+    - semen
+    - kidneys
+    - reproductive_organs
+    - eyes
+  animal: bull
+  deity: shukracharya
+  quality: rajasic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: meena
+    degrees: 27
+  debilitation:
+    sign: kanya
+    degrees: 27
+  moolatrikona:
+    sign: tula
+    range: "0-15"
+  own_signs:
+    - vrishabha
+    - tula
+  friendly_signs:
+    - makara
+    - kumbha
+    - mithuna
+    - kanya
+  neutral_signs:
+    - dhanus
+    - meena
+  inimical_signs:
+    - simha
+    - karka
+    - mesha
+    - vrishchika
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - bharani
+    - purvaphalguni
+    - purvashadha
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.shani
+    - graha.budha
+  enemies:
+    - graha.surya
+    - graha.chandra
+    - graha.mangala
+  neutrals:
+    - graha.guru
+    - graha.rahu
+    - graha.ketu
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 20
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Spouse (Dara)"
+    - "Love (Kama)"
+    - "Luxury (Sukha)"
+  traditional:
+    - "Wealth and possessions"
+    - "Creative arts"
+    - "Marriage and relationships"
+  modern:
+    - "Aesthetics and beauty"
+    - "Social grace"
+    - "Material comforts"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Shukra"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Shukra"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Shukra is the teacher of the asuras and the most powerful
+  natural benefic in many classical texts. It governs love,
+  beauty, wealth, creativity, and relationships. A well-placed
+  Shukra bestows artistic talent, charm, and material prosperity.
+  As the graha closest to Earth (excluding the Moon), its appearance
+  as the morning or evening star has deep symbolic significance
+  in Vedic mythology. Shukra grants the longest Vimshottari dasha
+  at 20 years.
+
+# === HISTORY ===
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

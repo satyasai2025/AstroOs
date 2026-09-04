@@ -1,0 +1,126 @@
+# knowledge/sources/vedicastrology_wikidot/_source.yaml
+#
+# Source registration fixture for VedicAstrology.Wikidot, integrated via the
+# EXISTING governed knowledge-ingestion pipeline (apps/api/domain/knowledge_reliability.py
+# SourceReliabilityRecord + apps/api/domain/knowledge_ingestion.py IngestedDocument).
+# This file does NOT create a new Source Registry — it is a YAML fixture consumed by
+# apps/api/scripts/seed_vedicastrology_wikidot.py to construct a SourceReliabilityRecord.
+
+id: source.vedicastrology-wikidot
+name: "VedicAstrology.Wikidot"
+url: "http://vedicastrology.wikidot.com/overview"
+author: "Vinay Jha (site owner/maintainer)"
+classification: "methodology / secondary traditional source"
+category: secondary
+status: active
+confidence: low
+version: 1.0
+last_verified: 2026-08-26
+
+# === RELIABILITY (maps to SourceReliabilityTier / ReviewStatus enums) ===
+
+reliability:
+  tier: INFORMAL_TRADITION       # SourceReliabilityTier.INFORMAL_TRADITION — community wiki, not peer-reviewed or classical
+  review_status: UNREVIEWED      # ReviewStatus.UNREVIEWED
+  provenance:
+    edition_title: "VedicAstrology.Wikidot (community wiki)"
+    publisher: "Wikidot.com (self-published)"
+    publication_year: null
+    editor_or_translator: null
+    manuscript_lineage: null
+    is_critical_edition: false
+  scholarly_eval:
+    tradition: "Mixed Parashari / personal methodology (author-specific synthesis, incl. Surya-Siddhanta / SS mode preference)"
+    methodology_clarity_notes: >
+      Site is a long-running personal wiki by a single author (self-identified as
+      "Vinay Jha") mixing classical citations (frequently BPHS - Brihat Parashara
+      Hora Shastra) with idiosyncratic personal methodology, software (Kundalee),
+      and empirical claims that are not independently peer reviewed or benchmarked.
+    primary_commentaries: []
+    known_disputed_passages:
+      - "Bhaava-Chalita vs Rashi-Chakra house computation claims (conflicts with repo conflict-001.yaml Parashari whole-sign default)"
+      - "Logarithmic base-2 scaling of Ishta/Kashta 'main strength' claimed to supersede Shadbala in most cases"
+      - "DAC (Dashaa Aarambha Chakra) millisecond-accuracy claims for dasha-period charts"
+  empirical_citations: []
+  known_failures_or_contradictions:
+    - "No independent replication or benchmark data published on-site for its empirical/strength claims."
+
+# === EXPLICIT NON-CANONICAL NOTE ===
+
+note: >
+  Not canonical. Claims unverified until cross-checked against primary/classical
+  sources. This source is registered strictly as INFORMAL_TRADITION / UNREVIEWED.
+  No content extracted from this source may be marked CANONICAL, SUPPORTED, or
+  auto-promoted through the RuleLifecycleState machine. All extracted items default
+  to lifecycle_state DOCUMENTED and verification_status UNVERIFIED.
+
+# === PAGES INGESTED (see sibling YAML files for extracted items) ===
+
+pages_ingested:
+  - slug: overview
+    url: "http://vedicastrology.wikidot.com/overview"
+    fixture: overview.yaml
+  - slug: planetary-traits-1
+    url: "http://vedicastrology.wikidot.com/planetary-traits-1"
+    fixture: grahas.yaml
+  - slug: origin-and-meaning-of-horoscopic-houses
+    url: "http://vedicastrology.wikidot.com/origin-and-meaning-of-horoscopic-houses"
+    fixture: bhava.yaml
+  - slug: main-strength-versus-shadbala
+    url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
+    fixture: shadbala_strength_methodology.yaml
+  - slug: divisional-charts
+    url: "http://vedicastrology.wikidot.com/divisional-charts"
+    fixture: divisional_charts.yaml
+  - slug: ashtaka-varga
+    url: "http://vedicastrology.wikidot.com/ashtaka-varga"
+    fixture: ashtakavarga_sudarshana_chakra.yaml
+  - slug: sudarshana-chakra
+    url: "http://vedicastrology.wikidot.com/sudarshana-chakra"
+    fixture: ashtakavarga_sudarshana_chakra.yaml
+  - slug: vipareet-raja-yoga
+    url: "http://vedicastrology.wikidot.com/vipareet-raja-yoga"
+    fixture: yoga.yaml
+
+pages_skipped:
+  - label: "Rashi (signs)"
+    reason: "No dedicated Rashi page found on the site's link inventory; general rashi content is folded into other pages (e.g. planetary-traits-1, origin-and-meaning-of-horoscopic-houses). Not fabricated."
+  - label: "Nakshatra"
+    reason: "No dedicated Nakshatra page found; referenced only in passing on hindu-calendar / panchanga content, which was not fetched in this pass."
+  - label: "Drishti (aspects)"
+    reason: "No dedicated Drishti page found under an obvious slug; aspects are referenced in passing across multiple pages (e.g. origin-and-meaning-of-horoscopic-houses) but not extracted as a standalone page in this pass."
+  - label: "Varshaphala"
+    reason: "No dedicated methodology page found; only annual-chart DATA pages exist (e.g. divya-varsha-phala-1579-1939-ad), which are tabular datasets, not methodology articles, and were skipped as out of scope for methodology extraction."
+  # NOTE: "Medini Jyotisha" was resolved on 2026-08-26 and moved out of this
+  # skipped list — see pages_fetched_later below and medini_jyotisha.yaml.
+
+pages_fetched_later:
+  - label: "Medini Jyotisha"
+    slug: "raaj-jyotisha"
+    url: "http://vedicastrology.wikidot.com/raaj-jyotisha"
+    fetched: 2026-08-26
+    fixture: medini_jyotisha.yaml
+    note: >
+      Page exists and is substantial (74,665 chars, Hindi/Devanagari). Only the
+      mundane-astrology METHODOLOGY portion was extracted (7 items). The applied
+      world-history / Kaliyuga-prediction sections and the historiographical and
+      ethno-political polemic were deliberately excluded as out of scope — see
+      medini_jyotisha.yaml `excluded_content` for the specific sections and
+      reasons. This is a scope decision, not a truth judgement.
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-08-26
+    change: "Initial source registration for VedicAstrology.Wikidot integration into the governed knowledge-ingestion pipeline."
+    author: "AstroOS Knowledge Integration (AI-assisted, session rkmvedant@gmail.com)"
+  - version: 1.1
+    date: 2026-08-26
+    change: >
+      Phase 2 gap closure. Fetched the previously-skipped Medini Jyotisha page
+      (raaj-jyotisha) and added medini_jyotisha.yaml with 7 methodology items,
+      all UNVERIFIED / DOCUMENTED. Rashi, Nakshatra, Drishti and Varshaphala
+      remain skipped — re-confirmed that no dedicated methodology pages exist for
+      them on this site, so there is nothing further to fetch.
+    author: "AstroOS Knowledge Integration (AI-assisted, session rkmvedant@gmail.com)"

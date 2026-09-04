@@ -1,0 +1,26 @@
+_record_id,_dataset_id,_record_type,_version,_is_deleted,test_id,aspect_type,planet_a,planet_b,position_a_deg,position_b_deg,expected_orb_deg,expected_is_applying,ayanamsa_system,source_reference,notes
+ASTRO-REC-BMASP-000001,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,CONJ-001,conjunction,sun,moon,150.0,150.0,0.00,unknown,lahiri,Classical definition: 0 degrees exact,Exact conjunction — zero orb
+ASTRO-REC-BMASP-000002,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,CONJ-002,conjunction,sun,moon,150.0,151.5,1.50,unknown,lahiri,Classical definition: 0 degrees,Conjunction within 1.5 degree orb
+ASTRO-REC-BMASP-000003,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,CONJ-003,conjunction,sun,moon,150.0,158.0,8.00,unknown,lahiri,Classical definition: 0 degrees,Conjunction outside typical 8 degree orb — should not detect
+ASTRO-REC-BMASP-000004,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,OPP-001,opposition,sun,moon,0.0,180.0,0.00,unknown,lahiri,Classical definition: 180 degrees,Exact opposition
+ASTRO-REC-BMASP-000005,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,OPP-002,opposition,sun,moon,0.0,178.5,1.50,unknown,lahiri,Classical definition: 180 degrees,Opposition within 1.5 degree orb
+ASTRO-REC-BMASP-000006,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,OPP-003,opposition,sun,moon,0.0,170.0,10.00,unknown,lahiri,Classical definition: 180 degrees,Opposition outside 10 degree orb — should not detect
+ASTRO-REC-BMASP-000007,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,TRI-001,trine,sun,jupiter,0.0,120.0,0.00,unknown,lahiri,Classical definition: 120 degrees,Exact trine
+ASTRO-REC-BMASP-000008,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,TRI-002,trine,sun,jupiter,0.0,122.0,2.00,unknown,lahiri,Classical definition: 120 degrees,Trine within 2 degree orb
+ASTRO-REC-BMASP-000009,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,TRI-003,trine,sun,jupiter,0.0,130.0,10.00,unknown,lahiri,Classical definition: 120 degrees,Trine outside 10 degree orb — should not detect
+ASTRO-REC-BMASP-000010,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SQR-001,square,sun,saturn,0.0,90.0,0.00,unknown,lahiri,Classical definition: 90 degrees,Exact square
+ASTRO-REC-BMASP-000011,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SQR-002,square,sun,saturn,0.0,92.0,2.00,unknown,lahiri,Classical definition: 90 degrees,Square within 2 degree orb
+ASTRO-REC-BMASP-000012,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SQR-003,square,sun,saturn,0.0,100.0,10.00,unknown,lahiri,Classical definition: 90 degrees,Square outside 10 degree orb — should not detect
+ASTRO-REC-BMASP-000013,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SEX-001,sextile,sun,venus,0.0,60.0,0.00,unknown,lahiri,Classical definition: 60 degrees,Exact sextile
+ASTRO-REC-BMASP-000014,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SEX-002,sextile,sun,venus,0.0,62.0,2.00,unknown,lahiri,Classical definition: 60 degrees,Sextile within 2 degree orb
+ASTRO-REC-BMASP-000015,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SEX-003,sextile,sun,venus,0.0,70.0,10.00,unknown,lahiri,Classical definition: 60 degrees,Sextile outside 10 degree orb — should not detect
+ASTRO-REC-BMASP-000016,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,MARS-4TH,special_graha,mars,jupiter,0.0,120.0,0.00,unknown,lahiri,Mars 4th aspect (trine): 120 degrees from Mars position,Mars 4th aspect — classical special aspect
+ASTRO-REC-BMASP-000017,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,MARS-8TH,special_graha,mars,jupiter,0.0,240.0,0.00,unknown,lahiri,Mars 8th aspect (opposition): 240 degrees from Mars position,Mars 8th aspect — classical special aspect
+ASTRO-REC-BMASP-000018,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,JUP-5TH,special_graha,jupiter,mars,0.0,120.0,0.00,unknown,lahiri,Jupiter 5th aspect (trine): 120 degrees from Jupiter position,Jupiter 5th aspect — classical special aspect
+ASTRO-REC-BMASP-000019,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,JUP-7TH,special_graha,jupiter,mars,0.0,180.0,0.00,unknown,lahiri,Jupiter 7th aspect (opposition): 180 degrees from Jupiter position,Jupiter 7th aspect — classical special aspect
+ASTRO-REC-BMASP-000020,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,JUP-9TH,special_graha,jupiter,mars,0.0,60.0,0.00,unknown,lahiri,Jupiter 9th aspect (sextile): 60 degrees from Jupiter position,Jupiter 9th aspect — classical special aspect
+ASTRO-REC-BMASP-000021,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SAT-3RD,special_graha,saturn,mars,0.0,60.0,0.00,unknown,lahiri,Saturn 3rd aspect (sextile): 60 degrees from Saturn position,Saturn 3rd aspect — classical special aspect
+ASTRO-REC-BMASP-000022,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,SAT-10TH,special_graha,saturn,mars,0.0,270.0,0.00,unknown,lahiri,Saturn 10th aspect (square): 270 degrees from Saturn position,Saturn 10th aspect — classical special aspect
+ASTRO-REC-BMASP-000023,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,BND-001,conjunction,sun,mercury,150.0,153.0,3.00,unknown,lahiri,Mercury combust limit: 14 degrees,Mercury conjunction within combust range — should detect aspect
+ASTRO-REC-BMASP-000024,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,BND-002,conjunction,sun,venus,150.0,160.0,10.00,unknown,lahiri,Venus combust limit: 10 degrees,Venus conjunction at exact combust limit — boundary case
+ASTRO-REC-BMASP-000025,ASTRO-BM-ASPECT-v0.1.0,reference,1,false,BND-003,conjunction,sun,jupiter,150.0,161.0,11.00,unknown,lahiri,Jupiter combust limit: 11 degrees,Jupiter conjunction at exact combust limit — boundary case

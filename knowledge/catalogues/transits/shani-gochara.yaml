@@ -1,0 +1,754 @@
+# ============================================================================
+# ASTRO OS — Shani (Saturn) Gochara — Foundational Catalogue
+# ============================================================================
+# Source: BPHS Chapter 42 — Gochara Phaladhyaya
+# Scope: Saturn's transit effects through 12 houses from natal Lagna,
+#         Sade Sati (7.5-year period), and Ashtama Shani.
+# Orbital period: ~2.5 years per rashi (30 months)
+# Note:  Foundational rules only. No predictive interpretations beyond BPHS.
+# ============================================================================
+
+# ── Saturn Transit from Lagna (each house) ──────────────────────────────────
+
+id: transit.shani.gochara.h1
+name: "Shani Gochara — 1st House"
+aliases: ["Saturn Transit 1st House", "Shani in 1st from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 1st house (Lagna) from the natal Ascendant, the native
+  experiences a period of self-focus, responsibility, and maturity. There may be
+  physical ailments, reduced vitality, or a sense of heaviness. The native is
+  compelled to confront personal limitations and develop discipline. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "1st house from Lagna"
+
+effects:
+  - description: "Physical fatigue, bodily ailments, sense of heaviness and responsibility"
+    intensity: strong
+  - description: "Period of introspection and self-discipline"
+    intensity: moderate
+  - description: "Reduced vitality and energy levels"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 1st house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani occupies the first house from the Lagna, the person will be
+      troubled by diseases and will be without happiness and pleasures."
+    confidence: high
+
+notes: "Saturn transit through the 1st house marks the beginning of a transformative period."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h2
+name: "Shani Gochara — 2nd House"
+aliases: ["Saturn Transit 2nd House", "Shani in 2nd from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 2nd house from the natal Ascendant, the native may
+  experience financial difficulties, family disputes, or changes in speech and
+  diet. There may be increased expenditures or loss of accumulated wealth.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "2nd house from Lagna"
+
+effects:
+  - description: "Financial strain, potential loss of wealth"
+    intensity: strong
+  - description: "Family discord or disputes"
+    intensity: moderate
+  - description: "Changes in speech patterns and dietary habits"
+    intensity: mild
+
+timing:
+  onset: "When Saturn enters the 2nd house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the second house from the Lagna, the native will suffer
+      loss of wealth and will face family problems."
+    confidence: high
+
+notes: "Effects are modulated by Saturn's dignity and Ashtakavarga strength in the 2nd house."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h3
+name: "Shani Gochara — 3rd House"
+aliases: ["Saturn Transit 3rd House", "Shani in 3rd from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 3rd house from the natal Ascendant, it is considered
+  one of the more favorable transit positions. The native gains courage, willpower,
+  and may undertake successful journeys. Siblings may be affected. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "3rd house from Lagna"
+
+effects:
+  - description: "Increased courage and determination"
+    intensity: moderate
+  - description: "Success in endeavors and short journeys"
+    intensity: moderate
+  - description: "Matters related to siblings may arise"
+    intensity: mild
+
+timing:
+  onset: "When Saturn enters the 3rd house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the third house from the Lagna, the person will be
+      courageous and will achieve success."
+    confidence: high
+
+notes: "3rd house transit of Saturn is generally considered a period of strength."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h4
+name: "Shani Gochara — 4th House"
+aliases: ["Saturn Transit 4th House", "Shani in 4th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 4th house from the natal Ascendant, the native
+  experiences domestic disturbances, reduced mental peace, and potential issues
+  with property or vehicles. There may be separation from homeland or mother.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "4th house from Lagna"
+
+effects:
+  - description: "Domestic unrest and mental unrest"
+    intensity: strong
+  - description: "Potential issues with property, vehicles, or home"
+    intensity: moderate
+  - description: "Separation from mother or homeland"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 4th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani occupies the fourth house from the Lagna, the person will be
+      devoid of domestic happiness and mental peace."
+    confidence: high
+
+notes: "The 4th house governs Sukh (happiness) — Saturn here tests emotional security."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h5
+name: "Shani Gochara — 5th House"
+aliases: ["Saturn Transit 5th House", "Shani in 5th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 5th house from the natal Ascendant, the native may
+  face obstacles in progeny, education, or creative pursuits. There can be delays
+  or disappointments in romantic matters. Intelligence may be applied practically.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "5th house from Lagna"
+
+effects:
+  - description: "Obstacles or delays related to children and education"
+    intensity: strong
+  - description: "Challenges in creative and romantic pursuits"
+    intensity: moderate
+  - description: "Practical application of intelligence"
+    intensity: mild
+
+timing:
+  onset: "When Saturn enters the 5th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the fifth house from the Lagna, the person will face
+      difficulties with children and will have problems with intelligence."
+    confidence: high
+
+notes: "5th house is Putra Sthana — Saturn's discipline here can delay but also structure creative output."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h6
+name: "Shani Gochara — 6th House"
+aliases: ["Saturn Transit 6th House", "Shani in 6th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 6th house from the natal Ascendant, the native gains
+  victory over enemies and adversaries. Health matters may require attention, but
+  Saturn in the 6th is generally favorable for overcoming opposition and completing
+  tasks. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "6th house from Lagna"
+
+effects:
+  - description: "Victory over enemies and competitors"
+    intensity: strong
+  - description: "Success in legal matters and disputes"
+    intensity: moderate
+  - description: "Health awareness and attention to bodily maintenance"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 6th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the sixth house from the Lagna, the person will overcome
+      enemies and will be successful in competitive endeavors."
+    confidence: high
+
+notes: "6th house transit of Saturn is generally considered favorable for overcoming obstacles."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h7
+name: "Shani Gochara — 7th House"
+aliases: ["Saturn Transit 7th House", "Shani in 7th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 7th house from the natal Ascendant, the native may
+  experience delays or difficulties in marriage and partnerships. Business
+  partnerships may face strain. There can be separation or disagreements with
+  the spouse. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "7th house from Lagna"
+
+effects:
+  - description: "Strains in marriage and partnerships"
+    intensity: strong
+  - description: "Delays in marriage for unmarried natives"
+    intensity: moderate
+  - description: "Business partnership difficulties"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 7th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani occupies the seventh house from the Lagna, the person will face
+      difficulties in married life and partnerships."
+    confidence: high
+
+notes: "7th house is Kalatra Sthana — Saturn tests the strength of partnerships."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h8
+name: "Shani Gochara — 8th House (Ashtama Shani)"
+aliases: ["Saturn Transit 8th House", "Ashtama Shani", "Shani in 8th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 8th house from the natal Ascendant (Ashtama Shani),
+  the native faces significant challenges including health concerns, accidents,
+  hidden troubles, or sudden changes. This is considered one of the most difficult
+  transit periods. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "8th house from Lagna"
+
+effects:
+  - description: "Health crises, accidents, or sudden life changes"
+    intensity: strong
+  - description: "Hidden troubles and unexpected events"
+    intensity: strong
+  - description: "Psychological transformation through adversity"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 8th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the eighth house from the Lagna, the person will face many
+      dangers and will suffer from diseases."
+    confidence: high
+
+notes: >
+  Ashtama Shani is specifically called out in BPHS as a particularly challenging
+  transit. The 8th house governs longevity, obstacles, and hidden matters — Saturn
+  here brings these themes into sharp focus.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h9
+name: "Shani Gochara — 9th House"
+aliases: ["Saturn Transit 9th House", "Shani in 9th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 9th house from the natal Ascendant, the native may
+  experience obstacles in fortune, education, and long-distance travel. Relations
+  with the father or guru may be strained. Spiritual seeking may intensify
+  through hardship. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "9th house from Lagna"
+
+effects:
+  - description: "Obstacles in fortune and luck"
+    intensity: strong
+  - description: "Strained relations with father or teacher"
+    intensity: moderate
+  - description: "Delays or difficulties in long-distance travel"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 9th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the ninth house from the Lagna, the person will face
+      obstacles in fortune and will have problems with father and teachers."
+    confidence: high
+
+notes: "9th house is Dharma Sthana — Saturn here tests faith and philosophical foundations."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h10
+name: "Shani Gochara — 10th House"
+aliases: ["Saturn Transit 10th House", "Shani in 10th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 10th house from the natal Ascendant, the native may
+  face professional changes, career restructuring, or authority-related challenges.
+  Hard work yields recognition, but there may be delays in advancement. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "10th house from Lagna"
+
+effects:
+  - description: "Professional restructuring and career changes"
+    intensity: strong
+  - description: "Recognition through sustained hard work"
+    intensity: moderate
+  - description: "Challenges with authority and superiors"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 10th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani occupies the tenth house from the Lagna, the person will be
+      engaged in many tasks and will face professional challenges."
+    confidence: high
+
+notes: "10th house is Karma Sthana — Saturn here demands diligent work for results."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h11
+name: "Shani Gochara — 11th House"
+aliases: ["Saturn Transit 11th House", "Shani in 11th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 11th house from the natal Ascendant, the native
+  experiences fulfillment of desires, gains from networks, and material benefits.
+  This is considered one of the most favorable transit positions for Saturn.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "11th house from Lagna"
+
+effects:
+  - description: "Fulfillment of long-held desires and ambitions"
+    intensity: strong
+  - description: "Material gains and financial improvement"
+    intensity: strong
+  - description: "Benefits from social networks and associations"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 11th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the eleventh house from the Lagna, the person will enjoy
+      wealth and will fulfill his desires."
+    confidence: high
+
+notes: "11th house is Labha Sthana — Saturn here rewards accumulated effort."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.shani.gochara.h12
+name: "Shani Gochara — 12th House"
+aliases: ["Saturn Transit 12th House", "Shani in 12th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Saturn transits the 12th house from the natal Ascendant, the native
+  experiences expenditure, losses, separation, or foreign connections. There may
+  be hospitalization, spiritual retreat, or isolation. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "12th house from Lagna"
+
+effects:
+  - description: "Financial expenditures and potential losses"
+    intensity: strong
+  - description: "Separation or distance from home and family"
+    intensity: moderate
+  - description: "Spiritual contemplation or isolation"
+    intensity: mild
+
+timing:
+  onset: "When Saturn enters the 12th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the twelfth house from the Lagna, the person will incur
+      heavy expenditure and will face many difficulties."
+    confidence: high
+
+notes: >
+  12th house is Vyaya Sthana — Saturn here triggers themes of expenditure,
+  detachment, and foreign lands. This precedes the challenging Sade Sati onset.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+# ── SADE SATI ────────────────────────────────────────────────────────────────
+
+id: transit.shani.sade-sati
+name: "Sade Sati — Saturn's 7.5-Year Period"
+aliases: ["Sade Sati", "Sade Sati Period", "7.5 Year Saturn Transit"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  Sade Sati is the 7.5-year period during which Saturn transits through the
+  12th, 1st, and 2nd houses from the natal Moon (Chandra). Each rashi transit
+  lasts approximately 2.5 years, totaling 7.5 years. This is one of the most
+  significant transit periods in Vedic astrology and is considered a time of
+  major life transformation and testing. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "12th, 1st, or 2nd house from Chandra (natal Moon)"
+  - entity: entity.chandra
+    role: object
+    position: "natal Moon position"
+
+effects:
+  - description: "Major life transformation and testing period"
+    intensity: strong
+  - description: "Sustained challenges across personal, professional, and emotional domains"
+    intensity: strong
+  - description: "Forced maturity and karmic resolution"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 12th house from natal Moon"
+  duration: "7.5 years (3 rashi transits of ~2.5 years each)"
+
+# ── Sade Sati Phases ─────────────────────────────────────────────────────────
+
+phases:
+  - phase: "First Phase (Rising)"
+    position: "12th house from Moon"
+    duration: "2.5 years"
+    effects:
+      - "Financial expenditures and separations"
+      - "Beginning of transformative pressure"
+      - "Loss of comfort and familiar situations"
+
+  - phase: "Peak Phase (Culminating)"
+    position: "1st house from Moon (over natal Moon)"
+    duration: "2.5 years"
+    effects:
+      - "Direct impact on personal identity and emotional core"
+      - "Maximum intensity of Sade Sati"
+      - "Health, mental peace, and self-image most affected"
+
+  - phase: "Third Phase (Setting)"
+    position: "2nd house from Moon"
+    duration: "2.5 years"
+    effects:
+      - "Financial and family adjustments"
+      - "Gradual resolution of Sade Sati pressures"
+      - "Speech and family dynamics challenged"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani transits through the twelfth, first, and second houses from the
+      Moon, it constitutes the Sade Sati period of seven and a half years. This
+      period brings significant challenges and transformation."
+    confidence: high
+
+notes: >
+  Sade Sati is evaluated from the Moon, not the Lagna. The Moon sign determines
+  the starting point. Sade Sati intensity varies based on Saturn's dignity in
+  the transit sign, Ashtakavarga points, and Dasha running at the time.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+# ── ASHTAMA SHANI ────────────────────────────────────────────────────────────
+
+id: transit.shani.ashtama-shani
+name: "Ashtama Shani — Saturn's 8th House Transit"
+aliases: ["Ashtama Shani", "Saturn in 8th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  Ashtama Shani occurs when Saturn transits the 8th house from the natal
+  Ascendant. This 2.5-year period is considered particularly challenging,
+  bringing sudden events, health concerns, accidents, or transformative
+  experiences. The 8th house governs longevity, obstacles, hidden matters,
+  and transformation. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.shani
+    role: subject
+    position: "8th house from Lagna"
+
+effects:
+  - description: "Sudden unexpected events and accidents"
+    intensity: strong
+  - description: "Health concerns requiring attention"
+    intensity: strong
+  - description: "Hidden obstacles and adversaries"
+    intensity: moderate
+
+timing:
+  onset: "When Saturn enters the 8th house from Lagna"
+  duration: "2.5 years"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Sani is in the eighth house from the Lagna, it is called Ashtama
+      Shani and brings many dangers and difficulties to the native."
+    confidence: high
+
+notes: >
+  Ashtama Shani is distinct from Sade Sati. While Sade Sati is Moon-based,
+  Ashtama Shani is Lagna-based. Both can occur simultaneously if Saturn
+  transits the 8th from Lagna while also being in the 12th/1st/2nd from Moon.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,70 @@
+id: tajika.core.timing
+name: Tajika Timing Principles
+aliases: ["Tajika Timing System", "Tajika Progression", "Istimrari", "Tajika Monthly/Daily Charts"]
+category: tajika
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: tajika
+statement: >
+  Tajika timing uses progressive chart refinement: annual (Varshaphal),
+  monthly (Masaphal), weekly (Saptahaphal), and daily (Dinaphal) charts.
+  The annual chart governs the year; the monthly chart (cast when the Sun
+  enters each sign during the year) refines to monthly themes; the weekly
+  chart (cast on each day the Sun changes sign within the month) refines
+  further; and the daily chart (cast each day at sunrise) provides daily
+  granularity. Istimrari refers to the progression technique where the annual
+  chart is further refined through these sub-periods. Each sub-period chart
+  is cast using the same cusp calculation method as the annual chart.
+
+conditions:
+  - entity: surya.sign-entry
+    role: subject
+    detail: "Monthly chart is cast when the Sun enters each subsequent sign after the solar return"
+
+  - entity: surya.daily
+    role: framework
+    detail: "Daily chart is cast at local sunrise each day using the annual chart as base"
+
+  - entity: istimrari.progression
+    role: framework
+    detail: "Istimrari: progressive refinement from annual to monthly to weekly to daily"
+
+effects:
+  - description: "Annual chart governs the overall year theme and major events"
+    intensity: strong
+  - description: "Monthly chart refines annual predictions to specific monthly periods"
+    intensity: strong
+  - description: "Weekly chart pinpoints events to a seven-day window"
+    intensity: moderate
+  - description: "Daily chart provides day-level timing for specific events"
+    intensity: moderate
+  - description: "Istimrari progression narrows prediction from year to month to week to day"
+    intensity: strong
+
+sources:
+  - ref: source.tajika-nihanti
+    claim: "Tajika timing principles: Monthly, weekly, daily chart analysis. Istimrari (progression)."
+    confidence: high
+
+notes: >
+  Tajika timing hierarchy: (1) Annual chart (Varshaphal) — cast at solar return,
+  governs the year. (2) Monthly chart (Masaphal) — cast when the Sun enters the
+  next sign after the solar return position; the Muntha also advances one sign.
+  (3) Weekly chart (Saptahaphal) — cast when the Sun changes sign within the
+  current month. (4) Daily chart (Dinaphal) — cast at local sunrise each day.
+  (5) Istimrari is the systematic progression: start with the annual chart, then
+  examine the relevant monthly chart, then weekly, then daily — each narrower
+  window confirms or refines the broader prediction. (6) The monthly chart uses
+  the same house system and aspect rules as the annual chart. (7) When multiple
+  sub-period charts agree on a prediction, confidence increases. (8) When they
+  conflict, the most specific chart (daily) takes precedence for timing, while
+  the broader chart (annual) governs the overall theme.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

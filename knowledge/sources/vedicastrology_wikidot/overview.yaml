@@ -1,0 +1,68 @@
+# knowledge/sources/vedicastrology_wikidot/overview.yaml
+#
+# Extracted knowledge items from http://vedicastrology.wikidot.com/overview
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+
+page_title: "Overview"
+page_url: "http://vedicastrology.wikidot.com/overview"
+technique_mapping:
+  best_fit_technique_key: null
+  note: >
+    General historical/definitional essay on Jyotisha as a discipline; does not map to
+    a specific existing TechniqueModel.technique_key. No existing technique record grep
+    match found for a general "overview/history" technique in apps/api/models/technique.py
+    usage, and none is proposed — this page is background/definitional context only,
+    not a technique.
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/overview"
+    page_title: "Overview"
+    section: "ज्योतिष की परिभाषा (Definition of Jyotisha)"
+    title: "Jyotisha defined as the science of karma-fruition timing"
+    claim: >
+      The page defines Jyotisha with the phrase "karma-phala-vipaka-kala-vidhanam"
+      (the rule governing the timing of ripening of karmic fruits), framing astrology
+      as the study of when karmic results (drishta and adrishta phala) manifest,
+      with Prarabdha as the currently-active portion of accumulated karma.
+    item_type: FACT_DEFINITION
+    referenced_classical_source: null
+    related_concepts: ["karma", "prarabdha", "phalit-jyotisha"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/overview"
+    page_title: "Overview"
+    section: "उत्पत्ति (Origins)"
+    title: "Jyotisha as a Vedanga with attested Vedic-era origins"
+    claim: >
+      The page asserts Jyotisha is one of the six Vedangas, with earliest references
+      in the Mundaka and Chandogya Upanishads, and cites Rigveda 1.164 as describing
+      division of the solar year into 12 parts, and the Yajurveda's Darsha-Paurnamasa
+      yajna as implying a 30-tithi month convention was already in use in the Vedic period.
+    item_type: FACT_DEFINITION
+    referenced_classical_source: "Mundaka Upanishad; Chandogya Upanishad; Rigveda 1.164; Yajurveda (Darsha-Paurnamasa)"
+    related_concepts: ["vedanga-jyotisha", "tithi", "panchanga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/overview"
+    page_title: "Overview"
+    section: "Table of Contents / Site Structure"
+    title: "Site covers Siddhanta, Samhita, and Hora branches of Jyotisha"
+    claim: >
+      The overview's table of contents documents the traditional three-fold division
+      of Jyotisha into Siddhanta (mathematical astronomy), Samhita (mundane/Medini
+      astrology, Muhurta, Vastu), and Hora (natal/predictive astrology, Prashna,
+      palmistry, etc.), and lists numerous sub-topics and modern controversies
+      (e.g. two definitions of Ayanamsha, Surya-siddhanta vs Drik-siddhanta debate).
+    item_type: FACT_DEFINITION
+    referenced_classical_source: null
+    related_concepts: ["siddhanta", "samhita", "hora", "ayanamsha"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

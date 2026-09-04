@@ -1,0 +1,259 @@
+# Karakatva Catalogue Index
+# Cross-reference index for all karakatva catalogue records
+# Source: BPHS Chapter 33 (Karaka Graha Phala Adhyaya)
+
+id: karaka.index
+name: Karakatva Pustaka Suchi
+aliases: [Karakatva Catalogue Index, Significator Master Index]
+category: karaka
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+source_primary: source.BPHS
+
+records:
+  - file: graha-karakatvas.yaml
+    id: karaka.graha.karakatvas
+    name: Graha Karakatva Samuha
+    description: "Centralized karakatva table for all 9 grahas"
+    karaka_type: graha
+    scope: 9 grahas
+    coverage: 9/9 grahas
+    grahas_covered:
+      - graha.surya
+      - graha.chandra
+      - graha.mangala
+      - graha.budha
+      - graha.guru
+      - graha.shukra
+      - graha.shani
+      - graha.rahu
+      - graha.ketu
+
+  - file: bhava-karakatvas.yaml
+    id: karaka.bhava.karakatvas
+    name: Bhava Karakatva Samuha
+    description: "Centralized karakatva table for all 12 bhavas"
+    karaka_type: bhava
+    scope: 12 bhavas
+    coverage: 12/12 bhavas
+    bhavas_covered:
+      - bhava.1
+      - bhava.2
+      - bhava.3
+      - bhava.4
+      - bhava.5
+      - bhava.6
+      - bhava.7
+      - bhava.8
+      - bhava.9
+      - bhava.10
+      - bhava.11
+      - bhava.12
+
+  - file: nakshatra-karakatvas.yaml
+    id: karaka.nakshatra.karakatvas
+    name: Nakshatra Karakatva Samuha
+    description: "Centralized karakatva table for all 27 nakshatras"
+    karaka_type: nakshatra
+    scope: 27 nakshatras
+    coverage: 27/27 nakshatras
+    nakshatras_covered:
+      - nakshatra.ashvini
+      - nakshatra.bharani
+      - nakshatra.krittika
+      - nakshatra.rohini
+      - nakshatra.mrigashira
+      - nakshatra.ardra
+      - nakshatra.punarvasu
+      - nakshatra.pushya
+      - nakshatra.ashlesha
+      - nakshatra.magha
+      - nakshatra.purvaphalguni
+      - nakshatra.uttaraphalguni
+      - nakshatra.hasta
+      - nakshatra.chitra
+      - nakshatra.swati
+      - nakshatra.vishakha
+      - nakshatra.anuradha
+      - nakshatra.jyeshtha
+      - nakshatra.moola
+      - nakshatra.purvashadha
+      - nakshatra.uttarashadha
+      - nakshatra.shravana
+      - nakshatra.dhanishta
+      - nakshatra.shatabhisha
+      - nakshatra.purvabhadrapada
+      - nakshatra.uttarabhadrapada
+      - nakshatra.revati
+
+  - file: house-significations.yaml
+    id: karaka.house-significations
+    name: Bhava-Jeevana-Ghatana Samuha
+    description: "Comprehensive house-to-life-event signification map"
+    karaka_type: bhava
+    scope: Life events mapped to houses
+    coverage: 37 life events across 12 bhavas
+    life_events_covered:
+      - self-identity
+      - family-of-origin
+      - siblings
+      - mother-and-home
+      - children
+      - education
+      - health-and-disease
+      - marriage
+      - partnership
+      - sex-and-intimacy
+      - career
+      - income-and-gains
+      - wealth-accumulation
+      - property-and-vehicles
+      - travel
+      - foreign-settlement
+      - father-and-fortune
+      - obstacles-and-litigation
+      - longevity
+      - death-and-transformation
+      - liberation
+      - spirituality
+      - occult-and-mysticism
+      - art-and-creativity
+      - social-status
+      - gambling-and-speculation
+      - pets-and-animals
+      - enemies-and-competition
+      - litigation-and-legal-matters
+      - debt-and-financial-obligations
+      - losses-and-expenditure
+      - hospitalization
+      - imprisonment
+      - research-and-investigation
+      - religious-rituals
+      - inheritance
+      - insurance
+
+cross_reference_matrix:
+  graha_to_bhava_karakatvas:
+    - graha: graha.surya
+      primary_bhayas: [bhava.1, bhava.9, bhava.10]
+      secondary_bhayas: [bhava.5]
+    - graha: graha.chandra
+      primary_bhayas: [bhava.4, bhava.7]
+      secondary_bhayas: [bhava.1]
+    - graha: graha.mangala
+      primary_bhayas: [bhava.3, bhava.4]
+      secondary_bhayas: [bhava.7, bhava.1]
+    - graha: graha.budha
+      primary_bhayas: [bhava.2, bhava.4, bhava.5]
+      secondary_bhayas: [bhava.10]
+    - graha: graha.guru
+      primary_bhayas: [bhava.2, bhava.5, bhava.9]
+      secondary_bhayas: [bhava.11]
+    - graha: graha.shukra
+      primary_bhayas: [bhava.4, bhava.5, bhava.7]
+      secondary_bhayas: [bhava.1]
+    - graha: graha.shani
+      primary_bhayas: [bhava.6, bhava.8, bhava.10, bhava.11, bhava.12]
+      secondary_bhayas: []
+    - graha: graha.rahu
+      primary_bhayas: [bhava.7, bhava.8, bhava.9, bhava.11, bhava.12]
+      secondary_bhayas: []
+    - graha: graha.ketu
+      primary_bhayas: [bhava.6, bhava.8, bhava.12]
+      secondary_bhayas: []
+
+  bhava_to_graha_karakas:
+    - bhava: bhava.1
+      karaka: graha.surya
+    - bhava: bhava.2
+      karaka: graha.guru
+    - bhava: bhava.3
+      karaka: graha.mangala
+    - bhava: bhava.4
+      karaka: graha.chandra
+    - bhava: bhava.5
+      karaka: graha.guru
+    - bhava: bhava.6
+      karaka: graha.shani
+    - bhava: bhava.7
+      karaka: graha.shukra
+    - bhava: bhava.8
+      karaka: graha.shani
+    - bhava: bhava.9
+      karaka: graha.guru
+    - bhava: bhava.10
+      karaka: graha.surya
+    - bhava: bhava.11
+      karaka: graha.guru
+    - bhava: bhava.12
+      karaka: graha.ketu
+
+  graha_to_nakshatra_rulers:
+    - graha: graha.surya
+      nakshatras: [nakshatra.krittika, nakshatra.uttaraphalguni, nakshatra.uttarashadha]
+    - graha: graha.chandra
+      nakshatras: [nakshatra.rohini, nakshatra.hasta, nakshatra.shravana]
+    - graha: graha.mangala
+      nakshatras: [nakshatra.mrigashira, nakshatra.chitra, nakshatra.dhanishta]
+    - graha: graha.budha
+      nakshatras: [nakshatra.ashlesha, nakshatra.jyeshtha, nakshatra.revati]
+    - graha: graha.guru
+      nakshatras: [nakshatra.punarvasu, nakshatra.vishakha, nakshatra.purvabhadrapada]
+    - graha: graha.shukra
+      nakshatras: [nakshatra.bharani, nakshatra.purvaphalguni, nakshatra.purvashadha]
+    - graha: graha.shani
+      nakshatras: [nakshatra.pushya, nakshatra.anuradha, nakshatra.uttarabhadrapada]
+    - graha: graha.rahu
+      nakshatras: [nakshatra.ardra, nakshatra.swati, nakshatra.shatabhisha]
+    - graha: graha.ketu
+      nakshatras: [nakshatra.ashvini, nakshatra.magha, nakshatra.moola]
+
+summary:
+  total_files: 4
+  total_records: 85
+  graha_karakatvas: 9
+  bhava_karakatvas: 12
+  nakshatra_karakatvas: 27
+  life_events_mapped: 37
+  coverage: "Complete coverage of all 9 grahas, 12 bhavas, and 27 nakshatras"
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 33 - primary source for all karakatva assignments"
+    confidence: high
+  - ref: source.phaladeepika
+    claim: "Phaladeepika Chapter 13 - supplementary nakshatra significations"
+    confidence: high
+
+notes: |
+  This index provides a master cross-reference for all karakatva catalogue records.
+  It enables:
+  1. Quick lookup of graha-bhava-karakatva relationships
+  2. Reverse lookups: given a life event, find governing houses and karakas
+  3. Nakshatra-graha ruler mappings for transit and dasha analysis
+  4. Coverage verification of all classical elements
+
+  Usage workflow:
+  1. Consult graha-karakatvas.yaml for natural graha significations
+  2. Consult bhava-karakatvas.yaml for natural bhava significations
+  3. Consult nakshatra-karakatvas.yaml for nakshatra-specific themes
+  4. Consult house-significations.yaml for life event mapping
+  5. Use cross_reference_matrix for quick entity-to-entity lookups
+
+  Dependencies:
+  - Graha catalogue (graha/) for entity definitions
+  - Bhava catalogue (bhava/) for house definitions
+  - Nakshatra catalogue (nakshatra/) for star definitions
+  - Source catalogue for citation references
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Corrected graha_to_nakshatra_rulers cross-reference matrix: Chandra was listed with Pushya (Shani's nakshatra) instead of Hasta; Guru was listed with Moola (Ketu's) instead of Purva Bhadrapada; Rahu erroneously had a fourth nakshatra (Purva Bhadrapada, which belongs to Guru). Also corrected total_records (53 -> 85) and life_events_mapped (35 -> 37) to match the actual sub-counts, and standardized nakshatra ID spelling/format to match catalogues/nakshatras/_index.yaml."
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue index with cross-reference matrix"
+    author: "Chief Jyotish Knowledge Architect"

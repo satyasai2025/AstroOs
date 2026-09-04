@@ -1,0 +1,683 @@
+# ============================================================================
+# ASTRO OS — Mangala (Mars) Gochara — Foundational Catalogue
+# ============================================================================
+# Source: BPHS Chapter 42 — Gochara Phaladhyaya
+# Scope: Mars transit effects through 12 houses from natal Lagna,
+#         including Mangalik transit, energy, conflict, and property themes.
+# Orbital period: ~45 days per rashi
+# Note:  Foundational rules only. No predictive interpretations beyond BPHS.
+# ============================================================================
+
+# ── Mangala Transit from Lagna (each house) ────────────────────────────────
+
+id: transit.mangala.gochara.h1
+name: "Mangala Gochara — 1st House (Mangalik Transit)"
+aliases: ["Mars Transit 1st House", "Mangala in 1st from Lagna", "Mangalik Transit"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 1st house (Lagna) from the natal Ascendant, the native
+  experiences heightened energy, aggression, and physical vitality. This is a
+  Mangalik transit position — the native may face conflicts, accidents, or
+  heated arguments. Mars in the 1st intensifies self-expression and assertiveness.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "1st house from Lagna"
+
+effects:
+  - description: "Heightened energy, aggression, and physical vitality"
+    intensity: strong
+  - description: "Increased likelihood of conflicts, arguments, or accidents"
+    intensity: strong
+  - description: "Strong assertiveness and self-assertion"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 1st house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala occupies the first house from the Lagna, the person will be
+      energetic and courageous but may face conflicts and accidents."
+    confidence: high
+
+notes: >
+  Mars through the 1st is a Mangalik transit position. While the natal
+  Mangalik Dosha is permanent, the transit Mangalik effect is temporary
+  (45 days) and amplifies aggressive tendencies.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h2
+name: "Mangala Gochara — 2nd House"
+aliases: ["Mars Transit 2nd House", "Mangala in 2nd from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 2nd house from the natal Ascendant, the native may
+  face harsh speech, financial disputes, or family conflicts. There is potential
+  for heated arguments and expenditure on food or medical matters. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "2nd house from Lagna"
+
+effects:
+  - description: "Harsh speech and verbal conflicts"
+    intensity: moderate
+  - description: "Financial disputes or sudden expenditures"
+    intensity: moderate
+  - description: "Family discord or disputes"
+    intensity: mild
+
+timing:
+  onset: "When Mars enters the 2nd house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala is in the second house from the Lagna, the person will be
+      of harsh speech and may face financial and family disputes."
+    confidence: high
+
+notes: "Mars in the 2nd can trigger verbal aggression — mindful speech is advised during this transit."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h3
+name: "Mangala Gochara — 3rd House"
+aliases: ["Mars Transit 3rd House", "Mangala in 3rd from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 3rd house from the natal Ascendant, the native gains
+  courage, determination, and success in short journeys. This is one of Mars's
+  most favorable transit positions. Siblings may be affected, and communication
+  becomes bold and assertive. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "3rd house from Lagna"
+
+effects:
+  - description: "Increased courage, determination, and boldness"
+    intensity: strong
+  - description: "Success in short journeys and communication"
+    intensity: moderate
+  - description: "Matters related to siblings arise"
+    intensity: mild
+
+timing:
+  onset: "When Mars enters the 3rd house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala occupies the third house from the Lagna, the person will be
+      courageous and will achieve success in endeavors."
+    confidence: high
+
+notes: "3rd house transit of Mars is considered highly favorable — Mars's natural energy finds constructive expression."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h4
+name: "Mangala Gochara — 4th House (Mangalik Transit)"
+aliases: ["Mars Transit 4th House", "Mangala in 4th from Lagna", "Mangalik Transit"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 4th house from the natal Ascendant, the native
+  experiences domestic unrest, property disputes, and mental agitation. This is
+  a Mangalik transit position. There may be vehicle-related issues or conflicts
+  with mother. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "4th house from Lagna"
+
+effects:
+  - description: "Domestic unrest and property disputes"
+    intensity: strong
+  - description: "Mental agitation and restlessness"
+    intensity: strong
+  - description: "Vehicle-related issues or mother-related concerns"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 4th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala is in the fourth house from the Lagna, the person will face
+      domestic disturbances and property-related conflicts."
+    confidence: high
+
+notes: >
+  Mars through the 4th is a Mangalik transit position. The native should
+  exercise caution regarding property dealings and domestic harmony during
+  this 45-day period.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h5
+name: "Mangala Gochara — 5th House"
+aliases: ["Mars Transit 5th House", "Mangala in 5th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 5th house from the natal Ascendant, the native may
+  experience obstacles in progeny, conflicts in education, or challenges in
+  creative pursuits. There may be speculative losses or heated debates.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "5th house from Lagna"
+
+effects:
+  - description: "Obstacles or disputes related to children and education"
+    intensity: moderate
+  - description: "Speculative losses or risky ventures"
+    intensity: moderate
+  - description: "Challenges in creative and romantic pursuits"
+    intensity: mild
+
+timing:
+  onset: "When Mars enters the 5th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala occupies the fifth house from the Lagna, the person may face
+      difficulties with children and speculative matters."
+    confidence: high
+
+notes: "Mars in the 5th can inflame speculative tendencies — caution advised in gambling or high-risk investments."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h6
+name: "Mangala Gochara — 6th House"
+aliases: ["Mars Transit 6th House", "Mangala in 6th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 6th house from the natal Ascendant, the native gains
+  victory over enemies, competitors, and legal adversaries. Health may require
+  attention, but Mars in the 6th is generally favorable for overcoming obstacles
+  and completing tasks. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "6th house from Lagna"
+
+effects:
+  - description: "Victory over enemies and competitors"
+    intensity: strong
+  - description: "Success in legal disputes and competitive matters"
+    intensity: strong
+  - description: "Health awareness and bodily maintenance"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 6th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala is in the sixth house from the Lagna, the person will overcome
+      enemies and will be victorious in disputes."
+    confidence: high
+
+notes: >
+  The 6th house is an Upachaya house — malefic planets like Mars do well here.
+  Mars transit through the 6th is one of its most favorable positions.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h7
+name: "Mangala Gochara — 7th House (Mangalik Transit)"
+aliases: ["Mars Transit 7th House", "Mangala in 7th from Lagna", "Mangalik Transit"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 7th house from the natal Ascendant, the native may
+  experience conflicts in marriage, partnerships, and public life. This is a
+  Mangalik transit position. There is heightened aggression in relationships
+  and potential for heated disputes. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "7th house from Lagna"
+
+effects:
+  - description: "Conflicts and heated disputes in marriage or partnerships"
+    intensity: strong
+  - description: "Increased aggression in relationships"
+    intensity: strong
+  - description: "Challenges in business partnerships"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 7th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala occupies the seventh house from the Lagna, the person will
+      face conflicts in married life and partnerships."
+    confidence: high
+
+notes: >
+  Mars through the 7th is a Mangalik transit position. Married couples should
+  exercise extra patience and understanding during this period. Avoid starting
+  new partnerships.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h8
+name: "Mangala Gochara — 8th House (Mangalik Transit)"
+aliases: ["Mars Transit 8th House", "Mangala in 8th from Lagna", "Mangalik Transit"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 8th house from the natal Ascendant, the native faces
+  significant challenges including accidents, surgery, sudden health events,
+  hidden dangers, and transformative upheaval. This is a Mangalik transit
+  position and one of the most dangerous Mars transit placements. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "8th house from Lagna"
+
+effects:
+  - description: "Accidents, injuries, or surgical procedures"
+    intensity: strong
+  - description: "Sudden health crises or hidden dangers"
+    intensity: strong
+  - description: "Transformative upheaval and psychological intensity"
+    intensity: strong
+
+timing:
+  onset: "When Mars enters the 8th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala is in the eighth house from the Lagna, the person will face
+      dangers, accidents, and may require surgery."
+    confidence: high
+
+notes: >
+  Mars through the 8th is a Mangalik transit position and considered the most
+  dangerous Mars transit. The native should take extra precautions regarding
+  health, driving, and physical safety during this period.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h9
+name: "Mangala Gochara — 9th House"
+aliases: ["Mars Transit 9th House", "Mangala in 9th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 9th house from the natal Ascendant, the native may
+  face conflicts with father or teachers, obstacles in fortune, or disputes
+  related to philosophy and religion. Short pilgrimages may occur. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "9th house from Lagna"
+
+effects:
+  - description: "Conflicts with father, teachers, or mentors"
+    intensity: moderate
+  - description: "Obstacles in fortune and philosophical pursuits"
+    intensity: moderate
+  - description: "Short pilgrimages or journeys"
+    intensity: mild
+
+timing:
+  onset: "When Mars enters the 9th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala occupies the ninth house from the Lagna, the person may face
+      conflicts with father and teachers and obstacles in fortune."
+    confidence: high
+
+notes: "Mars in the 9th can inflame ideological disputes — patience with differing viewpoints is advised."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h10
+name: "Mangala Gochara — 10th House"
+aliases: ["Mars Transit 10th House", "Mangala in 10th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 10th house from the natal Ascendant, the native
+  experiences energetic professional activity, career changes, and conflicts
+  with authority. There is drive and ambition, but also risk of heated
+  professional disputes. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "10th house from Lagna"
+
+effects:
+  - description: "Energetic professional activity and career drive"
+    intensity: strong
+  - description: "Conflicts with authority or superiors"
+    intensity: moderate
+  - description: "Sudden career changes or new projects"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 10th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala is in the tenth house from the Lagna, the person will be
+      active in profession but may face conflicts with authority."
+    confidence: high
+
+notes: "Mars in the 10th drives ambition and action — channel the energy into constructive professional work."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h11
+name: "Mangala Gochara — 11th House"
+aliases: ["Mars Transit 11th House", "Mangala in 11th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 11th house from the natal Ascendant, the native
+  experiences financial gains, fulfillment of desires, and benefits from
+  social networks. This is one of Mars's most favorable transit positions
+  for material success. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "11th house from Lagna"
+
+effects:
+  - description: "Financial gains and income increase"
+    intensity: strong
+  - description: "Fulfillment of desires and ambitions"
+    intensity: strong
+  - description: "Benefits from social networks and associations"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 11th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala occupies the eleventh house from the Lagna, the person will
+      gain wealth and fulfill his desires."
+    confidence: high
+
+notes: >
+  The 11th house is an Upachaya house — malefic Mars does well here, delivering
+  material gains and ambition fulfillment.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.mangala.gochara.h12
+name: "Mangala Gochara — 12th House (Mangalik Transit)"
+aliases: ["Mars Transit 12th House", "Mangala in 12th from Lagna", "Mangalik Transit"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Mars transits the 12th house from the natal Ascendant, the native faces
+  expenditure, losses, separation, and potential health issues. This is a
+  Mangalik transit position. There may be hospitalization, foreign travel, or
+  isolation. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "12th house from Lagna"
+
+effects:
+  - description: "Financial expenditure and potential losses"
+    intensity: strong
+  - description: "Separation, isolation, or foreign connections"
+    intensity: moderate
+  - description: "Health concerns or hospitalization"
+    intensity: moderate
+
+timing:
+  onset: "When Mars enters the 12th house from Lagna"
+  duration: "45 days (approximately)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Mangala is in the twelfth house from the Lagna, the person will incur
+      expenditure and may face separation or hospitalization."
+    confidence: high
+
+notes: >
+  Mars through the 12th is a Mangalik transit position. Expenses and health
+  matters may require attention. The native should avoid impulsive spending
+  and exercise caution regarding physical safety.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+# ── MANGALIK TRANSIT SUMMARY ───────────────────────────────────────────────
+
+id: transit.mangalik.positions
+name: "Mangalik Transit Positions Summary"
+aliases: ["Mangalik Transit Positions", "Mars Mangalik Houses"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  The Mangalik transit positions are the 1st, 4th, 7th, 8th, and 12th houses
+  from the Lagna. When Mars transits these houses, its malefic energy is
+  amplified, causing conflicts, accidents, health issues, and domestic
+  disturbances. These positions are considered challenging and require caution
+  and remedial measures. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.mangala
+    role: subject
+    position: "1st, 4th, 7th, 8th, or 12th house from Lagna"
+
+effects:
+  - description: "Amplified malefic effects across personal, domestic, and partnership domains"
+    intensity: strong
+  - description: "Conflicts, accidents, health issues, and domestic disturbances"
+    intensity: strong
+
+timing:
+  onset: "When Mars enters any of the 5 Mangalik houses from Lagna"
+  duration: "45 days per house (total ~225 days across all 5 positions)"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "The Mangalik positions for transit are the first, fourth, seventh, eighth,
+      and twelfth houses from the Ascendant. Mars in these houses produces
+      challenging effects."
+    confidence: high
+
+notes: >
+  The 5 Mangalik transit positions mirror the natal Mangalik Dosha positions.
+  While natal Mangalik is permanent, transit Mangalik is temporary (45 days each).
+  The effects are most severe when Mars is in its own sign or exaltation during
+  these transits.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

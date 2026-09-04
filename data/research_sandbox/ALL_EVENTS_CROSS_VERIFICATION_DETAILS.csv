@@ -1,0 +1,586 @@
+case_id,name,event_date,event_type,domain,event_desc,age,dasha_chain,dasha_match,varga_match,transit_match,concordance_score,diagnostics
+RSALL_000001,Triplets 1937/7/01  No.1,1983-01-20,Family,FAMILY_PROGENY,Had twins,45.6,Venus-Saturn-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_000003,Triplets 1937/7/01 No.2,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,45.6,Venus-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_000010,Twins 1960/8/07  No.1 13564,1961-01-24,Other,HEALTH_CRISIS,Sibling died of SIDS,0.5,Mars-Jupiter-Venus,True,True,True,100.0,Dasha: mars-jupiter-venus connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability)
+RSALL_000011,Twins 1960/10/07 No.1 20447,1961-02-24,Other,HEALTH_CRISIS,Sibling twin died SIDS,0.4,Venus-Saturn-Saturn,True,False,True,70.0,Dasha: venus-saturn-saturn connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa
+RSALL_000012,Twins 1834/2/07  No.1 2213,1834-05-10,Other,GENERAL_LIFE,Age three months; three days,0.2,Moon-Jupiter-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000013,Twins 1960/8/07 No.2 13565,1961-01-24,Other,HEALTH_CRISIS,Crib death at five months,0.5,Mars-Jupiter-Venus,True,True,True,100.0,Dasha: mars-jupiter-venus connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability)
+RSALL_000014,Twins 1834/2/07  No.2 2214,1834-05-24,Other,GENERAL_LIFE,Age three months; 17 days,0.3,Moon-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000015,Twins 1980/6/08  No.1 14790,1982-05-01,Other,FAMILY_PROGENY,Twin sister drowned as a toddler,1.9,Ketu-Moon-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_000017,Twins 1954/3/09 No.1 20452,1978-10-24,Other,HEALTH_CRISIS,Twin died after drowning; age 24,24.6,Mars-Jupiter-Mercury,True,True,True,100.0,Dasha: mars-jupiter-mercury connects with Dusthana/Maraka lords; D30: Jupiter occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000018,Twins 1954/3/09 No.2 20453,1978-10-24,Other,HEALTH_CRISIS,Five day coma after drowning; age 24,24.6,Mars-Jupiter-Moon,True,True,True,100.0,Dasha: mars-jupiter-moon connects with Dusthana/Maraka lords; D30: Jupiter occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000020,Twins 1946/7/10  No.2 10257,1976-02-13,Other,HEALTH_CRISIS,Dad died in an accident,29.6,Ketu-Jupiter-Rahu,True,True,True,100.0,Dasha: ketu-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability)
+RSALL_000027,Triplets 1946/7/16  No.1,1983-01-20,Family,FAMILY_PROGENY,Had twins,36.5,Jupiter-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_000035,Triplets 1944/6/18  No.1,1983-01-20,Family,FAMILY_PROGENY,Had twins,38.6,Jupiter-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000036,Triplets 1944/6/18  No.2,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,38.6,Jupiter-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000051,Twins 1954/9/27  No.2 12721,1971-05-16,Health,HEALTH_CRISIS,Motorcycle accident; knee injured,16.6,Rahu-Rahu-Sun,True,False,False,40.0,Dasha: rahu-rahu-sun connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa
+RSALL_000063,Accident Andrew,1996-07-27,Health,HEALTH_CRISIS,Severely burned in house fire; age 16,15.9,Moon-Sun-Saturn,True,True,True,100.0,Dasha: moon-sun-saturn connects with Dusthana/Maraka lords; D30: Sun occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Naidhana Tara
+RSALL_000066,Accident,1984-08-27,Health,HEALTH_CRISIS,Car hit by train; totalled; concussion.,34.8,Saturn-Venus-Mars,True,True,True,100.0,Dasha: saturn-venus-mars connects with Dusthana/Maraka lords; D30: Venus occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Naidhana Tara
+RSALL_000067,Accident,1983-03-16,Health,HEALTH_CRISIS,Auto accident; friend killed.  In coma three weeks; brain concussion; crippled i,18.6,Mercury-Rahu-Ketu,True,True,True,100.0,Dasha: mercury-rahu-ketu connects with Dusthana/Maraka lords; D30: Rahu occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Vadha Tara
+RSALL_000068,Accident,1983-08-15,Health,HEALTH_CRISIS,Appendectomy,13.3,Venus-Rahu-Rahu,True,False,True,70.0,Dasha: venus-rahu-rahu connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa
+RSALL_000068,Accident,1986-08-01,Health,HEALTH_CRISIS,Broke his nose while playing ball,16.3,Venus-Jupiter-Jupiter,True,True,False,70.0,Dasha: venus-jupiter-jupiter connects with Dusthana/Maraka lords; D30: Jupiter occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000068,Accident,1988-04-02,Health,HEALTH_CRISIS,Auto accident; head injury,17.9,Venus-Jupiter-Sun,True,True,True,100.0,Dasha: venus-jupiter-sun connects with Dusthana/Maraka lords; D30: Jupiter occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Janma Tara; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_000069,Accident,1944-10-31,Relationship,RELATIONSHIP,Second marriage; 23 years,31.3,Saturn-Venus-Ketu,True,False,False,40.0,Dasha: saturn-venus connects with 7th/2nd/DK (Venus)
+RSALL_000069,Accident,1968-03-25,Other,HEALTH_CRISIS,Second husband died after 23 years marriage.,54.7,Mercury-Saturn-Saturn,True,True,False,70.0,Dasha: mercury-saturn-saturn connects with Dusthana/Maraka lords; D30: Saturn occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000069,Accident,1971-05-14,Health,HEALTH_CRISIS,Car accident; seriously injured; crippled.,57.8,Ketu-Venus-Venus,True,False,True,70.0,Dasha: ketu-venus-venus connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa; SBC: Transiting Ketu hits Vainashika Tara
+RSALL_000070,Accident,1949-04-12,Health,HEALTH_CRISIS,Snowy morning; car hit by train,24.8,Mars-Ketu-Rahu,True,True,True,100.0,Dasha: mars-ketu-rahu connects with Dusthana/Maraka lords; D30: Ketu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_000070,Accident,1949-04-12,Health,HEALTH_CRISIS,Hit by train; both kids killed,24.8,Mars-Ketu-Rahu,True,True,True,100.0,Dasha: mars-ketu-rahu connects with Dusthana/Maraka lords; D30: Ketu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_000071,Accident,1974-03-13,Health,HEALTH_CRISIS,Auto accident; car totalled; injured,32.9,Venus-Venus-Saturn,True,True,True,100.0,Dasha: venus-venus-saturn connects with Dusthana/Maraka lords; D30: Venus occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara; SBC: Transiting Ketu hits Vadha Tara
+RSALL_000074,Accident,1966-02-19,Other,GENERAL_LIFE,Auto; drowned; age 17,17.3,Mars-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_000075,Accident,1972-03-19,Other,FAMILY_PROGENY,Drowned along with his brother; Lake Piru; CA; age 20.,20.5,Mars-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_000078,Accident,1969-07-26,Health,HEALTH_CRISIS,Valve shunt heart operation,7.9,Jupiter-Saturn-Venus,True,False,True,70.0,Dasha: jupiter-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Venus Trimsamsa
+RSALL_000078,Accident,1971-01-04,Other,GENERAL_LIFE,Run over by a school bus; age nine; fatal,9.4,Jupiter-Saturn-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000079,Accident,1983-09-12,Health,HEALTH_CRISIS,Freak football accident; paralyzed from neck down,17.3,Venus-Jupiter-Venus,True,True,True,100.0,Dasha: venus-jupiter-venus connects with Dusthana/Maraka lords; D30: Jupiter occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000079,Accident,1986-03-18,Other,GENERAL_LIFE,Age 20,19.8,Venus-Saturn-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000083,Accident,1883-12-31,Health,HEALTH_CRISIS,Terribly burned,4.4,Saturn-Rahu-Saturn,True,False,True,70.0,Dasha: saturn-rahu-saturn connects with Dusthana/Maraka lords; D30: Rahu in Venus Trimsamsa; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_000083,Accident,1884-01-02,Other,GENERAL_LIFE,Burned; age three,4.4,Saturn-Rahu-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_000084,Accident,1968-06-15,Other,GENERAL_LIFE,Electrocuted; age 41,40.5,Venus-Sun-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000085,Accident,1972-03-19,Other,GENERAL_LIFE,Drowned; age 16,16.4,Venus-Mars-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000086,Accident,1880-03-02,Other,GENERAL_LIFE,Drowned; age 31,31.2,Jupiter-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000087,Accident,1866-10-12,Other,GENERAL_LIFE,Run over by a cart; age 17; fatal,17.6,Mercury-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000094,Accident,1946-04-02,Other,GENERAL_LIFE,Auto collided with truck; fatal injuries,33.0,Rahu-Moon-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000095,Accident,1986-11-27,Other,GENERAL_LIFE,in fire of the house he lived in,9.9,Moon-Ketu-Ketu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000096,Accident,1927-09-03,Other,GENERAL_LIFE,Drowned when almost 11 months old,0.9,Saturn-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000098,Accident,1972-02-13,Other,GENERAL_LIFE,Fatal plane crash; age 35,35.2,Mercury-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000100,Accident Josh's father,1990-10-18,Family,FAMILY_PROGENY,Twins born,42.0,Moon-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_000102,Accident Josh's mother,1990-10-18,Family,FAMILY_PROGENY,Twins born,30.2,Mercury-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_000104,Accident,1980-09-26,Health,HEALTH_CRISIS,Bike riding; hit and dragged by Police car; fractures & injuries.,16.6,Sun-Saturn-Mercury,True,True,True,100.0,Dasha: sun-saturn-mercury connects with Dusthana/Maraka lords; D30: Saturn occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Ketu hits Vainashika Tara
+RSALL_000105,Accident,1973-03-30,Health,HEALTH_CRISIS,Little finger; accident,1.7,Mars-Jupiter-Sun,True,False,True,70.0,Dasha: mars-jupiter-sun connects with Dusthana/Maraka lords; D30: Jupiter in Venus Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_000107,Accident,1986-09-28,Health,HEALTH_CRISIS,Head accident; carelessness,3.4,Sun-Mercury-Mercury,True,False,False,40.0,Dasha: sun-mercury-mercury connects with Dusthana/Maraka lords; D30: Mercury in Mercury Trimsamsa
+RSALL_000110,Accident,1974-03-26,Health,HEALTH_CRISIS,Knee surgery,50.4,Saturn-Rahu-Saturn,True,False,False,40.0,Dasha: saturn-rahu-saturn connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa
+RSALL_000115,Accident,1985-06-25,Other,GENERAL_LIFE,Widowed,59.6,Saturn-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_000115,Accident,1988-05-10,Health,HEALTH_CRISIS,Run over by a car,62.5,Saturn-Ketu-Ketu,True,False,False,40.0,Dasha: saturn-ketu-ketu connects with Dusthana/Maraka lords; D30: Ketu in Mercury Trimsamsa
+RSALL_000115,Accident,1988-07-11,Health,HEALTH_CRISIS,Rehab; first steps in a walker,62.7,Saturn-Ketu-Venus,True,False,False,40.0,Dasha: saturn-ketu-venus connects with Dusthana/Maraka lords; D30: Ketu in Mercury Trimsamsa
+RSALL_000119,Accountant 7557,1971-12-15,Mental Health,HEALTH_CRISIS,Nervous breakdown,36.9,Saturn-Mercury-Saturn,True,True,True,100.0,Dasha: saturn-mercury-saturn connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Naidhana Tara
+RSALL_000119,Accountant 7557,1981-08-15,Work,CAREER_STATUS,Bought business,46.5,Saturn-Rahu-Mercury,False,False,True,30.0,Transit: Sun activating 10th house
+RSALL_000147,Actor 9450,1965-07-15,Crime,LITIGATION_CRIME,Beaten by three thugs,22.0,Saturn-Jupiter-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000214,Adopted 35974,1999-06-03,Misc.,FAMILY_PROGENY,Found and spoke to brother,53.4,Mars-Ketu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_000218,Adopted 39247,1992-06-17,Relationship,RELATIONSHIP,Met his birth mother; rejected,30.8,Venus-Ketu-Mercury,True,True,False,70.0,Dasha: venus-ketu connects with 7th/2nd/DK (Saturn); D9: Ketu in supportive Navamsha (Scorpio)
+RSALL_000222,Adopted 44305 Neil,1999-07-21,Relationship,RELATIONSHIP,Met natural mom,34.2,Venus-Saturn-Moon,True,False,False,40.0,Dasha: venus-saturn connects with 7th/2nd/DK (Jupiter)
+RSALL_000229,Adopted 83382,1966-03-25,Family,FAMILY_PROGENY,Adopted by Parent  25 March 1966,0.2,Venus-Sun-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000236,Adoptive parent 83383,1966-03-25,Family,FAMILY_PROGENY,Adopted a child  25 March 1966,44.5,Jupiter-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000237,Adoptive parent 83384,1966-03-25,Family,FAMILY_PROGENY,Adopted a child  25 March 1966,39.5,Venus-Mars-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_000238,Adult Victim Larry,1992-06-01,Work,CAREER_STATUS,Signed by Pittsburgh Pirates,39.2,Jupiter-Rahu-Mercury,True,False,True,70.0,Dasha: jupiter-rahu connects with 10th/1st/11th/AmK; Transit: Jupiter activating 10th house
+RSALL_000245,AIDS 10199,1981-09-30,Other,GENERAL_LIFE,AIDS age 35,35.4,Rahu-Mars-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_000246,AIDS 10221,1988-01-24,Other,GENERAL_LIFE,AIDS age 41,41.6,Rahu-Jupiter-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_000249,AIDS 10519,1982-09-05,Health,HEALTH_CRISIS,Hospital with AIDS,35.5,Moon-Saturn-Venus,True,False,True,70.0,Dasha: moon-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa; SBC: Transiting Mars hits Vadha Tara
+RSALL_000249,AIDS 10519,1983-02-14,Other,GENERAL_LIFE,AIDS age 36,35.9,Moon-Saturn-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_000250,AIDS 10691,1985-11-15,Mental Health,HEALTH_CRISIS,Depressed with AIDS,38.3,Mars-Rahu-Venus,True,False,True,70.0,Dasha: mars-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa
+RSALL_000251,AIDS 10701,1984-12-15,Other,GENERAL_LIFE,AIDS age 37,37.3,Venus-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000255,AIDS 10954,1983-06-15,Other,GENERAL_LIFE,AIDS age 35,35.1,Saturn-Mars-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_000256,AIDS 11083,1985-10-14,Other,GENERAL_LIFE,AIDS age a week less than 37,37.0,Rahu-Moon-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_000258,AIDS 11189,1987-01-29,Other,GENERAL_LIFE,AIDS age 37,37.9,Saturn-Saturn-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000261,AIDS 11362,1985-11-11,Other,GENERAL_LIFE,AIDS age 36,36.2,Saturn-Ketu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_000272,AIDS 1151,1992-12-15,Other,GENERAL_LIFE,AIDS; age 44,44.1,Saturn-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000287,AIDS 1168,1992-11-02,Other,GENERAL_LIFE,AIDS age 25,26.6,Jupiter-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000296,AIDS 12070,1988-05-21,Other,GENERAL_LIFE,AIDS age 36,36.3,Mars-Mercury-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_000299,AIDS 12342,1985-01-14,Other,GENERAL_LIFE,AIDS age 34 plus two weeks,32.0,Mercury-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000304,AIDS 12534,1986-02-12,Other,GENERAL_LIFE,AIDS age 32,32.2,Mercury-Mars-Ketu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000305,AIDS 12602,1987-04-13,Health,HEALTH_CRISIS,AIDS diagnosed,33.0,Rahu-Moon-Saturn,True,False,False,40.0,Dasha: rahu-moon-saturn connects with Dusthana/Maraka lords; D30: Moon in Mercury Trimsamsa
+RSALL_000306,AIDS 12628,1990-09-11,Other,GENERAL_LIFE,AIDS age 36,36.3,Saturn-Sun-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000310,AIDS 12820,1982-06-27,Other,GENERAL_LIFE,AIDS age 27,27.3,Saturn-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_000315,AIDS 13058,1986-08-27,Other,GENERAL_LIFE,AIDS age 29,29.9,Mercury-Mars-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000317,AIDS 13273,1986-02-23,Other,GENERAL_LIFE,AIDS;age 27,27.9,Mercury-Jupiter-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000343,AIDS 1656,1992-04-15,Other,GENERAL_LIFE,AIDS spring of 1992; age 44,44.4,Mercury-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000346,AIDS 19281,1988-02-25,Other,GENERAL_LIFE,AIDS age 63,63.1,Rahu-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000347,AIDS 19285,1979-06-15,Social,CAREER_STATUS,Gay; came out 1979,36.8,Ketu-Jupiter-Saturn,True,False,False,40.0,Dasha: ketu-jupiter connects with 10th/1st/11th/AmK
+RSALL_000350,AIDS 19300,1985-06-28,Health,HEALTH_CRISIS,AIDS,40.7,Mercury-Moon-Mercury,True,False,True,70.0,Dasha: mercury-moon-mercury connects with Dusthana/Maraka lords; D30: Moon in Mercury Trimsamsa
+RSALL_000352,AIDS 19303,1988-06-15,Other,GENERAL_LIFE,AIDS 1988; age 41,40.0,Jupiter-Saturn-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000369,AIDS 19414,1984-02-01,Other,GENERAL_LIFE,AIDS; age 26 almost 27,26.9,Jupiter-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000370,AIDS 19415,1991-02-19,Relationship,RELATIONSHIP,Partner; love at first sight,34.4,Rahu-Sun-Mercury,False,False,False,0.0,Baseline planetary aspects
+RSALL_000372,AIDS 19417,1985-12-08,Other,GENERAL_LIFE,AIDS; age 29,29.8,Mars-Sun-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000376,AIDS 19421,1988-02-13,Other,GENERAL_LIFE,AIDS age 34 and nine days,34.0,Jupiter-Rahu-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000378,AIDS 19423,1987-09-08,Other,GENERAL_LIFE,AIDS age 34,34.1,Moon-Mars-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_000383,AIDS 306,1984-01-20,Other,GENERAL_LIFE,AIDS age 46,46.9,Mercury-Ketu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_000389,AIDS 365,1987-05-04,Health,HEALTH_CRISIS,AIDS diagnosed,40.8,Rahu-Sun-Saturn,True,False,True,70.0,Dasha: rahu-sun-saturn connects with Dusthana/Maraka lords; D30: Sun in Jupiter Trimsamsa; SBC: Transiting Mars hits Vainashika Tara
+RSALL_000394,AIDS 397,1985-01-01,Other,GENERAL_LIFE,AIDS age 34,34.4,Ketu-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000395,AIDS 407,1987-10-02,Other,GENERAL_LIFE,AIDS age 35,35.8,Venus-Rahu-Ketu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000401,AIDS 423,1988-04-24,Other,GENERAL_LIFE,AIDS age 34,34.7,Mercury-Saturn-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_000403,AIDS 42902 SIDA 1,1983-01-20,Family,FAMILY_PROGENY,Had twins,58.8,Rahu-Ketu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_000404,AIDS 43460 SIDA 2,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,57.2,Moon-Mars-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000408,AIDS 43465 SIDA 8,2013-02-05,Health,HEALTH_CRISIS,start testosterone treatment for female-male transition,74.7,Jupiter-Venus-Saturn,True,True,True,100.0,Dasha: jupiter-venus-saturn connects with Dusthana/Maraka lords; D30: Venus occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Vadha Tara
+RSALL_000408,AIDS 43465 SIDA 8,2013-08-20,Misc.,GENERAL_LIFE,Changed Name  20 August 2013,75.3,Jupiter-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_000427,AIDS 43486 SIDA 27,1986-01-18,Other,FAMILY_PROGENY,Daughter raped,38.9,Mars-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_000502,AIDS 44830 Ian,1995-12-08,Other,GENERAL_LIFE,AIDS; age 43,43.9,Jupiter-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_000503,AIDS 44831 Henry,1995-12-08,Other,HEALTH_CRISIS,Ian died of AIDS,34.2,Jupiter-Mars-Saturn,True,False,True,70.0,Dasha: jupiter-mars-saturn connects with Dusthana/Maraka lords; D30: Mars in Jupiter Trimsamsa; SBC: Transiting Rahu hits Janma Tara
+RSALL_000512,AIDS 6111,1988-06-15,Other,GENERAL_LIFE,AIDS age 62,62.1,Mercury-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_000513,AIDS 6299,1983-02-12,Other,GENERAL_LIFE,AIDS age 55,55.5,Rahu-Ketu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_000514,AIDS 6308,1984-10-12,Other,GENERAL_LIFE,AIDS age 57,57.1,Venus-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000516,AIDS 6627,1985-08-02,Other,GENERAL_LIFE,AIDS two weeks short of age 56,56.0,Jupiter-Rahu-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_000517,AIDS 6777,1986-08-10,Health,HEALTH_CRISIS,Pneumonia; diagnosed with AIDS,56.0,Mars-Mercury-Mercury,True,True,True,100.0,Dasha: mars-mercury-mercury connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000520,AIDS 7212,1985-07-15,Other,GENERAL_LIFE,AIDS age 52,52.3,Saturn-Sun-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000522,AIDS 7843,1985-05-25,Other,GENERAL_LIFE,AIDS age 48,48.8,Mercury-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_000527,AIDS 8645,1986-05-22,Other,GENERAL_LIFE,AIDS age 45,45.9,Rahu-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_000528,AIDS 8653,1986-10-13,Other,GENERAL_LIFE,AIDS age 46,46.2,Saturn-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_000532,AIDS 9088,1986-02-16,Other,GENERAL_LIFE,AIDS age 43,43.8,Mars-Sun-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000537,AIDS 9635,1986-06-15,Other,HEALTH_CRISIS,AIDS died 1986; age 42,42.1,Moon-Rahu-Mars,True,False,True,70.0,Dasha: moon-rahu-mars connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa; SBC: Transiting Mars hits Vainashika Tara
+RSALL_000708,Alcoholic 6824,1964-04-21,Mental Health,HEALTH_CRISIS,Date of her last drink,33.5,Jupiter-Jupiter-Mars,True,False,True,70.0,Dasha: jupiter-jupiter-mars connects with Dusthana/Maraka lords; D30: Jupiter in Venus Trimsamsa
+RSALL_000720,Alcoholic 7060,1979-01-22,Other,GENERAL_LIFE,Age 46,46.7,Venus-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_000786,Allergy 3932,1944-01-10,Other,GENERAL_LIFE,Asthma attack; age 43,43.3,Jupiter-Mars-Sun,False,True,True,60.0,Baseline planetary aspects
+RSALL_000825,Astrologer PL,1977-05-16,Family,FAMILY_PROGENY,Major move accompanying parental split,11.1,Saturn-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_000825,Astrologer PL,1984-04-11,Other,GENERAL_LIFE,in Houston,18.0,Mercury-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_000825,Astrologer PL,1990-10-31,Death,HEALTH_CRISIS,at 8:30 PM in Wilmington,24.5,Mercury-Rahu-Mercury,True,False,True,70.0,Dasha: mercury-rahu-mercury connects with Dusthana/Maraka lords; D30: Rahu in Venus Trimsamsa; SBC: Transiting Saturn hits Vainashika Tara
+RSALL_000857,Astrologer 3293,1982-12-02,Work,HEALTH_CRISIS,First Jarvik-7 heart placed in human,94.6,Venus-Jupiter-Rahu,True,False,False,40.0,Dasha: venus-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa
+RSALL_000925,Astrologer 6562,1985-06-07,Other,HEALTH_CRISIS,Husband died,56.3,Venus-Rahu-Jupiter,True,False,False,40.0,Dasha: venus-rahu-jupiter connects with Dusthana/Maraka lords; D30: Rahu in Venus Trimsamsa
+RSALL_000944,Astrologer Merrin,1976-07-15,Other,HEALTH_CRISIS,Death of Mother  15 July 1976,42.5,Moon-Moon-Mercury,False,True,True,60.0,D30: Moon occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Vadha Tara
+RSALL_000944,Astrologer Merrin,1988-09-06,Health,HEALTH_CRISIS,Breast cancer mastectomy,54.6,Mars-Saturn-Ketu,True,True,True,100.0,Dasha: mars-saturn-ketu connects with Dusthana/Maraka lords; D30: Saturn occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_000947,Astrologer Sharon,2000-09-29,Health,HEALTH_CRISIS,Wrist surgery,53.8,Venus-Saturn-Mercury,True,False,True,70.0,Dasha: venus-saturn-mercury connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa; SBC: Transiting Mars hits Vainashika Tara
+RSALL_000947,Astrologer Sharon,2000-12-08,Health,HEALTH_CRISIS,Cosmetic surgery,54.0,Venus-Saturn-Ketu,True,False,True,70.0,Dasha: venus-saturn-ketu connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa; SBC: Transiting Mars hits Vadha Tara
+RSALL_000965,Attorney 4263,1975-07-12,Other,HEALTH_CRISIS,Cancer; age 69,69.4,Mercury-Venus-Venus,True,False,True,70.0,Dasha: mercury-venus-venus connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa
+RSALL_000977,Attorney 9199,1984-08-24,Work,CAREER_STATUS,Began a private practice,42.0,Venus-Rahu-Mercury,True,False,False,40.0,Dasha: venus-rahu connects with 10th/1st/11th/AmK
+RSALL_001064,Birth Defect,1991-12-06,Health,HEALTH_CRISIS,Surgery to repair skull,32.2,Venus-Rahu-Jupiter,True,False,True,70.0,Dasha: venus-rahu-jupiter connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa; SBC: Transiting Mars hits Janma Tara
+RSALL_001064,Birth Defect,1992-01-08,Health,HEALTH_CRISIS,Surgery to repair skull,32.3,Venus-Rahu-Jupiter,True,False,False,40.0,Dasha: venus-rahu-jupiter connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa
+RSALL_001064,Birth Defect,1992-07-23,Health,HEALTH_CRISIS,Surgery for relief of nerve pressure,32.8,Venus-Rahu-Saturn,True,False,True,70.0,Dasha: venus-rahu-saturn connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa
+RSALL_001066,Birth Defect,1976-07-13,Other,HEALTH_CRISIS,Brain tumor; age five,5.5,Mercury-Saturn-Mercury,True,False,True,70.0,Dasha: mercury-saturn-mercury connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_001070,Birth Defect,1975-01-25,Health,HEALTH_CRISIS,Broke his left leg,2.6,Mercury-Mars-Venus,True,False,True,70.0,Dasha: mercury-mars-venus connects with Dusthana/Maraka lords; D30: Mars in Venus Trimsamsa
+RSALL_001099,Birth Defect,1983-02-21,Other,HEALTH_CRISIS,Defective heart valve; age 11 months,0.9,Moon-Moon-Venus,False,False,True,30.0,D30: Moon in Mercury Trimsamsa
+RSALL_001116,Birth Defect,1905-03-01,Other,GENERAL_LIFE,Age six months,0.5,Mercury-Mercury-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001125,Birth Defect,1979-04-05,Family,FAMILY_PROGENY,Daughter born,26.4,Moon-Moon-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001133,Birth Defect,1913-12-11,Other,GENERAL_LIFE,Apparently convulsions; age six months,0.4,Sun-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001199,Bisexual 10935,1965-03-20,Relationship,RELATIONSHIP,Husband,16.9,Mercury-Venus-Saturn,True,False,False,40.0,Dasha: mercury-venus connects with 7th/2nd/DK (Mars)
+RSALL_001202,Bisexual 12110,1973-04-18,Relationship,RELATIONSHIP,Married his wife; five years,21.1,Mercury-Mercury-Venus,False,True,True,60.0,D9: Mercury in supportive Navamsha (Capricorn); Transit: Jupiter blessing 7th/1st house axis
+RSALL_001206,Bisexual 6392,1965-10-17,Family,FAMILY_PROGENY,Daughter born,37.6,Rahu-Mars-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001215,Bisexual 9124,1976-12-03,Financial,CAREER_STATUS,Won $700 on game show,34.5,Mars-Saturn-Rahu,True,True,True,100.0,Dasha: mars-saturn connects with 10th/1st/11th/AmK; D10: Saturn placed in Kendra/Trikona (Aries); Transit: Sun activating 10th house
+RSALL_001218,Bisexual 9235,1969-10-26,Family,FAMILY_PROGENY,Son born,27.0,Ketu-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001221,Blaylock; Mary Perdue,1993-07-13,Other,GENERAL_LIFE,Emphysema,72.1,Mercury-Mercury-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001222,Blessington; Dodie,1976-11-29,Crime,LITIGATION_CRIME,Raped and beaten on the street,16.4,Jupiter-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001222,Blessington; Dodie,1977-03-15,Health,HEALTH_CRISIS,Car accident; on drugs,16.6,Jupiter-Jupiter-Mercury,True,True,False,70.0,Dasha: jupiter-jupiter-mercury connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability)
+RSALL_001238,Bourniquel; Camille,2013-04-01,Other,HEALTH_CRISIS,Death; Cause unspecified  1 April 2013,95.1,Saturn-Jupiter-Mercury,True,False,True,70.0,Dasha: saturn-jupiter-mercury connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_001241,Broadcaster 7715 Bud,1967-02-03,Crime,HEALTH_CRISIS,Accidentally hit pedestrian with car,31.1,Sun-Rahu-Ketu,True,False,True,70.0,Dasha: sun-rahu-ketu connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa
+RSALL_001245,Business Executive 10425,1985-10-09,Social,CAREER_STATUS,3 1/2 months on drug charges; later cleared,38.8,Saturn-Mercury-Mercury,True,False,False,40.0,Dasha: saturn-mercury connects with 10th/1st/11th/AmK
+RSALL_001257,Business Owner Pete,1984-04-11,Other,HEALTH_CRISIS,Kidney cancer; age 55,55.5,Rahu-Saturn-Mercury,True,True,True,100.0,Dasha: rahu-saturn-mercury connects with Dusthana/Maraka lords; D30: Saturn occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Naidhana Tara; SBC: Transiting Rahu hits Vainashika Tara
+RSALL_001260,Business Owner 10953 Karen,1965-11-15,Relationship,RELATIONSHIP,Met future husband,17.5,Rahu-Sun-Venus,False,False,False,0.0,Baseline planetary aspects
+RSALL_001260,Business Owner 10953 Karen,1968-10-31,Relationship,RELATIONSHIP,Married 16 years,20.4,Jupiter-Jupiter-Saturn,True,True,False,70.0,Dasha: jupiter-jupiter connects with 7th/2nd/DK (Moon); D9: Jupiter in supportive Navamsha (Taurus)
+RSALL_001365,Catholic celibate 5609,1973-06-09,Relationship,RELATIONSHIP,Married at 48,50.6,Moon-Ketu-Rahu,False,False,False,0.0,Baseline planetary aspects
+RSALL_001441,Child Abuse Victim 6706,1984-01-01,Misc.,FAMILY_PROGENY,Realized raped as child through dream,53.8,Mercury-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001466,Child Actress 5394 Viola,1953-10-16,Health,HEALTH_CRISIS,Difficult child birth,32.5,Moon-Saturn-Venus,True,False,True,70.0,Dasha: moon-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Venus Trimsamsa
+RSALL_001466,Child Actress 5394 Viola,1953-10-16,Misc.,GENERAL_LIFE,N.D.E.,32.5,Moon-Saturn-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001471,Child Victim 11035 Scott,1958-06-04,Crime,LITIGATION_CRIME,Kidnapped; stabbed and castrated,9.7,Moon-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001489,Clerical 6589 Harriet,1980-04-12,Other,HEALTH_CRISIS,Husband died of cancer,51.0,Rahu-Saturn-Rahu,True,True,False,70.0,Dasha: rahu-saturn-rahu connects with Dusthana/Maraka lords; D30: Saturn occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_001504,Computer Consultant 43327,2001-09-11,Misc.,HEALTH_CRISIS,Escaped death in World Trade Center,38.3,Jupiter-Sun-Mercury,True,False,True,70.0,Dasha: jupiter-sun-mercury connects with Dusthana/Maraka lords; D30: Sun in Mercury Trimsamsa; SBC: Transiting Saturn hits Janma Tara
+RSALL_001510,Computer Programmer 12926,1986-05-29,Health,HEALTH_CRISIS,Partial hysterectomy,30.5,Rahu-Venus-Rahu,True,False,True,70.0,Dasha: rahu-venus-rahu connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa
+RSALL_001512,Computer Programmer 13552 Jon,1973-02-03,Health,HEALTH_CRISIS,Hit by a car; injured badly,12.6,Jupiter-Ketu-Mercury,True,False,False,40.0,Dasha: jupiter-ketu-mercury connects with Dusthana/Maraka lords; D30: Ketu in Venus Trimsamsa
+RSALL_001524,Conjoined Twins 13764,1962-06-28,Health,HEALTH_CRISIS,Separation surgery,0.2,Venus-Venus-Mercury,True,True,False,70.0,Dasha: venus-venus-mercury connects with Dusthana/Maraka lords; D30: Venus occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_001545,Contractor 7437 Donald,1972-02-13,Other,GENERAL_LIFE,Plane crash; age 37,37.7,Jupiter-Jupiter-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_001551,Cult Member K.O.,1989-06-08,Family,FAMILY_PROGENY,Baby Kelly born,29.2,Venus-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001575,Deaf 3890,1902-01-16,Other,GENERAL_LIFE,Age one,2.0,Mercury-Mars-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001579,Delp; Alfred,1945-02-02,Other,GENERAL_LIFE,Hanged in Berlin; age 37,37.4,Moon-Venus-Mars,True,True,True,100.0,Baseline planetary aspects
+RSALL_001600,Depressed 5579,1976-06-14,Other,GENERAL_LIFE,Great shock,53.8,Rahu-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001601,Depressed 6531 Barbara,1981-05-04,Mental Health,HEALTH_CRISIS,Suicide attempt by gas; age 52,52.4,Moon-Venus-Venus,False,False,False,0.0,D30: Venus in Mercury Trimsamsa
+RSALL_001668,Drug Abuse 12325,1974-10-15,Other,GENERAL_LIFE,Drug abuse/liver damage;age 21,21.8,Moon-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001674,Drug Abuse 44612 Wayne,1971-01-18,Misc.,FAMILY_PROGENY,Personal turn-around,19.0,Saturn-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001687,Dyslectic 14582,1986-10-29,Health,HEALTH_CRISIS,Broke a few ribs,13.6,Venus-Mercury-Mars,True,False,True,70.0,Dasha: venus-mercury-mars connects with Dusthana/Maraka lords; D30: Mercury in Venus Trimsamsa; SBC: Transiting Saturn hits Naidhana Tara
+RSALL_001688,Earthquake Survivor Anchorage quake,1964-03-27,Misc.,GENERAL_LIFE,Earthquake,26.6,Rahu-Jupiter-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001690,Eating Disorder 11706,1974-11-04,Crime,LITIGATION_CRIME,Assaulted and raped; threat by knife,24.1,Rahu-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001690,Eating Disorder 11706,1974-11-04,Crime,LITIGATION_CRIME,Assaulted and raped; threat by knife,24.1,Rahu-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001701,Eating Disorder 6541,1977-03-05,Other,HEALTH_CRISIS,Heart failure; age 48,48.2,Jupiter-Venus-Mercury,True,True,True,100.0,Dasha: jupiter-venus-mercury connects with Dusthana/Maraka lords; D30: Venus occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara
+RSALL_001714,Educator 10945,1962-10-21,Family,FAMILY_PROGENY,Moved to U.S.,14.4,Ketu-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_001721,Educator 12948,1987-10-18,Other,GENERAL_LIFE,Premature labor; fetus dead,31.7,Jupiter-Mercury-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001721,Educator 12948,1987-11-01,Health,HEALTH_CRISIS,Peritonitis,31.7,Jupiter-Mercury-Moon,True,False,True,70.0,Dasha: jupiter-mercury-moon connects with Dusthana/Maraka lords; D30: Mercury in Mercury Trimsamsa; SBC: Transiting Mars hits Janma Tara
+RSALL_001725,Educator 3345,1975-01-13,Other,GENERAL_LIFE,Third husband,85.7,Jupiter-Venus-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_001731,Educator 44254 Romina C.,1992-03-29,Family,FAMILY_PROGENY,Daughter Irena,26.1,Rahu-Saturn-Mars,False,True,True,60.0,Baseline planetary aspects
+RSALL_001732,Educator 44564 Ines J.,1993-12-04,Family,FAMILY_PROGENY,Daughter Nira,27.0,Sun-Sun-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_001732,Educator 44564 Ines J.,1997-10-09,Family,FAMILY_PROGENY,Daughter Gita,30.8,Sun-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001741,Educator 6525,1986-01-31,Other,GENERAL_LIFE,Age 55,57.2,Jupiter-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001776,Engineer 44552 Natasa S.,1998-04-16,Other,GENERAL_LIFE,Leukemia; age 33,33.8,Moon-Moon-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001785,Engineer,1984-01-17,Other,GENERAL_LIFE,Age 71,71.8,Saturn-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001800,Epps; Tory,2005-06-01,Other,GENERAL_LIFE,Blood clot; age 38,38.0,Jupiter-Saturn-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001801,Family Distress 1006,1975-07-07,Other,GENERAL_LIFE,Choked on her own vomit; age 27,27.5,Sun-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001802,Family Distress 1007,1975-07-07,Other,HEALTH_CRISIS,Wife died after birth of their son,30.0,Rahu-Mercury-Mars,True,False,True,70.0,Dasha: rahu-mercury-mars connects with Dusthana/Maraka lords; D30: Mercury in Venus Trimsamsa
+RSALL_001803,Family Distress 1008,1975-07-07,Other,HEALTH_CRISIS,Mom died when brother born,1.5,Rahu-Moon-Saturn,True,False,False,40.0,Dasha: rahu-moon-saturn connects with Dusthana/Maraka lords; D30: Moon in Jupiter Trimsamsa
+RSALL_001803,Family Distress 1008,1975-07-07,Other,GENERAL_LIFE,When she was young,1.5,Rahu-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001805,Family Distress 10418,1982-08-25,Other,GENERAL_LIFE,Lover O.D. on sleeping pills,35.7,Rahu-Mars-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001806,Family Distress 10961,1984-10-18,Other,FAMILY_PROGENY,Daughter raped by 13-year old boy,36.4,Jupiter-Moon-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001807,Family Distress 11469,1969-02-06,Relationship,RELATIONSHIP,Iranian husband,19.0,Venus-Mercury-Moon,True,False,False,40.0,Dasha: venus-mercury connects with 7th/2nd/DK (Moon)
+RSALL_001807,Family Distress 11469,1975-01-28,Relationship,RELATIONSHIP,Iranian husband,25.0,Sun-Saturn-Sun,True,False,True,70.0,Dasha: sun-saturn connects with 7th/2nd/DK (Moon); Transit: Jupiter blessing 7th/1st house axis
+RSALL_001808,Family Distress 11476,1984-10-18,Other,FAMILY_PROGENY,Her three-year-old daughter was raped,34.7,Rahu-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001809,Family Distress 11764,1983-11-07,Other,FAMILY_PROGENY,Daughter abducted,32.9,Jupiter-Mercury-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001810,Family Distress 12846,1978-07-16,Family,FAMILY_PROGENY,Son born with Down's Syndrome,23.2,Rahu-Sun-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001811,Family Distress 13088,1982-06-08,Other,HEALTH_CRISIS,Baby died at two months; SIDS,25.4,Rahu-Saturn-Mercury,True,False,True,70.0,Dasha: rahu-saturn-mercury connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_001812,Family Distress 13106,1980-10-06,Other,HEALTH_CRISIS,Baby died of SIDS,23.6,Jupiter-Moon-Mars,True,False,True,70.0,Dasha: jupiter-moon-mars connects with Dusthana/Maraka lords; D30: Moon in Jupiter Trimsamsa
+RSALL_001813,Family Distress 13251,1980-10-06,Other,HEALTH_CRISIS,Baby died at two months; SIDS,22.7,Venus-Ketu-Jupiter,True,False,True,70.0,Dasha: venus-ketu-jupiter connects with Dusthana/Maraka lords; D30: Ketu in Jupiter Trimsamsa
+RSALL_001814,Family Distress 13741,1984-04-04,Other,HEALTH_CRISIS,Son hanged himself by accident,22.2,Rahu-Rahu-Mercury,True,True,True,100.0,Dasha: rahu-rahu-mercury connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_001818,Family Distress 2725,1902-12-11,Family,FAMILY_PROGENY,Son born with birth defects,31.9,Moon-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001818,Family Distress 2725,1903-02-27,Other,HEALTH_CRISIS,Son died; two months,32.2,Moon-Jupiter-Mars,True,True,True,100.0,Dasha: moon-jupiter-mars connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vainashika Tara
+RSALL_001819,Family Distress 330,1966-08-31,Family,FAMILY_PROGENY,Daughter born,25.8,Moon-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001820,Family Distress 4297,1940-04-09,Other,HEALTH_CRISIS,Died after childbirth; age 33,33.6,Jupiter-Jupiter-Saturn,True,False,True,70.0,Dasha: jupiter-jupiter-saturn connects with Dusthana/Maraka lords; D30: Jupiter in Jupiter Trimsamsa
+RSALL_001823,Family Distress 44300 Marion,1984-08-16,Other,HEALTH_CRISIS,Son died of SIDS,28.2,Mars-Venus-Rahu,True,False,True,70.0,Dasha: mars-venus-rahu connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa; SBC: Transiting Mars hits Vadha Tara; SBC: Transiting Ketu hits Vadha Tara
+RSALL_001827,Family Distress 44979 Rosemary,1989-08-18,Other,HEALTH_CRISIS,Husband died of heart attack,65.0,Saturn-Saturn-Ketu,True,True,True,100.0,Dasha: saturn-saturn-ketu connects with Dusthana/Maraka lords; D30: Saturn occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Janma Tara
+RSALL_001830,Family Distress 4888,1931-11-28,Relationship,RELATIONSHIP,She and husband eloped,16.9,Rahu-Mercury-Saturn,False,False,False,0.0,Baseline planetary aspects
+RSALL_001830,Family Distress 4888,1933-05-27,Other,HEALTH_CRISIS,Baby died at six months;  SIDS,18.4,Rahu-Venus-Venus,False,False,True,30.0,D30: Venus in Venus Trimsamsa; SBC: Transiting Saturn hits Janma Tara
+RSALL_001831,Family Distress 5868,1938-10-29,Family,FAMILY_PROGENY,Son born; only child,14.2,Venus-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001831,Family Distress 5868,1966-02-19,Other,FAMILY_PROGENY,Her one son drowned,41.5,Mars-Jupiter-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001833,Family Distress 6586,1968-04-02,Family,FAMILY_PROGENY,Baby born with spina bifida,38.9,Jupiter-Jupiter-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001835,Family Distress 6946,1956-08-03,Family,FAMILY_PROGENY,Son born,25.0,Venus-Sun-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001835,Family Distress 6946,1977-05-16,Other,HEALTH_CRISIS,Son died of a drug O.D.,45.8,Sun-Venus-Venus,True,False,True,70.0,Dasha: sun-venus-venus connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa; SBC: Transiting Saturn hits Janma Tara
+RSALL_001837,Family Distress 7391,1965-10-21,Family,FAMILY_PROGENY,Jon born with club feet; extra thumb,31.6,Moon-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001837,Family Distress 7391,1971-06-05,Family,FAMILY_PROGENY,Jamie born with web feet,37.3,Mars-Ketu-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001839,Family Distress 7600,1979-03-18,Family,FAMILY_PROGENY,Son born with Down's Syndrome,43.9,Mercury-Saturn-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_001841,Family Distress 8729,1969-01-16,Family,FAMILY_PROGENY,Had a healthy normal child who lived,28.2,Sun-Mercury-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001841,Family Distress 8729,1970-02-05,Family,FAMILY_PROGENY,Twins born; first twin stillborn,29.2,Sun-Ketu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001841,Family Distress 8729,1970-02-05,Other,GENERAL_LIFE,First twin stillborn,29.2,Sun-Ketu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001842,Family Distress 8756 Burke; Meta,1970-06-26,Family,FAMILY_PROGENY,First son born; had club feet,29.5,Jupiter-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001842,Family Distress 8756 Burke; Meta,1980-05-21,Family,FAMILY_PROGENY,Third son born; had club feet,39.4,Jupiter-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001843,Family Distress 8768,1965-10-21,Family,FAMILY_PROGENY,Jonathan born with clubfeet and an extra thumb,24.8,Mars-Mars-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_001843,Family Distress 8768,1971-06-05,Family,FAMILY_PROGENY,Jamie born with webbed feet,30.4,Mars-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001844,Family Distress 9127,1979-03-18,Family,FAMILY_PROGENY,Son born with Down's Syndrome,36.8,Venus-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001847,Family Distress 9482,1970-02-05,Other,HEALTH_CRISIS,Had twins; first died; second died later,26.4,Mercury-Mercury-Mercury,False,False,False,0.0,D30: Mercury in Jupiter Trimsamsa
+RSALL_001847,Family Distress 9482,1972-01-02,Other,HEALTH_CRISIS,Second twin died,28.3,Mercury-Mercury-Saturn,False,False,True,30.0,D30: Mercury in Jupiter Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_001852,Family Distress F1K,1983-01-20,Family,FAMILY_PROGENY,Had twins,27.3,Sun-Saturn-Mars,False,True,True,60.0,Baseline planetary aspects
+RSALL_001855,Family Distress F2K,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,17.9,Venus-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001856,Family General 10091,1968-11-19,Family,FAMILY_PROGENY,Twins born,22.9,Rahu-Jupiter-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001856,Family General 10091,1972-03-23,Other,GENERAL_LIFE,One twin killed,26.2,Rahu-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001857,Family General 10387,1979-08-08,Health,HEALTH_CRISIS,Baby born by C-Section,32.7,Sun-Venus-Mercury,True,False,False,40.0,Dasha: sun-venus-mercury connects with Dusthana/Maraka lords; D30: Venus in Venus Trimsamsa
+RSALL_001858,Family General 11025,1976-11-14,Health,HEALTH_CRISIS,Daughter by C-Section,28.2,Rahu-Mars-Jupiter,True,True,True,100.0,Dasha: rahu-mars-jupiter connects with Dusthana/Maraka lords; D30: Mars occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Vainashika Tara; SBC: Transiting Ketu hits Naidhana Tara
+RSALL_001858,Family General 11025,1979-10-12,Health,HEALTH_CRISIS,Son by C-Section,31.1,Jupiter-Jupiter-Rahu,True,True,True,100.0,Dasha: jupiter-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability)
+RSALL_001859,Family General 11031,1979-09-10,Health,HEALTH_CRISIS,Daughter born by C-section,31.0,Jupiter-Venus-Venus,True,False,True,70.0,Dasha: jupiter-venus-venus connects with Dusthana/Maraka lords; D30: Venus in Venus Trimsamsa; SBC: Transiting Saturn hits Naidhana Tara; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_001860,Family General 12095,1976-08-07,Health,HEALTH_CRISIS,First child born by C-Section,24.4,Saturn-Moon-Mercury,True,False,False,40.0,Dasha: saturn-moon-mercury connects with Dusthana/Maraka lords; D30: Moon in Mercury Trimsamsa
+RSALL_001860,Family General 12095,1979-08-13,Health,HEALTH_CRISIS,Second child born by C-Section,27.5,Saturn-Rahu-Mercury,True,True,False,70.0,Dasha: saturn-rahu-mercury connects with Dusthana/Maraka lords; D30: Rahu occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_001861,Family General 13035,1982-01-11,Health,HEALTH_CRISIS,Child born by C-Section,25.4,Rahu-Mars-Venus,True,False,True,70.0,Dasha: rahu-mars-venus connects with Dusthana/Maraka lords; D30: Mars in Venus Trimsamsa; SBC: Transiting Mars hits Janma Tara; SBC: Transiting Rahu hits Vainashika Tara
+RSALL_001864,Family General 5221,1945-07-10,Family,FAMILY_PROGENY,Gave birth to twins,26.3,Sun-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001869,Family Trauma 14862,1985-05-23,Family,FAMILY_PROGENY,Mother missing,2.7,Jupiter-Ketu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001901,Flight Attendant 41950,1975-10-30,Health,HEALTH_CRISIS,Plane crash,26.0,Venus-Rahu-Venus,True,True,True,100.0,Dasha: venus-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Vadha Tara; SBC: Transiting Ketu hits Vainashika Tara
+RSALL_001916,Fournier; Claude,1916-08-04,Other,GENERAL_LIFE,Age 35,35.7,Jupiter-Mercury-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001917,Fraud 47529,2000-10-31,Crime,LITIGATION_CRIME,Two years probation and 300 hours community service,25.4,Moon-Moon-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001935,Homeless 36003,1987-04-07,Family,FAMILY_PROGENY,Daughter born,17.7,Sun-Venus-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_001935,Homeless 36003,1988-09-28,Family,FAMILY_PROGENY,Son born,19.1,Moon-Moon-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001940,Homeless 36422,1943-05-01,Work,CAREER_STATUS,Ordained an R.C. Priest,25.8,Rahu-Moon-Mercury,True,False,False,40.0,Dasha: rahu-moon connects with 10th/1st/11th/AmK
+RSALL_001943,Homicidal Male 1171,1980-03-03,Crime,LITIGATION_CRIME,Attempted murder,20.1,Venus-Mercury-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001944,Homicide 1177,1977-02-27,Crime,LITIGATION_CRIME,Shot and killed husband,37.4,Saturn-Moon-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_001946,Homicide 1180,1979-06-14,Crime,FAMILY_PROGENY,Shot dad; mom and brother,26.6,Rahu-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001947,Homicide 1181,1947-09-13,Crime,LITIGATION_CRIME,Shot wife five times,40.8,Jupiter-Mercury-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_001950,Homicide Book III Dau. 25392,1964-05-23,Other,GENERAL_LIFE,Strangled by her dad,3.6,Venus-Mercury-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001951,Homicide Book III Mom 25358,1964-05-23,Other,FAMILY_PROGENY,Returned from work to find children dead,27.4,Mercury-Saturn-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_001952,Homicide Book III Son 25393,1964-05-23,Other,GENERAL_LIFE,Strangled by his dad,1.8,Moon-Mars-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001954,Homicide Child Victim 14520,1978-12-02,Other,GENERAL_LIFE,Suffocated; age seven,7.2,Venus-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001956,Homicide Child Victim 37449,1997-06-02,Social,CAREER_STATUS,Mom found guilty of manslaughter,1.5,Rahu-Rahu-Jupiter,False,False,False,0.0,Baseline planetary aspects
+RSALL_001957,Homicide Child Victim 4584,1925-11-02,Other,FAMILY_PROGENY,Shot by father; age 14,14.9,Moon-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001958,Homicide Child Victim 5261,1925-11-02,Other,FAMILY_PROGENY,Shot by father; age six,6.1,Venus-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001959,Homicide Child Victim 5669,1927-12-07,Other,FAMILY_PROGENY,Gassed by mother; age four,4.7,Mars-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_001960,Homicide Child Victim 5927,1927-12-07,Other,FAMILY_PROGENY,Gassed by mother; age two,2.9,Ketu-Venus-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001961,Homicide Child Victim 6087,1927-12-07,Other,FAMILY_PROGENY,Gassed by mother; age 21 months,1.8,Rahu-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001962,Homicide Child Victim 9473 Book III,1946-09-03,Other,GENERAL_LIFE,Stabbed and beheaded by mom at three,3.0,Mars-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001963,Homicide Eddie 38513,1986-12-20,Crime,LITIGATION_CRIME,Rival gang encounter,17.9,Rahu-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001964,Homicide Gun 10919,1976-03-10,Crime,LITIGATION_CRIME,Fatally shot wife,27.9,Mercury-Saturn-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_001965,Homicide Gun 5103 Book III,1957-04-20,Crime,LITIGATION_CRIME,Shot and killed wife,39.4,Ketu-Mercury-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001965,Homicide Gun 5103 Book III,1957-04-20,Crime,LITIGATION_CRIME,Shot and wounded wife's lover,39.4,Ketu-Mercury-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_001966,Homicide Gun 9357,1962-10-16,Family,FAMILY_PROGENY,Ran away from home,19.5,Jupiter-Mars-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_001966,Homicide Gun 9357,1962-10-16,Crime,LITIGATION_CRIME,Shot and killed cab driver,19.5,Jupiter-Mars-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_001967,Wessel; Ferne,1958-04-06,Other,GENERAL_LIFE,Strangled; age 43,43.0,Saturn-Ketu-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001970,Homicide Suicide 1173,1929-03-19,Crime,FAMILY_PROGENY,Killed her three children,35.0,Venus-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001970,Homicide Suicide 1173,1929-03-19,Other,GENERAL_LIFE,Hanged herself; age 35,35.0,Venus-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001971,Homicide Suicide 3098,1925-11-02,Other,GENERAL_LIFE,Shot himself; age 42,42.1,Ketu-Saturn-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001971,Homicide Suicide 3098,1925-11-02,Crime,FAMILY_PROGENY,Shot; killed two sons,42.1,Ketu-Saturn-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001972,Homicide Suicide 3975,1927-12-07,Other,GENERAL_LIFE,Gassed herself; age 26,26.5,Sun-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001972,Homicide Suicide 3975,1927-12-07,Crime,FAMILY_PROGENY,Gassed her three children,26.5,Sun-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_001974,Homicide Victim 11527 Book III,1972-09-03,Other,GENERAL_LIFE,Shot; age 22,22.5,Venus-Ketu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_001975,Homicide Victim 1172,1980-03-03,Crime,FAMILY_PROGENY,Son knifed her and a friend,47.5,Jupiter-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_001976,Homicide Victim 1174,1929-03-19,Other,FAMILY_PROGENY,Killed by mother; age eight,8.9,Rahu-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_001977,Homicide Victim 1175,1929-03-19,Other,FAMILY_PROGENY,Killed by mother; age six,6.7,Mercury-Mars-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001978,Homicide Victim 1176,1929-03-19,Other,FAMILY_PROGENY,Killed by mother; age four,4.1,Mars-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_001984,Homicide Victim 1188,1976-12-14,Other,GENERAL_LIFE,Shot; age 36,36.6,Venus-Saturn-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_001985,Homicide Victim 1189,1969-12-30,Family,FAMILY_PROGENY,Son taken by court custody,29.0,Saturn-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_001985,Homicide Victim 1189,1970-07-09,Relationship,RELATIONSHIP,Second marriage,29.5,Saturn-Rahu-Saturn,False,True,False,30.0,D9: Rahu in supportive Navamsha (Taurus)
+RSALL_001985,Homicide Victim 1189,1970-08-15,Other,GENERAL_LIFE,Shot; age 29,29.6,Saturn-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_001986,Homicide Victim 1190,1969-11-24,Relationship,RELATIONSHIP,First husband,27.1,Moon-Moon-Venus,False,False,False,0.0,Baseline planetary aspects
+RSALL_001986,Homicide Victim 1190,1973-01-02,Relationship,RELATIONSHIP,Second marriage,30.2,Moon-Jupiter-Venus,True,False,False,40.0,Dasha: moon-jupiter connects with 7th/2nd/DK (Mercury)
+RSALL_001987,Homicide Victim 1191,1962-11-12,Relationship,RELATIONSHIP,Age 19,19.0,Moon-Sun-Mercury,False,False,False,0.0,Baseline planetary aspects
+RSALL_001987,Homicide Victim 1191,1969-09-22,Social,CAREER_STATUS,Paroled,25.9,Mars-Moon-Saturn,True,True,True,100.0,Dasha: mars-moon connects with 10th/1st/11th/AmK; D10: Moon placed in Kendra/Trikona (Aries); Transit: Sun activating 10th house; Transit: Jupiter activating 10th house
+RSALL_001992,Homicide Victim 1196,1986-02-02,Other,GENERAL_LIFE,Thoat cut; age 26,26.3,Venus-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_001993,Homicide Victim 1197,1976-06-15,Crime,LITIGATION_CRIME,Disappeared,14.4,Rahu-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_001993,Homicide Victim 1197,1978-03-23,Other,GENERAL_LIFE,Body found; age 16,16.1,Rahu-Mercury-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_001999,Homicide Victim 36575 Isabella,1953-04-03,Relationship,RELATIONSHIP,Married due to being pregnant,14.6,Venus-Jupiter-Mercury,True,True,False,70.0,Dasha: venus-jupiter connects with 7th/2nd/DK (Jupiter); D9: Jupiter in supportive Navamsha (Libra)
+RSALL_001999,Homicide Victim 36575 Isabella,1972-11-07,Other,GENERAL_LIFE,Killed by husband; age 34,34.2,Moon-Saturn-Ketu,False,True,True,60.0,Baseline planetary aspects
+RSALL_002002,Homicide Victim 9460,1986-01-10,Other,GENERAL_LIFE,Husband murdered,42.4,Rahu-Moon-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_002002,Homicide Victim 9460,1986-02-21,Social,CAREER_STATUS,Body of husband found,42.5,Rahu-Moon-Saturn,True,True,False,70.0,Dasha: rahu-moon connects with 10th/1st/11th/AmK; D10: Moon placed in Kendra/Trikona (Leo)
+RSALL_002003,Homicide Victim Father 1199,1988-03-26,Other,FAMILY_PROGENY,Rape; murder of 14 year-old daughter,51.0,Mars-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_002004,Homicide Victim Wife 9460,1986-01-10,Other,GENERAL_LIFE,Husband murdered,40.0,Mercury-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002004,Homicide Victim Wife 9460,1986-02-21,Social,CAREER_STATUS,Body of husband found,40.1,Mercury-Jupiter-Saturn,True,False,False,40.0,Dasha: mercury-jupiter connects with 10th/1st/11th/AmK
+RSALL_002041,Incest Perpetrator 4762,1950-06-23,Relationship,RELATIONSHIP,Difficult; strained relationship,37.1,Rahu-Mars-Jupiter,False,False,False,0.0,Baseline planetary aspects
+RSALL_002041,Incest Perpetrator 4762,1983-12-13,Other,GENERAL_LIFE,Stroke; age 70,70.6,Saturn-Jupiter-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002058,Incest Victim 8946,1960-12-30,Relationship,RELATIONSHIP,Brutal man,19.2,Jupiter-Venus-Jupiter,True,True,True,100.0,Dasha: jupiter-venus connects with 7th/2nd/DK (Saturn); D9: Venus in supportive Navamsha (Gemini); Transit: Jupiter blessing 7th/1st house axis
+RSALL_002084,Infant Mortality 10450,1947-05-28,Other,GENERAL_LIFE,Age 4 1/2 months,0.4,Ketu-Saturn-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002095,Infant Mortality 14578,1973-03-25,Other,GENERAL_LIFE,Age 2 months,0.2,Venus-Ketu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_002100,Infant Mortality 3603,1895-09-10,Other,GENERAL_LIFE,Internal convulsions; age 10  months,0.9,Moon-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_002101,Infant Mortality 3698,1897-01-27,Other,GENERAL_LIFE,Hydrocephalus; age five months,0.4,Sun-Mars-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_002105,Infant Mortality 4289,1906-11-19,Other,GENERAL_LIFE,Convulsions; cholera; age 4 months,0.4,Rahu-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002107,Infant Mortality 4473,1909-10-20,Other,GENERAL_LIFE,Age eight months,0.7,Ketu-Sun-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002109,Infant Mortality 4565,1911-07-11,Other,GENERAL_LIFE,Cerebral inflamation; TB; age 11 1/2 months,0.9,Mars-Saturn-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_002112,Infant Mortality 4936,1916-09-02,Other,GENERAL_LIFE,Convulsions/infantile cholera; age 11 months,0.9,Ketu-Sun-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_002116,Infant Mortality 6172,1927-09-02,Other,GENERAL_LIFE,Drowned; age 11 months,0.9,Saturn-Sun-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_002118,Infant Mortality 6265,1928-12-23,Other,GENERAL_LIFE,TB; age 18 1/2 months,1.6,Saturn-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002124,Infant Mortality 6303,1928-01-13,Other,HEALTH_CRISIS,Lungs; heart; age four months,0.3,Sun-Mercury-Mars,True,False,True,70.0,Dasha: sun-mercury-mars connects with Dusthana/Maraka lords; D30: Mercury in Venus Trimsamsa; SBC: Transiting Saturn hits Vadha Tara; SBC: Transiting Ketu hits Vadha Tara
+RSALL_002144,Infant Mortality 6514,1929-07-09,Other,GENERAL_LIFE,Convulsions; age nine months,0.6,Ketu-Jupiter-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002231,Infant Mortality 9653,1944-11-09,Other,GENERAL_LIFE,Ill; age 5 1/2 months,0.5,Sun-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002234,Infant Mortality 9741,1945-03-27,Other,GENERAL_LIFE,Pneumonia; age 6 months,0.5,Mercury-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_002258,Kidnapped 14270,1983-11-04,Crime,LITIGATION_CRIME,Abducted from neighborhood; age 15,15.8,Venus-Mars-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_002259,Kidnapped baby Moosa Al-Khunaizi,2020-02-18,Social,CAREER_STATUS,Reunited with his family after 20 years,20.6,Saturn-Saturn-Rahu,True,False,False,40.0,Dasha: saturn-saturn connects with 10th/1st/11th/AmK
+RSALL_002261,Kidnapper 1326,1967-12-12,Crime,LITIGATION_CRIME,Kidnapped two students; drove around,28.2,Ketu-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002261,Kidnapper 1326,1974-01-26,Other,GENERAL_LIFE,Drank arsenic; age 34,34.3,Venus-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_002263,Kushi; Norio,2001-07-03,Other,HEALTH_CRISIS,Of cervical cancer; age 78,46.5,Rahu-Saturn-Saturn,True,False,True,70.0,Dasha: rahu-saturn-saturn connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa
+RSALL_002263,Kushi; Norio,2014-12-28,Other,HEALTH_CRISIS,Of pancreatic cancer; age 88,60.0,Jupiter-Jupiter-Mercury,True,False,True,70.0,Dasha: jupiter-jupiter-mercury connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa; SBC: Transiting Saturn hits Naidhana Tara
+RSALL_002268,Landsman; Ruth,1986-05-28,Other,HEALTH_CRISIS,Cancer; age 66,68.1,Saturn-Rahu-Sun,True,True,True,100.0,Dasha: saturn-rahu-sun connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Janma Tara
+RSALL_002304,Librarian 36346,1970-06-06,Relationship,RELATIONSHIP,Marriage  6 June 1970,31.0,Jupiter-Saturn-Rahu,True,True,True,100.0,Dasha: jupiter-saturn connects with 7th/2nd/DK (Saturn); D9: Saturn in supportive Navamsha (Taurus); Transit: Jupiter blessing 7th/1st house axis
+RSALL_002305,Librarian Wife 36347,1970-06-06,Relationship,RELATIONSHIP,One lengthy marriage,27.8,Mercury-Mars-Ketu,True,False,False,40.0,Dasha: mercury-mars connects with 7th/2nd/DK (Mercury)
+RSALL_002305,Librarian Wife 36347,1997-04-17,Social,CAREER_STATUS,Entered a nursing home for continual care,54.7,Venus-Jupiter-Sun,True,True,False,70.0,Dasha: venus-jupiter connects with 10th/1st/11th/AmK; D10: Jupiter placed in Kendra/Trikona (Sagittarius)
+RSALL_002306,Longevity 2495,1879-01-01,Relationship,RELATIONSHIP,Married a medical doctor,19.1,Jupiter-Mercury-Jupiter,True,False,False,40.0,Dasha: jupiter-mercury connects with 7th/2nd/DK (Mars)
+RSALL_002306,Longevity 2495,1896-05-31,Other,GENERAL_LIFE,Widowed,36.5,Saturn-Venus-Mars,True,True,True,100.0,Baseline planetary aspects
+RSALL_002309,Longevity 3430,1927-08-08,Relationship,RELATIONSHIP,To wife of 38 years,36.2,Rahu-Mars-Venus,False,False,False,0.0,Baseline planetary aspects
+RSALL_002309,Longevity 3430,1965-05-28,Other,HEALTH_CRISIS,Wife died,74.1,Mercury-Ketu-Venus,True,False,False,40.0,Dasha: mercury-ketu-venus connects with Dusthana/Maraka lords; D30: Ketu in Jupiter Trimsamsa
+RSALL_002309,Longevity 3430,1981-09-07,Health,HEALTH_CRISIS,Collapsed and stopped breathing,90.3,Ketu-Sun-Saturn,True,False,False,40.0,Dasha: ketu-sun-saturn connects with Dusthana/Maraka lords; D30: Sun in Venus Trimsamsa
+RSALL_002321,Lucky,1986-01-02,Financial,CAREER_STATUS,Won $8;384; wife won $750;000,38.0,Rahu-Moon-Venus,True,False,False,40.0,Dasha: rahu-moon connects with 10th/1st/11th/AmK
+RSALL_002322,Lucky,1986-01-02,Financial,CAREER_STATUS,Won $750;000,34.6,Rahu-Venus-Mercury,False,True,False,30.0,D10: Venus placed in Kendra/Trikona (Capricorn)
+RSALL_002323,Lucky,1981-10-24,Financial,CAREER_STATUS,Won $11;000 on slot machine,36.9,Moon-Saturn-Mercury,True,False,False,40.0,Dasha: moon-saturn connects with 10th/1st/11th/AmK
+RSALL_002324,Lucky Hubbard; Florence,1948-03-07,Financial,FINANCIAL,Prizes and cash on game show,68.9,Mercury-Ketu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_002325,Lucky,1951-03-23,Financial,CAREER_STATUS,Won cash; prizes; trip,19.7,Rahu-Jupiter-Rahu,True,True,False,70.0,Dasha: rahu-jupiter connects with 10th/1st/11th/AmK; D10: Jupiter placed in Kendra/Trikona (Aries)
+RSALL_002326,Lucky,1972-08-04,Financial,FINANCIAL,$6000 worth of prizes,29.1,Moon-Rahu-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_002327,Lucky,1973-01-07,Financial,CAREER_STATUS,Won $25;000,46.9,Mercury-Saturn-Rahu,True,True,False,70.0,Dasha: mercury-saturn connects with 10th/1st/11th/AmK; D10: Saturn placed in Kendra/Trikona (Cancer)
+RSALL_002328,Lucky,1990-02-28,Financial,FINANCIAL,Amount not given,40.3,Saturn-Saturn-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_002329,Lucky,1986-09-01,Financial,CAREER_STATUS,Won $1 million in lottery,32.8,Rahu-Rahu-Saturn,False,True,False,30.0,D10: Rahu placed in Kendra/Trikona (Libra)
+RSALL_002330,Lucky,2000-03-18,Financial,CAREER_STATUS,Won $2 million on the lottery,30.7,Rahu-Moon-Jupiter,True,False,False,40.0,Dasha: rahu-moon connects with 10th/1st/11th/AmK
+RSALL_002331,Lucky,1936-08-04,Financial,CAREER_STATUS,Won $100;000 in lottery,39.3,Moon-Venus-Saturn,True,True,True,100.0,Dasha: moon-venus connects with 10th/1st/11th/AmK; D10: Venus placed in Kendra/Trikona (Sagittarius); Transit: Sun activating 10th house
+RSALL_002332,Lucky Gibby,1991-03-13,Financial,CAREER_STATUS,Won $100;000 in Ohio state lottery,76.4,Mercury-Rahu-Venus,True,False,False,40.0,Dasha: mercury-rahu connects with 10th/1st/11th/AmK
+RSALL_002333,Lucky Mrs. Swingle,1986-05-28,Financial,CAREER_STATUS,She and husband won $21 million state lotto,53.6,Mercury-Mercury-Jupiter,True,True,False,70.0,Dasha: mercury-mercury connects with 10th/1st/11th/AmK; D10: Mercury placed in Kendra/Trikona (Cancer)
+RSALL_002334,Lucky,1985-06-08,Financial,CAREER_STATUS,Won lottery,54.7,Venus-Jupiter-Rahu,True,False,True,70.0,Dasha: venus-jupiter connects with 10th/1st/11th/AmK; Transit: Jupiter activating 10th house
+RSALL_002335,Lucky,1983-09-08,Financial,CAREER_STATUS,Won $6;000 for trip,54.1,Saturn-Jupiter-Saturn,True,True,False,70.0,Dasha: saturn-jupiter connects with 10th/1st/11th/AmK; D10: Jupiter placed in Kendra/Trikona (Cancer)
+RSALL_002336,Lucky,1975-09-18,Financial,CAREER_STATUS,Won $50;000 in state lottery,45.1,Saturn-Mars-Venus,True,False,False,40.0,Dasha: saturn-mars connects with 10th/1st/11th/AmK
+RSALL_002337,Lucky,1984-09-12,Financial,FINANCIAL,Bought winning lottery ticket,52.4,Venus-Moon-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_002340,Lucky Book III,1946-10-12,Financial,FINANCIAL,Amount not given,27.3,Saturn-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_002341,Lucky,1981-07-18,Financial,CAREER_STATUS,Won $1 million slot-machine jackpot,31.5,Rahu-Saturn-Rahu,True,True,False,70.0,Dasha: rahu-saturn connects with 10th/1st/11th/AmK; D10: Saturn placed in Kendra/Trikona (Aries)
+RSALL_002342,Lucky,1970-10-03,Financial,CAREER_STATUS,Won $120;000 in Irish Sweepstakes,18.3,Rahu-Venus-Saturn,True,False,False,40.0,Dasha: rahu-venus connects with 10th/1st/11th/AmK
+RSALL_002350,Suicide,1997-12-24,Other,GENERAL_LIFE,Gunshot to the head; age 42,42.0,Jupiter-Saturn-Sun,False,True,True,60.0,Baseline planetary aspects
+RSALL_002356,Medical,1963-03-26,Other,GENERAL_LIFE,Began years of agoraphobia,41.4,Jupiter-Venus-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_002361,Medical,1959-05-24,Health,HEALTH_CRISIS,Gangrenous leg removed,68.7,Rahu-Venus-Sun,True,False,False,40.0,Dasha: rahu-venus-sun connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa
+RSALL_002362,Medical,1945-06-21,Health,HEALTH_CRISIS,Both legs blown off by grenade,32.8,Saturn-Ketu-Ketu,True,True,False,70.0,Dasha: saturn-ketu-ketu connects with Dusthana/Maraka lords; D30: Ketu occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_002366,Medical,1975-06-16,Health,HEALTH_CRISIS,First leg removed,41.5,Mercury-Saturn-Jupiter,True,False,True,70.0,Dasha: mercury-saturn-jupiter connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa; SBC: Transiting Saturn hits Janma Tara
+RSALL_002366,Medical,1975-10-15,Health,HEALTH_CRISIS,Second leg removed,41.9,Ketu-Ketu-Moon,True,True,True,100.0,Dasha: ketu-ketu-moon connects with Dusthana/Maraka lords; D30: Ketu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002366,Medical,1978-01-28,Other,GENERAL_LIFE,Age 54,44.1,Ketu-Moon-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_002369,Medical Bee sting allergy,1996-09-11,Other,GENERAL_LIFE,Saw doctor; anaphylactic shock kit,51.2,Saturn-Mercury-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002373,Medical,1972-02-08,Other,HEALTH_CRISIS,Husband died,57.6,Saturn-Mars-Rahu,True,False,True,70.0,Dasha: saturn-mars-rahu connects with Dusthana/Maraka lords; D30: Mars in Jupiter Trimsamsa
+RSALL_002378,Medical,2002-02-13,Health,HEALTH_CRISIS,Placed on respirator,5.8,Sun-Moon-Jupiter,True,False,True,70.0,Dasha: sun-moon-jupiter connects with Dusthana/Maraka lords; D30: Moon in Mercury Trimsamsa
+RSALL_002381,Medical,1967-10-10,Social,HEALTH_CRISIS,Hospitalized for depression and attempted suicide,22.8,Saturn-Saturn-Venus,True,False,False,40.0,Dasha: saturn-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_002381,Medical,1969-03-13,Health,HEALTH_CRISIS,Ten shock treatments,24.2,Saturn-Saturn-Jupiter,True,False,True,70.0,Dasha: saturn-saturn-jupiter connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa; SBC: Transiting Ketu hits Vadha Tara
+RSALL_002384,Medical Christopher,1969-03-11,Other,GENERAL_LIFE,Brain hemorhage; age 20,20.4,Sun-Saturn-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_002385,Medical,1976-01-12,Health,HEALTH_CRISIS,Rhinoplasty,15.4,Moon-Saturn-Venus,True,False,True,70.0,Dasha: moon-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa
+RSALL_002385,Medical,1981-04-07,Health,HEALTH_CRISIS,Breast reduction,20.7,Mars-Mars-Rahu,True,False,True,70.0,Dasha: mars-mars-rahu connects with Dusthana/Maraka lords; D30: Mars in Mercury Trimsamsa
+RSALL_002416,Medical,1982-10-31,Other,GENERAL_LIFE,Leukemia; age eight,8.2,Rahu-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_002417,Medical,1961-05-12,Other,HEALTH_CRISIS,Stomach cancer; age 61,61.3,Saturn-Jupiter-Jupiter,True,False,True,70.0,Dasha: saturn-jupiter-jupiter connects with Dusthana/Maraka lords; D30: Jupiter in Jupiter Trimsamsa; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_002418,Medical,1956-01-22,Other,HEALTH_CRISIS,Pulmonary cancer; age 55,55.2,Venus-Mars-Saturn,True,True,True,100.0,Dasha: venus-mars-saturn connects with Dusthana/Maraka lords; D30: Mars occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Ketu hits Vadha Tara
+RSALL_002419,Medical,1953-10-30,Other,HEALTH_CRISIS,Larnyx cancer; age 52,52.8,Venus-Saturn-Rahu,True,False,True,70.0,Dasha: venus-saturn-rahu connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_002421,Medical Janis,2000-09-11,Health,HEALTH_CRISIS,Squamous cell cancer,70.1,Venus-Mercury-Saturn,True,True,True,100.0,Dasha: venus-mercury-saturn connects with Dusthana/Maraka lords; D30: Mercury occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Vainashika Tara
+RSALL_002421,Medical Janis,2000-10-16,Health,HEALTH_CRISIS,First radiation treatment,70.2,Venus-Ketu-Ketu,True,True,True,100.0,Dasha: venus-ketu-ketu connects with Dusthana/Maraka lords; D30: Ketu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002421,Medical Janis,2000-10-24,Health,HEALTH_CRISIS,First chemo treatment,70.2,Venus-Ketu-Ketu,True,True,True,100.0,Dasha: venus-ketu-ketu connects with Dusthana/Maraka lords; D30: Ketu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002422,Medical,1959-07-18,Other,GENERAL_LIFE,Hodgkins disease; age 57,57.8,Rahu-Moon-Sun,False,True,True,60.0,Baseline planetary aspects
+RSALL_002423,Medical,1966-02-11,Other,HEALTH_CRISIS,Kidney cancer; age 63,63.8,Saturn-Moon-Moon,True,False,False,40.0,Dasha: saturn-moon-moon connects with Dusthana/Maraka lords; D30: Moon in Mercury Trimsamsa
+RSALL_002424,Medical,1948-08-17,Other,HEALTH_CRISIS,Bronchial cancer; age 45,45.9,Rahu-Saturn-Rahu,True,False,False,40.0,Dasha: rahu-saturn-rahu connects with Dusthana/Maraka lords; D30: Saturn in Venus Trimsamsa
+RSALL_002426,Medical,1959-02-08,Other,HEALTH_CRISIS,Cancer; age 55,55.8,Saturn-Moon-Jupiter,True,False,True,70.0,Dasha: saturn-moon-jupiter connects with Dusthana/Maraka lords; D30: Moon in Jupiter Trimsamsa; SBC: Transiting Saturn hits Naidhana Tara; SBC: Transiting Rahu hits Janma Tara
+RSALL_002427,Medical,1956-08-15,Other,HEALTH_CRISIS,Bronchial cancer; age 52,52.7,Saturn-Jupiter-Moon,True,False,False,40.0,Dasha: saturn-jupiter-moon connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa
+RSALL_002428,Medical,1965-02-28,Other,HEALTH_CRISIS,Larnyx cancer; age 60 (died on a leap year),60.9,Rahu-Venus-Rahu,True,False,True,70.0,Dasha: rahu-venus-rahu connects with Dusthana/Maraka lords; D30: Venus in Venus Trimsamsa
+RSALL_002429,Medical,1962-02-24,Other,GENERAL_LIFE,Age 57,57.8,Moon-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002430,Medical,1951-01-18,Other,HEALTH_CRISIS,Bronchial cancer; age 46,46.5,Jupiter-Mars-Jupiter,True,False,True,70.0,Dasha: jupiter-mars-jupiter connects with Dusthana/Maraka lords; D30: Mars in Venus Trimsamsa; SBC: Transiting Rahu hits Vainashika Tara
+RSALL_002432,Medical,1953-04-15,Other,GENERAL_LIFE,Age 48,48.6,Rahu-Rahu-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_002433,Medical,1957-07-03,Other,HEALTH_CRISIS,Larnyx cancer; age 52,52.5,Rahu-Jupiter-Venus,True,True,False,70.0,Dasha: rahu-jupiter-venus connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002434,Medical,1963-09-20,Other,HEALTH_CRISIS,Uterus-cervix cancer; age 58,58.7,Sun-Mars-Saturn,True,False,True,70.0,Dasha: sun-mars-saturn connects with Dusthana/Maraka lords; D30: Mars in Jupiter Trimsamsa
+RSALL_002435,Medical,1952-08-20,Other,HEALTH_CRISIS,Cancer; age 46,47.4,Mercury-Mercury-Rahu,True,True,True,100.0,Dasha: mercury-mercury-rahu connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Ketu hits Vainashika Tara
+RSALL_002437,Medical,1954-03-03,Other,HEALTH_CRISIS,Ovarian cancer; age 48 plus 2 days,48.0,Jupiter-Saturn-Saturn,True,False,False,40.0,Dasha: jupiter-saturn-saturn connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_002438,Medical,1947-04-28,Other,HEALTH_CRISIS,Bronchial cancer; age 40,40.7,Mercury-Rahu-Mercury,True,False,True,70.0,Dasha: mercury-rahu-mercury connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_002440,Medical,1955-08-05,Other,HEALTH_CRISIS,Bronchial cancer; age 48,48.6,Venus-Venus-Rahu,True,False,False,40.0,Dasha: venus-venus-rahu connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa
+RSALL_002441,Medical,1965-01-13,Other,HEALTH_CRISIS,Stomach cancer; age 57,57.8,Saturn-Moon-Saturn,True,False,False,40.0,Dasha: saturn-moon-saturn connects with Dusthana/Maraka lords; D30: Moon in Jupiter Trimsamsa
+RSALL_002442,Medical,1952-03-26,Other,HEALTH_CRISIS,Digestive system cancer; age 44,44.6,Venus-Rahu-Venus,True,False,True,70.0,Dasha: venus-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu in Venus Trimsamsa; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_002443,Medical,1952-09-01,Other,HEALTH_CRISIS,Kidney cancer; age 44,44.9,Mercury-Ketu-Venus,True,False,True,70.0,Dasha: mercury-ketu-venus connects with Dusthana/Maraka lords; D30: Ketu in Venus Trimsamsa; SBC: Transiting Ketu hits Vainashika Tara
+RSALL_002444,Medical,1945-09-18,Other,HEALTH_CRISIS,Stomach-Liver cancer; age 37,37.8,Jupiter-Venus-Moon,True,False,True,70.0,Dasha: jupiter-venus-moon connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa; SBC: Transiting Ketu hits Vadha Tara
+RSALL_002446,Medical,1993-03-01,Health,HEALTH_CRISIS,Cancer surgery on right breast,47.4,Saturn-Venus-Ketu,True,False,True,70.0,Dasha: saturn-venus-ketu connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa; SBC: Transiting Ketu hits Janma Tara
+RSALL_002447,Medical,1953-10-29,Other,HEALTH_CRISIS,Pleura cancer; age 46,45.5,Jupiter-Rahu-Sun,True,False,False,40.0,Dasha: jupiter-rahu-sun connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa
+RSALL_002448,Medical,1965-10-13,Other,HEALTH_CRISIS,Cancer; age 57,57.3,Saturn-Saturn-Mercury,True,False,True,70.0,Dasha: saturn-saturn-mercury connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_002450,Medical Garret,1977-05-03,Health,HEALTH_CRISIS,Radium implantation,56.5,Mars-Venus-Rahu,True,False,True,70.0,Dasha: mars-venus-rahu connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa; SBC: Transiting Ketu hits Janma Tara
+RSALL_002471,Medical,1975-09-25,Health,HEALTH_CRISIS,Double mastectomy,57.3,Saturn-Rahu-Venus,True,True,False,70.0,Dasha: saturn-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002485,Medical,1971-10-30,Health,HEALTH_CRISIS,Gall bladder removed,49.7,Mars-Mercury-Mercury,True,True,False,70.0,Dasha: mars-mercury-mercury connects with Dusthana/Maraka lords; D30: Mercury occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002485,Medical,1975-12-09,Health,HEALTH_CRISIS,Hysterectomy,53.8,Rahu-Rahu-Jupiter,True,False,True,70.0,Dasha: rahu-rahu-jupiter connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa
+RSALL_002494,Medical,1981-11-19,Health,HEALTH_CRISIS,Throat cancer surgery,58.3,Jupiter-Jupiter-Mars,True,False,True,70.0,Dasha: jupiter-jupiter-mars connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa; SBC: Transiting Mars hits Janma Tara
+RSALL_002494,Medical,1982-01-21,Health,HEALTH_CRISIS,Two teeth pulled,58.4,Jupiter-Jupiter-Rahu,True,False,True,70.0,Dasha: jupiter-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa
+RSALL_002494,Medical,1982-02-23,Health,HEALTH_CRISIS,Cardiac arrest,58.5,Jupiter-Jupiter-Rahu,True,False,True,70.0,Dasha: jupiter-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa
+RSALL_002515,Medical Donna,1968-12-11,Health,HEALTH_CRISIS,Radical mastectomy,38.4,Saturn-Venus-Ketu,True,True,True,100.0,Dasha: saturn-venus-ketu connects with Dusthana/Maraka lords; D30: Venus occupies Mars Trimsamsa (physical vulnerability)
+RSALL_002515,Medical Donna,1970-09-24,Other,HEALTH_CRISIS,Liver cancer; age 40,40.2,Saturn-Moon-Saturn,True,False,False,40.0,Dasha: saturn-moon-saturn connects with Dusthana/Maraka lords; D30: Moon in Jupiter Trimsamsa
+RSALL_002541,Medical,1978-11-12,Other,HEALTH_CRISIS,Cancer; age 38,38.7,Jupiter-Jupiter-Rahu,True,False,True,70.0,Dasha: jupiter-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter in Jupiter Trimsamsa
+RSALL_002548,Medical,1986-09-05,Other,GENERAL_LIFE,With pills; alcohol and bag; age 45,45.5,Rahu-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_002588,Medical Castellani; Renato,1985-12-28,Other,GENERAL_LIFE,Cirrhosis; age 72,72.3,Venus-Mars-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_002590,Medical,1971-07-02,Health,HEALTH_CRISIS,Blind due to diabetes,24.1,Sun-Saturn-Venus,True,False,True,70.0,Dasha: sun-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_002594,Medical,1986-05-05,Other,HEALTH_CRISIS,Sister died,63.7,Jupiter-Rahu-Ketu,True,False,True,70.0,Dasha: jupiter-rahu-ketu connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa; SBC: Transiting Mars hits Janma Tara; SBC: Transiting Saturn hits Vadha Tara; SBC: Transiting Ketu hits Vainashika Tara
+RSALL_002597,Medical,1985-11-12,Health,HEALTH_CRISIS,First surgery on right eye,74.1,Mars-Jupiter-Rahu,True,False,True,70.0,Dasha: mars-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa; SBC: Transiting Saturn hits Janma Tara
+RSALL_002597,Medical,1985-12-05,Health,HEALTH_CRISIS,Second surgery on right eye,74.2,Mars-Jupiter-Rahu,True,False,True,70.0,Dasha: mars-jupiter-rahu connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa; SBC: Transiting Mars hits Vadha Tara; SBC: Transiting Saturn hits Janma Tara
+RSALL_002599,Medical,1970-01-13,Other,GENERAL_LIFE,Chicken Pox and Encephalitis; age seven,6.0,Moon-Jupiter-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_002601,Medical,1979-12-26,Health,HEALTH_CRISIS,Onset of epilepsy; age 26,26.5,Moon-Mercury-Moon,True,False,True,70.0,Dasha: moon-mercury-moon connects with Dusthana/Maraka lords; D30: Mercury in Venus Trimsamsa; SBC: Transiting Mars hits Janma Tara
+RSALL_002603,Medical Mary,2000-11-14,Family,FAMILY_PROGENY,Child born,43.8,Venus-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_002604,Medical Sara,1998-07-25,Family,FAMILY_PROGENY,Twins born,44.4,Jupiter-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_002605,Medical Rachel,1996-10-16,Family,FAMILY_PROGENY,Son born,36.8,Venus-Sun-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002632,Medical Peter,1969-03-12,Other,HEALTH_CRISIS,Brother died,24.0,Rahu-Moon-Jupiter,True,True,True,100.0,Dasha: rahu-moon-jupiter connects with Dusthana/Maraka lords; D30: Moon occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Naidhana Tara
+RSALL_002641,Medical,1960-10-14,Family,FAMILY_PROGENY,Daughter born,22.3,Rahu-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_002655,Medical,1975-12-04,Other,GENERAL_LIFE,Suffered with M.S.; age 53,53.9,Rahu-Sun-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002672,Medical,1996-04-19,Health,HEALTH_CRISIS,Hospitalized with meningitis,18.0,Rahu-Venus-Venus,True,False,True,70.0,Dasha: rahu-venus-venus connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa; SBC: Transiting Saturn hits Vainashika Tara
+RSALL_002674,Medical,2001-09-11,Other,GENERAL_LIFE,Dad in Trade Center terrorist attacks; survived,45.3,Venus-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_002689,Medical,1975-07-08,Other,FAMILY_PROGENY,Son killed by sniper,43.6,Saturn-Mercury-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_002695,Medical,1948-07-28,Health,HEALTH_CRISIS,Polio; age two,2.2,Sun-Venus-Saturn,True,True,True,100.0,Dasha: sun-venus-saturn connects with Dusthana/Maraka lords; D30: Venus occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Ketu hits Vainashika Tara
+RSALL_002695,Medical,1963-03-13,Health,HEALTH_CRISIS,Auto accident; loss of leg,16.8,Mars-Mercury-Saturn,True,False,True,70.0,Dasha: mars-mercury-saturn connects with Dusthana/Maraka lords; D30: Mercury in Mercury Trimsamsa; SBC: Transiting Ketu hits Janma Tara
+RSALL_002696,Medical May; Brian,1955-04-15,Health,HEALTH_CRISIS,Polio; age five,5.1,Moon-Mercury-Mercury,True,False,True,70.0,Dasha: moon-mercury-mercury connects with Dusthana/Maraka lords; D30: Mercury in Mercury Trimsamsa
+RSALL_002698,Medical,1952-08-23,Health,HEALTH_CRISIS,Polio,12.8,Jupiter-Rahu-Rahu,True,True,False,70.0,Dasha: jupiter-rahu-rahu connects with Dusthana/Maraka lords; D30: Rahu occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_002702,Medical,1975-05-14,Mental Health,HEALTH_CRISIS,Paranoid and distraught,36.6,Mercury-Saturn-Saturn,True,True,True,100.0,Dasha: mercury-saturn-saturn connects with Dusthana/Maraka lords; D30: Saturn occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Janma Tara
+RSALL_002702,Medical,1975-12-12,Misc.,GENERAL_LIFE,Started treatment by two psychiatrists,37.2,Mercury-Saturn-Ketu,False,True,True,60.0,Baseline planetary aspects
+RSALL_002704,Medical,1969-06-26,Health,HEALTH_CRISIS,Surgery to correct congenital disease; left with paralysis,16.5,Rahu-Venus-Moon,True,False,True,70.0,Dasha: rahu-venus-moon connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa
+RSALL_002706,Medical,1986-10-06,Health,HEALTH_CRISIS,Car; not injured,46.7,Jupiter-Ketu-Sun,True,True,True,100.0,Dasha: jupiter-ketu-sun connects with Dusthana/Maraka lords; D30: Ketu occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Janma Tara; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_002724,Medical Emerson Case No.1,1983-01-20,Family,FAMILY_PROGENY,Had twins,54.3,Mercury-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_002725,Medical Emerson Case No.2,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,37.4,Saturn-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_002732,Medical,1990-10-18,Health,HEALTH_CRISIS,First of three surgeries,57.8,Mercury-Saturn-Jupiter,True,False,True,70.0,Dasha: mercury-saturn-jupiter connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_002734,Medical,1984-05-15,Health,HEALTH_CRISIS,Second operation,33.0,Rahu-Venus-Rahu,True,False,True,70.0,Dasha: rahu-venus-rahu connects with Dusthana/Maraka lords; D30: Venus in Venus Trimsamsa
+RSALL_002739,Meilhon; Tony,2011-01-19,Crime,LITIGATION_CRIME,at 01:00 AM,31.4,Mars-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_002739,Meilhon; Tony,2013-06-05,Crime,FAMILY_PROGENY,sentenced to 22 years of prison,33.8,Rahu-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_002775,Mensan 13938 Swerdloff; Stuart,1971-04-15,Health,HEALTH_CRISIS,Hit by car; broken leg and concussion,7.4,Venus-Sun-Mercury,True,True,True,100.0,Dasha: venus-sun-mercury connects with Dusthana/Maraka lords; D30: Sun occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_002785,Mensan 4919 Shatzkin; Jerry,1977-07-04,Health,HEALTH_CRISIS,Butane heater exploded; badly burned,62.1,Venus-Mercury-Mercury,True,True,False,70.0,Dasha: venus-mercury-mercury connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_002795,Mensan 5593 Kaye; Mary,1943-10-02,Social,CAREER_STATUS,U.S. Marine Corp,21.0,Jupiter-Mercury-Saturn,True,True,True,100.0,Dasha: jupiter-mercury connects with 10th/1st/11th/AmK; D10: Mercury placed in Kendra/Trikona (Sagittarius); Transit: Sun activating 10th house
+RSALL_002795,Mensan 5593 Kaye; Mary,1944-06-11,Relationship,RELATIONSHIP,Met a man; married 10 days later,21.7,Jupiter-Ketu-Saturn,True,False,False,40.0,Dasha: jupiter-ketu connects with 7th/2nd/DK (Venus)
+RSALL_002795,Mensan 5593 Kaye; Mary,1944-06-21,Relationship,RELATIONSHIP,First marriage,21.7,Jupiter-Ketu-Saturn,True,False,False,40.0,Dasha: jupiter-ketu connects with 7th/2nd/DK (Venus)
+RSALL_002951,Mental Defective 4742,1937-06-01,Other,GENERAL_LIFE,Age 24,24.3,Saturn-Mercury-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_002957,Military 6640,1982-09-12,Health,HEALTH_CRISIS,Coronary,53.0,Moon-Jupiter-Moon,True,True,False,70.0,Dasha: moon-jupiter-moon connects with Dusthana/Maraka lords; D30: Jupiter occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_002960,Minister 5063,1944-04-24,Social,CAREER_STATUS,Joined U.S. Army,26.9,Rahu-Jupiter-Ketu,True,True,False,70.0,Dasha: rahu-jupiter connects with 10th/1st/11th/AmK; D10: Jupiter placed in Kendra/Trikona (Capricorn)
+RSALL_002961,Kerze; Christopher Christopher Matthew Kerze,1990-04-20,Crime,LITIGATION_CRIME,Age 17,17.2,Mars-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_002963,Missing Person 12135,1974-06-07,Crime,LITIGATION_CRIME,Disappeared after phone call,22.1,Rahu-Mars-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_002964,Missing Person 13093,1982-09-12,Family,FAMILY_PROGENY,Son born,25.6,Rahu-Mercury-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_002964,Missing Person 13093,1985-05-23,Crime,LITIGATION_CRIME,Disappeared,28.3,Rahu-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_002965,Missing Person 14871,1989-12-16,Crime,LITIGATION_CRIME,Disappeared from yard; no witnesses,7.0,Saturn-Sun-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_002966,Missing Person 23951,1992-09-24,Crime,LITIGATION_CRIME,Last seen,33.5,Jupiter-Mercury-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_002967,Missing Person 7696 James,1980-01-14,Crime,LITIGATION_CRIME,Last seen in boat off coast,44.2,Mars-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_002968,Missing Person 8994,1971-08-16,Crime,LITIGATION_CRIME,Body not found for ten years,29.7,Moon-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_002969,Missing Person 9905,1981-12-19,Crime,LITIGATION_CRIME,Car found at mall,36.7,Mercury-Saturn-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_002978,Moss; Perry Perry Victor Moss,2013-05-22,Work,CAREER_STATUS,New England Basketball Hall of Fame,54.5,Venus-Moon-Mercury,True,True,False,70.0,Dasha: venus-moon connects with 10th/1st/11th/AmK; D10: Moon placed in Kendra/Trikona (Cancer)
+RSALL_003003,Musician 5897,1989-04-24,Other,HEALTH_CRISIS,Brain tumor; age 64,64.5,Mars-Moon-Jupiter,True,False,True,70.0,Dasha: mars-moon-jupiter connects with Dusthana/Maraka lords; D30: Moon in Jupiter Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_003020,Nazi; American 8655,1960-10-20,Social,CAREER_STATUS,Led demonstration,20.2,Ketu-Moon-Venus,True,True,False,70.0,Dasha: ketu-moon connects with 10th/1st/11th/AmK; D10: Moon placed in Kendra/Trikona (Aries)
+RSALL_003021,NDE Ellyn,1985-10-14,Health,HEALTH_CRISIS,Near death experience,35.4,Saturn-Rahu-Mercury,True,False,False,40.0,Dasha: saturn-rahu-mercury connects with Dusthana/Maraka lords; D30: Rahu in Jupiter Trimsamsa
+RSALL_003023,Nervous Breakdown 11162,1969-03-26,Social,CAREER_STATUS,Military service two years,20.1,Venus-Saturn-Ketu,True,False,False,40.0,Dasha: venus-saturn connects with 10th/1st/11th/AmK
+RSALL_003046,Nurse 4718,1978-02-05,Other,GENERAL_LIFE,Age 65,65.3,Saturn-Ketu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_003047,Nurse 5670 Magda,1981-11-25,Financial,RELATIONSHIP,Turned down marriage for money,58.7,Ketu-Ketu-Jupiter,False,True,False,30.0,D9: Ketu in supportive Navamsha (Gemini)
+RSALL_003049,Nurse 7248,1979-01-22,Other,GENERAL_LIFE,Unknown causes,45.7,Moon-Mars-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_003379,Overweight 9694,1964-11-16,Work,CAREER_STATUS,At unspecified company,20.3,Jupiter-Jupiter-Venus,True,False,False,40.0,Dasha: jupiter-jupiter connects with 10th/1st/11th/AmK
+RSALL_003391,Perrais; Laëtitia,2011-01-19,Crime,LITIGATION_CRIME,Kidnapped and strangled,17.7,Rahu-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_003429,Physician 4119,1987-08-14,Other,HEALTH_CRISIS,Wife died,83.8,Saturn-Jupiter-Saturn,True,False,True,70.0,Dasha: saturn-jupiter-saturn connects with Dusthana/Maraka lords; D30: Jupiter in Mercury Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_003448,Pilot 13298,1978-10-21,Misc.,GENERAL_LIFE,Saw UFO and disappeared,20.4,Saturn-Rahu-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_003456,Pilot 6997,1934-01-18,Relationship,RELATIONSHIP,at 6:50 PM,2.1,Mars-Mercury-Saturn,True,False,True,70.0,Dasha: mars-mercury connects with 7th/2nd/DK (Mars); Transit: Jupiter blessing 7th/1st house axis
+RSALL_003473,Pilot 8412,1942-02-13,Relationship,RELATIONSHIP,To an obese female,2.6,Ketu-Rahu-Jupiter,False,True,False,30.0,D9: Rahu in supportive Navamsha (Capricorn)
+RSALL_003484,Pilot 9674,1974-02-08,Health,HEALTH_CRISIS,Airplane crash; burns over 90% of body,29.6,Saturn-Venus-Venus,True,True,True,100.0,Dasha: saturn-venus-venus connects with Dusthana/Maraka lords; D30: Venus occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_003488,Politician,1981-01-25,Other,GENERAL_LIFE,Age 84,84.9,Venus-Moon-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_003624,Prostitute 7995 Frank,1964-01-13,Other,GENERAL_LIFE,Moved business to N.Y.,26.5,Saturn-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_003627,Prostitute 9167 Kathy,1971-03-09,Crime,LITIGATION_CRIME,Guilty of prostitution,28.6,Moon-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_003671,Psychokinetic,1963-08-10,Health,HEALTH_CRISIS,Hospitalized with pneumonia and asthma,4.7,Venus-Rahu-Venus,True,True,True,100.0,Dasha: venus-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Ketu hits Janma Tara
+RSALL_003673,Psychologist (91598) Quentin,2016-02-18,Other,GENERAL_LIFE,in Houston,78.3,Venus-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_003724,Rape Victim's Mother,1986-01-18,Other,FAMILY_PROGENY,Daughter raped,30.2,Venus-Rahu-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_003725,Rape Victim 10027,1980-09-08,Crime,LITIGATION_CRIME,Two men tried to kill her,35.0,Mercury-Jupiter-Mars,True,True,True,100.0,Baseline planetary aspects
+RSALL_003731,Rape Victim 14004,1989-04-11,Crime,LITIGATION_CRIME,Raped,24.6,Saturn-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_003732,Rape Victim 14072,1988-05-30,Crime,LITIGATION_CRIME,Raped,22.9,Sun-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_003734,Rape Victim 14518,1985-11-22,Crime,LITIGATION_CRIME,Raped,14.1,Mars-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_003736,Rape Victim 14616,1986-05-31,Crime,LITIGATION_CRIME,Raped,12.3,Mercury-Moon-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_003737,Rape Victim 14621,1986-11-18,Crime,LITIGATION_CRIME,Raped,12.6,Rahu-Saturn-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_003738,Rape Victim 14628,1987-09-15,Crime,LITIGATION_CRIME,Raped,13.0,Saturn-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_003739,Rape Victim 14629,1988-08-30,Crime,LITIGATION_CRIME,Raped,13.9,Jupiter-Venus-Ketu,True,True,True,100.0,Baseline planetary aspects
+RSALL_003740,Rape Victim 14645,1986-01-18,Crime,LITIGATION_CRIME,Raped,10.6,Mercury-Moon-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_003741,Rape Victim 14690,1986-07-22,Crime,LITIGATION_CRIME,Raped,9.2,Jupiter-Mars-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_003742,Rape Victim 14725,1985-11-03,Crime,LITIGATION_CRIME,Raped by uncle,7.4,Ketu-Saturn-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_003743,Rape Victim 14827,1984-10-18,Crime,LITIGATION_CRIME,Raped; age three; by neighbor boy,2.8,Jupiter-Moon-Venus,False,True,True,60.0,Baseline planetary aspects
+RSALL_003744,Rape victim 42696,2000-11-04,Crime,LITIGATION_CRIME,"Raped by ""friend""",21.4,Mars-Saturn-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_003744,Rape victim 42696,2001-06-06,Health,HEALTH_CRISIS,Automobile accident,22.0,Mars-Saturn-Moon,True,False,True,70.0,Dasha: mars-saturn-moon connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_003744,Rape victim 42696,2001-06-28,Health,HEALTH_CRISIS,Laser surgery,22.1,Mars-Saturn-Mars,True,False,True,70.0,Dasha: mars-saturn-mars connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa
+RSALL_003745,Rape Victim 4672,1976-02-27,Crime,LITIGATION_CRIME,Raped,63.9,Saturn-Jupiter-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_003745,Rape Victim 4672,1976-02-27,Crime,LITIGATION_CRIME,Beaten,63.9,Saturn-Jupiter-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_003754,Realtor 14087,1986-01-27,Crime,LITIGATION_CRIME,Stolen weapons charge,20.4,Mercury-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_003782,Robbery Victim 1545,1978-02-18,Crime,LITIGATION_CRIME,Robbed; taken hostage by gunpoint,47.6,Saturn-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_003783,Robbery Victim 4284,1981-12-22,Other,GENERAL_LIFE,House was robbed,75.5,Saturn-Saturn-Mars,False,True,True,60.0,Baseline planetary aspects
+RSALL_003783,Robbery Victim 4284,1982-07-08,Other,GENERAL_LIFE,Robbed by two black men in garage,76.1,Saturn-Saturn-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_003784,Rodden File 43315 Marie,1939-07-26,Relationship,RELATIONSHIP,Married Tony in secret,25.8,Jupiter-Moon-Saturn,True,False,False,40.0,Dasha: jupiter-moon connects with 7th/2nd/DK (Venus)
+RSALL_003785,Rodden File 43384 White female,1948-10-29,Family,FINANCIAL,Son Richard born,24.2,Sun-Mars-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_003857,S.I.D.S. 14922,1984-03-18,Other,GENERAL_LIFE,Age  not quite three months old,0.2,Moon-Jupiter-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_003882,S.I.D.S. 44247 Patrick,1987-08-01,Other,HEALTH_CRISIS,SIDS; age ten months,0.8,Moon-Venus-Jupiter,True,False,True,70.0,Dasha: moon-venus-jupiter connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa
+RSALL_003884,S.I.D.S. 44277 Brian,1984-09-03,Other,HEALTH_CRISIS,SIDS; age 21 months,1.8,Jupiter-Moon-Jupiter,True,False,False,40.0,Dasha: jupiter-moon-jupiter connects with Dusthana/Maraka lords; D30: Moon in Venus Trimsamsa
+RSALL_003886,S.I.D.S. 44288 Gregory,1986-07-03,Other,HEALTH_CRISIS,SIDS; age two months,0.2,Sun-Mercury-Saturn,True,False,False,40.0,Dasha: sun-mercury-saturn connects with Dusthana/Maraka lords; D30: Mercury in Venus Trimsamsa
+RSALL_003894,S.I.D.S. Parent 11600,1979-06-05,Other,FAMILY_PROGENY,Son,28.9,Jupiter-Mercury-Mars,True,True,True,100.0,Baseline planetary aspects
+RSALL_003895,S.I.D.S. Parent 12251,1985-10-06,Other,FAMILY_PROGENY,Daughter,33.1,Venus-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_003896,S.I.D.S. Parent 13482,1985-10-06,Other,FAMILY_PROGENY,Daughter,25.9,Jupiter-Jupiter-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_003897,S.I.D.S. Parent 13632,1985-04-08,Other,FAMILY_PROGENY,Son,24.2,Venus-Rahu-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_003898,S.I.D.S. Parent 9731,1979-06-05,Other,FAMILY_PROGENY,Son,34.7,Mercury-Jupiter-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_003941,Seduced Youth,1974-10-26,Health,HEALTH_CRISIS,Abortion,21.1,Venus-Saturn-Venus,True,True,True,100.0,Dasha: venus-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara; SBC: Transiting Ketu hits Vainashika Tara
+RSALL_003944,Sextuplets No.1,1983-01-20,Family,FAMILY_PROGENY,Had twins,14.3,Rahu-Mercury-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_003945,Sextuplets No.2,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,14.3,Rahu-Mercury-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_003951,Sexual Escort 35983,1981-12-11,Family,FAMILY_PROGENY,Daughter born; adopted out later,17.0,Rahu-Rahu-Mars,False,True,True,60.0,Baseline planetary aspects
+RSALL_003973,Sex Assault Victim 12037,1982-05-17,Crime,LITIGATION_CRIME,Sexually abused by a youth,30.5,Sun-Saturn-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_004000,Spina Bifida 14030,1983-06-27,Social,CAREER_STATUS,Graduated from high school,18.5,Mars-Moon-Rahu,True,True,True,100.0,Dasha: mars-moon connects with 10th/1st/11th/AmK; D10: Moon placed in Kendra/Trikona (Libra); Transit: Jupiter activating 10th house
+RSALL_004023,Spiritual Teacher Timothy,1971-02-01,Misc.,GENERAL_LIFE,Transformative spiritual awakening,16.7,Ketu-Sun-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_004119,Suicidal 12900,1975-07-12,Relationship,RELATIONSHIP,Marriage  12 July 1975,19.8,Mars-Ketu-Rahu,True,True,True,100.0,Dasha: mars-ketu connects with 7th/2nd/DK (Jupiter); D9: Ketu in supportive Navamsha (Virgo); Transit: Jupiter blessing 7th/1st house axis
+RSALL_004122,Suicidal 14538,1985-03-10,Health,HEALTH_CRISIS,Drug overdose,13.1,Mars-Jupiter-Saturn,True,True,True,100.0,Dasha: mars-jupiter-saturn connects with Dusthana/Maraka lords; D30: Jupiter occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Janma Tara
+RSALL_004124,Suicide or Murder Dolores,1983-06-15,Crime,LITIGATION_CRIME,Left work,39.8,Moon-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004124,Suicide or Murder Dolores,1983-06-18,Other,GENERAL_LIFE,Body found; age 39,39.8,Moon-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004125,Suicide,1977-12-02,Other,GENERAL_LIFE,Age 30,30.6,Ketu-Mercury-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004130,Suicide,1989-10-20,Other,GENERAL_LIFE,Body found,9.8,Jupiter-Mercury-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_004141,Suicide,1982-08-26,Other,GENERAL_LIFE,Drugs; age 35,35.4,Mercury-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004152,Suicide,1969-01-18,Health,HEALTH_CRISIS,Car accident,17.6,Rahu-Rahu-Moon,True,False,True,70.0,Dasha: rahu-rahu-moon connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa
+RSALL_004152,Suicide,1969-01-22,Other,GENERAL_LIFE,Drug overdose; age 17,17.6,Rahu-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_004165,Suicide,1977-05-16,Other,GENERAL_LIFE,Drug overdose; age 20,20.8,Rahu-Mars-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_004166,Suicide,1980-07-12,Other,GENERAL_LIFE,Drug overdose; age 21,21.5,Saturn-Rahu-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_004169,Suicide Chrissy,1979-02-26,Other,GENERAL_LIFE,Pill OD; age 23,23.2,Rahu-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004170,Suicide,1968-09-10,Other,GENERAL_LIFE,Overdosed; age 59,39.1,Moon-Moon-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_004196,Suicide,1969-04-25,Other,GENERAL_LIFE,Carbon monoxide; age 21,21.2,Rahu-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004199,Suicide,1985-04-13,Other,FAMILY_PROGENY,Carbon monoxide poisoning; age 28,28.9,Venus-Jupiter-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004206,Suicide Candace,1984-04-11,Other,HEALTH_CRISIS,Died at home from kidney cancer. She found his body.,15.4,Rahu-Ketu-Venus,True,False,True,70.0,Dasha: rahu-ketu-venus connects with Dusthana/Maraka lords; D30: Ketu in Jupiter Trimsamsa; SBC: Transiting Mars hits Vainashika Tara; SBC: Transiting Ketu hits Vainashika Tara
+RSALL_004206,Suicide Candace,1992-06-26,Other,GENERAL_LIFE,Self-inflicted shotgun blast to head,23.6,Jupiter-Jupiter-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_004207,Suicide,1981-07-10,Other,GENERAL_LIFE,Gunshot; age 33,33.9,Jupiter-Jupiter-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_004223,Suicide,1989-12-12,Other,GENERAL_LIFE,Gunshot to head; age 22,22.1,Rahu-Mars-Rahu,False,True,True,60.0,Baseline planetary aspects
+RSALL_004225,Suicide,1956-02-16,Other,GENERAL_LIFE,Shot herself; age 27,27.9,Jupiter-Mercury-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_004227,Suicide,1960-04-04,Death,HEALTH_CRISIS,Attempted drug overdose,20.2,Mercury-Venus-Saturn,True,True,True,100.0,Dasha: mercury-venus-saturn connects with Dusthana/Maraka lords; D30: Venus occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vainashika Tara
+RSALL_004230,Suicide,1951-09-30,Other,GENERAL_LIFE,Gunshot; age 41,41.7,Ketu-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_004320,Suicide,1987-01-31,Other,GENERAL_LIFE,Hanged self; age 19,19.0,Ketu-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_004321,Suicide,1990-04-28,Other,GENERAL_LIFE,Hanged herself; age 16,16.9,Saturn-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_004322,Suicide,1969-01-02,Other,GENERAL_LIFE,Hanged himself; age 32,32.0,Jupiter-Ketu-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_004324,Suicide,1981-06-28,Other,GENERAL_LIFE,Hanged himself; age 36,26.3,Mercury-Jupiter-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_004326,Suicide,1992-11-20,Other,GENERAL_LIFE,Hanged herself; age 17 -seven days,17.0,Mars-Saturn-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_004443,Suicide,1997-12-24,Other,GENERAL_LIFE,Gunshot to the head; age 42,42.0,Jupiter-Saturn-Sun,False,True,True,60.0,Baseline planetary aspects
+RSALL_004444,Suicide,1902-03-25,Other,FAMILY_PROGENY,Poison; age 41,41.2,Jupiter-Rahu-Jupiter,False,True,True,60.0,Baseline planetary aspects
+RSALL_004445,Suicide,1967-09-15,Other,FAMILY_PROGENY,Poison; age 23,23.4,Sun-Saturn-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_004446,Suicide,1949-06-20,Other,FAMILY_PROGENY,Poisoned; age 26,26.3,Sun-Venus-Mercury,True,True,True,100.0,Baseline planetary aspects
+RSALL_004484,Terrorism victim WTC 50105 Victim of World Trade Center Attack,2001-09-11,Other,GENERAL_LIFE,Age 23; in WTC attack; NY,23.1,Mars-Moon-Moon,False,True,True,60.0,Baseline planetary aspects
+RSALL_004485,Terrorism victim WTC 50106,2001-09-11,Other,GENERAL_LIFE,At the World Trade Center; NY;,33.7,Moon-Rahu-Ketu,False,True,True,60.0,Baseline planetary aspects
+RSALL_004486,Terrorist Survivor 43446,2001-09-11,Other,GENERAL_LIFE,Survived attack,45.4,Rahu-Venus-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_004487,Terrorist,2001-09-11,Health,HEALTH_CRISIS,survived world trade center attack,45.7,Jupiter-Mercury-Rahu,True,False,True,70.0,Dasha: jupiter-mercury-rahu connects with Dusthana/Maraka lords; D30: Mercury in Mercury Trimsamsa
+RSALL_004487,Terrorist,2001-09-11,Misc.,FAMILY_PROGENY,considers self saved by her dead brother who told her she was safe,45.7,Jupiter-Mercury-Rahu,True,True,True,100.0,Baseline planetary aspects
+RSALL_004510,Therapist 4921,1965-12-18,Health,HEALTH_CRISIS,Fell when helping patient,50.5,Mercury-Mars-Sun,True,False,True,70.0,Dasha: mercury-mars-sun connects with Dusthana/Maraka lords; D30: Mars in Jupiter Trimsamsa; SBC: Transiting Mars hits Vadha Tara; SBC: Transiting Saturn hits Janma Tara; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_004510,Therapist 4921,1967-02-13,Health,HEALTH_CRISIS,End of career due to injuries,51.7,Mercury-Rahu-Saturn,True,True,True,100.0,Dasha: mercury-rahu-saturn connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_004510,Therapist 4921,1972-10-08,Health,HEALTH_CRISIS,Fell and hit head in apartment,57.3,Mercury-Saturn-Mars,True,False,True,70.0,Dasha: mercury-saturn-mars connects with Dusthana/Maraka lords; D30: Saturn in Jupiter Trimsamsa; SBC: Transiting Rahu hits Vadha Tara
+RSALL_004536,Thief 5738,1940-09-16,Social,CAREER_STATUS,Caught as a thief,16.9,Rahu-Venus-Moon,True,True,False,70.0,Dasha: rahu-venus connects with 10th/1st/11th/AmK; D10: Venus placed in Kendra/Trikona (Libra)
+RSALL_004537,Thief Suspect 13594 Zan,1980-08-07,Health,HEALTH_CRISIS,Shot in the chest by a cop,19.8,Saturn-Saturn-Venus,True,False,True,70.0,Dasha: saturn-saturn-venus connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa; SBC: Transiting Saturn hits Naidhana Tara
+RSALL_004548,Transgender 13704,1989-06-16,Health,HEALTH_CRISIS,Sex change operation,27.8,Venus-Mercury-Venus,True,True,True,100.0,Dasha: venus-mercury-venus connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_004549,Transgender 13819,1989-05-30,Health,HEALTH_CRISIS,Sex change operation,26.6,Jupiter-Mercury-Rahu,True,True,True,100.0,Dasha: jupiter-mercury-rahu connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara; SBC: Transiting Rahu hits Janma Tara
+RSALL_004552,Transgender 43196 MB,1975-10-23,Health,HEALTH_CRISIS,sex change,27.4,Jupiter-Sun-Mercury,True,True,True,100.0,Dasha: jupiter-sun-mercury connects with Dusthana/Maraka lords; D30: Sun occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Janma Tara; SBC: Transiting Ketu hits Vadha Tara
+RSALL_004553,Transgender 49981,2004-03-05,Health,HEALTH_CRISIS,final surgery,39.3,Sun-Moon-Saturn,True,True,True,100.0,Dasha: sun-moon-saturn connects with Dusthana/Maraka lords; D30: Moon occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara
+RSALL_004554,Transgender 5899,1955-09-12,Health,HEALTH_CRISIS,Sex Change-first operation,30.8,Rahu-Rahu-Venus,True,True,True,100.0,Dasha: rahu-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_004554,Transgender 5899,1956-05-19,Health,HEALTH_CRISIS,Sex change-last operation,31.5,Rahu-Rahu-Mars,True,True,True,100.0,Dasha: rahu-rahu-mars connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Vainashika Tara
+RSALL_004555,Transgender 86987,2013-02-05,Health,HEALTH_CRISIS,start testosterone treatment for female-male transition,20.6,Venus-Mercury-Rahu,True,True,True,100.0,Dasha: venus-mercury-rahu connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Vadha Tara
+RSALL_004555,Transgender 86987,2013-08-20,Misc.,GENERAL_LIFE,Changed Name  20 August 2013,21.1,Venus-Mercury-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004558,Transgender 86987,2013-02-05,Health,HEALTH_CRISIS,start testosterone treatment for female-male transition,20.6,Venus-Mercury-Rahu,True,True,True,100.0,Dasha: venus-mercury-rahu connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Rahu hits Vadha Tara
+RSALL_004558,Transgender 86987,2013-08-20,Misc.,GENERAL_LIFE,Changed Name  20 August 2013,21.1,Venus-Mercury-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004562,Transgender Danny,1987-04-19,Family,FAMILY_PROGENY,Birth of son,25.3,Moon-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_004573,Transgender 13704,1989-06-16,Health,HEALTH_CRISIS,Sex change operation,27.8,Venus-Mercury-Venus,True,True,True,100.0,Dasha: venus-mercury-venus connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability)
+RSALL_004574,Transgender 13819,1989-05-30,Health,HEALTH_CRISIS,Sex change operation,26.6,Jupiter-Mercury-Rahu,True,True,True,100.0,Dasha: jupiter-mercury-rahu connects with Dusthana/Maraka lords; D30: Mercury occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara; SBC: Transiting Rahu hits Janma Tara
+RSALL_004577,Transgender 43196 MB,1975-10-23,Health,HEALTH_CRISIS,sex change,27.4,Jupiter-Sun-Mercury,True,True,True,100.0,Dasha: jupiter-sun-mercury connects with Dusthana/Maraka lords; D30: Sun occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Janma Tara; SBC: Transiting Ketu hits Vadha Tara
+RSALL_004578,Transgender 49981,2004-03-05,Health,HEALTH_CRISIS,final surgery,39.3,Sun-Moon-Saturn,True,True,True,100.0,Dasha: sun-moon-saturn connects with Dusthana/Maraka lords; D30: Moon occupies Saturn Trimsamsa (physical vulnerability); SBC: Transiting Saturn hits Vadha Tara
+RSALL_004579,Transgender 5899,1955-09-12,Health,HEALTH_CRISIS,Sex Change-first operation,30.8,Rahu-Rahu-Venus,True,True,True,100.0,Dasha: rahu-rahu-venus connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability)
+RSALL_004579,Transgender 5899,1956-05-19,Health,HEALTH_CRISIS,Sex change-last operation,31.5,Rahu-Rahu-Mars,True,True,True,100.0,Dasha: rahu-rahu-mars connects with Dusthana/Maraka lords; D30: Rahu occupies Mars Trimsamsa (physical vulnerability); SBC: Transiting Mars hits Vainashika Tara
+RSALL_004584,Transgender Danny,1987-04-19,Family,FAMILY_PROGENY,Birth of son,25.3,Moon-Rahu-Mercury,False,True,True,60.0,Baseline planetary aspects
+RSALL_004624,Twins 3775,1898-08-02,Other,GENERAL_LIFE,Age nine months,0.8,Ketu-Saturn-Mars,False,True,True,60.0,Baseline planetary aspects
+RSALL_004624,Twins 3775,1989-03-23,Other,GENERAL_LIFE,Age five months,91.4,Saturn-Moon-Venus,True,True,True,100.0,Baseline planetary aspects
+RSALL_004634,Twins Family 1 Mother,1983-01-20,Family,FAMILY_PROGENY,Had twins,29.3,Jupiter-Venus-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004635,Twins Family 2 Father,1983-01-20,Family,FAMILY_PROGENY,Wife had twins,34.6,Saturn-Venus-Sun,True,True,True,100.0,Baseline planetary aspects
+RSALL_004642,UFO Abductee Mom,1995-05-25,Misc.,GENERAL_LIFE,Implant put in head by aliens,42.4,Saturn-Venus-Moon,True,True,True,100.0,Baseline planetary aspects
+RSALL_004643,UFO Abductee Son,1994-05-26,Social,CAREER_STATUS,Space trip,8.4,Moon-Saturn-Saturn,True,False,True,70.0,Dasha: moon-saturn connects with 10th/1st/11th/AmK; Transit: Sun activating 10th house
+RSALL_004655,Walk-in (Robin) now Rasun,1991-11-02,Health,HEALTH_CRISIS,Car accident; resumed as Rasun,41.2,Saturn-Venus-Venus,True,False,True,70.0,Dasha: saturn-venus-venus connects with Dusthana/Maraka lords; D30: Venus in Mercury Trimsamsa; SBC: Transiting Rahu hits Naidhana Tara
+RSALL_004659,Wessel; Ferne,1958-04-06,Other,GENERAL_LIFE,Strangled; age 43,43.0,Saturn-Ketu-Saturn,False,True,True,60.0,Baseline planetary aspects
+RSALL_004673,Widow Karin,1984-04-11,Other,HEALTH_CRISIS,First husband. Died of kidney cancer,54.6,Saturn-Rahu-Saturn,True,False,False,40.0,Dasha: saturn-rahu-saturn connects with Dusthana/Maraka lords; D30: Rahu in Mercury Trimsamsa
+RSALL_004673,Widow Karin,1992-06-26,Other,HEALTH_CRISIS,Only daughter. Died by suicide,62.8,Mercury-Venus-Sun,True,False,True,70.0,Dasha: mercury-venus-sun connects with Dusthana/Maraka lords; D30: Venus in Jupiter Trimsamsa
+RSALL_004675,Widow 4953,1948-06-20,Other,HEALTH_CRISIS,Husband died of heart attack,32.5,Venus-Saturn-Rahu,True,False,True,70.0,Dasha: venus-saturn-rahu connects with Dusthana/Maraka lords; D30: Saturn in Mercury Trimsamsa; SBC: Transiting Ketu hits Vadha Tara
+RSALL_004675,Widow 4953,1981-07-10,Other,FAMILY_PROGENY,Son shot himself,65.5,Rahu-Saturn-Saturn,True,True,True,100.0,Baseline planetary aspects
+RSALL_004678,Widow 5894,1963-08-03,Other,GENERAL_LIFE,Husband number two,38.7,Saturn-Venus-Jupiter,True,True,True,100.0,Baseline planetary aspects
+RSALL_004679,Widow 6638,1947-10-31,Relationship,RELATIONSHIP,First marriage two years,18.1,Saturn-Mercury-Jupiter,True,False,False,40.0,Dasha: saturn-mercury connects with 7th/2nd/DK (Saturn)
+RSALL_004679,Widow 6638,1950-06-23,Relationship,RELATIONSHIP,Second marriage,20.8,Saturn-Venus-Moon,True,False,False,40.0,Dasha: saturn-venus connects with 7th/2nd/DK (Saturn)

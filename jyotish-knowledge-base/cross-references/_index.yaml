@@ -1,0 +1,61 @@
+# cross-references/_index.yaml
+
+id: index.cross-references
+name: Cross-Reference Catalogue Index
+category: index
+status: active
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Index of all Phase 5 relationship-mapping records. Unlike the
+  catalogues/ directory (which documents individual entities — a
+  graha, a rashi, a yoga), this directory consolidates RELATIONSHIPS
+  between entity types into reciprocal, directly-queryable views.
+
+entries:
+  - id: cross-reference.graha-rashi-dignity-matrix
+    file: graha-rashi-dignity-matrix.yaml
+    maps: "Graha x Rashi"
+    description: "Full 9x12 dignity matrix (exalted/moolatrikona/own/friendly/neutral/enemy/debilitated)"
+
+  - id: cross-reference.graha-nakshatra-affinity
+    file: graha-nakshatra-affinity.yaml
+    maps: "Graha x Nakshatra"
+    description: "Affinity of each graha when placed in nakshatras ruled by friend/neutral/enemy lords"
+
+  - id: cross-reference.graha-bhava-functional-nature
+    file: graha-bhava-functional-nature.yaml
+    maps: "Graha x Bhava"
+    description: "Occupation strength/quality of each graha by house-type group (kendra/trikona/upachaya/dusthana/maraka)"
+
+  - id: cross-reference.yoga-graha-index
+    file: yoga-graha-index.yaml
+    maps: "Yoga x Graha"
+    description: "Reverse index of the 20 catalogued yogas by graha participant"
+
+  - id: cross-reference.dasha-graha-event-themes
+    file: dasha-graha-event-themes.yaml
+    maps: "Dasha x Graha"
+    description: "Consolidated life-event themes per graha as Mahadasha lord across Vimshottari/Ashtottari/Shodashottari"
+
+count: 5
+
+sources:
+  - ref: source.BPHS
+    claim: "Underlying relationship data is drawn from and cites the individual catalogues/ records; see each entry's own sources field"
+    confidence: high
+
+notes: >
+  These records are synthesized cross-references built on top of the
+  Phase 2B/3/4 catalogues, not independently-sourced classical
+  citations. Each entry documents its own confidence level and
+  methodology. A lagna-dependent house-lordship matrix (as opposed to
+  the lagna-independent house-occupation matrix here) remains a
+  natural extension for a future phase.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial index — Phase 5 cross-reference records"
+    author: "Chief Jyotish Knowledge Architect"

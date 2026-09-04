@@ -1,0 +1,66 @@
+# ontology/glossary/rashi.yaml
+
+id: term.rashi
+name: Rāśi
+aliases:
+  - Rashi
+  - Sign
+  - Zodiac Sign
+  - राशि
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    rāśi — from rāś (to heap, to accumulate). Literally "a
+    heap, a pile, a group." In jyotisha, one of the twelve
+    30-degree divisions of the sidereal zodiac, each with
+    specific attributes.
+  english: >
+    One of the twelve signs of the sidereal zodiac, each
+    spanning 30 degrees. The rashis are: Mesha (Aries),
+    Vrishabha (Taurus), Mithuna (Gemini), Karka (Cancer),
+    Simha (Leo), Kanya (Virgo), Tula (Libra), Vrishchika
+    (Scorpio), Dhanus (Sagittarius), Makara (Capricorn),
+    Kumbha (Aquarius), Meena (Pisces).
+  technical: >
+    Each rashi has defined attributes: element (agni/prithvi/
+    vayu/jala), mode (chara/sthira/dvisvabhava), graha
+    lordship, gender, direction, and body part. Rashis are
+    classified as benefic/malefic based on their nature.
+    The rashi chart (D-1) is the foundational chart from
+    which all varga charts are derived.
+
+usage:
+  primary: "Foundation of chart construction — all grahas and bhavas are placed within rashis"
+  secondary: "Rashi-based analysis of graha dignity, element balance, and sign attributes"
+
+related_concepts:
+  - ref: term.graha
+    relationship: "Each graha rules certain rashis and has defined strength levels in different rashis"
+  - ref: term.bhava
+    relationship: "Each bhava is contained within a rashi; the rashi lord becomes the bhava lord"
+  - ref: term.nakshatra
+    relationship: "Each rashi contains approximately 2.25 nakshatras (9 padas)"
+
+sources:
+  - ref: source.BPHS
+    chapter: 4
+    verse: 1-16
+    claim: "Rāśyādīnāṃ pravakṣyāmi — I shall describe the rashi and others"
+    confidence: high
+
+notes: >
+  The 12-rashi system is common to almost all astrological
+  traditions worldwide. In jyotisha, rashis are always
+  sidereal (nirayana). The rashi chart (D-1) is the primary
+  reference chart, with all other charts derived from it.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,154 @@
+# catalogues/grahas/chandra.yaml
+
+id: graha.chandra
+name: Chandra
+aliases:
+  - Moon
+  - Soma
+  - Candr
+  - Indu
+  - Nishakara
+  - Shashank
+category: graha
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Candr
+devanagari: चन्द्र
+meaning: "The shining one; the one that delights"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: 29.53
+  sidereal_period_days: 27.32
+  retrograde: false
+  notes: "Moon never goes retrograde; its orbit is a satellite of Earth"
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: female
+  nature: natural benefic
+  caste: vaishya
+  element: water
+  direction: northwest
+  color: white
+  gem: pearl
+  metal: silver
+  grain: rice
+  body_parts:
+    - blood
+    - mind
+    - breasts
+  animal: deer
+  deity: varuna
+  quality: sattvic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: vrishabha
+    degrees: 3
+  debilitation:
+    sign: vrishchika
+    degrees: 3
+  moolatrikona:
+    sign: vrishabha
+    range: "4°–30°"
+  own_signs:
+    - karka
+  friendly_signs:
+    - simha
+    - mithuna
+    - kanya
+  neutral_signs:
+    - mesha
+    - vrishchika
+    - dhanus
+    - meena
+    - vrishabha
+    - tula
+    - makara
+    - kumbha
+  inimical_signs: []
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - rohini
+    - hasta
+    - shravana
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.surya
+    - graha.budha
+  enemies: []
+  neutrals:
+    - graha.mangala
+    - graha.guru
+    - graha.shukra
+    - graha.shani
+    - graha.rahu
+    - graha.ketu
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 10
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Mind (Mana)"
+    - "Mother (Matri)"
+    - "Emotions"
+  traditional:
+    - "Travel"
+    - "Water bodies"
+    - "Public"
+  modern:
+    - "Subconscious patterns"
+    - "Nurturing"
+    - "Intuition"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Chandra"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Chandra"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Chandra is the fastest-moving graha in the zodiac (~13° per day).
+  Its waxing and waning phases symbolize the fluctuating nature of
+  the mind. In Parashari astrology, a strong Chandra indicates
+  emotional stability, intuition, and a nurturing disposition.
+  Chandra is neutral in a general sense but considered a natural
+  benefic due to its cooling, gentle influence.
+
+# === HISTORY ===
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Corrected avastha sign categorization to match relationships field: Chandra has zero enemies, so inimical_signs should be empty (was incorrectly listing 4 signs owned by neutral grahas); removed karka (own sign) from neutral_signs; added the 4 missing neutral-graha-owned signs (vrishchika, tula, makara, kumbha)"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

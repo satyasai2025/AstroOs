@@ -1,0 +1,118 @@
+# catalogues/bhavas/bhava-1.yaml
+
+id: bhava.1
+name: Tanu Bhava
+aliases:
+  - 1st House
+  - Lagna
+  - Ascendant House
+  - तनु भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Tanu
+number: 1
+meaning: "Body; self; birth; personality"
+
+natural_karaka:
+  ref: graha.surya
+  notes: "Surya is the natural karaka for self, vitality, and individuality"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana. The first house is the foundation of the chart"
+
+karakatvas:
+  classical:
+    - concept: Self and identity (Atma)
+      source: source.BPHS
+    - concept: Body and physical appearance (Tanu)
+      source: source.BPHS
+    - concept: Personality and temperament
+      source: source.BPHS
+    - concept: Health and vitality
+      source: source.BPHS
+    - concept: Birth and early life
+      source: source.BPHS
+  traditional:
+    - concept: Self
+    - concept: Body
+    - concept: Appearance
+    - concept: Personality
+    - concept: Health
+    - concept: Vitality
+    - concept: Birth
+
+conditions:
+  strong_when:
+    - Lord placed in Kendra or Trikona
+    - Strong benefic aspect on the house
+    - Well-placed natural karaka (Surya)
+  weak_when:
+    - Lord placed in Dusthana (6, 8, 12)
+    - Afflicted by malefics
+    - Weak or combust lord
+  afflicted_when:
+    - Malefics occupying the 1st house
+    - Lord in enemy sign or debilitated
+    - Afflicted by papa kartari
+
+effects:
+  positive:
+    - Strong physical constitution and vitality
+    - Commanding personality and leadership ability
+    - Good health and longevity
+    - Confident and self-assured demeanor
+  negative:
+    - Poor health or weak constitution
+    - Lack of confidence or low self-esteem
+    - Difficulties in early life
+    - Physical vulnerabilities
+
+related_bhavas:
+  - bhava: 4
+    relationship: Kendra
+    notes: "The 4th house (Sukha Bhava) is a kendra house forming the 1-4 axis of the chart"
+  - bhava: 7
+    relationship: Kendra
+    notes: "The 7th house (Yuvati Bhava) is a kendra house forming the 1-7 axis of the chart"
+  - bhava: 10
+    relationship: Kendra
+    notes: "The 10th house (Karma Bhava) is a kendra house forming the 1-10 axis of the chart"
+  - bhava: 5
+    relationship: Trikona
+    notes: "The 5th house (Putra Bhava) is a trikona house forming the 1-5 axis of fortune"
+  - bhava: 9
+    relationship: Trikona
+    notes: "The 9th house (Dharma Bhava) is a trikona house forming the 1-9 axis of dharma"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    chapter: 33
+    verse: 1-10
+    claim: "Self, body, appearance, personality, health, and vitality are significations of the 1st house"
+    confidence: high
+
+notes: >
+  The 1st house (Tanu Bhava) is the most important house in
+  the chart, representing the self, physical body, and
+  overall personality. It is both a Kendra (angular) and a
+  Trikona (trinal) house, making it uniquely powerful. The
+  Lagna (Ascendant) is the rising sign at the time of birth
+  and serves as the reference point for the entire chart.
+  Surya as natural karaka reinforces the association with
+  self-identity and vitality.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

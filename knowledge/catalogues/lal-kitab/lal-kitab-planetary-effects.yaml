@@ -1,0 +1,64 @@
+id: lal-kitab.core.planetary-effects
+name: Lal Kitab Planetary Effects
+aliases: ["Lal Kitab Graha Effects", "Lal Kitab Planet-in-House", "Lal Kitab Graha Phala"]
+category: lal-kitab
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: lal-kitab
+statement: >
+  Planets in houses produce effects in Lal Kitab that differ significantly from
+  classical Parashari interpretations. The Lal Kitab effect system is based on
+  two principles: sitting effects (planet in a house) and aspecting effects
+  (planet aspects the house opposite). A planet in the 1st house aspects the
+  7th; a planet in the 2nd aspects the 8th, and so on. Additionally, Lal Kitab
+  assigns fixed body-part and family-member rulerships to each house, and
+  planets in those houses directly affect those areas. No planet is inherently
+  benefic or malefic — the effect depends entirely on house placement and
+  ownership.
+
+conditions:
+  - entity: graha.placement
+    role: subject
+    detail: "A planet's effect is determined by its house position (sitting) and the house it aspects (7th from itself)"
+
+  - entity: graha.ownership
+    role: framework
+    detail: "House ownership combined with placement determines whether the planet acts positively or negatively"
+
+effects:
+  - description: "Sitting effect: planet in a house directly influences that house's significations"
+    intensity: strong
+  - description: "Aspecting effect: planet aspects the 7th house from its position, influencing that house's domain"
+    intensity: strong
+  - description: "Ownership effect: planet owning a house acts as that house's agent wherever placed"
+    intensity: strong
+  - description: "No planet is permanently benefic or malefic — effects shift based on house dynamics"
+    intensity: moderate
+
+sources:
+  - ref: source.lal-kitab
+    claim: "Lal Kitab planetary effects: Unique to Lal Kitab — planets in houses produce different effects than classical system."
+    confidence: high
+
+notes: >
+  Lal Kitab planetary effect rules: (1) A benefic planet sitting in a good house
+  strengthens that house but its opposite house may weaken. (2) A malefic planet
+  sitting in a bad house may actually strengthen it by afflicting it less than
+  expected. (3) The sitting-aspecting framework creates a simple two-house
+  analysis for each planet. (4) If the 1st house has a benefic planet, it
+  strengthens self and aspects the 7th (partnership) positively. (5) If the
+  2nd house has a malefic, it may cause family disputes and its aspect on the
+  8th creates obstacles. (6) Planetary friendship and enmity in Lal Kitab
+  sometimes differs from Parashari. (7) The effects accumulate: multiple
+  planets in a house create layered results based on each planet's sitting
+  and aspecting behavior. (8) Empty houses derive their strength from their
+  owner — if the owner is well-placed, the empty house functions properly.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

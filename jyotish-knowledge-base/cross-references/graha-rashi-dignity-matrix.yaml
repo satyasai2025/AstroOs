@@ -1,0 +1,197 @@
+# cross-references/graha-rashi-dignity-matrix.yaml
+# Phase 5 — Relationship Mapping: Graha-Rashi relationships
+
+id: cross-reference.graha-rashi-dignity-matrix
+name: Graha-Rashi Dignity Matrix
+aliases: ["Planet-Sign Dignity Table", "Avastha Matrix"]
+category: cross-reference
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Consolidated 9-graha x 12-rashi dignity matrix. For every graha in every
+  rashi, records its dignity status (exalted, moolatrikona, own, friendly,
+  neutral, enemy, or debilitated) — the single most-consulted lookup in
+  chart interpretation. Source data is drawn from each graha's `avastha`
+  block in catalogues/grahas/*.yaml; this record consolidates it into a
+  reciprocal, per-rashi view rather than the per-graha view already
+  present there.
+
+dignity_precedence: >
+  Within a single rashi, degree-specific dignities take precedence over
+  the whole-sign category: EXALTED (narrow degree) > MOOLATRIKONA
+  (degree range, often within the own or exalted sign) > OWN >
+  FRIENDLY > NEUTRAL > ENEMY > DEBILITATED (narrow degree). A graha
+  can be simultaneously "own sign" for most of a rashi and
+  "moolatrikona" for a sub-range of the same rashi (e.g. Surya in
+  Simha: Moolatrikona 0-20 degrees, Own 20-30 degrees).
+
+matrix:
+  - graha: graha.surya
+    rashis:
+      mesha: { status: friendly, note: "Exaltation point at 10°" }
+      vrishabha: { status: enemy }
+      mithuna: { status: neutral }
+      karka: { status: friendly }
+      simha: { status: own, note: "Moolatrikona 0°-20°, own sign 20°-30°" }
+      kanya: { status: neutral }
+      tula: { status: enemy, note: "Debilitation point at 10°" }
+      vrishchika: { status: friendly }
+      dhanus: { status: friendly }
+      makara: { status: enemy }
+      kumbha: { status: enemy }
+      meena: { status: friendly }
+
+  - graha: graha.chandra
+    rashis:
+      mesha: { status: neutral }
+      vrishabha: { status: neutral, note: "Exaltation point at 3°, Moolatrikona 4°-30°" }
+      mithuna: { status: friendly }
+      karka: { status: own }
+      simha: { status: friendly }
+      kanya: { status: friendly }
+      tula: { status: neutral }
+      vrishchika: { status: neutral, note: "Debilitation point at 3°" }
+      dhanus: { status: neutral }
+      makara: { status: neutral }
+      kumbha: { status: neutral }
+      meena: { status: neutral }
+
+  - graha: graha.mangala
+    rashis:
+      mesha: { status: own, note: "Moolatrikona 0°-12°, own sign 12°-30°" }
+      vrishabha: { status: neutral }
+      mithuna: { status: enemy }
+      karka: { status: enemy, note: "Debilitation point at 28°" }
+      simha: { status: friendly }
+      kanya: { status: enemy }
+      tula: { status: neutral }
+      vrishchika: { status: own }
+      dhanus: { status: friendly }
+      makara: { status: friendly, note: "Exaltation point at 28°" }
+      kumbha: { status: neutral }
+      meena: { status: friendly }
+
+  - graha: graha.budha
+    rashis:
+      mesha: { status: neutral }
+      vrishabha: { status: neutral }
+      mithuna: { status: own }
+      karka: { status: friendly }
+      simha: { status: friendly }
+      kanya: { status: own, note: "Exaltation point at 15°, Moolatrikona 16°-20°" }
+      tula: { status: neutral }
+      vrishchika: { status: neutral }
+      dhanus: { status: friendly }
+      makara: { status: neutral }
+      kumbha: { status: neutral }
+      meena: { status: friendly, note: "Debilitation point at 15°" }
+
+  - graha: graha.guru
+    rashis:
+      mesha: { status: friendly }
+      vrishabha: { status: enemy }
+      mithuna: { status: enemy }
+      karka: { status: friendly, note: "Exaltation point at 5°" }
+      simha: { status: friendly }
+      kanya: { status: enemy }
+      tula: { status: enemy }
+      vrishchika: { status: friendly }
+      dhanus: { status: own, note: "Moolatrikona 0°-10°, own sign 10°-30°" }
+      makara: { status: neutral, note: "Debilitation point at 5°" }
+      kumbha: { status: neutral }
+      meena: { status: own }
+
+  - graha: graha.shukra
+    rashis:
+      mesha: { status: enemy }
+      vrishabha: { status: own }
+      mithuna: { status: friendly }
+      karka: { status: enemy }
+      simha: { status: enemy }
+      kanya: { status: friendly, note: "Debilitation point at 27°" }
+      tula: { status: own, note: "Moolatrikona 0°-15°, own sign 15°-30°" }
+      vrishchika: { status: enemy }
+      dhanus: { status: neutral }
+      makara: { status: friendly }
+      kumbha: { status: friendly }
+      meena: { status: neutral, note: "Exaltation point at 27°" }
+
+  - graha: graha.shani
+    rashis:
+      mesha: { status: enemy, note: "Debilitation point at 20°" }
+      vrishabha: { status: friendly }
+      mithuna: { status: friendly }
+      karka: { status: enemy }
+      simha: { status: enemy }
+      kanya: { status: friendly }
+      tula: { status: friendly, note: "Exaltation point at 20°" }
+      vrishchika: { status: enemy }
+      dhanus: { status: neutral }
+      makara: { status: own }
+      kumbha: { status: own, note: "Moolatrikona 0°-20°, own sign 20°-30°" }
+      meena: { status: neutral }
+
+  - graha: graha.rahu
+    rashis:
+      mesha: { status: enemy }
+      vrishabha: { status: friendly, note: "Some traditions treat this as Rahu's exaltation sign" }
+      mithuna: { status: neutral, note: "Some traditions treat this as Rahu's exaltation sign; co-lord of Kanya in some systems does not apply here" }
+      karka: { status: enemy }
+      simha: { status: enemy }
+      kanya: { status: neutral, note: "Treated as co-lord alongside Budha in some systems" }
+      tula: { status: friendly }
+      vrishchika: { status: enemy }
+      dhanus: { status: neutral }
+      makara: { status: friendly }
+      kumbha: { status: friendly }
+      meena: { status: neutral }
+
+  - graha: graha.ketu
+    rashis:
+      mesha: { status: friendly }
+      vrishabha: { status: neutral }
+      mithuna: { status: enemy }
+      karka: { status: enemy }
+      simha: { status: enemy }
+      kanya: { status: enemy }
+      tula: { status: neutral }
+      vrishchika: { status: friendly, note: "Treated as co-lord alongside Mangala in some systems" }
+      dhanus: { status: friendly, note: "Some traditions treat this as Ketu's exaltation sign" }
+      makara: { status: neutral }
+      kumbha: { status: neutral }
+      meena: { status: friendly, note: "Treated as co-lord alongside Shukra in some systems" }
+
+data_quality_note: >
+  While building this matrix, an internal inconsistency was found and
+  corrected in catalogues/grahas/chandra.yaml (v1.0 to v1.1): its
+  relationships field listed zero enemies, but its avastha.inimical_signs
+  listed four signs owned by grahas Chandra treats as neutral. This has
+  been reconciled; the matrix above reflects the corrected data. The
+  other seven sign-owning grahas were spot-checked and found internally
+  consistent (their inimical_signs match exactly the signs owned by
+  their listed enemy grahas).
+
+sources:
+  - ref: source.BPHS
+    claim: "Graha dignity in rashis: exaltation, debilitation, moolatrikona, and own-sign points, Chapter 3-4"
+    confidence: high
+
+notes: >
+  This matrix is the reciprocal view of data already present in each
+  graha's individual catalogue record (catalogues/grahas/*.yaml,
+  avastha block). It exists so a practitioner can look up "what is
+  every graha's dignity in Tula?" without opening nine separate files.
+  Rahu and Ketu have no classically-universal exaltation/debilitation/
+  moolatrikona/own-sign assignments; the alternate traditions noted
+  above (Rahu in Vrishabha or Mithuna, Ketu in Dhanus) are documented
+  but not treated as primary in this knowledge base, consistent with
+  catalogues/grahas/rahu.yaml and catalogues/grahas/ketu.yaml.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial cross-reference entry — Phase 5 Graha-Rashi relationship mapping"
+    author: "Chief Jyotish Knowledge Architect"

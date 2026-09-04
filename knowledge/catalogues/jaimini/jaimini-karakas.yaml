@@ -1,0 +1,248 @@
+# Jaimini Chara Karaka System
+# Dynamic significators determined by planetary degrees in the birth chart.
+# Source: Jaimini Sutras Chapter 1
+
+id: jaimini.chara-karakas.system
+name: Chara Karaka Paddhati
+aliases: ["Chara Karaka System", "Jaimini Karaka Scheme", "Dynamic Significator System"]
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: jaimini
+type: karaka-system
+
+statement: >
+  The Chara Karaka system assigns life-area significations to grahas
+  based on their degree positions within their respective rashis in
+  the birth chart. The graha with the highest degrees assumes the
+  highest-level karaka role (Atmakaraka), with subsequent roles
+  assigned in descending order of degrees. This is a dynamic system —
+  karaka assignments change from chart to chart based on actual
+  planetary positions.
+
+conditions:
+  - entity: graha.all
+    role: subject
+    notes: >
+      All grahas from Surya through Shani (7 visible planets) are
+      eligible for chara karaka assignments. Rahu and Ketu are
+      excluded from the standard chara karaka scheme.
+  - entity: degree.madhya
+    role: determinant
+    notes: >
+      The degree used for comparison is the longitude of the graha
+      within its occupied rashi (0 to 30 degrees), NOT the absolute
+      longitude from Mesha 0. This ensures fair comparison across
+      different rashis.
+
+karaka_assignments:
+  - rank: 1
+    abbreviation: AK
+    sanskrit: Atmakaraka
+    english: "Soul Significator"
+    description: >
+      The graha with the highest degrees in the birth chart. The
+      Atmakaraka represents the soul itself — its nature, desires,
+      and karmic agenda for this lifetime. The AK is the most
+      important graha in the Jaimini system, determining the
+      Karakamsha Lagna and the starting point of Chara Dasha.
+    significance: soul, self, life purpose, karma
+    bhava_links: [bhava.1, bhava.9]
+
+  - rank: 2
+    abbreviation: AmK
+    sanskrit: Amatyakaraka
+    english: "Advisor/Career Significator"
+    description: >
+      The graha with the second-highest degrees. The Amatyakaraka
+      represents the advisor, counselor, or minister of the soul.
+      It indicates career direction, professional guidance, and the
+      type of work that aligns with the native's soul purpose.
+    significance: career, advisors, profession, counsel
+    bhava_links: [bhava.10, bhava.2]
+
+  - rank: 3
+    abbreviation: Bk
+    sanskrit: Bhratrukarak
+    english: "Sibling Significator"
+    description: >
+      The graha with the third-highest degrees. The Bhratrukarak
+      represents siblings, specifically brothers. It also signifies
+      courage, valor, and the native's competitive spirit.
+    significance: brothers, siblings, courage, competition
+    bhava_links: [bhava.3, bhava.11]
+
+  - rank: 4
+    abbreviation: Mk
+    sanskrit: Matrukarak
+    english: "Mother/Maternal Significator"
+    description: >
+      The graha with the fourth-highest degrees. The Matrukarak
+      represents the mother, maternal relatives, and domestic
+      happiness. It also relates to property, vehicles, and
+      emotional security.
+    significance: mother, property, vehicles, domestic peace
+    bhava_links: [bhava.4]
+
+  - rank: 5
+    abbreviation: Pk
+    sanskrit: Pitrukarak
+    english: "Father/Paternal Significator"
+    description: >
+      The graha with the fifth-highest degrees. The Pitrukarak
+      represents the father, paternal lineage, fortune (bhagya),
+      and the native's relationship with tradition and dharma.
+    significance: father, fortune, dharma, tradition
+    bhava_links: [bhava.9, bhava.5]
+
+  - rank: 6
+    abbreviation: PutK
+    sanskrit: Putrakaraka
+    english: "Progeny Significator"
+    description: >
+      The graha with the sixth-highest degrees. The Putrakaraka
+      represents children, students, creativity, and intelligence.
+      It indicates the native's creative and procreative potential.
+    significance: children, creativity, intelligence, students
+    bhava_links: [bhava.5, bhava.11]
+
+  - rank: 7
+    abbreviation: GnK
+    sanskrit: Jnatikaraka
+    english: "Cousin/Relative Significator"
+    description: >
+      The graha with the seventh-highest degrees. The Jnatikaraka
+      represents cousins, relatives, and extended family. It also
+      signifies disputes, litigation, and competition in a broader
+      sense.
+    significance: cousins, relatives, disputes, extended family
+    bhava_links: [bhava.3, bhava.6]
+
+  - rank: 8
+    abbreviation: DK
+    sanskrit: Darakaraka
+    english: "Spouse/Partnership Significator"
+    description: >
+      The graha with the lowest degrees among the seven eligible
+      grahas. The Darakaraka represents the spouse, marriage
+      partner, and business partnerships. It reveals the nature of
+      the partner and the quality of the marital relationship.
+    significance: spouse, marriage, partnerships, relationships
+    bhava_links: [bhava.7]
+
+saturn_exception: |
+  In the standard Chara Karaka scheme, there are 7 eligible grahas
+  (Surya through Shani) and 8 karaka ranks. When Shani (Saturn)
+  is present, the assignments follow the standard descending degree
+  order.
+
+  Important note: In some Jaimini traditions, Shani is NOT barred
+  from any karaka position — all seven grahas are eligible for all
+  eight positions. The lowest-degree graha among the seven becomes
+  the Darakaraka, regardless of which graha it is.
+
+determination_method: |
+  Step 1: Calculate the degree of each graha within its occupied
+    rashi (0 to 30 degrees).
+
+  Step 2: Rank all seven grahas (Surya through Shani) from highest
+    to lowest degree within their rashis.
+
+  Step 3: Assign karaka roles based on rank:
+    - Highest degree -> Atmakaraka (AK)
+    - 2nd highest -> Amatyakaraka (AmK)
+    - 3rd highest -> Bhratrukarak (Bk)
+    - 4th highest -> Matrukarak (Mk)
+    - 5th highest -> Pitrukarak (Pk)
+    - 6th highest -> Putrakaraka (PutK)
+    - 7th highest -> Jnatikaraka (GnK)
+    - Lowest degree -> Darakaraka (DK)
+
+  Step 4: When two or more grahas have the same degree, the graha
+    with the higher absolute longitude (from Mesha 0) takes the
+    higher rank.
+
+effects:
+  - description: >
+      The chara karaka system creates personalized significator
+      assignments that differ from chart to chart, making each
+      native's Jaimini analysis unique.
+    intensity: strong
+  - description: >
+      The Atmakaraka's position in the chart becomes the primary
+      focus of Jaimini analysis, determining the Karakamsha chart
+      and Chara Dasha starting point.
+    intensity: strong
+  - description: >
+      Each karaka's placement in the chart (house, sign, conjunction,
+      aspect) modifies its significations and reveals specific
+      life-area outcomes.
+    intensity: moderate
+
+distinction_from_naisargika: |
+  The Chara Karaka system is fundamentally different from the
+  Naisargika Karaka (natural significator) system used in
+  Parashari Jyotish:
+
+  Naisargika Karakas (BPHS):
+  - Fixed assignments: Surya = Atma, Chandra = Manas, etc.
+  - Do not change from chart to chart
+  - Based on inherent nature of the graha
+  - See: karaka.graha.karakatvas
+
+  Chara Karaka (Jaimini):
+  - Dynamic assignments based on degree positions
+  - Change from chart to chart
+  - Based on actual degree placement in the birth chart
+  - This file (jaimini.chara-karakas.system)
+
+  Both systems can be applied to the same chart but they serve
+  different analytical purposes. Naisargika karakas show what
+  each graha naturally signifies; chara karakas show which graha
+  is activated for which life area in THIS specific native.
+
+cross_references:
+  - ref: jaimini.karakamsha.chart
+    relationship: "AK's D-9 position determines the Karakamsha Lagna"
+  - ref: jaimini.chara-dasha.rules
+    relationship: "AK determines the starting rashi of Chara Dasha"
+  - ref: karaka.graha.karakatvas
+    relationship: "Naisargika (natural) karakas; distinct from but complementary to Chara Karakas"
+  - ref: bhava.7
+    relationship: "Darakaraka's relationship with the 7th bhava is critical for marriage timing"
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras Chapter 1 establish the Chara Karaka system
+      with eight ranks (AK through DK) determined by planetary
+      degree positions. The system is the foundation of Jaimini
+      analysis.
+    confidence: high
+
+notes: |
+  The Chara Karaka system is the cornerstone of Jaimini astrology.
+  Unlike Parashari, where significations are fixed to grahas, the
+  Jaimini system assigns them dynamically based on the chart's
+  specific configuration.
+
+  Key Analytical Points:
+  1. The AK is always the most important graha in Jaimini analysis.
+  2. The AK's house, sign, conjunctions, and aspects reveal the
+     soul's primary orientation.
+  3. The Amatyakaraka (AmK) indicates career and guidance.
+  4. The Darakaraka (DK) reveals spouse nature and marriage quality.
+  5. All eight karakas work together to paint a complete picture
+     of the native's life themes.
+
+  In practice, the chara karakas are used alongside (not instead
+  of) the naisargika karakas for comprehensive chart analysis.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with all 8 Chara Karaka definitions"
+    author: "Chief Jyotish Knowledge Architect"

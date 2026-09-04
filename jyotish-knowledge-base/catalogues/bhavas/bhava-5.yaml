@@ -1,0 +1,99 @@
+# catalogues/bhavas/bhava-5.yaml
+
+id: bhava.5
+name: Putra Bhava
+aliases:
+  - 5th House
+  - Children House
+  - पुत्र भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Putra
+number: 5
+meaning: "Children; progeny; creativity"
+
+natural_karaka:
+  ref: graha.guru
+  notes: "Guru is the natural karaka for children, wisdom, and intelligence"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana"
+
+karakatvas:
+  classical:
+    - concept: Children and progeny (Putra)
+      source: source.BPHS
+    - concept: Intelligence and creativity (Buddhi)
+      source: source.BPHS
+    - concept: Mantra and spiritual practice
+      source: source.BPHS
+    - concept: Speculation and risk-taking
+      source: source.BPHS
+  traditional:
+    - concept: Children
+    - concept: Intelligence
+    - concept: Mantra
+    - concept: Speculation
+
+conditions:
+  strong_when:
+    - Strong lord placed in Kendra or Trikona
+    - Guru's aspect on the house
+    - Benefics occupying the 5th house
+  weak_when:
+    - Afflicted by malefics
+    - Lord in Dusthana
+    - Weak or debilitated lord
+  afflicted_when:
+    - Malefics occupying the 5th house
+    - Lord in enemy sign
+    - Afflicted by papa kartari
+
+effects:
+  positive:
+    - Blessed with children and progeny
+    - Sharp intellect and creative abilities
+    - Success in speculative ventures
+    - Spiritual growth through mantra
+  negative:
+    - Difficulties with conception or children
+    - Intellectual dullness or poor judgment
+    - Losses in speculation
+    - Lack of creative fulfillment
+
+related_bhavas:
+  - bhava: 1
+    relationship: Trikona
+    notes: "One of the three Trikona (trinal) houses along with bhava.1 and bhava.9 — the most auspicious group"
+  - bhava: 9
+    relationship: fortune
+    notes: "The 9th house (Dharma Bhava) is another Trikona; together they form the Lakshmi Sthanam"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Children, intelligence, mantra, and speculative ability are significations of the 5th house"
+    confidence: high
+
+notes: >
+  The 5th house (Putra Bhava) is a Trikona (trinal) house and is
+  considered highly auspicious. It governs children, creativity,
+  intelligence, and spiritual practices involving mantra. Guru
+  as natural karaka reinforces the wisdom and expansive qualities
+  of this bhava. The 5th house also indicates purva punya (merit
+  from past lives), speculative ability, and romantic inclinations.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

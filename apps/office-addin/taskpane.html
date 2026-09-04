@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AstroOS Kurma &amp; SBC Console</title>
+
+  <!-- Office.js CDN -->
+  <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b1424;
+      --card-bg: #111e38;
+      --border: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    header {
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-family: monospace;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #070e1c;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      color: var(--text);
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #334155;
+    }
+
+    .status-panel {
+      font-family: monospace;
+      font-size: 11px;
+      background: #070e1c;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      max-height: 180px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .log-info { color: #38bdf8; }
+    .log-success { color: var(--success); }
+    .log-warn { color: var(--warning); }
+    .log-error { color: var(--danger); font-weight: bold; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .badge-ok { background: #064e3b; color: #34d399; }
+    .badge-error { background: #7f1d1d; color: #f87171; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌐 AstroOS Mundane Console</h1>
+    <div class="subtitle">KURMA CHAKRA &amp; SBC INTEGRATION</div>
+  </header>
+
+  <div class="card">
+    <div class="form-group">
+      <label for="apiUrl">AstroOS API Base URL</label>
+      <input type="text" id="apiUrl" value="http://localhost:8000" />
+    </div>
+
+    <div class="form-group">
+      <label for="targetDate">Target Timestamp (ISO / UTC)</label>
+      <input type="datetime-local" id="targetDate" />
+    </div>
+
+    <div class="form-group">
+      <label for="ayanamsaSelect">Ayanamsa</label>
+      <select id="ayanamsaSelect">
+        <option value="lahiri" selected>Lahiri (Chitra Paksha)</option>
+        <option value="raman">Raman</option>
+        <option value="krishnamurti">KP (Krishnamurti)</option>
+        <option value="fagan_bradley">Fagan-Bradley</option>
+      </select>
+    </div>
+
+    <button id="syncBtn" class="btn">
+      <span>⚡</span> Sync Kurma &amp; SBC Tables
+    </button>
+
+    <button id="auditBtn" class="btn btn-secondary">
+      <span>🔍</span> Audit Error Cells Only
+    </button>
+  </div>
+
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <label>Audit &amp; Execution Log</label>
+      <span id="auditBadge" class="badge badge-ok">READY</span>
+    </div>
+    <div id="logOutput" class="status-panel">System ready. Click 'Sync' to update workbook.</div>
+  </div>
+
+  <script src="taskpane.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+id: jaimini.chara-dasha-system
+name: Chara Dasha System
+aliases:
+  - Jaimini Dasha
+  - चर दशा
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Chara Dasha is Jaimini's unique rashi-based (sign-based) dasha
+  system. Unlike Vimshottari which is nakshatra-based, Chara Dasha
+  assigns dasha periods to rashis (signs) based on their position
+  from the Atmakaraka's sign.
+
+calculation: >
+  1. Identify the Atmakaraka (AK) and its sign position.
+  2. The AK's sign becomes the starting point.
+  3. Count from AK's sign in zodiacal order for odd rashis,
+     counter-zodiacal for even rashis.
+  4. Each rashi gets a dasha period equal to the number of
+     rashis counted from AK.
+
+sequence: >
+  The sequence starts from the AK's sign and proceeds through
+  all 12 rashis, returning to the AK's sign at the end.
+
+duration: >
+  Each rashi gets a dasha period. The total cycle varies but
+  typically covers 12 years per cycle (similar to Vimshottari's
+  120 years but with different distribution).
+
+# === CALCULATION RULES ===
+rules:
+  - rule: "Start from Atmakaraka's sign"
+    source: source.jaimini-sutras
+  - rule: "Odd rashis (Mesha, Mithuna, Simha, Tula, Dhanus, Kumbha) count zodiacally"
+    source: source.jaimini-sutras
+  - rule: "Even rashis (Vrishabha, Karka, Kanya, Vrishchika, Makara, Meena) count counter-zodiacally"
+    source: source.jaimini-sutras
+  - rule: "The dasha period of a rashi equals the count from AK's sign"
+    source: source.jaimini-sutras
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  Chara Dasha is considered more accurate for timing events in
+  Jaimini astrology. The system is rashi-based rather than
+  nakshatra-based, making it complementary to Vimshottari.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial Chara Dasha system entry"
+    author: "Chief Jyotish Knowledge Architect"

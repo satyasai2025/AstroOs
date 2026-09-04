@@ -1,0 +1,41 @@
+id: yoga.chandra.durudhura
+name: Durudhura Yoga
+aliases: ["Both-Sides Wealth Yoga"]
+category: yoga
+type: chandra
+subcategory: nakshatra-based
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Planets (other than the Sun) are present in BOTH the 2nd and 12th houses from the Moon simultaneously"
+      entity: yoga.chandra.durudhura
+      role: subject
+      notes: "Both flanking positions from the Moon must be occupied by non-Sun planets. The same planet cannot occupy both positions (they are adjacent signs). Different planets in both positions create the full yoga. The strength depends on the benefic/malefic nature of the occupying planets."
+
+effects:
+  positive:
+    - "Great wealth and material comfort"
+    - "Prosperity from multiple directions"
+    - "Balance between earning (2nd) and enjoyment (12th)"
+    - "Social status and respect"
+    - "Comfortable and luxurious life"
+  negative:
+    - "Malefic planets in these positions may bring wealth through difficult means"
+  intensity: strong
+
+sources:
+  - ref: source.BPHS
+    chapter: 5
+    verse: 27
+
+notes: "A combination of Sunapha and Anapha conditions. When both the 2nd and 12th from Moon are occupied, the native receives the benefits of both yogas simultaneously. This is considered a very fortunate placement indicating wealth, comfort, and social standing. The name 'Durudhura' suggests something that is carried on both sides, like a balanced load - the native has support from both directions of wealth."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,87 @@
+id: jaimini.rashi-drishti
+name: Rashi Drishti (Sign Aspects)
+aliases:
+  - Sign Aspects
+  - Jaimini Aspects
+  - राशि दृष्टि
+category: jaimini
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Rashi Drishti is Jaimini's unique system of sign-based aspects,
+  where rashis (signs) aspect each other based on their position
+  from each other. This is fundamentally different from Parashari's
+  Graha Drishti where planets aspect other planets.
+
+# === ASPECT RULES ===
+aspect_rules:
+  - rule: "All rashis aspect the 7th sign from themselves"
+    source: source.jaimini-sutras
+    notes: "This is the primary aspect, similar to Parashari's 7th aspect"
+
+  - rule: "All rashis aspect the signs 2nd and 12th from themselves"
+    source: source.jaimini-sutras
+    notes: "These are special Jaimini aspects not found in Parashari"
+
+  - rule: "All rashis aspect the signs 4th and 8th from themselves"
+    source: source.jaimini-sutras
+    notes: "These are additional Jaimini aspects"
+
+# === ASPECT TABLE ===
+aspect_table:
+  Mesha:
+    aspects: [Tulanam, Vrishabham, Meena, Karkam, Simha]
+    notes: "Mesha aspects 7th (Tula), 2nd (Vrishabha), 12th (Meena), 4th (Karka), 8th (Simha)"
+  Vrishabham:
+    aspects: [Vrishchikam, Mithunam, Mesha, Simha, Kanya]
+  Mithunam:
+    aspects: [Dhanus, Karkam, Vrishabham, Kanya, Tula]
+  Karkam:
+    aspects: [Makaram, Simham, Mithunam, Tula, Vrishchikam]
+  Simham:
+    aspects: [Kumbham, Kanya, Karkam, Vrishchikam, Dhanus]
+  Kanya:
+    aspects: [Meena, Tulanam, Simham, Dhanus, Makaram]
+  Tulanam:
+    aspects: [Mesha, Vrishchikam, Kanya, Makaram, Kumbham]
+  Vrishchikam:
+    aspects: [Vrishabham, Dhanus, Tulanam, Kumbham, Meena]
+  Dhanus:
+    aspects: [Mithunam, Makaram, Vrishchikam, Meena, Mesha]
+  Makaram:
+    aspects: [Karkam, Kumbham, Dhanus, Mesha, Vrishabham]
+  Kumbham:
+    aspects: [Simham, Meena, Makaram, Vrishabham, Mithunam]
+  Meena:
+    aspects: [Kanya, Mesha, Kumbham, Mithunam, Karkam]
+
+# === STRENGTH OF ASPECTS ===
+aspect_strength:
+  - strength: "7th aspect"
+    power: "strongest"
+    notes: "Full aspect power"
+  - strength: "4th and 8th aspects"
+    power: "moderate"
+    notes: "Partial aspect power"
+  - strength: "2nd and 12th aspects"
+    power: "weakest"
+    notes: "Minimal aspect power"
+
+# === SOURCE ===
+source: source.jaimini-sutras
+
+# === NOTES ===
+notes: >
+  Rashi Drishti is unique to Jaimini. In Parashari, planets aspect
+  other planets (Graha Drishti). In Jaimini, signs aspect signs
+  (Rashi Drishti). The two systems are complementary and should be
+  used together for comprehensive analysis.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial Rashi Drishti entry"
+    author: "Chief Jyotish Knowledge Architect"

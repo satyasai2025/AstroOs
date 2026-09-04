@@ -1,0 +1,115 @@
+id: aspect.special.conjunction
+name: Conjunction (Yuti) Effects
+aliases:
+  - Yuti
+  - Graha Yuti
+  - Planetary Conjunction
+  - Samyoga
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: special
+
+statement: >
+  When two or more grahas occupy the same sign, they form a conjunction
+  (yuti). The nature and effects of the conjunction depend on the
+  specific combination of grahas, their individual dignity, and the
+  sign/house they occupy together.
+
+conditions:
+  - entity: graha.any
+    role: subject
+    notes: >
+      Any two or more grahas in the same sign form a conjunction. The
+      minimum distance for conjunction is typically considered within
+      the same sign (approximately 30 degrees or less depending on
+      authority).
+  - entity: rashi.host
+    role: object
+    notes: >
+      The sign containing the conjunction determines its background
+      quality — friendly, neutral, or enemy signs modify the outcome.
+
+effects:
+  - description: >
+      Conjunction merges the significations of the combined grahas.
+      The dominant graha (by dignity, strength, or ownership) tends to
+      lead the combined influence.
+    intensity: moderate
+    notes: >
+      Two grahas in conjunction are not equally influential — dignity,
+      retrograde status, and natural temperament determine which graha
+      "leads."
+  - description: >
+      Friendly conjunctions (grahas in mutual friendship) produce
+      harmonious blended effects.
+    intensity: moderate
+    notes: >
+      Guru-Shukra conjunction is a common example — their friendship
+      produces combined benefits.
+  - description: >
+      Hostile conjunctions (grahas in mutual enmity) produce friction
+      and contested influence.
+    intensity: strong
+    notes: >
+      Guru-Shani conjunction is a notable example where their enmity
+      creates tension despite both being functionally significant.
+
+exceptions:
+  - condition: >
+      Surya-Chandra conjunction (Amavasya Yoga) — when Surya and
+      Chandra are in the same sign, it is called Amavasya Yoga. The
+      results vary significantly based on degree proximity.
+    reason: >
+      Amavasya (new moon) conditions are considered inauspicious by
+      tradition. However, BPHS notes that Surya-Chandra conjunction is
+      inauspicious specifically when the Moon is waning, and more
+      favourable when waxing.
+  - condition: >
+      Guru-Chandra conjunction (Gaja-Kesari Yoga) — when Guru and
+      Chandra are in kendra (1st, 4th, 7th, 10th) from each other,
+      which includes conjunction in the same sign.
+    reason: >
+      This is one of the most auspicious yogas described in BPHS. The
+      conjunction of Guru and Chandra in the same sign activates this
+      yoga.
+  - condition: >
+      Shani-Mangala conjunction — both are natural malefics; their
+      conjunction intensifies malefic effects.
+    reason: >
+      Two natural malefics together amplify challenging significations.
+      BPHS classifies this as inherently difficult.
+  - condition: >
+      Guru-Shani conjunction — their mutual enmity creates tension
+      despite both being functional benefics for many ascendants.
+    reason: >
+      BPHS Ch.2 describes this as a contradictory combination whose
+      effects depend heavily on the house and sign of conjunction.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Conjunctions are
+      described through specific graha pairings and their combined
+      effects. Notable yogas (Gaja-Kesari, Amavasya) arise from
+      conjunctions.
+    confidence: high
+
+notes: >
+  Conjunction (yuti) is distinct from aspect (drishti) but related.
+  While aspects create influence between grahas in different houses,
+  conjunctions create direct merging of graha energies in the same
+  house. Both are types of graha-to-graha relationship. This record
+  covers conjunctions as a special category of aspectual interaction.
+  Detailed yoga-specific conjunction effects (such as Neecha-Bhanga
+  Raja Yoga from conjunction with the dispositor of a debilitated
+  graha) are covered in the yogas catalogue, not here.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

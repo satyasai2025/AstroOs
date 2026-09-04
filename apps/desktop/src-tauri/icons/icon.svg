@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bg)" stroke="#334155" stroke-width="8"/>
+  <!-- Sun/mandala symbol -->
+  <circle cx="256" cy="256" r="80" fill="none" stroke="url(#sun)" stroke-width="6"/>
+  <circle cx="256" cy="256" r="20" fill="url(#sun)"/>
+  <!-- Rays -->
+  <g stroke="url(#sun)" stroke-width="4" stroke-linecap="round">
+    <line x1="256" y1="136" x2="256" y2="100"/>
+    <line x1="256" y1="376" x2="256" y2="412"/>
+    <line x1="136" y1="256" x2="100" y2="256"/>
+    <line x1="376" y1="256" x2="412" y2="256"/>
+    <line x1="172" y1="172" x2="146" y2="146"/>
+    <line x1="340" y1="340" x2="366" y2="366"/>
+    <line x1="340" y1="172" x2="366" y2="146"/>
+    <line x1="172" y1="340" x2="146" y2="366"/>
+  </g>
+  <!-- Text "A" for AstroOS -->
+  <text x="256" y="280" font-family="serif" font-size="120" font-weight="bold"
+        fill="url(#sun)" text-anchor="middle" dominant-baseline="central">A</text>
+</svg>

@@ -1,0 +1,152 @@
+# cross-references/graha-bhava-functional-nature.yaml
+# Phase 5 — Relationship Mapping: Graha-Bhava relationships
+
+id: cross-reference.graha-bhava-functional-nature
+name: Graha-Bhava Functional Nature
+aliases: ["House-Type Occupation Strength", "Kendra-Trikona-Upachaya-Dusthana Graha Framework"]
+category: cross-reference
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-16
+
+description: >
+  Maps each graha's natural benefic/malefic quality against the five
+  functional house-type groups (kendra, trikona, upachaya, dusthana,
+  maraka) from catalogues/bhavas/_index.yaml, covering how each graha
+  behaves when OCCUPYING (transiting through or placed in) a house of
+  that type. This is distinct from catalogues/karakatvas/house-
+  significations.yaml (which maps life events to houses) and from
+  lordship theory (which is lagna-dependent and out of scope here,
+  see scope_note below) — this record is lagna-independent and
+  answers "how does this graha behave when sitting in a kendra/
+  dusthana/etc., regardless of whose chart it is."
+
+scope_note: >
+  Functional benefic/malefic status by HOUSE LORDSHIP (e.g. "for
+  Karka lagna, Mangala owns the 5th and 10th and becomes a
+  yogakaraka") is lagna-dependent — it varies across all 12
+  ascendants and requires cross-referencing each rashi's ruling
+  graha. That per-lagna lordship table is a natural Phase 6 extension
+  (see lordship_theory section below for the general principles that
+  would drive such a table); this record covers occupation only,
+  which applies uniformly regardless of lagna.
+
+house_groups:
+  kendra: { houses: [1, 4, 7, 10], theme: "pillars of life — self, home, partnerships, career" }
+  trikona: { houses: [1, 5, 9], theme: "houses of fortune and dharma — the most auspicious group" }
+  upachaya: { houses: [3, 6, 10, 11], theme: "houses of growth — improve with time and effort" }
+  dusthana: { houses: [6, 8, 12], theme: "houses of difficulty — obstacles, crisis, loss" }
+  maraka: { houses: [2, 7], theme: "houses classically associated with death-timing (marka) potential" }
+
+lordship_theory: >
+  General principles (BPHS Ch.19, applied at lordship level, not
+  occupation level): (1) Kendradhipatya dosha — a natural benefic
+  that owns ONLY a kendra house (and no trikona) has its
+  auspiciousness reduced, since kendra lordship alone is considered
+  a mild affliction for benefics. (2) A natural malefic owning a
+  kendra alone is NOT afflicted this way — kendra lordship instead
+  improves a malefic's results. (3) Trikona lordship is auspicious
+  for any graha regardless of natural nature. (4) A graha owning
+  BOTH a kendra and a trikona for a given lagna becomes a
+  Yogakaraka — the single most auspicious lordship combination
+  (e.g., Mangala for Karka and Simha lagnas; Shani for Tula and
+  Vrishabha lagnas). (5) Dusthana lordship (6th, 8th, 12th) taints
+  the significations of whatever else that graha owns or occupies,
+  for any graha, benefic or malefic — this is one of the few rules
+  that does NOT depend on natural nature. (6) 2nd and 3rd lords are
+  functionally neutral-to-mild in most systems; the 11th lord is
+  broadly auspicious as an upachaya-trikona-adjacent house.
+
+occupation_by_graha:
+  - graha: graha.surya
+    nature: natural malefic
+    kendra: "Gives authority and visibility but can create ego friction in relationship-facing kendras (7th); strongest in 10th (career, natural affinity with Surya's karakatva)."
+    trikona: "Excellent in 9th (father, dharma, fortune — directly resonant with Surya's own karakatvas); 5th is good for leadership and recognition through creative/intellectual work."
+    upachaya: "Very strong; Surya in 3rd, 6th, or 11th builds authority and overcomes obstacles through sustained effort — a classically favoured placement for public standing."
+    dusthana: "Uncomfortable; Surya in 8th threatens vitality and self-confidence, in 12th indicates isolation or loss of status, in 6th can indicate conflict with authority figures despite otherwise functioning as upachaya."
+    maraka: "In 2nd or 7th, Surya's heat can strain family wealth or partnership harmony respectively; contributes to maraka potential per classical timing rules."
+
+  - graha: graha.chandra
+    nature: natural benefic
+    kendra: "Excellent in all four kendras, especially 4th (own natural signification of home/mother) and 1st (emotional stability radiates outward)."
+    trikona: "Strong in 5th and 9th; brings emotional intelligence to creativity and a nurturing quality to fortune/dharma matters."
+    upachaya: "Adequate but Chandra's gentle nature is somewhat strained by upachaya's demand for struggle-driven growth, particularly in 6th (health/enemies) and 8th-adjacent sensitivity."
+    dusthana: "Waning Chandra in 6th, 8th, or 12th intensifies emotional volatility and is one of the more difficult placements for mental stability; waxing Chandra softens but does not eliminate this."
+    maraka: "As a natural benefic, Chandra's presence in 2nd or 7th is comparatively gentle even given maraka classification — it moderates rather than intensifies the timing potential."
+
+  - graha: graha.mangala
+    nature: natural malefic
+    kendra: "Provides drive and courage but occupation of relationship kendras (7th, and to a lesser extent 4th) is the classical basis of Mangal Dosha (see catalogues/yogas/dosha/mangal-dosha.yaml) due to friction with partnership and domestic harmony."
+    trikona: "Excellent in 9th and 5th when well-dignified — channels Mangala's assertive energy into fortune and creative/intellectual courage; less favourable if debilitated or afflicted."
+    upachaya: "One of Mangala's strongest functional zones; 3rd, 6th, and 11th occupation is classically considered highly favourable, giving courage, victory over adversaries, and sustained gains."
+    dusthana: "Mangala is comparatively at home in 6th (combative energy suits open conflict/competition) but 8th occupation is a recognised risk factor for accidents and surgery; 12th can manifest as suppressed aggression or hidden expenses."
+    maraka: "Mangala in 2nd or 7th sharply raises maraka intensity — one of the most cited combinations in classical longevity analysis, particularly for 2nd house/speech-related and 7th house/partnership-related timing."
+
+  - graha: graha.budha
+    nature: natural neutral
+    kendra: "Adaptable and generally favourable in all kendras; results depend heavily on conjunction/aspect since Budha has no fixed disposition of its own."
+    trikona: "Strong in 5th (intelligence, analytical creativity) and 9th (higher learning); amplifies whatever quality — benefic or malefic — is impressed on it by association."
+    upachaya: "Comfortable; Budha's adaptability suits the growth-through-effort nature of 3rd, 6th, and 11th, especially for commerce and communication-based gains."
+    dusthana: "Budha in 8th supports research and occult inclination rather than crisis (consistent with its intellectual nature); 12th supports foreign commerce/communication; 6th is workable given Budha's association with service and analysis."
+    maraka: "Budha's maraka contribution in 2nd or 7th is comparatively mild and highly association-dependent — it rarely acts as a primary marka factor on its own."
+
+  - graha: graha.guru
+    nature: natural benefic
+    kendra: "Very strong in all kendras, though kendra-only lordship for other lagnas can trigger kendradhipatya dosha (see lordship_theory); as an occupant, Guru performs excellently, especially 1st and 10th."
+    trikona: "The single strongest functional zone for Guru; 5th and 9th occupation are archetypally auspicious, reinforcing Guru's own significations of wisdom, children, and fortune."
+    upachaya: "Guru is the natural benefic least comfortable in upachaya houses — its expansive, generous nature is somewhat constrained by the effort-and-friction character of 3rd, 6th, and 11th, though 11th (gains) is the most tolerable of the three."
+    dusthana: "Guru is the most protective natural benefic when placed in dusthana houses — Jupiter in 8th is specifically noted in classical texts as supportive of longevity (Ayushkaraka function) rather than purely harmful; 12th supports genuine spiritual liberation themes; 6th is the most challenging of the three for Guru."
+    maraka: "Guru's presence in 2nd or 7th is one of the gentlest maraka combinations — its benefic nature substantially tempers the harshness classically attributed to these houses."
+
+  - graha: graha.shukra
+    nature: natural benefic
+    kendra: "Strong in all kendras, particularly 7th (direct resonance with Shukra's own karakatva of marriage and partnership) and 4th (domestic comfort, luxury)."
+    trikona: "Excellent in 5th (romance, creativity, aesthetic talent) and 9th (fortune through relationships or the arts)."
+    upachaya: "Reasonably comfortable, though Shukra's refined nature is somewhat coarsened by upachaya's effort-driven character; 11th (gains through networks/relationships) is the most favourable of the three."
+    dusthana: "Shukra in 8th is specifically noted for occult/tantric inclination and can indicate complications in intimate relationships; 12th is one of Shukra's more workable dusthana placements (bed pleasures, foreign luxury); 6th can indicate relationship-related disputes or health issues tied to indulgence."
+    maraka: "Shukra in 7th is a double-edged classical combination — auspicious for marriage significations yet also a recognised maraka-intensifying placement in longevity analysis; 2nd is comparatively milder."
+
+  - graha: graha.shani
+    nature: natural malefic
+    kendra: "Provides discipline and endurance but is considered to create quiet, persistent friction in kendras, especially 1st (health, vitality) and 4th (domestic contentment); 10th is Shani's strongest kendra, resonant with its karakatva of career and structure."
+    trikona: "Generally the most difficult functional zone for Shani; 5th (creativity, children) and 9th (fortune, dharma) occupation is classically viewed with caution unless Shani is well-dignified, since Shani's restrictive nature runs counter to trikona's expansive auspiciousness."
+    upachaya: "Shani's single strongest functional zone — 3rd, 6th, and 11th occupation is considered highly favourable, giving sustained achievement through discipline, victory over competitors, and durable material gains; this is one of the most consistently cited rules in classical texts."
+    dusthana: "Shani is comparatively at home in 8th and 12th given its own karakatva of longevity, endings, and renunciation — classical texts treat Shani in 8th as less damaging than other malefics there, and Shani in 12th supports asceticism/foreign settlement; 6th overlaps favourably with its upachaya strength."
+    maraka: "Shani in 2nd or 7th is a significant classical maraka factor, particularly for delayed but severe timing events, consistent with Shani's general association with prolonged processes."
+
+  - graha: graha.rahu
+    nature: natural malefic
+    kendra: "Amplifies whatever kendra it occupies, often toward unconventional or intensified expression; 10th can indicate unusual but prominent career paths, 7th can indicate atypical or cross-cultural partnerships."
+    trikona: "Rahu in 5th or 9th channels its amplifying, materially-driven nature into speculative gains or unorthodox belief systems — results are highly dependent on dignity and association, more volatile than for classical grahas."
+    upachaya: "One of Rahu's strongest functional zones, closely paralleling Shani; 3rd, 6th, and 11th are classically favoured for Rahu, associated with sudden gains, victory over competitors, and rapid material advancement."
+    dusthana: "Rahu in 8th is one of the most intensely debated placements in classical and modern practice — associated with sudden transformation, occult inclination, and health volatility; 12th supports foreign residence (a core Rahu karakatva); 6th overlaps with its upachaya strength."
+    maraka: "Rahu in 2nd or 7th is treated with caution in classical longevity analysis, tending to manifest as sudden or unexpected disruption to family/partnership stability rather than gradual maraka pressure."
+
+  - graha: graha.ketu
+    nature: natural malefic
+    kendra: "Tends to detach from the significations of whichever kendra it occupies; 1st can indicate a diffuse or spiritually-oriented sense of self, 7th can indicate detachment from or unconventional partnership patterns."
+    trikona: "Ketu in 5th or 9th often manifests as innate spiritual insight, past-life aptitude, or detachment from conventional creative/dharmic ambition rather than material trikona benefits."
+    upachaya: "Favourable, paralleling Mangala (its natural affinal energy); 3rd, 6th, and 11th occupation supports sudden gains, victory in competition, and effective, if unconventional, effort."
+    dusthana: "Ketu is considered comparatively at home in 12th (its own karakatva of moksha and withdrawal) and functions acceptably in 8th (research, occult, transformation resonate with its nature); 6th overlaps with its upachaya strength."
+    maraka: "Ketu in 2nd or 7th tends to manifest as sudden separations or losses rather than sustained decline, consistent with its general signature of abrupt rather than gradual change."
+
+sources:
+  - ref: source.BPHS
+    claim: "Chapter 19 — kendradhipatya dosha, yogakaraka principles, and general house-lordship/occupation theory"
+    confidence: high
+
+notes: >
+  This record intentionally separates OCCUPATION effects (covered
+  here, lagna-independent) from LORDSHIP effects (lagna-dependent,
+  summarized only as general theory in lordship_theory). A full
+  per-lagna lordship matrix would require cross-referencing
+  catalogues/rashis/*.yaml ruling-graha data against this framework
+  for all 12 ascendants — a natural candidate for a future
+  cross-reference entry once Phase 5/6 relationship mapping expands.
+
+history:
+  - version: 1.0
+    date: 2026-07-16
+    change: "Initial cross-reference entry — Phase 5 Graha-Bhava relationship mapping"
+    author: "Chief Jyotish Knowledge Architect"

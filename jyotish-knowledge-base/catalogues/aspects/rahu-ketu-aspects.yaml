@@ -1,0 +1,109 @@
+id: aspect.special.rahu-ketu
+name: Rahu and Ketu Aspects
+aliases:
+  - North Node Aspects
+  - South Node Aspects
+  - Rahu-Ketu Special Aspects
+  - Lunar Node Aspects
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: special
+
+statement: >
+  Rahu and Ketu aspect the 5th and 9th houses from their positions in
+  addition to the standard 7th house aspect, mirroring Guru's special
+  aspects. However, this is a disputed rule — some classical traditions
+  deny special aspects to the lunar nodes entirely.
+
+conditions:
+  - entity: graha.rahu
+    role: subject
+    notes: >
+      Rahu's special aspects (5th, 9th) follow the same pattern as Guru.
+      This view is attributed to BPHS and certain commentarial traditions.
+  - entity: graha.ketu
+    role: subject
+    notes: >
+      Ketu follows the same rules as Rahu — 5th and 9th aspects in
+      addition to the standard 7th. Since Rahu and Ketu are always
+      180 degrees apart, their aspect patterns are complementary.
+  - entity: house.5th-from-rahu-or-ketu
+    role: object
+    notes: >
+      The 5th aspect mirrors Guru's 5th aspect in structural form.
+      Whether it carries the same benefic quality is debated.
+  - entity: house.9th-from-rahu-or-ketu
+    role: object
+    notes: >
+      The 9th aspect mirrors Guru's 9th aspect in structural form.
+      The quality depends on Rahu/Ketu's relationship with the
+      dispositor and other chart factors.
+
+effects:
+  - description: >
+      Rahu's special aspects carry a Rahu-filtered version of the
+      significations of the targeted houses — illusion, obsession,
+      unconventional approaches, foreign elements, and amplification.
+    intensity: moderate
+    notes: >
+      Unlike Guru's special aspects which are inherently benefic,
+      Rahu's aspects are ambivalent and depend heavily on disposition.
+  - description: >
+      Ketu's special aspects carry a Ketu-filtered version — detachment,
+      spiritual tendencies, past-life connections, sudden insights,
+      and dissolution.
+    intensity: moderate
+    notes: >
+      Ketu's aspects tend toward dissolution and spiritualization
+      rather than material amplification.
+
+exceptions:
+  - condition: >
+      Several classical traditions and commentators do not grant special
+      aspects to Rahu or Ketu, limiting them to the 7th aspect only.
+    reason: >
+      Rahu and Ketu are chaya grahas (shadow planets) without physical
+      bodies. Some authorities argue that physical grahas alone possess
+      special aspect capacity. This is an unresolved tradition-specific
+      divergence.
+  - condition: >
+      The Parashari system assigns special aspects; the Jaimini system
+      does not address Rahu/Ketu special aspects in the same framework.
+    reason: >
+      Different classical systems have different rules for lunar node
+      aspects. Practitioners should be aware of which system they are
+      applying.
+  - condition: >
+      When Rahu/Ketu are conjunct a natural benefic, the special aspects
+      may acquire some benefic coloring; when conjunct a natural malefic,
+      the malefic coloring intensifies.
+    reason: >
+      Rahu/Ketu amplify the qualities of conjunction partners, which
+      extends to their aspect behavior.
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      Brihat Parashara Hora Shastra, Chapter 2: Rahu and Ketu aspects
+      the 5th, 7th, and 9th houses from their positions, following
+      the same pattern as Guru. This is the BPHS position.
+    confidence: high
+
+notes: >
+  The attribution of special aspects to Rahu and Ketu is one of the
+  most actively debated topics in Vedic astrology. BPHS ascribes 5th
+  and 9th aspects to them (same as Guru), but many practitioners and
+  commentators restrict Rahu/Ketu to the standard 7th aspect only.
+  This catalogue records the BPHS position while noting the conflict.
+  practitioners should clearly state which tradition they follow when
+  applying Rahu/Ketu aspects.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

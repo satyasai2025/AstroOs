@@ -1,0 +1,154 @@
+# catalogues/grahas/mangala.yaml
+
+id: graha.mangala
+name: Mangala
+aliases:
+  - Mars
+  - Kuja
+  - Angaraka
+  - Bhauma
+  - Kubera
+  - Raktavarna
+  - Mahishasura
+category: graha
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Aṅgāraka
+devanagari: मङ्गल
+meaning: "The auspicious one; the red one"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: 779.94
+  sidereal_period_days: 686.97
+  retrograde:
+    occurs: true
+    typical_duration_days: 72
+    typical_frequency: "Every 26 months"
+  notes: "Retrograde for approximately 2–2.5 months roughly every 26 months"
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: male
+  nature: natural malefic
+  caste: kshatriya
+  element: fire
+  direction: south
+  color: red
+  gem: red coral
+  metal: copper
+  grain: masoor
+  body_parts:
+    - bone_marrow
+    - muscles
+    - blood
+  animal: ram
+  deity: kartikeya
+  quality: tamasic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: makara
+    degrees: 28
+  debilitation:
+    sign: karka
+    degrees: 28
+  moolatrikona:
+    sign: mesha
+    range: "0°–12°"
+  own_signs:
+    - mesha
+    - vrishchika
+  friendly_signs:
+    - simha
+    - karka
+    - dhanus
+    - meena
+  neutral_signs:
+    - vrishabha
+    - tula
+    - makara
+    - kumbha
+  inimical_signs:
+    - mithuna
+    - kanya
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - mrigashira
+    - chitra
+    - dhanishta
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.surya
+    - graha.chandra
+    - graha.guru
+  enemies:
+    - graha.budha
+  neutrals:
+    - graha.shukra
+    - graha.shani
+    - graha.rahu
+    - graha.ketu
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 7
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Courage (Virya)"
+    - "Siblings (Bhratri)"
+    - "Strength (Shakti)"
+  traditional:
+    - "Land and property"
+    - "Military affairs"
+    - "Disputes"
+  modern:
+    - "Assertiveness"
+    - "Ambition"
+    - "Initiative"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Mangala"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Mangala"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Mangala is the commander of the celestial army and represents
+  the fiery, assertive energy in the chart. As a natural malefic
+  ruling Mesha and Vrishchika, it governs courage, ambition, and
+  technical skill. A strong Mangala indicates leadership potential,
+  while an afflicted Mangala may manifest as aggression or conflict.
+  Mangala owns the 3rd and 8th houses naturally (in Mesha lagna).
+
+# === HISTORY ===
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

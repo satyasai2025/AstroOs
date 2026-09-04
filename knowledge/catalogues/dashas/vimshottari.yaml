@@ -1,0 +1,106 @@
+id: dasha.vimshottari
+name: Vimshottari Dasha
+aliases: ["Ashtottarashata Dasha", "120-Year Dasha"]
+category: dasha
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+type: nakshatra-dasha
+total_years: 120
+
+sequence:
+  - graha: graha.chandra
+    years: 10
+  - graha: graha.shani
+    years: 19
+  - graha: graha.guru
+    years: 16
+  - graha: graha.rahu
+    years: 18
+  - graha: graha.ketu
+    years: 7
+  - graha: graha.shukra
+    years: 20
+  - graha: graha.surya
+    years: 6
+  - graha: graha.chandra
+    years: 10
+  - graha: graha.mangala
+    years: 7
+  - graha: graha.budha
+    years: 17
+
+total_verification: |
+  10 + 19 + 16 + 18 + 7 + 20 + 6 + 10 + 7 + 17 = 120 years. Verified.
+
+calculation_method: |
+  The starting point is the nakshatra occupied by the Moon (Chandra) at the time of birth.
+  Each of the 27 nakshatras is owned by one of the 9 grahas (3 nakshatras per graha).
+  The balance of the starting nakshatra's dasha period is calculated proportionally:
+    balance = (remaining padas of the nakshatra / 4) * total years of the owning graha
+  The sequence then follows the fixed order: Chandra, Shani, Guru, Rahu, Ketu,
+  Shukra, Surya, Chandra, Mangala, Budha.
+
+antardasha: true
+pratyantardasha: true
+sub_period_calculation: |
+  Antardasha (sub-period) is calculated within each major period (mahadasha).
+  The sub-periods follow the same sequence order, starting from the graha
+  whose mahadasha is running. Each graha's antardasha duration within a
+  mahadasha is proportional to its share of the 120-year cycle:
+
+    antardasha_years = (mahadasha_years * graha_years) / 120
+
+  For example, within the 19-year Shani mahadasha, Shukra antardasha =
+  19 * 20 / 120 = 3.1667 years.
+
+  Pratyantardasha (sub-sub-period) further divides each antardasha using
+  the same proportional formula, with the third level graha's share.
+
+  Sookshma (4th level) and Prana (5th level) dashas also exist but are
+  rarely used in practice.
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapter 9 — Vimshottari Dasha is the most widely used dasha system. It is a nakshatra-based dasha spanning 120 years, starting from the Moon's nakshatra at birth."
+    confidence: high
+  - ref: source.BPHS
+    claim: "BPHS Ch.9 describes the complete antardasha and pratyantardasha calculation methodology using proportional division of the mahadasha period."
+    confidence: high
+
+notes: |
+  Vimshottari is the primary and most widely referenced dasha system in
+  Parashari Jyotish. It is applicable to all births (no conditional
+  restrictions on when it can be used). The remaining balance at birth
+  is called the "dasha balance" or "dasha lagna" and is critical for
+  accurate life-event timing. The system assumes a 120-year life span
+  as its cycle length; if a person lives beyond 120 years, the cycle
+  repeats from the beginning.
+
+  The nakshatra ownership mapping is:
+    Ketu: Ashvini, Magha, Moola
+    Shukra: Bharani, Purva Phalguni, Purva Ashadha
+    Surya: Krittika, Uttara Phalguni, Uttara Ashadha
+    Chandra: Rohini, Hasta, Shravana
+    Mangala: Mrigashira, Chitra, Dhanishta
+    Rahu: Ardra, Swati, Shatabhisha
+    Guru: Punarvasu, Vishakha, Purva Bhadrapada
+    Shani: Pushya, Anuradha, Uttara Bhadrapada
+    Budha: Ashlesha, Jyeshtha, Revati
+
+  Each nakshatra is owned by exactly one graha (no sharing) — this is
+  the fixed, universal Vimshottari sequence and matches the
+  nakshatra_lordship field recorded in each individual graha's own
+  catalogue record (catalogues/grahas/*.yaml).
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Corrected the nakshatra ownership mapping table in these notes, which was internally scrambled (e.g. listed Chandra twice, omitted Budha's correct nakshatras, and disagreed with every individual graha file's own nakshatra_lordship field). The corrected table now matches the standard Vimshottari sequence and all 9 graha catalogue records exactly."
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

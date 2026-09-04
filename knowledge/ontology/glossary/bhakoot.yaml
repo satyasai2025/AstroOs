@@ -1,0 +1,67 @@
+# ontology/glossary/bhakoot.yaml
+
+id: term.bhakoot
+name: Bhakūṭa
+aliases:
+  - Bhakoot
+  - Bhakut
+  - Rashi Matching
+  - भकूट
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    bhakūṭa — from bhāga (portion) + kūṭa (group, category).
+    The second of the eight kūṭas (compatibility factors)
+    in the ashtakūṭa matching system, assessing the
+    compatibility of the couple's rāśi-s.
+  english: >
+    A compatibility assessment in the ashtakoota matching
+    system that evaluates the moon sign compatibility between
+    potential spouses. The rashi occupied by the bride's moon
+    and the groom's moon are checked for compatibility: some
+    sign pairs are considered harmonious, others neutral, and
+    some prohibited.
+  technical: >
+    Bhakoot carries 2 points out of 36 in the ashtakoota
+    system. Compatibility is based on the count from the
+    girl's rashi to the boy's rashi: mutual 2/12 positions
+    are prohibited (mahendra dosha), 5/9 positions are
+    highly favorable, and 1/7 positions are neutral. This
+    assessment is distinct from the nakshatra-based gunas.
+
+usage:
+  primary: "Pre-marital compatibility evaluation in the ashtakoota system"
+  secondary: "Assessment of emotional and familial harmony between partners"
+
+related_concepts:
+  - ref: term.gana
+    relationship: "Gana (nature compatibility) is another koota in the ashtakoota system"
+  - ref: term.rashi
+    relationship: "Bhakoot evaluates compatibility between the moon rashis of partners"
+  - ref: term.varna
+    relationship: "Varna matching is the first of the eight kootas and assesses spiritual compatibility"
+
+sources:
+  - ref: source.BPHS
+    chapter: 74
+    verse: 1-6
+    claim: "Bhakūṭaṃ dvi-phalaṃ proktaṃ — Bhakoot is declared as carrying 2 points"
+    confidence: high
+
+notes: >
+  Bhakoot compatibility is sometimes considered the most
+  critical of the eight kootas. Some schools give it higher
+  weight than others in the overall ashtakoota score. The
+  prohibition of 2/12 positions is based on Parashara's
+  declaration that such placements cause mutual harm.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

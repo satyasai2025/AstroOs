@@ -1,0 +1,41 @@
+id: yoga.chandra.gauri-yoga
+name: Gauri Yoga
+aliases: ["Fair/Beautiful One Yoga"]
+category: yoga
+type: chandra
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Moon is placed in Taurus (Vrishabha) or Cancer (Karka) AND receives aspect from Jupiter"
+      entity: yoga.chandra.gauri-yoga
+      role: subject
+      notes: "Moon in Taurus is exalted; Moon in Cancer is in own sign. Jupiter's aspect (5th, 7th, or 9th from its position) must fall on the Moon's sign. The yoga is strongest when Moon is waxing (Shukla Paksha) and Jupiter is not retrograde."
+
+effects:
+  positive:
+    - "Physical beauty and attractive appearance"
+    - "Noble and virtuous character"
+    - "Good fortune and prosperity"
+    - "Respected in society"
+    - "Happy domestic life"
+    - "Creative and artistic abilities"
+  negative: []
+  intensity: strong
+
+sources:
+  - ref: source.phaladeepika
+    chapter: null
+    verse: null
+
+notes: "Named after Goddess Gauri (Parvati), known for her beauty and grace. From Phaladeepika by Mantreshwara. Moon in Taurus or Cancer is already in a strong dignity position. Jupiter's aspect adds wisdom, grace, and expansion to the Moon's nurturing qualities. The name 'Gauri' literally means 'fair' or 'beautiful one', reflecting the physical beauty this yoga confers."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

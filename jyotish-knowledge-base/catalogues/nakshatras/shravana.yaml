@@ -1,0 +1,56 @@
+id: nakshatra.shravana
+name: Shravana
+aliases: [Shravishtha, श्रवण]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Shravana
+devanagari: श्रवण
+meaning: "The Listener; the Ear"
+ruler: { ref: graha.chandra, system: vimshottari }
+deity:
+  name: Vishnu
+  description: "The Preserver of the Universe; the all-pervading sustainer of cosmic order"
+  attributes: [preservation, pervasiveness, divine order, cosmic balance]
+shakti:
+  name: Samhanana
+  meaning: "The power to hear and connect"
+  power: "To hear and connect; to bring things together through listening"
+star: { name: Altair }
+starting_degree: 10.0
+ending_degree: 23.33
+rashi_span: [{ ref: rashi.makaram }]
+padas:
+  - { pada: 1, degrees: "10°-13°20' Makara", rashi: rashi.makaram, navamsha_rashi: rashi.simham }
+  - { pada: 2, degrees: "13°20'-16°40' Makara", rashi: rashi.makaram, navamsha_rashi: rashi.kanyam }
+  - { pada: 3, degrees: "16°40'-20° Makara", rashi: rashi.makaram, navamsha_rashi: rashi.tulanam }
+  - { pada: 4, degrees: "20°-23°20' Makara", rashi: rashi.makaram, navamsha_rashi: rashi.vrishchikam }
+nature:
+  temperament: "Listening and learning; possesses deep receptivity and wisdom-seeking nature"
+  guna: sattvic
+  gana: deva
+  yoni: monkey
+  nadis: antya
+karakatvas:
+  - { concept: "Listening and communication" }
+  - { concept: "Learning and education" }
+  - { concept: "Fame and reputation" }
+  - { concept: "Knowledge and wisdom" }
+  - { concept: "Connection and networking" }
+compatible_nakshatras:
+  - { ref: nakshatra.uttarashadha }
+  - { ref: nakshatra.dhanishta }
+  - { ref: nakshatra.rohini }
+incompatible_nakshatras:
+  - { ref: nakshatra.ashvini }
+  - { ref: nakshatra.bharani }
+  - { ref: nakshatra.krittika }
+sources:
+  - { ref: source.BPHS, claim: "Shravana is ruled by Chandra; deity is Vishnu; Gana is Deva; Yoni is Monkey; Nadi is Antya", confidence: high }
+  - { ref: source.BPHS, claim: "Shravana spans from 10° to 23°20' Makara", confidence: high }
+notes: "Shravana is the nakshatra of listening and learning. Vishnu as deity represents the all-pervading consciousness that listens to all prayers. This nakshatra is associated with wisdom, fame, and the ability to absorb knowledge."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

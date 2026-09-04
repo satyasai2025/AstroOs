@@ -1,0 +1,91 @@
+id: nakshatra.18
+name: Jyeshtha
+aliases:
+  - Jyeshtha
+  - ज्येष्ठा
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Jyeshtha
+devanagari: ज्येष्ठा
+meaning: "The Eldest, The Chief, The Most Senior"
+
+ruler:
+  ref: graha.4
+  system: vimshottari
+
+deity:
+  name: Indra
+  description: King of the gods, ruler of heaven, bestower of power and protection
+  attributes:
+    - royalty
+    - protection
+    - power
+    - leadership
+
+shakti:
+  name: Aarohana Shakti
+  meaning: "The power to protect and rule"
+  power: "To rise to leadership, protect dependents, and wield authority with courage"
+
+star:
+  name: Antares (Alpha Scorpii)
+  magnitude: 0.96
+
+starting_degree: 226.666666667
+ending_degree: 240.0
+rashi_span:
+  - ref: rashi.vrishchikam
+
+padas:
+  - pada: 1
+    degrees: "16°40' to 20°00' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.mesham
+  - pada: 2
+    degrees: "20°00' to 23°20' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.vrishabham
+  - pada: 3
+    degrees: "23°20' to 26°40' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.mithunam
+  - pada: 4
+    degrees: "26°40' to 30°00' Vrishchika"
+    rashi: rashi.vrishchikam
+    navamsha_rashi: rashi.karkam
+
+nature:
+  temperament: Authoritative, protective, courageous, commanding
+  guna: tamasic
+  gana: rakshasa
+  yoni: Deer
+  nadis: adi
+
+karakatvas:
+  - concept: protection
+  - concept: power
+  - concept: seniority
+  - concept: first-born
+  - concept: leadership
+  - concept: authority
+
+compatible_nakshatras: []
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Describes the characteristics and traits associated with Jyeshtha nakshatra, ruled by Mercury and deity Indra"
+    confidence: high
+
+notes: "Jyeshtha is the 18th nakshatra, spanning 16°40' to 30°00' of Vrishchika (Scorpio). It is ruled by Mercury (Budha) and its deity is Indra, king of the gods. The shakti is Aarohana — the power to protect and rule. Jyeshtha natives are authoritative, protective, and naturally command respect. Antares, one of the brightest stars in the sky, marks this nakshatra and gives it a fiery, martial quality."
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references that used numeric sign-index IDs (rashi.8) instead of the catalogue's canonical named IDs (rashi.vrishchikam)", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,561 @@
+# Karakatva Catalogue: Bhava Significators
+# Source: BPHS Chapter 33 (Karaka Graha Phala Adhyaya) and Chapter 16-27 (Bhava descriptions)
+# Standardized karaka assignments for all 12 bhavas
+
+id: karaka.bhava.karakatvas
+name: Bhava Karakatva Samuha
+aliases: [House Significator Collection, Bhava Karakatvas]
+category: karaka
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+source_primary: source.BPHS
+
+karaka_type: bhava
+
+significations:
+  - bhava: bhava.1
+    name: Lagna (Ascendant / Self)
+    sanskrit: Tanu Bhava
+    karaka: graha.surya
+    karakatvas:
+      - concept: self (aatman)
+        confidence: high
+        notes: Primary house of self-identity, personality
+      - concept: body (shareera)
+        confidence: high
+        notes: Physical constitution, health, vitality
+      - concept: appearance (varna, rupa)
+        confidence: high
+        notes: Physical appearance, complexion, demeanor
+      - concept: health (arogya)
+        confidence: high
+        notes: General health and constitution
+      - concept: character (svabhava)
+        confidence: high
+        notes: Innate nature, temperament, behavioral traits
+      - concept: birth circumstances
+        confidence: high
+        notes: Conditions at birth, early life environment
+    cross_references:
+      - ref: graha.surya
+        relationship: "Surya is natural karaka for 1st bhava"
+      - ref: bhava.8
+        relationship: "1st-8th axis: longevity, transformation"
+      - ref: bhava.7
+        relationship: "1st-7th axis: self vs. other, partnerships"
+    sources:
+      - ref: source.BPHS
+        claim: "First bhava signifies self, body, appearance, health, and character"
+        confidence: high
+
+  - bhava: bhava.2
+    name: Dhana Bhava (Wealth)
+    sanskrit: Dhana Bhava
+    karaka: graha.guru
+    karakatvas:
+      - concept: wealth (dhana)
+        confidence: high
+        notes: Accumulated wealth, financial resources, bank balance
+      - concept: family (kutumba)
+        confidence: high
+        notes: Immediate family, household, family traditions
+      - concept: speech (vaani)
+        confidence: high
+        notes: Manner of speaking, eloquence, vocal quality
+      - concept: food (ahaara)
+        confidence: high
+        notes: Eating habits, food preferences, nourishment
+      - concept: right eye
+        confidence: high
+        notes: Signifies right eye, vision of the native
+      - concept: face (vaktra)
+        confidence: medium
+        notes: Facial features, overall facial appearance
+      - concept: values, self-worth
+        confidence: medium
+        notes: Personal values, self-esteem, moral code
+    cross_references:
+      - ref: graha.guru
+        relationship: "Guru is natural karaka for 2nd bhava (wealth)"
+      - ref: graha.budha
+        relationship: "Budha signifies speech (Vak) from 2nd bhava perspective"
+      - ref: bhava.1
+        relationship: "2nd from Lagna: family of origin, accumulated wealth"
+      - ref: bhava.11
+        relationship: "11th from 2nd: gains from wealth"
+    sources:
+      - ref: source.BPHS
+        claim: "Second bhava signifies wealth, family, speech, food, right eye"
+        confidence: high
+
+  - bhava: bhava.3
+    name: Sahaja Bhava (Siblings / Courage)
+    sanskrit: Sahaja Bhava
+    karaka: graha.mangala
+    karakatvas:
+      - concept: siblings (bhratru)
+        confidence: high
+        notes: Brothers and sisters, sibling relationships
+      - concept: courage (saahas)
+        confidence: high
+        notes: Bravery, initiative, willpower, self-assertion
+      - concept: short journeys (sankshipta yatra)
+        confidence: high
+        notes: Short-distance travel, daily commutes
+      - concept: communication (samparka)
+        confidence: medium
+        notes: Written communication, letters, messages
+      - concept: efforts (prayatna)
+        confidence: high
+        notes: Personal effort, initiative, entrepreneurial drive
+      - concept: arms, shoulders
+        confidence: medium
+        notes: Physical body parts governed by 3rd bhava
+      - concept: writing, literary pursuits
+        confidence: medium
+        notes: Authorship, journalism, creative writing
+    cross_references:
+      - ref: graha.mangala
+        relationship: "Mangala is natural karaka for 3rd bhava (siblings, courage)"
+      - ref: bhava.9
+        relationship: "3rd-9th axis: personal effort vs. fortune/dharma"
+      - ref: bhava.11
+        relationship: "3rd from 9th: siblings of father, father's fortune"
+    sources:
+      - ref: source.BPHS
+        claim: "Third bhava signifies siblings, courage, short journeys, communication"
+        confidence: high
+
+  - bhava: bhava.4
+    name: Sukha Bhava (Happiness / Home)
+    sanskrit: Sukha Bhava
+    karaka: graha.chandra
+    karakatvas:
+      - concept: mother (maatru)
+        confidence: high
+        notes: Mother, maternal lineage, nurturing
+      - concept: happiness (sukha)
+        confidence: high
+        notes: Inner peace, emotional contentment, mental comfort
+      - concept: home (vaasa sthana)
+        confidence: high
+        notes: Residence, homeland, domestic environment
+      - concept: property (vastu)
+        confidence: high
+        notes: Immovable property, real estate, landed assets
+      - concept: vehicles (vaahana)
+        confidence: high
+        notes: Conveyances, cars, modes of transport
+      - concept: education (vidya)
+        confidence: high
+        notes: Basic education, schooling, learning environment
+      - concept: chest, lungs
+        confidence: medium
+        notes: Physical body parts governed by 4th bhava
+      - concept: comforts (bhogas)
+        confidence: high
+        notes: Luxuries, comforts, domestic pleasures
+    cross_references:
+      - ref: graha.chandra
+        relationship: "Chandra is natural karaka for 4th bhava (mother, happiness)"
+      - ref: bhava.10
+        relationship: "4th-10th axis: home vs. career, domestic vs. public life"
+      - ref: bhava.8
+        relationship: "4th from 8th: transformation of home life"
+      - ref: bhava.1
+        relationship: "4th from Lagna: early childhood, emotional foundation"
+    sources:
+      - ref: source.BPHS
+        claim: "Fourth bhava signifies mother, happiness, home, property, vehicles, education"
+        confidence: high
+
+  - bhava: bhava.5
+    name: Putra Bhava (Children / Intellect)
+    sanskrit: Putra Bhava
+    karaka: graha.guru
+    karakatvas:
+      - concept: children (putra)
+        confidence: high
+        notes: Progeny, sons, creative offspring
+      - concept: intellect (buddhi)
+        confidence: high
+        notes: Analytical intelligence, reasoning, wisdom
+      - concept: speculation (vyaja)
+        confidence: high
+        notes: Gambling, stock market, risky investments
+      - concept: romance (prema)
+        confidence: high
+        notes: Love affairs, romantic relationships before marriage
+      - concept: past life merit (purva punya)
+        confidence: high
+        notes: Good fortune from previous incarnation
+      - concept: stomach, liver
+        confidence: medium
+        notes: Physical body parts governed by 5th bhava
+      - concept: mantras, spiritual practices
+        confidence: medium
+        notes: Chanting, meditation, ritual practices
+      - concept: counseling, advice
+        confidence: medium
+        notes: Advisory role, wise counsel
+    cross_references:
+      - ref: graha.guru
+        relationship: "Guru is natural karaka for 5th bhava (children, intelligence)"
+      - ref: bhava.11
+        relationship: "5th-11th axis: children vs. gains, individual vs. community"
+      - ref: bhava.1
+        relationship: "5th from Lagna: self-expression, creativity, children"
+      - ref: bhava.9
+        relationship: "5th from 9th: dharmic children, spiritual merit"
+    sources:
+      - ref: source.BPHS
+        claim: "Fifth bhava signifies children, intellect, speculation, romance, past merit"
+        confidence: high
+
+  - bhava: bhava.6
+    name: Shatru Bhava (Enemies / Service)
+    sanskrit: Shatru Bhava
+    karaka: graha.shani
+    karakatvas:
+      - concept: enemies (shatru)
+        confidence: high
+        notes: Competition, adversaries, legal opponents
+      - concept: disease (roga)
+        confidence: high
+        notes: Illness, health problems, chronic conditions
+      - concept: debt (rina)
+        confidence: high
+        notes: Loans, financial obligations, karmic debts
+      - concept: service (seva)
+        confidence: high
+        notes: Employment, service to others, workplace
+      - concept: litigation (vyavahara)
+        confidence: high
+        notes: Legal disputes, court cases, disputes
+      - concept: maternal uncle (maama)
+        confidence: medium
+        notes: Mother's brother, extended maternal family
+      - concept: pets, animals
+        confidence: medium
+        notes: Domestic animals, pets
+      - concept: obstacles (vighna)
+        confidence: high
+        notes: Hindrances, challenges, daily struggles
+    cross_references:
+      - ref: graha.shani
+        relationship: "Shani is natural karaka for 6th bhava (service, obstacles)"
+      - ref: bhava.12
+        relationship: "6th-12th axis: daily service vs. expenditure/loss"
+      - ref: bhava.1
+        relationship: "6th from Lagna: health challenges, daily routine"
+      - ref: bhava.10
+        relationship: "6th from 10th: service within career, workplace politics"
+    sources:
+      - ref: source.BPHS
+        claim: "Sixth bhava signifies enemies, disease, debt, service, litigation"
+        confidence: high
+
+  - bhava: bhava.7
+    name: Kalatra Bhava (Marriage / Partnership)
+    sanskrit: Kalatra Bhava
+    karaka: graha.shukra
+    karakatvas:
+      - concept: marriage (vivaha)
+        confidence: high
+        notes: Marriage, marital life, spouse selection
+      - concept: spouse (jaya)
+        confidence: high
+        notes: Husband/wife, life partner, partner qualities
+      - concept: partnerships (sambandha)
+        confidence: high
+        notes: Business partnerships, legal partnerships
+      - concept: sexual relations (maithuna)
+        confidence: high
+        notes: Physical intimacy, sexual compatibility
+      - concept: foreign travel (videsh yatra)
+        confidence: medium
+        notes: Travel abroad, especially after marriage
+      - concept: public dealing
+        confidence: medium
+        notes: Interactions with public, social engagement
+      - concept: business trade
+        confidence: medium
+        notes: Commercial transactions, trade partnerships
+    cross_references:
+      - ref: graha.shukra
+        relationship: "Shukra is natural karaka for 7th bhava (marriage, partnership)"
+      - ref: bhava.1
+        relationship: "1st-7th axis: self vs. other, individual vs. partner"
+      - ref: bhava.2
+        relationship: "7th from 2nd: family through marriage"
+      - ref: bhava.8
+        relationship: "7th from 8th: sexual relations, hidden partnerships"
+    sources:
+      - ref: source.BPHS
+        claim: "Seventh bhava signifies marriage, spouse, partnerships, sexual relations"
+        confidence: high
+
+  - bhava: bhava.8
+    name: Mrityu Bhava (Death / Transformation)
+    sanskrit: Mrityu Bhava
+    karaka: graha.shani
+    karakatvas:
+      - concept: death (mrityu)
+        confidence: high
+        notes: Physical death, manner of death, timing
+      - concept: longevity (ayur)
+        confidence: high
+        notes: Duration of life, life span determination
+      - concept: obstacles (vighna)
+        confidence: high
+        notes: Major obstacles, karmic blockages, sudden events
+      - concept: hidden matters (rahasya)
+        confidence: high
+        notes: Secrets, mysteries, hidden information
+      - concept: sudden events (akasmika)
+        confidence: high
+        notes: Unexpected occurrences, accidents, sudden gains/losses
+      - concept: insurance, inheritance
+        confidence: high
+        notes: Legacy wealth, insurance claims, unearned income
+      - concept: chronic disease
+        confidence: high
+        notes: Long-term illness, chronic conditions
+      - concept: surgery (shalya tantra)
+        confidence: medium
+        notes: Surgical interventions, invasive procedures
+      - concept: occult (tantrika)
+        confidence: medium
+        notes: Occult sciences, tantric practices, hidden knowledge
+    cross_references:
+      - ref: graha.shani
+        relationship: "Shani is natural karaka for 8th bhava (longevity, obstacles)"
+      - ref: bhava.1
+        relationship: "1st-8th axis: life vs. death, self vs. transformation"
+      - ref: bhava.2
+        relationship: "8th from 2nd: family death, loss of wealth"
+      - ref: bhava.7
+        relationship: "8th from 7th: spouse's longevity, marital challenges"
+    sources:
+      - ref: source.BPHS
+        claim: "Eighth bhava signifies death, longevity, obstacles, hidden matters, sudden events"
+        confidence: high
+
+  - bhava: bhava.9
+    name: Dharma Bhava (Fortune / Righteousness)
+    sanskrit: Dharma Bhava
+    karaka: graha.guru
+    karakatvas:
+      - concept: fortune (bhagya)
+        confidence: high
+        notes: General luck, prosperity, divine grace
+      - concept: dharma (righteousness)
+        confidence: high
+        notes: Moral conduct, religious duty, spiritual path
+      - concept: father (pitru)
+        confidence: high
+        notes: Father, paternal lineage, ancestral heritage
+      - concept: long journeys (deergha yatra)
+        confidence: high
+        notes: Long-distance travel, pilgrimages, foreign travel
+      - concept: higher knowledge (para vidya)
+        confidence: high
+        notes: Philosophy, higher learning, spiritual knowledge
+      - concept: teacher (guru)
+        confidence: high
+        notes: Spiritual teacher, mentor, advisor
+      - concept: temple, worship
+        confidence: medium
+        notes: Religious institutions, worship, divine connection
+      - concept: thighs
+        confidence: medium
+        notes: Physical body parts governed by 9th bhava
+    cross_references:
+      - ref: graha.guru
+        relationship: "Guru is natural karaka for 9th bhava (dharma, fortune)"
+      - ref: bhava.3
+        relationship: "3rd-9th axis: effort vs. fortune, lower vs. higher knowledge"
+      - ref: bhava.5
+        relationship: "9th from 5th: dharmic children, spiritual merit"
+      - ref: bhava.1
+        relationship: "9th from Lagna: overall fortune, spiritual path"
+    sources:
+      - ref: source.BPHS
+        claim: "Ninth bhava signifies fortune, dharma, father, long journeys, higher knowledge"
+        confidence: high
+
+  - bhava: bhava.10
+    name: Karma Bhava (Career / Status)
+    sanskrit: Karma Bhava
+    karaka: graha.surya
+    karakatvas:
+      - concept: career (karma)
+        confidence: high
+        notes: Profession, occupation, career path
+      - concept: reputation (kirti)
+        confidence: high
+        notes: Fame, social standing, public recognition
+      - concept: authority (adhikara)
+        confidence: high
+        notes: Power, command, administrative position
+      - concept: government (raja)
+        confidence: high
+        notes: Government service, political career
+      - concept: reputation (yashas)
+        confidence: high
+        notes: Public image, honor, respect
+      - concept: knees
+        confidence: medium
+        notes: Physical body parts governed by 10th bhava
+      - concept: business (vanijya)
+        confidence: medium
+        notes: Commercial enterprise, business dealings
+    cross_references:
+      - ref: graha.surya
+        relationship: "Surya is natural karaka for 10th bhava (career, authority)"
+      - ref: bhava.4
+        relationship: "4th-10th axis: home vs. career, private vs. public"
+      - ref: bhava.6
+        relationship: "10th from 6th: career in service, employment"
+      - ref: bhava.7
+        relationship: "10th from 7th: spouse's career, partnership business"
+    sources:
+      - ref: source.BPHS
+        claim: "Tenth bhava signifies career, reputation, authority, government"
+        confidence: high
+
+  - bhava: bhava.11
+    name: Labha Bhava (Gains / Income)
+    sanskrit: Labha Bhava
+    karaka: graha.guru
+    karakatvas:
+      - concept: income (aaya)
+        confidence: high
+        notes: Regular income, salary, earnings
+      - concept: gains (labha)
+        confidence: high
+        notes: Profits, returns, accumulated gains
+      - concept: fulfillment of desires (ichha phala)
+        confidence: high
+        notes: Realization of wishes, goal achievement
+      - concept: friends (mitra)
+        confidence: high
+        notes: Social circle, friends, well-wishers
+      - concept: elder siblings (jyeshtha bhratru)
+        confidence: high
+        notes: Elder brothers and sisters
+      - concept: community, social groups
+        confidence: medium
+        notes: Clubs, organizations, community networks
+      - concept: ankles, left ear
+        confidence: medium
+        notes: Physical body parts governed by 11th bhava
+    cross_references:
+      - ref: graha.guru
+        relationship: "Guru signifies gains through dharmic channels"
+      - ref: bhava.5
+        relationship: "5th-11th axis: children vs. gains, creativity vs. income"
+      - ref: bhava.2
+        relationship: "11th from 2nd: returns on accumulated wealth"
+      - ref: bhava.10
+        relationship: "11th from 10th: rewards from career, professional gains"
+    sources:
+      - ref: source.BPHS
+        claim: "Eleventh bhava signifies income, gains, desires, friends, elder siblings"
+        confidence: high
+
+  - bhava: bhava.12
+    name: Vyaya Bhava (Loss / Liberation)
+    sanskrit: Vyaya Bhava
+    karaka: graha.ketu
+    karakatvas:
+      - concept: expenses (vyaya)
+        confidence: high
+        notes: Expenditure, losses, spending
+      - concept: foreign lands (videsh)
+        confidence: high
+        notes: Residence abroad, foreign connections
+      - concept: moksha (liberation)
+        confidence: high
+        notes: Spiritual liberation, enlightenment
+      - concept: losses (hana kshaya)
+        confidence: high
+        notes: Financial losses, material depletion
+      - concept: imprisonment (bandhana)
+        confidence: medium
+        notes: Confinement, restrictions, hospitalization
+      - concept: sleep (nidra)
+        confidence: high
+        notes: Sleep patterns, dreams, unconscious mind
+      - concept: bed pleasures (shayana sukha)
+        confidence: medium
+        notes: Bed comforts, sensual pleasures
+      - concept: detachment (vairagya)
+        confidence: high
+        notes: Renunciation, letting go, spiritual surrender
+      - concept: feet
+        confidence: medium
+        notes: Physical body parts governed by 12th bhava
+    cross_references:
+      - ref: graha.ketu
+        relationship: "Ketu is natural karaka for 12th bhava (moksha, liberation)"
+      - ref: bhava.6
+        relationship: "6th-12th axis: service vs. liberation, daily life vs. transcendence"
+      - ref: bhava.1
+        relationship: "12th from Lagna: losses, expenditure, spiritual retreat"
+      - ref: bhava.8
+        relationship: "12th from 8th: final liberation, end of transformation"
+    sources:
+      - ref: source.BPHS
+        claim: "Twelfth bhava signifies expenses, foreign lands, liberation, sleep, losses"
+        confidence: high
+
+bhava_axis_summary:
+  - axis: 1-7
+    theme: "Self vs. Other, Identity vs. Partnership"
+    bhavas: [bhava.1, bhava.7]
+    notes: "The fundamental axis of individual existence versus relationships"
+  - axis: 2-8
+    theme: "Wealth vs. Transformation, Family vs. Death"
+    bhavas: [bhava.2, bhava.8]
+    notes: "Material accumulation versus karmic transformation"
+  - axis: 3-9
+    theme: "Effort vs. Fortune, Lower vs. Higher Knowledge"
+    bhavas: [bhava.3, bhava.9]
+    notes: "Personal initiative versus divine grace and dharma"
+  - axis: 4-10
+    theme: "Home vs. Career, Private vs. Public"
+    bhavas: [bhava.4, bhava.10]
+    notes: "Domestic life versus public persona and professional identity"
+  - axis: 5-11
+    theme: "Children vs. Gains, Individual vs. Community"
+    bhavas: [bhava.5, bhava.11]
+    notes: "Creative expression versus social fulfillment and income"
+  - axis: 6-12
+    theme: "Service vs. Liberation, Daily Life vs. Transcendence"
+    bhavas: [bhava.6, bhava.12]
+    notes: "Ordinary struggle versus spiritual release"
+
+sources:
+  - ref: source.BPHS
+    claim: "Brihat Parashara Hora Shastra, Chapters 16-27 (Bhava descriptions) and Chapter 33 (Karaka)"
+    confidence: high
+
+notes: |
+  This catalogue centralizes the bhava karakatva assignments from BPHS. Each bhava has
+  a natural karaka graha and multiple significations. The bhava-karaka relationship is
+  fundamental to chart interpretation.
+
+  Key principles:
+  1. Each bhava has a primary natural karaka graha
+  2. Bhavas signify both positive and negative outcomes depending on graha placement
+  3. Opposing bhavas (axes) represent complementary life polarities
+  4. The 1st bhava (Lagna) is the reference point for all other bhavas
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry with all 12 bhava karakatvas from BPHS"
+    author: "Chief Jyotish Knowledge Architect"

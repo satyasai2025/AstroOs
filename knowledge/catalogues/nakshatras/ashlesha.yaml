@@ -1,0 +1,100 @@
+# catalogues/nakshatras/ashlesha.yaml
+
+id: nakshatra.ashlesha
+name: Ashlesha
+aliases:
+  - Ayilyam
+  - आश्लेषा
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Āśleṣā
+devanagari: आश्लेषा
+meaning: "The clingy one; the entwiner"
+
+ruler:
+  ref: graha.budha
+  system: vimshottari
+
+deity:
+  name: Shesha
+  description: The king of the Nagas (serpents), the cosmic serpent upon whom Vishnu reclines
+  attributes:
+    - serpents
+    - mystery
+    - venom
+    - hidden knowledge
+
+shakti:
+  name: Ashlesha
+  meaning: "to entwine"
+  power: "the power to entwine, to cling and to inject venom"
+
+star:
+  name: Acubens
+  alt_name: Alpha Cancri
+
+starting_degree: 93.333
+ending_degree: 106.667
+rashi_span:
+  - ref: rashi.karkam
+
+padas:
+  - pada: 1
+    degrees: "16°40' - 20°00'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.makaram
+  - pada: 2
+    degrees: "20°00' - 23°20'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.kumbham
+  - pada: 3
+    degrees: "23°20' - 26°40'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.meenam
+  - pada: 4
+    degrees: "26°40' - 30°00'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.mesham
+
+nature:
+  temperament: Clinging, secretive
+  guna: tamasic
+  gana: rakshasa
+  yoni: cat
+  nadi: adi
+
+karakatvas:
+  - concept: Secret knowledge and mystery
+  - concept: Hypnosis and control
+  - concept: Poison and antidote
+  - concept: Kundalini and hidden power
+
+compatible_nakshatras:
+  - ref: nakshatra.ashlesha
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Ashlesha is the ninth nakshatra, ruled by Budha, presided over by Shesha Naga"
+    confidence: high
+
+notes: >
+  Ashlesha is the ninth nakshatra, entirely within Karka (16°40' to
+  30° Karka). Ruled by Budha in the Vimshottari system, it is
+  presided over by Shesha, the king of the Nagas. Its shakti is the
+  power to entwine. All four padas reside in Karka with navamsha
+  progression through Makara-Kumbha-Mesha-Mesha. As a rakshasa-gana,
+  tamasic nakshatra with a secretive temperament, it bestows hidden
+  knowledge, hypnotic power, and the capacity to wield both poison
+  and its antidote. The final nakshatra of Karka marks the completion
+  of the emotional water sign's journey.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

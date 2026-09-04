@@ -1,0 +1,102 @@
+# catalogues/nakshatras/mrigashira.yaml
+
+id: nakshatra.mrigashira
+name: Mrigashira
+aliases:
+  - Mrigashirsha
+  - मृगशिरा
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Mṛgaśīrṣa
+devanagari: मृगशिरा
+meaning: "The deer's head; the searching one"
+
+ruler:
+  ref: graha.mangala
+  system: vimshottari
+
+deity:
+  name: Soma
+  description: The Moon god, associated with nourishment, immortality, and the lunar essence
+  attributes:
+    - moonlight
+    - nourishment
+    - immortality
+    - beauty
+
+shakti:
+  name: Iccha
+  meaning: "to seek"
+  power: "the power of seeking, investigation, and exploration"
+
+star:
+  name: Alnitak
+  alt_name: Al Nitak
+
+starting_degree: 36.667
+ending_degree: 50.000
+rashi_span:
+  - ref: rashi.vrishabham
+  - ref: rashi.mithunam
+
+padas:
+  - pada: 1
+    degrees: "23°20' - 26°40'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.kanyam
+  - pada: 2
+    degrees: "26°40' - 30°00'"
+    rashi: rashi.vrishabham
+    navamsha_rashi: rashi.tulanam
+  - pada: 3
+    degrees: "0°00' - 3°20'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.vrishchikam
+  - pada: 4
+    degrees: "3°20' - 6°40'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.dhanus
+
+nature:
+  temperament: Searching, curious
+  guna: rajasic
+  gana: deva
+  yoni: serpent
+  nadi: antya
+
+karakatvas:
+  - concept: Seeking and investigation
+  - concept: Curiosity and exploration
+  - concept: Travel and wandering
+  - concept: Lunar beauty and charm
+
+compatible_nakshatras:
+  - ref: nakshatra.ashvini
+  - ref: nakshatra.mrigashira
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Mrigashira is the fifth nakshatra, ruled by Mangala, presided over by Soma"
+    confidence: high
+
+notes: >
+  Mrigashira is the fifth nakshatra, spanning from late Vrishabha into
+  early Mithuna (23°20' Vrishabha to 6°40' Mithuna). Ruled by Mangala
+  in the Vimshottari system, it is presided over by Soma (the Moon
+  deity). Its shakti is the power of seeking. The first two padas fall
+  in Vrishabha with Kanya and Tula navamsha; padas three and four are
+  in Mithuna with Vrishchika and Dhanus navamsha. As a deva-gana,
+  rajasic nakshatra with a searching temperament, it confers curiosity,
+  investigative ability, and a restless seeking nature.
+
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed navamsha_rashi reference that used a non-canonical ID (rashi.tulam) instead of the canonical rashi.tulanam", author: "Chief Jyotish Knowledge Architect" }
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

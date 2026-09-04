@@ -1,0 +1,69 @@
+id: bhrigu.core.principles
+name: Bhrigu Nandi Nadi Principles
+aliases: ["BNN Core Principles", "Nadi Astrology Fundamentals", "Bhrigu Nadi Base Rules"]
+category: bhrigu
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+system: bhrigu
+statement: >
+  Bhrigu Nandi Nadi (BNN) is a nakshatra-based predictive system that uses
+  specific planetary combinations (yogas) derived from nakshatra lordships
+  rather than sign-based analysis. The core principle is that each nakshatra
+  padas carry specific karmic imprints, and when planets occupy certain
+  nakshatras, the nakshatra-based combinations produce predictable life
+  patterns. BNN uses a simplified house system where the Lagna and its
+  nakshatra set the framework, and planetary nakshatra ownership determines
+  results. Planets are evaluated primarily through their nakshatra positions
+  rather than sign positions.
+
+conditions:
+  - entity: nakshatra.lordship
+    role: subject
+    detail: "Each planet owns specific nakshatras; its placement in another's nakshatra creates specific yogas"
+
+  - entity: lagna.nakshatra
+    role: framework
+    detail: "Lagna nakshatra sets the karmic framework for the entire chart in BNN analysis"
+
+  - entity: graha.nakshatra
+    role: framework
+    detail: "Planetary effects are primarily determined by their nakshatra position, not sign position"
+
+effects:
+  - description: "Nakshatra-based combinations produce life-pattern predictions independent of Dasha timing"
+    intensity: strong
+  - description: "Planets in the same nakshatra or nakshatra lordship create linked life events"
+    intensity: strong
+  - description: "BNN predictions can be made from Lagna alone without requiring divisional charts"
+    intensity: moderate
+  - description: "Nakshatra pada positions provide fine-grained detail about the nature of planetary effects"
+    intensity: moderate
+
+sources:
+  - ref: source.bhrigu-nandi-nadi
+    claim: "BNN core principles: Nakshatra-based predictions, planetary combinations unique to Nadi."
+    confidence: high
+
+notes: >
+  BNN core principles: (1) The system is rooted in the ancient Nadi tradition,
+  attributed to the sage Bhrigu. (2) Predictions are nakshatra-centric — each
+  planet's nakshatra and its lord determine outcomes. (3) When two or more
+  planets share the same nakshatra lord, they form a Nadi yoga that produces
+  specific life patterns. (4) The Lagna nakshatra is the starting point for
+  all analysis. (5) BNN uses a minimal set of tools: nakshatras, planetary
+  ownership of nakshatras, and specific Nadi combinations. (6) The system is
+  considered predictive from birth data alone, without requiring extensive
+  divisional chart analysis. (7) BNN combinations often describe specific
+  life events (marriage timing, career events, health issues) through
+  nakshatra-based logic rather than sign or house-based logic. (8) The
+  system operates on the principle that nakshatras carry karmic information
+  more precisely than rashis.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

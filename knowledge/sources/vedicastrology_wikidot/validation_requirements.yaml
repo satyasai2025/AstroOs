@@ -1,0 +1,79 @@
+# knowledge/sources/vedicastrology_wikidot/validation_requirements.yaml
+#
+# VALIDATION REQUIREMENTS (not benchmark results) for empirical/methodology claims
+# extracted from VedicAstrology.Wikidot that were flagged requires_validation: true.
+# These are pending work items for the EXISTING benchmark engine
+# (apps/api/services/benchmark_engine.py, apps/api/domain/benchmark.py) — no new
+# Benchmark Engine or taxonomy is created here. suggested_benchmark_category values
+# below are derived from the dataclasses already present in domain/benchmark.py
+# (PlanetBenchmark -> PLANET_POSITION, HouseBenchmark -> HOUSE_CUSP,
+# VargaBenchmark -> VARGA_ACCURACY). No exact "strength methodology" category exists
+# yet in benchmark.py, so those items use GENERAL_METHODOLOGY as an explicit fallback
+# label pending a human decision on whether to extend the benchmark taxonomy.
+
+requirements:
+  - requirement_id: VR-WIKIDOT-STRENGTH-01
+    claim: >
+      Ishta-Kashta ('main strength') uses a base-2 logarithmic scale
+      (60-45-30-22-15-8-4-2-0) and should take precedence over Shadbala, which
+      should only be used as a tiebreaker.
+    source_url: "http://vedicastrology.wikidot.com/main-strength-versus-shadbala"
+    suggested_benchmark_category: GENERAL_METHODOLOGY
+    status: NOT_YET_BENCHMARKED
+    # This claim has TWO separable parts with DIFFERENT evidence status.
+    textual_status:
+      scale_values: VERIFIED_EXPLICIT
+      precedence_over_shadbala: UNVERIFIED
+    primary_text_refs:
+      - PTV-BPHS-CH28-V7-9   # see primary_text_verification.yaml
+    notes: >
+      CORRECTION (primary-text pass): the 60-45-30-22-15-8-4-2-0 values were
+      previously rated NOT_SUPPORTED on the basis of secondary-source search
+      alone. That rating was WRONG. The values are explicit in BPHS Ch. 28
+      vv. 7-9 ("ISHTA KASHTA SAPTAVARGAJA PHALA"), R. Santhanam translation
+      pp. 230-231. See primary_text_verification.yaml / PTV-BPHS-CH28-V7-9.
+
+      Three things remain unverified and keep this requirement open:
+        1. The "base-2 logarithmic" characterisation is the source's own
+           interpretation; BPHS presents a plain table with no such wording.
+        2. The verse table is DIGNITY-based (Saptavargaja), distinct from the
+           astronomical Ishta/Kashta of Ch. 28 v. 6 — conflating them is a
+           live risk in this source's framing.
+        3. The PRECEDENCE claim (Shadbala only as tiebreaker) has no verse
+           support found at all, and is the empirically testable part. It
+           remains the actual subject of this benchmark requirement, and is
+           the open half of CONFLICT-WIKIDOT-002.
+
+      Benchmark taxonomy note (unchanged): no existing PlanetBenchmark /
+      HouseBenchmark / VargaBenchmark category in apps/api/domain/benchmark.py
+      covers dignity-scoring precedence rules; GENERAL_METHODOLOGY is an
+      explicit fallback pending a human decision on extending the taxonomy.
+
+  - requirement_id: VR-WIKIDOT-DAC-01
+    claim: >
+      DAC (Dashaa Aarambha Chakra) requires high birth-time-accuracy and is
+      "impractical now"; SC (Sudarshana Chakra) + VPC (Varsha Pravesha Chakra) +
+      Vimshottari is claimed as the practical substitute for dasha-period predictions.
+    source_url: "http://vedicastrology.wikidot.com/ashtaka-varga"
+    suggested_benchmark_category: GENERAL_METHODOLOGY
+    status: NOT_YET_BENCHMARKED
+    notes: >
+      Requires a ground-truth event dataset with birth-time precision metadata to
+      test DAC vs SC+VPC+Vimshottari predictive accuracy; no existing benchmark
+      category models "dasha-period-specific predictive accuracy," so flagged
+      GENERAL_METHODOLOGY.
+
+  - requirement_id: VR-WIKIDOT-D9DEITY-01
+    claim: >
+      Preponderance of the Rakshasa D-9 (Navamsha) deity among planets is claimed
+      correlated with societal outcomes (example given: a rise in rape cases in
+      first half of 2014) and with individual libido-related danger during the
+      Mahadasha of a planet with a Rakshasa D-9 deity.
+    source_url: "http://vedicastrology.wikidot.com/divisional-charts"
+    suggested_benchmark_category: VARGA_ACCURACY
+    status: NOT_YET_BENCHMARKED
+    notes: >
+      Closest fit is VargaBenchmark (D-9/Navamsha is a divisional chart), but the
+      claim is about deity-symbolism correlated with outcomes rather than
+      chart-computation accuracy — flagged for human review on whether this even
+      belongs in the benchmark taxonomy versus mundane/Medini-specific tooling.

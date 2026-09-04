@@ -1,0 +1,84 @@
+# knowledge/sources/vedicastrology_wikidot/grahas.yaml
+#
+# Extracted knowledge items from http://vedicastrology.wikidot.com/planetary-traits-1
+# Source tier: INFORMAL_TRADITION / UNREVIEWED. Not canonical.
+
+page_title: "Planetary Traits 1"
+page_url: "http://vedicastrology.wikidot.com/planetary-traits-1"
+technique_mapping:
+  best_fit_technique_key: graha_karakatva
+  technique_exists_in_registry: true
+  framework: Parashari
+  mapping_ref: technique_mapping.yaml
+  note: >
+    General graha-definitional content overlapping with the existing
+    knowledge/catalogues/grahas/*.yaml catalogue (e.g. surya.yaml). No grep match for
+    an existing TechniqueModel.technique_key specific to "graha classification" was
+    found; content instead complements the existing graha catalogue as supplementary
+    (non-canonical) commentary, not a technique per se.
+
+items:
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/planetary-traits-1"
+    page_title: "Planetary Traits 1"
+    section: "Definitions and Properties of Graha in Jyotisha and Physics"
+    title: "Graha is theologically defined, not astronomically defined"
+    claim: >
+      The page argues that the Jyotisha concept of "Graha" is fundamentally distinct
+      from the physics concept of "planet" — ancient texts define Grahas as
+      manifestations providing karmic fruits to beings, not physical bodies orbiting
+      the Sun, and warns against conflating the two definitions merely because names coincide.
+    item_type: OPINION_ASSERTION
+    referenced_classical_source: null
+    related_concepts: ["graha", "karaka", "panchanga"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/planetary-traits-1"
+    page_title: "Planetary Traits 1"
+    section: "Definitions and Properties of Graha in Jyotisha and Physics"
+    title: "Three-fold classification of Grahas: Mandala, Taaraa, Chhaayaa"
+    claim: >
+      Grahas are classified into three types — Mandala-graha (Sun and Moon, with
+      a large visible disc), Taaraa-graha (star-like planets), and Chhaayaa-graha
+      (Rahu and Ketu, shadow points with no physical image) — each with distinct
+      astrological properties; e.g. Mandala-grahas generate the five limbs of
+      Panchanga (Tithi, Karana, Yoga, Nakshatra, Vaara).
+    item_type: FACT_DEFINITION
+    referenced_classical_source: null
+    related_concepts: ["graha", "rahu", "ketu", "panchanga", "eclipse"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED
+
+  - source: "VedicAstrology.Wikidot"
+    source_url: "http://vedicastrology.wikidot.com/planetary-traits-1"
+    page_title: "Planetary Traits 1"
+    section: "स्वभाव में चंचलता या स्थिरता (Volatility vs Stability of Temperament)"
+    title: "Chandra, Budha, Shani, Rahu, Ketu impart volatility; Guru, Shukra, Surya, Mangala impart stability"
+    claim: >
+      IF the Lagna is conjoined with or aspected by Chandra, Budha, Shani, Rahu, or
+      Ketu, THEN the native's temperament tends toward volatility/restlessness
+      (chanchalata); IF conjoined with or aspected by Guru, Shukra, Surya, or Mangala,
+      THEN the temperament tends toward stability (sthirata). The page further reasons
+      that a planet's fixed/movable nature is more influenced by the sign portion in
+      which it holds full (30-degree) rulership than by the sign portion of its
+      moolatrikona (e.g. Shukra owns all 30 degrees of Vrishabha, a fixed sign, but
+      only 15 degrees of Tula, a movable sign, so Shukra's temperament effect leans
+      fixed/stable).
+    item_type: RULE
+    condition_summary: >
+      Lagna conjoined with or aspected by Chandra/Budha/Shani/Rahu/Ketu (volatile-natured
+      planets) versus Guru/Shukra/Surya/Mangala (stable-natured planets).
+    conclusion_summary: >
+      Native's temperament leans volatile/restless under the first group's influence,
+      or stable/steady under the second group's influence; the planet's dominant
+      rulership portion (full-sign owner vs moolatrikona owner) further modulates
+      which tendency prevails for Shukra, Shani, and Mangala specifically.
+    referenced_classical_source: null
+    related_concepts: ["lagna", "graha-svabhava", "moolatrikona", "own-sign"]
+    technique_framework: "Parashari"
+    verification_status: UNVERIFIED
+    lifecycle_state: DOCUMENTED

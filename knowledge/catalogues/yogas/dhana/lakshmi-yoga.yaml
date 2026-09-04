@@ -1,0 +1,41 @@
+id: yoga.dhana.lakshmi-yoga
+name: Lakshmi Yoga
+aliases: ["Goddess of Wealth Yoga"]
+category: yoga
+type: dhana
+subcategory: null
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  conditions:
+    - condition: "Lord of the 9th house is placed in a Kendra (1st, 4th, 7th, or 10th) from the Lagna, AND Venus is in own sign (Taurus or Libra) or exalted (Pisces)"
+      entity: yoga.dhana.lakshmi-yoga
+      role: subject
+      notes: "Both conditions must be satisfied simultaneously. Venus should not be combust. The yoga is strongest when the 9th lord is also in a Kendra from Venus. Some authorities add that Venus must not be in dusthana houses."
+
+effects:
+  positive:
+    - "Exceptional wealth and luxury"
+    - "Comfortable and opulent lifestyle"
+    - "Success in arts, beauty, and luxury businesses"
+    - "Generous and charitable disposition"
+    - "Marriage into a wealthy or cultured family"
+    - "Venusian pleasures: music, art, fine living"
+  negative: []
+  intensity: strong
+
+sources:
+  - ref: source.phaladeepika
+    chapter: null
+    verse: null
+
+notes: "From Phaladeepika by Mantreshwara. Named after Goddess Lakshmi, the Hindu deity of wealth and prosperity. Venus represents Lakshmi in Jyotish. When Venus is dignified (own sign or exalted) and the 9th lord (fortune/luck) occupies a Kendra, the combination ensures both earned and fortunate wealth. This is one of the most auspicious dhana yogas for material prosperity."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

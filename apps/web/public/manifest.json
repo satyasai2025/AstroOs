@@ -1,0 +1,41 @@
+{
+  "name": "AstroOS Vedic Research Platform",
+  "short_name": "AstroOS",
+  "description": "Deterministic, Zero-Hallucination Vedic Astrology & Phalita Decision Engine",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/astroos-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["astronomy", "research", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Live Sky Transits",
+      "short_name": "Live Sky",
+      "description": "View real-time celestial planetary positions & aspect alerts",
+      "url": "/consultation?tab=livesky",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Shastric Copilot",
+      "short_name": "Copilot",
+      "description": "Ask zero-hallucination astrological questions",
+      "url": "/consultation?tab=oracle",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ]
+}

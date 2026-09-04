@@ -1,0 +1,135 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+# Node / frontend
+node_modules/
+.next/
+*.tsbuildinfo
+dist/
+build/
+package-lock.json
+apps/web/crawler-reports/
+
+# Environment / secrets
+.env
+apps/api/security/keys/*.pem
+
+# Editor/OS
+.DS_Store
+
+# Junk files from broken Windows-style shell commands (e.g. `dir /s /b > nul`
+# run in a POSIX shell — /s and /b get treated as extra args, nul becomes a
+# real file instead of the null device). See DOCUMENTATION_REALITY_AUDIT.md §5.
+nul
+alembic
+docker
+echo
+env.py
+location
+uvicorn
+
+# Replit / agent session artifacts — not application code
+attached_assets/
+.agents/
+.local/
+.replit
+replit.nix
+
+# Local Claude configuration
+.claude/settings.json
+
+# Local archive files
+apps.7z
+apps.zip
+packages.zip
+
+.DS_Store
+
+# Junk files from broken Windows-style shell commands (e.g. `dir /s /b > nul`
+# run in a POSIX shell — /s and /b get treated as extra args, nul becomes a
+# real file instead of the null device). See DOCUMENTATION_REALITY_AUDIT.md §5.
+nul
+alembic
+docker
+echo
+env.py
+location
+uvicorn
+
+# Replit / agent session artifacts — not application code
+attached_assets/
+.agents/
+.local/
+.replit
+replit.nix
+
+# Local Claude configuration
+.claude/
+
+# Local archive files
+apps.7z
+apps.zip
+packages.zip
+
+# Temporary documentation
+\## Docs & architecture.txt
+New folder/
+.venv/
+apps/web/.env.local
+
+# Junk / session artifacts
+*.docx
+*.bak
+*.xlsm
+~$*.xlsm
+SBC.txt
+Complete Sarvatobhadra Chakra Plan.txt
+scratch/
+/research/
+data/batch_output/
+
+
+# Non-runtime clutter (docs/planning/notes) removed from tracking
+docs
+architecture
+.agents
+benchmarks
+observability
+examples
+ASTROOS_AUDIT_AND_PLAN.md
+ASTROOS_PHASE_IV_V2_4_ROADMAP.md
+ASTROOS_V2_STATUS.md
+ASTROOS_VISION_V3_ROADMAP.md
+CHANGELOG.md
+CHANGES_COMPLETE.md
+CLAUDE_START_HERE.md
+CORE_FEATURES_PROFESSIONAL_DESIGN.md
+DOCUMENTATION_REALITY_AUDIT.md
+IMPORT_PAGE_REDESIGN.md
+PHASE_10_PLAN.md
+TEST_PLAN_CompareCharts.md
+tasks_phase2_data.json
+tasks_phase3_data.json
+summarize_task.md
+login page.txt
+how to start program.txt
+astroos my vision.txt
+event engine.txt
+kp analysis.txt
+kp analysis - Copy.txt
+mixed varga.txt
+mixed varga animated.txt
+mixed varga and transit  animated.txt
+nakshatra.txt
+nakshatra image.txt
+timings of event.txt
+birthdata for research.xlsx
+.claude/settings.local.json.bak
+.claude/settings.local.json
+
+# Database dumps (never commit data)
+backups/

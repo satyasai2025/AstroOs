@@ -1,0 +1,488 @@
+# ============================================================================
+# ASTRO OS — Rahu-Ketu Gochara — Foundational Catalogue
+# ============================================================================
+# Source: BPHS Chapter 42 — Gochara Phaladhyaya
+# Scope: Rahu and Ketu transit effects through 12 houses from natal Lagna,
+#         including eclipse effects and karmic themes.
+# Orbital period: ~18 months per rashi (both Rahu and Ketu)
+# Note:  Foundational rules only. No predictive interpretations beyond BPHS.
+# ============================================================================
+
+# ── RAHU GOCHARA ────────────────────────────────────────────────────────────
+
+id: transit.rahu.gochara.h1
+name: "Rahu Gochara — 1st House"
+aliases: ["Rahu Transit 1st House", "Rahu in 1st from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Rahu transits the 1st house from the natal Ascendant, the native
+  experiences confusion regarding identity, unconventional behavior, and sudden
+  changes in self-expression. There may be a strong desire for recognition and
+  material achievement. Foreign connections or unusual circumstances surround the
+  self. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.rahu
+    role: subject
+    position: "1st house from Lagna"
+
+effects:
+  - description: "Confusion about identity and self-image"
+    intensity: strong
+  - description: "Unconventional behavior and desire for recognition"
+    intensity: moderate
+  - description: "Sudden changes in personal circumstances"
+    intensity: moderate
+
+timing:
+  onset: "When Rahu enters the 1st house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Rahu occupies the first house from the Lagna, the person will be
+      confused in mind, will have an unusual appearance, and may face unexpected
+      changes in life."
+    confidence: high
+
+notes: >
+  Rahu's transit is always marked by illusion (Maya), suddenness, and
+  foreign or unconventional influences. Effects depend heavily on the
+  sign Rahu transits and any conjunctions with natal grahas.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.rahu.gochara.h4
+name: "Rahu Gochara — 4th House"
+aliases: ["Rahu Transit 4th House", "Rahu in 4th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Rahu transits the 4th house from the natal Ascendant, the native
+  experiences domestic unrest, mental confusion, and potential relocation or
+  foreign residence. Property matters may become complicated. There can be
+  estrangement from mother or homeland. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.rahu
+    role: subject
+    position: "4th house from Lagna"
+
+effects:
+  - description: "Domestic unrest and mental confusion"
+    intensity: strong
+  - description: "Potential relocation or foreign residence"
+    intensity: moderate
+  - description: "Complications in property or vehicle matters"
+    intensity: moderate
+
+timing:
+  onset: "When Rahu enters the 4th house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Rahu is in the fourth house from the Lagna, the person will face
+      domestic disturbances and may live abroad or away from homeland."
+    confidence: high
+
+notes: "Rahu in the 4th often drives the native toward foreign lands or unconventional living situations."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.rahu.gochara.h7
+name: "Rahu Gochara — 7th House"
+aliases: ["Rahu Transit 7th House", "Rahu in 7th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Rahu transits the 7th house from the natal Ascendant, the native
+  experiences unusual partnerships, sudden romantic encounters, or foreign
+  connections through spouse or business associates. There may be obsession
+  with relationships or unconventional partnerships. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.rahu
+    role: subject
+    position: "7th house from Lagna"
+
+effects:
+  - description: "Unconventional or foreign partnerships"
+    intensity: strong
+  - description: "Sudden romantic or business encounters"
+    intensity: moderate
+  - description: "Obsessive tendencies in relationships"
+    intensity: moderate
+
+timing:
+  onset: "When Rahu enters the 7th house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Rahu occupies the seventh house from the Lagna, the person will
+      have unusual partnerships and may face sudden events in married life."
+    confidence: high
+
+notes: >
+  Rahu in the 7th can bring a foreign or unusual spouse, or the native may
+  enter partnerships that defy social convention.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.rahu.gochara.h10
+name: "Rahu Gochara — 10th House"
+aliases: ["Rahu Transit 10th House", "Rahu in 10th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Rahu transits the 10th house from the natal Ascendant, the native
+  experiences sudden career changes, foreign professional opportunities, or
+  unconventional career paths. There may be ambition-driven actions and
+  unexpected professional recognition or upheaval. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.rahu
+    role: subject
+    position: "10th house from Lagna"
+
+effects:
+  - description: "Sudden career changes or foreign professional opportunities"
+    intensity: strong
+  - description: "Ambition-driven actions and unconventional career path"
+    intensity: moderate
+  - description: "Unexpected professional recognition or upheaval"
+    intensity: moderate
+
+timing:
+  onset: "When Rahu enters the 10th house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Rahu is in the tenth house from the Lagna, the person will face
+      sudden professional changes and may work in foreign or unconventional fields."
+    confidence: high
+
+notes: "Rahu in the 10th can elevate or disrupt career — the outcome depends on natal chart strength."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+# ── KETU GOCHARA ────────────────────────────────────────────────────────────
+
+id: transit.ketu.gochara.h1
+name: "Ketu Gochara — 1st House"
+aliases: ["Ketu Transit 1st House", "Ketu in 1st from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Ketu transits the 1st house from the natal Ascendant, the native
+  experiences detachment from self, spiritual seeking, and confusion about
+  personal identity. There is a tendency toward isolation, meditation, and
+  letting go of material attachments. Physical health may be affected.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.ketu
+    role: subject
+    position: "1st house from Lagna"
+
+effects:
+  - description: "Detachment from self and material world"
+    intensity: strong
+  - description: "Spiritual seeking and introspection"
+    intensity: moderate
+  - description: "Potential health issues or physical disorientation"
+    intensity: moderate
+
+timing:
+  onset: "When Ketu enters the 1st house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Ketu occupies the first house from the Lagna, the person will be
+      detached from worldly pleasures and will seek spiritual liberation."
+    confidence: high
+
+notes: >
+  Ketu's transit mirrors Rahu's but in the opposite direction — where Rahu
+  creates desire and confusion, Ketu creates detachment and clarity (or loss).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.ketu.gochara.h4
+name: "Ketu Gochara — 4th House"
+aliases: ["Ketu Transit 4th House", "Ketu in 4th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Ketu transits the 4th house from the natal Ascendant, the native
+  experiences detachment from domestic comforts, loss of mental peace, and
+  spiritual withdrawal from home life. There may be separation from mother
+  or homeland. Property matters may result in losses. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.ketu
+    role: subject
+    position: "4th house from Lagna"
+
+effects:
+  - description: "Detachment from domestic comforts and home"
+    intensity: strong
+  - description: "Loss of mental peace or domestic happiness"
+    intensity: moderate
+  - description: "Spiritual withdrawal or separation from mother"
+    intensity: moderate
+
+timing:
+  onset: "When Ketu enters the 4th house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Ketu is in the fourth house from the Lagna, the person will lack
+      domestic happiness and may face separation from mother or homeland."
+    confidence: high
+
+notes: "Ketu in the 4th strips away attachment to home, property, and emotional security."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.ketu.gochara.h7
+name: "Ketu Gochara — 7th House"
+aliases: ["Ketu Transit 7th House", "Ketu in 7th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Ketu transits the 7th house from the natal Ascendant, the native
+  experiences detachment from partnerships, marriage difficulties, or loss of
+  interest in relationships. There may be spiritual growth through
+  relational challenges or separation from spouse. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.ketu
+    role: subject
+    position: "7th house from Lagna"
+
+effects:
+  - description: "Detachment from partnerships and relationships"
+    intensity: strong
+  - description: "Marriage or partnership difficulties"
+    intensity: moderate
+  - description: "Spiritual growth through relational challenges"
+    intensity: mild
+
+timing:
+  onset: "When Ketu enters the 7th house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Ketu occupies the seventh house from the Lagna, the person will
+      face difficulties in partnerships and may become detached from married life."
+    confidence: high
+
+notes: >
+  Ketu in the 7th often signifies karmic resolution in partnerships — the
+  native may experience dissolution of old bonds to prepare for new ones.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+id: transit.ketu.gochara.h12
+name: "Ketu Gochara — 12th House"
+aliases: ["Ketu Transit 12th House", "Ketu in 12th from Lagna"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Ketu transits the 12th house from the natal Ascendant, the native
+  experiences spiritual liberation (moksha tendencies), foreign connections,
+  hospitalization, or expenses. This is considered Ketu's most spiritually
+  significant transit, promoting detachment and transcendence. BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.ketu
+    role: subject
+    position: "12th house from Lagna"
+
+effects:
+  - description: "Spiritual liberation and transcendence"
+    intensity: strong
+  - description: "Foreign travel, connections, or settlement"
+    intensity: moderate
+  - description: "Expenses, hospitalization, or isolation"
+    intensity: moderate
+
+timing:
+  onset: "When Ketu enters the 12th house from Lagna"
+  duration: "18 months"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Ketu is in the twelfth house from the Lagna, the person will be
+      inclined toward spiritual liberation and may travel to foreign lands."
+    confidence: high
+
+notes: >
+  Ketu in the 12th is considered favorable for spiritual seekers — it
+  promotes detachment and can facilitate moksha (liberation from the cycle
+  of birth and death).
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"
+
+---
+
+# ── ECLIPSE EFFECTS ─────────────────────────────────────────────────────────
+
+id: transit.eclipse.effects
+name: "Rahu-Ketu Eclipse Transit Effects"
+aliases: ["Eclipse Effects", "Grahan Transit", "Rahu-Ketu Eclipse Period"]
+category: transit
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+rule_type: gochara
+statement: >
+  When Rahu or Ketu transits near the Sun or Moon (within a close orb), the
+  native experiences eclipse effects (Grahan Dosha). Rahu-Ketu near the Sun
+  causes confusion in authority, father, and self-expression. Near the Moon,
+  it causes emotional instability, mental health concerns, and domestic
+  disturbances. Eclipse periods amplify all Rahu-Ketu transit effects.
+  BPHS Ch.42.
+
+conditions:
+  - entity: entity.graha.rahu
+    role: subject
+    position: "conjunct or within close orb of Sun or Moon"
+  - entity: entity.graha.ketu
+    role: subject
+    position: "conjunct or within close orb of Sun or Moon"
+
+effects:
+  - description: "Amplified confusion, illusion, and sudden events"
+    intensity: strong
+  - description: "Emotional instability when near Moon"
+    intensity: strong
+  - description: "Authority and self-expression issues when near Sun"
+    intensity: strong
+
+timing:
+  onset: "When Rahu or Ketu transits within 5-7 degrees of natal Sun or Moon"
+  duration: "Varies by proximity; strongest within conjunction"
+
+sources:
+  - ref: source.BPHS
+    claim: >
+      "When Rahu or Ketu comes close to the Sun or Moon during transit, it
+      produces Grahan (eclipse) effects causing disturbance to the significations
+      of the afflicted luminary."
+    confidence: high
+
+notes: >
+  Eclipse effects are among the most potent Rahu-Ketu transit phenomena.
+  The native should observe specific remedies during Grahan periods. Solar
+  eclipses (Rahu near Sun) affect health and authority; lunar eclipses
+  (Ketu near Moon) affect mental peace and domestic life.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

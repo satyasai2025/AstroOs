@@ -1,0 +1,107 @@
+# catalogues/bhavas/bhava-11.yaml
+
+id: bhava.11
+name: Labha Bhava
+aliases:
+  - 11th House
+  - Gains House
+  - लाभ भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Labha
+number: 11
+meaning: "Gains; income; desires; fulfillment"
+
+natural_karaka:
+  ref: graha.guru
+  notes: "Guru is the natural karaka for gains, aspirations, and fulfillment of desires"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana"
+
+karakatvas:
+  classical:
+    - concept: Gains and income (Labha)
+      source: source.BPHS
+    - concept: Desires and aspirations (Ashaya)
+      source: source.BPHS
+    - concept: Elder siblings
+      source: source.BPHS
+    - concept: Fulfillment and accomplishment
+      source: source.BPHS
+    - concept: Friends and social networks
+      source: source.BPHS
+  traditional:
+    - concept: Gains
+    - concept: Income
+    - concept: Desires
+    - concept: Elder siblings
+    - concept: Fulfillment
+    - concept: Friends
+
+conditions:
+  strong_when:
+    - Benefics occupying or aspecting the house
+    - Strong lord placed in Kendra or Trikona
+    - Well-placed natural karaka (Guru)
+  weak_when:
+    - Lord placed in Dusthana (6, 8, 12)
+    - Afflicted by malefics
+    - Weak or debilitated lord
+  afflicted_when:
+    - Malefics occupying the 11th house
+    - Lord in enemy sign or debilitated
+    - Afflicted by papa kartari
+
+effects:
+  positive:
+    - Strong financial gains and income growth
+    - Fulfillment of long-held desires
+    - Supportive elder siblings and friends
+    - Successful social networking and alliances
+  negative:
+    - Financial losses or unfulfilled desires
+    - Estrangement from elder siblings
+    - Difficulty in achieving goals
+    - Isolation from social networks
+
+related_bhavas:
+  - bhava: 2
+    relationship: wealth
+    notes: "The 2nd house (Dhana Bhava) governs accumulated wealth while the 11th governs income flow"
+  - bhava: 5
+    relationship: creativity
+    notes: "The 5th house (Putra Bhava) governs creativity and speculation; gains (11th) from 5th show returns on creative efforts"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    chapter: 33
+    verse: 55-65
+    claim: "Gains, income, desires, elder siblings, and fulfillment are significations of the 11th house"
+    confidence: high
+
+notes: >
+  The 11th house (Labha Bhava) is one of the upachaya
+  (increasing) houses and represents gains, income, and the
+  fulfillment of desires. As a house of aspirations, it
+  shows what the native strives for and ultimately achieves.
+  Guru as natural karaka reinforces the association with
+  expansion, prosperity, and noble aspirations. Malefics in
+  the 11th house are often considered beneficial as they
+  drive ambitious pursuit of goals.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

@@ -1,0 +1,16 @@
+{
+  "name": "@astroos/office-addin",
+  "version": "1.0.0",
+  "description": "AstroOS Office.js Add-in for Excel (Kurma Chakra & SBC)",
+  "private": true,
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "validate": "npx office-addin-manifest validate manifest.xml",
+    "sideload": "npx office-addin-debugging start manifest.xml desktop"
+  },
+  "devDependencies": {
+    "@types/office-js": "^1.0.419",
+    "@types/office-runtime": "^1.0.35",
+    "typescript": "^5.7.2"
+  }
+}

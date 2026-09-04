@@ -1,0 +1,68 @@
+# ontology/glossary/bhava.yaml
+
+id: term.bhava
+name: Bhāva
+aliases:
+  - Bhava
+  - House
+  - भाव
+category: term
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+definition:
+  sanskrit: >
+    bhāva — from bhū (to be, to become). Literally "state of
+    being, condition, or becoming." In jyotisha, one of the
+    twelve divisions of the horoscopic chart, each representing
+    a distinct domain of human life.
+  english: >
+    One of the twelve houses (bhavas) in the horoscopic wheel.
+    Each bhava governs specific areas of life: the 1st house
+    (self), 2nd (wealth, family), 3rd (effort, siblings),
+    4th (home, mother), 5th (intellect, children), 6th (debts,
+    disease), 7th (spouse, partnerships), 8th (longevity,
+    transformation), 9th (fortune, dharma), 10th (career,
+    status), 11th (gains, fulfillment), 12th (losses, moksha).
+  technical: >
+    Each bhava spans approximately 30 degrees in the equal-house
+    system. Bhava strength depends on occupying grahas, its lord,
+    aspects received, and argala. The bhava system includes
+    concepts like bhava lord (bhavapati), bhava karaka (natural
+    significator), and bhavat bhavam (house-to-house progression).
+
+usage:
+  primary: "Foundation of chart interpretation — each life domain maps to a bhava"
+  secondary: "Sequential analysis through bhavat bhavam (bhava from bhava)"
+
+related_concepts:
+  - ref: term.graha
+    relationship: "Grahas occupy bhavas and act as bhava lords for analysis"
+  - ref: term.kendra
+    relationship: "Kendra (1, 4, 7, 10) are a special set of angular bhavas"
+  - ref: term.trikona
+    relationship: "Trikona (1, 5, 9) are trinal bhavas associated with dharma"
+  - ref: term.dusthana
+    relationship: "Dusthana (6, 8, 12) are difficult bhavas associated with adversity"
+
+sources:
+  - ref: source.BPHS
+    chapter: 11
+    verse: 1-5
+    claim: "Tatra lagnaṃ śarīraṃ ca — the lagna represents the body, etc."
+    confidence: high
+
+notes: >
+  The bhava system forms the structural backbone of Parashari
+  astrology. Each bhava has a natural karaka (significator):
+  Lagna/Surya for 1st, Jupiter for 2nd, etc. The Bhavat Bhavam
+  principle states that a bhava shows matters of the bhava
+  counting the same number from it.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial glossary entry"
+    author: "Chief Jyotish Knowledge Architect"

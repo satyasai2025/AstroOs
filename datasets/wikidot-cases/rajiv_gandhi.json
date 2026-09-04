@@ -1,0 +1,68 @@
+﻿{
+  "person_name": "Rajiv Gandhi",
+  "chart_id": "WKD-RAJIV-005",
+  "source": "Wikipedia: Rajiv Gandhi (infobox birth_date=1944-08-20, birth_place=Bombay, British India)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1944-08-20",
+    "time_utc": "14:07:00",
+    "latitude": 18.9667,
+    "longitude": 72.8333,
+    "note": "Birth time 8:37pm IST = 14:07 UTC, widely cited in Vedic astrology literature"
+  },
+  "rectified_birth_time": {
+    "date": "1944-08-20",
+    "time_utc": "14:07:00",
+    "latitude": 18.9667,
+    "longitude": 72.8333,
+    "source": "Wikidot birth-chart-of-rajiv-gandhi (rectified); nakshatra: Uttara Phalguni, pada 4; ascendant: Capricorn"
+  },
+  "birth_data": {
+    "janma_nakshatra": "uttara_phalguni",
+    "nakshatra_pada": 4,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "capricorn"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1984-10-31",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Became Prime Minister of India after assassination of Indira Gandhi"
+    },
+    {
+      "event_date": "1984-12-31",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Congress wins landslide general elections; sworn in as PM"
+    },
+    {
+      "event_date": "1989-12-02",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Lost general elections; resigned as Prime Minister"
+    },
+    {
+      "event_date": "1991-05-21",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Assassinated by LTTE suicide bomber at Sriperumbudur, Tamil Nadu"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-rajiv-gandhi",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

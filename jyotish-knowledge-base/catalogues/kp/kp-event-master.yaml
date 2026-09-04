@@ -1,0 +1,7778 @@
+version: 1.0.0
+catalogue: KP Master Complete 408 Event Master Database
+total_events: 408
+events:
+- id: absconding
+  name: Absconding
+  category: General
+  polarity: ADVERSE
+  primary_cusp: 11
+  required_houses:
+  - 3
+  - 8
+  - 11
+  supporting_houses:
+  - 3
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Absconding (Main: 11, Supp: [3, 8], Hind: [])'
+- id: accident
+  name: Accident
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Accident (Main: 1, Supp: [8, 12], Hind: [])'
+- id: accidental_death
+  name: Accidental death
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 8
+  required_houses:
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Saturn
+  - Rahu
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Accidental death (Main: 8, Supp: [8, 12], Hind: [])'
+- id: accumulating_huge_wealth
+  name: Accumulating huge wealth
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs:
+  - Taurus
+  notes: 'KP Master Classical Event: Accumulating huge wealth (Main: 2, Supp: [2, 6, 11],
+    Hind: [])'
+- id: addiction_to_alcohol
+  name: Addiction to alcohol
+  category: General
+  polarity: ADVERSE
+  primary_cusp: 5
+  required_houses:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  supporting_houses:
+  - 3
+  - 6
+  - 2
+  - 1
+  - 4
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Mars
+  - Rahu
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Addiction to alcohol (Main: 5, Supp: [3, 6, 2, 1,
+    4], Hind: [])'
+- id: adopt_a_child
+  name: Adopt a child
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 2
+  - 4
+  - 8
+  supporting_houses:
+  - 2
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Adopt a child (Main: 4, Supp: [2, 8], Hind: [])'
+- id: always_sick
+  name: Always sick
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 4
+  supporting_houses:
+  - 1
+  - 4
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Always sick (Main: 1, Supp: [1, 4], Hind: [])'
+- id: ancestral_property
+  name: Ancestral property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 10
+  - 11
+  supporting_houses:
+  - 10
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Ancestral property (Main: 2, Supp: [10, 2, 11], Hind:
+    [])'
+- id: ancestral_property_getting
+  name: Ancestral property (getting)
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 11
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Ancestral property (getting) (Main: 4, Supp: [4,
+    9, 11, 6], Hind: [])'
+- id: anticipated_promotion_delayed
+  name: Anticipated promotion (delayed)
+  category: Career
+  polarity: ADVERSE
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 3
+  - 5
+  - 10
+  supporting_houses:
+  - 3
+  - 2
+  - 5
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Anticipated promotion (delayed) (Main: 10, Supp:
+    [3, 2, 5, 10], Hind: [])'
+- id: astrologer
+  name: Astrologer
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 4
+  - 5
+  - 9
+  - 12
+  supporting_houses:
+  - 4
+  - 5
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Jupiter
+  - Saturn
+  supporting_signs:
+  - Gemini
+  - Libra
+  - Aquarius
+  notes: influenced by Mercury, Jupiter and Saturn
+- id: attainment_of_spirituality
+  name: Attainment of spirituality
+  category: Spiritual
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 5
+  - 9
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  - Jupiter
+  - Saturn
+  supporting_signs:
+  - Pisces
+  notes: 'KP Master Classical Event: Attainment of spirituality (Main: 9, Supp: [5, 11],
+    Hind: [])'
+- id: bad_luck_in_the_form_of_any_loss
+  name: Bad luck in the form of any loss
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Mars
+  supporting_signs:
+  - Scorpio
+  notes: 'KP Master Classical Event: Bad luck in the form of any loss (Main: 12, Supp:
+    [5, 8, 12], Hind: [])'
+- id: bank_deposits
+  name: Bank deposits
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Bank deposits (Main: 2, Supp: [2, 6, 10, 11], Hind:
+    [])'
+- id: basic_education_up_to_graduation
+  name: Basic education up to Graduation
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 9
+  - 11
+  supporting_houses:
+  - 11
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Basic education up to Graduation (Main: 4, Supp:
+    [11, 9], Hind: [])'
+- id: boldness_rashness
+  name: Boldness/Rashness
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Boldness/Rashness (Main: 3, Supp: [6, 10, 11], Hind:
+    [])'
+- id: boldness_to_take_a_job
+  name: Boldness to take a job
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 2
+  - 3
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Sun
+  supporting_signs:
+  - Aries
+  - Leo
+  notes: 'KP Master Classical Event: Boldness to take a job (Main: 3, Supp: [2, 10, 11],
+    Hind: [])'
+- id: borrowing_due_to_disease_or_diffculties
+  name: Borrowing due to disease or diffculties
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 6
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs:
+  - Virgo
+  notes: 'KP Master Classical Event: Borrowing due to disease or diffculties (Main: 6,
+    Supp: [], Hind: [])'
+- id: borrowing_from_children
+  name: Borrowing From children
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 4
+  - 6
+  supporting_houses:
+  - 4
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing From children (Main: 6, Supp: [4, 6], Hind:
+    [])'
+- id: borrowing_from_elder_brother
+  name: Borrowing From elder brother
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 6
+  - 10
+  supporting_houses:
+  - 10
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing From elder brother (Main: 6, Supp: [10,
+    6], Hind: [])'
+- id: borrowing_from_friends
+  name: Borrowing from friends
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 5
+  - 6
+  - 8
+  supporting_houses:
+  - 8
+  - 5
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing from friends (Main: 6, Supp: [8, 5, 6],
+    Hind: [])'
+- id: borrowing_from_mother
+  name: Borrowing From mother
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 3
+  - 6
+  supporting_houses:
+  - 3
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing From mother (Main: 6, Supp: [3, 6], Hind:
+    [])'
+- id: borrowing_from_wife_or_partner
+  name: Borrowing From wife or partner
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 6
+  - 8
+  supporting_houses:
+  - 6
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing From wife or partner (Main: 6, Supp: [6,
+    8], Hind: [])'
+- id: borrowing_from_younger_brother
+  name: Borrowing from younger brother
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  supporting_houses:
+  - 2
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing from younger brother (Main: 6, Supp: [2,
+    6], Hind: [])'
+- id: borrowing_from_bank
+  name: Borrowing from bank
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing from bank (Main: 6, Supp: [2, 6, 10, 11],
+    Hind: [])'
+- id: borrowing_to_repay_debt_due_to_business
+  name: Borrowing to repay debt due to business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 9
+  supporting_houses:
+  - 9
+  - 6
+  - 2
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Borrowing to repay debt due to business (Main: 6,
+    Supp: [9, 6, 2], Hind: [])'
+- id: break_education
+  name: Break education
+  category: Education
+  polarity: ADVERSE
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Break education (Main: 4, Supp: [8, 12], Hind: [])'
+- id: break_in_service
+  name: Break in Service
+  category: Career
+  polarity: ADVERSE
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 8
+  - 10
+  supporting_houses:
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Ketu
+  supporting_signs:
+  - Leo
+  - Sagittarius
+  notes: 'KP Master Classical Event: Break in Service (Main: 10, Supp: [5, 8], Hind: [])'
+- id: breaking_of_engagement
+  name: Breaking of engagement
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 3
+  - 7
+  - 8
+  supporting_houses:
+  - 3
+  - 7
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Mars
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Breaking of engagement (Main: 7, Supp: [3, 7, 8],
+    Hind: [])'
+- id: buildings_constructed_for_renting
+  name: Buildings constructed for renting
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 6
+  - 10
+  - 12
+  supporting_houses:
+  - 12
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Buildings constructed for renting (Main: 4, Supp:
+    [12, 6, 10], Hind: [])'
+- id: business_partner
+  name: Business partner
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 5
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Business partner (Main: 7, Supp: [5, 7, 11], Hind:
+    [])'
+- id: caesarean_child_birth
+  name: Caesarean child birth
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 8
+  supporting_houses:
+  - 2
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Caesarean child birth (Main: 5, Supp: [2, 8], Hind:
+    [])'
+- id: calamity
+  name: Calamity
+  category: General
+  polarity: ADVERSE
+  primary_cusp: 8
+  required_houses:
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  supporting_signs: []
+  notes: Badhaka
+- id: change_in_job
+  name: Change in job
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 5
+  - 6
+  supporting_houses:
+  - 1
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Change in job (Main: 6, Supp: [1, 5], Hind: [])'
+- id: change_in_place_of_job
+  name: Change in place of job
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 3
+  - 6
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 7
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Change in place of job (Main: 6, Supp: [3, 7, 10,
+    11], Hind: [])'
+- id: change_in_line_of_career_vocation
+  name: Change in line of Career/vocation
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 5
+  - 9
+  supporting_houses:
+  - 5
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Change in line of Career/vocation (Main: 9, Supp:
+    [5, 9], Hind: [])'
+- id: change_of_residence
+  name: Change of residence
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 3
+  - 12
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Change of residence (Main: 4, Supp: [3, 12, 11],
+    Hind: [])'
+- id: charming_face
+  name: Charming face
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  supporting_houses:
+  - 5
+  adverse_houses: []
+  supporting_planets:
+  - Venus
+  - Moon
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Charming face (Main: 1, Supp: [5], Hind: [])'
+- id: child_adoption
+  name: Child adoption
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 10
+  supporting_houses:
+  - 8
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Child adoption (Main: 5, Supp: [8, 6, 10], Hind:
+    [])'
+- id: child_birth
+  name: Child Birth
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Moon
+  - Venus
+  supporting_signs:
+  - Cancer
+  - Scorpio
+  - Pisces
+  notes: 'KP Master Classical Event: Child Birth (Main: 5, Supp: [2, 11], Hind: [])'
+- id: child_birth_denial_and_abortion
+  name: Child birth denial and abortion
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 1
+  - 4
+  - 5
+  - 10
+  supporting_houses:
+  - 4
+  - 10
+  - 1
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Mars
+  - Ketu
+  supporting_signs:
+  - Aries
+  - Leo
+  - Gemini
+  - Virgo
+  notes: 'KP Master Classical Event: Child birth denial and abortion (Main: 5, Supp: [4,
+    10, 1], Hind: [])'
+- id: child’s_health
+  name: Child’s health
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 3
+  - 5
+  - 9
+  supporting_houses:
+  - 9
+  - 3
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Child’s health (Main: 5, Supp: [9, 3, 5], Hind: [])'
+- id: child’s_return_home
+  name: Child’s return home
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Child’s return home (Main: 11, Supp: [5, 11], Hind:
+    [])'
+- id: childlessness_of_a_man
+  name: Childlessness of a Man
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 1
+  - 4
+  - 10
+  - 11
+  supporting_houses:
+  - 10
+  - 4
+  - 1
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Childlessness of a Man (Main: 11, Supp: [10, 4, 1],
+    Hind: [])'
+- id: chronic_disease
+  name: Chronic disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 6
+  - 8
+  supporting_houses:
+  - 1
+  - 6
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Chronic disease (Main: 6, Supp: [1, 6, 8], Hind:
+    [])'
+- id: cinema_actor
+  name: Cinema actor
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 5
+  - 10
+  - 11
+  - 7
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Cinema actor (Main: 5, Supp: [5, 10, 11, 7], Hind:
+    [])'
+- id: college_admission
+  name: College admission
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  supporting_houses:
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: College admission (Main: 4, Supp: [4, 11], Hind:
+    [])'
+- id: coming_back_home_after_discharge_from_hospital
+  name: Coming back home after discharge from hospital
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 2
+  - 4
+  - 5
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Coming back home after discharge from hospital (Main:
+    4, Supp: [2, 11, 5], Hind: [])'
+- id: coming_back_from_abroad
+  name: Coming back from abroad
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 2
+  - 3
+  - 4
+  - 8
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 2
+  - 4
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  - Venus
+  supporting_signs:
+  - Taurus
+  - Cancer
+  notes: 'KP Master Classical Event: Coming back from abroad (Main: 4, Supp: [3, 9, 2,
+    4, 8, 11], Hind: [])'
+- id: commission_agency_as_business
+  name: Commission Agency as Business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 3
+  - 7
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Commission Agency as Business (Main: 7, Supp: [3,
+    11], Hind: [])'
+- id: committing_rape
+  name: Committing rape
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - '9'
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Committing rape (Main: 8, Supp: [5, 12], Hind: [])'
+- id: competitive_exam
+  name: Competitive exam
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 4
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Competitive exam (Main: 6, Supp: [4, 9, 11], Hind:
+    [])'
+- id: completion_or_damage_in_education
+  name: Completion or Damage in education
+  category: Education
+  polarity: ADVERSE
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 5
+  - 8
+  supporting_houses:
+  - 3
+  - 8
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Completion or Damage in education (Main: 4, Supp:
+    [3, 8, 5], Hind: [])'
+- id: computer_professional
+  name: Computer professional
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 3
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Ketu
+  supporting_signs:
+  - Gemini
+  - Libra
+  - Aquarius
+  notes: 'KP Master Classical Event: Computer professional (Main: 10, Supp: [3, 2, 11],
+    Hind: [])'
+- id: conflicts_in_marriage
+  name: Conflicts in marriage
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 7
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Conflicts in marriage (Main: 7, Supp: [], Hind: [])'
+- id: congenital_birth_defect
+  name: Congenital Birth defect
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 12
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Rahu
+  - Mars
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Congenital Birth defect (Main: 12, Supp: [], Hind:
+    [])'
+- id: construct_a_house
+  name: Construct a house
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Construct a house (Main: 4, Supp: [4, 11, 12], Hind:
+    [])'
+- id: construction_of_a_religiious_building
+  name: Construction of a religiious building
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 12
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Construction of a religiious building (Main: 4, Supp:
+    [12, 4, 11], Hind: [])'
+- id: construction_of_several_houses
+  name: Construction of Several houses
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Construction of Several houses (Main: 4, Supp: [4,
+    11, 12], Hind: [])'
+- id: criminal_mind
+  name: Criminal mind
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Criminal mind (Main: 1, Supp: [6, 8, 12], Hind: [])'
+- id: cure_disease_recovery
+  name: Cure disease/recovery
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 5
+  required_houses:
+  - 1
+  - 5
+  - 11
+  supporting_houses:
+  - 1
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Cure disease/recovery (Main: 5, Supp: [1, 5, 11],
+    Hind: [])'
+- id: danger_from_being_in_secret_activities
+  name: Danger from being in secret activities
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 7
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: Saturn, Rahu and Uranus in these cuspal positions
+- id: danger_from_opponents
+  name: Danger from opponents
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Danger from opponents (Main: 7, Supp: [8, 12], Hind:
+    [])'
+- id: danger_to_health
+  name: Danger to health
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  - 1
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Danger to health (Main: 8, Supp: [6, 8, 12, 1], Hind:
+    [])'
+- id: danger_to_life
+  name: Danger to life
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: with relation with the Badhaka lord
+- id: danger_to_life_or_unnatural_or_accidental_death
+  name: Danger to life or unnatural or accidental death
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 4
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: with Badhaka, Maraka lords
+- id: danger_to_life,_ruined_life_death
+  name: Danger to life, ruined life death
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: with Badhaka lord
+- id: deaf_and_dumb
+  name: Deaf and dumb
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: and influence of mute signs
+- id: death_due_to_accident
+  name: Death due to accident
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 8
+  required_houses:
+  - 4
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: with Maraka and Badhaka Planets involved in these cusps
+- id: death_due_to_sickness
+  name: Death due to sickness
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 8
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Death due to sickness (Main: 8, Supp: [6, 12], Hind:
+    [])'
+- id: death_of_child
+  name: Death of child
+  category: Progeny
+  polarity: ADVERSE
+  primary_cusp: 5
+  required_houses:
+  - 4
+  - 5
+  - 6
+  - 11
+  supporting_houses:
+  - 4
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Death of child (Main: 5, Supp: [4, 6, 11], Hind:
+    [])'
+- id: death_of_mother
+  name: Death of mother
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 5
+  - 10
+  supporting_houses:
+  - 3
+  - 5
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Death of mother (Main: 4, Supp: [3, 5, 10], Hind:
+    [])'
+- id: death_of_partner
+  name: Death of partner
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 8
+  supporting_houses:
+  - 8
+  - 6
+  - 1
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Death of partner (Main: 7, Supp: [8, 6, 1], Hind:
+    [])'
+- id: debt_ridden_life
+  name: Debt ridden life
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Debt ridden life (Main: 6, Supp: [6, 8, 12], Hind:
+    [])'
+- id: debt_to_repay_debt
+  name: Debt to repay debt
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 3
+  - 6
+  - 7
+  - 12
+  supporting_houses:
+  - 3
+  - 7
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Debt to repay debt (Main: 6, Supp: [3, 7, 12], Hind:
+    [])'
+- id: decent_living
+  name: Decent living
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Decent living (Main: 10, Supp: [2, 6, 9, 11], Hind:
+    [])'
+- id: defect_in_speech_or_defect_in_right_vision_of_gents
+  name: Defect in Speech or defect in Right Vision of gents
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 8
+  - 12
+  supporting_houses:
+  - 12
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Scorpio
+  notes: 'KP Master Classical Event: Defect in Speech or defect in Right Vision of gents
+    (Main: 2, Supp: [12, 8], Hind: [])'
+- id: delay_in_marriage
+  name: Delay in marriage
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Delay in marriage (Main: 7, Supp: [2, 7, 11], Hind:
+    [])'
+- id: delivery_of_child
+  name: Delivery of child
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 4
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Delivery of child (Main: 5, Supp: [4, 8, 12], Hind:
+    [])'
+- id: deposit_money_in_bank
+  name: Deposit money in Bank
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 2
+  - 4
+  - 11
+  supporting_houses:
+  - 4
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Deposit money in Bank (Main: 4, Supp: [4, 2, 11],
+    Hind: [])'
+- id: depression
+  name: Depression
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 1
+  - 3
+  - 8
+  - 12
+  supporting_houses:
+  - 1
+  - 3
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Depression (Main: 8, Supp: [1, 3, 12], Hind: [])'
+- id: discharge_from_hospital
+  name: Discharge from hospital
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 2
+  - 4
+  - 11
+  supporting_houses:
+  - 2
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Discharge from hospital (Main: 1, Supp: [2, 4, 11],
+    Hind: [])'
+- id: disease_chronic
+  name: Disease (Chronic)
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 6
+  - 8
+  supporting_houses:
+  - 1
+  - 6
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Disease (Chronic) (Main: 6, Supp: [1, 6, 8], Hind:
+    [])'
+- id: disease_causing_defect_in_body
+  name: Disease causing defect in body
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 12
+  supporting_houses:
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Disease causing defect in body (Main: 12, Supp: [12],
+    Hind: [])'
+- id: disease_is_cured,
+  name: Disease is cured,
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 5
+  - 6
+  - 11
+  supporting_houses:
+  - 1
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Disease is cured, (Main: 6, Supp: [1, 5, 11], Hind:
+    [])'
+- id: disease_unknown_in_medical_science
+  name: Disease unknown in medical science
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 6
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Disease unknown in medical science (Main: 6, Supp:
+    [], Hind: [])'
+- id: disease___life_long
+  name: Disease - Life long
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Disease - Life long (Main: 1, Supp: [1, 6, 8, 12],
+    Hind: [])'
+- id: disease___receovery
+  name: Disease - Receovery
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 11
+  supporting_houses:
+  - 1
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Disease - Receovery (Main: 1, Supp: [1, 5, 11], Hind:
+    [])'
+- id: disgrace_scandal
+  name: Disgrace Scandal
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 1
+  - 5
+  - 8
+  supporting_houses:
+  - 1
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Ketu
+  - Mars
+  supporting_signs:
+  - Scorpio
+  notes: 'KP Master Classical Event: Disgrace Scandal (Main: 8, Supp: [1, 5, 8], Hind:
+    [])'
+- id: divorce_finalized
+  name: Divorce finalized
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 10
+  - 12
+  supporting_houses:
+  - 1
+  - 6
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Divorce finalized (Main: 7, Supp: [1, 6, 10, 12],
+    Hind: [])'
+- id: doctorate_degree
+  name: Doctorate degree
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 9
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Doctorate degree (Main: 11, Supp: [4, 9, 11], Hind:
+    [])'
+- id: donations
+  name: Donations
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Donations (Main: 10, Supp: [9, 11], Hind: [])'
+- id: dowry_receiving
+  name: Dowry receiving
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Dowry receiving (Main: 7, Supp: [2, 7, 8, 11], Hind:
+    [])'
+- id: dull_business
+  name: Dull business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 5
+  - 7
+  supporting_houses:
+  - 1
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Taurus
+  - Virgo
+  - Capricorn
+  notes: 'KP Master Classical Event: Dull business (Main: 7, Supp: [1, 5], Hind: [])'
+- id: earn_sufficient_money
+  name: Earn sufficient money
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Earn sufficient money (Main: 6, Supp: [2, 6, 11],
+    Hind: [])'
+- id: earning_money_through_illegal_means
+  name: Earning money through illegal means
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Earning money through illegal means (Main: 11, Supp:
+    [2, 5, 8], Hind: [])'
+- id: education_less_person
+  name: Education-less person
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 8
+  - 10
+  supporting_houses:
+  - 3
+  - 8
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Education-less person (Main: 4, Supp: [3, 8, 10],
+    Hind: [])'
+- id: export_business
+  name: Export Business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  - 12
+  supporting_houses:
+  - 3
+  - 6
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Export Business (Main: 10, Supp: [3, 6, 11, 12],
+    Hind: [])'
+- id: left_eye_disease
+  name: Left Eye disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Left Eye disease (Main: 12, Supp: [6, 8], Hind: [])'
+- id: eyes_to_be_healthy
+  name: Eyes to be healthy
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 3
+  - 11
+  supporting_houses:
+  - 11
+  - 3
+  adverse_houses: []
+  supporting_planets:
+  - Sun
+  - Moon
+  supporting_signs:
+  - Taurus
+  notes: 'KP Master Classical Event: Eyes to be healthy (Main: 2, Supp: [11, 3], Hind:
+    [])'
+- id: failure_in_exam
+  name: Failure in exam
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Failure in exam (Main: 4, Supp: [6, 8, 12, 3], Hind:
+    [])'
+- id: failure_in_politics
+  name: Failure in politics
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 10
+  supporting_houses:
+  - 2
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Failure in politics (Main: 10, Supp: [2], Hind: [])'
+- id: fame
+  name: Fame
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 3
+  - 10
+  supporting_houses:
+  - 1
+  - 3
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Fame (Main: 10, Supp: [1, 3, 10], Hind: [])'
+- id: filing_a_court_case
+  name: Filing a court case
+  category: Legal
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Filing a court case (Main: 3, Supp: [6, 11], Hind:
+    [])'
+- id: financial_status
+  name: Financial Status
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Financial Status (Main: 2, Supp: [2, 6, 11], Hind:
+    [])'
+- id: forced_retirement
+  name: Forced Retirement
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 8
+  - 10
+  supporting_houses:
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Jupiter
+  supporting_signs: []
+  notes: with Mars appearing with Jupiter having influence of 9th house of law
+- id: foreign_going
+  name: Foreign going
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 3
+  - 9
+  - 12
+  supporting_houses:
+  - 3
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Foreign going (Main: 12, Supp: [3, 9, 12], Hind:
+    [])'
+- id: foreign_settlement
+  name: Foreign settlement
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 3
+  - 9
+  - 12
+  supporting_houses:
+  - 3
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Foreign settlement (Main: 12, Supp: [3, 9, 12], Hind:
+    [])'
+- id: foreign_study
+  name: Foreign study
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 6
+  - 9
+  - 11
+  - 12
+  supporting_houses:
+  - 6
+  - 9
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: with Mercury at any of these cuspal positions
+- id: foreign_travel
+  name: Foreign Travel
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 3
+  - 9
+  - 12
+  supporting_houses:
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Foreign Travel (Main: 12, Supp: [3, 9], Hind: [])'
+- id: free_from_debt
+  name: Free from debt
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 4
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Free from debt (Main: 8, Supp: [4, 5, 8, 12], Hind:
+    [])'
+- id: free_of_disease
+  name: Free of disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 11
+  required_houses:
+  - 6
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Free of disease (Main: 11, Supp: [6, 11], Hind: [])'
+- id: friends_helpful_and_beneficial
+  name: Friends helpful and beneficial
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 1
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Friends helpful and beneficial (Main: 11, Supp: [1,
+    2, 3, 6, 10, 11], Hind: [])'
+- id: further_studiesmaster,_ph.d.
+  name: Further studies(Master, Ph.D.)
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 4
+  - 9
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Further studies(Master, Ph.D.) (Main: 9, Supp: [4,
+    9, 11], Hind: [])'
+- id: gain_a_degree_through_correspondence
+  name: Gain a degree through correspondence
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 9
+  - 12
+  supporting_houses:
+  - 3
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain a degree through correspondence (Main: 4, Supp:
+    [3, 9, 12], Hind: [])'
+- id: gain_from_independent_business
+  name: Gain from independent business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain from independent business (Main: 2, Supp: [2,
+    7, 10, 11], Hind: [])'
+- id: gain_from_lottery
+  name: Gain from lottery
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 5
+  - 6
+  - 8
+  - 11
+  supporting_houses:
+  - 5
+  - 6
+  - 11
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain from lottery (Main: 3, Supp: [5, 6, 11, 8],
+    Hind: [])'
+- id: gain_in_foreign_land_and_or_with_foreigners
+  name: Gain in foreign land and/or with foreigners
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  - 12
+  supporting_houses:
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain in foreign land and/or with foreigners (Main:
+    12, Supp: [2, 3, 6, 10, 11], Hind: [])'
+- id: gain_in_gambling
+  name: Gain in gambling
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 10
+  - 11
+  supporting_houses:
+  - 5
+  - 10
+  - 11
+  - 2
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain in gambling (Main: 5, Supp: [5, 10, 11, 2],
+    Hind: [])'
+- id: gain_in_investment
+  name: Gain in investment
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 2
+  - 6
+  - 11
+  - 12
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain in investment (Main: 12, Supp: [2, 6, 11], Hind:
+    [])'
+- id: gain_of_money___wealth
+  name: Gain of money / wealth
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain of money / wealth (Main: 11, Supp: [2, 6, 11],
+    Hind: [])'
+- id: gain_profit_in_business
+  name: Gain/Profit in business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain/Profit in business (Main: 7, Supp: [2, 10, 11],
+    Hind: [])'
+- id: gain_success__in_independent_business
+  name: Gain/success  in independent business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 3
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 7
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gain/success  in independent business (Main: 2, Supp:
+    [3, 7, 10, 11], Hind: [])'
+- id: gaining_wealth,_increase_bank_deposit
+  name: Gaining wealth, increase bank deposit
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Gaining wealth, increase bank deposit (Main: 2, Supp:
+    [2, 6, 10, 11], Hind: [])'
+- id: get_a_degree_with_difficulties
+  name: Get a degree with difficulties
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 2
+  - 4
+  - 8
+  - 10
+  - 11
+  supporting_houses:
+  - 8
+  - 2
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Get a degree with difficulties (Main: 4, Supp: [8,
+    2, 10, 11], Hind: [])'
+- id: get_a_desired_or_good_job
+  name: Get a desired or good job
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Get a desired or good job (Main: 6, Supp: [2, 6,
+    11, 10], Hind: [])'
+- id: getting_a_business_partner
+  name: Getting a business partner
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting a business partner (Main: 10, Supp: [6, 11],
+    Hind: [])'
+- id: getting_a_telephone_call
+  name: Getting a telephone call
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting a telephone call (Main: 3, Supp: [3, 9, 11],
+    Hind: [])'
+- id: getting_a_tenant
+  name: Getting a tenant
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 4
+  - 6
+  - 11
+  supporting_houses:
+  - 4
+  - 11
+  - 6
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting a tenant (Main: 6, Supp: [4, 11, 6], Hind:
+    [])'
+- id: getting_an_award_prize
+  name: Getting an award/prize
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 10
+  - 11
+  - 6
+  adverse_houses: []
+  supporting_planets:
+  - Sun
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting an award/prize (Main: 10, Supp: [10, 11,
+    6], Hind: [])'
+- id: getting_bail
+  name: Getting bail
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 6
+  - 10
+  - 11
+  - 12
+  supporting_houses:
+  - 6
+  - 11
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting bail (Main: 12, Supp: [6, 11, 10], Hind:
+    [])'
+- id: getting_gratuity,_insurance_of_the_deceased
+  name: Getting gratuity, insurance of the deceased
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 2
+  - 11
+  - 5
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting gratuity, insurance of the deceased (Main:
+    8, Supp: [8, 2, 11, 5], Hind: [])'
+- id: getting_hidden_treasure
+  name: Getting hidden treasure
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 8
+  - 11
+  supporting_houses:
+  - 4
+  - 11
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Getting hidden treasure (Main: 11, Supp: [4, 11,
+    8], Hind: [])'
+- id: giving_donation
+  name: Giving donation
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Giving donation (Main: 8, Supp: [5, 8, 12], Hind:
+    [])'
+- id: giving_dowry
+  name: Giving dowry
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 5
+  - 8
+  supporting_houses:
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Giving dowry (Main: 8, Supp: [5], Hind: [])'
+- id: go_out_of_present_environment
+  name: Go out of present environment
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 3
+  - 7
+  - 12
+  supporting_houses:
+  - 3
+  - 7
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Go out of present environment (Main: 1, Supp: [3,
+    7, 12], Hind: [])'
+- id: going_abroad_for_job
+  name: Going abroad for job
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 3
+  - 6
+  - 9
+  - 10
+  - 12
+  supporting_houses:
+  - 3
+  - 9
+  - 12
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Going abroad for job (Main: 12, Supp: [3, 9, 12,
+    6, 10], Hind: [])'
+- id: good_health_recover,_good_luck_in_all
+  name: Good health recover, Good Luck in all
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Good health recover, Good Luck in all (Main: 1, Supp:
+    [1, 11, 5], Hind: [])'
+- id: happy_married_life
+  name: Happy married life
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Venus
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Happy married life (Main: 11, Supp: [2, 7, 11], Hind:
+    [])'
+- id: having_an_affair_with_business_partner
+  name: Having an affair with business partner
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Having an affair with business partner (Main: 5,
+    Supp: [8, 5, 11], Hind: [])'
+- id: having_bed_comfort_with_one’s_wife
+  name: Having bed comfort with one’s wife
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 1
+  - 5
+  - 7
+  - 12
+  supporting_houses:
+  - 1
+  - 5
+  - 7
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Having bed comfort with one’s wife (Main: 12, Supp:
+    [1, 5, 7, 12], Hind: [])'
+- id: having_marriage_as_one_desired
+  name: Having marriage as one desired
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 3
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 3
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Having marriage as one desired (Main: 11, Supp: [2,
+    3, 7, 11], Hind: [])'
+- id: hearing_news_about_a_missing_person
+  name: Hearing news about a missing person
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 3,11 and the missing person's Asc. House
+- id: high_position_in_politics
+  name: High position in politics
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 9
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: High position in politics (Main: 11, Supp: [9, 10,
+    11], Hind: [])'
+- id: higher_education
+  name: Higher education
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 4
+  - 9
+  - 11
+  supporting_houses:
+  - 11
+  - 4
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Higher education (Main: 9, Supp: [11, 4, 9], Hind:
+    [])'
+- id: higher_studies
+  name: Higher Studies
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 9
+  - 11
+  supporting_houses:
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Higher Studies (Main: 11, Supp: [9], Hind: [])'
+- id: honourable_life_but_materially_poor
+  name: Honourable life but materially poor
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 3
+  - 9
+  - 10
+  supporting_houses:
+  - 1
+  - 3
+  - 9
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Honourable life but materially poor (Main: 10, Supp:
+    [1, 3, 9, 10], Hind: [])'
+- id: house_detention
+  name: House detention
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 4
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: House detention (Main: 12, Supp: [4, 8, 12], Hind:
+    [])'
+- id: ill_health
+  name: Ill Health
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 1
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Ill Health (Main: 6, Supp: [1, 8, 12], Hind: [])'
+- id: illicit_connections_with_women
+  name: Illicit connections with women
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 5
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Illicit connections with women (Main: 2, Supp: [2,
+    5, 8, 11], Hind: [])'
+- id: imprisonment
+  name: Imprisonment
+  category: Progeny
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 3
+  - 8
+  - 12
+  supporting_houses:
+  - 3
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Imprisonment (Main: 12, Supp: [3, 8], Hind: [])'
+- id: increase_in_ornaments_and_jewels
+  name: Increase in ornaments and jewels
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 8
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 10
+  - 11
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Increase in ornaments and jewels (Main: 2, Supp:
+    [2, 10, 11, 8], Hind: [])'
+- id: independent_earnings
+  name: Independent earnings
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 4
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 4
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Independent earnings (Main: 2, Supp: [4, 6, 10, 11],
+    Hind: [])'
+- id: independent_business
+  name: Independent business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 3
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 7
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Independent business (Main: 7, Supp: [3, 7, 10, 11],
+    Hind: [])'
+- id: inheritance_of_large_property
+  name: Inheritance of large property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 2
+  - 9
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Inheritance of large property (Main: 9, Supp: [2,
+    11], Hind: [])'
+- id: inheriting_property
+  name: Inheriting property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Inheriting property (Main: 10, Supp: [2, 10, 11],
+    Hind: [])'
+- id: insanity
+  name: Insanity
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Insanity (Main: 12, Supp: [6, 8, 12], Hind: [])'
+- id: instant_predictions
+  name: Instant predictions
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Instant predictions (Main: 3, Supp: [3, 9, 11], Hind:
+    [])'
+- id: insurance_claims
+  name: Insurance claims
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Insurance claims (Main: 2, Supp: [8, 11], Hind: [])'
+- id: insurance_legacy,_gratuity
+  name: Insurance legacy, gratuity
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Insurance legacy, gratuity (Main: 2, Supp: [8, 2,
+    11], Hind: [])'
+- id: intelligent_thinking
+  name: Intelligent thinking
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 3
+  - 5
+  - 9
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Intelligent thinking (Main: 5, Supp: [5, 11, 3, 9],
+    Hind: [])'
+- id: inter_caste_marriage
+  name: Inter-caste marriage
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Venus
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Inter-caste marriage (Main: 5, Supp: [2, 7, 11],
+    Hind: [])'
+- id: job_and_independent_business_together
+  name: Job and independent business together
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 3
+  - 6
+  - 7
+  - 10
+  supporting_houses:
+  - 10
+  - 6
+  - 7
+  - 2
+  - 3
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Job and independent business together (Main: 10,
+    Supp: [10, 6, 7, 2, 3], Hind: [])'
+- id: job_in_a_permanent_place
+  name: Job in a permanent place
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 10
+  supporting_houses:
+  - 4
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Job in a permanent place (Main: 4, Supp: [4, 10],
+    Hind: [])'
+- id: keeping_a_mistress
+  name: Keeping a mistress
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 7
+  - 11
+  - 12
+  supporting_houses:
+  - 7
+  - 11
+  - 2
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Keeping a mistress (Main: 5, Supp: [7, 11, 2, 12],
+    Hind: [])'
+- id: lagna_lord_very_weak
+  name: Lagna Lord very weak
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Lagna Lord very weak (Main: 1, Supp: [5, 8, 12],
+    Hind: [])'
+- id: landed_property_ownership
+  name: Landed property ownership
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Landed property ownership (Main: 4, Supp: [4, 11,
+    12], Hind: [])'
+- id: leasing_a_landed_or_immovable_property
+  name: Leasing a landed or immovable property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 6
+  - 11
+  - 12
+  supporting_houses:
+  - 6
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Leasing a landed or immovable property (Main: 11,
+    Supp: [6, 11, 12], Hind: [])'
+- id: legal_profession
+  name: Legal profession
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Mercury
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Legal profession (Main: 10, Supp: [2, 6, 11, 9],
+    Hind: [])'
+- id: life_long_disease
+  name: Life long disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Life long disease (Main: 6, Supp: [1, 6, 8, 12],
+    Hind: [])'
+- id: loans_from_bank
+  name: Loans from bank
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loans from bank (Main: 6, Supp: [2, 11], Hind: [])'
+- id: long_distance_phone_call
+  name: Long distance phone call
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Long distance phone call (Main: 3, Supp: [3, 9, 11],
+    Hind: [])'
+- id: long_journey_ineraction_with_foreigners
+  name: Long journey ineraction with foreigners
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 9
+  - 11
+  supporting_houses:
+  - 9
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Long journey ineraction with foreigners (Main: 2,
+    Supp: [9, 2, 11], Hind: [])'
+- id: long_journeys_only
+  name: Long Journeys only
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 3
+  - 9
+  - 12
+  supporting_houses:
+  - 3
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Long Journeys only (Main: 9, Supp: [3, 12], Hind:
+    [])'
+- id: long_life_over_66_yrs
+  name: Long life (over 66 yrs)
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 9
+  - 10
+  supporting_houses:
+  - 1
+  - 5
+  - 9
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Long life (over 66 yrs) (Main: 1, Supp: [1, 5, 9,
+    10], Hind: [])'
+- id: long_life_of_father
+  name: Long life of father
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 1
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 9
+  - 11
+  - 1
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Long life of father (Main: 9, Supp: [9, 11, 1, 6],
+    Hind: [])'
+- id: long_lifespan
+  name: Long lifespan
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 9
+  - 10
+  supporting_houses:
+  - 1
+  - 5
+  - 9
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Long lifespan (Main: 1, Supp: [1, 5, 9, 10], Hind:
+    [])'
+- id: loose_thinking
+  name: Loose thinking
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 1
+  - 4
+  - 5
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 8
+  - 6
+  - 1
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loose thinking (Main: 5, Supp: [4, 8, 6, 1, 12],
+    Hind: [])'
+- id: losing_wealth,_money
+  name: Losing wealth, money
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Losing wealth, money (Main: 2, Supp: [], Hind: [])'
+- id: losing_through_friends
+  name: Losing through friends
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 5
+  - 8
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Losing through friends (Main: 11, Supp: [4, 5, 8,
+    12], Hind: [])'
+- id: loss_in_appeal
+  name: Loss in appeal
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 5
+  - 12
+  supporting_houses:
+  - 5
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss in appeal (Main: 3, Supp: [5, 12], Hind: [])'
+- id: loss_in_business
+  name: Loss in business
+  category: Career
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss in business (Main: 7, Supp: [5, 8, 12], Hind:
+    [])'
+- id: loss_in_business_or_industry
+  name: Loss in business or industry
+  category: Career
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Taurus
+  - Virgo
+  - Capricorn
+  notes: 'KP Master Classical Event: Loss in business or industry (Main: 7, Supp: [5,
+    8, 12], Hind: [])'
+- id: loss_in_competition
+  name: Loss in competition
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 5
+  - 6
+  supporting_houses:
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss in competition (Main: 6, Supp: [5], Hind: [])'
+- id: loss_in_investment
+  name: Loss in investment
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 1
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 1
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss in investment (Main: 12, Supp: [1, 5, 8], Hind:
+    [])'
+- id: loss_of_money
+  name: Loss of money
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 2
+  required_houses:
+  - 1
+  - 2
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 1
+  - 7
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss of money (Main: 2, Supp: [1, 7, 8, 12], Hind:
+    [])'
+- id: loss_of_reputation
+  name: Loss of reputation
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 8
+  - 9
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss of reputation (Main: 3, Supp: [8, 12, 9], Hind:
+    [])'
+- id: loss_of_reputation_&_money_income_tax_trouble
+  name: Loss of reputation & money income tax trouble
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 10
+  required_houses:
+  - 7
+  - 8
+  - 10
+  - 12
+  supporting_houses:
+  - 7
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss of reputation & money income tax trouble (Main:
+    10, Supp: [7, 8, 12], Hind: [])'
+- id: loss_of_wealth
+  name: Loss of wealth
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 8
+  - 11
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss of wealth (Main: 11, Supp: [5, 8, 12], Hind:
+    [])'
+- id: loss_of_work
+  name: Loss of work
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 5
+  - 9
+  - 10
+  - 12
+  supporting_houses:
+  - 1
+  - 5
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Loss of work (Main: 10, Supp: [1, 5, 9, 12], Hind:
+    [])'
+- id: love_affair
+  name: Love affair
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Love affair (Main: 5, Supp: [2, 11], Hind: [])'
+- id: love_marriage
+  name: Love marriage
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 7
+  - 11
+  - 2
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Venus
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Love marriage (Main: 5, Supp: [7, 11, 2], Hind: [])'
+- id: love_partner_and_success_in_love_affair
+  name: Love partner and success in love affair
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 11
+  - 2
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Love partner and success in love affair (Main: 5,
+    Supp: [11, 2], Hind: [])'
+- id: lower_level_education
+  name: Lower level education
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 2
+  - 4
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Lower level education (Main: 4, Supp: [2, 11], Hind:
+    [])'
+- id: madness_or_insanity
+  name: Madness or insanity
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  - Mercury
+  - Ketu
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Madness or insanity (Main: 8, Supp: [6, 8, 12], Hind:
+    [])'
+- id: making_contract_or_agreement
+  name: Making contract or agreement
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 1
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 11
+  - 1
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Making contract or agreement (Main: 3, Supp: [3,
+    9, 11, 1], Hind: [])'
+- id: mantra_receiving
+  name: Mantra receiving
+  category: Spiritual
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 9
+  - 11
+  supporting_houses:
+  - 5
+  - 9
+  - 11
+  - 2
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Mantra receiving (Main: 5, Supp: [5, 9, 11, 2], Hind:
+    [])'
+- id: marriage_already_fixed_stops_abruptly
+  name: Marriage already fixed stops abruptly
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 10
+  - 12
+  supporting_houses:
+  - 1
+  - 6
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage already fixed stops abruptly (Main: 7, Supp:
+    [1, 6, 10, 12], Hind: [])'
+- id: marriage_and_separation
+  name: Marriage and separation
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 10
+  supporting_houses:
+  - 1
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage and separation (Main: 7, Supp: [1, 6, 10],
+    Hind: [])'
+- id: marriage_celebration
+  name: Marriage celebration
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage celebration (Main: 7, Supp: [2, 11], Hind:
+    [])'
+- id: marriage_negotiation
+  name: Marriage negotiation
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 7
+  - 9
+  supporting_houses:
+  - 7
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage negotiation (Main: 3, Supp: [7, 3, 9], Hind:
+    [])'
+- id: marriage_to_a_widow
+  name: Marriage to a widow
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage to a widow (Main: 7, Supp: [2, 7, 8, 11],
+    Hind: [])'
+- id: marriage_to_an_aged_partner
+  name: Marriage to an aged partner
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage to an aged partner (Main: 7, Supp: [2, 7,
+    11], Hind: [])'
+- id: marriage_to_foreigner
+  name: Marriage to foreigner
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 5
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage to foreigner (Main: 7, Supp: [5, 7, 11],
+    Hind: [])'
+- id: marriage___engagement
+  name: Marriage - engagement
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 7
+  - 9
+  - 11
+  supporting_houses:
+  - 7
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marriage - engagement (Main: 3, Supp: [7, 9, 11],
+    Hind: [])'
+- id: marriage___second_after_divorce
+  name: Marriage - Second after Divorce
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 9
+  required_houses:
+  - 2
+  - 9
+  - 11
+  supporting_houses:
+  - 2
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Mercury
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Marriage - Second after Divorce (Main: 9, Supp: [2,
+    9, 11], Hind: [])'
+- id: marrying_a_career_girl
+  name: Marrying a career girl
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  - 4
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Marrying a career girl (Main: 4, Supp: [8, 12, 4],
+    Hind: [])'
+- id: medical_claims
+  name: Medical claims
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 8
+  - 11
+  supporting_houses:
+  - 6
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Medical claims (Main: 2, Supp: [6, 8, 11], Hind:
+    [])'
+- id: meeting_a_person_or_appointment
+  name: Meeting a person or appointment
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Meeting a person or appointment (Main: 3, Supp: [9,
+    11], Hind: [])'
+- id: mind_to_commit_crime
+  name: Mind to commit crime
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 6
+  - 8
+  - 10
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Mind to commit crime (Main: 12, Supp: [6, 8, 10,
+    12], Hind: [])'
+- id: mind_to_raping
+  name: Mind to raping
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Rahu
+  - '9'
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Mind to raping (Main: 12, Supp: [5, 6, 8, 12], Hind:
+    [])'
+- id: misunderstanding_with_partner_and_family_members
+  name: Misunderstanding with partner and family members
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 8
+  supporting_houses:
+  - 2
+  - 7
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Misunderstanding with partner and family members
+    (Main: 7, Supp: [2, 7, 8], Hind: [])'
+- id: money_obtained_by_selling_possessions
+  name: Money obtained by selling possessions
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 11
+  - 12
+  supporting_houses:
+  - 3
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Money obtained by selling possessions (Main: 3, Supp:
+    [3, 11, 12], Hind: [])'
+- id: moving_from_place
+  name: Moving from place
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 3
+  - 12
+  supporting_houses:
+  - 3
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Moving from place (Main: 12, Supp: [3, 12], Hind:
+    [])'
+- id: multiple_marriage
+  name: Multiple marriage
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 9
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Mars
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Multiple marriage (Main: 7, Supp: [2, 7, 9, 11],
+    Hind: [])'
+- id: negotiation_to_take_over_a_business
+  name: Negotiation to take over a business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 9
+  - 10
+  supporting_houses:
+  - 10
+  - 6
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Negotiation to take over a business (Main: 3, Supp:
+    [10, 6, 3, 9], Hind: [])'
+- id: negotiation_to_adopt_a_child
+  name: Negotiation to adopt a child
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 5
+  - 9
+  supporting_houses:
+  - 5
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Negotiation to adopt a child (Main: 3, Supp: [5,
+    3, 9], Hind: [])'
+- id: negotiations
+  name: Negotiations
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Negotiations (Main: 3, Supp: [9, 11], Hind: [])'
+- id: new_inventions
+  name: New inventions
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 1
+  - 5
+  - 9
+  - 12
+  supporting_houses:
+  - 1
+  - 5
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: New inventions (Main: 12, Supp: [1, 5, 9, 12], Hind:
+    [])'
+- id: news_of_promotion_in_service_with_transfer_order
+  name: News of promotion in service with transfer order
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: News of promotion in service with transfer order
+    (Main: 3, Supp: [3, 6, 10, 11], Hind: [])'
+- id: no_change_of_work_place
+  name: No change of work place
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 4
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 4
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: No change of work place (Main: 10, Supp: [1, 4, 10,
+    11], Hind: [])'
+- id: no_cure_of_disease
+  name: No cure of disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 6
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: No cure of disease (Main: 11, Supp: [4, 6, 12], Hind:
+    [])'
+- id: no_improvement_in_business_and_service
+  name: No improvement in business and service
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 5
+  - 10
+  supporting_houses:
+  - 2
+  - 5
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: No improvement in business and service (Main: 10,
+    Supp: [2, 5, 10], Hind: [])'
+- id: no_marriage
+  name: No marriage
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 10
+  supporting_houses:
+  - 1
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: No marriage (Main: 7, Supp: [1, 6, 10], Hind: [])'
+- id: no_marriage_with_a_love_partner
+  name: No marriage with a love partner
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 4
+  - 5
+  - 6
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: No marriage with a love partner (Main: 5, Supp: [4,
+    6, 12], Hind: [])'
+- id: no_occupation_in_life
+  name: No occupation in life
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 9
+  - 10
+  supporting_houses:
+  - 5
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: No occupation in life (Main: 10, Supp: [5, 9], Hind:
+    [])'
+- id: non_recovery_of__lost_articles_due_to_theft
+  name: Non-recovery of  lost articles due to theft
+  category: General
+  polarity: ADVERSE
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 8
+  - 11
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Non-recovery of  lost articles due to theft (Main:
+    11, Supp: [5, 8, 12], Hind: [])'
+- id: normal_delivery
+  name: Normal delivery
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 2
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Normal delivery (Main: 5, Supp: [2, 5, 11], Hind:
+    [])'
+- id: obstacles_in_career
+  name: Obstacles in career
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Obstacles in career (Main: 6, Supp: [5, 8, 12], Hind:
+    [])'
+- id: obtaining_jewellery
+  name: Obtaining Jewellery
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 11
+  supporting_houses:
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Obtaining Jewellery (Main: 2, Supp: [11], Hind: [])'
+- id: occupying_a_new_house
+  name: Occupying a new house
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 1
+  - 4
+  - 11
+  supporting_houses:
+  - 11
+  - 1
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Occupying a new house (Main: 4, Supp: [11, 1], Hind:
+    [])'
+- id: once_for_all_lost_of_property
+  name: Once for all lost of property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Once for all lost of property (Main: 2, Supp: [5,
+    8, 12], Hind: [])'
+- id: one_speaks_truth
+  name: One speaks truth
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  supporting_houses:
+  - 3
+  adverse_houses: []
+  supporting_planets:
+  - Sun
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: One speaks truth (Main: 3, Supp: [3], Hind: [])'
+- id: one’s_exertion
+  name: One’s exertion
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 1
+  - 2
+  - 11
+  supporting_houses:
+  - 1
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: One’s exertion (Main: 2, Supp: [1, 2, 11], Hind:
+    [])'
+- id: opening_bank_account
+  name: Opening bank account
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Opening bank account (Main: 2, Supp: [6, 11], Hind:
+    [])'
+- id: ornaments_or_cash_from_inheritance
+  name: Ornaments or cash from inheritance
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 2
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Ornaments or cash from inheritance (Main: 8, Supp:
+    [2, 11], Hind: [])'
+- id: overdraft_facility
+  name: Overdraft facility
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 10
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Overdraft facility (Main: 6, Supp: [2, 6, 10], Hind:
+    [])'
+- id: own_vehicle
+  name: Own vehicle
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  supporting_houses:
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Own vehicle (Main: 4, Supp: [4, 11], Hind: [])'
+- id: partnership_breaks
+  name: Partnership breaks
+  category: General
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 6
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Partnership breaks (Main: 7, Supp: [8, 6, 12], Hind:
+    [])'
+- id: partnership_of_any_kind
+  name: Partnership of any kind
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Partnership of any kind (Main: 7, Supp: [5, 11],
+    Hind: [])'
+- id: passport,_green_card,_visa
+  name: Passport, Green card, Visa
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  - 12
+  supporting_houses:
+  - 9
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Passport, Green card, Visa (Main: 3, Supp: [9, 11,
+    12], Hind: [])'
+- id: person_of_nuisance_for_other
+  name: Person of nuisance for other
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 5
+  - 8
+  supporting_houses:
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Sun
+  - Mars
+  - Rahu
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Person of nuisance for other (Main: 8, Supp: [5,
+    8], Hind: [])'
+- id: pilgrimage
+  name: Pilgrimage
+  category: Spiritual
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 3
+  - 9
+  - 10
+  supporting_houses:
+  - 3
+  - 9
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Pilgrimage (Main: 9, Supp: [3, 9, 10], Hind: [])'
+- id: pleasant_function_at_home
+  name: Pleasant function at home
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 5
+  - 10
+  - 11
+  supporting_houses:
+  - 10
+  - 11
+  - 5
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  - Jupiter
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Pleasant function at home (Main: 4, Supp: [10, 11,
+    5], Hind: [])'
+- id: pleasure_by_thnking_of_love
+  name: Pleasure by thnking of love
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 11
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Venus
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Pleasure by thnking of love (Main: 5, Supp: [11,
+    8], Hind: [])'
+- id: politics_as_profession
+  name: Politics as Profession
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Sun
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Politics as Profession (Main: 10, Supp: [2, 6, 11,
+    9], Hind: [])'
+- id: politics___failure
+  name: Politics - Failure
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Politics - Failure (Main: 1, Supp: [5, 8, 12], Hind:
+    [])'
+- id: poor_living
+  name: Poor living
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 8
+  - 10
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Poor living (Main: 10, Supp: [8, 12], Hind: [])'
+- id: popular_actor,_artist
+  name: Popular actor, artist
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 6
+  - 10
+  supporting_houses:
+  - 5
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Venus
+  - Moon
+  supporting_signs:
+  - Gemini
+  - Libra
+  - Aquarius
+  notes: 'KP Master Classical Event: Popular actor, artist (Main: 5, Supp: [5, 6, 10],
+    Hind: [])'
+- id: popular_in_acting
+  name: Popular in acting
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Venus
+  - Moon
+  - Sun
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Popular in acting (Main: 11, Supp: [5, 11], Hind:
+    [])'
+- id: popular_astrologer
+  name: Popular Astrologer
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 10
+  - 11
+  supporting_houses:
+  - 11
+  - 2
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Popular Astrologer (Main: 10, Supp: [11, 2], Hind:
+    [])'
+- id: popularity
+  name: Popularity
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 3
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 10
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Popularity (Main: 10, Supp: [1, 10, 3, 11], Hind:
+    [])'
+- id: popularity_and_success_in_music
+  name: Popularity and success in music
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 5
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Popularity and success in music (Main: 5, Supp: [5,
+    6, 10, 11], Hind: [])'
+- id: popularity_success_in_politics
+  name: Popularity/success in politics
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 10
+  - 11
+  - 2
+  - 6
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Sun
+  supporting_signs:
+  - Capricorn
+  notes: 'KP Master Classical Event: Popularity/success in politics (Main: 10, Supp: [3,
+    10, 11, 2, 6], Hind: [])'
+- id: poverty
+  name: Poverty
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Poverty (Main: 2, Supp: [8, 12, 5], Hind: [])'
+- id: pregnancy
+  name: Pregnancy
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Pregnancy (Main: 5, Supp: [2, 11], Hind: [])'
+- id: pregnancy_and_child_birth
+  name: Pregnancy and child birth
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  - 2
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Pregnancy and child birth (Main: 5, Supp: [5, 11,
+    2], Hind: [])'
+- id: premarital_sex
+  name: Premarital sex
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 5
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Venus
+  - Mars
+  supporting_signs:
+  - Scorpio
+  notes: 'KP Master Classical Event: Premarital sex (Main: 5, Supp: [5, 8, 11], Hind:
+    [])'
+- id: problems_in_service
+  name: Problems in Service
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 10
+  supporting_houses:
+  - 6
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Problems in Service (Main: 10, Supp: [6, 5, 8], Hind:
+    [])'
+- id: proficient_in_occult_sciences_and_knowledge
+  name: Proficient in occult sciences and knowledge
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 9
+  - 12
+  supporting_houses:
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  - Venus
+  - Mercury
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Proficient in occult sciences and knowledge (Main:
+    2, Supp: [9, 12], Hind: [])'
+- id: profit_in_business
+  name: Profit in business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Profit in business (Main: 11, Supp: [2, 7, 10, 11],
+    Hind: [])'
+- id: promotion_&_overseas
+  name: Promotion & overseas
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 10
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Promotion & overseas (Main: 10, Supp: [], Hind: [])'
+- id: promotion_in_work
+  name: Promotion in work
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Promotion in work (Main: 6, Supp: [2, 6, 10, 11],
+    Hind: [])'
+- id: promotion_with_transfer
+  name: Promotion with transfer
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Promotion with transfer (Main: 10, Supp: [2, 3, 6,
+    10, 11], Hind: [])'
+- id: promotion_reinstatement_or_gain_on_occupation
+  name: Promotion Reinstatement or gain on occupation
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Promotion Reinstatement or gain on occupation (Main:
+    11, Supp: [2, 6, 10, 11], Hind: [])'
+- id: proneness_to_disease
+  name: Proneness to disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Proneness to disease (Main: 1, Supp: [6, 8, 12],
+    Hind: [])'
+- id: property_through_will
+  name: Property through will
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 6
+  - 8
+  - 10
+  supporting_houses:
+  - 6
+  - 8
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Property through will (Main: 8, Supp: [6, 8, 10],
+    Hind: [])'
+- id: property,_vehicle_from_inheritance
+  name: Property, vehicle from inheritance
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 4
+  - 8
+  - 11
+  supporting_houses:
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Property, vehicle from inheritance (Main: 8, Supp:
+    [4, 11], Hind: [])'
+- id: publications_as_business
+  name: Publications as Business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 3
+  - 6
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  - 3
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Mars
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Publications as Business (Main: 7, Supp: [2, 6, 11,
+    3], Hind: [])'
+- id: publishing_a_book
+  name: Publishing a book
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Mars
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Publishing a book (Main: 3, Supp: [3, 11, 10], Hind:
+    [])'
+- id: publishing_press_ownership
+  name: Publishing press ownership
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 6
+  - 10
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Publishing press ownership (Main: 10, Supp: [2, 6,
+    10], Hind: [])'
+- id: purchase_of_a_house
+  name: Purchase of a house
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 4
+  - 6
+  - 9
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Purchase of a house (Main: 12, Supp: [4, 6, 9, 12],
+    Hind: [])'
+- id: purchase_of_car
+  name: Purchase of Car
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Purchase of Car (Main: 4, Supp: [4, 9, 10, 11], Hind:
+    [])'
+- id: purchase_of_movable_property
+  name: Purchase of movable property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 6
+  - 9
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Purchase of movable property (Main: 2, Supp: [6,
+    9, 2, 11], Hind: [])'
+- id: purchase_of_property_by_loan
+  name: Purchase of property by loan
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 6
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Purchase of property by loan (Main: 4, Supp: [4,
+    6, 11, 12], Hind: [])'
+- id: purchase_of_tv_or_electrical_goods
+  name: Purchase of TV or electrical goods
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 1
+  - 3
+  - 5
+  - 12
+  supporting_houses:
+  - 3
+  - 12
+  - 5
+  - 1
+  adverse_houses: []
+  supporting_planets:
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Purchase of TV or electrical goods (Main: 3, Supp:
+    [3, 12, 5, 1], Hind: [])'
+- id: purchase_of_vehicle
+  name: Purchase of vehicle
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Purchase of vehicle (Main: 4, Supp: [4, 11, 12],
+    Hind: [])'
+- id: raped_by_someone
+  name: Raped by someone
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - '9'
+  - '7'
+  - Mars
+  - Rahu
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Raped by someone (Main: 5, Supp: [8, 12], Hind: [])'
+- id: reach_home_in_time
+  name: Reach home in time
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 11
+  supporting_houses:
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reach home in time (Main: 4, Supp: [4, 11], Hind:
+    [])'
+- id: realization_of_amount_due
+  name: Realization of amount due
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Realization of amount due (Main: 11, Supp: [2, 11],
+    Hind: [])'
+- id: receipt_of_a_letter
+  name: Receipt of a letter
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Receipt of a letter (Main: 3, Supp: [3, 11], Hind:
+    [])'
+- id: receipt_of_documents
+  name: Receipt of documents
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Receipt of documents (Main: 3, Supp: [3, 11], Hind:
+    [])'
+- id: receipt_of_gifts
+  name: Receipt of Gifts
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 6
+  - 8
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Receipt of Gifts (Main: 8, Supp: [6, 11], Hind: [])'
+- id: receipt_of_news_causing_worries
+  name: Receipt of news causing worries
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 8
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Receipt of news causing worries (Main: 3, Supp: [3,
+    11, 8], Hind: [])'
+- id: receiving_donation
+  name: Receiving donation
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Receiving donation (Main: 6, Supp: [2, 6, 11], Hind:
+    [])'
+- id: reconciliation_after_separation_and_divorce
+  name: Reconciliation after separation and divorce
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 7
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reconciliation after separation and divorce (Main:
+    7, Supp: [], Hind: [])'
+- id: recovery_from_disease
+  name: Recovery from disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 5
+  - 6
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Recovery from disease (Main: 6, Supp: [5, 11], Hind:
+    [])'
+- id: recovery_of_health
+  name: Recovery of health
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 3
+  - 5
+  supporting_houses:
+  - 3
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Recovery of health (Main: 5, Supp: [3, 5], Hind:
+    [])'
+- id: recovery_of_lost_articles
+  name: Recovery of lost articles
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 2
+  - 6
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Recovery of lost articles (Main: 8, Supp: [2, 6,
+    11], Hind: [])'
+- id: recovery_of_lost_property
+  name: Recovery of lost property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Recovery of lost property (Main: 2, Supp: [2, 6,
+    11], Hind: [])'
+- id: reinstatement
+  name: Reinstatement
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reinstatement (Main: 10, Supp: [2, 6, 10, 11], Hind:
+    [])'
+- id: release_from_jail
+  name: Release from jail
+  category: Legal
+  polarity: ADVERSE
+  primary_cusp: 12
+  required_houses:
+  - 2
+  - 4
+  - 11
+  - 12
+  supporting_houses:
+  - 2
+  - 4
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Release from jail (Main: 12, Supp: [2, 4, 11], Hind:
+    [])'
+- id: removal_from_service
+  name: Removal from service
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 8
+  - 9
+  - 10
+  supporting_houses:
+  - 5
+  - 9
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Removal from service (Main: 10, Supp: [5, 9, 8],
+    Hind: [])'
+- id: rendering_wealth
+  name: Rendering wealth
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 2
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Rendering wealth (Main: 8, Supp: [2, 11], Hind: [])'
+- id: rent_a_property
+  name: Rent a property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 6
+  - 10
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 11
+  - 12
+  - 6
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Rent a property (Main: 4, Supp: [4, 11, 12, 6, 10],
+    Hind: [])'
+- id: renunciation
+  name: Renunciation
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 1
+  - 4
+  - 12
+  supporting_houses:
+  - 1
+  - 4
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Renunciation (Main: 12, Supp: [1, 4, 12], Hind: [])'
+- id: repaying_loan
+  name: Repaying loan
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 12
+  - 5
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Repaying loan (Main: 6, Supp: [12, 5, 8], Hind: [])'
+- id: reputation
+  name: Reputation
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Sun
+  - Saturn
+  - Mars
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reputation (Main: 10, Supp: [1, 11], Hind: [])'
+- id: research_scholarship
+  name: Research Scholarship
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Research Scholarship (Main: 11, Supp: [2, 6], Hind:
+    [])'
+- id: retirement_from_work
+  name: Retirement from Work
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 9
+  - 10
+  supporting_houses:
+  - 5
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Retirement from Work (Main: 10, Supp: [5, 9], Hind:
+    [])'
+- id: return_of_missing_person
+  name: Return of missing person
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Return of missing person (Main: 11, Supp: [2, 8,
+    11], Hind: [])'
+- id: return_of_wife_from_hometown
+  name: Return of wife from hometown
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 11
+  - 7
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Return of wife from hometown (Main: 7, Supp: [11,
+    7, 5], Hind: [])'
+- id: returning_borrowed_money
+  name: Returning borrowed money
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 4
+  - 5
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Returning borrowed money (Main: 6, Supp: [4, 5, 8,
+    12], Hind: [])'
+- id: reunion_with_spouse
+  name: Reunion with spouse
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reunion with spouse (Main: 11, Supp: [2, 7, 11],
+    Hind: [])'
+- id: reunion_with_kith_and_kin
+  name: Reunion with kith and kin
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reunion with kith and kin (Main: 11, Supp: [3, 9,
+    11], Hind: [])'
+- id: reunion_with_partner
+  name: Reunion with partner
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 7
+  - 11
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Reunion with partner (Main: 7, Supp: [7, 11, 5],
+    Hind: [])'
+- id: rumor_or_any_information_is_false
+  name: Rumor or any information is false
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Rahu
+  - Mars
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Rumor or any information is false (Main: 3, Supp:
+    [3, 9, 11], Hind: [])'
+- id: safe_and_natural_delivery_of_child
+  name: Safe and natural delivery of child
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 3
+  - 5
+  - 11
+  supporting_houses:
+  - 3
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Safe and natural delivery of child (Main: 5, Supp:
+    [3, 5, 11], Hind: [])'
+- id: safe_from_danger_cure_recovery
+  name: Safe from danger/cure/recovery
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 1
+  - 5
+  - 11
+  supporting_houses:
+  - 1
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Safe from danger/cure/recovery (Main: 5, Supp: [1,
+    5, 11], Hind: [])'
+- id: sale_of_immovable_property
+  name: Sale of immovable property
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 3
+  - 5
+  - 10
+  supporting_houses:
+  - 10
+  - 5
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Sale of immovable property (Main: 10, Supp: [10,
+    5, 3], Hind: [])'
+- id: sale_of_any_vehicle
+  name: Sale of any vehicle
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 5
+  - 10
+  supporting_houses:
+  - 3
+  - 4
+  - 5
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Sale of any vehicle (Main: 4, Supp: [3, 4, 5, 10],
+    Hind: [])'
+- id: satisfaction_of_desires
+  name: Satisfaction of Desires
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 1
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Cancer
+  - Scorpio
+  - Pisces
+  notes: 'KP Master Classical Event: Satisfaction of Desires (Main: 11, Supp: [1, 11],
+    Hind: [])'
+- id: satisfactory_spiritual_life
+  name: Satisfactory spiritual life
+  category: Spiritual
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 10
+  - 11
+  supporting_houses:
+  - 5
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Satisfactory spiritual life (Main: 11, Supp: [5,
+    10], Hind: [])'
+- id: scandalous_love_affair
+  name: Scandalous love affair
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Venus
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Scandalous love affair (Main: 5, Supp: [5, 8, 12],
+    Hind: [])'
+- id: scholarship
+  name: Scholarship
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 2
+  - 4
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  - 4
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Scholarship (Main: 11, Supp: [2, 6, 11, 4], Hind:
+    [])'
+- id: scholarship_for_higher_studies
+  name: Scholarship for higher studies
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 6
+  - 9
+  - 11
+  - 4
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Scholarship for higher studies (Main: 11, Supp: [6,
+    9, 11, 4], Hind: [])'
+- id: scientist
+  name: Scientist
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 2
+  - 3
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 9
+  - 11
+  - 10
+  - 2
+  - 3
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Jupiter
+  - Mars
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Scientist (Main: 9, Supp: [9, 11, 10, 2, 3], Hind:
+    [])'
+- id: second_child
+  name: Second child
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Second child (Main: 7, Supp: [2, 11], Hind: [])'
+- id: second_marriage_after_demise_of_first_spouse
+  name: Second marriage after demise of first spouse
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 2
+  - 9
+  - 11
+  supporting_houses:
+  - 2
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Second marriage after demise of first spouse (Main:
+    9, Supp: [2, 9, 11], Hind: [])'
+- id: secret_activities_of_partner
+  name: Secret activities of Partner
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 5
+  - 6
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Scorpio
+  notes: 'KP Master Classical Event: Secret activities of Partner (Main: 6, Supp: [5,
+    11], Hind: [])'
+- id: self___acquisition
+  name: Self - acquisition
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Self - acquisition (Main: 2, Supp: [2, 11], Hind:
+    [])'
+- id: selling_at_loss
+  name: Selling at loss
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 8
+  - 12
+  supporting_houses:
+  - 3
+  - 12
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Selling at loss (Main: 3, Supp: [3, 12, 8], Hind:
+    [])'
+- id: selling_of_a_car
+  name: Selling of a car
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 5
+  - 10
+  supporting_houses:
+  - 3
+  - 5
+  - 10
+  - 4
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Selling of a car (Main: 4, Supp: [3, 5, 10, 4], Hind:
+    [])'
+- id: selling_with_profit
+  name: Selling with profit
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Selling with profit (Main: 3, Supp: [3, 11], Hind:
+    [])'
+- id: separation_after_marriage
+  name: Separation after marriage
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 10
+  - 12
+  supporting_houses:
+  - 1
+  - 7
+  - 6
+  - 12
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Sun
+  - Saturn
+  - Rahu
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation after marriage (Main: 7, Supp: [1, 7,
+    6, 12, 10], Hind: [])'
+- id: separation_by_violence
+  name: Separation by violence
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 6
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs:
+  - Aries
+  - Leo
+  - Sagittarius
+  notes: 'KP Master Classical Event: Separation by violence (Main: 7, Supp: [8, 6, 12],
+    Hind: [])'
+- id: separation_due_to_misunderstanding_with_partner
+  name: Separation due to misunderstanding with partner
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 12
+  supporting_houses:
+  - 2
+  - 7
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation due to misunderstanding with partner (Main:
+    7, Supp: [2, 7, 12], Hind: [])'
+- id: separation_from_family
+  name: Separation from family
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 2
+  required_houses:
+  - 1
+  - 2
+  - 3
+  - 12
+  supporting_houses:
+  - 1
+  - 12
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation from family (Main: 2, Supp: [1, 12, 3],
+    Hind: [])'
+- id: separation_from_father
+  name: Separation from father
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 9
+  required_houses:
+  - 3
+  - 8
+  - 9
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation from father (Main: 9, Supp: [8, 12, 3],
+    Hind: [])'
+- id: separation_from_mother
+  name: Separation from Mother
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 4
+  required_houses:
+  - 3
+  - 4
+  - 12
+  supporting_houses:
+  - 3
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation from Mother (Main: 4, Supp: [3, 12], Hind:
+    [])'
+- id: separation_from_partner
+  name: Separation from partner
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 6
+  - 7
+  - 12
+  supporting_houses:
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation from partner (Main: 7, Supp: [6, 12],
+    Hind: [])'
+- id: separation_of_spouse_partner_by_death
+  name: Separation of spouse/partner by death
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 6
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation of spouse/partner by death (Main: 7, Supp:
+    [8, 12, 6], Hind: [])'
+- id: separation_spouses_from_each_other
+  name: Separation spouses from each other
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 1
+  - 6
+  - 7
+  - 10
+  - 12
+  supporting_houses:
+  - 1
+  - 6
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation spouses from each other (Main: 7, Supp:
+    [1, 6, 10, 12], Hind: [])'
+- id: separation_from_child
+  name: Separation from child
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 5
+  required_houses:
+  - 4
+  - 5
+  - 12
+  supporting_houses:
+  - 4
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Separation from child (Main: 5, Supp: [4, 12], Hind:
+    [])'
+- id: serving_others
+  name: Serving others
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 11
+  supporting_houses:
+  - 6
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Serving others (Main: 2, Supp: [6, 2, 11], Hind:
+    [])'
+- id: sexual_relationship_with_friend
+  name: Sexual relationship with friend
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Sexual relationship with friend (Main: 11, Supp:
+    [8, 5], Hind: [])'
+- id: short_journey,_touring
+  name: Short journey, touring
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 7
+  - 11
+  supporting_houses:
+  - 3
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Short journey, touring (Main: 3, Supp: [3, 7, 11],
+    Hind: [])'
+- id: sickness_of_the_mind
+  name: Sickness of the mind
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 6
+  - 12
+  supporting_houses:
+  - 1
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Sickness of the mind (Main: 1, Supp: [1, 6, 12],
+    Hind: [])'
+- id: siddhi_initiation
+  name: Siddhi initiation
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 3
+  - 5
+  - 9
+  - 10
+  - 12
+  supporting_houses:
+  - 3
+  - 9
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Ketu
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Siddhi initiation (Main: 5, Supp: [3, 9, 10, 12],
+    Hind: [])'
+- id: signing_a_contract
+  name: Signing a contract
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 6
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Signing a contract (Main: 3, Supp: [6, 9, 11], Hind:
+    [])'
+- id: speculative_gain
+  name: Speculative gain
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 6
+  - 11
+  supporting_houses:
+  - 2
+  - 5
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Mercury
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Speculative gain (Main: 5, Supp: [2, 5, 6, 11], Hind:
+    [])'
+- id: speculative_business
+  name: Speculative business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  - 8
+  adverse_houses: []
+  supporting_planets:
+  - Rahu
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Speculative business (Main: 5, Supp: [2, 11, 8],
+    Hind: [])'
+- id: spiritual_life_and_divine_worship
+  name: Spiritual life and Divine worship
+  category: Spiritual
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 1
+  - 5
+  - 9
+  - 11
+  - 12
+  supporting_houses:
+  - 1
+  - 5
+  - 9
+  - 11
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Spiritual life and Divine worship (Main: 9, Supp:
+    [1, 5, 9, 11, 12], Hind: [])'
+- id: sports,_fine_arts,_film,_speculation_as_work
+  name: Sports, fine arts, film, speculation as work
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 10
+  - 2
+  - 11
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Sports, fine arts, film, speculation as work (Main:
+    5, Supp: [10, 2, 11, 6], Hind: [])'
+- id: spouse_partner_will_be_an_employee
+  name: Spouse/partner will be an employee
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 4
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Spouse/partner will be an employee (Main: 7, Supp:
+    [4, 8, 12], Hind: [])'
+- id: starting_journey
+  name: Starting journey
+  category: Travel
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 5
+  - 9
+  - 11
+  supporting_houses:
+  - 5
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Starting journey (Main: 3, Supp: [5, 9, 11], Hind:
+    [])'
+- id: status_and_respect
+  name: Status and Respect
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Status and Respect (Main: 10, Supp: [1, 11], Hind:
+    [])'
+- id: stay_in_mother_land
+  name: Stay in mother land
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 12
+  required_houses:
+  - 2
+  - 4
+  - 8
+  - 11
+  - 12
+  supporting_houses:
+  - 2
+  - 4
+  - 8
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Stay in mother land (Main: 12, Supp: [2, 4, 8, 11],
+    Hind: [])'
+- id: sterility_of_a_woman
+  name: Sterility of a woman
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 1
+  - 4
+  - 5
+  - 10
+  supporting_houses:
+  - 4
+  - 10
+  - 1
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Sterility of a woman (Main: 5, Supp: [4, 10, 1],
+    Hind: [])'
+- id: strong_lagna
+  name: Strong Lagna
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: Maraka Badhaka
+- id: study_of_law
+  name: Study of Law
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  supporting_houses: []
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Study of Law (Main: 4, Supp: [], Hind: [])'
+- id: success_in_all_undertakings
+  name: Success in all undertakings
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 1
+  - 2
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  - 1
+  - 2
+  - 3
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in all undertakings (Main: 11, Supp: [6,
+    11, 1, 2, 3, 10], Hind: [])'
+- id: success_in_appeal
+  name: Success in appeal
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in appeal (Main: 3, Supp: [6, 11], Hind:
+    [])'
+- id: success_in_competitions
+  name: Success in competitions
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 3
+  - 6
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in competitions (Main: 6, Supp: [1, 11, 3],
+    Hind: [])'
+- id: success_in_competitive_exams
+  name: Success in competitive exams
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 6
+  - 9
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 11
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in competitive exams (Main: 4, Supp: [4,
+    9, 11, 6], Hind: [])'
+- id: success_in_education
+  name: Success in education
+  category: Education
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 9
+  - 11
+  supporting_houses:
+  - 4
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in education (Main: 11, Supp: [4, 9, 11],
+    Hind: [])'
+- id: success_in_interview
+  name: Success in interview
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in interview (Main: 11, Supp: [3, 9], Hind:
+    [])'
+- id: success_in_litigation
+  name: Success in litigation
+  category: Legal
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 6
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in litigation (Main: 6, Supp: [1, 11], Hind:
+    [])'
+- id: success_in_love_affair
+  name: Success in love affair
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 11
+  supporting_houses:
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Venus
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in love affair (Main: 11, Supp: [5, 11],
+    Hind: [])'
+- id: success_in_personal_interview
+  name: Success in personal interview
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in personal interview (Main: 3, Supp: [3,
+    6, 10, 11], Hind: [])'
+- id: success_in_political_career
+  name: Success in political career
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 6
+  - 9
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in political career (Main: 1, Supp: [1, 6,
+    9, 10, 11], Hind: [])'
+- id: success_in_politics
+  name: Success in politics
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 9
+  - 10
+  - 11
+  - 1
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in politics (Main: 10, Supp: [9, 10, 11,
+    1, 6], Hind: [])'
+- id: success_in_research
+  name: Success in research
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 6
+  - 9
+  - 11
+  - 12
+  supporting_houses:
+  - 6
+  - 11
+  - 9
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Venus
+  - Saturn
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in research (Main: 9, Supp: [6, 11, 9, 12],
+    Hind: [])'
+- id: success_in_self_efforts
+  name: Success in self efforts
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 3
+  - 6
+  - 11
+  supporting_houses:
+  - 11
+  - 6
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in self efforts (Main: 1, Supp: [11, 6, 3],
+    Hind: [])'
+- id: success_in_spiritual_discipline
+  name: Success in spiritual discipline
+  category: Spiritual
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  - 9
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in spiritual discipline (Main: 9, Supp: [6,
+    11, 9, 10], Hind: [])'
+- id: success_in_sports
+  name: Success in sports
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 3
+  - 5
+  - 6
+  - 11
+  supporting_houses:
+  - 6
+  - 11
+  - 3
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Success in sports (Main: 5, Supp: [6, 11, 3], Hind:
+    [])'
+- id: successful_astrologer
+  name: Successful astrologer
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 9
+  - 11
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Successful astrologer (Main: 10, Supp: [2, 9, 11,
+    10], Hind: [])'
+- id: successful_in_share_market_business
+  name: Successful in share market business
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 5
+  - 7
+  - 10
+  - 11
+  supporting_houses:
+  - 5
+  - 10
+  - 2
+  - 7
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Successful in share market business (Main: 10, Supp:
+    [5, 10, 2, 7, 11], Hind: [])'
+- id: successful_writer,_publisher
+  name: Successful writer, publisher
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 3
+  - 9
+  - 11
+  supporting_houses:
+  - 3
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Successful writer, publisher (Main: 11, Supp: [3,
+    9], Hind: [])'
+- id: successful_broker
+  name: Successful broker
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 3
+  - 10
+  - 6
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Successful broker (Main: 3, Supp: [3, 10, 6, 11],
+    Hind: [])'
+- id: successful_negotiation
+  name: Successful negotiation
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 11
+  supporting_houses:
+  - 3
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mercury
+  - Jupiter
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Successful negotiation (Main: 3, Supp: [3, 11], Hind:
+    [])'
+- id: suffer_from_disease
+  name: Suffer from disease
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 6
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Suffer from disease (Main: 6, Supp: [6, 8, 12], Hind:
+    [])'
+- id: suicide
+  name: Suicide
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 4
+  - 8
+  - 12
+  supporting_houses:
+  - 12
+  - 4
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Saturn
+  - Rahu
+  - Ketu
+  - Mercury
+  supporting_signs: []
+  notes: BADHAKA MARAKA
+- id: surgery
+  name: Surgery
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Surgery (Main: 1, Supp: [6, 8, 12], Hind: [])'
+- id: surgery_operation
+  name: Surgery/operation
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 6
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Surgery/operation (Main: 8, Supp: [8, 6, 12], Hind:
+    [])'
+- id: suspension
+  name: Suspension
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 5
+  - 8
+  - 9
+  - 10
+  - 12
+  supporting_houses:
+  - 1
+  - 8
+  - 9
+  - 12
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Suspension (Main: 10, Supp: [1, 8, 9, 12, 5], Hind:
+    [])'
+- id: taking_possession_of_flat,_residence
+  name: Taking possession of flat, residence
+  category: Property
+  polarity: BENEFICIAL
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 9
+  - 11
+  supporting_houses:
+  - 9
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Taking possession of flat, residence (Main: 4, Supp:
+    [9, 11], Hind: [])'
+- id: teaching_as_profession
+  name: Teaching as Profession
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 2
+  - 4
+  - 6
+  - 9
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 11
+  - 4
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Jupiter
+  - Venus
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Teaching as Profession (Main: 10, Supp: [2, 6, 11,
+    4, 9], Hind: [])'
+- id: temporary_suspension_in_service
+  name: Temporary Suspension in Service
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 10
+  supporting_houses:
+  - 5
+  - 6
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Temporary Suspension in Service (Main: 10, Supp:
+    [5, 6, 8], Hind: [])'
+- id: tender_resignation_of_service_in_haste
+  name: Tender resignation of service in haste
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 2
+  - 6
+  - 8
+  - 9
+  - 10
+  supporting_houses:
+  - 2
+  - 8
+  - 9
+  - 10
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  - Ketu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Tender resignation of service in haste (Main: 6,
+    Supp: [2, 8, 9, 10], Hind: [])'
+- id: termination_of_love_affair
+  name: Termination of love affair
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 5
+  - 6
+  - 8
+  - 10
+  - 12
+  supporting_houses:
+  - 6
+  - 8
+  - 12
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Termination of love affair (Main: 5, Supp: [6, 8,
+    12, 10], Hind: [])'
+- id: theft_in_house
+  name: Theft in house
+  category: Property
+  polarity: ADVERSE
+  primary_cusp: 7
+  required_houses:
+  - 2
+  - 7
+  - 12
+  supporting_houses:
+  - 2
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  - Mars
+  - Rahu
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Theft in house (Main: 7, Supp: [2, 12], Hind: [])'
+- id: theft_of_vehicle
+  name: Theft of vehicle
+  category: Property
+  polarity: ADVERSE
+  primary_cusp: 4
+  required_houses:
+  - 4
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Theft of vehicle (Main: 4, Supp: [4, 6, 8, 12], Hind:
+    [])'
+- id: third_child
+  name: Third Child
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 9
+  required_houses:
+  - 2
+  - 9
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Third Child (Main: 9, Supp: [2, 11], Hind: [])'
+- id: timid_and_coward
+  name: Timid and coward
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 8
+  - 12
+  supporting_houses:
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets:
+  - Saturn
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Timid and coward (Main: 3, Supp: [8, 12], Hind: [])'
+- id: transfer
+  name: Transfer
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 3
+  - 10
+  - 12
+  supporting_houses:
+  - 3
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Transfer (Main: 10, Supp: [3, 10, 12], Hind: [])'
+- id: treatment_not_effective
+  name: Treatment not effective
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 4
+  - 5
+  - 10
+  supporting_houses:
+  - 4
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Treatment not effective (Main: 5, Supp: [4, 10],
+    Hind: [])'
+- id: twin_birth
+  name: Twin birth
+  category: Progeny
+  polarity: BENEFICIAL
+  primary_cusp: 5
+  required_houses:
+  - 2
+  - 5
+  - 11
+  supporting_houses:
+  - 2
+  - 5
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Gemini
+  - Virgo
+  - Sagittarius
+  - Pisces
+  notes: 'KP Master Classical Event: Twin birth (Main: 5, Supp: [2, 5, 11], Hind: [])'
+- id: unearned_gains
+  name: Unearned Gains
+  category: Health
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 11
+  supporting_houses:
+  - 2
+  - 11
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Unearned Gains (Main: 8, Supp: [2, 11, 5], Hind:
+    [])'
+- id: unexpected_loss
+  name: Unexpected Loss
+  category: Finance
+  polarity: ADVERSE
+  primary_cusp: 8
+  required_houses:
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Unexpected Loss (Main: 8, Supp: [5, 12], Hind: [])'
+- id: unhappy_married_life
+  name: Unhappy married life
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 4
+  - 6
+  - 8
+  - 10
+  - 11
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 8
+  - 10
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Unhappy married life (Main: 11, Supp: [4, 6, 8, 10,
+    12], Hind: [])'
+- id: difficulties_in
+  name: Difficulties in
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 7
+  required_houses:
+  - 4
+  - 6
+  - 7
+  - 8
+  - 12
+  supporting_houses:
+  - 4
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Difficulties in (Main: 7, Supp: [4, 6, 8, 12], Hind:
+    [])'
+- id: unreliable_friend
+  name: Unreliable friend
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 7
+  - 8
+  - 9
+  - 11
+  supporting_houses:
+  - 7
+  - 8
+  - 9
+  adverse_houses: []
+  supporting_planets:
+  - Moon
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Unreliable friend (Main: 11, Supp: [7, 8, 9], Hind:
+    [])'
+- id: vacating_by_tenant
+  name: Vacating by tenant
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 6
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 6
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Vacating by tenant (Main: 11, Supp: [8, 6], Hind:
+    [])'
+- id: voluntary_retirement_from_service
+  name: Voluntary Retirement from service
+  category: Career
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 1
+  - 5
+  - 9
+  - 10
+  supporting_houses:
+  - 1
+  - 5
+  - 9
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Voluntary Retirement from service (Main: 10, Supp:
+    [1, 5, 9], Hind: [])'
+- id: weak_lagna
+  name: Weak Lagna
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 1
+  required_houses:
+  - 1
+  - 5
+  - 6
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 6
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'BADHAKA MARAKA '
+- id: wealth__enormous
+  name: Wealth--Enormous
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 2
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Wealth--Enormous (Main: 2, Supp: [2, 6, 10, 11],
+    Hind: [])'
+- id: wealth__medium
+  name: Wealth--Medium
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Wealth--Medium (Main: 2, Supp: [5, 8, 12], Hind:
+    [])'
+- id: wealthlessness
+  name: Wealthlessness
+  category: Finance
+  polarity: BENEFICIAL
+  primary_cusp: 2
+  required_houses:
+  - 2
+  - 5
+  - 8
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Wealthlessness (Main: 2, Supp: [5, 8, 12], Hind:
+    [])'
+- id: wife_is_destined_to_get_property
+  name: Wife is destined to get property
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 8
+  - 10
+  supporting_houses:
+  - 10
+  - 8
+  - 5
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Wife is destined to get property (Main: 10, Supp:
+    [10, 8, 5], Hind: [])'
+- id: wife’s_property
+  name: Wife’s property
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 8
+  required_houses:
+  - 2
+  - 7
+  - 8
+  - 11
+  supporting_houses:
+  - 8
+  - 2
+  - 11
+  - 7
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Wife’s property (Main: 8, Supp: [8, 2, 11, 7], Hind:
+    [])'
+- id: winding_up_business_or_break_in_career
+  name: Winding up business or break in career
+  category: Career
+  polarity: ADVERSE
+  primary_cusp: 10
+  required_houses:
+  - 5
+  - 8
+  - 10
+  - 12
+  supporting_houses:
+  - 5
+  - 8
+  - 12
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs:
+  - Taurus
+  - Virgo
+  - Capricorn
+  notes: 'KP Master Classical Event: Winding up business or break in career (Main: 10,
+    Supp: [5, 8, 12], Hind: [])'
+- id: winning_election_litigation_sport_competition
+  name: Winning election/litigation/sport/competition
+  category: Legal
+  polarity: BENEFICIAL
+  primary_cusp: 6
+  required_houses:
+  - 1
+  - 3
+  - 6
+  - 10
+  - 11
+  supporting_houses:
+  - 1
+  - 3
+  - 6
+  - 10
+  - 11
+  adverse_houses: []
+  supporting_planets:
+  - Mars
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Winning election/litigation/sport/competition (Main:
+    6, Supp: [1, 3, 6, 10, 11], Hind: [])'
+- id: winning_in_love
+  name: Winning in Love
+  category: Marriage
+  polarity: BENEFICIAL
+  primary_cusp: 11
+  required_houses:
+  - 5
+  - 7
+  - 11
+  supporting_houses:
+  - 5
+  - 7
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Winning in Love (Main: 11, Supp: [5, 7], Hind: [])'
+- id: younger_siblings___death
+  name: Younger siblings - Death
+  category: Health
+  polarity: ADVERSE
+  primary_cusp: 3
+  required_houses:
+  - 2
+  - 3
+  - 4
+  supporting_houses:
+  - 2
+  - 4
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: Maraka and Badhaka of the particular sibling
+- id: younger_siblings___enmity
+  name: Younger siblings - Enmity
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 3
+  - 6
+  - 8
+  supporting_houses:
+  - 6
+  - 8
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Younger siblings - Enmity (Main: 3, Supp: [6, 8],
+    Hind: [])'
+- id: younger_siblings___living_in_harmony
+  name: Younger siblings - Living in Harmony
+  category: General
+  polarity: BENEFICIAL
+  primary_cusp: 3
+  required_houses:
+  - 1
+  - 3
+  - 11
+  supporting_houses:
+  - 1
+  - 11
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Younger siblings - Living in Harmony (Main: 3, Supp:
+    [1, 11], Hind: [])'
+- id: younger_siblings___separation
+  name: Younger siblings - Separation
+  category: Marriage
+  polarity: ADVERSE
+  primary_cusp: 3
+  required_houses:
+  - 2
+  - 3
+  - 10
+  supporting_houses:
+  - 2
+  - 10
+  adverse_houses: []
+  supporting_planets: []
+  supporting_signs: []
+  notes: 'KP Master Classical Event: Younger siblings - Separation (Main: 3, Supp: [2,
+    10], Hind: [])'

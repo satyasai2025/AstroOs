@@ -1,0 +1,302 @@
+{
+  "target_binary": "C:\\Users\\rkmau\\Downloads\\Phalit\\Phalit.kkk",
+  "file_size_bytes": 12226560,
+  "total_d01_matches": 3,
+  "d01_sections": [
+    {
+      "index": 1,
+      "offset": 524768,
+      "context_slice": "524568..525968",
+      "ascii_strings": [
+        "awKundli",
+        "A14_ShodashaVarg",
+        "A04_Bal",
+        "A06_Maitrea",
+        "A07_DrigBal",
+        "A09_DrigBhaav",
+        "A08_CheshtaaBal",
+        "A05_BhavChalita",
+        "Pic02_DrawBhaava",
+        "A02_AharganPhal",
+        "A03_12Bhaava",
+        "A10_Aayu",
+        "Panc01",
+        "A23_Dasha120",
+        "D01_Lagna",
+        "frmMap",
+        "A11_Gulik",
+        "A12_BhaavBal",
+        "A17_Uchchaadi",
+        "C02_Surya"
+      ],
+      "utf16_strings": [],
+      "candidate_floats": []
+    },
+    {
+      "index": 2,
+      "offset": 527600,
+      "context_slice": "527400..528800",
+      "ascii_strings": [
+        "A85_DrgGrahNow",
+        "A86_GocharGrahChakra",
+        "frmData",
+        "C05_Budh",
+        "C06_Guru",
+        "C04_Kuj",
+        "C08_Shani",
+        "C01_GrahSpashta",
+        "C07_Shukr",
+        "C03_Chandr",
+        "A88_ShodashaVargaNow",
+        "A29_GrahNow",
+        "frmDrawIndia",
+        "A89_DrigPlace",
+        "D01_Native",
+        "D02_Native",
+        "D03_Native",
+        "D04_Native",
+        "D05_Native",
+        "D06_Native"
+      ],
+      "utf16_strings": [],
+      "candidate_floats": []
+    },
+    {
+      "index": 3,
+      "offset": 1338127,
+      "context_slice": "1337927..1339327",
+      "ascii_strings": [
+        "Details",
+        "mnuMain",
+        "MAIN",
+        "mnuDataInput",
+        "Data Input",
+        "mnuPhalaadesha",
+        "Phalaadesha",
+        "mnuVarshaphala",
+        "Varshaphala",
+        "mnuAshtakaVargaD1",
+        "AshtakaVarga-D01",
+        "mnuAV16",
+        "Astaka Varga Shodash",
+        "mnuSudarshanChakr",
+        "Sudarshan Chakra",
+        "mnuMaitri",
+        "Maitree",
+        "mnuNotice",
+        "Notice",
+        "mnuShow"
+      ],
+      "utf16_strings": [],
+      "candidate_floats": []
+    }
+  ],
+  "birth_storage_regions": [
+    {
+      "keyword": "txtLat",
+      "offset": 14734,
+      "strings": [
+        "Arial3",
+        "Longitude : Degrees",
+        "txtLat",
+        "Arial32",
+        "Latitude : Nort or South of Equator, one character",
+        "txtLatSec",
+        "Arial3$",
+        "Latitude : Seconds (decimal allowed)",
+        "txtLatMin",
+        "Arial3"
+      ]
+    },
+    {
+      "keyword": "txtLat",
+      "offset": 14851,
+      "strings": [
+        " Nort or South of Equator, one character",
+        "txtLatSec",
+        "Arial3$",
+        "Latitude : Seconds (decimal allowed)",
+        "txtLatMin",
+        "Arial3",
+        "Latitude : Minutes",
+        "txtLatDeg",
+        "Arial3",
+        "Latitude : Degrees"
+      ]
+    },
+    {
+      "keyword": "txtLat",
+      "offset": 14958,
+      "strings": [
+        "Latitude : Seconds (decimal allowed)",
+        "txtLatMin",
+        "Arial3",
+        "Latitude : Minutes",
+        "txtLatDeg",
+        "Arial3",
+        "Latitude : Degrees",
+        "txtZone",
+        "Arial34",
+        "Time-Zone of Birth-place : East or West of Greenwich"
+      ]
+    },
+    {
+      "keyword": "txtLong",
+      "offset": 14323,
+      "strings": [
+        " to Ishtakaal output too (in Drik mode).",
+        "txtLong",
+        "Arial35",
+        "Longitude : East or West of Greenwich, one character.",
+        "txtLongSec",
+        "Arial3%",
+        "Longitude : Seconds (decimal allowed)",
+        "txtLongMin",
+        "Arial3",
+        "Longitude"
+      ]
+    },
+    {
+      "keyword": "txtLong",
+      "offset": 14444,
+      "strings": [
+        "ast or West of Greenwich, one character.",
+        "txtLongSec",
+        "Arial3%",
+        "Longitude : Seconds (decimal allowed)",
+        "txtLongMin",
+        "Arial3",
+        "Longitude : Minutes",
+        "txtLongDeg",
+        "Arial3",
+        "Longitude : Degrees"
+      ]
+    },
+    {
+      "keyword": "txtLong",
+      "offset": 14552,
+      "strings": [
+        "Longitude : Seconds (decimal allowed)",
+        "txtLongMin",
+        "Arial3",
+        "Longitude : Minutes",
+        "txtLongDeg",
+        "Arial3",
+        "Longitude : Degrees",
+        "txtLat",
+        "Arial32",
+        "Latitude : Nort or South of Equator, one character"
+      ]
+    },
+    {
+      "keyword": "txtDateYear",
+      "offset": 13475,
+      "strings": [
+        " to Ishtakaal output too (in Drik mode).",
+        "txtDateYear",
+        "1980",
+        "Arial3",
+        "Birth-year (Gregorian) ; Zonal Standard Time needed, but after manual DST (Daylight Saving Time) correction. Add DST manually to Ishtakaal output too (in Drik mode). For entire Kalpa in SSS mode, type -1.9 to +2.3 billion years in Year"
+      ]
+    },
+    {
+      "keyword": "txtDateYear",
+      "offset": 534644,
+      "strings": [
+        "uMediniWorldSmall",
+        "txtTimeHour",
+        "txtDateDay",
+        "mnuMap1",
+        "txtDateYear",
+        "mnuPriorityAffinity",
+        "optEnglish",
+        "txtLomash",
+        "txtLong",
+        "cmdJHoraa"
+      ]
+    },
+    {
+      "keyword": "txtTimeHour",
+      "offset": 13224,
+      "strings": [
+        " to Ishtakaal output too (in Drik mode).",
+        "txtTimeHour",
+        "Arial3",
+        "Birth-time : Hours (24-hour system) ; Local Standard Time needed, but after manual DST (Daylight Saving Time) correction. Add DST manually to Ishtakaal output too (in Drik mode).",
+        "txtDateYear",
+        "1980"
+      ]
+    },
+    {
+      "keyword": "txtTimeHour",
+      "offset": 534612,
+      "strings": [
+        "uAbout",
+        "mnuMediniWorldBig",
+        "mnuMediniWorldSmall",
+        "txtTimeHour",
+        "txtDateDay",
+        "mnuMap1",
+        "txtDateYear",
+        "mnuPriorityAffinity",
+        "optEnglish",
+        "txtLomash"
+      ]
+    },
+    {
+      "keyword": "txtPlace",
+      "offset": 18991,
+      "strings": [
+        "leave this switch ON, which is default .",
+        "txtPlace",
+        "Birthplace,State,Country, Time Zone in Degrees. Essential : 4th and last field on right must be Time Zone in degrees, and it must be 4th, all fields separated by commas.",
+        "Times New Roman31",
+        "Place, State, Country, maximum size 50 characters",
+        "txtD"
+      ]
+    },
+    {
+      "keyword": "txtPlace",
+      "offset": 534748,
+      "strings": [
+        "lish",
+        "txtLomash",
+        "txtLong",
+        "cmdJHoraa",
+        "mnuNewRec",
+        "txtPlace",
+        "cmdDefault",
+        "mnuMediniIndiaSizeSmall",
+        "Combo1",
+        "frameMedini"
+      ]
+    },
+    {
+      "keyword": "txtPlace",
+      "offset": 1345850,
+      "strings": [
+        "racters, may be left blank if not known.",
+        "txtPlace",
+        "Place",
+        "Data1",
+        "Place",
+        "Arial3K",
+        "type in the name of Place (<30 characters, First letter must be in Capital)",
+        "txtLong",
+        "85E0000",
+        "Data1"
+      ]
+    },
+    {
+      "keyword": "Personal-1",
+      "offset": 19324,
+      "strings": [
+        "txtDefaultCategory",
+        "Personal-1",
+        "Times New Roman3",
+        "Category of Default Record. Do not type directly into it unless the program malfunctions. If malfunctioning, type here some real directory's name.",
+        "Data1"
+      ]
+    }
+  ]
+}

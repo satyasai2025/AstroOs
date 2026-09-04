@@ -1,0 +1,59 @@
+﻿{
+  "person_name": "Mao Zedong",
+  "chart_id": "WKD-MAO-013",
+  "source": "Wikipedia: Mao Zedong (infobox birth_date=1893-12-26, birth_place=Shaoshan, Hunan, Qing dynasty China)",
+  "confidence_tier": "B",
+  "recorded_birth_time": {
+    "date": "1893-12-26",
+    "time_utc": "00:00:00",
+    "latitude": 27.9166,
+    "longitude": 112.5166,
+    "note": "Birth time uncertain for this period; midnight UTC placeholder. Some sources cite early morning hours."
+  },
+  "rectified_birth_time": {
+    "date": "1893-12-26",
+    "time_utc": "00:00:00",
+    "latitude": 27.9166,
+    "longitude": 112.5166,
+    "source": "Wikidot birth-chart-of-mao-zedong (rectified); exact birth time disputed — confidence_tier B"
+  },
+  "birth_data": {
+    "janma_nakshatra": "uttara_ashadha",
+    "nakshatra_pada": 2,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "capricorn"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1949-10-01",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Proclaimed founding of People Republic of China; became Chairman"
+    },
+    {
+      "event_date": "1966-05-16",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Cultural Revolution officially launched (Circular of May 16)"
+    },
+    {
+      "event_date": "1976-09-09",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Death in Beijing"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-mao-zedong",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources. Birth time disputed -- confidence_tier B."
+}

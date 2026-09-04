@@ -1,0 +1,100 @@
+{#
+    AstroOS — Divisional (Varga) chart grid partial.
+
+    Renders a page-worth of varga charts as a fixed 2-column x 3-row grid
+    (6 charts per A4 page), matching the layout used by the Jagannatha Hora
+    reference output the client supplied.
+
+    Sizing is pinned in mm, not fractions, for the same reason as the rest of
+    the report: fractional widths reflow with viewport width and clip content
+    at print time.
+
+        usable width  = 186mm  ->  2 cols of 90mm + 6mm gutter
+        usable height = 277mm  ->  3 rows of ~78mm + headers
+
+    Usage:
+        {% from "_varga_grid.html" import varga_grid %}
+        {{ varga_grid(report.vargas[0:6]) }}
+
+    Each item in `charts` is expected to be a dict:
+        { "code": "D10", "name": "Dasamsha", "svg": "<svg .../>",
+          "ascendant": "Pisces" }
+#}
+
+{% macro varga_grid(charts) %}
+<div class="vgrid">
+    {% for c in charts %}
+    <div class="vcell">
+        <div class="vcap">
+            <span class="vcode">{{ c.code }}</span>
+            <span class="vname">{{ c.name }}</span>
+        </div>
+        <div class="vbox">{{ c.svg | safe }}</div>
+        <div class="vfoot">Lagna: {{ c.ascendant }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{#
+    Companion style block. Included once per document by the consuming
+    template so the macro can be used without duplicating CSS.
+#}
+{% macro varga_grid_styles() %}
+<style>
+    .vgrid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4mm 6mm;
+        width: 186mm;
+    }
+    /* Height budget for a 6-chart sheet (must not exceed the .a4 content box):
+         masthead 16mm + 4mm gap
+       + 3 rows x 80mm  = 240mm
+       + 2 row gaps x 4mm = 8mm
+       = 268mm, inside the 277mm usable height, leaving the absolute
+       footer at bottom:7mm clear.
+       At 84mm rows this totalled 280mm and the last row was clipped. */
+    .vcell {
+        width: 90mm;
+        height: 80mm;
+    }
+    .vcap {
+        display: flex;
+        align-items: baseline;
+        gap: 2mm;
+        border-bottom: 1px solid var(--gold);
+        padding-bottom: 1mm;
+        margin-bottom: 1.5mm;
+    }
+    .vcode {
+        font-size: 8pt;
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: .04em;
+    }
+    .vname {
+        font-size: 7.5pt;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+    }
+    .vbox {
+        border: 1px solid var(--rule);
+        height: 67mm;          /* 80mm cell - caption ~5.5mm - footer ~4mm - borders */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fff;
+    }
+    .vbox svg { width: 63mm; height: 63mm; display: block; }
+    .vfoot {
+        font-size: 7.5pt;
+        color: var(--muted);
+        margin-top: 1mm;
+        text-align: right;
+    }
+</style>
+{% endmacro %}

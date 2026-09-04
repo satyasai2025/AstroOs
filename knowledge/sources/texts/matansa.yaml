@@ -1,0 +1,34 @@
+id: source.matansa
+name: Matsya Purana (Astrological Sections)
+aliases:
+  - Matsya Purana
+  - मत्स्य पुराण
+category: source
+status: active
+confidence: medium
+version: 1.0
+last_verified: 2026-07-15
+
+author: Anonymous
+date:
+  approximate: "300 CE"
+  confidence: low
+
+language:
+  original: Sanskrit
+
+tradition: Puranic
+
+related_texts:
+  - ref: source.vishnu-dharmottara
+    relationship: "Both are Puranic texts with astrological references."
+
+significance: "The Matsya Purana contains astrological sections that provide context for the Puranic tradition of Jyotish."
+
+notes: "Secondary source for classical Jyotish. Useful for comparative and historical study."
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

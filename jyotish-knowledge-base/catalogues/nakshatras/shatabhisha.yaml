@@ -1,0 +1,56 @@
+id: nakshatra.shatabhisha
+name: Shatabhisha
+aliases: [Shatarudra, शतभिषा]
+category: nakshatra
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+classical_name: Shatabhisha
+devanagari: शतभिषा
+meaning: "The Hundred Physicians; the Hundred Stars"
+ruler: { ref: graha.rahu, system: vimshottari }
+deity:
+  name: Varuna
+  description: "The God of Cosmic Waters and the Celestial Ocean; keeper of cosmic law and healing powers"
+  attributes: [healing, cosmic waters, secrecy, medical knowledge, divine law]
+shakti:
+  name: Bhishana
+  meaning: "The power to heal and cure"
+  power: "To heal and cure; to conceal and protect"
+star: { name: "Gamma Aquarii" }
+starting_degree: 6.67
+ending_degree: 20.0
+rashi_span: [{ ref: rashi.kumbham }]
+padas:
+  - { pada: 1, degrees: "6°40'-10° Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.mesham }
+  - { pada: 2, degrees: "10°-13°20' Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.vrishabham }
+  - { pada: 3, degrees: "13°20'-16°40' Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.mithunam }
+  - { pada: 4, degrees: "16°40'-20° Kumbha", rashi: rashi.kumbham, navamsha_rashi: rashi.karkam }
+nature:
+  temperament: "Healing and secretive; possesses deep medical and esoteric knowledge"
+  guna: rajasic
+  gana: rakshasa
+  yoni: horse
+  nadis: madhya
+karakatvas:
+  - { concept: "Healing and medicine" }
+  - { concept: "Secrecy and mysticism" }
+  - { concept: "Water and fluidity" }
+  - { concept: "Medical knowledge and pharmacy" }
+  - { concept: "Hidden power and concealment" }
+compatible_nakshatras:
+  - { ref: nakshatra.dhanishta }
+  - { ref: nakshatra.purvabhadrapada }
+  - { ref: nakshatra.ashvini }
+incompatible_nakshatras:
+  - { ref: nakshatra.punarvasu }
+  - { ref: nakshatra.pushya }
+  - { ref: nakshatra.ashlesha }
+sources:
+  - { ref: source.BPHS, claim: "Shatabhisha is ruled by Rahu; deity is Varuna; Gana is Rakshasa; Yoni is Horse; Nadi is Madhya", confidence: high }
+  - { ref: source.BPHS, claim: "Shatabhisha spans from 6°40' to 20° Kumbha", confidence: high }
+notes: "Shatabhisha is the nakshatra of healing and secrecy. Varuna as deity represents the cosmic physician and keeper of healing waters. The name means 'hundred physicians' indicating diverse healing abilities. Associated with alternative medicine and esoteric healing."
+history:
+  - { version: 1.1, date: 2026-07-16, change: "Fixed rashi references (rashi_span/pada.rashi/navamsha_rashi) that used non-canonical IDs (bare Sanskrit form or numeric sign index) instead of the catalogue's canonical -am suffix IDs (e.g. rashi.tula -> rashi.tulanam)", author: "Chief Jyotish Knowledge Architect" }
+  - { version: 1.0, date: 2026-07-15, change: "Initial catalogue entry", author: "Chief Jyotish Knowledge Architect" }

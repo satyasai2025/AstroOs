@@ -1,0 +1,98 @@
+id: aspect.rashi-drishti.rules
+name: Rashi Drishti Rules
+aliases:
+  - Sign Aspect Rules
+  - Jaimini Aspect System
+  - Rashi-to-Rashi Drishti
+  - Jaimini Drishti
+category: aspect
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+aspect_type: rashi-drishti
+
+statement: >
+  In the Jaimini system of aspectation, rashis (signs) aspect each other
+  based on their nature (chara/movable, sthira/fixed, dual/dvisvabhava):
+  (1) All movable (chara) signs aspect all fixed (sthira) signs except
+  the immediately adjacent fixed sign. (2) All fixed signs aspect all
+  movable signs. (3) All dual (dvisvabhava) signs aspect other dual
+  signs.
+
+conditions:
+  - entity: rashi.chara
+    role: subject
+    notes: >
+      Movable signs: Mesha, Karka, Tula, Makara. Each aspects all
+      fixed signs except the one immediately following it in the
+      zodiacal sequence.
+  - entity: rashi.sthira
+    role: subject
+    notes: >
+      Fixed signs: Vrishabha, Simha, Vrischika, Kumbha. Each aspects
+      all movable signs without exception.
+  - entity: rashi.dvisvabhava
+    role: subject
+    notes: >
+      Dual signs: Mithuna, Kanya, Dhanu, Meena. Each aspects all
+      other dual signs (three per dual sign).
+
+effects:
+  - description: >
+      Rashi drishti operates on sign-level associations between rashis,
+      independent of graha placement. The aspect exists by virtue of
+      the sign's nature, not by a specific graha casting the aspect.
+    intensity: moderate
+    notes: >
+      Rashi drishti is considered a structural feature of the rashi
+      chart itself, active regardless of graha positions.
+  - description: >
+      When a graha occupies a rashi that aspects another rashi, the
+      graha's influence extends to the grahas in the aspected rashi.
+    intensity: moderate
+    notes: >
+      The graha inherits the rashi aspect as an additional channel of
+      influence. This is additive to the graha's own (Parashari) aspects.
+
+exceptions:
+  - condition: >
+      Movable signs do NOT aspect the immediately adjacent fixed sign
+      in the zodiacal order. For example, Mesha (1) does not aspect
+      Vrishabha (2), but Mesha does aspect Simha (5), Vrischika (8),
+      and Kumbha (11).
+    reason: >
+      The adjacent exception prevents trivial adjacency from creating
+      an aspect relationship. The exact classical reasoning is debated
+      among Jaimini commentators.
+  - condition: >
+      Dual signs only aspect other dual signs, not movable or fixed
+      signs. This limits dual sign aspects to three targets each.
+    reason: >
+      The dual nature creates a self-referencing aspect pattern rather
+      than cross-nature aspects.
+
+sources:
+  - ref: source.jaimini-sutras
+    claim: >
+      Jaimini Sutras define rashi drishti based on sign nature (chara,
+      sthira, dvisvabhava). This system is distinct from Parashari
+      graha drishti and is applied within the Jaimini framework.
+    confidence: high
+
+notes: >
+  Rashi drishti is part of the Jaimini system and is NOT the same as
+  Parashari graha drishti. Both systems can be applied to the same
+  chart but they operate on different principles. Parashari aspects
+  are graha-based (a planet aspecting a house); Jaimini aspects are
+  rashi-based (a sign aspecting another sign). In practice, when a
+  graha occupies a sign that aspects another sign via rashi drishti,
+  the graha's influence is said to extend to grahas in the aspected
+  sign.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

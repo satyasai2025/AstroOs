@@ -1,0 +1,8412 @@
+{
+  "absconding": {
+    "label": "Absconding",
+    "category": "General",
+    "houses": [
+      3,
+      8,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      3,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "accident": {
+    "label": "Accident",
+    "category": "Health",
+    "houses": [
+      1,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "accidental_death": {
+    "label": "Accidental death",
+    "category": "Health",
+    "houses": [
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Mars",
+      "Saturn",
+      "Rahu",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "accumulating_huge_wealth": {
+    "label": "Accumulating huge wealth",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": [
+      "Taurus"
+    ]
+  },
+  "addiction_to_alcohol": {
+    "label": "Addiction to alcohol",
+    "category": "General",
+    "houses": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      3,
+      6,
+      2,
+      1,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn",
+      "Mars",
+      "Rahu",
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "adopt_a_child": {
+    "label": "Adopt a child",
+    "category": "Progeny",
+    "houses": [
+      2,
+      4,
+      8
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      2,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "always_sick": {
+    "label": "Always sick",
+    "category": "Health",
+    "houses": [
+      1,
+      4
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "ancestral_property": {
+    "label": "Ancestral property",
+    "category": "Property",
+    "houses": [
+      2,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      10,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "ancestral_property_getting": {
+    "label": "Ancestral property (getting)",
+    "category": "Property",
+    "houses": [
+      4,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      9,
+      11,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "anticipated_promotion_delayed": {
+    "label": "Anticipated promotion (delayed)",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      5,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      3,
+      2,
+      5,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "astrologer": {
+    "label": "Astrologer",
+    "category": "General",
+    "houses": [
+      4,
+      5,
+      9,
+      12
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      4,
+      5,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Jupiter",
+      "Saturn"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Libra",
+      "Aquarius"
+    ]
+  },
+  "attainment_of_spirituality": {
+    "label": "Attainment of spirituality",
+    "category": "Spiritual",
+    "houses": [
+      5,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Ketu",
+      "Jupiter",
+      "Saturn"
+    ],
+    "supportingSigns": [
+      "Pisces"
+    ]
+  },
+  "bad_luck_in_the_form_of_any_loss": {
+    "label": "Bad luck in the form of any loss",
+    "category": "Finance",
+    "houses": [
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn",
+      "Mars"
+    ],
+    "supportingSigns": [
+      "Scorpio"
+    ]
+  },
+  "bank_deposits": {
+    "label": "Bank deposits",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "basic_education_up_to_graduation": {
+    "label": "Basic education up to Graduation",
+    "category": "Education",
+    "houses": [
+      4,
+      9,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      11,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "boldness_rashness": {
+    "label": "Boldness/Rashness",
+    "category": "General",
+    "houses": [
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "boldness_to_take_a_job": {
+    "label": "Boldness to take a job",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      10,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      2,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Sun"
+    ],
+    "supportingSigns": [
+      "Aries",
+      "Leo"
+    ]
+  },
+  "borrowing_due_to_disease_or_diffculties": {
+    "label": "Borrowing due to disease or diffculties",
+    "category": "Health",
+    "houses": [
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": [
+      "Virgo"
+    ]
+  },
+  "borrowing_from_children": {
+    "label": "Borrowing From children",
+    "category": "Progeny",
+    "houses": [
+      4,
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      4,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_from_elder_brother": {
+    "label": "Borrowing From elder brother",
+    "category": "General",
+    "houses": [
+      6,
+      10
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      10,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_from_friends": {
+    "label": "Borrowing from friends",
+    "category": "General",
+    "houses": [
+      5,
+      6,
+      8
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      8,
+      5,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_from_mother": {
+    "label": "Borrowing From mother",
+    "category": "General",
+    "houses": [
+      3,
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      3,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_from_wife_or_partner": {
+    "label": "Borrowing From wife or partner",
+    "category": "Marriage",
+    "houses": [
+      6,
+      8
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      6,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_from_younger_brother": {
+    "label": "Borrowing from younger brother",
+    "category": "General",
+    "houses": [
+      2,
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_from_bank": {
+    "label": "Borrowing from bank",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "borrowing_to_repay_debt_due_to_business": {
+    "label": "Borrowing to repay debt due to business",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      9
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      9,
+      6,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "break_education": {
+    "label": "Break education",
+    "category": "Education",
+    "houses": [
+      4,
+      8,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "break_in_service": {
+    "label": "Break in Service",
+    "category": "Career",
+    "houses": [
+      5,
+      8,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn",
+      "Ketu"
+    ],
+    "supportingSigns": [
+      "Leo",
+      "Sagittarius"
+    ]
+  },
+  "breaking_of_engagement": {
+    "label": "Breaking of engagement",
+    "category": "Marriage",
+    "houses": [
+      3,
+      7,
+      8
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      3,
+      7,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Mercury",
+      "Mars",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "buildings_constructed_for_renting": {
+    "label": "Buildings constructed for renting",
+    "category": "Property",
+    "houses": [
+      4,
+      6,
+      10,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      12,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "business_partner": {
+    "label": "Business partner",
+    "category": "Career",
+    "houses": [
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      5,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "caesarean_child_birth": {
+    "label": "Caesarean child birth",
+    "category": "Progeny",
+    "houses": [
+      2,
+      5,
+      8
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "calamity": {
+    "label": "Calamity",
+    "category": "General",
+    "houses": [
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "change_in_job": {
+    "label": "Change in job",
+    "category": "Career",
+    "houses": [
+      1,
+      5,
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "change_in_place_of_job": {
+    "label": "Change in place of job",
+    "category": "Career",
+    "houses": [
+      3,
+      6,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      3,
+      7,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "change_in_line_of_career_vocation": {
+    "label": "Change in line of Career/vocation",
+    "category": "Career",
+    "houses": [
+      5,
+      9
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      5,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "change_of_residence": {
+    "label": "Change of residence",
+    "category": "General",
+    "houses": [
+      3,
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      12,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "charming_face": {
+    "label": "Charming face",
+    "category": "General",
+    "houses": [
+      1,
+      5
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Venus",
+      "Moon",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "child_adoption": {
+    "label": "Child adoption",
+    "category": "Progeny",
+    "houses": [
+      5,
+      6,
+      8,
+      10
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      8,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "child_birth": {
+    "label": "Child Birth",
+    "category": "Progeny",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Moon",
+      "Venus"
+    ],
+    "supportingSigns": [
+      "Cancer",
+      "Scorpio",
+      "Pisces"
+    ]
+  },
+  "child_birth_denial_and_abortion": {
+    "label": "Child birth denial and abortion",
+    "category": "Progeny",
+    "houses": [
+      1,
+      4,
+      5,
+      10
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      10,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Mars",
+      "Ketu"
+    ],
+    "supportingSigns": [
+      "Aries",
+      "Leo",
+      "Gemini",
+      "Virgo"
+    ]
+  },
+  "child\u2019s_health": {
+    "label": "Child\u2019s health",
+    "category": "Progeny",
+    "houses": [
+      3,
+      5,
+      9
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      9,
+      3,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "child\u2019s_return_home": {
+    "label": "Child\u2019s return home",
+    "category": "Progeny",
+    "houses": [
+      5,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "childlessness_of_a_man": {
+    "label": "Childlessness of a Man",
+    "category": "Progeny",
+    "houses": [
+      1,
+      4,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      10,
+      4,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "chronic_disease": {
+    "label": "Chronic disease",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      6,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "cinema_actor": {
+    "label": "Cinema actor",
+    "category": "General",
+    "houses": [
+      5,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      10,
+      11,
+      7
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "college_admission": {
+    "label": "College admission",
+    "category": "Education",
+    "houses": [
+      4,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "coming_back_home_after_discharge_from_hospital": {
+    "label": "Coming back home after discharge from hospital",
+    "category": "Health",
+    "houses": [
+      2,
+      4,
+      5,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      2,
+      11,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "coming_back_from_abroad": {
+    "label": "Coming back from abroad",
+    "category": "Travel",
+    "houses": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      9,
+      2,
+      4,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon",
+      "Venus"
+    ],
+    "supportingSigns": [
+      "Taurus",
+      "Cancer"
+    ]
+  },
+  "commission_agency_as_business": {
+    "label": "Commission Agency as Business",
+    "category": "Career",
+    "houses": [
+      3,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "committing_rape": {
+    "label": "Committing rape",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      5,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "9",
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "competitive_exam": {
+    "label": "Competitive exam",
+    "category": "Education",
+    "houses": [
+      4,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      4,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "completion_or_damage_in_education": {
+    "label": "Completion or Damage in education",
+    "category": "Education",
+    "houses": [
+      3,
+      4,
+      5,
+      8
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      8,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "computer_professional": {
+    "label": "Computer professional",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      3,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Ketu"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Libra",
+      "Aquarius"
+    ]
+  },
+  "conflicts_in_marriage": {
+    "label": "Conflicts in marriage",
+    "category": "Marriage",
+    "houses": [
+      7
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "congenital_birth_defect": {
+    "label": "Congenital Birth defect",
+    "category": "Progeny",
+    "houses": [
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Rahu",
+      "Mars",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "construct_a_house": {
+    "label": "Construct a house",
+    "category": "Property",
+    "houses": [
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "construction_of_a_religiious_building": {
+    "label": "Construction of a religiious building",
+    "category": "Property",
+    "houses": [
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      12,
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "construction_of_several_houses": {
+    "label": "Construction of Several houses",
+    "category": "Property",
+    "houses": [
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "criminal_mind": {
+    "label": "Criminal mind",
+    "category": "General",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "cure_disease_recovery": {
+    "label": "Cure disease/recovery",
+    "category": "Health",
+    "houses": [
+      1,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      1,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "danger_from_being_in_secret_activities": {
+    "label": "Danger from being in secret activities",
+    "category": "General",
+    "houses": [
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      7,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "danger_from_opponents": {
+    "label": "Danger from opponents",
+    "category": "General",
+    "houses": [
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "danger_to_health": {
+    "label": "Danger to health",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      6,
+      8,
+      12,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "danger_to_life": {
+    "label": "Danger to life",
+    "category": "General",
+    "houses": [
+      3,
+      8,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "danger_to_life_or_unnatural_or_accidental_death": {
+    "label": "Danger to life or unnatural or accidental death",
+    "category": "Health",
+    "houses": [
+      1,
+      4,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      4,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "danger_to_life,_ruined_life_death": {
+    "label": "Danger to life, ruined life death",
+    "category": "Health",
+    "houses": [
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "deaf_and_dumb": {
+    "label": "Deaf and dumb",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "death_due_to_accident": {
+    "label": "Death due to accident",
+    "category": "Health",
+    "houses": [
+      4,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      4,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "death_due_to_sickness": {
+    "label": "Death due to sickness",
+    "category": "Health",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "death_of_child": {
+    "label": "Death of child",
+    "category": "Progeny",
+    "houses": [
+      4,
+      5,
+      6,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "death_of_mother": {
+    "label": "Death of mother",
+    "category": "Health",
+    "houses": [
+      3,
+      4,
+      5,
+      10
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      5,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "death_of_partner": {
+    "label": "Death of partner",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      7,
+      8
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      8,
+      6,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "debt_ridden_life": {
+    "label": "Debt ridden life",
+    "category": "Finance",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "debt_to_repay_debt": {
+    "label": "Debt to repay debt",
+    "category": "Finance",
+    "houses": [
+      3,
+      6,
+      7,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      3,
+      7,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "decent_living": {
+    "label": "Decent living",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      6,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "defect_in_speech_or_defect_in_right_vision_of_gents": {
+    "label": "Defect in Speech or defect in Right Vision of gents",
+    "category": "General",
+    "houses": [
+      2,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      12,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Scorpio"
+    ]
+  },
+  "delay_in_marriage": {
+    "label": "Delay in marriage",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "delivery_of_child": {
+    "label": "Delivery of child",
+    "category": "Progeny",
+    "houses": [
+      4,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "deposit_money_in_bank": {
+    "label": "Deposit money in Bank",
+    "category": "Finance",
+    "houses": [
+      2,
+      4,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "depression": {
+    "label": "Depression",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      1,
+      3,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "discharge_from_hospital": {
+    "label": "Discharge from hospital",
+    "category": "Health",
+    "houses": [
+      1,
+      2,
+      4,
+      11
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      2,
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "disease_chronic": {
+    "label": "Disease (Chronic)",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      6,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "disease_causing_defect_in_body": {
+    "label": "Disease causing defect in body",
+    "category": "Health",
+    "houses": [
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "disease_is_cured,": {
+    "label": "Disease is cured,",
+    "category": "Health",
+    "houses": [
+      1,
+      5,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "disease_unknown_in_medical_science": {
+    "label": "Disease unknown in medical science",
+    "category": "Health",
+    "houses": [
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "disease___life_long": {
+    "label": "Disease - Life long",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "disease___receovery": {
+    "label": "Disease - Receovery",
+    "category": "Health",
+    "houses": [
+      1,
+      5,
+      11
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "disgrace_scandal": {
+    "label": "Disgrace Scandal",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      8
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      1,
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Ketu",
+      "Mars"
+    ],
+    "supportingSigns": [
+      "Scorpio"
+    ]
+  },
+  "divorce_finalized": {
+    "label": "Divorce finalized",
+    "category": "Marriage",
+    "houses": [
+      1,
+      6,
+      7,
+      10,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      6,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "doctorate_degree": {
+    "label": "Doctorate degree",
+    "category": "Education",
+    "houses": [
+      4,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      4,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "donations": {
+    "label": "Donations",
+    "category": "General",
+    "houses": [
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "dowry_receiving": {
+    "label": "Dowry receiving",
+    "category": "General",
+    "houses": [
+      2,
+      7,
+      8,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "dull_business": {
+    "label": "Dull business",
+    "category": "Career",
+    "houses": [
+      1,
+      5,
+      7
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Taurus",
+      "Virgo",
+      "Capricorn"
+    ]
+  },
+  "earn_sufficient_money": {
+    "label": "Earn sufficient money",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "earning_money_through_illegal_means": {
+    "label": "Earning money through illegal means",
+    "category": "Finance",
+    "houses": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "education_less_person": {
+    "label": "Education-less person",
+    "category": "Progeny",
+    "houses": [
+      3,
+      4,
+      8,
+      10
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      8,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "export_business": {
+    "label": "Export Business",
+    "category": "Career",
+    "houses": [
+      3,
+      6,
+      10,
+      11,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      3,
+      6,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon"
+    ],
+    "supportingSigns": []
+  },
+  "left_eye_disease": {
+    "label": "Left Eye disease",
+    "category": "Health",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      6,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "eyes_to_be_healthy": {
+    "label": "Eyes to be healthy",
+    "category": "Health",
+    "houses": [
+      2,
+      3,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      11,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Sun",
+      "Moon"
+    ],
+    "supportingSigns": [
+      "Taurus"
+    ]
+  },
+  "failure_in_exam": {
+    "label": "Failure in exam",
+    "category": "Education",
+    "houses": [
+      3,
+      4,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      6,
+      8,
+      12,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "failure_in_politics": {
+    "label": "Failure in politics",
+    "category": "General",
+    "houses": [
+      2,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "fame": {
+    "label": "Fame",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      3,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "filing_a_court_case": {
+    "label": "Filing a court case",
+    "category": "Legal",
+    "houses": [
+      3,
+      6,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "financial_status": {
+    "label": "Financial Status",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "forced_retirement": {
+    "label": "Forced Retirement",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "foreign_going": {
+    "label": "Foreign going",
+    "category": "Travel",
+    "houses": [
+      3,
+      9,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      3,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "foreign_settlement": {
+    "label": "Foreign settlement",
+    "category": "Travel",
+    "houses": [
+      3,
+      9,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      3,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "foreign_study": {
+    "label": "Foreign study",
+    "category": "Travel",
+    "houses": [
+      6,
+      9,
+      11,
+      12
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      6,
+      9,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "foreign_travel": {
+    "label": "Foreign Travel",
+    "category": "Travel",
+    "houses": [
+      3,
+      9,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "free_from_debt": {
+    "label": "Free from debt",
+    "category": "Finance",
+    "houses": [
+      4,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      4,
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "free_of_disease": {
+    "label": "Free of disease",
+    "category": "Health",
+    "houses": [
+      6,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "friends_helpful_and_beneficial": {
+    "label": "Friends helpful and beneficial",
+    "category": "General",
+    "houses": [
+      1,
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      1,
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "further_studiesmaster,_ph.d.": {
+    "label": "Further studies(Master, Ph.D.)",
+    "category": "General",
+    "houses": [
+      4,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      4,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "gain_a_degree_through_correspondence": {
+    "label": "Gain a degree through correspondence",
+    "category": "Education",
+    "houses": [
+      3,
+      4,
+      9,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "gain_from_independent_business": {
+    "label": "Gain from independent business",
+    "category": "Career",
+    "houses": [
+      2,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      7,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "gain_from_lottery": {
+    "label": "Gain from lottery",
+    "category": "Finance",
+    "houses": [
+      3,
+      5,
+      6,
+      8,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      5,
+      6,
+      11,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "gain_in_foreign_land_and_or_with_foreigners": {
+    "label": "Gain in foreign land and/or with foreigners",
+    "category": "Travel",
+    "houses": [
+      2,
+      3,
+      6,
+      10,
+      11,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "gain_in_gambling": {
+    "label": "Gain in gambling",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      10,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      10,
+      11,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "gain_in_investment": {
+    "label": "Gain in investment",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      11,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "gain_of_money___wealth": {
+    "label": "Gain of money / wealth",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "gain_profit_in_business": {
+    "label": "Gain/Profit in business",
+    "category": "Career",
+    "houses": [
+      2,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "gain_success__in_independent_business": {
+    "label": "Gain/success  in independent business",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      3,
+      7,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "gaining_wealth,_increase_bank_deposit": {
+    "label": "Gaining wealth, increase bank deposit",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "get_a_degree_with_difficulties": {
+    "label": "Get a degree with difficulties",
+    "category": "Education",
+    "houses": [
+      2,
+      4,
+      8,
+      10,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      8,
+      2,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "get_a_desired_or_good_job": {
+    "label": "Get a desired or good job",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6,
+      11,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "getting_a_business_partner": {
+    "label": "Getting a business partner",
+    "category": "Career",
+    "houses": [
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "getting_a_telephone_call": {
+    "label": "Getting a telephone call",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "getting_a_tenant": {
+    "label": "Getting a tenant",
+    "category": "General",
+    "houses": [
+      4,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      4,
+      11,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "getting_an_award_prize": {
+    "label": "Getting an award/prize",
+    "category": "General",
+    "houses": [
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      10,
+      11,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Sun",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "getting_bail": {
+    "label": "Getting bail",
+    "category": "General",
+    "houses": [
+      6,
+      10,
+      11,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      6,
+      11,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "getting_gratuity,_insurance_of_the_deceased": {
+    "label": "Getting gratuity, insurance of the deceased",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      8,
+      2,
+      11,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "getting_hidden_treasure": {
+    "label": "Getting hidden treasure",
+    "category": "General",
+    "houses": [
+      4,
+      8,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      4,
+      11,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "giving_donation": {
+    "label": "Giving donation",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "giving_dowry": {
+    "label": "Giving dowry",
+    "category": "General",
+    "houses": [
+      5,
+      8
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "go_out_of_present_environment": {
+    "label": "Go out of present environment",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      7,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      3,
+      7,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "going_abroad_for_job": {
+    "label": "Going abroad for job",
+    "category": "Career",
+    "houses": [
+      3,
+      6,
+      9,
+      10,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      3,
+      9,
+      12,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "good_health_recover,_good_luck_in_all": {
+    "label": "Good health recover, Good Luck in all",
+    "category": "Health",
+    "houses": [
+      1,
+      5,
+      11
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      11,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "happy_married_life": {
+    "label": "Happy married life",
+    "category": "General",
+    "houses": [
+      2,
+      7,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Venus",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "having_an_affair_with_business_partner": {
+    "label": "Having an affair with business partner",
+    "category": "Career",
+    "houses": [
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      8,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "having_bed_comfort_with_one\u2019s_wife": {
+    "label": "Having bed comfort with one\u2019s wife",
+    "category": "Marriage",
+    "houses": [
+      1,
+      5,
+      7,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      1,
+      5,
+      7,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "having_marriage_as_one_desired": {
+    "label": "Having marriage as one desired",
+    "category": "Marriage",
+    "houses": [
+      2,
+      3,
+      7,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      3,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "hearing_news_about_a_missing_person": {
+    "label": "Hearing news about a missing person",
+    "category": "Progeny",
+    "houses": [
+      3,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "high_position_in_politics": {
+    "label": "High position in politics",
+    "category": "General",
+    "houses": [
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      9,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "higher_education": {
+    "label": "Higher education",
+    "category": "Education",
+    "houses": [
+      4,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      11,
+      4,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "higher_studies": {
+    "label": "Higher Studies",
+    "category": "General",
+    "houses": [
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "honourable_life_but_materially_poor": {
+    "label": "Honourable life but materially poor",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      9,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      3,
+      9,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "house_detention": {
+    "label": "House detention",
+    "category": "Property",
+    "houses": [
+      4,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      4,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "ill_health": {
+    "label": "Ill Health",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "illicit_connections_with_women": {
+    "label": "Illicit connections with women",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "imprisonment": {
+    "label": "Imprisonment",
+    "category": "Progeny",
+    "houses": [
+      3,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      3,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "increase_in_ornaments_and_jewels": {
+    "label": "Increase in ornaments and jewels",
+    "category": "General",
+    "houses": [
+      2,
+      8,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      10,
+      11,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "independent_earnings": {
+    "label": "Independent earnings",
+    "category": "Finance",
+    "houses": [
+      2,
+      4,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      4,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "independent_business": {
+    "label": "Independent business",
+    "category": "Career",
+    "houses": [
+      3,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      3,
+      7,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "inheritance_of_large_property": {
+    "label": "Inheritance of large property",
+    "category": "Property",
+    "houses": [
+      2,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "inheriting_property": {
+    "label": "Inheriting property",
+    "category": "Property",
+    "houses": [
+      2,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "insanity": {
+    "label": "Insanity",
+    "category": "General",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon"
+    ],
+    "supportingSigns": []
+  },
+  "instant_predictions": {
+    "label": "Instant predictions",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "insurance_claims": {
+    "label": "Insurance claims",
+    "category": "General",
+    "houses": [
+      2,
+      8,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "insurance_legacy,_gratuity": {
+    "label": "Insurance legacy, gratuity",
+    "category": "General",
+    "houses": [
+      2,
+      8,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      8,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "intelligent_thinking": {
+    "label": "Intelligent thinking",
+    "category": "General",
+    "houses": [
+      3,
+      5,
+      9,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      11,
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "inter_caste_marriage": {
+    "label": "Inter-caste marriage",
+    "category": "Marriage",
+    "houses": [
+      2,
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Venus",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "job_and_independent_business_together": {
+    "label": "Job and independent business together",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      6,
+      7,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      10,
+      6,
+      7,
+      2,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "job_in_a_permanent_place": {
+    "label": "Job in a permanent place",
+    "category": "Career",
+    "houses": [
+      4,
+      10
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "keeping_a_mistress": {
+    "label": "Keeping a mistress",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      7,
+      11,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      7,
+      11,
+      2,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "lagna_lord_very_weak": {
+    "label": "Lagna Lord very weak",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "landed_property_ownership": {
+    "label": "Landed property ownership",
+    "category": "Property",
+    "houses": [
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "leasing_a_landed_or_immovable_property": {
+    "label": "Leasing a landed or immovable property",
+    "category": "Property",
+    "houses": [
+      6,
+      11,
+      12
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      6,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "legal_profession": {
+    "label": "Legal profession",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      6,
+      11,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Mercury",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "life_long_disease": {
+    "label": "Life long disease",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loans_from_bank": {
+    "label": "Loans from bank",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "long_distance_phone_call": {
+    "label": "Long distance phone call",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "long_journey_ineraction_with_foreigners": {
+    "label": "Long journey ineraction with foreigners",
+    "category": "Travel",
+    "houses": [
+      2,
+      9,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      9,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "long_journeys_only": {
+    "label": "Long Journeys only",
+    "category": "Travel",
+    "houses": [
+      3,
+      9,
+      12
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      3,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "long_life_over_66_yrs": {
+    "label": "Long life (over 66 yrs)",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      9,
+      10
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      5,
+      9,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "long_life_of_father": {
+    "label": "Long life of father",
+    "category": "General",
+    "houses": [
+      1,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      9,
+      11,
+      1,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "long_lifespan": {
+    "label": "Long lifespan",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      9,
+      10
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      5,
+      9,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loose_thinking": {
+    "label": "Loose thinking",
+    "category": "General",
+    "houses": [
+      1,
+      4,
+      5,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      8,
+      6,
+      1,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "losing_wealth,_money": {
+    "label": "Losing wealth, money",
+    "category": "Finance",
+    "houses": [
+      2
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "losing_through_friends": {
+    "label": "Losing through friends",
+    "category": "General",
+    "houses": [
+      4,
+      5,
+      8,
+      11,
+      12
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      4,
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_in_appeal": {
+    "label": "Loss in appeal",
+    "category": "Finance",
+    "houses": [
+      3,
+      5,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      5,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_in_business": {
+    "label": "Loss in business",
+    "category": "Career",
+    "houses": [
+      5,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_in_business_or_industry": {
+    "label": "Loss in business or industry",
+    "category": "Career",
+    "houses": [
+      5,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Taurus",
+      "Virgo",
+      "Capricorn"
+    ]
+  },
+  "loss_in_competition": {
+    "label": "Loss in competition",
+    "category": "Finance",
+    "houses": [
+      5,
+      6
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_in_investment": {
+    "label": "Loss in investment",
+    "category": "Finance",
+    "houses": [
+      1,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      1,
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_of_money": {
+    "label": "Loss of money",
+    "category": "Finance",
+    "houses": [
+      1,
+      2,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      1,
+      7,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_of_reputation": {
+    "label": "Loss of reputation",
+    "category": "Finance",
+    "houses": [
+      3,
+      8,
+      9,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      8,
+      12,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_of_reputation_&_money_income_tax_trouble": {
+    "label": "Loss of reputation & money income tax trouble",
+    "category": "Finance",
+    "houses": [
+      7,
+      8,
+      10,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      7,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_of_wealth": {
+    "label": "Loss of wealth",
+    "category": "Finance",
+    "houses": [
+      5,
+      8,
+      11,
+      12
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "loss_of_work": {
+    "label": "Loss of work",
+    "category": "Finance",
+    "houses": [
+      1,
+      5,
+      9,
+      10,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      5,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "love_affair": {
+    "label": "Love affair",
+    "category": "Marriage",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "love_marriage": {
+    "label": "Love marriage",
+    "category": "Marriage",
+    "houses": [
+      2,
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      7,
+      11,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Venus",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "love_partner_and_success_in_love_affair": {
+    "label": "Love partner and success in love affair",
+    "category": "Marriage",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      11,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "lower_level_education": {
+    "label": "Lower level education",
+    "category": "Education",
+    "houses": [
+      2,
+      4,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "madness_or_insanity": {
+    "label": "Madness or insanity",
+    "category": "General",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon",
+      "Mercury",
+      "Ketu",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "making_contract_or_agreement": {
+    "label": "Making contract or agreement",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      9,
+      11,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "mantra_receiving": {
+    "label": "Mantra receiving",
+    "category": "Spiritual",
+    "houses": [
+      2,
+      5,
+      9,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      9,
+      11,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "marriage_already_fixed_stops_abruptly": {
+    "label": "Marriage already fixed stops abruptly",
+    "category": "Marriage",
+    "houses": [
+      1,
+      6,
+      7,
+      10,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      6,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "marriage_and_separation": {
+    "label": "Marriage and separation",
+    "category": "Marriage",
+    "houses": [
+      1,
+      6,
+      7,
+      10
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "marriage_celebration": {
+    "label": "Marriage celebration",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "marriage_negotiation": {
+    "label": "Marriage negotiation",
+    "category": "Marriage",
+    "houses": [
+      3,
+      7,
+      9
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      7,
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "marriage_to_a_widow": {
+    "label": "Marriage to a widow",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      8,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "marriage_to_an_aged_partner": {
+    "label": "Marriage to an aged partner",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "marriage_to_foreigner": {
+    "label": "Marriage to foreigner",
+    "category": "Marriage",
+    "houses": [
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      5,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "marriage___engagement": {
+    "label": "Marriage - engagement",
+    "category": "Marriage",
+    "houses": [
+      3,
+      7,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      7,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "marriage___second_after_divorce": {
+    "label": "Marriage - Second after Divorce",
+    "category": "Marriage",
+    "houses": [
+      2,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      2,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Jupiter",
+      "Mercury"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "marrying_a_career_girl": {
+    "label": "Marrying a career girl",
+    "category": "Career",
+    "houses": [
+      4,
+      8,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      8,
+      12,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "medical_claims": {
+    "label": "Medical claims",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      8,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      6,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "meeting_a_person_or_appointment": {
+    "label": "Meeting a person or appointment",
+    "category": "Progeny",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "mind_to_commit_crime": {
+    "label": "Mind to commit crime",
+    "category": "General",
+    "houses": [
+      6,
+      8,
+      10,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      6,
+      8,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "mind_to_raping": {
+    "label": "Mind to raping",
+    "category": "General",
+    "houses": [
+      5,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      5,
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Rahu",
+      "9"
+    ],
+    "supportingSigns": []
+  },
+  "misunderstanding_with_partner_and_family_members": {
+    "label": "Misunderstanding with partner and family members",
+    "category": "General",
+    "houses": [
+      2,
+      7,
+      8
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "money_obtained_by_selling_possessions": {
+    "label": "Money obtained by selling possessions",
+    "category": "Finance",
+    "houses": [
+      3,
+      11,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "moving_from_place": {
+    "label": "Moving from place",
+    "category": "General",
+    "houses": [
+      3,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      3,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "multiple_marriage": {
+    "label": "Multiple marriage",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      9,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Mars"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "negotiation_to_take_over_a_business": {
+    "label": "Negotiation to take over a business",
+    "category": "Career",
+    "houses": [
+      3,
+      6,
+      9,
+      10
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      10,
+      6,
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "negotiation_to_adopt_a_child": {
+    "label": "Negotiation to adopt a child",
+    "category": "Progeny",
+    "houses": [
+      3,
+      5,
+      9
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      5,
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "negotiations": {
+    "label": "Negotiations",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "new_inventions": {
+    "label": "New inventions",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      9,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      1,
+      5,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "news_of_promotion_in_service_with_transfer_order": {
+    "label": "News of promotion in service with transfer order",
+    "category": "Career",
+    "houses": [
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "no_change_of_work_place": {
+    "label": "No change of work place",
+    "category": "General",
+    "houses": [
+      1,
+      4,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      4,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "no_cure_of_disease": {
+    "label": "No cure of disease",
+    "category": "Health",
+    "houses": [
+      4,
+      6,
+      11,
+      12
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      4,
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "no_improvement_in_business_and_service": {
+    "label": "No improvement in business and service",
+    "category": "Career",
+    "houses": [
+      2,
+      5,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      5,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "no_marriage": {
+    "label": "No marriage",
+    "category": "Marriage",
+    "houses": [
+      1,
+      6,
+      7,
+      10
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "no_marriage_with_a_love_partner": {
+    "label": "No marriage with a love partner",
+    "category": "Marriage",
+    "houses": [
+      4,
+      5,
+      6,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "no_occupation_in_life": {
+    "label": "No occupation in life",
+    "category": "General",
+    "houses": [
+      5,
+      9,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "non_recovery_of__lost_articles_due_to_theft": {
+    "label": "Non-recovery of  lost articles due to theft",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      11,
+      12
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "normal_delivery": {
+    "label": "Normal delivery",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "obstacles_in_career": {
+    "label": "Obstacles in career",
+    "category": "Career",
+    "houses": [
+      5,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "obtaining_jewellery": {
+    "label": "Obtaining Jewellery",
+    "category": "General",
+    "houses": [
+      2,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "occupying_a_new_house": {
+    "label": "Occupying a new house",
+    "category": "Property",
+    "houses": [
+      1,
+      4,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      11,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "once_for_all_lost_of_property": {
+    "label": "Once for all lost of property",
+    "category": "Property",
+    "houses": [
+      2,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "one_speaks_truth": {
+    "label": "One speaks truth",
+    "category": "General",
+    "houses": [
+      3
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Sun",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "one\u2019s_exertion": {
+    "label": "One\u2019s exertion",
+    "category": "General",
+    "houses": [
+      1,
+      2,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      1,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "opening_bank_account": {
+    "label": "Opening bank account",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "ornaments_or_cash_from_inheritance": {
+    "label": "Ornaments or cash from inheritance",
+    "category": "General",
+    "houses": [
+      2,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "overdraft_facility": {
+    "label": "Overdraft facility",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      10
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "own_vehicle": {
+    "label": "Own vehicle",
+    "category": "Property",
+    "houses": [
+      4,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "partnership_breaks": {
+    "label": "Partnership breaks",
+    "category": "General",
+    "houses": [
+      6,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      8,
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "partnership_of_any_kind": {
+    "label": "Partnership of any kind",
+    "category": "General",
+    "houses": [
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "passport,_green_card,_visa": {
+    "label": "Passport, Green card, Visa",
+    "category": "Travel",
+    "houses": [
+      3,
+      9,
+      11,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      9,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "person_of_nuisance_for_other": {
+    "label": "Person of nuisance for other",
+    "category": "Progeny",
+    "houses": [
+      5,
+      8
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Sun",
+      "Mars",
+      "Rahu",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "pilgrimage": {
+    "label": "Pilgrimage",
+    "category": "Spiritual",
+    "houses": [
+      3,
+      9,
+      10
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      3,
+      9,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "pleasant_function_at_home": {
+    "label": "Pleasant function at home",
+    "category": "General",
+    "houses": [
+      4,
+      5,
+      10,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      10,
+      11,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon",
+      "Jupiter",
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "pleasure_by_thnking_of_love": {
+    "label": "Pleasure by thnking of love",
+    "category": "Marriage",
+    "houses": [
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      11,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Venus",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "politics_as_profession": {
+    "label": "Politics as Profession",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      6,
+      11,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Sun",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "politics___failure": {
+    "label": "Politics - Failure",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "poor_living": {
+    "label": "Poor living",
+    "category": "General",
+    "houses": [
+      8,
+      10,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "popular_actor,_artist": {
+    "label": "Popular actor, artist",
+    "category": "General",
+    "houses": [
+      5,
+      6,
+      10
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Venus",
+      "Moon"
+    ],
+    "supportingSigns": [
+      "Gemini",
+      "Libra",
+      "Aquarius"
+    ]
+  },
+  "popular_in_acting": {
+    "label": "Popular in acting",
+    "category": "General",
+    "houses": [
+      5,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Venus",
+      "Moon",
+      "Sun"
+    ],
+    "supportingSigns": []
+  },
+  "popular_astrologer": {
+    "label": "Popular Astrologer",
+    "category": "General",
+    "houses": [
+      2,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      11,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "popularity": {
+    "label": "Popularity",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      10,
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "popularity_and_success_in_music": {
+    "label": "Popularity and success in music",
+    "category": "General",
+    "houses": [
+      5,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "popularity_success_in_politics": {
+    "label": "Popularity/success in politics",
+    "category": "General",
+    "houses": [
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      3,
+      10,
+      11,
+      2,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Sun"
+    ],
+    "supportingSigns": [
+      "Capricorn"
+    ]
+  },
+  "poverty": {
+    "label": "Poverty",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      8,
+      12,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "pregnancy": {
+    "label": "Pregnancy",
+    "category": "Progeny",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "pregnancy_and_child_birth": {
+    "label": "Pregnancy and child birth",
+    "category": "Progeny",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      11,
+      2
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "premarital_sex": {
+    "label": "Premarital sex",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Venus",
+      "Mars"
+    ],
+    "supportingSigns": [
+      "Scorpio"
+    ]
+  },
+  "problems_in_service": {
+    "label": "Problems in Service",
+    "category": "Career",
+    "houses": [
+      5,
+      6,
+      8,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      6,
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "proficient_in_occult_sciences_and_knowledge": {
+    "label": "Proficient in occult sciences and knowledge",
+    "category": "General",
+    "houses": [
+      2,
+      9,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Ketu",
+      "Venus",
+      "Mercury",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "profit_in_business": {
+    "label": "Profit in business",
+    "category": "Career",
+    "houses": [
+      2,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      7,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "promotion_&_overseas": {
+    "label": "Promotion & overseas",
+    "category": "Career",
+    "houses": [
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "promotion_in_work": {
+    "label": "Promotion in work",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "promotion_with_transfer": {
+    "label": "Promotion with transfer",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "promotion_reinstatement_or_gain_on_occupation": {
+    "label": "Promotion Reinstatement or gain on occupation",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "proneness_to_disease": {
+    "label": "Proneness to disease",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "property_through_will": {
+    "label": "Property through will",
+    "category": "Property",
+    "houses": [
+      6,
+      8,
+      10
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      6,
+      8,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "property,_vehicle_from_inheritance": {
+    "label": "Property, vehicle from inheritance",
+    "category": "Property",
+    "houses": [
+      4,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "publications_as_business": {
+    "label": "Publications as Business",
+    "category": "Career",
+    "houses": [
+      2,
+      3,
+      6,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      6,
+      11,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Mars",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "publishing_a_book": {
+    "label": "Publishing a book",
+    "category": "General",
+    "houses": [
+      3,
+      10,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Mars",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "publishing_press_ownership": {
+    "label": "Publishing press ownership",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "purchase_of_a_house": {
+    "label": "Purchase of a house",
+    "category": "Property",
+    "houses": [
+      4,
+      6,
+      9,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      4,
+      6,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "purchase_of_car": {
+    "label": "Purchase of Car",
+    "category": "Property",
+    "houses": [
+      4,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      9,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "purchase_of_movable_property": {
+    "label": "Purchase of movable property",
+    "category": "Property",
+    "houses": [
+      2,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      6,
+      9,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "purchase_of_property_by_loan": {
+    "label": "Purchase of property by loan",
+    "category": "Finance",
+    "houses": [
+      4,
+      6,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      6,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "purchase_of_tv_or_electrical_goods": {
+    "label": "Purchase of TV or electrical goods",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      5,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      12,
+      5,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "purchase_of_vehicle": {
+    "label": "Purchase of vehicle",
+    "category": "Property",
+    "houses": [
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "raped_by_someone": {
+    "label": "Raped by someone",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "9",
+      "7",
+      "Mars",
+      "Rahu",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "reach_home_in_time": {
+    "label": "Reach home in time",
+    "category": "General",
+    "houses": [
+      4,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "realization_of_amount_due": {
+    "label": "Realization of amount due",
+    "category": "General",
+    "houses": [
+      2,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "receipt_of_a_letter": {
+    "label": "Receipt of a letter",
+    "category": "General",
+    "houses": [
+      3,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "receipt_of_documents": {
+    "label": "Receipt of documents",
+    "category": "General",
+    "houses": [
+      3,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "receipt_of_gifts": {
+    "label": "Receipt of Gifts",
+    "category": "General",
+    "houses": [
+      6,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "receipt_of_news_causing_worries": {
+    "label": "Receipt of news causing worries",
+    "category": "General",
+    "houses": [
+      3,
+      8,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "receiving_donation": {
+    "label": "Receiving donation",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "reconciliation_after_separation_and_divorce": {
+    "label": "Reconciliation after separation and divorce",
+    "category": "Marriage",
+    "houses": [
+      7
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "recovery_from_disease": {
+    "label": "Recovery from disease",
+    "category": "Health",
+    "houses": [
+      5,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "recovery_of_health": {
+    "label": "Recovery of health",
+    "category": "Health",
+    "houses": [
+      3,
+      5
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      3,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "recovery_of_lost_articles": {
+    "label": "Recovery of lost articles",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "recovery_of_lost_property": {
+    "label": "Recovery of lost property",
+    "category": "Property",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "reinstatement": {
+    "label": "Reinstatement",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "release_from_jail": {
+    "label": "Release from jail",
+    "category": "Legal",
+    "houses": [
+      2,
+      4,
+      11,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      2,
+      4,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "removal_from_service": {
+    "label": "Removal from service",
+    "category": "Career",
+    "houses": [
+      5,
+      8,
+      9,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      9,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "rendering_wealth": {
+    "label": "Rendering wealth",
+    "category": "Finance",
+    "houses": [
+      2,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "rent_a_property": {
+    "label": "Rent a property",
+    "category": "Property",
+    "houses": [
+      4,
+      6,
+      10,
+      11,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      11,
+      12,
+      6,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "renunciation": {
+    "label": "Renunciation",
+    "category": "General",
+    "houses": [
+      1,
+      4,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      1,
+      4,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "repaying_loan": {
+    "label": "Repaying loan",
+    "category": "Finance",
+    "houses": [
+      5,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      12,
+      5,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "reputation": {
+    "label": "Reputation",
+    "category": "General",
+    "houses": [
+      1,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Sun",
+      "Saturn",
+      "Mars",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "research_scholarship": {
+    "label": "Research Scholarship",
+    "category": "Health",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "retirement_from_work": {
+    "label": "Retirement from Work",
+    "category": "General",
+    "houses": [
+      5,
+      9,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "return_of_missing_person": {
+    "label": "Return of missing person",
+    "category": "Progeny",
+    "houses": [
+      2,
+      8,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "return_of_wife_from_hometown": {
+    "label": "Return of wife from hometown",
+    "category": "Marriage",
+    "houses": [
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      11,
+      7,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "returning_borrowed_money": {
+    "label": "Returning borrowed money",
+    "category": "Finance",
+    "houses": [
+      4,
+      5,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      4,
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "reunion_with_spouse": {
+    "label": "Reunion with spouse",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "reunion_with_kith_and_kin": {
+    "label": "Reunion with kith and kin",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      3,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "reunion_with_partner": {
+    "label": "Reunion with partner",
+    "category": "General",
+    "houses": [
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      7,
+      11,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "rumor_or_any_information_is_false": {
+    "label": "Rumor or any information is false",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Rahu",
+      "Mars",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "safe_and_natural_delivery_of_child": {
+    "label": "Safe and natural delivery of child",
+    "category": "Progeny",
+    "houses": [
+      3,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      3,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "safe_from_danger_cure_recovery": {
+    "label": "Safe from danger/cure/recovery",
+    "category": "Health",
+    "houses": [
+      1,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      1,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "sale_of_immovable_property": {
+    "label": "Sale of immovable property",
+    "category": "Property",
+    "houses": [
+      3,
+      5,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      10,
+      5,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "sale_of_any_vehicle": {
+    "label": "Sale of any vehicle",
+    "category": "Property",
+    "houses": [
+      3,
+      4,
+      5,
+      10
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      4,
+      5,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "satisfaction_of_desires": {
+    "label": "Satisfaction of Desires",
+    "category": "General",
+    "houses": [
+      1,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      1,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Cancer",
+      "Scorpio",
+      "Pisces"
+    ]
+  },
+  "satisfactory_spiritual_life": {
+    "label": "Satisfactory spiritual life",
+    "category": "Spiritual",
+    "houses": [
+      5,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "scandalous_love_affair": {
+    "label": "Scandalous love affair",
+    "category": "Marriage",
+    "houses": [
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Venus",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "scholarship": {
+    "label": "Scholarship",
+    "category": "General",
+    "houses": [
+      2,
+      4,
+      6,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      2,
+      6,
+      11,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "scholarship_for_higher_studies": {
+    "label": "Scholarship for higher studies",
+    "category": "General",
+    "houses": [
+      4,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      6,
+      9,
+      11,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "scientist": {
+    "label": "Scientist",
+    "category": "General",
+    "houses": [
+      2,
+      3,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      9,
+      11,
+      10,
+      2,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Jupiter",
+      "Mars",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "second_child": {
+    "label": "Second child",
+    "category": "Progeny",
+    "houses": [
+      2,
+      7,
+      11
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "second_marriage_after_demise_of_first_spouse": {
+    "label": "Second marriage after demise of first spouse",
+    "category": "Marriage",
+    "houses": [
+      2,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      2,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Ketu",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "secret_activities_of_partner": {
+    "label": "Secret activities of Partner",
+    "category": "General",
+    "houses": [
+      5,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Scorpio"
+    ]
+  },
+  "self___acquisition": {
+    "label": "Self - acquisition",
+    "category": "General",
+    "houses": [
+      2,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "selling_at_loss": {
+    "label": "Selling at loss",
+    "category": "Finance",
+    "houses": [
+      3,
+      8,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      12,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "selling_of_a_car": {
+    "label": "Selling of a car",
+    "category": "Property",
+    "houses": [
+      3,
+      4,
+      5,
+      10
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      5,
+      10,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "selling_with_profit": {
+    "label": "Selling with profit",
+    "category": "Finance",
+    "houses": [
+      3,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_after_marriage": {
+    "label": "Separation after marriage",
+    "category": "Marriage",
+    "houses": [
+      1,
+      6,
+      7,
+      10,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      7,
+      6,
+      12,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Sun",
+      "Saturn",
+      "Rahu",
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "separation_by_violence": {
+    "label": "Separation by violence",
+    "category": "Marriage",
+    "houses": [
+      6,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      8,
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": [
+      "Aries",
+      "Leo",
+      "Sagittarius"
+    ]
+  },
+  "separation_due_to_misunderstanding_with_partner": {
+    "label": "Separation due to misunderstanding with partner",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      7,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "separation_from_family": {
+    "label": "Separation from family",
+    "category": "Marriage",
+    "houses": [
+      1,
+      2,
+      3,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      1,
+      12,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_from_father": {
+    "label": "Separation from father",
+    "category": "Marriage",
+    "houses": [
+      3,
+      8,
+      9,
+      12
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      8,
+      12,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_from_mother": {
+    "label": "Separation from Mother",
+    "category": "Marriage",
+    "houses": [
+      3,
+      4,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      3,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_from_partner": {
+    "label": "Separation from partner",
+    "category": "Marriage",
+    "houses": [
+      6,
+      7,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_of_spouse_partner_by_death": {
+    "label": "Separation of spouse/partner by death",
+    "category": "Marriage",
+    "houses": [
+      6,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      8,
+      12,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_spouses_from_each_other": {
+    "label": "Separation spouses from each other",
+    "category": "Marriage",
+    "houses": [
+      1,
+      6,
+      7,
+      10,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      1,
+      6,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "separation_from_child": {
+    "label": "Separation from child",
+    "category": "Marriage",
+    "houses": [
+      4,
+      5,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "serving_others": {
+    "label": "Serving others",
+    "category": "General",
+    "houses": [
+      2,
+      6,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      6,
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "sexual_relationship_with_friend": {
+    "label": "Sexual relationship with friend",
+    "category": "General",
+    "houses": [
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      8,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "short_journey,_touring": {
+    "label": "Short journey, touring",
+    "category": "Travel",
+    "houses": [
+      3,
+      7,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "sickness_of_the_mind": {
+    "label": "Sickness of the mind",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "siddhi_initiation": {
+    "label": "Siddhi initiation",
+    "category": "General",
+    "houses": [
+      3,
+      5,
+      9,
+      10,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      3,
+      9,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Ketu",
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "signing_a_contract": {
+    "label": "Signing a contract",
+    "category": "General",
+    "houses": [
+      3,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      6,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "speculative_gain": {
+    "label": "Speculative gain",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      6,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      5,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Mercury",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "speculative_business": {
+    "label": "Speculative business",
+    "category": "Career",
+    "houses": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      11,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Rahu",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "spiritual_life_and_divine_worship": {
+    "label": "Spiritual life and Divine worship",
+    "category": "Spiritual",
+    "houses": [
+      1,
+      5,
+      9,
+      11,
+      12
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      1,
+      5,
+      9,
+      11,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "sports,_fine_arts,_film,_speculation_as_work": {
+    "label": "Sports, fine arts, film, speculation as work",
+    "category": "General",
+    "houses": [
+      2,
+      5,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      10,
+      2,
+      11,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "spouse_partner_will_be_an_employee": {
+    "label": "Spouse/partner will be an employee",
+    "category": "Marriage",
+    "houses": [
+      4,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      4,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "starting_journey": {
+    "label": "Starting journey",
+    "category": "Travel",
+    "houses": [
+      3,
+      5,
+      9,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      5,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "status_and_respect": {
+    "label": "Status and Respect",
+    "category": "General",
+    "houses": [
+      1,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "stay_in_mother_land": {
+    "label": "Stay in mother land",
+    "category": "Property",
+    "houses": [
+      2,
+      4,
+      8,
+      11,
+      12
+    ],
+    "primaryCusp": 12,
+    "supportingHouses": [
+      2,
+      4,
+      8,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "sterility_of_a_woman": {
+    "label": "Sterility of a woman",
+    "category": "General",
+    "houses": [
+      1,
+      4,
+      5,
+      10
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      10,
+      1
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "strong_lagna": {
+    "label": "Strong Lagna",
+    "category": "General",
+    "houses": [
+      1
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "study_of_law": {
+    "label": "Study of Law",
+    "category": "Education",
+    "houses": [
+      4
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "success_in_all_undertakings": {
+    "label": "Success in all undertakings",
+    "category": "General",
+    "houses": [
+      1,
+      2,
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      6,
+      11,
+      1,
+      2,
+      3,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_appeal": {
+    "label": "Success in appeal",
+    "category": "General",
+    "houses": [
+      3,
+      6,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_competitions": {
+    "label": "Success in competitions",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      11,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_competitive_exams": {
+    "label": "Success in competitive exams",
+    "category": "Education",
+    "houses": [
+      4,
+      6,
+      9,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      9,
+      11,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_education": {
+    "label": "Success in education",
+    "category": "Education",
+    "houses": [
+      4,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      4,
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_interview": {
+    "label": "Success in interview",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_litigation": {
+    "label": "Success in litigation",
+    "category": "Legal",
+    "houses": [
+      1,
+      6,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "success_in_love_affair": {
+    "label": "Success in love affair",
+    "category": "Marriage",
+    "houses": [
+      5,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Venus",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "success_in_personal_interview": {
+    "label": "Success in personal interview",
+    "category": "Progeny",
+    "houses": [
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_political_career": {
+    "label": "Success in political career",
+    "category": "Career",
+    "houses": [
+      1,
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      1,
+      6,
+      9,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_politics": {
+    "label": "Success in politics",
+    "category": "General",
+    "houses": [
+      1,
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      9,
+      10,
+      11,
+      1,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_research": {
+    "label": "Success in research",
+    "category": "Health",
+    "houses": [
+      6,
+      9,
+      11,
+      12
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      6,
+      11,
+      9,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Venus",
+      "Saturn",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "success_in_self_efforts": {
+    "label": "Success in self efforts",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      6,
+      11
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      11,
+      6,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_spiritual_discipline": {
+    "label": "Success in spiritual discipline",
+    "category": "Spiritual",
+    "houses": [
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      6,
+      11,
+      9,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "success_in_sports": {
+    "label": "Success in sports",
+    "category": "General",
+    "houses": [
+      3,
+      5,
+      6,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      6,
+      11,
+      3
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "successful_astrologer": {
+    "label": "Successful astrologer",
+    "category": "General",
+    "houses": [
+      2,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      9,
+      11,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "successful_in_share_market_business": {
+    "label": "Successful in share market business",
+    "category": "Career",
+    "houses": [
+      2,
+      5,
+      7,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      10,
+      2,
+      7,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "successful_writer,_publisher": {
+    "label": "Successful writer, publisher",
+    "category": "General",
+    "houses": [
+      3,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      3,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "successful_broker": {
+    "label": "Successful broker",
+    "category": "General",
+    "houses": [
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      10,
+      6,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "successful_negotiation": {
+    "label": "Successful negotiation",
+    "category": "General",
+    "houses": [
+      3,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      3,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "supportingSigns": []
+  },
+  "suffer_from_disease": {
+    "label": "Suffer from disease",
+    "category": "Health",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "suicide": {
+    "label": "Suicide",
+    "category": "General",
+    "houses": [
+      4,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      12,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Saturn",
+      "Rahu",
+      "Ketu",
+      "Mercury"
+    ],
+    "supportingSigns": []
+  },
+  "surgery": {
+    "label": "Surgery",
+    "category": "Health",
+    "houses": [
+      1,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "surgery_operation": {
+    "label": "Surgery/operation",
+    "category": "Health",
+    "houses": [
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      8,
+      6,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "suspension": {
+    "label": "Suspension",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      8,
+      9,
+      10,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      8,
+      9,
+      12,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "taking_possession_of_flat,_residence": {
+    "label": "Taking possession of flat, residence",
+    "category": "Property",
+    "houses": [
+      4,
+      9,
+      11
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      9,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "teaching_as_profession": {
+    "label": "Teaching as Profession",
+    "category": "Career",
+    "houses": [
+      2,
+      4,
+      6,
+      9,
+      10,
+      11
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      2,
+      6,
+      11,
+      4,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Jupiter",
+      "Venus"
+    ],
+    "supportingSigns": []
+  },
+  "temporary_suspension_in_service": {
+    "label": "Temporary Suspension in Service",
+    "category": "Career",
+    "houses": [
+      5,
+      6,
+      8,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      6,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "tender_resignation_of_service_in_haste": {
+    "label": "Tender resignation of service in haste",
+    "category": "Career",
+    "houses": [
+      2,
+      6,
+      8,
+      9,
+      10
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      2,
+      8,
+      9,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars",
+      "Ketu"
+    ],
+    "supportingSigns": []
+  },
+  "termination_of_love_affair": {
+    "label": "Termination of love affair",
+    "category": "Marriage",
+    "houses": [
+      5,
+      6,
+      8,
+      10,
+      12
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      6,
+      8,
+      12,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "theft_in_house": {
+    "label": "Theft in house",
+    "category": "Property",
+    "houses": [
+      2,
+      7,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      2,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [
+      "Saturn",
+      "Mars",
+      "Rahu"
+    ],
+    "supportingSigns": []
+  },
+  "theft_of_vehicle": {
+    "label": "Theft of vehicle",
+    "category": "Property",
+    "houses": [
+      4,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 4,
+    "supportingHouses": [
+      4,
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "third_child": {
+    "label": "Third Child",
+    "category": "Progeny",
+    "houses": [
+      2,
+      9,
+      11
+    ],
+    "primaryCusp": 9,
+    "supportingHouses": [
+      2,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "timid_and_coward": {
+    "label": "Timid and coward",
+    "category": "General",
+    "houses": [
+      3,
+      8,
+      12
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Saturn"
+    ],
+    "supportingSigns": []
+  },
+  "transfer": {
+    "label": "Transfer",
+    "category": "Career",
+    "houses": [
+      3,
+      10,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      3,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "treatment_not_effective": {
+    "label": "Treatment not effective",
+    "category": "General",
+    "houses": [
+      4,
+      5,
+      10
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      4,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "twin_birth": {
+    "label": "Twin birth",
+    "category": "Progeny",
+    "houses": [
+      2,
+      5,
+      11
+    ],
+    "primaryCusp": 5,
+    "supportingHouses": [
+      2,
+      5,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Gemini",
+      "Virgo",
+      "Sagittarius",
+      "Pisces"
+    ]
+  },
+  "unearned_gains": {
+    "label": "Unearned Gains",
+    "category": "Health",
+    "houses": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      2,
+      11,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "unexpected_loss": {
+    "label": "Unexpected Loss",
+    "category": "Finance",
+    "houses": [
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      5,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "unhappy_married_life": {
+    "label": "Unhappy married life",
+    "category": "General",
+    "houses": [
+      4,
+      6,
+      8,
+      10,
+      11,
+      12
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      4,
+      6,
+      8,
+      10,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "difficulties_in": {
+    "label": "Difficulties in",
+    "category": "General",
+    "houses": [
+      4,
+      6,
+      7,
+      8,
+      12
+    ],
+    "primaryCusp": 7,
+    "supportingHouses": [
+      4,
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "unreliable_friend": {
+    "label": "Unreliable friend",
+    "category": "General",
+    "houses": [
+      7,
+      8,
+      9,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      7,
+      8,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Moon"
+    ],
+    "supportingSigns": []
+  },
+  "vacating_by_tenant": {
+    "label": "Vacating by tenant",
+    "category": "General",
+    "houses": [
+      6,
+      8,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      8,
+      6
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "voluntary_retirement_from_service": {
+    "label": "Voluntary Retirement from service",
+    "category": "Career",
+    "houses": [
+      1,
+      5,
+      9,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      1,
+      5,
+      9
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "weak_lagna": {
+    "label": "Weak Lagna",
+    "category": "General",
+    "houses": [
+      1,
+      5,
+      6,
+      8,
+      12
+    ],
+    "primaryCusp": 1,
+    "supportingHouses": [
+      5,
+      6,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "wealth__enormous": {
+    "label": "Wealth--Enormous",
+    "category": "Finance",
+    "houses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      2,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "wealth__medium": {
+    "label": "Wealth--Medium",
+    "category": "Finance",
+    "houses": [
+      2,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "wealthlessness": {
+    "label": "Wealthlessness",
+    "category": "Finance",
+    "houses": [
+      2,
+      5,
+      8,
+      12
+    ],
+    "primaryCusp": 2,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "wife_is_destined_to_get_property": {
+    "label": "Wife is destined to get property",
+    "category": "Marriage",
+    "houses": [
+      5,
+      8,
+      10
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      10,
+      8,
+      5
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "wife\u2019s_property": {
+    "label": "Wife\u2019s property",
+    "category": "Marriage",
+    "houses": [
+      2,
+      7,
+      8,
+      11
+    ],
+    "primaryCusp": 8,
+    "supportingHouses": [
+      8,
+      2,
+      11,
+      7
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "winding_up_business_or_break_in_career": {
+    "label": "Winding up business or break in career",
+    "category": "Career",
+    "houses": [
+      5,
+      8,
+      10,
+      12
+    ],
+    "primaryCusp": 10,
+    "supportingHouses": [
+      5,
+      8,
+      12
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": [
+      "Taurus",
+      "Virgo",
+      "Capricorn"
+    ]
+  },
+  "winning_election_litigation_sport_competition": {
+    "label": "Winning election/litigation/sport/competition",
+    "category": "Legal",
+    "houses": [
+      1,
+      3,
+      6,
+      10,
+      11
+    ],
+    "primaryCusp": 6,
+    "supportingHouses": [
+      1,
+      3,
+      6,
+      10,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [
+      "Mars"
+    ],
+    "supportingSigns": []
+  },
+  "winning_in_love": {
+    "label": "Winning in Love",
+    "category": "Marriage",
+    "houses": [
+      5,
+      7,
+      11
+    ],
+    "primaryCusp": 11,
+    "supportingHouses": [
+      5,
+      7
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "younger_siblings___death": {
+    "label": "Younger siblings - Death",
+    "category": "Health",
+    "houses": [
+      2,
+      3,
+      4
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      2,
+      4
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "younger_siblings___enmity": {
+    "label": "Younger siblings - Enmity",
+    "category": "General",
+    "houses": [
+      3,
+      6,
+      8
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      6,
+      8
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "younger_siblings___living_in_harmony": {
+    "label": "Younger siblings - Living in Harmony",
+    "category": "General",
+    "houses": [
+      1,
+      3,
+      11
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      1,
+      11
+    ],
+    "adverseHouses": [],
+    "polarity": "BENEFICIAL",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  },
+  "younger_siblings___separation": {
+    "label": "Younger siblings - Separation",
+    "category": "Marriage",
+    "houses": [
+      2,
+      3,
+      10
+    ],
+    "primaryCusp": 3,
+    "supportingHouses": [
+      2,
+      10
+    ],
+    "adverseHouses": [],
+    "polarity": "ADVERSE",
+    "supportingPlanets": [],
+    "supportingSigns": []
+  }
+}

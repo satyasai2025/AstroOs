@@ -1,0 +1,100 @@
+# catalogues/nakshatras/punarvasu.yaml
+
+id: nakshatra.punarvasu
+name: Punarvasu
+aliases:
+  - Punarpoosam
+  - पुनर्वसु
+category: nakshatra
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Punarvasu
+devanagari: पुनर्वसु
+meaning: "The return of light; renewal of wealth"
+
+ruler:
+  ref: graha.guru
+  system: vimshottari
+
+deity:
+  name: Aditi
+  description: The mother of the gods (Adityas), symbol of infinite abundance and renewal
+  attributes:
+    - motherhood
+    - abundance
+    - renewal
+    - infinity
+
+shakti:
+  name: Punarvasu
+  meaning: "to regain"
+  power: "the power to regain, to bring back what was lost"
+
+star:
+  name: Pollux
+  alt_name: Beta Geminorum
+
+starting_degree: 63.333
+ending_degree: 80.000
+rashi_span:
+  - ref: rashi.mithunam
+  - ref: rashi.karkam
+
+padas:
+  - pada: 1
+    degrees: "20°00' - 23°20'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.vrishabham
+  - pada: 2
+    degrees: "23°20' - 26°40'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.mithunam
+  - pada: 3
+    degrees: "26°40' - 30°00'"
+    rashi: rashi.mithunam
+    navamsha_rashi: rashi.karkam
+  - pada: 4
+    degrees: "0°00' - 3°20'"
+    rashi: rashi.karkam
+    navamsha_rashi: rashi.simham
+
+nature:
+  temperament: Renewing, optimistic
+  guna: sattvic
+  gana: deva
+  yoni: cat
+  nadi: madhya
+
+karakatvas:
+  - concept: Renewal and regeneration
+  - concept: Return of lost prosperity
+  - concept: Optimism and faith
+  - concept: Generosity and expansion
+
+compatible_nakshatras:
+  - ref: nakshatra.punarvasu
+incompatible_nakshatras: []
+
+sources:
+  - ref: source.BPHS
+    claim: "Punarvasu is the seventh nakshatra, ruled by Guru, presided over by Aditi"
+    confidence: high
+
+notes: >
+  Punarvasu is the seventh nakshatra, spanning from late Mithuna into
+  early Karka (20° Mithuna to 3°20' Karka). Ruled by Guru in the
+  Vimshottari system, it is presided over by Aditi, the mother of the
+  gods. Its shakti is the power to regain what was lost. The first
+  three padas fall in Mithuna with Vrishabha-Mithuna-Karka navamsha;
+  the fourth pada is in Karka with Simha navamsha. As a deva-gana,
+  sattvic nakshatra with a renewing temperament, it bestows optimism,
+  generosity, and the capacity for renewal and fresh starts.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

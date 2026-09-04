@@ -1,0 +1,149 @@
+id: catalogue.yogas
+name: Classical Yoga Catalogue
+description: "Foundational classical Jyotish yogas catalogued from BPHS, Phaladeepika, Saravali, and traditional sources"
+version: 1.0
+last_verified: 2026-07-15
+total_entries: 20
+
+raja:
+  - id: yoga.raja.gaja-keshari
+    name: Gaja Kesari Yoga
+    file: raja/gaja-keshari.yaml
+    source: BPHS Ch.5
+    intensity: strong
+
+  - id: yoga.raja.budha-aditya
+    name: Budha Aditya Yoga
+    file: raja/budha-aditya.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+  - id: yoga.raja.chandra-mangala
+    name: Chandra Mangala Yoga
+    file: raja/chandra-mangala.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+  - id: yoga.raja.dhana-yoga-1
+    name: Dhanadhikari Yoga
+    file: raja/dhana-yoga-1.yaml
+    source: BPHS Ch.5
+    intensity: strong
+
+  - id: yoga.raja.vasumad
+    name: Vasumad Yoga
+    file: raja/vasumad-yoga.yaml
+    source: Saravali
+    intensity: moderate
+
+dhana:
+  - id: yoga.dhana.lakshmi-yoga
+    name: Lakshmi Yoga
+    file: dhana/lakshmi-yoga.yaml
+    source: Phaladeepika
+    intensity: strong
+
+  - id: yoga.dhana.dhana-yoga-2
+    name: Dhana Yoga
+    file: dhana/dhana-yoga-2.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+  - id: yoga.dhana.kubera-yoga
+    name: Kubera Yoga
+    file: dhana/kubera-yoga.yaml
+    source: Phaladeepika
+    intensity: moderate
+
+chandra:
+  - id: yoga.chandra.maha-bhagya
+    name: Maha Bhagya Yoga
+    file: chandra/maha-bhagya.yaml
+    source: BPHS Ch.5
+    intensity: strong
+
+  - id: yoga.chandra.gauri-yoga
+    name: Gauri Yoga
+    file: chandra/gauri-yoga.yaml
+    source: Phaladeepika
+    intensity: strong
+
+  - id: yoga.chandra.sunapha
+    name: Sunapha Yoga
+    file: chandra/sunapha.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+  - id: yoga.chandra.anapha
+    name: Anapha Yoga
+    file: chandra/anapha.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+  - id: yoga.chandra.durudhura
+    name: Durudhura Yoga
+    file: chandra/durudhura.yaml
+    source: BPHS Ch.5
+    intensity: strong
+
+  - id: yoga.chandra.kapata
+    name: Kedara Yoga
+    file: chandra/kapata.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+dosha:
+  - id: yoga.dosha.mangal-dosha
+    name: Mangal Dosha
+    file: dosha/mangal-dosha.yaml
+    source: BPHS Ch.36
+    intensity: strong
+
+  - id: yoga.dosha.sarpadosha
+    name: Sarpadosha
+    file: dosha/sarpadosha.yaml
+    source: Traditional
+    intensity: strong
+
+  - id: yoga.dosha.kaal-sarpadosha
+    name: Kaal Sarpadosha
+    file: dosha/kaal-sarpadosha.yaml
+    source: Traditional
+    intensity: strong
+
+special:
+  - id: yoga.special.pancha-mahapurusha
+    name: Pancha Mahapurusha Yoga
+    file: special/pancha-mahapurusha.yaml
+    source: BPHS Ch.5
+    intensity: strong
+
+  - id: yoga.special.neechabhanga-raja
+    name: Neechabhanga Raja Yoga
+    file: special/neechabhanga-raja.yaml
+    source: BPHS Ch.2
+    intensity: strong
+
+  - id: yoga.special.viparita-raja
+    name: Viparita Raja Yoga
+    file: special/viparita-raja.yaml
+    source: BPHS Ch.5
+    intensity: moderate
+
+metadata:
+  sources_used:
+    - source.BPHS
+    - source.phaladeepika
+    - source.saravali
+    - source.traditional
+
+  intensity_distribution:
+    strong: 12
+    moderate: 8
+
+  type_distribution:
+    raja: 5
+    dhana: 3
+    chandra: 6
+    dosha: 3
+    special: 3

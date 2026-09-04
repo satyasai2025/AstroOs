@@ -1,0 +1,102 @@
+# catalogues/bhavas/bhava-4.yaml
+
+id: bhava.4
+name: Sukha Bhava
+aliases:
+  - 4th House
+  - Happiness House
+  - सुख भाव
+category: bhava
+status: active
+confidence: high
+version: 1.0
+last_verified: 2026-07-15
+
+classical_name: Sukha
+number: 4
+meaning: "Happiness; comfort; domestic bliss"
+
+natural_karaka:
+  ref: graha.chandra
+  notes: "Chandra is the natural karaka for mother, emotions, and domestic happiness"
+
+marakasthana:
+  is_maraka: false
+  universal: false
+  notes: "Not a marakasthana"
+
+karakatvas:
+  classical:
+    - concept: Mother (Matri)
+      source: source.BPHS
+    - concept: Happiness and comfort (Sukha)
+      source: source.BPHS
+    - concept: Property and immovable assets
+      source: source.BPHS
+    - concept: Vehicles and conveyances
+      source: source.BPHS
+    - concept: Education and learning
+      source: source.BPHS
+  traditional:
+    - concept: Mother
+    - concept: Happiness
+    - concept: Property
+    - concept: Vehicles
+    - concept: Education
+
+conditions:
+  strong_when:
+    - Lord well-placed in Kendra or Trikona
+    - Benefics occupying or aspecting the house
+    - Strong Chandra (natural karaka)
+  weak_when:
+    - Malefics afflicting the house
+    - Lord in Dusthana
+    - Weak or debilitated lord
+  afflicted_when:
+    - Malefics occupying the 4th house
+    - Lord in enemy sign or debilitated
+    - Afflicted Chandra
+
+effects:
+  positive:
+    - Domestic happiness and emotional well-being
+    - Supportive relationship with mother
+    - Comfortable home and property ownership
+    - Success in education and learning
+  negative:
+    - Emotional instability and domestic unrest
+    - Difficulties with mother or motherhood
+    - Property disputes or loss
+    - Obstacles in education
+
+related_bhavas:
+  - bhava: 1
+    relationship: foundation
+    notes: "The 4th house represents the emotional foundation of the self shown in bhava.1"
+  - bhava: 7
+    relationship: home
+    notes: "The 7th from the 4th (bhava.10) shows the public expression of domestic matters"
+
+tradition_overrides:
+  parashari:
+    upapada_calculation: null
+
+sources:
+  - ref: source.BPHS
+    claim: "Mother, happiness, property, vehicles, and education are significations of the 4th house"
+    confidence: high
+
+notes: >
+  The 4th house (Sukha Bhava) governs domestic happiness, mother,
+  emotional security, and immovable property. As a Kendra (angular
+  house), it is highly significant. Chandra as natural karaka
+  links this house to emotions, nurturing, and the mind. The
+  4th house also indicates the quality of one's education and
+  the comfort derived from home and family life.
+
+history:
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

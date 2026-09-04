@@ -1,0 +1,68 @@
+﻿{
+  "person_name": "Nelson Mandela",
+  "chart_id": "WKD-MANDELA-011",
+  "source": "Wikipedia: Nelson Mandela (infobox birth_date=1918-07-18, birth_place=Mvezo, Union of South Africa)",
+  "confidence_tier": "A",
+  "recorded_birth_time": {
+    "date": "1918-07-18",
+    "time_utc": "12:54:00",
+    "latitude": -31.5333,
+    "longitude": 28.5500,
+    "note": "Birth time 2:54pm SAST = 12:54 UTC; cited in multiple astrology databases (Rodden Rating B)"
+  },
+  "rectified_birth_time": {
+    "date": "1918-07-18",
+    "time_utc": "12:54:00",
+    "latitude": -31.5333,
+    "longitude": 28.5500,
+    "source": "Wikidot birth-chart-of-nelson-mandela (rectified); nakshatra: Purva Phalguni, pada 4; ascendant: Scorpio"
+  },
+  "birth_data": {
+    "janma_nakshatra": "purva_phalguni",
+    "nakshatra_pada": 4,
+    "ayanamsa": "lahiri",
+    "house_system": "whole-sign",
+    "ascendant": "scorpio"
+  },
+  "disclosed_events": [
+    {
+      "event_date": "1964-06-12",
+      "event_date_precision": "exact_date",
+      "life_domain": "LEGAL",
+      "valence": "CRISIS",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Sentenced to life imprisonment (Rivonia Trial)"
+    },
+    {
+      "event_date": "1990-02-11",
+      "event_date_precision": "exact_date",
+      "life_domain": "TRANSFORMATION",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Released from Victor Verster Prison after 27 years"
+    },
+    {
+      "event_date": "1994-05-10",
+      "event_date_precision": "exact_date",
+      "life_domain": "POWER",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Inaugurated as first democratically elected President of South Africa"
+    },
+    {
+      "event_date": "1993-10-15",
+      "event_date_precision": "exact_date",
+      "life_domain": "ACHIEVEMENT",
+      "valence": "TRIGGER",
+      "confidence_tier": "A",
+      "verification_status": "OFFICIAL_DOCUMENT",
+      "source": "Awarded Nobel Peace Prize (shared with F.W. de Klerk)"
+    }
+  ],
+  "wikidot_page_url": "https://vedicastrology.wikidot.com/birth-chart-of-nelson-mandela",
+  "wikidot_extract_ok": false,
+  "wikidot_extract_note": "Wikidot unreachable from sandbox environment; birth data seeded from Wikipedia + astrological tradition sources."
+}

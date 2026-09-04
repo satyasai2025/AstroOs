@@ -1,0 +1,3588 @@
+{
+  "dataset_id": "GC-MASTER",
+  "version": "1.0.0",
+  "status": "STABLE",
+  "description": "Golden-reference benchmark dataset. The baseline script (scripts/compute_gc_master_baseline.py) fills expected_planets, expected_house_cusps and expected_vargas for each reference. Birth data uses public-domain celebrity records cross-checked against published ephemerides.",
+  "references": [
+    {
+      "chart_id": "GC-REF-001",
+      "person_name": "Queen Elizabeth II",
+      "confidence_tier": "A",
+      "source": "Public record — born 1926-04-21 02:40 BST (01:40 UTC), London",
+      "birth_data": {
+        "date": "1926-04-21",
+        "time_utc": "01:40:00",
+        "latitude": 51.5074,
+        "longitude": -0.1278
+      },
+      "expected_planets": {
+        "sun": {
+          "longitude": 7.378166,
+          "rashi": "aries",
+          "rashi_degree": 7.378166,
+          "house_number": 5,
+          "nakshatra": "ashwini",
+          "pada": 3
+        },
+        "moon": {
+          "longitude": 109.294,
+          "rashi": "cancer",
+          "rashi_degree": 19.294,
+          "house_number": 8,
+          "nakshatra": "ashlesha",
+          "pada": 1
+        },
+        "mars": {
+          "longitude": 298.038415,
+          "rashi": "capricorn",
+          "rashi_degree": 28.038415,
+          "house_number": 2,
+          "nakshatra": "dhanishtha",
+          "pada": 2
+        },
+        "mercury": {
+          "longitude": 341.834335,
+          "rashi": "pisces",
+          "rashi_degree": 11.834335,
+          "house_number": 4,
+          "nakshatra": "uttara_bhadrapada",
+          "pada": 3
+        },
+        "jupiter": {
+          "longitude": 299.681867,
+          "rashi": "capricorn",
+          "rashi_degree": 29.681867,
+          "house_number": 2,
+          "nakshatra": "dhanishtha",
+          "pada": 2
+        },
+        "venus": {
+          "longitude": 321.128295,
+          "rashi": "aquarius",
+          "rashi_degree": 21.128295,
+          "house_number": 3,
+          "nakshatra": "purva_bhadrapada",
+          "pada": 1
+        },
+        "saturn": {
+          "longitude": 211.617299,
+          "rashi": "scorpio",
+          "rashi_degree": 1.617299,
+          "house_number": 12,
+          "nakshatra": "vishakha",
+          "pada": 4
+        },
+        "rahu": {
+          "longitude": 87.645446,
+          "rashi": "gemini",
+          "rashi_degree": 27.645446,
+          "house_number": 7,
+          "nakshatra": "punarvasu",
+          "pada": 3
+        },
+        "ketu": {
+          "longitude": 267.645446,
+          "rashi": "sagittarius",
+          "rashi_degree": 27.645446,
+          "house_number": 1,
+          "nakshatra": "uttara_ashadha",
+          "pada": 1
+        }
+      },
+      "expected_house_cusps": {
+        "W": {
+          "1": 240.0,
+          "2": 270.0,
+          "3": 300.0,
+          "4": 330.0,
+          "5": 0.0,
+          "6": 30.0,
+          "7": 60.0,
+          "8": 90.0,
+          "9": 120.0,
+          "10": 150.0,
+          "11": 180.0,
+          "12": 210.0
+        },
+        "P": {
+          "1": 268.588922,
+          "2": 325.659084,
+          "3": 7.510945,
+          "4": 32.756931,
+          "5": 51.301976,
+          "6": 68.290059,
+          "7": 88.588922,
+          "8": 145.659084,
+          "9": 187.510945,
+          "10": 212.756931,
+          "11": 231.301976,
+          "12": 248.290059
+        },
+        "K": {
+          "1": 268.588922,
+          "2": 302.534533,
+          "3": 351.344869,
+          "4": 32.756931,
+          "5": 48.470803,
+          "6": 66.108374,
+          "7": 88.588922,
+          "8": 122.534533,
+          "9": 171.344869,
+          "10": 212.756931,
+          "11": 228.470803,
+          "12": 246.108374
+        },
+        "E": {
+          "1": 268.588922,
+          "2": 298.588922,
+          "3": 328.588922,
+          "4": 358.588922,
+          "5": 28.588922,
+          "6": 58.588922,
+          "7": 88.588922,
+          "8": 118.588922,
+          "9": 148.588922,
+          "10": 178.588922,
+          "11": 208.588922,
+          "12": 238.588922
+        }
+      },
+      "expected_vargas": {
+        "D2": {
+          "ketu": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 2
+          }
+        },
+        "D3": {
+          "ketu": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "virgo",
+            "house": 2
+          },
+          "venus": {
+            "rashi": "libra",
+            "house": 3
+          },
+          "moon": {
+            "rashi": "scorpio",
+            "house": 4
+          },
+          "saturn": {
+            "rashi": "scorpio",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "aries",
+            "house": 9
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 12
+          }
+        },
+        "D4": {
+          "ketu": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "moon": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "aries",
+            "house": 8
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 12
+          }
+        },
+        "D7": {
+          "ketu": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "sagittarius",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "mars": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "taurus",
+            "house": 12
+          },
+          "saturn": {
+            "rashi": "taurus",
+            "house": 12
+          },
+          "sun": {
+            "rashi": "taurus",
+            "house": 12
+          }
+        },
+        "D9": {
+          "ketu": {
+            "rashi": "sagittarius",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "sagittarius",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "aries",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "gemini",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 7
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 8
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 10
+          },
+          "mars": {
+            "rashi": "virgo",
+            "house": 10
+          },
+          "mercury": {
+            "rashi": "libra",
+            "house": 11
+          }
+        },
+        "D10": {
+          "ketu": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "mars": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 11
+          }
+        },
+        "D12": {
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "scorpio",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "sagittarius",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 2
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 9
+          },
+          "venus": {
+            "rashi": "libra",
+            "house": 12
+          }
+        },
+        "D16": {
+          "mars": {
+            "rashi": "gemini",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "cancer",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 5
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "leo",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 12
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 12
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 12
+          }
+        },
+        "D20": {
+          "mercury": {
+            "rashi": "pisces",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "aries",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 6
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 8
+          },
+          "jupiter": {
+            "rashi": "scorpio",
+            "house": 9
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 11
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 12
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 12
+          },
+          "venus": {
+            "rashi": "aquarius",
+            "house": 12
+          }
+        },
+        "D24": {
+          "jupiter": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "ketu": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "leo",
+            "house": 3
+          },
+          "moon": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "venus": {
+            "rashi": "sagittarius",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 11
+          },
+          "mars": {
+            "rashi": "taurus",
+            "house": 12
+          }
+        },
+        "D27": {
+          "venus": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 6
+          },
+          "sun": {
+            "rashi": "libra",
+            "house": 6
+          },
+          "mercury": {
+            "rashi": "scorpio",
+            "house": 7
+          },
+          "saturn": {
+            "rashi": "aquarius",
+            "house": 10
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 12
+          }
+        },
+        "D30": {
+          "ketu": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "scorpio",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "aries",
+            "house": 7
+          },
+          "saturn": {
+            "rashi": "taurus",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "gemini",
+            "house": 9
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 10
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 12
+          }
+        },
+        "D40": {
+          "venus": {
+            "rashi": "leo",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "moon": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "sagittarius",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "mercury": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 11
+          }
+        },
+        "D45": {
+          "moon": {
+            "rashi": "leo",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "sagittarius",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "pisces",
+            "house": 10
+          },
+          "venus": {
+            "rashi": "pisces",
+            "house": 10
+          },
+          "ketu": {
+            "rashi": "taurus",
+            "house": 12
+          },
+          "mercury": {
+            "rashi": "taurus",
+            "house": 12
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 12
+          }
+        },
+        "D60": {
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "gemini",
+            "house": 6
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 6
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 9
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 9
+          },
+          "venus": {
+            "rashi": "libra",
+            "house": 10
+          },
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "scorpio",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "sagittarius",
+            "house": 12
+          }
+        }
+      }
+    },
+    {
+      "chart_id": "GC-REF-002",
+      "person_name": "Barack Obama",
+      "confidence_tier": "A",
+      "source": "Public record — born 1961-08-04 19:24 HST (05:24 UTC Aug 5), Honolulu",
+      "birth_data": {
+        "date": "1961-08-05",
+        "time_utc": "05:24:00",
+        "latitude": 21.3069,
+        "longitude": -157.8583
+      },
+      "expected_planets": {
+        "sun": {
+          "longitude": 109.227293,
+          "rashi": "cancer",
+          "rashi_degree": 19.227293,
+          "house_number": 7,
+          "nakshatra": "ashlesha",
+          "pada": 1
+        },
+        "moon": {
+          "longitude": 40.036807,
+          "rashi": "taurus",
+          "rashi_degree": 10.036807,
+          "house_number": 5,
+          "nakshatra": "rohini",
+          "pada": 1
+        },
+        "mars": {
+          "longitude": 149.255973,
+          "rashi": "leo",
+          "rashi_degree": 29.255973,
+          "house_number": 8,
+          "nakshatra": "uttara_phalguni",
+          "pada": 1
+        },
+        "mercury": {
+          "longitude": 99.010981,
+          "rashi": "cancer",
+          "rashi_degree": 9.010981,
+          "house_number": 7,
+          "nakshatra": "pushya",
+          "pada": 2
+        },
+        "jupiter": {
+          "longitude": 277.537997,
+          "rashi": "capricorn",
+          "rashi_degree": 7.537997,
+          "house_number": 1,
+          "nakshatra": "uttara_ashadha",
+          "pada": 4
+        },
+        "venus": {
+          "longitude": 68.468731,
+          "rashi": "gemini",
+          "rashi_degree": 8.468731,
+          "house_number": 6,
+          "nakshatra": "ardra",
+          "pada": 1
+        },
+        "saturn": {
+          "longitude": 272.010119,
+          "rashi": "capricorn",
+          "rashi_degree": 2.010119,
+          "house_number": 1,
+          "nakshatra": "uttara_ashadha",
+          "pada": 2
+        },
+        "rahu": {
+          "longitude": 124.571927,
+          "rashi": "leo",
+          "rashi_degree": 4.571927,
+          "house_number": 8,
+          "nakshatra": "magha",
+          "pada": 2
+        },
+        "ketu": {
+          "longitude": 304.571927,
+          "rashi": "aquarius",
+          "rashi_degree": 4.571927,
+          "house_number": 2,
+          "nakshatra": "dhanishtha",
+          "pada": 4
+        }
+      },
+      "expected_house_cusps": {
+        "W": {
+          "1": 270.0,
+          "2": 300.0,
+          "3": 330.0,
+          "4": 0.0,
+          "5": 30.0,
+          "6": 60.0,
+          "7": 90.0,
+          "8": 120.0,
+          "9": 150.0,
+          "10": 180.0,
+          "11": 210.0,
+          "12": 240.0
+        },
+        "P": {
+          "1": 294.731211,
+          "2": 332.587595,
+          "3": 6.978315,
+          "4": 35.572846,
+          "5": 60.660268,
+          "6": 85.701992,
+          "7": 114.731211,
+          "8": 152.587595,
+          "9": 186.978315,
+          "10": 215.572846,
+          "11": 240.660268,
+          "12": 265.701992
+        },
+        "K": {
+          "1": 294.731211,
+          "2": 328.76861,
+          "3": 4.058999,
+          "4": 35.572846,
+          "5": 59.730006,
+          "6": 85.375054,
+          "7": 114.731211,
+          "8": 148.76861,
+          "9": 184.058999,
+          "10": 215.572846,
+          "11": 239.730006,
+          "12": 265.375054
+        },
+        "E": {
+          "1": 294.731211,
+          "2": 324.731211,
+          "3": 354.731211,
+          "4": 24.731211,
+          "5": 54.731211,
+          "6": 84.731211,
+          "7": 114.731211,
+          "8": 144.731211,
+          "9": 174.731211,
+          "10": 204.731211,
+          "11": 234.731211,
+          "12": 264.731211
+        }
+      },
+      "expected_vargas": {
+        "D2": {
+          "ketu": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "mars": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 12
+          }
+        },
+        "D3": {
+          "moon": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "mars": {
+            "rashi": "aries",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 12
+          }
+        },
+        "D4": {
+          "mercury": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "taurus",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 11
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 12
+          }
+        },
+        "D7": {
+          "moon": {
+            "rashi": "capricorn",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "aquarius",
+            "house": 3
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "pisces",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "taurus",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 8
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 9
+          },
+          "rahu": {
+            "rashi": "virgo",
+            "house": 10
+          }
+        },
+        "D9": {
+          "mercury": {
+            "rashi": "virgo",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 4
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 5
+          },
+          "venus": {
+            "rashi": "sagittarius",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 6
+          },
+          "jupiter": {
+            "rashi": "pisces",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "aries",
+            "house": 9
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 10
+          }
+        },
+        "D10": {
+          "mars": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 2
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "scorpio",
+            "house": 7
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "aries",
+            "house": 12
+          }
+        },
+        "D12": {
+          "mercury": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 6
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "cancer",
+            "house": 10
+          },
+          "moon": {
+            "rashi": "virgo",
+            "house": 12
+          },
+          "rahu": {
+            "rashi": "virgo",
+            "house": 12
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 12
+          }
+        },
+        "D16": {
+          "saturn": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "ketu": {
+            "rashi": "libra",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 6
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 7
+          },
+          "moon": {
+            "rashi": "capricorn",
+            "house": 9
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 10
+          },
+          "venus": {
+            "rashi": "aries",
+            "house": 12
+          }
+        },
+        "D20": {
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "libra",
+            "house": 3
+          },
+          "venus": {
+            "rashi": "capricorn",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 8
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 8
+          },
+          "sun": {
+            "rashi": "aries",
+            "house": 9
+          },
+          "saturn": {
+            "rashi": "taurus",
+            "house": 10
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 11
+          },
+          "mars": {
+            "rashi": "cancer",
+            "house": 12
+          }
+        },
+        "D24": {
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "pisces",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "cancer",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "leo",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "libra",
+            "house": 9
+          },
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 10
+          },
+          "rahu": {
+            "rashi": "scorpio",
+            "house": 10
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 12
+          }
+        },
+        "D27": {
+          "venus": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "gemini",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 2
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "saturn": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 9
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 10
+          },
+          "moon": {
+            "rashi": "aries",
+            "house": 12
+          }
+        },
+        "D30": {
+          "venus": {
+            "rashi": "aquarius",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 4
+          },
+          "moon": {
+            "rashi": "taurus",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "taurus",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 9
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 9
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 10
+          }
+        },
+        "D40": {
+          "mars": {
+            "rashi": "cancer",
+            "house": 2
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 3
+          },
+          "ketu": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "mercury": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "moon": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "sun": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "sagittarius",
+            "house": 7
+          },
+          "venus": {
+            "rashi": "pisces",
+            "house": 10
+          }
+        },
+        "D45": {
+          "mercury": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 4
+          },
+          "moon": {
+            "rashi": "scorpio",
+            "house": 7
+          },
+          "venus": {
+            "rashi": "sagittarius",
+            "house": 8
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 10
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 10
+          },
+          "jupiter": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "mars": {
+            "rashi": "pisces",
+            "house": 11
+          }
+        },
+        "D60": {
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 2
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 3
+          },
+          "ketu": {
+            "rashi": "capricorn",
+            "house": 3
+          },
+          "rahu": {
+            "rashi": "capricorn",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "saturn": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 6
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 10
+          }
+        }
+      }
+    },
+    {
+      "chart_id": "GC-REF-003",
+      "person_name": "Diana, Princess of Wales",
+      "confidence_tier": "B",
+      "source": "Public record — born 1961-07-01 19:45 BST (18:45 UTC), Sandringham",
+      "birth_data": {
+        "date": "1961-07-01",
+        "time_utc": "18:45:00",
+        "latitude": 52.8307,
+        "longitude": 0.5087
+      },
+      "expected_planets": {
+        "sun": {
+          "longitude": 76.343748,
+          "rashi": "gemini",
+          "rashi_degree": 16.343748,
+          "house_number": 8,
+          "nakshatra": "ardra",
+          "pada": 3
+        },
+        "moon": {
+          "longitude": 301.718629,
+          "rashi": "aquarius",
+          "rashi_degree": 1.718629,
+          "house_number": 4,
+          "nakshatra": "dhanishtha",
+          "pada": 3
+        },
+        "mars": {
+          "longitude": 128.326404,
+          "rashi": "leo",
+          "rashi_degree": 8.326404,
+          "house_number": 10,
+          "nakshatra": "magha",
+          "pada": 3
+        },
+        "mercury": {
+          "longitude": 69.882088,
+          "rashi": "gemini",
+          "rashi_degree": 9.882088,
+          "house_number": 8,
+          "nakshatra": "ardra",
+          "pada": 1
+        },
+        "jupiter": {
+          "longitude": 281.77777,
+          "rashi": "capricorn",
+          "rashi_degree": 11.77777,
+          "house_number": 3,
+          "nakshatra": "shravana",
+          "pada": 1
+        },
+        "venus": {
+          "longitude": 31.080532,
+          "rashi": "taurus",
+          "rashi_degree": 1.080532,
+          "house_number": 7,
+          "nakshatra": "krittika",
+          "pada": 2
+        },
+        "saturn": {
+          "longitude": 274.494694,
+          "rashi": "capricorn",
+          "rashi_degree": 4.494694,
+          "house_number": 3,
+          "nakshatra": "uttara_ashadha",
+          "pada": 3
+        },
+        "rahu": {
+          "longitude": 126.397179,
+          "rashi": "leo",
+          "rashi_degree": 6.397179,
+          "house_number": 10,
+          "nakshatra": "magha",
+          "pada": 2
+        },
+        "ketu": {
+          "longitude": 306.397179,
+          "rashi": "aquarius",
+          "rashi_degree": 6.397179,
+          "house_number": 4,
+          "nakshatra": "dhanishtha",
+          "pada": 4
+        }
+      },
+      "expected_house_cusps": {
+        "W": {
+          "1": 210.0,
+          "2": 240.0,
+          "3": 270.0,
+          "4": 300.0,
+          "5": 330.0,
+          "6": 0.0,
+          "7": 30.0,
+          "8": 60.0,
+          "9": 90.0,
+          "10": 120.0,
+          "11": 150.0,
+          "12": 180.0
+        },
+        "P": {
+          "1": 235.099133,
+          "2": 276.498993,
+          "3": 325.048495,
+          "4": 359.742038,
+          "5": 22.741594,
+          "6": 39.981795,
+          "7": 55.099133,
+          "8": 96.498993,
+          "9": 145.048495,
+          "10": 179.742038,
+          "11": 202.741594,
+          "12": 219.981795
+        },
+        "K": {
+          "1": 235.099133,
+          "2": 259.153866,
+          "3": 297.677269,
+          "4": 359.742038,
+          "5": 17.596465,
+          "6": 35.664857,
+          "7": 55.099133,
+          "8": 79.153866,
+          "9": 117.677269,
+          "10": 179.742038,
+          "11": 197.596465,
+          "12": 215.664857
+        },
+        "E": {
+          "1": 235.099133,
+          "2": 265.099133,
+          "3": 295.099133,
+          "4": 325.099133,
+          "5": 355.099133,
+          "6": 25.099133,
+          "7": 55.099133,
+          "8": 85.099133,
+          "9": 115.099133,
+          "10": 145.099133,
+          "11": 175.099133,
+          "12": 205.099133
+        }
+      },
+      "expected_vargas": {
+        "D2": {
+          "ketu": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 12
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 12
+          }
+        },
+        "D3": {
+          "mars": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "libra",
+            "house": 4
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 7
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 8
+          },
+          "jupiter": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 12
+          }
+        },
+        "D4": {
+          "rahu": {
+            "rashi": "leo",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 7
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 9
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 10
+          }
+        },
+        "D7": {
+          "venus": {
+            "rashi": "scorpio",
+            "house": 2
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 6
+          },
+          "mercury": {
+            "rashi": "leo",
+            "house": 11
+          },
+          "saturn": {
+            "rashi": "leo",
+            "house": 11
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 12
+          },
+          "mars": {
+            "rashi": "virgo",
+            "house": 12
+          },
+          "rahu": {
+            "rashi": "virgo",
+            "house": 12
+          },
+          "sun": {
+            "rashi": "virgo",
+            "house": 12
+          }
+        },
+        "D9": {
+          "saturn": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 4
+          },
+          "mars": {
+            "rashi": "gemini",
+            "house": 5
+          },
+          "moon": {
+            "rashi": "libra",
+            "house": 9
+          },
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 10
+          },
+          "mercury": {
+            "rashi": "sagittarius",
+            "house": 11
+          },
+          "venus": {
+            "rashi": "capricorn",
+            "house": 12
+          }
+        },
+        "D10": {
+          "ketu": {
+            "rashi": "aries",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 8
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 8
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 8
+          },
+          "sun": {
+            "rashi": "scorpio",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "sagittarius",
+            "house": 10
+          },
+          "venus": {
+            "rashi": "capricorn",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 12
+          }
+        },
+        "D12": {
+          "mercury": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 4
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 8
+          },
+          "jupiter": {
+            "rashi": "taurus",
+            "house": 9
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 9
+          }
+        },
+        "D16": {
+          "jupiter": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "rahu": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "taurus",
+            "house": 9
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 12
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 12
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 12
+          }
+        },
+        "D20": {
+          "ketu": {
+            "rashi": "aries",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "taurus",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 3
+          },
+          "jupiter": {
+            "rashi": "scorpio",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "sagittarius",
+            "house": 9
+          },
+          "moon": {
+            "rashi": "capricorn",
+            "house": 10
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 11
+          }
+        },
+        "D24": {
+          "mercury": {
+            "rashi": "pisces",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 2
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 5
+          },
+          "moon": {
+            "rashi": "virgo",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "virgo",
+            "house": 7
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 8
+          },
+          "ketu": {
+            "rashi": "capricorn",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "capricorn",
+            "house": 11
+          },
+          "mars": {
+            "rashi": "aquarius",
+            "house": 12
+          }
+        },
+        "D27": {
+          "mars": {
+            "rashi": "scorpio",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "scorpio",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "scorpio",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "taurus",
+            "house": 7
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 9
+          },
+          "rahu": {
+            "rashi": "virgo",
+            "house": 11
+          }
+        },
+        "D30": {
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "mars": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "saturn": {
+            "rashi": "taurus",
+            "house": 7
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 11
+          }
+        },
+        "D40": {
+          "venus": {
+            "rashi": "scorpio",
+            "house": 5
+          },
+          "ketu": {
+            "rashi": "sagittarius",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "sagittarius",
+            "house": 6
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "pisces",
+            "house": 9
+          },
+          "saturn": {
+            "rashi": "pisces",
+            "house": 9
+          },
+          "mercury": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 12
+          }
+        },
+        "D45": {
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "taurus",
+            "house": 9
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 9
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 12
+          }
+        },
+        "D60": {
+          "sun": {
+            "rashi": "sagittarius",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "sagittarius",
+            "house": 1
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 7
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 8
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 10
+          },
+          "mercury": {
+            "rashi": "scorpio",
+            "house": 12
+          }
+        }
+      }
+    },
+    {
+      "chart_id": "GC-REF-004",
+      "person_name": "Nelson Mandela",
+      "confidence_tier": "B",
+      "source": "Public record — born 1918-07-18 13:30 SAST (11:30 UTC), Mvezo",
+      "birth_data": {
+        "date": "1918-07-18",
+        "time_utc": "11:30:00",
+        "latitude": -31.9453,
+        "longitude": 28.5419
+      },
+      "expected_planets": {
+        "sun": {
+          "longitude": 92.295705,
+          "rashi": "cancer",
+          "rashi_degree": 2.295705,
+          "house_number": 9,
+          "nakshatra": "punarvasu",
+          "pada": 4
+        },
+        "moon": {
+          "longitude": 206.82174,
+          "rashi": "libra",
+          "rashi_degree": 26.82174,
+          "house_number": 12,
+          "nakshatra": "vishakha",
+          "pada": 3
+        },
+        "mars": {
+          "longitude": 169.826747,
+          "rashi": "virgo",
+          "rashi_degree": 19.826747,
+          "house_number": 11,
+          "nakshatra": "hasta",
+          "pada": 3
+        },
+        "mercury": {
+          "longitude": 113.319844,
+          "rashi": "cancer",
+          "rashi_degree": 23.319844,
+          "house_number": 9,
+          "nakshatra": "ashlesha",
+          "pada": 2
+        },
+        "jupiter": {
+          "longitude": 68.435317,
+          "rashi": "gemini",
+          "rashi_degree": 8.435317,
+          "house_number": 8,
+          "nakshatra": "ardra",
+          "pada": 1
+        },
+        "venus": {
+          "longitude": 59.79078,
+          "rashi": "taurus",
+          "rashi_degree": 29.79078,
+          "house_number": 7,
+          "nakshatra": "mrigashira",
+          "pada": 2
+        },
+        "saturn": {
+          "longitude": 112.305825,
+          "rashi": "cancer",
+          "rashi_degree": 22.305825,
+          "house_number": 9,
+          "nakshatra": "ashlesha",
+          "pada": 2
+        },
+        "rahu": {
+          "longitude": 237.812958,
+          "rashi": "scorpio",
+          "rashi_degree": 27.812958,
+          "house_number": 1,
+          "nakshatra": "jyeshtha",
+          "pada": 4
+        },
+        "ketu": {
+          "longitude": 57.812958,
+          "rashi": "taurus",
+          "rashi_degree": 27.812958,
+          "house_number": 7,
+          "nakshatra": "mrigashira",
+          "pada": 2
+        }
+      },
+      "expected_house_cusps": {
+        "W": {
+          "1": 210.0,
+          "2": 240.0,
+          "3": 270.0,
+          "4": 300.0,
+          "5": 330.0,
+          "6": 0.0,
+          "7": 30.0,
+          "8": 60.0,
+          "9": 90.0,
+          "10": 120.0,
+          "11": 150.0,
+          "12": 180.0
+        },
+        "P": {
+          "1": 219.430394,
+          "2": 244.484479,
+          "3": 267.026731,
+          "4": 291.31841,
+          "5": 321.197598,
+          "6": 358.978269,
+          "7": 39.430394,
+          "8": 64.484479,
+          "9": 87.026731,
+          "10": 111.31841,
+          "11": 141.197598,
+          "12": 178.978269
+        },
+        "K": {
+          "1": 219.430394,
+          "2": 246.012369,
+          "3": 269.210045,
+          "4": 291.31841,
+          "5": 327.831821,
+          "6": 6.516142,
+          "7": 39.430394,
+          "8": 66.012369,
+          "9": 89.210045,
+          "10": 111.31841,
+          "11": 147.831821,
+          "12": 186.516142
+        },
+        "E": {
+          "1": 219.430394,
+          "2": 249.430394,
+          "3": 279.430394,
+          "4": 309.430394,
+          "5": 339.430394,
+          "6": 9.430394,
+          "7": 39.430394,
+          "8": 69.430394,
+          "9": 99.430394,
+          "10": 129.430394,
+          "11": 159.430394,
+          "12": 189.430394
+        }
+      },
+      "expected_vargas": {
+        "D2": {
+          "moon": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 2
+          }
+        },
+        "D3": {
+          "ketu": {
+            "rashi": "capricorn",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "capricorn",
+            "house": 3
+          },
+          "venus": {
+            "rashi": "capricorn",
+            "house": 3
+          },
+          "mercury": {
+            "rashi": "pisces",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "pisces",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "rahu": {
+            "rashi": "cancer",
+            "house": 9
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 9
+          }
+        },
+        "D4": {
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "pisces",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 6
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 8
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 12
+          }
+        },
+        "D7": {
+          "jupiter": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "scorpio",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 7
+          },
+          "moon": {
+            "rashi": "aries",
+            "house": 10
+          },
+          "ketu": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 12
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 12
+          }
+        },
+        "D9": {
+          "ketu": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "jupiter": {
+            "rashi": "sagittarius",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 10
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 11
+          }
+        },
+        "D10": {
+          "ketu": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "pisces",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 7
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 11
+          }
+        },
+        "D12": {
+          "saturn": {
+            "rashi": "pisces",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "venus": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 6
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "virgo",
+            "house": 8
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 9
+          }
+        },
+        "D16": {
+          "saturn": {
+            "rashi": "pisces",
+            "house": 3
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "taurus",
+            "house": 5
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "libra",
+            "house": 10
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 10
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 10
+          },
+          "venus": {
+            "rashi": "scorpio",
+            "house": 11
+          }
+        },
+        "D20": {
+          "ketu": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "rahu": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 2
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "virgo",
+            "house": 4
+          },
+          "moon": {
+            "rashi": "virgo",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "capricorn",
+            "house": 8
+          },
+          "sun": {
+            "rashi": "taurus",
+            "house": 12
+          }
+        },
+        "D24": {
+          "jupiter": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "ketu": {
+            "rashi": "taurus",
+            "house": 4
+          },
+          "moon": {
+            "rashi": "taurus",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 4
+          },
+          "venus": {
+            "rashi": "gemini",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "libra",
+            "house": 9
+          },
+          "saturn": {
+            "rashi": "sagittarius",
+            "house": 11
+          },
+          "mercury": {
+            "rashi": "capricorn",
+            "house": 12
+          }
+        },
+        "D27": {
+          "mercury": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "sun": {
+            "rashi": "pisces",
+            "house": 7
+          },
+          "jupiter": {
+            "rashi": "taurus",
+            "house": 9
+          },
+          "ketu": {
+            "rashi": "leo",
+            "house": 12
+          }
+        },
+        "D30": {
+          "moon": {
+            "rashi": "libra",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "rahu": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "venus": {
+            "rashi": "scorpio",
+            "house": 3
+          },
+          "mercury": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "aquarius",
+            "house": 6
+          },
+          "mars": {
+            "rashi": "pisces",
+            "house": 7
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 11
+          }
+        },
+        "D40": {
+          "ketu": {
+            "rashi": "scorpio",
+            "house": 2
+          },
+          "rahu": {
+            "rashi": "scorpio",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "venus": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "pisces",
+            "house": 6
+          },
+          "moon": {
+            "rashi": "pisces",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "pisces",
+            "house": 6
+          },
+          "mercury": {
+            "rashi": "taurus",
+            "house": 8
+          }
+        },
+        "D45": {
+          "jupiter": {
+            "rashi": "sagittarius",
+            "house": 3
+          },
+          "ketu": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "rahu": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "saturn": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "venus": {
+            "rashi": "aries",
+            "house": 7
+          },
+          "mars": {
+            "rashi": "taurus",
+            "house": 8
+          },
+          "sun": {
+            "rashi": "cancer",
+            "house": 10
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 11
+          }
+        },
+        "D60": {
+          "ketu": {
+            "rashi": "taurus",
+            "house": 2
+          },
+          "rahu": {
+            "rashi": "taurus",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 3
+          },
+          "jupiter": {
+            "rashi": "leo",
+            "house": 5
+          },
+          "mercury": {
+            "rashi": "leo",
+            "house": 5
+          },
+          "moon": {
+            "rashi": "virgo",
+            "house": 6
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 6
+          },
+          "mars": {
+            "rashi": "capricorn",
+            "house": 10
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 11
+          }
+        }
+      }
+    },
+    {
+      "chart_id": "GC-REF-005",
+      "person_name": "Steve Jobs",
+      "confidence_tier": "C",
+      "source": "Public record — born 1955-02-24 19:15 PST (03:15 UTC Feb 25), San Francisco",
+      "birth_data": {
+        "date": "1955-02-25",
+        "time_utc": "03:15:00",
+        "latitude": 37.7749,
+        "longitude": -122.4194
+      },
+      "expected_planets": {
+        "sun": {
+          "longitude": 312.517481,
+          "rashi": "aquarius",
+          "rashi_degree": 12.517481,
+          "house_number": 7,
+          "nakshatra": "shatabhisha",
+          "pada": 2
+        },
+        "moon": {
+          "longitude": 344.516676,
+          "rashi": "pisces",
+          "rashi_degree": 14.516676,
+          "house_number": 8,
+          "nakshatra": "uttara_bhadrapada",
+          "pada": 4
+        },
+        "mars": {
+          "longitude": 5.859833,
+          "rashi": "aries",
+          "rashi_degree": 5.859833,
+          "house_number": 9,
+          "nakshatra": "ashwini",
+          "pada": 2
+        },
+        "mercury": {
+          "longitude": 291.131075,
+          "rashi": "capricorn",
+          "rashi_degree": 21.131075,
+          "house_number": 6,
+          "nakshatra": "shravana",
+          "pada": 4
+        },
+        "jupiter": {
+          "longitude": 87.277305,
+          "rashi": "gemini",
+          "rashi_degree": 27.277305,
+          "house_number": 11,
+          "nakshatra": "punarvasu",
+          "pada": 3
+        },
+        "venus": {
+          "longitude": 267.941217,
+          "rashi": "sagittarius",
+          "rashi_degree": 27.941217,
+          "house_number": 5,
+          "nakshatra": "uttara_ashadha",
+          "pada": 1
+        },
+        "saturn": {
+          "longitude": 207.932028,
+          "rashi": "libra",
+          "rashi_degree": 27.932028,
+          "house_number": 3,
+          "nakshatra": "vishakha",
+          "pada": 3
+        },
+        "rahu": {
+          "longitude": 249.274294,
+          "rashi": "sagittarius",
+          "rashi_degree": 9.274294,
+          "house_number": 5,
+          "nakshatra": "mula",
+          "pada": 3
+        },
+        "ketu": {
+          "longitude": 69.274294,
+          "rashi": "gemini",
+          "rashi_degree": 9.274294,
+          "house_number": 11,
+          "nakshatra": "ardra",
+          "pada": 1
+        }
+      },
+      "expected_house_cusps": {
+        "W": {
+          "1": 120.0,
+          "2": 150.0,
+          "3": 180.0,
+          "4": 210.0,
+          "5": 240.0,
+          "6": 270.0,
+          "7": 300.0,
+          "8": 330.0,
+          "9": 0.0,
+          "10": 30.0,
+          "11": 60.0,
+          "12": 90.0
+        },
+        "P": {
+          "1": 149.060599,
+          "2": 175.012186,
+          "3": 205.12254,
+          "4": 238.084461,
+          "5": 271.243308,
+          "6": 301.978383,
+          "7": 329.060599,
+          "8": 355.012186,
+          "9": 25.12254,
+          "10": 58.084461,
+          "11": 91.243308,
+          "12": 121.978383
+        },
+        "K": {
+          "1": 149.060599,
+          "2": 178.73258,
+          "3": 208.004811,
+          "4": 238.084461,
+          "5": 270.237912,
+          "6": 299.58451,
+          "7": 329.060599,
+          "8": 358.73258,
+          "9": 28.004811,
+          "10": 58.084461,
+          "11": 90.237912,
+          "12": 119.58451
+        },
+        "E": {
+          "1": 149.060599,
+          "2": 179.060599,
+          "3": 209.060599,
+          "4": 239.060599,
+          "5": 269.060599,
+          "6": 299.060599,
+          "7": 329.060599,
+          "8": 359.060599,
+          "9": 29.060599,
+          "10": 59.060599,
+          "11": 89.060599,
+          "12": 119.060599
+        }
+      },
+      "expected_vargas": {
+        "D2": {
+          "jupiter": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "ketu": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "rahu": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 2
+          }
+        },
+        "D3": {
+          "mars": {
+            "rashi": "aries",
+            "house": 1
+          },
+          "ketu": {
+            "rashi": "gemini",
+            "house": 3
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 3
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 4
+          },
+          "venus": {
+            "rashi": "leo",
+            "house": 5
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "sagittarius",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "aquarius",
+            "house": 11
+          }
+        },
+        "D4": {
+          "sun": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 3
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 3
+          },
+          "ketu": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "mars": {
+            "rashi": "aries",
+            "house": 12
+          }
+        },
+        "D7": {
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "taurus",
+            "house": 4
+          },
+          "venus": {
+            "rashi": "gemini",
+            "house": 5
+          },
+          "ketu": {
+            "rashi": "leo",
+            "house": 7
+          },
+          "mercury": {
+            "rashi": "scorpio",
+            "house": 10
+          },
+          "jupiter": {
+            "rashi": "sagittarius",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "sagittarius",
+            "house": 11
+          }
+        },
+        "D9": {
+          "ketu": {
+            "rashi": "sagittarius",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "sagittarius",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "capricorn",
+            "house": 2
+          },
+          "mars": {
+            "rashi": "taurus",
+            "house": 6
+          },
+          "jupiter": {
+            "rashi": "gemini",
+            "house": 7
+          },
+          "rahu": {
+            "rashi": "gemini",
+            "house": 7
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 7
+          },
+          "mercury": {
+            "rashi": "cancer",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "scorpio",
+            "house": 12
+          }
+        },
+        "D10": {
+          "mars": {
+            "rashi": "taurus",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "cancer",
+            "house": 3
+          },
+          "ketu": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "venus": {
+            "rashi": "virgo",
+            "house": 5
+          },
+          "jupiter": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 11
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 12
+          }
+        },
+        "D12": {
+          "sun": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "moon": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "ketu": {
+            "rashi": "virgo",
+            "house": 3
+          },
+          "mercury": {
+            "rashi": "virgo",
+            "house": 3
+          },
+          "saturn": {
+            "rashi": "virgo",
+            "house": 3
+          },
+          "venus": {
+            "rashi": "scorpio",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 10
+          },
+          "mars": {
+            "rashi": "gemini",
+            "house": 12
+          }
+        },
+        "D16": {
+          "jupiter": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "venus": {
+            "rashi": "aquarius",
+            "house": 4
+          },
+          "mercury": {
+            "rashi": "pisces",
+            "house": 5
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 6
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 8
+          },
+          "mars": {
+            "rashi": "cancer",
+            "house": 9
+          },
+          "moon": {
+            "rashi": "cancer",
+            "house": 9
+          }
+        },
+        "D20": {
+          "mars": {
+            "rashi": "cancer",
+            "house": 1
+          },
+          "sun": {
+            "rashi": "leo",
+            "house": 2
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "aquarius",
+            "house": 8
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 8
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 8
+          },
+          "venus": {
+            "rashi": "aquarius",
+            "house": 8
+          },
+          "moon": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "mercury": {
+            "rashi": "gemini",
+            "house": 12
+          }
+        },
+        "D24": {
+          "mercury": {
+            "rashi": "scorpio",
+            "house": 5
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 6
+          },
+          "ketu": {
+            "rashi": "pisces",
+            "house": 9
+          },
+          "rahu": {
+            "rashi": "pisces",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "taurus",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "gemini",
+            "house": 12
+          },
+          "saturn": {
+            "rashi": "gemini",
+            "house": 12
+          },
+          "sun": {
+            "rashi": "gemini",
+            "house": 12
+          },
+          "venus": {
+            "rashi": "gemini",
+            "house": 12
+          }
+        },
+        "D27": {
+          "ketu": {
+            "rashi": "gemini",
+            "house": 1
+          },
+          "mars": {
+            "rashi": "virgo",
+            "house": 4
+          },
+          "sun": {
+            "rashi": "virgo",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "libra",
+            "house": 5
+          },
+          "saturn": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "rahu": {
+            "rashi": "sagittarius",
+            "house": 7
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 9
+          },
+          "moon": {
+            "rashi": "aquarius",
+            "house": 9
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 12
+          }
+        },
+        "D30": {
+          "jupiter": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "saturn": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "venus": {
+            "rashi": "libra",
+            "house": 1
+          },
+          "mercury": {
+            "rashi": "capricorn",
+            "house": 4
+          },
+          "ketu": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "mars": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "rahu": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 5
+          },
+          "moon": {
+            "rashi": "pisces",
+            "house": 6
+          }
+        },
+        "D40": {
+          "sun": {
+            "rashi": "leo",
+            "house": 3
+          },
+          "mars": {
+            "rashi": "scorpio",
+            "house": 6
+          },
+          "mercury": {
+            "rashi": "aquarius",
+            "house": 9
+          },
+          "jupiter": {
+            "rashi": "aries",
+            "house": 11
+          },
+          "ketu": {
+            "rashi": "aries",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "aries",
+            "house": 11
+          },
+          "moon": {
+            "rashi": "taurus",
+            "house": 12
+          },
+          "saturn": {
+            "rashi": "taurus",
+            "house": 12
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 12
+          }
+        },
+        "D45": {
+          "jupiter": {
+            "rashi": "aries",
+            "house": 2
+          },
+          "venus": {
+            "rashi": "taurus",
+            "house": 3
+          },
+          "moon": {
+            "rashi": "virgo",
+            "house": 7
+          },
+          "saturn": {
+            "rashi": "virgo",
+            "house": 7
+          },
+          "mercury": {
+            "rashi": "scorpio",
+            "house": 9
+          },
+          "mars": {
+            "rashi": "sagittarius",
+            "house": 10
+          },
+          "ketu": {
+            "rashi": "capricorn",
+            "house": 11
+          },
+          "rahu": {
+            "rashi": "capricorn",
+            "house": 11
+          },
+          "sun": {
+            "rashi": "aquarius",
+            "house": 12
+          }
+        },
+        "D60": {
+          "mars": {
+            "rashi": "pisces",
+            "house": 2
+          },
+          "moon": {
+            "rashi": "pisces",
+            "house": 2
+          },
+          "mercury": {
+            "rashi": "aries",
+            "house": 3
+          },
+          "sun": {
+            "rashi": "taurus",
+            "house": 4
+          },
+          "jupiter": {
+            "rashi": "libra",
+            "house": 9
+          },
+          "ketu": {
+            "rashi": "libra",
+            "house": 9
+          },
+          "rahu": {
+            "rashi": "libra",
+            "house": 9
+          },
+          "saturn": {
+            "rashi": "scorpio",
+            "house": 10
+          },
+          "venus": {
+            "rashi": "scorpio",
+            "house": 10
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+# catalogues/grahas/guru.yaml
+
+id: graha.guru
+name: Guru
+aliases:
+  - Jupiter
+  - Brihaspati
+  - Devaguru
+  - Jiva
+  - Surarchana
+  - Angira
+category: graha
+status: active
+confidence: high
+version: 1.1
+last_verified: 2026-07-16
+
+classical_name: Bṛhaspati
+devanagari: गुरु
+meaning: "The teacher; the heavy one; the lord of wisdom"
+
+# === ASTRONOMICAL ===
+
+astronomical:
+  synodic_period_days: 398.88
+  sidereal_period_days: 4332.59
+  retrograde:
+    occurs: true
+    typical_duration_days: 121
+    typical_frequency: "Annually for ~4 months"
+  notes: "Retrograde for approximately 120 days each year"
+
+# === JYOTISH ATTRIBUTES ===
+
+jyotish:
+  gender: male
+  nature: natural benefic
+  caste: brahmin
+  element: ether
+  direction: northeast
+  color: yellow
+  gem: yellow sapphire
+  metal: gold
+  grain: chana
+  body_parts:
+    - fat
+    - liver
+    - ears
+    - thighs
+  animal: lion
+  deity: indra
+  quality: sattvic
+
+# === AVASTHA (Dignities) ===
+
+avastha:
+  exaltation:
+    sign: karka
+    degrees: 5
+  debilitation:
+    sign: makara
+    degrees: 5
+  moolatrikona:
+    sign: dhanus
+    range: "0°–10°"
+  own_signs:
+    - dhanus
+    - meena
+  friendly_signs:
+    - simha
+    - karka
+    - mesha
+    - vrishchika
+  neutral_signs:
+    - makara
+    - kumbha
+  inimical_signs:
+    - mithuna
+    - kanya
+    - vrishabha
+    - tula
+
+# === NAKSHATRA LORDSHIP ===
+
+nakshatra_lordship:
+  system: vimshottari
+  nakshatras:
+    - punarvasu
+    - vishakha
+    - purvabhadrapada
+
+# === RELATIONSHIPS ===
+
+relationships:
+  friends:
+    - graha.surya
+    - graha.chandra
+    - graha.mangala
+  enemies:
+    - graha.budha
+    - graha.shukra
+  neutrals:
+    - graha.shani
+    - graha.rahu
+    - graha.ketu
+
+# === VIMSHOTTARI DASHA ===
+
+vimshottari_dasha_years: 16
+
+# === KARAKATVAS (Significations) ===
+
+karakatvas:
+  classical:
+    - "Wisdom (Jnana)"
+    - "Fortune (Shri)"
+    - "Children (Putra)"
+  traditional:
+    - "Dharma and righteousness"
+    - "Wealth and prosperity"
+    - "Spiritual knowledge"
+  modern:
+    - "Higher education"
+    - "Philosophy"
+    - "Expansion and growth"
+  confidence: high
+
+# === SOURCES ===
+
+sources:
+  - ref: source.BPHS
+    claim: "General description, gender, nature, and attributes of Guru"
+    confidence: high
+  - ref: source.brihat-jataka
+    claim: "Physical attributes and significations of Guru"
+    confidence: high
+
+# === NOTES ===
+
+notes: >
+  Guru is the teacher of the devas and the greatest natural benefic.
+  It represents wisdom, prosperity, children, and spiritual growth.
+  A strong Guru in a chart bestows optimism, ethical living, and
+  good fortune. Guru's exaltation in Karka (sign of the mother)
+  underscores its nurturing, protective quality. Guru transits
+  through one sign per year, completing its full zodiac cycle in
+  approximately 12 years.
+
+# === HISTORY ===
+
+history:
+  - version: 1.1
+    date: 2026-07-16
+    change: "Standardized nakshatra ID references to canonical no-underscore form (e.g. purva_phalguni -> purvaphalguni), matching catalogues/nakshatras/_index.yaml"
+    author: "Chief Jyotish Knowledge Architect"
+  - version: 1.0
+    date: 2026-07-15
+    change: "Initial catalogue entry"
+    author: "Chief Jyotish Knowledge Architect"

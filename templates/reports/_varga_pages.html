@@ -1,0 +1,48 @@
+{#
+    AstroOS — Divisional chart PAGES.
+
+    Emits one full A4 sheet per group of six varga charts, using the shared
+    .a4 page box and masthead so these pages sit inside the Detailed report
+    without any style drift from the Foundation pages.
+
+    Usage from a report template:
+        {% from "_varga_grid.html" import varga_grid, varga_grid_styles %}
+        {% from "_varga_pages.html" import varga_pages %}
+        {{ varga_grid_styles() }}
+        {{ varga_pages(report.varga_pages, start_page=3, total_pages=5) }}
+
+    `varga_pages` is a list of lists — the output of
+    VargaGridBuilder.page_chunks(), so page capacity stays defined in one
+    place rather than being re-derived in the template.
+#}
+
+{% from "_varga_grid.html" import varga_grid %}
+
+{% macro varga_pages(pages, start_page=1, total_pages=None) %}
+    {% for page_charts in pages %}
+    <div class="a4">
+        <div class="mast">
+            <div class="mast-logo"></div>
+            <div class="mast-c">
+                <div class="mast-title">Divisional Charts</div>
+                <div class="mast-sub">
+                    Shodashavarga — Sheet {{ loop.index }} of {{ pages|length }}
+                </div>
+            </div>
+            <div class="mast-pg">
+                Page {{ start_page + loop.index0 }}{% if total_pages %} of {{ total_pages }}{% endif %}
+            </div>
+        </div>
+
+        {{ varga_grid(page_charts) }}
+
+        <div class="foot">
+            <div><b>AstroOS</b> — Vedic Intelligence, Engineered for Accuracy</div>
+            <div style="text-align:right;">
+                Vargas computed by the canonical divisional engine<br/>
+                astroos.com
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endmacro %}

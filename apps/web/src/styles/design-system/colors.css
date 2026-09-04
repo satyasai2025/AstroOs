@@ -1,0 +1,47 @@
+:root{
+/* base backgrounds — enterprise slate */
+--bg-void:#090D16;
+--bg-navy-950:#0F172A;
+--bg-navy-900:#0F172A;
+--bg-charcoal-900:#1e293b;
+--bg-surface-800:#1e293b;
+--bg-surface-700:#334155;
+--bg-surface-600:#475569;
+--surface-glass:rgba(15,23,42,0.8);
+--surface-glass-strong:rgba(255,255,255,0.05);
+--surface-glass-border:rgba(255,255,255,0.09);
+
+/* borders */
+--border-subtle:rgba(255,255,255,0.07);
+--border-default:#1e293b;
+--border-strong:#334155;
+--border-focus:rgba(251,191,36,0.55);
+
+/* text - high contrast WCAG 2 AA compliant */
+--text-primary:#f8fafc;
+--text-secondary:#cbd5e1;
+--text-tertiary:#cbd5e1;
+--text-disabled:#64748b;
+--text-inverse:#0f172a;
+
+/* accent: amber */
+--amber-300:#fcd34d;
+--amber-400:#fbbf24;
+--amber-500:#f59e0b;
+--amber-600:#d97706;
+--amber-glow:0 0 16px rgba(251,191,36,0.30), 0 0 40px rgba(251,191,36,0.08);
+--amber-glow-soft:rgba(251,191,36,0.1);
+
+/* accent: cyan — instrument teal, not neon */
+--cyan-300:#7DCCDC;
+--cyan-400:#29B8D4;
+--cyan-500:#29B8D4;
+--cyan-600:#1A8FA3;
+--cyan-glow:0 0 16px rgba(41,184,212,0.30), 0 0 40px rgba(41,184,212,0.08);
+
+/* status — semantic signals */
+--obsidian-status-success:#4ade80;
+--obsidian-status-warning:#f59e0b;
+--obsidian-status-danger:#ef4444;
+--obsidian-status-info:#29B8D4;
+}
