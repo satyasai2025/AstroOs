@@ -9,12 +9,14 @@ interface CardProps {
   padding?: string;
   style?: CSSProperties;
   className?: string;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-export function Card({ id, children, glow, padding = "var(--space-3)", style, className }: CardProps) {
+export function Card({ id, children, glow, padding = "var(--space-3)", style, className, onClick }: CardProps) {
   return (
     <div
       id={id}
+      onClick={onClick}
       className={`bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm shadow-slate-200/50 dark:shadow-none transition-all ${className ?? ""}`}
       style={{
         borderRadius: "var(--radius-lg, 0.75rem)",

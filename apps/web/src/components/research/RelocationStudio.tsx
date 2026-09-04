@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { api } from "@/lib/api";
 import { useActiveChart } from "@/lib/charts";
-import { Card, Button, Badge, Select, type SelectOption } from "@/components/ui";
+import { Card, Button, Badge, Select, Modal, type SelectOption } from "@/components/ui";
 import { BirthPlaceSearch } from "@/components/workflow/BirthPlaceSearch";
 import type { PlaceResultResponse } from "@/lib/types";
 
@@ -60,47 +60,26 @@ const POPULAR_DESTINATIONS = [
   { name: "Mumbai, India", lat: 19.0760, lon: 72.8777 },
 ];
 
-function TargetCoordinatesTooltip() {
-  const [isOpen, setIsOpen] = useState(false);
+const MOTIVE_OPTIONS = [
+  { id: "all", label: "General Audit", icon: "🌐" },
+  { id: "career", label: "Career & Business", icon: "💼" },
+  { id: "mental_peace", label: "Peace of Mind & Home", icon: "🏡" },
+  { id: "wealth", label: "Wealth & Finance", icon: "💰" },
+  { id: "marriage", label: "Marriage & Love", icon: "❤️" },
+  { id: "health_risk", label: "Health & Stability", icon: "🛡️" },
+];
 
+function CoordinatesHelpButton({ onClick }: { onClick: () => void }) {
   return (
-    <div className="relative inline-flex items-center group">
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        aria-label="What are Target Coordinates?"
-        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700/80 hover:bg-violet-500 hover:text-white dark:hover:bg-violet-600 text-slate-600 dark:text-slate-300 text-[10px] font-bold cursor-help transition"
-      >
-        ?
-      </button>
-
-      {/* Tooltip Popup */}
-      <div
-        className={`absolute bottom-full mb-2 right-0 sm:left-1/2 sm:-translate-x-1/2 z-50 w-72 sm:w-84 p-3.5 bg-slate-900/95 text-slate-100 text-xs rounded-xl shadow-2xl border border-slate-700/80 backdrop-blur-md pointer-events-none transition-all duration-150 ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-        }`}
-      >
-        <div className="font-bold text-violet-400 mb-1.5 flex items-center gap-1.5">
-          <span>📍</span> What are Target Coordinates?
-        </div>
-        <p className="text-[11px] leading-relaxed text-slate-300">
-          <strong>Target Coordinates (Latitude &amp; Longitude)</strong> represent the exact geographic position of your destination city. Relocation astrology is <em>not country-based</em>, because a single country can span thousands of kilometers and multiple different lagna/bhava alignments.
-        </p>
-        <div className="mt-2 pt-2 border-t border-slate-800 text-[10px] space-y-1 text-slate-400">
-          <div>
-            <strong className="text-slate-200">• Core Zone (≤ 1.0° orb / ~110 km):</strong> Direct and intense manifestation of planetary lines and relocated kendras.
-          </div>
-          <div>
-            <strong className="text-slate-200">• Active Zone (1.0° - 3.0° orb / ~300 km):</strong> Moderate background influence across regional suburbs.
-          </div>
-        </div>
-        <div className="text-[9px] text-slate-500 mt-1.5 font-mono">
-          Tip: Enter any city name to automatically resolve its coordinates.
-        </div>
-      </div>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="What are Target Coordinates?"
+      className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 dark:bg-slate-700/80 hover:bg-violet-500 hover:text-white dark:hover:bg-violet-600 text-slate-600 dark:text-slate-300 text-[10px] font-bold cursor-pointer transition"
+      title="Click to learn about Target Coordinates & Orbs"
+    >
+      ?
+    </button>
   );
 }
 
@@ -120,10 +99,15 @@ export function RelocationStudio() {
   const [targetLat, setTargetLat] = useState<number>(40.7128);
   const [targetLon, setTargetLon] = useState<number>(-74.0060);
   const [ayanamsa, setAyanamsa] = useState<string>("lahiri");
+  const [selectedMotive, setSelectedMotive] = useState<string>("all");
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RelocationAnalyzeResponse | null>(null);
+
+  // Modals state
+  const [isCoordsModalOpen, setIsCoordsModalOpen] = useState<boolean>(false);
+  const [selectedDomainForModal, setSelectedDomainForModal] = useState<string | null>(null);
 
   // Sync with user's active/default chart
   useEffect(() => {
@@ -336,13 +320,47 @@ export function RelocationStudio() {
             </div>
           </div>
 
+          {/* Moving Motive / Priority */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 font-mono">
+                Your Primary Motive (Optional):
+              </span>
+              {selectedMotive !== "all" && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedMotive("all")}
+                  className="text-[10px] text-violet-500 hover:underline font-mono"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {MOTIVE_OPTIONS.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setSelectedMotive(m.id)}
+                  className={`px-2.5 py-1 rounded-md text-xs font-mono transition border ${
+                    selectedMotive === m.id
+                      ? "bg-violet-600 text-white border-violet-600 font-bold shadow-sm"
+                      : "bg-slate-100 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-violet-500/50"
+                  }`}
+                >
+                  <span className="mr-1">{m.icon}</span> {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="pt-1">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1.5">
                 <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 font-mono">
                   Target Coordinates
                 </span>
-                <TargetCoordinatesTooltip />
+                <CoordinatesHelpButton onClick={() => setIsCoordsModalOpen(true)} />
               </div>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">
                 Core radius: ≤ 1.0° (~110 km)
@@ -411,7 +429,7 @@ export function RelocationStudio() {
               </div>
               <div className="flex items-center gap-1.5">
                 <Badge tone="cyan">Target Coordinates</Badge>
-                <TargetCoordinatesTooltip />
+                <CoordinatesHelpButton onClick={() => setIsCoordsModalOpen(true)} />
               </div>
             </div>
 
@@ -468,15 +486,25 @@ export function RelocationStudio() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* 1. Career & Public Status */}
-              <Card className="p-5 border-l-4 border-l-amber-500 flex flex-col justify-between">
+              <Card
+                className={`p-5 border-l-4 border-l-amber-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                  selectedMotive === "career" ? "ring-2 ring-amber-500/80 bg-amber-500/5 shadow-md" : ""
+                }`}
+                onClick={() => setSelectedDomainForModal("career")}
+              >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                       <span>💼</span> Career &amp; Status
                     </span>
-                    <Badge tone={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "success" : "neutral"}>
-                      {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "High Support" : "Moderate"}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      {selectedMotive === "career" && (
+                        <Badge tone="gold">🎯 Motive</Badge>
+                      )}
+                      <Badge tone={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "success" : "neutral"}>
+                        {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "High Support" : "Moderate"}
+                      </Badge>
+                    </div>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                     Evaluates professional visibility, authority, leadership, and employment recognition at this longitude.
@@ -494,21 +522,32 @@ export function RelocationStudio() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
-                  💡 Best for career expansions, interviews, and public enterprise.
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                  <span>💡 Best for career expansions &amp; authority.</span>
+                  <span className="text-amber-500 dark:text-amber-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                 </div>
               </Card>
 
               {/* 2. Mental Peace & Domestic Comfort */}
-              <Card className="p-5 border-l-4 border-l-cyan-500 flex flex-col justify-between">
+              <Card
+                className={`p-5 border-l-4 border-l-cyan-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                  selectedMotive === "mental_peace" ? "ring-2 ring-cyan-500/80 bg-cyan-500/5 shadow-md" : ""
+                }`}
+                onClick={() => setSelectedDomainForModal("mental_peace")}
+              >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                       <span>🏡</span> Mental Peace &amp; Home
                     </span>
-                    <Badge tone={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "success" : "neutral"}>
-                      {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "Harmonic Comfort" : "Neutral"}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      {selectedMotive === "mental_peace" && (
+                        <Badge tone="cyan">🎯 Motive</Badge>
+                      )}
+                      <Badge tone={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "success" : "neutral"}>
+                        {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "Harmonic Comfort" : "Neutral"}
+                      </Badge>
+                    </div>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                     Evaluates psychological well-being, feelings of belonging, family harmony, and emotional bonding.
@@ -526,19 +565,30 @@ export function RelocationStudio() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
-                  💡 High emotional grounding and feeling at home without alienation.
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                  <span>💡 Emotional grounding &amp; home feeling.</span>
+                  <span className="text-cyan-500 dark:text-cyan-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                 </div>
               </Card>
 
               {/* 3. Wealth & Financial Influx */}
-              <Card className="p-5 border-l-4 border-l-emerald-500 flex flex-col justify-between">
+              <Card
+                className={`p-5 border-l-4 border-l-emerald-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                  selectedMotive === "wealth" ? "ring-2 ring-emerald-500/80 bg-emerald-500/5 shadow-md" : ""
+                }`}
+                onClick={() => setSelectedDomainForModal("wealth")}
+              >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                      <span>💰</span> Wealth &amp; Commercial Gains
+                      <span>💰</span> Wealth &amp; Gains
                     </span>
-                    <Badge tone="gold">Dhana Potential</Badge>
+                    <div className="flex items-center gap-1">
+                      {selectedMotive === "wealth" && (
+                        <Badge tone="success">🎯 Motive</Badge>
+                      )}
+                      <Badge tone="gold">Dhana Potential</Badge>
+                    </div>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                     Evaluates financial liquidity, business negotiations, asset generation, and commercial partnerships.
@@ -558,19 +608,30 @@ export function RelocationStudio() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
-                  💡 Commercial contacts and investment returns supported at this location.
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                  <span>💡 Commercial contacts &amp; investments.</span>
+                  <span className="text-emerald-500 dark:text-emerald-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                 </div>
               </Card>
 
               {/* 4. Relationships & Marriage */}
-              <Card className="p-5 border-l-4 border-l-rose-500 flex flex-col justify-between">
+              <Card
+                className={`p-5 border-l-4 border-l-rose-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                  selectedMotive === "marriage" ? "ring-2 ring-rose-500/80 bg-rose-500/5 shadow-md" : ""
+                }`}
+                onClick={() => setSelectedDomainForModal("marriage")}
+              >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                       <span>❤️</span> Marriage &amp; Partnerships
                     </span>
-                    <Badge tone="violet">7th Axis Focus</Badge>
+                    <div className="flex items-center gap-1">
+                      {selectedMotive === "marriage" && (
+                        <Badge tone="violet">🎯 Motive</Badge>
+                      )}
+                      <Badge tone="violet">7th Axis Focus</Badge>
+                    </div>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                     Evaluates relationship harmony, meeting significant others, mutual agreements, and marital stability.
@@ -586,21 +647,32 @@ export function RelocationStudio() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
-                  💡 Favorable for cooperative partnerships and meeting influential companions.
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                  <span>💡 Cooperative bonds &amp; romance.</span>
+                  <span className="text-rose-500 dark:text-rose-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                 </div>
               </Card>
 
               {/* 5. Health, Stability & Risk Warnings */}
-              <Card className="p-5 border-l-4 border-l-red-500 flex flex-col justify-between">
+              <Card
+                className={`p-5 border-l-4 border-l-red-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all ${
+                  selectedMotive === "health_risk" ? "ring-2 ring-red-500/80 bg-red-500/5 shadow-md" : ""
+                }`}
+                onClick={() => setSelectedDomainForModal("health_risk")}
+              >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                       <span>⚠️</span> Stability &amp; Risk Audit
                     </span>
-                    <Badge tone={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "danger" : "success"}>
-                      {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Volatile / Sudden" : "Low Risk"}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      {selectedMotive === "health_risk" && (
+                        <Badge tone="danger">🎯 Motive</Badge>
+                      )}
+                      <Badge tone={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "danger" : "success"}>
+                        {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "Volatile / Sudden" : "Low Risk"}
+                      </Badge>
+                    </div>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
                     Evaluates sudden unexpected shocks, volatility, health vulnerability, and need for grounding.
@@ -618,15 +690,21 @@ export function RelocationStudio() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
-                  {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched)
-                    ? "⚠️ Caution advised against hasty long-term commitments here."
-                    : "✅ Safe for long-term physical health and predictable routines."}
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                  <span>
+                    {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched)
+                      ? "⚠️ Caution: High volatility."
+                      : "✅ Safe for physical health."}
+                  </span>
+                  <span className="text-rose-500 dark:text-rose-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                 </div>
               </Card>
 
               {/* 6. Strategic Usage Recommendation */}
-              <Card className="p-5 border-l-4 border-l-indigo-500 flex flex-col justify-between">
+              <Card
+                className="p-5 border-l-4 border-l-indigo-500 flex flex-col justify-between cursor-pointer hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700 transition-all"
+                onClick={() => setSelectedDomainForModal("strategy")}
+              >
                 <div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
@@ -650,8 +728,9 @@ export function RelocationStudio() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-600 dark:text-slate-400">
-                  💡 Even if not moving permanently, traveling here charges beneficial natal promises.
+                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+                  <span>💡 Timing &amp; engagement style.</span>
+                  <span className="text-indigo-500 dark:text-indigo-400 font-bold font-mono hover:underline">Deep Dive ↗</span>
                 </div>
               </Card>
             </div>
@@ -734,6 +813,355 @@ export function RelocationStudio() {
             </details>
           </Card>
         </div>
+      )}
+
+      {/* Target Coordinates & Orbs Guide Modal */}
+      <Modal
+        open={isCoordsModalOpen}
+        onClose={() => setIsCoordsModalOpen(false)}
+        title="📍 Target Coordinates & Relocation Orbs Guide"
+        width={580}
+      >
+        <div className="space-y-4 text-xs">
+          <div className="p-3.5 rounded-xl bg-violet-500/10 border border-violet-500/20 text-slate-800 dark:text-slate-200">
+            <h4 className="font-bold text-violet-600 dark:text-violet-400 text-sm mb-1 flex items-center gap-1.5">
+              <span>🌐</span> Why Relocation is Coordinate-Based (Not Country-Based)
+            </h4>
+            <p className="leading-relaxed">
+              Astrology maps the celestial sky and planetary kendras (angles) at the exact moment of your birth. A single country like the USA, India, or Canada covers thousands of kilometers and spans several time zones.
+            </p>
+            <p className="mt-1.5 leading-relaxed text-slate-600 dark:text-slate-400">
+              For example, New York and Los Angeles are ~43° apart in longitude — shifting your chart by 3 full houses! Therefore, AstroOS evaluates the <strong>exact Latitude and Longitude</strong> of your destination city to ensure 100% astronomical accuracy.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm mb-2">
+              The 3 Proximity &amp; Degree Zones (Orbs of Influence)
+            </h4>
+            <div className="space-y-2">
+              <div className="p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5">
+                <div className="flex items-center justify-between font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
+                  <span>Zone 1: Peak Core Zone</span>
+                  <Badge tone="success">≤ 1.0° Orb (~110 km / 70 mi)</Badge>
+                </div>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                  Direct, maximum manifestation. Living inside this radius brings the full, acute power of planetary lines and relocated kendras into your daily life and external events.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-lg border border-cyan-500/30 bg-cyan-500/5">
+                <div className="flex items-center justify-between font-bold text-cyan-600 dark:text-cyan-400 mb-0.5">
+                  <span>Zone 2: Active Regional Zone</span>
+                  <Badge tone="cyan">1.0° - 3.0° Orb (~110 - 330 km)</Badge>
+                </div>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                  Strong background resonance. Ideal for living in commuter suburbs, neighboring towns, or regional metros without feeling overwhelmed.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/40">
+                <div className="flex items-center justify-between font-bold text-slate-700 dark:text-slate-300 mb-0.5">
+                  <span>Zone 3: Outer Horizon</span>
+                  <Badge tone="neutral">3.0° - 6.0° Orb (~330 - 650 km)</Badge>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Subtle, secondary background theme. Beyond 6.0°, the direct angular impact of the line dissipates completely.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2 border-t border-slate-200 dark:border-slate-800">
+            <Button variant="secondary" onClick={() => setIsCoordsModalOpen(false)}>
+              Close Guide
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Interactive Domain Detail Modal */}
+      {result && selectedDomainForModal && (
+        <Modal
+          open={Boolean(selectedDomainForModal)}
+          onClose={() => setSelectedDomainForModal(null)}
+          title={
+            selectedDomainForModal === "career"
+              ? "💼 Career & Social Status — Deep Dive Guide"
+              : selectedDomainForModal === "mental_peace"
+              ? "🏡 Mental Peace & Home Comfort — Deep Dive Guide"
+              : selectedDomainForModal === "wealth"
+              ? "💰 Wealth & Financial Influx — Deep Dive Guide"
+              : selectedDomainForModal === "marriage"
+              ? "❤️ Marriage & Partnerships — Deep Dive Guide"
+              : selectedDomainForModal === "health_risk"
+              ? "🛡️ Health & Stability Risk Audit — Deep Dive Guide"
+              : "🎯 Optimal Engagement Strategy — Deep Dive Guide"
+          }
+          width={640}
+        >
+          <div className="space-y-4 text-xs">
+            {/* Header info badge */}
+            <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+              <div>
+                <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
+                  {targetSearchText}
+                </span>
+                <span className="text-slate-500 dark:text-slate-400 font-mono ml-2">
+                  ({targetLat.toFixed(2)}°, {targetLon.toFixed(2)}°)
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                {selectedMotive === selectedDomainForModal && (
+                  <Badge tone="violet">🎯 Your Stated Primary Motive</Badge>
+                )}
+                <Badge tone="cyan">Radius: ≤ 1.0° (~110 km)</Badge>
+              </div>
+            </div>
+
+            {/* Career details */}
+            {selectedDomainForModal === "career" && (
+              <>
+                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                  <h4 className="font-bold text-amber-600 dark:text-amber-400 text-sm mb-1">
+                    Vedic &amp; Shastric Foundation: Karma Sthana (10th House / MC)
+                  </h4>
+                  <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    The 10th House (Dashama Bhava) and Midheaven (MC) rule worldly achievement, authority, leadership, and public reputation. In relocation astrology, shifting longitudes rotates the 10th cusp, placing different zodiac signs and natal planets at the zenith of the sky.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Relocated Midheaven (MC):</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
+                      {result.angles.midheaven.sign} {result.angles.midheaven.degree.toFixed(2)}°
+                    </span>
+                  </div>
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Harmonic Frequency:</span>
+                    <span className="text-slate-900 dark:text-slate-200">
+                      {HARMONIC_LABELS[result.angles.midheaven.harmonic_family] ?? result.angles.midheaven.harmonic_family}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Sun Angularity (Ravi):</span>
+                    <span className={result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched) ? "text-emerald-500 font-bold" : "text-slate-400"}>
+                      {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched)
+                        ? "Active on Kendra (Leadership & Recognition Amplified)"
+                        : "Neutral Baseline"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h5 className="font-bold text-slate-900 dark:text-slate-100">Actionable Relocation Advice:</h5>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <li><strong>Best For:</strong> Seeking senior managerial promotions, enterprise founding, public consulting, and building institutional authority.</li>
+                    <li><strong>Moving Decision:</strong> If career acceleration is your #1 goal, this longitude provides significant astrological tailwinds. If you are seeking quiet rest, the constant drive for recognition here can cause burnout.</li>
+                  </ul>
+                </div>
+              </>
+            )}
+
+            {/* Mental Peace details */}
+            {selectedDomainForModal === "mental_peace" && (
+              <>
+                <div className="p-3.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+                  <h4 className="font-bold text-cyan-600 dark:text-cyan-400 text-sm mb-1">
+                    Vedic &amp; Shastric Foundation: Sukh Sthana (4th House / IC)
+                  </h4>
+                  <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    The 4th House (Chaturtha Bhava) and Nadir (IC) govern domestic tranquility, motherly warmth, emotional security, and mental tranquility. When an individual relocates, harmonious angles here create a deep feeling of 'home' and belonging.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Harmonic Comfort Zone:</span>
+                    <span className={result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched) ? "text-cyan-500 font-bold" : "text-slate-400"}>
+                      {result.techniques.some((t) => t.technique_id === "comfort_zones" && t.is_matched)
+                        ? "9th-Harmonic Resonant (High Emotional Ease)"
+                        : "Standard Domestic Rhythm"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Ascendant Vibration:</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
+                      {result.angles.ascendant.sign} ({result.angles.ascendant.harmonic_family})
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h5 className="font-bold text-slate-900 dark:text-slate-100">Actionable Relocation Advice:</h5>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <li><strong>Best For:</strong> Family relocation, raising children, long-term property acquisition, and restoring mental wellness.</li>
+                    <li><strong>Moving Decision:</strong> You will adapt rapidly to this environment without severe culture shock or chronic homesickness.</li>
+                  </ul>
+                </div>
+              </>
+            )}
+
+            {/* Wealth details */}
+            {selectedDomainForModal === "wealth" && (
+              <>
+                <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                  <h4 className="font-bold text-emerald-600 dark:text-emerald-400 text-sm mb-1">
+                    Vedic &amp; Shastric Foundation: Dhana &amp; Labha Sthanas (2nd &amp; 11th)
+                  </h4>
+                  <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    Material wealth in relocation is driven by planetary crossing lines (Parans) and midpoint connections to the relocated kendras. Strong financial confluences stimulate commerce, deal-making, and asset liquidity.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Active Latitude Parans:</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
+                      {String(result.facts["relocation.paran.count"] ?? 0)} Active Crossing Lines
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Midpoints to Career Zenith (MC):</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
+                      {String(result.facts["relocation.midpoints.mc.count"] ?? 0)} Triggers
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h5 className="font-bold text-slate-900 dark:text-slate-100">Actionable Relocation Advice:</h5>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <li><strong>Best For:</strong> High-income contracts, expanding customer pipelines, raising venture capital, and commercial investments.</li>
+                    <li><strong>Moving Decision:</strong> High revenue generation is strongly activated. Keep living expenses prudent to maximize savings.</li>
+                  </ul>
+                </div>
+              </>
+            )}
+
+            {/* Marriage details */}
+            {selectedDomainForModal === "marriage" && (
+              <>
+                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                  <h4 className="font-bold text-rose-600 dark:text-rose-400 text-sm mb-1">
+                    Vedic &amp; Shastric Foundation: Kalatra Sthana (7th House / Descendant)
+                  </h4>
+                  <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    The 7th House (Saptama Bhava) and Descendant axis govern intimate partnerships, marriage, and long-term contracts. Moving places your 7th axis in direct relationship with the local community.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Relocated 7th Axis:</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-100">
+                      Opposite {result.angles.ascendant.sign}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Relational Harmony:</span>
+                    <span className="text-slate-900 dark:text-slate-200">
+                      Active Interpersonal Axis
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h5 className="font-bold text-slate-900 dark:text-slate-100">Actionable Relocation Advice:</h5>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <li><strong>Best For:</strong> Relocating with a spouse, finding a life partner, or establishing trust-based joint ventures.</li>
+                    <li><strong>Moving Decision:</strong> Fosters diplomacy and mutual understanding. If moving for marriage, this location provides solid interpersonal support.</li>
+                  </ul>
+                </div>
+              </>
+            )}
+
+            {/* Health & Risk details */}
+            {selectedDomainForModal === "health_risk" && (
+              <>
+                <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20">
+                  <h4 className="font-bold text-red-600 dark:text-red-400 text-sm mb-1">
+                    Vedic &amp; Shastric Foundation: Trik Bhavas (6th/8th/12th) &amp; Volatility Lines
+                  </h4>
+                  <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    Before committing to a relocation, auditing sudden disruptive lines (Uranus / Mars / Saturn parans) is essential. High volatility can trigger unexpected abrupt disruptions, litigation, or health vulnerability.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Volatility &amp; Disruption:</span>
+                    <span className={result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched) ? "text-rose-500 font-bold" : "text-emerald-500 font-bold"}>
+                      {result.techniques.some((t) => t.technique_id === "uranus_instability" && t.is_matched)
+                        ? "⚠️ Volatile Disruption Alert"
+                        : "✅ Stable / Low Disruption"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Physical Routine Risk:</span>
+                    <span className="text-slate-900 dark:text-slate-200">
+                      Normal Predictable Range
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h5 className="font-bold text-slate-900 dark:text-slate-100">Actionable Relocation Advice:</h5>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <li><strong>If Low Risk:</strong> Excellent location for steady, predictable long-term routine and physical well-being.</li>
+                    <li><strong>If Volatile:</strong> Avoid entering binding, illiquid multi-year contracts immediately. Maintain active insurance and emergency cash reserves.</li>
+                  </ul>
+                </div>
+              </>
+            )}
+
+            {/* Strategy details */}
+            {selectedDomainForModal === "strategy" && (
+              <>
+                <div className="p-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                  <h4 className="font-bold text-indigo-600 dark:text-indigo-400 text-sm mb-1">
+                    Optimal Engagement Strategy (How to Tap This City's Energy)
+                  </h4>
+                  <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    Astrocartography allows you to extract the astrological blessings of a location without necessarily moving there permanently. You can engage via Permanent Relocation, Short Working Trips, or Remote Commercial Ventures.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex justify-between border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                    <span className="text-slate-500">Recommended Engagement Mode:</span>
+                    <span className="text-indigo-500 dark:text-indigo-400 font-bold">
+                      {result.techniques.some((t) => t.technique_id === "sun_angular" && t.is_matched)
+                        ? "Permanent Relocation Recommended"
+                        : "Travel / Remote / Project-Based"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Core Impact Radius:</span>
+                    <span className="text-slate-900 dark:text-slate-100 font-bold">
+                      ≤ 1.0° (~110 km from {targetSearchText})
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <h5 className="font-bold text-slate-900 dark:text-slate-100">Next Steps:</h5>
+                  <ul className="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <li><strong>Timing the Move:</strong> Check your active Vimshottari Dasha period. Moving during supportive dasha lords amplifies favorable relocated kendras.</li>
+                    <li><strong>Remote Work:</strong> Even from home, scheduling meetings or conducting business with clients based in {targetSearchText} taps into this angular power.</li>
+                  </ul>
+                </div>
+              </>
+            )}
+
+            <div className="flex justify-end pt-3 border-t border-slate-200 dark:border-slate-800">
+              <Button variant="secondary" onClick={() => setSelectedDomainForModal(null)}>
+                Close Guide
+              </Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );
