@@ -323,12 +323,31 @@ async def master_astrologer_consultation(
             house_system=body.house_system,
         )
 
+        from apps.api.config import Settings
+        from apps.api.services.ai_provider import build_resolved_provider
+
+        settings = Settings()
+        resolved_prov = None
+        try:
+            resolved_prov = build_resolved_provider(
+                provider="astroos_ai",
+                api_key=None,
+                model=None,
+                base_url=None,
+                temperature=0.3,
+                max_tokens=3000,
+                global_settings=settings,
+            )
+        except Exception as e:
+            logger.info("No server-wide AI provider active: %s", e)
+
         engine = MasterAstrologerEngine()
         res = await asyncio.to_thread(
             engine.generate_consultation,
             chart=chart,
             target_date=body.target_date,
             subject_name=body.subject_name,
+            resolved_provider=resolved_prov,
             language=body.language,
         )
 

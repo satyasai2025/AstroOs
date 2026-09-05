@@ -221,9 +221,10 @@ export const NAV_CONFIG: NavGroup[] = [
         icon: "sparkle",
         color: "--section-research",
         items: [
+          { href: "/consultation", label: "Ask AI Astrologer", subtitle: "Interactive Chat Copilot & Oracle", icon: "chat", viewId: "ai-consultation" },
           { href: "/phalita", label: "Phalita MoE AI", subtitle: "Canonical 3-Chart & MoE", icon: "sparkle", viewId: "ai-phalita" },
           { href: "/research/explainability", label: "Prediction Explainability", subtitle: "Factor decomposition & counterfactuals", icon: "target", viewId: "ai-explainability" },
-          { href: "/ai", label: "Governed RAG Copilot", subtitle: "Shastra-grounded AI", icon: "chat", viewId: "ai-copilot" },
+          { href: "/ai", label: "Governed RAG Copilot", subtitle: "Shastra-grounded AI", icon: "sparkle", viewId: "ai-copilot" },
         ],
       },
     ],
@@ -283,6 +284,7 @@ export const NAV_CONFIG: NavGroup[] = [
         color: "--section-research",
         items: [
           { href: "/knowledge", label: "Knowledge Base", icon: "book" },
+          { href: "/knowledge/ask", label: "Ask AstroOS (AI Q&A)", subtitle: "Classical Slokas & Shastras", icon: "sparkle", viewId: "kb-ask" },
           { href: "/knowledge/bphs", label: "BPHS", icon: "book", viewId: "kb-bphs" },
           { href: "/knowledge/saravali", label: "Saravali", icon: "book", viewId: "kb-saravali" },
           { href: "/knowledge/rules", label: "Rule Explorer", icon: "settings", viewId: "kb-rules", disabled: true, beta: true },
