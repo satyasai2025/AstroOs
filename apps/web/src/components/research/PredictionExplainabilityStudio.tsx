@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { ExplainabilityHelpGuide } from "./ExplainabilityHelpGuide";
 
 interface AtomicFactor {
   factor_id: string;
@@ -47,6 +48,7 @@ export function PredictionExplainabilityStudio() {
   const [objective, setObjective] = useState<string>("marriage");
   const [report, setReport] = useState<ExplanationReport | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showHelp, setShowHelp] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"waterfall" | "classical" | "counterfactuals">("waterfall");
   const [selectedFactor, setSelectedFactor] = useState<AtomicFactor | null>(null);
 
@@ -107,7 +109,7 @@ export function PredictionExplainabilityStudio() {
     <div className="space-y-6">
       {/* Header */}
       <div className="rounded-xl border border-slate-700 bg-slate-900/60 p-6 backdrop-blur">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-white">
               Priority 17: Research & Prediction Explainability Engine
@@ -116,11 +118,31 @@ export function PredictionExplainabilityStudio() {
               Multi-modal astronomical decomposition, verified classical canonical citations, and genuine engine recalculation counterfactual sensitivity analysis.
             </p>
           </div>
-          <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-400">
-            Priority 17 Certified
-          </span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowHelp(!showHelp)}
+              className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition border ${
+                showHelp
+                  ? "bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-600/30"
+                  : "bg-slate-800 text-purple-300 border-purple-500/30 hover:bg-slate-700 hover:text-white"
+              }`}
+            >
+              <span>📖</span>
+              <span>{showHelp ? "Close Guide" : "Explainability Guide / Help"}</span>
+            </button>
+            <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-semibold text-purple-400">
+              Priority 17 Certified
+            </span>
+          </div>
         </div>
       </div>
+
+      {/* Interactive Help Guide Section */}
+      {showHelp && (
+        <div className="transition duration-300">
+          <ExplainabilityHelpGuide />
+        </div>
+      )}
 
       {/* Query Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/40 p-5">
