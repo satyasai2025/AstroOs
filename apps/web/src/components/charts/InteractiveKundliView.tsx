@@ -279,7 +279,7 @@ function PlanetBadge({
   const color = PLANET_COLORS[planet] || "#B0BEC5";
   const symbol = PLANET_SYMBOLS[planet] || planet[0];
   const active = isHovered || isPinned;
-  const r = active ? 22 : 18;
+  const r = active ? 21 : 18;
 
   return (
     <g
@@ -288,6 +288,14 @@ function PlanetBadge({
       onClick={onClick}
       style={{ cursor: "pointer" }}
     >
+      {/* Invisible permanent hit target to prevent hover thrashing */}
+      <circle
+        cx={x}
+        cy={y}
+        r={26}
+        fill="transparent"
+        style={{ pointerEvents: "all" }}
+      />
       {/* Glow ring on hover/pin */}
       {active && (
         <circle
@@ -298,6 +306,7 @@ function PlanetBadge({
           stroke={color}
           strokeWidth={1.5}
           opacity={0.4}
+          style={{ pointerEvents: "none" }}
         />
       )}
       {/* Badge background */}
@@ -309,6 +318,8 @@ function PlanetBadge({
         stroke={color}
         strokeWidth={active ? 2 : 1.2}
         opacity={0.95}
+        className="transition-all duration-150"
+        style={{ pointerEvents: "none" }}
       />
       {/* Planet symbol */}
       <text
@@ -320,6 +331,7 @@ function PlanetBadge({
         fontSize={planet === "Ascendant" ? 11 : 13}
         fontFamily="var(--font-mono)"
         fontWeight="bold"
+        style={{ pointerEvents: "none" }}
       >
         {symbol}
       </text>
@@ -333,6 +345,7 @@ function PlanetBadge({
           fill="#F59E0B"
           fontSize={8}
           fontWeight="bold"
+          style={{ pointerEvents: "none" }}
         >
           ℞
         </text>
@@ -346,6 +359,7 @@ function PlanetBadge({
           dominantBaseline="central"
           fill="#EF4444"
           fontSize={7}
+          style={{ pointerEvents: "none" }}
         >
           ☀
         </text>
@@ -359,6 +373,7 @@ function PlanetBadge({
         fill="var(--obsidian-text-secondary)"
         fontSize={9}
         fontFamily="var(--font-inter)"
+        style={{ pointerEvents: "none" }}
       >
         {planet === "Ascendant" ? "ASC" : planet.slice(0, 3)}
       </text>
@@ -775,13 +790,8 @@ const asc = chart.ascendant;
       </div>
 
       {/* ── Right: Detail Panel ── */}
-      {/* Wider than lg:w-80 when showing the planet card grid — the
-          other tabs (houses/aspects/overview) are simple text lists and
-          stay at the narrower width. */}
       <div
-        className={`w-full border-t lg:border-t-0 lg:border-l ${
-          activeTab === "planets" || activePlanet ? "lg:w-[440px]" : "lg:w-80"
-        }`}
+        className="w-full border-t lg:border-t-0 lg:border-l lg:w-[420px] lg:shrink-0 overflow-y-auto"
         style={{ borderColor: "var(--obsidian-border)" }}
       >
         {activeTab === "planets" || activePlanet ? (

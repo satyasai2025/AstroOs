@@ -399,44 +399,51 @@ function ChartsPageContent() {
         </div>
       </div>
 
-      <div className="mb-3 flex gap-1 border-b border-slate-200 dark:border-slate-800 pb-1.5 overflow-x-auto" role="tablist" aria-label="Chart view options">
-        {([
-          { key: "kundli" as ViewMode, label: "Interactive Kundli" },
-          { key: "chart" as ViewMode, label: "Chart View" },
-          { key: "nakshatra" as ViewMode, label: "Nakshatra / Pada" },
-          { key: "dasha" as ViewMode, label: "Dasha Timeline" },
-          { key: "strength" as ViewMode, label: "Strength" },
-          { key: "relationships-v2" as ViewMode, label: "Relationships" },
-          { key: "houses" as ViewMode, label: "House Network" },
-          { key: "timeline" as ViewMode, label: "Timeline" },
-          { key: "predictions" as ViewMode, label: "Prediction Chains" },
-          { key: "kp" as ViewMode, label: "KP Analysis" },
-          { key: "yogas" as ViewMode, label: "Yogas" },
-          { key: "ashtakavarga" as ViewMode, label: "Ashtakavarga" },
-          { key: "jaimini" as ViewMode, label: "Jaimini" },
-          { key: "planets" as ViewMode, label: "Planet Explorer" },
-          { key: "divisional" as ViewMode, label: "Divisional" },
-        ] as const).map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            role="tab"
-            aria-selected={view === tab.key}
-            aria-controls={`panel-${tab.key}`}
-            onClick={() => setView(tab.key)}
-            className={`rounded-lg px-2.5 py-1 text-xs font-semibold whitespace-nowrap transition ${
-              view === tab.key
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* View Switcher Tabs Bar */}
+      <div className="relative mb-4">
+        <div
+          className="flex items-center gap-1.5 overflow-x-auto pb-2 pt-1 px-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent"
+          role="tablist"
+          aria-label="Chart view options"
+        >
+          {([
+            { key: "kundli" as ViewMode, label: "Interactive Kundli" },
+            { key: "chart" as ViewMode, label: "Chart View" },
+            { key: "nakshatra" as ViewMode, label: "Nakshatra / Pada" },
+            { key: "dasha" as ViewMode, label: "Dasha Timeline" },
+            { key: "strength" as ViewMode, label: "Strength" },
+            { key: "relationships-v2" as ViewMode, label: "Relationships" },
+            { key: "houses" as ViewMode, label: "House Network" },
+            { key: "timeline" as ViewMode, label: "Timeline" },
+            { key: "predictions" as ViewMode, label: "Prediction Chains" },
+            { key: "kp" as ViewMode, label: "KP Analysis" },
+            { key: "yogas" as ViewMode, label: "Yogas" },
+            { key: "ashtakavarga" as ViewMode, label: "Ashtakavarga" },
+            { key: "jaimini" as ViewMode, label: "Jaimini" },
+            { key: "planets" as ViewMode, label: "Planet Explorer" },
+            { key: "divisional" as ViewMode, label: "Divisional" },
+          ] as const).map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              role="tab"
+              aria-selected={view === tab.key}
+              aria-controls={`panel-${tab.key}`}
+              onClick={() => setView(tab.key)}
+              className={`rounded-xl px-3.5 py-1.5 text-xs font-bold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                view === tab.key
+                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500 scale-[1.02]"
+                  : "bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-cyan-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {view === "kundli" && (
-        <div id="panel-kundli" role="tabpanel" aria-label="Interactive Kundli panel" className="space-y-3">
+        <div id="panel-kundli" role="tabpanel" aria-label="Interactive Kundli panel" className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
@@ -454,7 +461,9 @@ function ChartsPageContent() {
             </button>
             <Link href="/charts/history" className="btn-ghost text-xs px-2.5 py-1 ml-auto">View All</Link>
           </div>
-          <div className="glass-card h-[540px] overflow-hidden p-0"><InteractiveKundliView chart={chart} vargas={vargas} shadbala={result.shadbala} request={request} /></div>
+          <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md shadow-lg overflow-hidden min-h-[580px]">
+            <InteractiveKundliView chart={chart} vargas={vargas} shadbala={result.shadbala} request={request} />
+          </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <button type="button" onClick={() => setView("dasha")} className="glass-card p-3 text-left transition hover:opacity-90">
               <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-400">Dasha Timeline</h4>
