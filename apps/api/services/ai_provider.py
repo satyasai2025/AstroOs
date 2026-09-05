@@ -103,26 +103,47 @@ def build_resolved_provider(
 ) -> ResolvedAIProvider:
     """Fill in provider defaults and validate, without touching the DB."""
     if provider == "astroos_ai":
-        resolved_key = global_settings.OPENAI_API_KEY
+        resolved_key = (
+            global_settings.GEMINI_API_KEY
+            or global_settings.GROQ_API_KEY
+            or global_settings.OPENROUTER_API_KEY
+            or global_settings.OPENAI_API_KEY
+        )
         resolved_base = global_settings.OPENAI_BASE_URL
         resolved_model = global_settings.OPENAI_MODEL
 
-        # Smart auto-detection: if key starts with gsk_ (Groq) or AIza (Gemini)
-        # and base_url is unset or points to default openai.com, auto-wire the correct base_url & model.
-        if resolved_key:
+        # Priority / Auto-detection:
+        if global_settings.DEFAULT_AI_PROVIDER == "groq" and global_settings.GROQ_API_KEY:
+            resolved_key = global_settings.GROQ_API_KEY
+            resolved_base = "https://api.groq.com/openai/v1"
+            resolved_model = "llama-3.3-70b-versatile"
+        elif global_settings.DEFAULT_AI_PROVIDER == "openrouter" and global_settings.OPENROUTER_API_KEY:
+            resolved_key = global_settings.OPENROUTER_API_KEY
+            resolved_base = "https://openrouter.ai/api/v1"
+            resolved_model = "google/gemma-4-26b-a4b-it:free"
+        elif global_settings.GEMINI_API_KEY:
+            resolved_key = global_settings.GEMINI_API_KEY
+            resolved_base = "https://generativelanguage.googleapis.com/v1beta/openai"
+            resolved_model = "gemini-3.6-flash"
+        elif global_settings.GROQ_API_KEY:
+            resolved_key = global_settings.GROQ_API_KEY
+            resolved_base = "https://api.groq.com/openai/v1"
+            resolved_model = "llama-3.3-70b-versatile"
+        elif global_settings.OPENROUTER_API_KEY:
+            resolved_key = global_settings.OPENROUTER_API_KEY
+            resolved_base = "https://openrouter.ai/api/v1"
+            resolved_model = "google/gemma-4-26b-a4b-it:free"
+        elif resolved_key:
             clean_key = resolved_key.strip()
-            if clean_key.startswith("gsk_") and (not resolved_base or "openai.com" in resolved_base):
+            if clean_key.startswith("gsk_"):
                 resolved_base = "https://api.groq.com/openai/v1"
-                if not resolved_model or resolved_model == "gpt-4o-mini":
-                    resolved_model = "llama-3.3-70b-versatile"
-            elif (clean_key.startswith("AIza") or clean_key.startswith("AQ.")) and (not resolved_base or "openai.com" in resolved_base):
+                resolved_model = "llama-3.3-70b-versatile"
+            elif clean_key.startswith("AIza") or clean_key.startswith("AQ."):
                 resolved_base = "https://generativelanguage.googleapis.com/v1beta/openai"
-                if not resolved_model or resolved_model == "gpt-4o-mini":
-                    resolved_model = "gemini-3.6-flash"
-            elif clean_key.startswith("sk-or-v1-") and (not resolved_base or "openai.com" in resolved_base):
+                resolved_model = "gemini-3.6-flash"
+            elif clean_key.startswith("sk-or-"):
                 resolved_base = "https://openrouter.ai/api/v1"
-                if not resolved_model or resolved_model == "gpt-4o-mini":
-                    resolved_model = "google/gemma-4-26b-a4b-it:free"
+                resolved_model = "google/gemma-4-26b-a4b-it:free"
 
         return ResolvedAIProvider(
             provider="astroos_ai",
