@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { SettingsLayout } from "@/components/settings/SettingsLayout";
 import {
+  DashboardSummary,
   PaymentRecord,
   PlanLimitsInfo,
   SubscriptionInfo,
+  confirmLatestMockPayment,
+  fetchDashboardSummary,
   fetchMyLimits,
   fetchMySubscription,
   fetchPaymentHistory,
@@ -18,30 +21,90 @@ export default function BillingSettingsPage() {
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [limits, setLimits] = useState<PlanLimitsInfo | null>(null);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
+  const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [portalLoading, setPortalLoading] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
+  const [confirmingPayment, setConfirmingPayment] = useState(false);
+  const [bannerMessage, setBannerMessage] = useState<{ text: string; type: "success" | "info" } | null>(null);
+
+  const loadData = async () => {
+    try {
+      const [sub, lim, pay, sum] = await Promise.all([
+        fetchMySubscription(),
+        fetchMyLimits(),
+        fetchPaymentHistory(20, 0),
+        fetchDashboardSummary().catch(() => null),
+      ]);
+      setSubscription(sub);
+      setLimits(lim);
+      setPayments(pay.items);
+      if (sum) setSummary(sum);
+      return { sub, lim, pay, sum };
+    } catch (err) {
+      console.error("Failed to load billing data", err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function loadData() {
+    async function init() {
       setLoading(true);
-      try {
-        const [sub, lim, pay] = await Promise.all([
-          fetchMySubscription(),
-          fetchMyLimits(),
-          fetchPaymentHistory(20, 0),
-        ]);
-        setSubscription(sub);
-        setLimits(lim);
-        setPayments(pay.items);
-      } catch (err) {
-        console.error("Failed to load billing data", err);
-      } finally {
-        setLoading(false);
+      const data = await loadData();
+
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("checkout") === "success") {
+          const hasPendingMock = data?.pay?.items?.some(
+            (p: PaymentRecord) => p.status === "pending" && p.provider === "mock"
+          );
+          if (hasPendingMock) {
+            setConfirmingPayment(true);
+            try {
+              await confirmLatestMockPayment();
+              setBannerMessage({
+                text: "Your test payment was successfully verified! Your Pro subscription is now fully active.",
+                type: "success",
+              });
+              await loadData();
+            } catch (err) {
+              console.error("Auto-confirmation failed", err);
+              setBannerMessage({
+                text: "Checkout received. Click 'Activate Now' below to confirm your mock payment.",
+                type: "info",
+              });
+            } finally {
+              setConfirmingPayment(false);
+            }
+          } else {
+            setBannerMessage({
+              text: "Checkout complete! Your subscription and quotas are up to date.",
+              type: "success",
+            });
+          }
+        }
       }
     }
-    loadData();
+    init();
   }, []);
+
+  const handleConfirmMock = async () => {
+    setConfirmingPayment(true);
+    try {
+      await confirmLatestMockPayment();
+      setBannerMessage({
+        text: "Test payment confirmed and subscription activated!",
+        type: "success",
+      });
+      await loadData();
+    } catch (err: any) {
+      alert("Failed to confirm test payment: " + (err.message || "Unknown error"));
+    } finally {
+      setConfirmingPayment(false);
+    }
+  };
 
   const handleOpenPortal = async () => {
     setPortalLoading(true);
@@ -78,6 +141,28 @@ export default function BillingSettingsPage() {
       description="Manage your subscription plan, live usage quotas, invoices, and payment methods."
     >
       <div className="space-y-8">
+        {/* ── Banner Message (e.g. checkout success or confirmation) ── */}
+        {bannerMessage && (
+          <div
+            className={`rounded-2xl border p-4 flex items-center justify-between text-sm ${
+              bannerMessage.type === "success"
+                ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
+                : "border-cyan-500/30 bg-cyan-500/10 text-cyan-300"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <span>{bannerMessage.type === "success" ? "✓" : "ℹ"}</span>
+              <span>{bannerMessage.text}</span>
+            </div>
+            <button
+              onClick={() => setBannerMessage(null)}
+              className="text-xs opacity-70 hover:opacity-100 ml-4 font-mono"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* ── Grace Period Warning (if past due) ── */}
         {subscription?.status === "past_due_cancelled" && (
           <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5 text-amber-300 space-y-2">
@@ -104,7 +189,9 @@ export default function BillingSettingsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
             <div>
               <div className="flex items-center gap-2.5">
-                <h2 className="text-xl font-bold text-white">Current Subscription</h2>
+                <h2 className="text-xl font-bold text-white">
+                  {summary?.plan_name ? `${summary.plan_name} Plan` : "Current Subscription"}
+                </h2>
                 {getStatusBadge(subscription?.status)}
               </div>
               <p className="text-xs text-slate-400 mt-1">
@@ -146,13 +233,19 @@ export default function BillingSettingsPage() {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-slate-300">Saved Horoscopes Quota</span>
                 <span className="font-bold text-cyan-400">
-                  {limits?.saved_horoscopes ? `Limit: ${limits.saved_horoscopes}` : "Unlimited"}
+                  {summary?.saved_horoscopes_count ?? 1} / {limits?.saved_horoscopes ? limits.saved_horoscopes : "Unlimited"}
                 </span>
               </div>
               <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
-                  style={{ width: `${limits?.saved_horoscopes ? Math.min(100, (4 / limits.saved_horoscopes) * 100) : 10}%` }}
+                  className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${
+                      limits?.saved_horoscopes
+                        ? Math.min(100, Math.max(4, ((summary?.saved_horoscopes_count ?? 1) / limits.saved_horoscopes) * 100))
+                        : 10
+                    }%`,
+                  }}
                 />
               </div>
               <p className="text-[11px] text-slate-400">
@@ -165,13 +258,19 @@ export default function BillingSettingsPage() {
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-slate-300">Monthly Research Projects</span>
                 <span className="font-bold text-purple-400">
-                  {limits?.research_projects_monthly ? `${limits.research_projects_monthly} / mo` : "0 on Free"}
+                  {summary?.research_runs_used ?? 0} / {limits?.research_projects_monthly ? `${limits.research_projects_monthly}/mo` : "0 on Free"}
                 </span>
               </div>
               <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
-                  style={{ width: `${limits?.research_projects_monthly ? 30 : 0}%` }}
+                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-500"
+                  style={{
+                    width: `${
+                      limits?.research_projects_monthly
+                        ? Math.min(100, ((summary?.research_runs_used ?? 0) / limits.research_projects_monthly) * 100)
+                        : 0
+                    }%`,
+                  }}
                 />
               </div>
               <p className="text-[11px] text-slate-400">
@@ -180,6 +279,7 @@ export default function BillingSettingsPage() {
             </div>
           </div>
         </Card>
+
 
         {/* ── Payment History & Invoices Table ── */}
         <div className="space-y-4">
@@ -236,17 +336,29 @@ export default function BillingSettingsPage() {
                             {p.provider}
                           </td>
                           <td className="py-3 px-4 text-center">
-                            <span
-                              className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                                p.status === "succeeded"
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : p.status === "pending"
-                                  ? "bg-amber-500/20 text-amber-400"
-                                  : "bg-red-500/20 text-red-400"
-                              }`}
-                            >
-                              {p.status}
-                            </span>
+                            <div className="flex flex-col items-center gap-1">
+                              <span
+                                className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                  p.status === "succeeded"
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : p.status === "pending"
+                                    ? "bg-amber-500/20 text-amber-400"
+                                    : "bg-red-500/20 text-red-400"
+                                }`}
+                              >
+                                {p.status}
+                              </span>
+                              {p.status === "pending" && p.provider === "mock" && (
+                                <button
+                                  type="button"
+                                  onClick={handleConfirmMock}
+                                  disabled={confirmingPayment}
+                                  className="text-[10px] text-cyan-400 hover:text-cyan-300 font-semibold underline disabled:opacity-50"
+                                >
+                                  {confirmingPayment ? "Activating..." : "Activate (Test)"}
+                                </button>
+                              )}
+                            </div>
                           </td>
                           <td className="py-3 px-4 text-right">
                             {p.receipt_url ? (

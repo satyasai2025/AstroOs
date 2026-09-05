@@ -231,3 +231,7 @@ export async function updateNotificationPreferences(
 ): Promise<NotificationPreferences> {
   return api.put<NotificationPreferences>("/api/v1/notifications/preferences", prefs);
 }
+
+export async function confirmLatestMockPayment(): Promise<any> {
+  return api.post("/api/v1/payments/confirm-mock", {});
+}

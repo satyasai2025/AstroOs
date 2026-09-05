@@ -102,6 +102,63 @@ async def payment_history(
     return await _svc(db).list_user_payments(UUID(str(user_id_val)), limit=limit, offset=offset)
 
 
+@router.post("/payments/confirm-mock", response_model=WebhookProcessingResult)
+async def confirm_latest_mock_payment(
+    user: User = Depends(get_current_user_from_bearer),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """
+    Auto-confirm the latest pending mock payment for testing and development.
+    Transitions payment to SUCCEEDED and activates subscription.
+    """
+    import json
+    import uuid
+    from datetime import datetime, timedelta, timezone
+    from apps.api.models.payment import PaymentStatus
+    from apps.api.repositories.payment_repository import PaymentRepository
+    from apps.api.repositories.plan_repository import PlanRepository
+
+    user_id_val = user.id.value if hasattr(user.id, "value") else user.id
+    user_uuid = UUID(str(user_id_val))
+
+    payments = await PaymentRepository.list_by_user(db, user_uuid, limit=5)
+    pending_mock = next((p for p in payments if p.status == PaymentStatus.PENDING.value and p.provider == "mock"), None)
+    if not pending_mock:
+        return WebhookProcessingResult(
+            status="no_action",
+            provider="mock",
+            event_id="",
+            event_type="",
+            message="No pending mock payment found to confirm.",
+        )
+
+    plan = await PlanRepository.get_by_id(db, pending_mock.plan_id) if pending_mock.plan_id else None
+    plan_code = plan.plan_code if plan else "PRO"
+
+    now = datetime.now(timezone.utc)
+    mock_payload = {
+        "id": f"mock_evt_{uuid.uuid4().hex[:12]}",
+        "event_type": "checkout.session.completed",
+        "data": {
+            "user_id": str(user_uuid),
+            "plan_code": plan_code,
+            "order_id": pending_mock.provider_order_id,
+            "payment_id": f"mock_pi_{uuid.uuid4().hex[:12]}",
+            "amount": pending_mock.amount,
+            "currency": pending_mock.currency,
+            "period_start": int(now.timestamp()),
+            "period_end": int((now + timedelta(days=30)).timestamp()),
+        },
+    }
+    res = await _svc(db).process_webhook(
+        "mock",
+        json.dumps(mock_payload).encode("utf-8"),
+        {"x-mock-skip-signature": "true"},
+    )
+    await db.commit()
+    return res
+
+
 # ── Webhooks (Public with signature check) ───────────────────────────────────
 
 

@@ -224,6 +224,8 @@ class Settings(BaseSettings):
     """Default pricing currency: 'INR' (India-first ₹) with multi-currency support."""
     TAX_RATE_INR_PERCENT: float = 18.0
     """Applicable GST rate for INR transactions (percentage). Default: 18.0%."""
+    TAX_RATE_USD_PERCENT: float = 0.0
+    """Applicable sales tax rate for USD transactions (percentage). Default: 0.0%."""
     # ── Scholar Autonomous Blog & Publishing Engine ──────────────────────────
     MEDIUM_API_KEY: str | None = None
     """Integration token for publishing to Medium via REST API v1."""
