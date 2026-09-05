@@ -17,11 +17,11 @@ const PROVIDERS: { value: AIProvider; label: string; needsApiKey: boolean }[] = 
 
 const MODEL_PLACEHOLDER: Record<AIProvider, string> = {
   astroos_ai: "Server default",
-  gemini: "e.g. gemini-2.5-flash",
+  gemini: "e.g. gemini-3.6-flash",
   groq: "e.g. llama-3.3-70b-versatile",
   openai: "e.g. gpt-4o-mini",
   anthropic: "e.g. claude-sonnet-5",
-  openrouter: "e.g. openai/gpt-4o-mini",
+  openrouter: "e.g. google/gemma-4-26b-a4b-it:free",
   ollama: "e.g. llama3.1",
 };
 

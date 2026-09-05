@@ -44,7 +44,7 @@ _DEFAULT_MODELS = {
     "anthropic": "claude-sonnet-5",
     "gemini": "gemini-3.6-flash",
     "groq": "llama-3.3-70b-versatile",
-    "openrouter": "openai/gpt-4o-mini",
+    "openrouter": "google/gemma-4-26b-a4b-it:free",
     "ollama": "llama3.1",
 }
 
@@ -119,6 +119,10 @@ def build_resolved_provider(
                 resolved_base = "https://generativelanguage.googleapis.com/v1beta/openai"
                 if not resolved_model or resolved_model == "gpt-4o-mini":
                     resolved_model = "gemini-3.6-flash"
+            elif clean_key.startswith("sk-or-v1-") and (not resolved_base or "openai.com" in resolved_base):
+                resolved_base = "https://openrouter.ai/api/v1"
+                if not resolved_model or resolved_model == "gpt-4o-mini":
+                    resolved_model = "google/gemma-4-26b-a4b-it:free"
 
         return ResolvedAIProvider(
             provider="astroos_ai",
@@ -234,12 +238,17 @@ async def call_chat_completion(
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
+        headers = {
+            "Authorization": f"Bearer {resolved.api_key}",
+            "Content-Type": "application/json",
+        }
+        if "openrouter.ai" in (resolved.base_url or ""):
+            headers["HTTP-Referer"] = "https://astroos.dev"
+            headers["X-Title"] = "AstroOS"
+
         response = await client.post(
             f"{resolved.base_url.rstrip('/')}/chat/completions",
-            headers={
-                "Authorization": f"Bearer {resolved.api_key}",
-                "Content-Type": "application/json",
-            },
+            headers=headers,
             json=payload,
             timeout=_REQUEST_TIMEOUT_SECONDS,
         )
