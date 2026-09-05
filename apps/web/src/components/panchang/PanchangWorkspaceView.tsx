@@ -451,11 +451,11 @@ export function PanchangWorkspaceView() {
         setLatitude(activeRequest.latitude);
         setLongitude(activeRequest.longitude);
       }
-      const moon = activeChart.planets.find(p => p.planet.toLowerCase() === "moon");
+      const moon = (activeChart.planets || []).find(p => (p?.planet || "").toLowerCase() === "moon");
       if (moon && moon.pada) {
-        const nakIdx = NAKSHATRA_NAMES.findIndex(n => n.toLowerCase().includes(moon.nakshatra.toLowerCase()));
+        const nakIdx = NAKSHATRA_NAMES.findIndex(n => n.toLowerCase().includes((moon.nakshatra || "").toLowerCase()));
         if (nakIdx !== -1) setNatalNakshatra(nakIdx + 1);
-        const rashiIdx = RASHI_NAMES.findIndex(r => r.toLowerCase().includes(moon.rashi.toLowerCase()));
+        const rashiIdx = RASHI_NAMES.findIndex(r => r.toLowerCase().includes((moon.rashi || "").toLowerCase()));
         if (rashiIdx !== -1) setNatalMoonSign(rashiIdx + 1);
       }
     }
@@ -1205,11 +1205,11 @@ export function PanchangWorkspaceView() {
               <button
                 type="button"
                 onClick={() => {
-                  const moon = activeChart.planets.find(p => p.planet.toLowerCase() === "moon");
+                  const moon = (activeChart.planets || []).find(p => (p?.planet || "").toLowerCase() === "moon");
                   if (moon) {
-                    const nakIdx = NAKSHATRA_NAMES.findIndex(n => n.toLowerCase().includes(moon.nakshatra.toLowerCase()));
+                    const nakIdx = NAKSHATRA_NAMES.findIndex(n => n.toLowerCase().includes((moon.nakshatra || "").toLowerCase()));
                     if (nakIdx !== -1) setNatalNakshatra(nakIdx + 1);
-                    const rashiIdx = RASHI_NAMES.findIndex(r => r.toLowerCase().includes(moon.rashi.toLowerCase()));
+                    const rashiIdx = RASHI_NAMES.findIndex(r => r.toLowerCase().includes((moon.rashi || "").toLowerCase()));
                     if (rashiIdx !== -1) setNatalMoonSign(rashiIdx + 1);
                   }
                 }}

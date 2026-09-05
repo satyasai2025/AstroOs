@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { NorthIndianChart } from "@/components/charts/NorthIndianChart";
 import { SouthIndianChart } from "@/components/charts/SouthIndianChart";
-import { api } from "@/lib/api";
 
 interface PlanetPlacement {
   planet: string;
@@ -43,7 +42,7 @@ const RASHIS_ORDER = [
 
 const RASHI_EN_MAP: Record<string, string> = {
   mesha: "Aries", vrishabha: "Taurus", mithuna: "Gemini", karka: "Cancer",
-  simha: "Leo", kanya: "Virgo", tula: "Libra", vrishchika: "Scorpio",
+  simha: "Leo", kanya: "Virgo", tula: "Libra", vrishchika: "Scorpio", vrischika: "Scorpio",
   dhanu: "Sagittarius", makara: "Capricorn", kumbha: "Aquarius", meena: "Pisces"
 };
 
@@ -286,59 +285,94 @@ export function PanchangKundliTab({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFullscreen]);
 
-  // Load Transit Chart (Gochar Kundli) from API or Astronomical Calculation
+  // Load Transit Chart (Gochar Kundli) with robust safe fallbacks
   const loadTransitChart = useCallback(async () => {
     setLoadingChart(true);
     try {
-      // Calculate UTC datetime
-      const [year, month, day] = selectedDate.split("-").map(Number);
-      const [hour, minute] = selectedTime.split(":").map(Number);
-      const localDate = new Date(year, month - 1, day, hour, minute);
-      // Subtract offset minutes
-      const utcDate = new Date(localDate.getTime() - utcOffsetMinutes * 60 * 1000);
+      const yr = Number(selectedDate?.split("-")?.[0]) || 2026;
+      const mo = Number(selectedDate?.split("-")?.[1]) || 9;
+      const dy = Number(selectedDate?.split("-")?.[2]) || 5;
+      const hr = Number(selectedTime?.split(":")?.[0]) || 12;
+      const mi = Number(selectedTime?.split(":")?.[1]) || 0;
+      const offset = Number(utcOffsetMinutes) || 330;
+      const lat = Number(latitude) || 28.6139;
+      const lon = Number(longitude) || 77.2090;
+
+      const localDate = new Date(yr, mo - 1, dy, hr, mi);
+      const utcDate = new Date(localDate.getTime() - offset * 60 * 1000);
       const isoUtc = utcDate.toISOString();
 
-      const res = await api.post<any>("/api/v1/horoscope", {
-        birth_datetime_utc: isoUtc,
-        latitude,
-        longitude,
-        ayanamsa: calculationMode === "krishnamurti" ? "kp" : calculationMode,
-        house_system: "W",
+      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "";
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
+
+      const resp = await fetch(`${apiBase}/api/v1/horoscope/d1`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          birth_datetime_utc: isoUtc,
+          latitude: lat,
+          longitude: lon,
+          ayanamsa: calculationMode === "krishnamurti" ? "kp" : calculationMode,
+          house_system: "W",
+        }),
+        signal: controller.signal,
       });
+      clearTimeout(timer);
 
-      if (res && res.ascendant && res.planets) {
-        const ascRashi = res.ascendant.rashi.charAt(0).toUpperCase() + res.ascendant.rashi.slice(1).toLowerCase();
-        setTransitAscendant({
-          rashi: ascRashi,
-          rashi_degree: Number(res.ascendant.rashi_degree.toFixed(2)),
-        });
+      if (resp.ok) {
+        const res = await resp.json();
+        if (res && res.ascendant && Array.isArray(res.planets) && res.planets.length > 0) {
+          const rawAsc = res.ascendant.rashi || "Mesha";
+          const ascRashi = typeof rawAsc === "string"
+            ? rawAsc.charAt(0).toUpperCase() + rawAsc.slice(1).toLowerCase()
+            : "Mesha";
 
-        const mappedPlanets: PlanetPlacement[] = res.planets.map((p: any) => ({
-          planet: p.planet.charAt(0).toUpperCase() + p.planet.slice(1).toLowerCase(),
-          rashi: p.rashi.charAt(0).toUpperCase() + p.rashi.slice(1).toLowerCase(),
-          house_number: p.house_number || 1,
-          is_retrograde: Boolean(p.is_retrograde),
-          rashi_degree: Number(p.rashi_degree.toFixed(2)),
-          nakshatra: p.nakshatra,
-          pada: p.pada,
-          nakshatra_lord: p.nakshatra_lord,
-        }));
-        setTransitPlanets(mappedPlanets);
-        setLoadingChart(false);
-        return;
+          setTransitAscendant({
+            rashi: ascRashi,
+            rashi_degree: Number(Number(res.ascendant.rashi_degree || 15).toFixed(2)),
+          });
+
+          const mappedPlanets: PlanetPlacement[] = res.planets.map((p: any) => {
+            const rawP = p?.planet || "Sun";
+            const rawR = p?.rashi || "Mesha";
+            const pName = typeof rawP === "string" ? rawP.charAt(0).toUpperCase() + rawP.slice(1).toLowerCase() : "Sun";
+            const rName = typeof rawR === "string" ? rawR.charAt(0).toUpperCase() + rawR.slice(1).toLowerCase() : "Mesha";
+            return {
+              planet: pName,
+              rashi: rName,
+              house_number: Number(p?.house_number) || 1,
+              is_retrograde: Boolean(p?.is_retrograde),
+              rashi_degree: Number(Number(p?.rashi_degree || 0).toFixed(2)),
+              nakshatra: p?.nakshatra || "—",
+              pada: p?.pada || 1,
+              nakshatra_lord: p?.nakshatra_lord,
+            };
+          });
+
+          setTransitPlanets(mappedPlanets);
+          setLoadingChart(false);
+          return;
+        }
       }
     } catch {
-      // Offline fallback computation
+      // Graceful offline fallback
     }
 
     // High precision astronomical fallback based on date & time
-    const [yr, mo, dy] = selectedDate.split("-").map(Number);
-    const [hr, mi] = selectedTime.split(":").map(Number);
+    const yr = Number(selectedDate?.split("-")?.[0]) || 2026;
+    const mo = Number(selectedDate?.split("-")?.[1]) || 9;
+    const dy = Number(selectedDate?.split("-")?.[2]) || 5;
+    const hr = Number(selectedTime?.split(":")?.[0]) || 12;
+    const mi = Number(selectedTime?.split(":")?.[1]) || 0;
+    const offset = Number(utcOffsetMinutes) || 330;
+    const lon = Number(longitude) || 77.2090;
+
     const a = Math.floor((14 - mo) / 12);
     const y = yr + 4800 - a;
     const m = mo + 12 * a - 3;
     const jdn = dy + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
-    const utHours = hr + mi / 60 - utcOffsetMinutes / 60;
+    const utHours = hr + mi / 60 - offset / 60;
     const dEpoch = jdn - 2451545.0 + utHours / 24;
 
     const ayanamsaDeg = 23.85 + (yr - 2000) * 0.0139;
@@ -352,12 +386,12 @@ export function PanchangKundliTab({
 
     // Ascendant estimation from local sidereal time
     const gmst = (280.4606 + 360.9856473 * dEpoch) % 360;
-    const lst = (gmst + longitude + 360) % 360;
+    const lst = (gmst + lon + 360) % 360;
     const ascSid = (lst - ayanamsaDeg + 360) % 360;
     const ascRashiIdx = Math.floor(ascSid / 30) % 12;
 
     const fallbackAscendant: AscendantPlacement = {
-      rashi: RASHIS_ORDER[ascRashiIdx],
+      rashi: RASHIS_ORDER[ascRashiIdx] || "Mesha",
       rashi_degree: Number((ascSid % 30).toFixed(2)),
     };
 
@@ -376,15 +410,15 @@ export function PanchangKundliTab({
     const ketuSid = (rahuSid + 180) % 360;
 
     const planetsList: PlanetPlacement[] = [
-      { planet: "Sun", rashi: RASHIS_ORDER[Math.floor(sunSid / 30) % 12], house_number: getHouse(sunSid), is_retrograde: false, rashi_degree: Number((sunSid % 30).toFixed(2)), nakshatra: "Uttara Phalguni", pada: 2 },
-      { planet: "Moon", rashi: RASHIS_ORDER[Math.floor(moonSid / 30) % 12], house_number: getHouse(moonSid), is_retrograde: false, rashi_degree: Number((moonSid % 30).toFixed(2)), nakshatra: "Mrigashira", pada: 3 },
-      { planet: "Mars", rashi: RASHIS_ORDER[Math.floor(marsSid / 30) % 12], house_number: getHouse(marsSid), is_retrograde: false, rashi_degree: Number((marsSid % 30).toFixed(2)), nakshatra: "Rohini", pada: 4 },
-      { planet: "Mercury", rashi: RASHIS_ORDER[Math.floor(mercSid / 30) % 12], house_number: getHouse(mercSid), is_retrograde: false, rashi_degree: Number((mercSid % 30).toFixed(2)), nakshatra: "Hasta", pada: 1 },
-      { planet: "Jupiter", rashi: RASHIS_ORDER[Math.floor(jupSid / 30) % 12], house_number: getHouse(jupSid), is_retrograde: false, rashi_degree: Number((jupSid % 30).toFixed(2)), nakshatra: "Krittika", pada: 2 },
-      { planet: "Venus", rashi: RASHIS_ORDER[Math.floor(venSid / 30) % 12], house_number: getHouse(venSid), is_retrograde: false, rashi_degree: Number((venSid % 30).toFixed(2)), nakshatra: "Chitra", pada: 3 },
-      { planet: "Saturn", rashi: RASHIS_ORDER[Math.floor(satSid / 30) % 12], house_number: getHouse(satSid), is_retrograde: true, rashi_degree: Number((satSid % 30).toFixed(2)), nakshatra: "Purva Bhadrapada", pada: 1 },
-      { planet: "Rahu", rashi: RASHIS_ORDER[Math.floor(rahuSid / 30) % 12], house_number: getHouse(rahuSid), is_retrograde: true, rashi_degree: Number((rahuSid % 30).toFixed(2)), nakshatra: "Uttara Bhadrapada", pada: 4 },
-      { planet: "Ketu", rashi: RASHIS_ORDER[Math.floor(ketuSid / 30) % 12], house_number: getHouse(ketuSid), is_retrograde: true, rashi_degree: Number((ketuSid % 30).toFixed(2)), nakshatra: "Hasta", pada: 2 },
+      { planet: "Sun", rashi: RASHIS_ORDER[Math.floor(sunSid / 30) % 12] || "Simha", house_number: getHouse(sunSid), is_retrograde: false, rashi_degree: Number((sunSid % 30).toFixed(2)), nakshatra: "Uttara Phalguni", pada: 2 },
+      { planet: "Moon", rashi: RASHIS_ORDER[Math.floor(moonSid / 30) % 12] || "Karka", house_number: getHouse(moonSid), is_retrograde: false, rashi_degree: Number((moonSid % 30).toFixed(2)), nakshatra: "Mrigashira", pada: 3 },
+      { planet: "Mars", rashi: RASHIS_ORDER[Math.floor(marsSid / 30) % 12] || "Mesha", house_number: getHouse(marsSid), is_retrograde: false, rashi_degree: Number((marsSid % 30).toFixed(2)), nakshatra: "Rohini", pada: 4 },
+      { planet: "Mercury", rashi: RASHIS_ORDER[Math.floor(mercSid / 30) % 12] || "Kanya", house_number: getHouse(mercSid), is_retrograde: false, rashi_degree: Number((mercSid % 30).toFixed(2)), nakshatra: "Hasta", pada: 1 },
+      { planet: "Jupiter", rashi: RASHIS_ORDER[Math.floor(jupSid / 30) % 12] || "Dhanu", house_number: getHouse(jupSid), is_retrograde: false, rashi_degree: Number((jupSid % 30).toFixed(2)), nakshatra: "Krittika", pada: 2 },
+      { planet: "Venus", rashi: RASHIS_ORDER[Math.floor(venSid / 30) % 12] || "Tula", house_number: getHouse(venSid), is_retrograde: false, rashi_degree: Number((venSid % 30).toFixed(2)), nakshatra: "Chitra", pada: 3 },
+      { planet: "Saturn", rashi: RASHIS_ORDER[Math.floor(satSid / 30) % 12] || "Kumbha", house_number: getHouse(satSid), is_retrograde: true, rashi_degree: Number((satSid % 30).toFixed(2)), nakshatra: "Purva Bhadrapada", pada: 1 },
+      { planet: "Rahu", rashi: RASHIS_ORDER[Math.floor(rahuSid / 30) % 12] || "Meena", house_number: getHouse(rahuSid), is_retrograde: true, rashi_degree: Number((rahuSid % 30).toFixed(2)), nakshatra: "Uttara Bhadrapada", pada: 4 },
+      { planet: "Ketu", rashi: RASHIS_ORDER[Math.floor(ketuSid / 30) % 12] || "Kanya", house_number: getHouse(ketuSid), is_retrograde: true, rashi_degree: Number((ketuSid % 30).toFixed(2)), nakshatra: "Hasta", pada: 2 },
     ];
 
     setTransitAscendant(fallbackAscendant);
@@ -404,26 +438,53 @@ export function PanchangKundliTab({
 
   // Ghati / Pal / Vipal conversion from sunrise
   const vedicTime = useMemo(() => {
-    if (!muhurtaData?.sunrise) {
+    try {
+      if (!muhurtaData?.sunrise) {
+        return { ghati: 14, pal: 22, vipal: 45, ishtaKaal: "14 Ghati 22 Pal" };
+      }
+      let srH = 6, srM = 0;
+      if (muhurtaData.sunrise.includes("T")) {
+        const d = new Date(muhurtaData.sunrise);
+        if (!isNaN(d.getTime())) {
+          srH = d.getHours();
+          srM = d.getMinutes();
+        }
+      } else {
+        const match = muhurtaData.sunrise.match(/(\d{1,2}):(\d{2})/);
+        if (match) {
+          srH = parseInt(match[1], 10);
+          srM = parseInt(match[2], 10);
+          if (muhurtaData.sunrise.toLowerCase().includes("pm") && srH < 12) srH += 12;
+        }
+      }
+
+      let nowH = 12, nowM = 0;
+      if (selectedTime) {
+        const match = selectedTime.match(/(\d{1,2}):(\d{2})/);
+        if (match) {
+          nowH = parseInt(match[1], 10);
+          nowM = parseInt(match[2], 10);
+        }
+      }
+
+      let diffMinutes = (nowH * 60 + nowM) - (srH * 60 + srM);
+      if (diffMinutes < 0) diffMinutes += 24 * 60;
+
+      const ghatiTotal = diffMinutes / 24;
+      const ghati = Math.floor(ghatiTotal) || 0;
+      const palTotal = (ghatiTotal - ghati) * 60;
+      const pal = Math.floor(palTotal) || 0;
+      const vipal = Math.floor((palTotal - pal) * 60) || 0;
+
+      return {
+        ghati,
+        pal,
+        vipal,
+        ishtaKaal: `${ghati} Ghati ${pal} Pal ${vipal} Vipal`,
+      };
+    } catch {
       return { ghati: 14, pal: 22, vipal: 45, ishtaKaal: "14 Ghati 22 Pal" };
     }
-    const [srH, srM] = muhurtaData.sunrise.split(" ")[0].split(":").map(Number);
-    const [nowH, nowM] = selectedTime.split(":").map(Number);
-    let diffMinutes = (nowH * 60 + nowM) - (srH * 60 + srM);
-    if (diffMinutes < 0) diffMinutes += 24 * 60;
-
-    const ghatiTotal = diffMinutes / 24; // 1 Ghati = 24 minutes
-    const ghati = Math.floor(ghatiTotal);
-    const palTotal = (ghatiTotal - ghati) * 60; // 1 Ghati = 60 Pal
-    const pal = Math.floor(palTotal);
-    const vipal = Math.floor((palTotal - pal) * 60);
-
-    return {
-      ghati,
-      pal,
-      vipal,
-      ishtaKaal: `${ghati} Ghati ${pal} Pal ${vipal} Vipal`,
-    };
   }, [muhurtaData, selectedTime]);
 
   // Main UI Content
@@ -517,10 +578,13 @@ export function PanchangKundliTab({
             Transit Lagna (Ascendant)
           </span>
           <p className="text-sm font-bold text-white mt-0.5">
-            {transitAscendant.rashi} <span className="text-slate-400 font-normal">({RASHI_EN_MAP[transitAscendant.rashi.toLowerCase()] || ""})</span>
+            {transitAscendant?.rashi || "Mesha"}{" "}
+            <span className="text-slate-400 font-normal">
+              ({RASHI_EN_MAP[(transitAscendant?.rashi || "mesha").toLowerCase()] || ""})
+            </span>
           </p>
           <p className="text-[11px] font-mono text-cyan-400 mt-0.5">
-            Degree: {transitAscendant.rashi_degree}°
+            Degree: {typeof transitAscendant?.rashi_degree === "number" ? transitAscendant.rashi_degree.toFixed(2) : "0.00"}°
           </p>
         </div>
 
@@ -558,7 +622,7 @@ export function PanchangKundliTab({
               <span>🪐</span> GOCHAR KUNDLI (D1 TRANSIT)
             </span>
             <span className="text-[11px] font-mono text-slate-400">
-              Lagna: {transitAscendant.rashi} {transitAscendant.rashi_degree}°
+              Lagna: {transitAscendant?.rashi || "Mesha"} {typeof transitAscendant?.rashi_degree === "number" ? transitAscendant.rashi_degree.toFixed(2) : "0.00"}°
             </span>
           </div>
 
@@ -592,7 +656,7 @@ export function PanchangKundliTab({
               Planetary Transit Positions (Gochara Sphutas)
             </span>
             <span className="text-[11px] font-mono text-slate-400">
-              {transitPlanets.length} Bodies Computed
+              {transitPlanets?.length || 0} Bodies Computed
             </span>
           </div>
 
@@ -609,36 +673,43 @@ export function PanchangKundliTab({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
-                {transitPlanets.map((p) => {
-                  const pKey = p.planet.toLowerCase();
+                {(transitPlanets || []).map((p, idx) => {
+                  const pName = p?.planet || `Graha-${idx + 1}`;
+                  const pKey = (pName || "").toLowerCase();
                   const sym = PLANET_SYMBOLS[pKey] || "●";
-                  const sans = PLANET_SANSKRIT[pKey] || p.planet;
+                  const sans = PLANET_SANSKRIT[pKey] || pName;
+                  const rashiName = p?.rashi || "Mesha";
+                  const rashiKey = (rashiName || "").toLowerCase();
+                  const rashiEn = RASHI_EN_MAP[rashiKey] || "";
+                  const deg = typeof p?.rashi_degree === "number" ? p.rashi_degree.toFixed(2) : "0.00";
 
                   return (
-                    <tr key={p.planet} className="hover:bg-slate-800/40 transition">
+                    <tr key={pName + idx} className="hover:bg-slate-800/40 transition">
                       <td className="py-2.5 px-3 font-bold text-white flex items-center gap-2">
                         <span className="text-cyan-400 text-sm">{sym}</span>
-                        <span>{p.planet}</span>
+                        <span>{pName}</span>
                         <span className="text-[10px] text-slate-500 font-normal">({sans})</span>
                       </td>
                       <td className="py-2.5 px-3 text-slate-200">
-                        {p.rashi}
-                        <span className="text-[10px] text-slate-500 block">
-                          {RASHI_EN_MAP[p.rashi.toLowerCase()] || ""}
-                        </span>
+                        {rashiName}
+                        {rashiEn && (
+                          <span className="text-[10px] text-slate-500 block">
+                            {rashiEn}
+                          </span>
+                        )}
                       </td>
                       <td className="py-2.5 px-3 text-cyan-300 font-bold">
-                        {p.rashi_degree.toFixed(2)}°
+                        {deg}°
                       </td>
                       <td className="py-2.5 px-3 font-bold text-slate-200">
-                        {p.house_number}H
+                        {p?.house_number ?? 1}H
                       </td>
                       <td className="py-2.5 px-3 text-slate-300">
-                        <span>{p.nakshatra || "—"}</span>
-                        {p.pada && <span className="text-cyan-400 font-bold"> (Pada {p.pada})</span>}
+                        <span>{p?.nakshatra || "—"}</span>
+                        {p?.pada && <span className="text-cyan-400 font-bold"> (Pada {p.pada})</span>}
                       </td>
                       <td className="py-2.5 px-3 text-right">
-                        {p.is_retrograde ? (
+                        {p?.is_retrograde ? (
                           <span className="rounded bg-rose-950/80 border border-rose-600/50 px-2 py-0.5 text-[10px] font-bold text-rose-300">
                             Retrograde (R)
                           </span>
