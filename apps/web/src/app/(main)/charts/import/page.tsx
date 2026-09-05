@@ -447,10 +447,16 @@ export default function ImportChartPage() {
                 <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.subject_name}</dd>
                 <dt style={{ color: "var(--text-muted)" }}>Birth (local, as stored in file)</dt>
                 <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.birth_local}</dd>
+                {jhdPreview.place_name && (
+                  <>
+                    <dt style={{ color: "var(--text-muted)" }}>Place</dt>
+                    <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.place_name}</dd>
+                  </>
+                )}
                 <dt style={{ color: "var(--text-muted)" }}>Latitude</dt>
-                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.latitude.toFixed(4)}</dd>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.latitude.toFixed(4)}°</dd>
                 <dt style={{ color: "var(--text-muted)" }}>Longitude</dt>
-                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.longitude.toFixed(4)}</dd>
+                <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.longitude.toFixed(4)}°</dd>
                 <dt style={{ color: "var(--text-muted)" }}>Ayanamsa / House system</dt>
                 <dd style={{ color: "var(--text-primary)" }}>{jhdPreview.ayanamsa} / {jhdPreview.house_system}</dd>
               </dl>
