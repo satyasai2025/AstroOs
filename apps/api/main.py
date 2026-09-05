@@ -493,7 +493,7 @@ def create_app() -> FastAPI:
         geocoding_router.router, prefix="/api/v1", dependencies=_authenticated
     )
     app.include_router(
-        muhurta_router.router, prefix="/api/v1", dependencies=_authenticated
+        muhurta_router.router, prefix="/api/v1"
     )
     app.include_router(
         prashna_router.router, prefix="/api/v1"

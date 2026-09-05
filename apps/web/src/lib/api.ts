@@ -316,8 +316,14 @@ async function _fetch<T>(
       return _fetch<T>(path, init, false);
     }
     tokenStore.clear();
-    window.location.href = "/login";
-    throw new ApiError(401, "Session expired.");
+    if (typeof window !== "undefined") {
+      const p = window.location.pathname;
+      const isPublic = p === "/" || p.startsWith("/login") || p.startsWith("/register") || p.startsWith("/forgot-password") || p.startsWith("/reset-password") || p.startsWith("/panchang") || p.startsWith("/muhurta");
+      if (!isPublic && access) {
+        window.location.href = "/login";
+      }
+    }
+    throw new ApiError(401, "Session expired or unauthorized.");
   }
 
   if (!res.ok) {

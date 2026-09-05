@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { api } from "@/lib/api";
 
 export interface CityOption {
   name: string;
@@ -240,8 +239,18 @@ export function TodayPanchangCard() {
         ayanamsa: "lahiri",
       });
 
-      const res = await api.get<any>(`/api/v1/muhurta?${params}`);
-      if (res && res.sunrise && res.tithi) {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "";
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 4000);
+      const resp = await fetch(`${apiBase}/api/v1/muhurta?${params}`, {
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+
+      if (resp.ok) {
+        const res = await resp.json();
+        if (res && res.sunrise && res.tithi) {
         const parts = isoDate.split("-");
         const yr = parts[0];
         const mo = parts[1];
@@ -292,6 +301,7 @@ export function TodayPanchangCard() {
         });
         setLoading(false);
         return;
+        }
       }
     } catch {
       // Backend offline or in development: fallback
@@ -580,10 +590,10 @@ export function TodayPanchangCard() {
       {/* ── Bottom Primary CTA Button ── */}
       <div className="mt-3.5 pt-1">
         <Link
-          href="/muhurta"
+          href="/panchang#kundli"
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 hover:from-cyan-400 hover:to-sky-500 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-cyan-500/20 transition hover:brightness-105"
         >
-          <span>Open Full Muhurta &amp; Choghadiya Workspace</span>
+          <span>Open Full Panchang &amp; Gochar Kundli</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="5" y1="12" x2="19" y2="12" />
             <polyline points="12 5 19 12 12 19" />
