@@ -7,18 +7,20 @@ import { useEffect, useState } from "react";
 
 const PROVIDERS: { value: AIProvider; label: string; needsApiKey: boolean }[] = [
   { value: "astroos_ai", label: "AstroOS AI", needsApiKey: false },
+  { value: "gemini", label: "Google Gemini", needsApiKey: true },
+  { value: "groq", label: "Groq (Ultra-Fast Llama)", needsApiKey: true },
   { value: "openai", label: "OpenAI", needsApiKey: true },
-  { value: "anthropic", label: "Anthropic", needsApiKey: true },
-  { value: "gemini", label: "Gemini", needsApiKey: true },
+  { value: "anthropic", label: "Anthropic Claude", needsApiKey: true },
   { value: "openrouter", label: "OpenRouter", needsApiKey: true },
-  { value: "ollama", label: "Ollama", needsApiKey: false },
+  { value: "ollama", label: "Ollama (Local)", needsApiKey: false },
 ];
 
 const MODEL_PLACEHOLDER: Record<AIProvider, string> = {
   astroos_ai: "Server default",
+  gemini: "e.g. gemini-2.5-flash",
+  groq: "e.g. llama-3.3-70b-versatile",
   openai: "e.g. gpt-4o-mini",
   anthropic: "e.g. claude-sonnet-5",
-  gemini: "e.g. gemini-2.5-flash",
   openrouter: "e.g. openai/gpt-4o-mini",
   ollama: "e.g. llama3.1",
 };

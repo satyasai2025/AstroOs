@@ -54,7 +54,7 @@ admin-approved change.
 | `apps/api/services/shadbala/chesta_bala.py` | `9a87f30c29d2d06d0201d6f5a351069d1dd5f7dc0a3bd962e5b837781408fd87` | Rewritten: fixed backwards fast/slow logic |
 | `apps/api/services/shadbala/dina_hora_bala.py` | `1db2fd18430d63f804fdf2e224e15522f47c28071b64940b618d41dcc22b6fae` | Hora-lord algorithm fixed |
 | `apps/api/services/shadbala/varsha_masa_bala.py` | `c548764ec5387a49e44617fc29eca3b3f03ed0378eda49952cce9dce0c54c3b6` | New engine, verified exact vs PyJHora |
-| `apps/api/services/divisional_engine.py` | `d79fbad496540f52bb27da8587a3cbb1073ada4a2306c3bfd418b3ec8dd538c0` | D60 formula fixed |
+| `apps/api/services/divisional_engine.py` | `0c8ec2c3328352166d44496f6856625a0b0a138e1ae8bee3a5bdf47027dfdfdb` | D60 formula fixed |
 | `apps/api/services/dasha_engine.py` | `f28bab5c7a607696b710ed2830bfc7a72e1bd134c1791aa0795ded9048139a71` | Strengthened content_hash with full tree signature + tz-awareness enforcement + boundary float-precision guard |
 | `apps/api/services/jaimini_dasha_adapter.py` | `0dfb7ad954e2d6a52ef70ac48c9a5046b448aa747d9c047124e680968b6d32b4` | Verified correct, docstring clarified |
 | `apps/api/services/muhurta_engine.py` | `99469dccaa6d21fda777a3d23f190ed57c128429679a844d414f84c753499183` | Choghadiya night-sequence direction fixed |

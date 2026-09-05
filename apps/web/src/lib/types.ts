@@ -70,7 +70,7 @@ export interface ChangePasswordPayload {
 
 // ── AI Settings (per-user BYOK) ─────────────────────────────────────────────
 
-export type AIProvider = "astroos_ai" | "openai" | "anthropic" | "gemini" | "openrouter" | "ollama";
+export type AIProvider = "astroos_ai" | "openai" | "anthropic" | "gemini" | "groq" | "openrouter" | "ollama";
 
 export interface AISettings {
   provider: AIProvider;
