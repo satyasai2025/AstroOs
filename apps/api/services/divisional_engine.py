@@ -50,7 +50,7 @@ from apps.api.services.ephemeris_wrapper import (
     longitude_to_rashi,
 )
 from packages.shared.degrees import normalize_degrees
-from packages.shared.enums import Rashi
+from packages.shared.enums import Rashi, VargaMethod
 from packages.shared.rashi_offset import house_offset
 
 # ── Sign constants ────────────────────────────────────────────────────────────
@@ -139,49 +139,57 @@ def _d4_chaturthamsha(sign_index: int, deg: float) -> tuple[str, float]:
     return _RASHI_LIST[vsign_idx], vdeg
 
 
-def _d7_saptamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d7_saptamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D7 — Saptamsha.
     Seven equal parts (30/7° each).
     Odd sign: starts from same sign.
-    Even sign: starts from 7th sign (offset 6).
+    Even sign: starts from 7th sign (offset 6). In Arsha mode, counts backward.
     """
     part_size = 30.0 / 7.0
     part = min(int(deg / part_size), 6)
-    start = sign_index if _is_odd_sign(sign_index) else (sign_index + 6) % 12
-    vsign_idx = (start + part) % 12
+    if _is_odd_sign(sign_index):
+        start = sign_index
+        vsign_idx = (start + part) % 12
+    else:
+        start = (sign_index + 6) % 12
+        vsign_idx = (start - part) % 12 if varga_method == VargaMethod.ARSHA_PARASHARI else (start + part) % 12
     vdeg = (deg % part_size) * 7.0
     return _RASHI_LIST[vsign_idx], vdeg
 
 
-def _d9_navamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d9_navamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D9 — Navamsha (the most important divisional chart).
     Nine equal parts (30/9° each).
     Formula: varga_sign = (sign_index × 9 + part) mod 12.
-    This correctly places:
-      - Aries → starts at Aries
-      - Taurus → starts at Capricorn
-      - Gemini → starts at Libra
-      - Cancer → starts at Cancer
+    In Arsha Parashari mode, even signs count in reverse from their elemental anchor.
     """
     part_size = 30.0 / 9.0
     part = min(int(deg / part_size), 8)
-    vsign_idx = (sign_index * 9 + part) % 12
+    if _is_odd_sign(sign_index) or varga_method == VargaMethod.POPULAR:
+        vsign_idx = (sign_index * 9 + part) % 12
+    else:
+        start = 9 if sign_index in _EARTH else 3
+        vsign_idx = (start - part) % 12
     vdeg = (deg % part_size) * 9.0
     return _RASHI_LIST[vsign_idx], vdeg
 
 
-def _d10_dasamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d10_dasamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D10 — Dasamsha.
     Ten equal 3° parts.
     Odd sign: starts from same sign.
-    Even sign: starts from the 9th sign (offset 8).
+    Even sign: starts from the 9th sign (offset 8). In Arsha mode, counts backward.
     """
     part = min(int(deg / 3.0), 9)
-    start = sign_index if _is_odd_sign(sign_index) else (sign_index + 8) % 12
-    vsign_idx = (start + part) % 12
+    if _is_odd_sign(sign_index):
+        start = sign_index
+        vsign_idx = (start + part) % 12
+    else:
+        start = (sign_index + 8) % 12
+        vsign_idx = (start - part) % 12 if varga_method == VargaMethod.ARSHA_PARASHARI else (start + part) % 12
     vdeg = (deg % 3.0) * 10.0
     return _RASHI_LIST[vsign_idx], vdeg
 
@@ -207,15 +215,16 @@ _D16_START: dict[int, int] = {
 }
 
 
-def _d16_shodashamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d16_shodashamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D16 — Shodashamsha.
     Sixteen equal 1.875° parts.
-    Starting sign by quality: Cardinal→Aries, Fixed→Leo, Mutable→Sagittarius.
+    Starting sign by quality: Cardinal→Aries, Fixed→Leo, Mutable→Sagittarius. In Arsha mode, even signs reverse.
     """
     part_size = 30.0 / 16.0
     part = min(int(deg / part_size), 15)
-    vsign_idx = (_D16_START[sign_index] + part) % 12
+    start = _D16_START[sign_index]
+    vsign_idx = (start - part) % 12 if (not _is_odd_sign(sign_index) and varga_method == VargaMethod.ARSHA_PARASHARI) else (start + part) % 12
     vdeg = (deg % part_size) * 16.0
     return _RASHI_LIST[vsign_idx], vdeg
 
@@ -228,30 +237,33 @@ _D20_START: dict[int, int] = {
 }
 
 
-def _d20_vimshamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d20_vimshamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D20 — Vimshamsha.
     Twenty equal 1.5° parts.
-    Starting sign by quality: Movable→Aries, Fixed→Sagittarius, Dual→Leo.
+    Starting sign by quality: Movable→Aries, Fixed→Sagittarius, Dual→Leo. In Arsha mode, even signs reverse.
     """
     part_size = 1.5
     part = min(int(deg / part_size), 19)
-    vsign_idx = (_D20_START[sign_index] + part) % 12
+    start = _D20_START[sign_index]
+    vsign_idx = (start - part) % 12 if (not _is_odd_sign(sign_index) and varga_method == VargaMethod.ARSHA_PARASHARI) else (start + part) % 12
     vdeg = (deg % part_size) * 20.0
     return _RASHI_LIST[vsign_idx], vdeg
 
 
-def _d24_chaturvimshamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d24_chaturvimshamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D24 — Chaturvimshamsha (Siddhamsha).
     Twenty-four equal 1.25° parts.
     Odd sign: starts from Leo (4).
-    Even sign: starts from Cancer (3).
+    Even sign: starts from Cancer (3). In Arsha mode, even signs count backward.
     """
     part_size = 30.0 / 24.0
     part = min(int(deg / part_size), 23)
-    start = 4 if _is_odd_sign(sign_index) else 3
-    vsign_idx = (start + part) % 12
+    if _is_odd_sign(sign_index):
+        vsign_idx = (4 + part) % 12
+    else:
+        vsign_idx = (3 - part) % 12 if varga_method == VargaMethod.ARSHA_PARASHARI else (3 + part) % 12
     vdeg = (deg % part_size) * 24.0
     return _RASHI_LIST[vsign_idx], vdeg
 
@@ -265,15 +277,16 @@ _D27_START: dict[int, int] = {
 }
 
 
-def _d27_bhamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d27_bhamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D27 — Bhamsha (Nakshatramsha).
     Twenty-seven equal parts (30/27° each).
-    Start sign by element: Fire→Aries, Earth→Cancer, Air→Libra, Water→Capricorn.
+    Start sign by element: Fire→Aries, Earth→Cancer, Air→Libra, Water→Capricorn. In Arsha mode, even signs reverse.
     """
     part_size = 30.0 / 27.0
     part = min(int(deg / part_size), 26)
-    vsign_idx = (_D27_START[sign_index] + part) % 12
+    start = _D27_START[sign_index]
+    vsign_idx = (start - part) % 12 if (not _is_odd_sign(sign_index) and varga_method == VargaMethod.ARSHA_PARASHARI) else (start + part) % 12
     vdeg = (deg % part_size) * 27.0
     return _RASHI_LIST[vsign_idx], vdeg
 
@@ -360,22 +373,16 @@ def _d45_akshavedamsha(sign_index: int, deg: float) -> tuple[str, float]:
     return _RASHI_LIST[vsign_idx], vdeg
 
 
-def _d60_shashtiamsha(sign_index: int, deg: float) -> tuple[str, float]:
+def _d60_shashtiamsha(sign_index: int, deg: float, varga_method: VargaMethod = VargaMethod.POPULAR) -> tuple[str, float]:
     """
     D60 — Shashtiamsha (the most detailed varga).
-    Sixty equal 0.5° parts, counted FORWARD FROM THE PLANET'S OWN SIGN
-    (not from a fixed Aries/Libra odd-even split — that was this
-    function's previous, incorrect implementation). This is the
-    "Traditional Parasara Shashtyamsha" method — cross-verified against
-    PyJHora's jhora.horoscope.chart.charts.shashtyamsa_chart(
-    chart_method=1), which is both PyJHora's own default and explicitly
-    labeled "Traditional Parasara shashtyamsa (from sign)" in its
-    docstring. Confirmed exact for the 1995-01-01 12:00 UTC, New Delhi
-    reference chart (Sun -> Virgo, Moon -> Libra).
+    Sixty equal 0.5° parts.
+    In Popular mode, counted forward from the planet's sign.
+    In Arsha Parashari mode, even signs count backward from the planet's sign.
     """
     part_size = 0.5
     part = min(int(deg / part_size), 59)
-    vsign_idx = (sign_index + part) % 12
+    vsign_idx = (sign_index - part) % 12 if (not _is_odd_sign(sign_index) and varga_method == VargaMethod.ARSHA_PARASHARI) else (sign_index + part) % 12
     vdeg = (deg % part_size) * 60.0
     return _RASHI_LIST[vsign_idx], vdeg
 
@@ -702,6 +709,7 @@ def compute_varga_sign(
     varga: str,
     sidereal_longitude: float,
     scheme: str = "cyclic",
+    varga_method: VargaMethod = VargaMethod.POPULAR,
 ) -> tuple[str, float]:
     """
     Public helper: compute the varga sign and degree for any planet or ascendant.
@@ -743,7 +751,10 @@ def compute_varga_sign(
     lon = normalize_degrees(sidereal_longitude)
     sign_index = int(lon / 30.0)
     deg = lon % 30.0
-    return calculator(sign_index, deg)
+    try:
+        return calculator(sign_index, deg, varga_method=varga_method)
+    except TypeError:
+        return calculator(sign_index, deg)
 
 
 # ── Divisional Engine ─────────────────────────────────────────────────────────

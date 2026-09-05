@@ -98,6 +98,19 @@ class AyanamsaSystem(str, Enum):
     FAGAN_BRADLEY = "fagan_bradley"  # Western sidereal
     TRUE_CHITRA = "true_chitra"      # True Chitrapaksha
     TRUE_PUSHYA = "true_pushya"      # True Pushya paksha (used by P.V.R. Narasimha Rao)
+    LAHIRI_JHA_ANCHORED = "lahiri_jha_anchored"  # Spica 180:00:03 at Ujjain, 22-Mar-285 AD Noon (Vinay Jha Kundalee Drik mode)
+
+
+class VargaMethod(str, Enum):
+    """
+    Divisional chart calculation method:
+    - POPULAR: Modern commercial standard (JHora / Parashara's Light default).
+               Only D30 has reversed order in even signs.
+    - ARSHA_PARASHARI: Vinay Jha's Kundalee switch @10944 based on original Sanskrit BPHS.
+                       Reversed progression in even signs for D2, D7, D9, D10, D16, D20, D24, D27, D30, D60.
+    """
+    POPULAR = "popular"
+    ARSHA_PARASHARI = "arsha_parashari"
 
 
 class ChartType(str, Enum):

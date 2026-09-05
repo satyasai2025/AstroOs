@@ -1,0 +1,816 @@
+dasha_and_dac:
+- offset: 16199
+  text: Vimshottari starting from Nakshatra, 3 for Krittika as in BPHS ;but  6 for Ardra if lagna in Sun's Hora and birth
+    in dark Paksha.
+- offset: 17133
+  text: HOUR  of  Wanted Time  for which Dashas & Gochar is wanted. Default is NOON. In Medini, put IST here.
+- offset: 17301
+  text: MINUTE  of  Wanted Time  for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 17467
+  text: SECOND of Wanted Time  for which Dashas & Gochar is wanted  (decimal allowed). In Medini, put IST here.
+- offset: 17637
+  text: DATE  of Wanted Time for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 17788
+  text: MONTH  of  Wanted Time for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 17943
+  text: YEAR  of  Wanted Time  for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 18837
+  text: Put it off if currently popular method of Vimshottari is wanted. But ARSHA method is perfect, for which leave this
+    switch ON, which is default .
+- offset: 21292
+  text: Type the number of 4th level (=Sookshma Level) of VPC (Varsha Pravesha Chakra) if you want to view finer level charts  which
+    lasts for about 5 hours.
+- offset: 21509
+  text: Type the number of 3rd level (=Pratyantar Level) of VPC (Varsha Pravesha Chakra) if you want to view finer level charts
+    which lasts for about 61 hours.
+- offset: 22097
+  text: Praana number in left box.
+- offset: 22236
+  text: Enter pratyantar number in left box.
+- offset: 23384
+  text: Put Vimshottari  Check Box off if currently popular method of Vimshottari is wanted. But ARSHA method is perfect,
+    for which leave this switch ON, which is default .
+- offset: 23622
+  text: Put Vimshottari  Check Box off if currently popular method of Vimshottari is wanted. But ARSHA method is perfect,
+    for which leave this switch ON, which is default .
+- offset: 23851
+  text: Vimshottari starting from Nakshatra, 3 for Krittika, 6 for Ardra if lagna in Sun's Hora and birth in dark Paksha.
+- offset: 530484
+  text: B43_VimshottariCorrection
+- offset: 1265552
+  text: 'NOTICE  :  ACCURACY   OF  DASHAAS'
+- offset: 1276784
+  text: VARSHA-PHALA   PD (PRATYANTARA) and SD (SOOKSHMA dashaa)
+- offset: 1278822
+  text: Pratyanta, Sookshma and Praan Dashaas Onset Table (exact)
+- offset: 1279919
+  text: Pratyanta, Sookshma and Praan Dashaas Onset Table (exact)
+- offset: 1281049
+  text: 'YOGINI  DASHAAS : This table is based on Mean Tithi'
+- offset: 1284230
+  text: Current    PRATYANTARA, SUKSHMA  &  PRAANA  DASHAAS
+- offset: 1285075
+  text: 'KAALA-CHAKRA    DASHAA : This table is based on Mean Tithi'
+- offset: 1291627
+  text: 'ASHTOTTARI    ANTAR-DASHA : This table is based on exact True Tithi,time in Yr:Mon:Date:Hr: Min: Sec'
+- offset: 1291858
+  text: Chart of Dashaa starting time (exact)
+- offset: 1294134
+  text: List Start of Chakra Dashaa
+- offset: 1294199
+  text: In Medini, Mesha is start, but in Maasa or Vidashaa chakras Surya should be selected as start by checking it ON
+- offset: 1294375
+  text: '0 = 120 yrs Total Age for Vimshottari : 1 for 108 years Total Age of Ashtottari. Enter Total-Age in yrs if you know;
+    "g" for time in Womb.'
+- offset: 1313564
+  text: 'VIMSHOTTARI  Antar-Dashaa(AD) [all dashaa tables are based on exact True Tithi,time in Yr:Mon:Date:Hr: Min: Sec]'
+- offset: 1313802
+  text: Chart of Dashaa Onset Time (exact). DAC means "Dasha Arambha Chakra" .
+- offset: 1314287
+  text: As written in BPHS. For fuller results, combine the fruits of Dashaa-start charts.
+- offset: 1315907
+  text: Varsha, Maasa , Pratyantara & Sookshma Phalas
+- offset: 1316833
+  text: ShodashaVargas of VarshaPravesha
+- offset: 1321137
+  text: Put it ON, and then click 'MAIN' button above, for viewing Chara Dashaa Table.
+- offset: 1321303
+  text: Put it ON, and then click 'MAIN' button above, for viewing Ashtottari Dashaa Table.
+- offset: 1321458
+  text: Put it ON, and then click 'MAIN' button above, for viewing KCD (KaalaChakraDashaa) Table.
+- offset: 1321627
+  text: Put it ON, and then click 'MAIN' button above, for viewing Yogini Dashaa Table.
+- offset: 1322290
+  text: YEAR  of  Wanted Time  for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 1322445
+  text: YEAR  of  Wanted Time  for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 1322598
+  text: MONTH  of  Wanted Time for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 1322749
+  text: DATE  of Wanted Time for which Dashas & Gochar is wanted. In Medini, put IST here.
+- offset: 1331805
+  text: If OFF, no Yogini Dashaa Table shown if Shodash-3  is clicked to make Divisional Chart and Vimshottari. Table
+- offset: 1331992
+  text: If OFF, no Yogini Dashaa Table shown if Shodash-3  is clicked to make Divisional Chart and Vimshottari. Table
+- offset: 1332173
+  text: If OFF, no Kaala-Chakra-Dashaa Table shown if Shodash-3  is clicked to make Divisional Chart and Vimshottari. Table
+- offset: 1332639
+  text: For Dasha Onset Charts, use Shodash-3 button
+- offset: 1333577
+  text: 'List Start of Chakra-Dashaa : In Medini, Mesha is start, but in Maasa or Vidashaa chakras Surya should be selected
+    as start by checking it ON'
+- offset: 1333900
+  text: '0 = 120 yrs Total Age for Vimshottari : 1 for 108 years Total Age of Ashtottari. Enter Total-Age in yrs if you know;
+    "g" for time in Womb.'
+- offset: 1340079
+  text: SHODASH  VARGAS  OF DASHAARAMBHA
+- offset: 1349816
+  text: 'YOGINI  DASHAAS : This table is based on Mean Tithi'
+- offset: 1349963
+  text: "Use Yogini \r\nDasha Onset time \r\nof JHora-7.66 in \r\nSSS mode of \r\nVinay Jha, with \r\nthat time make \r\n\
+    Dasharambh \r\nChart in Kundalee"
+- offset: 1350162
+  text: ON = current Vimshottari Dashaas Onset time ; OFF = Vimshottari Onset Time according to numbers filled in boxes here.
+- offset: 1350343
+  text: Previous Praana Dashaa Start Chart
+- offset: 1350435
+  text: Next Praana Dashaa Start Chart
+- offset: 1350539
+  text: 'PD: Type in the number of Pratyantar Dashaa, zero for first.'
+- offset: 1350662
+  text: Previous Sookshma Dashaa Start Chart
+- offset: 1350755
+  text: Next Sookshma Dashaa Start Chart
+- offset: 1350860
+  text: 'PD: Type in the number of Pratyantar Dashaa, zero for first.'
+- offset: 1350983
+  text: Previous Pratyantar Dashaa Start Chart
+- offset: 1351084
+  text: Previous Antar Dashaa Start Chart
+- offset: 1351180
+  text: Previous Mahaa Dashaa Start Chart
+- offset: 1351270
+  text: Next Pratyantar Dashaa Start Chart
+- offset: 1351361
+  text: Next Antar Dashaa Start Chart
+- offset: 1351447
+  text: Next Mahaa Dashaa Start Chart
+- offset: 1351549
+  text: 'PD: Type in the number of Pratyantar Dashaa, zero for first.'
+- offset: 1351682
+  text: 'AD: Type in the number of Antar Dashaa, zero for first.'
+- offset: 1351816
+  text: Chart of Dashaa starting time (exact)
+- offset: 1351926
+  text: 'MD: Type in the number of Mahaa Dashaa, zero for first.'
+- offset: 1352491
+  text: Use JHora's Karaka Dasha to find out year and duration of Chara Karaka-dasha, and enter here DURATION in years of
+    wanted Karaka Dasha, after entering the Starting Year in Year Input box in Starter Form.
+- offset: 1354554
+  text: 'Years of Kaaraka Dashaa :'
+- offset: 1354617
+  text: Use JHora's Karaka Dasha to find out year and duration of Chara Karaka-dasha, and enter here DURATION in years of
+    wanted Karaka Dasha, after entering the Starting Year in Year Input box in Starter Form.
+- offset: 1362943
+  text: Click it to get Shodasha-varga Deities for Desired Time.
+- offset: 1384542
+  text: "Numbers 1 to 5 are for five levels of VPC (Varsha Pravesha Chakras).\r\n8 for 360 year Divya-varsha.\r\n9 for 30\
+    \ year Divya-month.\r\n10 for 2.5 year Divya-vidasha.\r\n114 for 3000 year-long KaliYuga-vidashaa of Current MahaaYuga.\r\
+    \n124 is for 36000 year long KaliYuga-maasa of Current MahaaYuga.\r\n134 is for 432000 year long KaliYuga of Current MahaaYuga.\r\
+    \n113 for 6000 year-long DwaaparaYuga-vidashaa of Current MahaaYuga.\r\n123 is for 72000 year long DwaaparaYuga-maasa\
+    \ of Current MahaaYuga.\r\n133 is for 864000 year long DwaaparaYuga of Current MahaaYuga.\r\n112 for 9000 year-long TretaaYuga-vidashaa\
+    \ of Current MahaaYuga.\r\n122 is for 108000 year long TretaaYuga-maasa of Current MahaaYuga.\r\n132 is for 1296000 year\
+    \ long TretaaYuga of Current MahaaYuga.\r\n111 for 12000 year-long SatYuga-vidashaa of Current MahaaYuga.\r\n121 is for\
+    \ 144000 year long SatYuga-maasa of Current MahaaYuga.\r\n131 is for 1728000 year long SatYuga of Current MahaaYuga.\r\
+    \n7 is for chart at the moment of Sun's Longitude as entered in the large green text \r\nbox above.\r\n\r\nNumbers not\
+    \ mentioned above are not allowed.\r\n====================================\r\nAccording to BPHS  (Brihat Parashara Hora\
+    \ Shaastra, Sudarshana Chakra \r\nchapter), there are three levels of Varsha-phala kundalis : \r\nfirst is Varsha-pravesha\
+    \ chart (VPC); \r\nsecond is eleven Maasa-pravesha charts;(Varsha-pravesha chart is same as first \r\nMaasa-Pravesha chart,\
+    \ hence there are 12 monthly charts). \r\nThird level is called Vidashaa in BPHS which is 2.5 degrees of Sun's motion.\
+    \ \r\nOther two levels are made by successively diving the previous leven by twelve, and \r\nare merely experimental which\
+    \ should not be used for general purposes.\r\n\r\nPROCEDURE :\r\n\r\nIn Medini mode, first select Meru or Vidisha chart\
+    \ etc, and then click the 'NOW' \r\nbutton to find out the current numbers of all Varsha-phala levels. Then, in the bottom-\r\
+    \nleft two text boxes for Varsha-phala level, enter the Type and Number of level. \r\nFor instance, if you want to make\
+    \ the chart of 11th pratyantara/vidashaa, then Type = \r\n3 (i.e., Pratyantara//vidashaa) and Number = 11 after typing\
+    \ month number in month \r\nbox.\r\n\r\nFor NAKSHATRA charts :\r\n\r\nInstead of above five Varsha-phala charts, if you\
+    \ want Solar Nakshatra Entry charts, \r\nthen Type = 6 and Number = 1 for Ashwini, 2 for Bharani,etc.\r\n\r\nHALF-DEGREE\
+    \ charts are experimental : Charts made at intervals of half-degree \r\nof Sun are relevant in Medini Jyotisha (RgVeda,i,164\
+    \ : 720 sons of Sun), esp for \r\nanalyzing finer details of Solar Nakshatra charts. Type= 7, and enter  the half-degree\
+    \ \r\nin Comments box.\r\n\r\nTIMING :\r\n\r\nIn the 'Chakra' button on Bhaavachalita page, you can get the exact timing\
+    \ of \r\nplanets, rasis &c by moving the mouse circularly on the circular chart. Timing in \r\ngiven in both IST and GMT.\
+    \ Use standard principles of BPHS to find out astrological \r\nresults for a particular place on Map at a particular timing\
+    \ on circular chakra. For \r\ncurrent planets on Map , first get current Sun's longitude by clicking 'NOW' , then \r\n\
+    copy this longitude to Comments large green box,enter Type 7 and click SHOW.\r\n\r\nDIVYA Timings :\r\n\r\nFor viewing\
+    \ exact timings of Divya varsha of 360 years or Divya-month of 30 years \r\nor KaliYuga-vidashaa of 3000 years, enter\
+    \ the year-length in years in the yello box in \r\nmap and find the timing through mouse-motion.\r\nBut for most accurate\
+    \ timings of Planets and Bhaava-endings, view in a separate \r\npage headed 'TIMINGS: Yr:Mon:Day ; Hr:Min:Sec'.\r\n\r\n\
+    For Code-numbers to be used in Varsha-text box on the left inside the MEDINI \r\nframe, use this table:\r\n=========================================\r\
+    \nFor Start of Kali Yuga in Medini, enter \"-3102\" in Year on left side.\r\n\r\nFor Start of Dwaapara Yuga in Medini,\
+    \ enter \"-867123\" in Year on left side and \r\nenter \"133\" in text box on the left of medini's \"help\" button.\r\n\
+    \r\nFor Start of Treta Yuga in Medini, enter \"-2163154\" in Year on left side and enter \r\n\"132\" in text box on the\
+    \ left of medini's \"help\" button.\r\n\r\nFor Start of last Divya-Varsha of Dwaapara Yuga in Medini, enter \"-3462\"\
+    \ in Year on \r\nleft side and enter \"8\" in text box on the left of medini's \"help\" button. For previous \r\nDivya-varshas,\
+    \ go on substracting 360 successively.\r\n\r\nFor Start of last Vidasha of Dwaapara Yuga in Medini, enter \"-9102\" in\
+    \ Year on left \r\nside and enter \"8\" in text box on the left of medini's \"help\" button. For previous \r\nDivya-varshas,\
+    \ go on substracting 6000 successively, but remember to increase 1 \r\nyear for every 41712 years. This correction will\
+    \ help in going into Vidashaas and \r\nDivya-varshas of Satyuga, Treta or Dwaapar. Same correction for far future."
+- offset: 1409092
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409217
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409342
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409467
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409592
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409717
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409842
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1409967
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410092
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410217
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410342
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410467
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410592
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410717
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410842
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1410967
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411092
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411217
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411342
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411466
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411590
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411714
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411838
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1411962
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1412086
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1412210
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1412334
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1412458
+  text: Double-Click to make Dasha-Onset-Chart; press ENTER to show AD onsets.
+- offset: 1539573
+  text: Type in the number of house in left text box  which should be made lagna in zoomedin  D1 chart.  ; do not click it
+    after opening any other ShodashaVarga's large chart through Shodash-3 button.
+muhurta_and_panchanga:
+- offset: 11276
+  text: 'Panchanga and Muhurtas for entire Kalpa : SSS mode(no Drik).'
+- offset: 20495
+  text: '"1" is for default Chakra, while for particular region enter the Naamaakshara Nakshatra of that region as viewed
+    in Sarvatobhadra Chakra.'
+- offset: 20773
+  text: Type  '7'  here to get Medini Chart for desired longitude of Sun, the latter should be typed in the large green box
+    above before clicking 'SHOW'.  6 for Nakshatra chart.
+- offset: 21936
+  text: is ON, enter the number of Nakshatra in the left text box.
+- offset: 24559
+  text: Tithi End Time on Map-World
+- offset: 24616
+  text: Tithi End Time on Map-India
+- offset: 1268674
+  text: KSHAYA Tithi, Yoga, Nakshatra
+- offset: 1270956
+  text: Varsha-phala Levels, Nakshatra and Sun-Degree
+- offset: 1273402
+  text: 'Timings of Nakshatras (Gochara : Start and End Timings)'
+- offset: 1279178
+  text: MUHURTA , UDAYAASTA, VRISHTI etc
+- offset: 1282598
+  text: 'PHALA-STHAANA : Rasi & Nakshatra of Fruition'
+- offset: 1283405
+  text: MUHURTAS         (Use Mouse Wheel for Zoom)
+- offset: 1375085
+  text: SuryaSiddhaantic Panchaanga + Muhurta(sunrise to sunrise)
+- offset: 1375812
+  text: 12 is maximum because 12.5 = screen's width of Muhurta Graphics Page
+- offset: 1376553
+  text: 'Number of days wanted at a time ; do not type more than screen can display, 34 for 20" screen. For more than one
+    day, click ''Panchanga'' button again after display comes. MAX = 737 . Never make this field NULL (empty) and use overwriting
+    : select the content and write your number.'
+- offset: 1376968
+  text: 'PANCHAANGA: You can make panchanga of whole month at once by typing 30 or more in Number box.'
+- offset: 1377138
+  text: 12 is maximum because 12.5 = screen's width of Muhurta Graphics Page
+- offset: 1377367
+  text: Number of days wanted at a time ; do not type more than screen can display, 34 for 20" screen. For more than one day,
+    click 'Panchanga' button again after display comes. MAX = 743
+- offset: 1391028
+  text: Ayanamsha is the difference between Saayan and Nirayan in all systems, but moderners define Saayan as "Tropical" with
+    respect to equinoxes, while ancient definition from India to Babylon and Egypt  was based on pendulum like vibration of
+    Nakshatra-circle, originating from SSS.
+- offset: 1452847
+  text: "&[IN.01.638\tNicobar\r\nIN.01.639\tNorth  & Middle Andaman\r\nIN.01.640\tSouth Andaman\r\nIN.02.542\tSrikakulam\r\
+    \nIN.02.543\tVizianagaram District\r\nIN.02.544\tVishakhapatnam\r\nIN.02.545\tEast Godavari\r\nIN.02.546\tWest Godavari\r\
+    \nIN.02.547\tKrishna\r\nIN.02.548\tGuntur\r\nIN.02.549\tPrakasam\r\nIN.02.550\tNellore\r\nIN.02.551\tCuddapah\r\nIN.02.552\t\
+    Kurnool\r\nIN.02.553\tAnantapur\r\nIN.02.554\tChittoor\r\nIN.03.300\tKokrajhar\r\nIN.03.301\tDhuburi\r\nIN.03.302\tGoalpara\r\
+    \nIN.03.303\tBarpeta\r\nIN.03.304\tMorigaon\r\nIN.03.305\tNagaon\r\nIN.03.306\tSontipur\r\nIN.03.307\tLakhimpur\r\nIN.03.308\t\
+    Dhemaji\r\nIN.03.309\tTinsukia\r\nIN.03.310\tDibrugarh\r\nIN.03.311\tSibsagar\r\nIN.03.312\tJorhat\r\nIN.03.313\tGolaghat\r\
+    \nIN.03.314\tKarbi Anglong\r\nIN.03.315\tDima Hasao District\r\nIN.03.316\tCachar\r\nIN.03.317\tKarimganj\r\nIN.03.318\t\
+    Hailakandi\r\nIN.03.319\tBongaigaon\r\nIN.03.320\tChirang\r\nIN.03.321\tKamrup\r\nIN.03.322\tKamrup Metropolitan\r\nIN.03.323\t\
+    Nalbari\r\nIN.03.324\tBaksa\r\nIN.03.325\tDarrang\r\nIN.03.326\tUdalguri\r\nIN.05.055\tChandigarh\r\nIN.06.496\tDadra\
+    \ & Nagar Haveli\r\nIN.07.090\tNorth West Delhi\r\nIN.07.091\tNorth Delhi\r\nIN.07.092\tNorth East Delhi\r\nIN.07.093\t\
+    East Delhi\r\nIN.07.094\tNew Delhi\r\nIN.07.095\tCentral Delhi\r\nIN.07.096\tWest Delhi\r\nIN.07.097\tSouth West Delhi\r\
+    \nIN.07.098\tSouth Delhi\r\nIN.09.468\tKachchh\r\nIN.09.469\tBanas Kantha\r\nIN.09.470\tPatan\r\nIN.09.471\tMahesana\r\
+    \nIN.09.472\tSabar Kantha\r\nIN.09.473\tGandhinagar\r\nIN.09.474\tAhmadabad\r\nIN.09.475\tSurendranagar\r\nIN.09.476\t\
+    Rajkot\r\nIN.09.477\tJamnagar\r\nIN.09.478\tPorbandar\r\nIN.09.479\tJunagadh\r\nIN.09.480\tAmreli\r\nIN.09.481\tBhavnagar\r\
+    \nIN.09.482\tAnand\r\nIN.09.483\tKheda\r\nIN.09.484\tPanch Mahals\r\nIN.09.485\tDohad\r\nIN.09.486\tVadodara\r\nIN.09.487\t\
+    Narmada District\r\nIN.09.488\tBharuch\r\nIN.09.489\tThe Dangs\r\nIN.09.490\tNavsari\r\nIN.09.491\tValsad\r\nIN.09.492\t\
+    Surat\r\nIN.09.493\tTapi\r\nIN.10.069\tPanchkula\r\nIN.10.070\tAmbala\r\nIN.10.071\tYamunanagar\r\nIN.10.072\tKurukshetra\r\
+    \nIN.10.073\tKaithal\r\nIN.10.074\tKarnal\r\nIN.10.075\tPanipat\r\nIN.10.076\tSonipat\r\nIN.10.077\tJind\r\nIN.10.078\t\
+    Fatehabad District\r\nIN.10.079\tSirsa\r\nIN.10.080\tHisar\r\nIN.10.081\tBhiwani\r\nIN.10.082\tRohtak\r\nIN.10.083\tJhajjar\r\
+    \nIN.10.084\tMahendragarh\r\nIN.10.085\tRewari District\r\nIN.10.086\tGurgaon\r\nIN.10.087\tMewat\r\nIN.10.088\tFaridabad\
+    \ District\r\nIN.10.089\tPalwal\r\nIN.11.023\tChamba\r\nIN.11.024\tKangra\r\nIN.11.025\tLahul and Spiti\r\nIN.11.026\t\
+    Kulu\r\nIN.11.027\tMandi\r\nIN.11.028\tHamirpur\r\nIN.11.029\tUna\r\nIN.11.030\tBilaspur\r\nIN.11.031\tSolan\r\nIN.11.032\t\
+    Sirmaur\r\nIN.11.033\tShimla\r\nIN.11.034\tKinnaur\r\nIN.12.001\tKupwara\r\nIN.12.002\tBadgam\r\nIN.12.003\tLadakh\r\n\
+    IN.12.004\tKargil\r\nIN.12.005\tPunch\r\nIN.12.006\tRajauri\r\nIN.12.007\tKathua\r\nIN.12.008\tBaramula\r\nIN.12.009\t\
+    Bandipore\r\nIN.12.010\tSrinagar\r\nIN.12.011\tGanderbal\r\nIN.12.012\tPulwama\r\nIN.12.013\tShupiyan\r\nIN.12.014\tAnantnag\r\
+    \nIN.12.015\tKulgam\r\nIN.12.016\tDoda\r\nIN.12.017\tRamban\r\nIN.12.018\tKishtwar\r\nIN.12.019\tUdhampur\r\nIN.12.020\t\
+    Reasi\r\nIN.12.021\tJammu\r\nIN.12.022\tSamba\r\nIN.13.588\tKasaragod District\r\nIN.13.589\tKannur\r\nIN.13.590\tWayanad\r\
+    \nIN.13.591\tKozhikode\r\nIN.13.592\tMalappuram\r\nIN.13.593\tPalakkad district\r\nIN.13.594\tThrissur District\r\nIN.13.595\t\
+    Ernakulam\r\nIN.13.596\tIdukki\r\nIN.13.597\tKottayam\r\nIN.13.598\tAlappuzha\r\nIN.13.599\tPattanamtitta\r\nIN.13.600\t\
+    Kollam\r\nIN.13.601\tThiruvananthapuram\r\nIN.14.587\tLakshadweep\r\nIN.16.497\tNandurbar\r\nIN.16.498\tDhule\r\nIN.16.499\t\
+    Jalgaon\r\nIN.16.500\tBuldana\r\nIN.16.501\tAkola\r\nIN.16.502\tWashim\r\nIN.16.503\tAmravati Division\r\nIN.16.504\t\
+    Wardha\r\nIN.16.505\tNagpur Division\r\nIN.16.506\tBhandara\r\nIN.16.507\tGondiya\r\nIN.16.508\tGadchiroli\r\nIN.16.509\t\
+    Chandrapur\r\nIN.16.510\tYavatmal\r\nIN.16.511\tNanded\r\nIN.16.512\tHingoli\r\nIN.16.513\tParbhani\r\nIN.16.514\tJalna\r\
+    \nIN.16.515\tAurangabad Division\r\nIN.16.516\tNashik Division\r\nIN.16.517\tThane\r\nIN.16.518\tMumbai Suburban\r\nIN.16.519\t\
+    Mumbai\r\nIN.16.520\tRaigarh\r\nIN.16.521\tPune Division\r\nIN.16.522\tAhmadnagar\r\nIN.16.523\tBid\r\nIN.16.524\tLatur\r\
+    \nIN.16.525\tOsmanabad\r\nIN.16.526\tSolapur\r\nIN.16.527\tSatara Division\r\nIN.16.528\tRatnagiri\r\nIN.16.529\tSindhudurg\r\
+    \nIN.16.530\tKolhapur\r\nIN.16.531\tSangli\r\nIN.17.272\tSenapati\r\nIN.17.273\tTamenglong\r\nIN.17.274\tChurachandpur\r\
+    \nIN.17.275\tBishnupur\r\nIN.17.276\tThoubal\r\nIN.17.277\tImphal West\r\nIN.17.278\tImphal East\r\nIN.17.279\tUkhrul\r\
+    \nIN.17.280\tChandel\r\nIN.18.293\tWest Garo Hills\r\nIN.18.294\tEast Garo Hills\r\nIN.18.295\tSouth Garo Hills\r\nIN.18.296\t\
+    West Khasi Hills\r\nIN.18.297\tRi-Bhoi\r\nIN.18.298\tEast Khasi Hills\r\nIN.18.299\tJaintia Hills\r\nIN.19.555\tBelgaum\r\
+    \nIN.19.556\tBagalkot\r\nIN.19.557\tBijapur\r\nIN.19.558\tBidar\r\nIN.19.559\tRaichur\r\nIN.19.560\tKoppal\r\nIN.19.561\t\
+    Gadag\r\nIN.19.562\tDharwad\r\nIN.19.563\tUttar Kannada\r\nIN.19.564\tHaveri\r\nIN.19.565\tBellary\r\nIN.19.566\tChitradurga\r\
+    \nIN.19.567\tDavanagere\r\nIN.19.568\tShimoga\r\nIN.19.569\tUdupi\r\nIN.19.570\tChikmagalur\r\nIN.19.571\tTumkur\r\nIN.19.572\t\
+    Bangalore Urban\r\nIN.19.573\tMandya\r\nIN.19.574\tHassan\r\nIN.19.575\tDakshina Kannada\r\nIN.19.576\tKodagu\r\nIN.19.577\t\
+    Mysore\r\nIN.19.578\tChamrajnagar\r\nIN.19.579\tGulbarga\r\nIN.19.580\tYadgir\r\nIN.19.581\tKolar\r\nIN.19.582\tChikkaballapur\r\
+    \nIN.19.583\tBangalore Rural\r\nIN.19.584\tRamanagara\r\nIN.20.261\tMon\r\nIN.20.262\tMokokchung\r\nIN.20.263\tZunheboto\r\
+    \nIN.20.264\tWokha\r\nIN.20.265\tDimapur\r\nIN.20.266\tPhek\r\nIN.20.267\tTuensang District\r\nIN.20.268\tLongleng\r\n\
+    IN.20.269\tKiphire\r\nIN.20.270\tKohima\r\nIN.20.271\tPeren\r\nIN.21.370\tBaragarh\r\nIN.21.371\tJharsuguda\r\nIN.21.372\t\
+    Sambalpur\r\nIN.21.373\tDebagarh\r\nIN.21.374\tSundargarh\r\nIN.21.375\tKendujhar\r\nIN.21.376\tMayurbhanj\r\nIN.21.377\t\
+    Baleshwar\r\nIN.21.378\tBhadrak\r\nIN.21.379\tKendrapara\r\nIN.21.380\tJagatsinghpur\r\nIN.21.381\tCuttack\r\nIN.21.382\t\
+    Jajpur\r\nIN.21.383\tDhenkanal\r\nIN.21.384\tAngul District\r\nIN.21.385\tNayagarh District\r\nIN.21.386\tKhordha\r\n\
+    IN.21.387\tPuri\r\nIN.21.388\tGanjam\r\nIN.21.389\tGajapati\r\nIN.21.390\tKandhamal\r\nIN.21.391\tBaudh\r\nIN.21.392\t\
+    Subarnapur\r\nIN.21.393\tBalangir\r\nIN.21.394\tNuapada\r\nIN.21.395\tKalahandi\r\nIN.21.396\tRayagada\r\nIN.21.397\t\
+    Nabarangpur\r\nIN.21.398\tKoraput\r\nIN.21.399\tMalkangiri\r\nIN.22.634\tYanam\r\nIN.22.635\tPuducherry\r\nIN.22.636\t\
+    Mahe\r\nIN.22.637\tKaraikal\r\nIN.23.035\tGurdaspur\r\nIN.23.036\tKapurthala\r\nIN.23.037\tJalandhar\r\nIN.23.038\tHoshiarpur\r\
+    \nIN.23.039\tShahid Bhagat Singh Nagar\r\nIN.23.040\tFatehgarh Sahib\r\nIN.23.041\tLudhiana\r\nIN.23.042\tMoga\r\nIN.23.043\t\
+    Ferozepur\r\nIN.23.044\tMuktsar\r\nIN.23.045\tFaridkot\r\nIN.23.046\tBathinda\r\nIN.23.047\tMansa\r\nIN.23.048\tPatiala\r\
+    \nIN.23.049\tAmritsar\r\nIN.23.050\tTarn Taran\r\nIN.23.051\tRupnagar\r\nIN.23.052\tAjitgarh\r\nIN.23.053\tSangrur\r\n\
+    IN.23.054\tBarnala\r\nIN.23.8407166\tFazilka\r\nIN.23.8408318\tPathankot\r\nIN.24.099\tGanganagar\r\nIN.24.100\tHanumangarh\r\
+    \nIN.24.101\tBikaner\r\nIN.24.102\tChuru\r\nIN.24.103\tJhunjhunun\r\nIN.24.104\tAlwar\r\nIN.24.105\tBharatpur\r\nIN.24.106\t\
+    Dhaulpur\r\nIN.24.107\tKarauli\r\nIN.24.108\tSawai Madhopur\r\nIN.24.109\tDausa\r\nIN.24.110\tJaipur\r\nIN.24.111\tSikar\r\
+    \nIN.24.112\tNagaur\r\nIN.24.113\tJodhpur\r\nIN.24.114\tJaisalmer\r\nIN.24.115\tBarmer\r\nIN.24.116\tJalore\r\nIN.24.117\t\
+    Sirohi\r\nIN.24.118\tPali\r\nIN.24.119\tAjmer\r\nIN.24.120\tTonk\r\nIN.24.121\tBundi\r\nIN.24.122\tBhilwara\r\nIN.24.123\t\
+    Rajsamand\r\nIN.24.124\tDungarpur\r\nIN.24.125\tBanswara\r\nIN.24.126\tChittaurgarh\r\nIN.24.127\tKota\r\nIN.24.128\t\
+    Baran\r\nIN.24.129\tJhalawar\r\nIN.24.130\tUdaipur\r\nIN.24.131\tPratapgarh\r\nIN.25.602\tThiruvallur\r\nIN.25.603\tChennai\r\
+    \nIN.25.604\tKancheepuram\r\nIN.25.605\tVellore\r\nIN.25.606\tTiruvannamalai\r\nIN.25.607\tVillupuram\r\nIN.25.608\tSalem\r\
+    \nIN.25.609\tNamakkal\r\nIN.25.610\tErode\r\nIN.25.611\tNilgiri\r\nIN.25.612\tDindigul\r\nIN.25.613\tKarur\r\nIN.25.614\t\
+    Tiruchchirappalli\r\nIN.25.615\tPerambalur\r\nIN.25.616\tAriyalur\r\nIN.25.617\tCuddalore\r\nIN.25.618\tNagapattinam\r\
+    \nIN.25.619\tThiruvarur\r\nIN.25.620\tThanjavur\r\nIN.25.621\tPudukkottai\r\nIN.25.622\tSivaganga\r\nIN.25.623\tMadurai\r\
+    \nIN.25.624\tTheni\r\nIN.25.625\tVirudhunagar\r\nIN.25.626\tRamanathapuram\r\nIN.25.627\tThoothukkudi\r\nIN.25.628\tTirunelveli\
+    \ Kattabo\r\nIN.25.629\tKanniyakumari\r\nIN.25.630\tDharmapuri\r\nIN.25.631\tKrishnagiri\r\nIN.25.632\tCoimbatore\r\n\
+    IN.25.633\tTiruppur\r\nIN.26.289\tWest Tripura\r\nIN.26.290\tSouth Tripura\r\nIN.26.291\tDhalai\r\nIN.26.292\tNorth Tripura\r\
+    \nIN.28.327\tDarjiling\r\nIN.28.328\tJalpaiguri\r\nIN.28.329\tKoch Bihar\r\nIN.28.330\tUttar Dinajpur\r\nIN.28.331\tDakshin\
+    \ Dinajpur\r\nIN.28.332\tMaldah\r\nIN.28.333\tMurshidabad\r\nIN.28.334\tBirbhum\r\nIN.28.335\tBarddhaman\r\nIN.28.336\t\
+    Nadia\r\nIN.28.337\tNorth 24 Parganas\r\nIN.28.338\tHugli\r\nIN.28.339\tBankura\r\nIN.28.340\tPuruliya\r\nIN.28.341\t\
+    Haora\r\nIN.28.342\tKolkata\r\nIN.28.343\tSouth 24 Paraganas\r\nIN.28.344\tPaschim Medinipur\r\nIN.28.345\tPurba Medinipur\r\
+    \nIN.29.241\tNorth District\r\nIN.29.242\tWest District\r\nIN.29.243\tSouth District\r\nIN.29.244\tEast District\r\nIN.30.245\t\
+    Tawang\r\nIN.30.246\tWest Kameng\r\nIN.30.247\tEast Kameng\r\nIN.30.248\tPapum Pare\r\nIN.30.249\tUpper Subansiri\r\n\
+    IN.30.250\tWest Siang\r\nIN.30.251\tEast Siang\r\nIN.30.252\tUpper Siang\r\nIN.30.253\tChanglang\r\nIN.30.254\tTirap\r\
+    \nIN.30.255\tLower Subansiri\r\nIN.30.256\tKurung Kumey\r\nIN.30.257\tDibang Valley\r\nIN.30.258\tLower Dibang Valley\r\
+    \nIN.30.259\tLohit District\r\nIN.30.260\tAnjaw\r\nIN.31.281\tMamit\r\nIN.31.282\tKolasib district\r\nIN.31.283\tAizawl\r\
+    \nIN.31.284\tChamphai\r\nIN.31.285\tSerchhip\r\nIN.31.286\tLunglei\r\nIN.31.287\tLawngtlai\r\nIN.31.288\tSaiha\r\nIN.32.494\t\
+    Diu\r\nIN.32.495\tDaman District\r\nIN.33.585\tNorth Goa\r\nIN.33.586\tSouth Goa\r\nIN.34.203\tPashchim Champaran\r\n\
+    IN.34.204\tPurba Champaran\r\nIN.34.205\tSheohar\r\nIN.34.206\tSitamarhi\r\nIN.34.207\tMadhubani\r\nIN.34.208\tSupaul\r\
+    \nIN.34.209\tAraria\r\nIN.34.210\tKishanganj\r\nIN.34.211\tPurnia\r\nIN.34.212\tKatihar\r\nIN.34.213\tMadhepura\r\nIN.34.214\t\
+    Saharsa\r\nIN.34.215\tDarbhanga\r\nIN.34.216\tMuzaffarpur\r\nIN.34.217\tGopalganj\r\nIN.34.218\tSiwan\r\nIN.34.219\tSaran\r\
+    \nIN.34.220\tVaishali\r\nIN.34.221\tSamastipur\r\nIN.34.222\tBegusarai\r\nIN.34.223\tKhagaria\r\nIN.34.224\tBhagalpur\r\
+    \nIN.34.225\tBanka\r\nIN.34.226\tMunger\r\nIN.34.227\tLakhisarai\r\nIN.34.228\tSheikhpura\r\nIN.34.229\tNalanda\r\nIN.34.230\t\
+    Patna\r\nIN.34.231\tBhojpur\r\nIN.34.232\tBuxar\r\nIN.34.233\tKaimur District\r\nIN.34.234\tRohtas\r\nIN.34.235\tAurangabad\r\
+    \nIN.34.236\tGaya\r\nIN.34.237\tNawada\r\nIN.34.238\tJamui\r\nIN.34.239\tJehanabad\r\nIN.34.240\tArwal\r\nIN.35.418\t\
+    Sheopur\r\nIN.35.419\tMorena\r\nIN.35.420\tBhind\r\nIN.35.421\tGwalior\r\nIN.35.422\tDatia\r\nIN.35.423\tShivpuri\r\n\
+    IN.35.424\tTikamgarh\r\nIN.35.425\tChhatarpur\r\nIN.35.426\tPanna\r\nIN.35.427\tSagar\r\nIN.35.428\tDamoh\r\nIN.35.429\t\
+    Satna\r\nIN.35.430\tRewa\r\nIN.35.431\tUmaria District\r\nIN.35.432\tNeemuch\r\nIN.35.433\tMandsaur\r\nIN.35.434\tRatlam\r\
+    \nIN.35.435\tUjjain\r\nIN.35.436\tShajapur\r\nIN.35.437\tDewas\r\nIN.35.438\tDhar\r\nIN.35.439\tIndore\r\nIN.35.440\t\
+    Khargone\r\nIN.35.441\tBarwani\r\nIN.35.442\tRajgarh\r\nIN.35.443\tVidisha\r\nIN.35.444\tBhopal\r\nIN.35.445\tSehore\r\
+    \nIN.35.446\tRaisen\r\nIN.35.447\tBetul\r\nIN.35.448\tHarda\r\nIN.35.449\tHoshangabad\r\nIN.35.450\tKatni\r\nIN.35.451\t\
+    Jabalpur\r\nIN.35.452\tNarsimhapur\r\nIN.35.453\tDindori\r\nIN.35.454\tMandla\r\nIN.35.455\tChhindwara\r\nIN.35.456\t\
+    Seoni\r\nIN.35.457\tBalaghat\r\nIN.35.458\tGuna\r\nIN.35.459\tAshoknagar\r\nIN.35.460\tShahdol\r\nIN.35.461\tAnuppur\r\
+    \nIN.35.462\tSidhi\r\nIN.35.463\tSingrauli\r\nIN.35.464\tJhabua\r\nIN.35.465\tAlirajpur\r\nIN.35.466\tEast Nimar\r\nIN.35.467\t\
+    Burhanpur\r\nIN.36.132\tSaharanpur\r\nIN.36.133\tMuzaffarnagar\r\nIN.36.134\tBijnor\r\nIN.36.135\tMoradabad\r\nIN.36.136\t\
+    Rampur\r\nIN.36.137\tJyotiba Phule Nagar\r\nIN.36.138\tMeerut\r\nIN.36.139\tBaghpat\r\nIN.36.140\tGhaziabad\r\nIN.36.141\t\
+    Gautam Buddha Nagar\r\nIN.36.142\tBulandshahr\r\nIN.36.143\tAligarh\r\nIN.36.144\tMahamaya Nagar\r\nIN.36.145\tMathura\r\
+    \nIN.36.146\tAgra\r\nIN.36.147\tFirozabad\r\nIN.36.148\tMainpuri\r\nIN.36.149\tBudaun\r\nIN.36.150\tBareilly\r\nIN.36.151\t\
+    Pilibhit\r\nIN.36.152\tShahjahanpur\r\nIN.36.153\tKheri\r\nIN.36.154\tSitapur\r\nIN.36.155\tHardoi\r\nIN.36.156\tUnnao\r\
+    \nIN.36.157\tLucknow District\r\nIN.36.158\tRae Bareli\r\nIN.36.159\tFarrukhabad\r\nIN.36.160\tKannauj\r\nIN.36.161\t\
+    Etawah\r\nIN.36.162\tAuraiya\r\nIN.36.163\tKanpur Dehat\r\nIN.36.164\tKanpur\r\nIN.36.165\tJalaun\r\nIN.36.166\tJhansi\r\
+    \nIN.36.167\tLalitpur\r\nIN.36.168\tHamirpur\r\nIN.36.169\tMahoba\r\nIN.36.170\tBanda\r\nIN.36.171\tChitrakoot\r\nIN.36.172\t\
+    Fatehpur\r\nIN.36.173\tPratapgarh\r\nIN.36.174\tKaushambi District\r\nIN.36.175\tAllahabad\r\nIN.36.176\tBara Banki\r\n\
+    IN.36.177\tFaizabad\r\nIN.36.178\tAmbedkar Nagar\r\nIN.36.179\tSultanpur\r\nIN.36.180\tBahraich\r\nIN.36.181\tShrawasti\r\
+    \nIN.36.182\tBalrampur\r\nIN.36.183\tGonda\r\nIN.36.184\tSiddharthangar\r\nIN.36.185\tBasti\r\nIN.36.186\tSant Kabir Nagar\r\
+    \nIN.36.187\tMaharajganj\r\nIN.36.188\tGorakhpur\r\nIN.36.189\tKushinagar\r\nIN.36.190\tDeoria\r\nIN.36.191\tAzamgarh\r\
+    \nIN.36.192\tMau\r\nIN.36.193\tBallia\r\nIN.36.194\tJaunpur\r\nIN.36.195\tGhazipur\r\nIN.36.196\tChandauli District\r\n\
+    IN.36.197\tVaranasi\r\nIN.36.198\tSant Ravi Das Nagar\r\nIN.36.199\tMirzapur\r\nIN.36.200\tSonbhadra\r\nIN.36.201\tEtah\r\
+    \nIN.36.202\tKanshiram Nagar\r\nIN.37.400\tKoriya\r\nIN.37.401\tSurguja\r\nIN.37.402\tJashpur\r\nIN.37.403\tRaigarh\r\n\
+    IN.37.404\tKorba\r\nIN.37.405\tJanjgir-Champa\r\nIN.37.406\tBilaspur\r\nIN.37.407\tKabeerdham\r\nIN.37.408\tRaj Nandgaon\r\
+    \nIN.37.409\tDurg\r\nIN.37.410\tRaipur\r\nIN.37.411\tMahasamund\r\nIN.37.412\tDhamtari\r\nIN.37.413\tUttar Bastar Kanker\r\
+    \nIN.37.414\tBastar\r\nIN.37.415\tNarayanpur\r\nIN.37.416\tDakshin Bastar Dantewada\r\nIN.37.417\tBijapur\r\nIN.38.346\t\
+    Garhwa\r\nIN.38.347\tChatra\r\nIN.38.348\tKodarma\r\nIN.38.349\tGiridih\r\nIN.38.350\tDeogarh\r\nIN.38.351\tGodda\r\n\
+    IN.38.352\tSahibganj\r\nIN.38.353\tPakur\r\nIN.38.354\tDhanbad\r\nIN.38.355\tBokaro\r\nIN.38.356\tLohardaga\r\nIN.38.357\t\
+    Purba Singhbhum\r\nIN.38.358\tPalamu\r\nIN.38.359\tLatehar\r\nIN.38.360\tHazaribag\r\nIN.38.361\tRamgarh\r\nIN.38.362\t\
+    Dumka\r\nIN.38.363\tJamtara\r\nIN.38.364\tRanchi\r\nIN.38.365\tKhunti\r\nIN.38.366\tGumla\r\nIN.38.367\tSimdega\r\nIN.38.368\t\
+    Pashchim Singhbhum\r\nIN.38.369\tSaraikela\r\nIN.39.056\tUttarkashi\r\nIN.39.057\tChamoli\r\nIN.39.058\tRudraprayag\r\n\
+    IN.39.059\tTehri-Garhwal\r\nIN.39.060\tDehradun\r\nIN.39.061\tGarhwal\r\nIN.39.062\tPithoragarh\r\nIN.39.063\tBageshwar\r\
+    \nIN.39.064\tAlmora\r\nIN.39.065\tChampawat\r\nIN.39.066\tNaini Tal\r\nIN.39.067\tUdham Singh Nagar\r\nIN.39.068\tHaridwar\r\
+    \nIN.40.532\tAdilabad\r\nIN.40.533\tNizamabad District\r\nIN.40.534\tKarimnagar\r\nIN.40.535\tMedak\r\nIN.40.536\tHyderabad\r\
+    \nIN.40.537\tRangareddi\r\nIN.40.538\tMahbubnagar\r\nIN.40.539\tNalgonda\r\nIN.40.540\tWarangal\r\nIN.40.541 Khammam\r\
+    \nNP.FR.14\tSeti Zone\r\nNP.ER.13\tSagarmatha Zone\r\nNP.MR.12\tRapti Zone\r\nNP.CR.11\tNarayani Zone\r\nNP.ER.10\tMechi\
+    \ Zone\r\nNP.FR.09\tMahakali Zone\r\nNP.WR.08\tLumbini Zone\r\nNP.ER.07\tKosi Zone\r\nNP.MR.06\tKarnali Zone\r\nNP.CR.05\t\
+    Janakpur Zone\r\nNP.WR.04\tGandaki Zone\r\nNP.WR.03\tDhawalagiri Zone\r\nNP.MR.02\tBheri Zone\r\nNP.CR.01\tBagmati Zone\r\
+    \nBT.06.7647113\tPhuentsholing\r\nBT.06.7647116\tBongo\r\nBT.06.7647631\tChabchha\r\nBT.07.7647804\tKikhorthang\r\nBT.07.7647805\t\
+    Beteni\r\nBT.08.7646448\tTsangkha\r\nBT.08.7646449\tLajab\r\nBT.08.7646456\tDrukgyegang\r\nBT.08.7647632\tKhiphisa\r\n\
+    BT.13.7647816\tMewang\r\nBT.14.7646634\tKhar\r\nBT.14.7646635\tChongshing\r\nBT.14.7646636\tYurung\r\nBT.18.7647112\t\
+    Nangkor\r\nBT.18.7647118\tGoshing\r\nBT.18.7647122\tBardo\r\nBT.18.7647813\tTrong\r\nBT.19.1252424\tTashigang\r\nBT.19.7647111\t\
+    Radi\r\nBT.19.7647125\tLumang\r\nBT.19.7647130\tThrimshing\r\nBT.21.7647633\tNubi\r\nBT.21.7647634\tBjakteng\r\nBT.22.7646447\t\
+    Dangchu\r\nBT.22.7647808\tRuepaisa\r\nBT.22.7647809\tNahi\r\nBD.81.3026\tDhaka\r\nBD.81.3029\tFaridpur\r\nBD.81.3033\t\
+    Gazipur\r\nBD.81.3035\tGopalganj\r\nBD.81.3039\tJamalpur\r\nBD.81.3048\tKishoregonj\r\nBD.81.3054\tMadaripur\r\nBD.81.3056\t\
+    Manikganj\r\nBD.81.3059\tMunshiganj\r\nBD.81.3061\tMymensingh\r\nBD.81.3067\tNarayanganj\r\nBD.81.3068\tNarsingdi\r\n\
+    BD.81.3072\tNetrakona\r\nBD.81.3082\tRajbari\r\nBD.81.3086\tShariatpur\r\nBD.81.3089\tSherpur\r\nBD.81.3093\tTangail\r\
+    \nBD.82.4001\tBagerhat\r\nBD.82.4018\tChuadanga\r\nBD.82.4041\tJessore\r\nBD.82.4044\tJhenaidah\r\nBD.82.4047\tKhulna\r\
+    \nBD.82.4050\tKushtia\r\nBD.82.4055\tMagura\r\nBD.82.4057\tMeherpur\r\nBD.82.4065\tNarail\r\nBD.82.4087\tSatkhira\r\n\
+    BD.83.5010\tBogra\r\nBD.83.5038\tJoypurhat\r\nBD.83.5064\tNaogaon\r\nBD.83.5069\tNatore\r\nBD.83.5070\tChapai Nababganj\r\
+    \nBD.83.5076\tPabna\r\nBD.83.5081\tRajshahi\r\nBD.83.5088\tSirajganj\r\nBD.84.2003\tBandarban\r\nBD.84.2012\tBrahmanbaria\r\
+    \nBD.84.2013\tChandpur\r\nBD.84.2015\tChittagong\r\nBD.84.2019\tComilla\r\nBD.84.2022\tCox's Bazar\r\nBD.84.2030\tFeni\r\
+    \nBD.84.2046\tKhagrachhari\r\nBD.84.2051\tLakshmipur\r\nBD.84.2075\tNoakhali\r\nBD.84.2084\tRangamati\r\nBD.85.1004\t\
+    Barguna\r\nBD.85.1006\tBarisal\r\nBD.85.1009\tBhola\r\nBD.85.1042\tJhalokati\r\nBD.85.1078\tPatuakhali\r\nBD.85.1079\t\
+    Pirojpur\r\nBD.86.6036\tHabiganj\r\nBD.86.6058\tMaulvibazar\r\nBD.86.6090\tSunamganj\r\nBD.86.6091\tSylhet\r\nBD.87.5527\t\
+    Dinajpur\r\nBD.87.5532\tGaibandha\r\nBD.87.5549\tKurigram\r\nBD.87.5552\tLalmonirhat\r\nBD.87.5573\tNilphamari Zila\r\n\
+    BD.87.5577\tPanchagarh\r\nBD.87.5585\tRangpur\r\nBD.87.5594\tThakurgaon\r\nPK.01.1164536\tSouth Waziristan Agency\r\n\
+    PK.01.1168705\tOrakzai Agency\r\nPK.01.1168875\tNorth Waziristan Agency\r\nPK.01.1170122\tMohmand Agency\r\nPK.01.1172574\t\
+    Kurram Agency\r\nPK.01.1173641\tKhyber Agency\r\nPK.01.1180280\tDera Ismail Khan Tribal Area\r\nPK.01.1183781\tBajaur\
+    \ Agency\r\nPK.01.7419041\tTank Tribal Area\r\nPK.01.7419043\tBannu Tribal Area\r\nPK.01.7419044\tLakki Marwat Tribal\
+    \ Area\r\nPK.01.7419049\tPeshawar Tribal Area\r\nPK.01.7419050\tKohat Tribal Area\r\nPK.01.7732203\tChawkay\r\nPK.02.1162104\t\
+    Zhob District\r\nPK.02.1163052\tKech District\r\nPK.02.1164895\tSibi District\r\nPK.02.1167526\tQuetta Division\r\nPK.02.1167527\t\
+    Quetta District\r\nPK.02.1167820\tPishin District\r\nPK.02.1168444\tPanjgur District\r\nPK.02.1169249\tNasirabad District\r\
+    \nPK.02.1171403\tMakran Division\r\nPK.02.1171867\tLoralai District\r\nPK.02.1172115\tLasbela District\r\nPK.02.1173463\t\
+    Kohlu District\r\nPK.02.1173663\tKhuzdar District\r\nPK.02.1174059\tKharan District\r\nPK.02.1175292\tKhelat\r\nPK.02.1175293\t\
+    Kalat District\r\nPK.02.1175527\tKachhi District\r\nPK.02.1177445\tGwadar District\r\nPK.02.1181950\tChagai District\r\
+    \nPK.02.6641896\tAwaran District\r\nPK.02.6641912\tBarkhan District\r\nPK.02.6641917\tBolan District\r\nPK.02.6641919\t\
+    Dera Bugti District\r\nPK.02.6641922\tJafarabad District\r\nPK.02.6641923\tJhal Magsi District\r\nPK.02.6641952\tMastung\
+    \ District\r\nPK.02.6641955\tMusa Khel District\r\nPK.02.6641960\tNushki District\r\nPK.02.6641961\tQila Abdullah District\r\
+    \nPK.02.6641963\tQila Saifullah District\r\nPK.02.6641965\tWashuk District\r\nPK.02.6641972\tZiarat District\r\nPK.02.8309758\t\
+    Harnai\r\nPK.02.8309759\tShirani\r\nPK.03.1164211\tSwat District\r\nPK.03.1168194\tPeshawar Division\r\nPK.03.1168195\t\
+    Peshawar District\r\nPK.03.1170875\tMardan District\r\nPK.03.1170950\tMansehra District\r\nPK.03.1171387\tMalakand Division\r\
+    \nPK.03.1171388\tMalakand Protected Area\r\nPK.03.1173473\tKohistan District\r\nPK.03.1173489\tKohat District\r\nPK.03.1176967\t\
+    Hazara Division\r\nPK.03.1179754\tUpper Dir District\r\nPK.03.1180282\tDera Ismail Khan District\r\nPK.03.1181064\tChitral\
+    \ District\r\nPK.03.1182146\tBuner District\r\nPK.03.1183459\tBannu District\r\nPK.03.1185055\tAbbottabad District\r\n\
+    PK.03.7419039\tLakki Marwat District\r\nPK.03.7419040\tTank District\r\nPK.03.7419047\tKarak District\r\nPK.03.7419048\t\
+    Hangu District\r\nPK.03.7419051\tCharsadda District\r\nPK.03.7419052\tNowshera District\r\nPK.03.7419053\tShangla District\r\
+    \nPK.03.7419054\tHaripur District\r\nPK.03.7419055\tSwabi District\r\nPK.03.7419056\tLower Dir District\r\nPK.03.8061265\t\
+    Tor Ghar\r\nPK.03.8224052\tBatagram\r\nPK.04.1162811\tVihari District\r\nPK.04.1164908\tSialkot District\r\nPK.04.1165218\t\
+    Shekhupura District\r\nPK.04.1165998\tSargodha Division\r\nPK.04.1165999\tSargodha District\r\nPK.04.1166545\tSahiwal\
+    \ District\r\nPK.04.1166990\tRawalpindi Division\r\nPK.04.1166991\tRawalpindi District\r\nPK.04.1167458\tRahimyar Khan\
+    \ District\r\nPK.04.1169603\tMuzaffargarh District\r\nPK.04.1169820\tMultan Division\r\nPK.04.1169821\tMultan District\r\
+    \nPK.04.1170424\tMianwali District\r\nPK.04.1172448\tLahore Division\r\nPK.04.1172449\tLahore District\r\nPK.04.1174623\t\
+    Kasur District\r\nPK.04.1175862\tJhelum District\r\nPK.04.1175906\tJhang District\r\nPK.04.1177651\tGujrat District\r\n\
+    PK.04.1177657\tGujranwala Division\r\nPK.04.1177658\tGujranwala District\r\nPK.04.1179398\tFaisalabad Division\r\nPK.04.1179399\t\
+    Faisalabad District\r\nPK.04.1180287\tDera Ghazi Khan District\r\nPK.04.1183875\tBahawalpur Division\r\nPK.04.1183876\t\
+    Bahawalpur District\r\nPK.04.1183882\tBahawalnagar District\r\nPK.04.1184248\tAttock District\r\nPK.04.7331706\tToba Tek\
+    \ Singh District\r\nPK.04.7418846\tLodhran District\r\nPK.04.7418850\tPakpattan District\r\nPK.04.7418888\tOkara District\r\
+    \nPK.04.7418890\tKhanewal District\r\nPK.04.7418962\tHafizabad District\r\nPK.04.7418963\tMandi Bahauddin District\r\n\
+    PK.04.7418964\tChakwal District\r\nPK.04.7418965\tKhushab District\r\nPK.04.7418966\tBhakkar District\r\nPK.04.7418967\t\
+    Leiah District\r\nPK.04.7418968\tNarowal District\r\nPK.04.7419159\tNankana Sahib District\r\nPK.04.7648373\tSudhnati\
+    \ District\r\nPK.04.8309731\tRajanpur\r\nPK.05.1163570\tThatta District\r\nPK.05.1163602\tThar Parkar District\r\nPK.05.1164407\t\
+    Sukkur District\r\nPK.05.1165106\tShikarpur District\r\nPK.05.1166162\tSanghar District\r\nPK.05.1169115\tNawabshah District\r\
+    \nPK.05.1172127\tLarkana District\r\nPK.05.1174348\tKhairpur Division\r\nPK.05.1174349\tKhairpur District\r\nPK.05.1174870\t\
+    Karachi District\r\nPK.05.1176514\tJacobabad District\r\nPK.05.1176732\tHyderabad Division\r\nPK.05.1176733\tHyderabad\
+    \ District\r\nPK.05.1180802\tDadu District\r\nPK.05.1184051\tBadin District\r\nPK.05.1376894\tMirpur Khas District\r\n\
+    PK.05.7352189\tNaushahro Firoz District\r\nPK.05.7418822\tGhotki District\r\nPK.05.7419156\tJamshoro District\r\nPK.05.7419157\t\
+    Matiari District\r\nPK.05.9034783\tQamber Shahdadkot District\r\nPK.05.9035095\tKashmore District\r\nPK.05.9072726\tUmerkot\
+    \ District\r\nPK.05.9625763\tTando Allahyar District\r\nPK.05.9625902\tTando Mohammad Khan District\r\nPK.06.1167717\t\
+    Poonch District\r\nPK.06.1169606\tMuzaffarabad District\r\nPK.06.1170297\tMirpur District\r\nPK.06.1173037\tKotli District\r\
+    \nPK.06.7536187\tBhimbar District\r\nPK.06.7536188\tBagh District\r\nPK.06.8199376\tNeelum District\r\nPK.06.8309754\t\
+    Haveli\r\nPK.06.8309755\tHatian\r\nPK.06.8986039\tSudhanoti District\r\nPK.07.1176775\tHunza-Nagar District\r\nPK.07.1183615\t\
+    Skardu District\r\nPK.07.7419057\tGhizar District\r\nPK.07.7419077\tGhanche District\r\nPK.07.8309748\tAstor\r\nPK.07.8358419\t\
+    Gilgit\r\nPK.07.8358421\tDiamir\r\nLK.29.1232781\tNuwara Eliya District\r\nLK.29.1235854\tMatale District\r\nLK.29.1241621\t\
+    Kandy District\r\nLK.30.1229899\tPolonnaruwa District\r\nLK.30.1251080\tAnuradhapura District\r\nLK.32.1229292\tPuttalam\
+    \ District\r\nLK.32.1237978\tKurunegala District\r\nLK.33.1228729\tRatnapura District\r\nLK.33.1240722\tKegalle District\r\
+    \nLK.34.1235845\tMatara District\r\nLK.34.1244925\tHambantota District\r\nLK.34.1246292\tGalle District\r\nLK.35.1234818\t\
+    Moneragala District\r\nLK.35.1250614\tBadulla District\r\nLK.35.8594110\tMonaragale District\r\nLK.36.1241963\tKalutara\
+    \ District\r\nLK.36.1246005\tGampaha District\r\nLK.36.1248990\tColombo District\r\nLK.37.1226258\tTrincomalee District\r\
+    \nLK.37.1250159\tBatticaloa District\r\nLK.37.1251460\tAmpara District\r\nLK.38.1225017\tVavuniya District\r\nLK.38.1234392\t\
+    Mullaitivu District\r\nLK.38.1236148\tMannar District\r\nLK.38.1240371\tKilinochchi District\r\nLK.38.1242831\tJaffna\
+    \ District\r\nCN.06.1279540\tYushu Zangzu Zizhizhou\r\nCN.06.1281075\tHaixi Mongolzu Zangzu Zizhizhou\r\nCN.06.1281178\t\
+    Golog Zangzu Zizhizhou\r\nCN.06.1788850\tXining Shi\r\nCN.06.1807329\tHuangnan Zangzu Zizhizhou\r\nCN.06.1809051\tHainan\
+    \ Zangzu Zizhizhou\r\nCN.06.1809101\tHaidong Diqu\r\nCN.06.1809111\tHaibei Zangzu Zizhizhou\r\nCN.07.1785017\tZhangzhou\
+    \ Shi\r\nCN.07.1790638\tXiamen Shi\r\nCN.07.1796662\tSanming Shi\r\nCN.07.1797350\tQuanzhou Shi\r\nCN.07.1798445\tPutian\
+    \ Shi\r\nCN.07.1799392\tNingde Shi\r\nCN.07.1799838\tNanping Shi\r\nCN.07.1802274\tLongyan Shi\r\nCN.07.1806121\tJianyang\
+    \ Diqu\r\nCN.07.1810815\tFuzhou Shi\r\nCN.10.1788925\tXingtai Shi\r\nCN.10.1793343\tTangshan Shi\r\nCN.10.1795266\tShijiazhuang\
+    \ Shi\r\nCN.10.1797593\tQinhuangdao Shi\r\nCN.10.1804539\tLangfang Shi\r\nCN.10.1808391\tHengshui Shi\r\nCN.10.1808961\t\
+    Handan Shi\r\nCN.10.1808962\tHandan Diqu\r\nCN.10.1816078\tCangzhou Shi\r\nCN.10.1816079\tCangzhou Diqu\r\nCN.10.1816969\t\
+    Baoding Shi\r\nCN.10.1816970\tBaoding Diqu\r\nCN.10.2033194\tZhangjiakou Shi\r\nCN.10.2038085\tChengde Shi\r\nCN.10.2038086\t\
+    Chengde Diqu\r\nCN.13.1280828\tKizilsu Kirgiz Zizhizhou\r\nCN.13.1280848\tKashi Diqu\r\nCN.13.1281018\tHotan Diqu\r\n\
+    CN.13.1529101\tUrumqi Shi\r\nCN.13.1529113\tTurpan Diqu\r\nCN.13.1529166\tTacheng Diqu\r\nCN.13.1529400\tKaramay Shi\r\
+    \nCN.13.1529434\tIli Kazak Zizhizhou\r\nCN.13.1529483\tKumul Diqu\r\nCN.13.1529568\tChangji Huizu Zizhizhou\r\nCN.13.1529581\t\
+    Bortala Mongol Zizhizhou\r\nCN.13.1529604\tBayingolin Mongol Zizhizhou\r\nCN.13.1529650\tAltay Diqu\r\nCN.13.1529658\t\
+    Aksu Diqu\r\nCN.14.1279714\tRikaze Diqu\r\nCN.14.1280019\tShannan Diqu\r\nCN.14.1280280\tQamdo Diqu\r\nCN.14.1280390\t\
+    Nyingchi Prefecture\r\nCN.14.1280456\tNgari Diqu\r\nCN.14.1280515\tNagqu Diqu\r\nCN.14.1280735\tLhasa Shi"
+varshaphala_and_tajika:
+- offset: 21093
+  text: Type the number of 5th level (=Praan Level) of VPC (Varsha Pravesha Chakra) if you want to view finer level charts
+    which lasts for about 25 minutes.
+- offset: 21728
+  text: Type the number of 2nd level (=solar month starting on Samkraanti) of VPC (Varsha Pravesha Chakra) if you want to
+    view finer level charts.
+- offset: 22394
+  text: Enter numbers for levels of Varsha-phala in Medini . Click 'help' button on right.
+- offset: 1280300
+  text: 'Gaurava Varshphala (Bhogya or Gata) Varsha : Maas : Din : Ghati : Pala.'
+- offset: 1287874
+  text: Enter 360 for Divya-Varsha TIMING, 30 for Divya-maasa. Default is 1 year. For Kaliyuga type 432000 after entering
+    Kaliyugaadi in Data Form. Then Press ENTER button.
+- offset: 1319651
+  text: "For human/solar year to be used for Year-length, leave \r\nthe default as  '1' in the yellow text box\r\n\r\n(if\
+    \ first solar month is needed in Chakra then put \"11\" \r\nhere),\r\n\r\nbut change it according to initial Data Form's\
+    \ Medini-Help.\r\n\r\nDivya Varsha cannot be selected whimsically.\r\nPrevious Divya-Varsha onset was in 1939 AD.\r\n\
+    Before Christ, first Divya Varsha was in BC 222.\r\nGo on adding or substracting 360 to get other Divya \r\nVarsha onsets.\r\
+    \nAfter you get Divya Varsha onset of the required era, \r\ngo on adding 30 years to find out required Divya Month \r\n\
+    for the wanted period.\r\nFor instance, to check 297 BC, enter -582 in the year \r\ntext box of data input form and enter\
+    \ '2' in this yellow \r\ntext box here to get Divya-Varsha PHALA for the 360-\r\nyear from 582 BC to 222 BC, but if Divya\
+    \ month \r\nPHALA is needed then enter -312 in the data input \r\nform's year box and here in yellow text box select '3'.\
+    \ \r\nCurrent Divya Varsha started in 1939 AD, and current \r\nDivya Month in AD 1999."
+- offset: 1342439
+  text: SHODASH  VARGAS  OF  VARSHA-cum-MAASA  PHALAS
+- offset: 1365635
+  text: Enter 360 here for Divya-Varsha Chart's TIMING-CHAKRA shown at left of this box in green box, and enter 30 for Divya-maasa
+    Timing. Default is 1 year for Varshaphala Timing.
+- offset: 2085821
+  text: Enter 360 here for Divya-Varsha Chart's TIMING-CHAKRA shown at left of this box in green box, and enter 30 for Divya-maasa
+    Timing. Default is 1 year for Varshaphala Timing.
+ashtakavarga_and_bala:
+- offset: 9386
+  text: Default Size of D-1 Chart, best size is between 5400 to 10800. Your preference here will be saved.
+- offset: 12798
+  text: 'Birth-time : Seconds (decimal allowed) ; Local Standard Time needed, but after manual DST (Daylight Saving Time)
+    correction. Add DST manually to Ishtakaal output too (in Drik mode).'
+- offset: 13051
+  text: 'Birth-time : Minutes ; Local Standard Time needed, but after manual DST (Daylight Saving Time) correction. Add DST
+    manually to Ishtakaal output too (in Drik mode).'
+- offset: 13287
+  text: 'Birth-time : Hours (24-hour system) ; Local Standard Time needed, but after manual DST (Daylight Saving Time) correction.
+    Add DST manually to Ishtakaal output too (in Drik mode).'
+- offset: 13540
+  text: Birth-year (Gregorian) ; Zonal Standard Time needed, but after manual DST (Daylight Saving Time) correction. Add DST
+    manually to Ishtakaal output too (in Drik mode). For entire Kalpa in SSS mode, type -1.9 to +2.3 billion years in Year
+    box. But >31767 BC or AD years cannot be saved.
+- offset: 13896
+  text: Month of Birth-date (Gregorian) ; Local Standard Time needed, but after manual DST (Daylight Saving Time) correction.
+    Add DST manually to Ishtakaal output too (in Drik mode).
+- offset: 14141
+  text: Day of Birth-date (Gregorian) ; Local Standard Time needed, but after manual DST (Daylight Saving Time) correction.
+    Add DST manually to Ishtakaal output too (in Drik mode).
+- offset: 15424
+  text: Time-Zone of Birth-place in Degrees ; Local Standard Time needed, but after manual DST (Daylight Saving Time) correction.
+    Add DST manually to Ishtakaal output too (in Drik mode).
+- offset: 16488
+  text: Save   New  or  Changed  Recordset  of  a  Person
+- offset: 16930
+  text: Default Record which opens at the start.Any record becomes default when saved.To change default,type Record Number,press
+    SAVE,restart.
+- offset: 18506
+  text: Category of Native, maximum size 40 characters, if empty then saved in "Misc"  category.  Maximum infinite records
+    in one category, and max 512 categories. Sub-categories can be made by adding prefixes like Indian-  or  Kids- etc in
+    category names.
+- offset: 26254
+  text: Save Record (Update) (Native)
+- offset: 855292
+  text: cmdAshtakvargAllDetails_Click
+- offset: 1293418
+  text: 'DST : Daylight Saving Time for Summer in Hour.'
+- offset: 1317328
+  text: '''1'' for Natal Graha as BAV Lagna ; ''2'' for Natal Lagna as BAV Lagna ;''3'' for Gochara Graha as BAV Lagna.'
+- offset: 1317777
+  text: 'Select Option in Text box at left before clicking here : ''1'' for Natal Graha as BAV Lagna ; ''2'' for Natal Lagna
+    as BAV Lagna ;''3'' for Gochara Graha as BAV Lagna.'
+- offset: 1318080
+  text: '''1'' for Natal Graha as BAV Lagna ; ''2'' for Natal Lagna as BAV Lagna ;''3'' for Gochara Graha as BAV Lagna.'
+- offset: 1320955
+  text: Type in Varga (Divisional) number here, and find its current transit chart byt clicking Ashtakvarg button.
+- offset: 1321852
+  text: Type in Varga (Divisional) number here, and find its current transit chart byt clicking Ashtakvarg button.
+- offset: 1336132
+  text: Unz vkSj f=dks.k nksuksa esa gSAvr% yXus'k 4]7]10 vFkok 5]9 d
+- offset: 1348032
+  text: "Unz vkSj \r\nf=dks.k nksuksa esa gSAvr% yXus'k 4]7]10 vFkok 5]9 d"
+- offset: 1370750
+  text: Ashtaka Varga's  GOCHARA  Chart    and  Transit-time (Sanchaar) for current planets.
+- offset: 1374794
+  text: Current (Gochara) Planets and Lagna shown with respect to Birth-time Planets and Lagna. AshtakaVarga Rekhas  should
+    also be accounted.
+- offset: 1380142
+  text: In Sarva-rekha, all 8 vargas are shown if number of days is <-48, else lagna-rekha is omitted upto number of days
+    <1096, above which even Chandra-rekha is omitted in Sarva-rekha. Fill  Number of days always integer >0
+- offset: 1381062
+  text: ON for all AVs, OFF for only Sarvashtaka
+- offset: 1381303
+  text: ON for pure ashtakvargaic lines, OFF for lines  weighted according to exaltation &c.
+- offset: 1381616
+  text: ON for Blue, OFF for Red Graph of Sarva-ashtakavarga
+- offset: 1381734
+  text: In Sarva-rekha, all 8 vargas are shown if number of days is <-48, else lagna-rekha is omitted upto number of days
+    <1096, above which even Chandra-rekha is omitted in Sarva-rekha. Fill  Number of days always integer >0
+- offset: 1392445
+  text: (These options are not saved)
+- offset: 1393136
+  text: ( These 'Extra Choices' are not saved. )
+sarvatobhadra_and_koorma:
+- offset: 1270693
+  text: 'Koorm-Chakra : put its centre at centre of Map'
+- offset: 1298637
+  text: Click it to make current SBC
+- offset: 1441882
+  text: "*AF.01.1125426\tShighnan District\r\nAF.08.1140918\tGelan\r\nAF.01.7052641\tArghanj Khwah\r\nAF.01.7052663\tArgo\r\
+    \nAF.01.7052664\tBaharak\r\nAF.01.7052665\tDarayim\r\nAF.01.7052666\tDarwaz-e Bala\r\nAF.01.7052667\tDarwaz-e Pa'in\r\n\
+    AF.01.7052668\tFaizabad\r\nAF.01.7052669\tIshkashim\r\nAF.01.7052670\tJurm\r\nAF.01.7052672\tKhash\r\nAF.01.7052674\t\
+    Khwahan\r\nAF.01.7052676\tKiran wa Munjan\r\nAF.01.7052679\tKishim\r\nAF.01.7052680\tKohistan\r\nAF.01.7052682\tKuf Ab\r\
+    \nAF.01.7052684\tRaghistan\r\nAF.01.7052686\tShahr-e Buzurg\r\nAF.01.7052689\tShiki\r\nAF.01.7052690\tShuhada\r\nAF.01.7052691\t\
+    Tagab\r\nAF.01.7052692\tTashkan\r\nAF.01.7052694\tWakhan\r\nAF.01.7052696\tWarduj\r\nAF.01.7052701\tYaftal-e Sufla\r\n\
+    AF.01.7052735\tYamgan\r\nAF.01.7052736\tYawan\r\nAF.01.7052737\tZaybak\r\nAF.02.7052785\tAb-e Kamari\r\nAF.02.7052787\t\
+    Ghormach\r\nAF.02.7052790\tJowand\r\nAF.02.7052792\tMuqur\r\nAF.02.7052794\tMurghab\r\nAF.02.7052795\tQadis\r\nAF.02.7052796\t\
+    Qal`ah-ye Now\r\nAF.03.7052857\tAndarab\r\nAF.03.7052897\tBaghlan-e Jadid\r\nAF.03.7052899\tBurkah\r\nAF.03.7052900\t\
+    Dahanah-ye Ghori\r\nAF.03.7052901\tDeh-e Salah\r\nAF.03.7052902\tDoshi\r\nAF.03.7052903\tFiring wa Gharu\r\nAF.03.7052904\t\
+    Guzargah-e Nur\r\nAF.03.7052905\tKhinjan\r\nAF.03.7052906\tKhost wa Firing\r\nAF.03.7052907\tKhwajah Hijran\r\nAF.03.7052908\t\
+    Nahrin\r\nAF.03.7052909\tPul-e Hisar\r\nAF.03.7052910\tTalah wa Barfak\r\nAF.05.7052911\tKahmard\r\nAF.05.7052912\tPanjab\r\
+    \nAF.05.7052913\tSayghan\r\nAF.05.7052914\tShaybar\r\nAF.05.7052915\tWaras\r\nAF.05.7052916\tYakawlang\r\nAF.06.7052917\t\
+    Anar Darah\r\nAF.06.7052918\tBakwah\r\nAF.06.7052919\tBala Buluk\r\nAF.06.7052920\tGulistan\r\nAF.06.7052921\tKhak-e Safed\r\
+    \nAF.06.7052922\tLash-e Juwayn\r\nAF.06.7052923\tPur Chaman\r\nAF.06.7052924\tPusht-e Rod\r\nAF.06.7052925\tQal`ah-ye\
+    \ Kah\r\nAF.06.7052926\tShayb Koh\r\nAF.07.7052927\tKhan-e Chahar Bagh\r\nAF.07.7052928\tAlmar\r\nAF.07.7052929\tAndkhoy\r\
+    \nAF.07.7052930\tBal Chiragh\r\nAF.07.7052931\tDowlatabad\r\nAF.07.7052932\tGurziwan\r\nAF.07.7052933\tKhwajah Sabz Posh\r\
+    \nAF.07.7052934\tKohistan\r\nAF.07.7052935\tMaimanah\r\nAF.07.7052936\tPashtun Kot\r\nAF.07.7052946\tQaisar\r\nAF.07.7052947\t\
+    Qaram Qol\r\nAF.07.7052948\tQurghan\r\nAF.07.7052949\tShirin Tagab\r\nAF.08.7052950\tAb Band\r\nAF.08.7052952\tAjristan\r\
+    \nAF.08.7052953\tAndar\r\nAF.08.7052954\tBahram-e Shahid\r\nAF.08.7052955\tDeh Yak\r\nAF.08.7052956\tGhazni\r\nAF.08.7052957\t\
+    Giro\r\nAF.08.7052958\tJaghuri\r\nAF.08.7052961\tKhwajah `Omari\r\nAF.08.7052962\tMalistan\r\nAF.08.7052984\tMuqer\r\n\
+    AF.08.7052985\tNawah\r\nAF.08.7052986\tNawur\r\nAF.08.7052988\tQarah Bagh\r\nAF.08.7052990\tRashidan\r\nAF.08.7052992\t\
+    Waghaz\r\nAF.08.7052994\tWali Muhammad Shahid Khugyani\r\nAF.08.7052996\tZanakhan\r\nAF.09.7052997\tChaghcharan\r\nAF.09.7052998\t\
+    Chahar Sadah\r\nAF.09.7052999\tDu Lainah\r\nAF.09.7053000\tDowlatyar\r\nAF.09.7053002\tLa`l wa Sar Jangal\r\nAF.09.7053003\t\
+    Pasaband\r\nAF.09.7053004\tSaghar\r\nAF.09.7053010\tShahrak\r\nAF.09.7053012\tTaywarah\r\nAF.09.7053013\tTulak\r\nAF.10.7053015\t\
+    Baghran\r\nAF.10.7053017\tDishu\r\nAF.10.7053018\tGarm Ser\r\nAF.10.7053026\tKajaki\r\nAF.10.7053027\tLashkar Gah\r\n\
+    AF.10.7053028\tMusa Qal`ah\r\nAF.10.7053029\tNad `Ali\r\nAF.10.7053030\tNahr-e Saraj\r\nAF.10.7053031\tNawah-ye Barakzai\r\
+    \nAF.10.7053032\tNow Zad\r\nAF.10.7053033\tReg-e Khan Neshin\r\nAF.10.7053034\tSangin\r\nAF.10.7053035\tWasher\r\nAF.11.7053036\t\
+    Adraskan\r\nAF.11.7053037\tChisht-e Sharif\r\nAF.11.7053038\tFarsi\r\nAF.11.7053039\tGhoriyan\r\nAF.11.7053040\tGulran\r\
+    \nAF.11.7053041\tInjil\r\nAF.11.7053042\tKarukh\r\nAF.11.7053043\tKuhsan\r\nAF.11.7053044\tKushk\r\nAF.11.7053045\tKushk-e\
+    \ Kuhnah\r\nAF.11.7053046\tGuzarah\r\nAF.11.7053047\tObeh\r\nAF.11.7053048\tPashtun Zarghun\r\nAF.11.7053049\tShindand\r\
+    \nAF.11.7053050\tZindah Jan\r\nAF.13.7053051\tBagrami\r\nAF.13.7053052\tChahar Asyab\r\nAF.13.7053053\tDeh-e Sabz\r\n\
+    AF.13.7053054\tFarzah\r\nAF.13.7053055\tGul Darah\r\nAF.13.7053056\tIstalif\r\nAF.13.7053057\tKalakan\r\nAF.13.7053058\t\
+    Khak-e Jabar\r\nAF.13.7053059\tMir Bachah Kot\r\nAF.13.7053060\tMusahi\r\nAF.13.7053080\tPaghman\r\nAF.13.7053081\tQarah\
+    \ Bagh\r\nAF.13.7053082\tSarobi\r\nAF.13.7053083\tShakar Darah\r\nAF.14.7053084\tAlah Say\r\nAF.14.7053085\tHisah-ye Awal-e\
+    \ Kohistan\r\nAF.14.7053086\tHisah-ye Duwum-e Kohistan\r\nAF.14.7053087\tKoh Band\r\nAF.14.7053088\tMahmud-e Raqi\r\n\
+    AF.14.7053089\tNijrab\r\nAF.14.7053090\tTagab\r\nAF.23.7053179\tShah Wali Kot\r\nAF.17.7053255\tAzrah\r\nAF.17.7053256\t\
+    Baraki Barak\r\nAF.17.7053257\tCharkh\r\nAF.17.7053258\tKharwar\r\nAF.17.7053259\tKhoshi\r\nAF.17.7053260\tMuhammad Aghah\r\
+    \nAF.17.7053261\tPul-e `Alam\r\nAF.18.7053262\tAchin\r\nAF.18.7053263\tBati Kot\r\nAF.18.7053264\tBihsud\r\nAF.18.7053265\t\
+    Chaparhar\r\nAF.18.7053266\tDarah-ye Nur\r\nAF.18.7053267\tDeh Bala\r\nAF.18.7053278\tDur Baba\r\nAF.18.7053279\tGoshtah\r\
+    \nAF.18.7053280\tHisarak\r\nAF.18.7053281\tJalalabad\r\nAF.18.7053282\tKamah\r\nAF.18.7053283\tKhugyani\r\nAF.18.7053284\t\
+    Kot\r\nAF.18.7053285\tKuz Kunar\r\nAF.18.7053286\tLa`lpur\r\nAF.18.7053287\tMohmand Darah\r\nAF.18.7053288\tNaziyan\r\n\
+    AF.18.7053289\tPachir wa Agam\r\nAF.18.7053290\tRodat\r\nAF.18.7053291\tSherzad\r\nAF.18.7053292\tShinwar\r\nAF.18.7053293\t\
+    Surkh Rod\r\nAF.19.7053294\tChahar Burjak\r\nAF.19.7053295\tKang\r\nAF.19.7053296\tKhash Rod\r\nAF.19.7053297\tZaranj\r\
+    \nAF.23.7053298\tArghandab\r\nAF.23.7053299\tArghistan\r\nAF.23.7053300\tDaman\r\nAF.23.7053301\tGhorak\r\nAF.23.7053302\t\
+    Khakrez\r\nAF.23.7053303\tMa`ruf\r\nAF.23.7053304\tMaywand\r\nAF.23.7053305\tMya Neshin\r\nAF.23.7053306\tNesh\r\nAF.23.7053307\t\
+    Panjwa'i\r\nAF.23.7053308\tRegistan\r\nAF.23.7053309\tShorabak\r\nAF.23.7053310\tSpin Boldak\r\nAF.23.7053311\tZharey\r\
+    \nAF.24.7053312\t`Aliabad\r\nAF.24.7053313\tDasht-e Archi\r\nAF.24.7053314\tChahar Darah\r\nAF.24.7053315\tImam Sahib\r\
+    \nAF.24.7053316\tKhanabad\r\nAF.24.7053317\tQal`ah-ye Zal\r\nAF.26.7053318\tBaharak\r\nAF.26.7053319\tBangi\r\nAF.26.7053320\t\
+    Chah Ab\r\nAF.26.7053321\tChal\r\nAF.26.7053322\tDarqad\r\nAF.26.7053323\tDasht-e Qal`ah\r\nAF.26.7053324\tFarkhar\r\n\
+    AF.26.7053325\tHazar Sumuch\r\nAF.26.7053326\tIshkamish\r\nAF.26.7053327\tKalafgan\r\nAF.26.7053328\tKhwajah Bahawuddin\r\
+    \nAF.26.7053329\tKhwajah Ghar\r\nAF.26.7053330\tNamak Ab\r\nAF.26.7053331\tRustaq\r\nAF.26.7053332\tTaluqan\r\nAF.26.7053333\t\
+    Warsaj\r\nAF.26.7053334\tYangi Qal`ah\r\nAF.27.7053335\tChak-e Wardak\r\nAF.27.7053336\tDaymirdad\r\nAF.27.7053337\tHisah-ye\
+    \ Awal-e Bihsud\r\nAF.27.7053338\tJaghatu\r\nAF.27.7053339\tJalrayz\r\nAF.27.7053340\tMaidan Shahr\r\nAF.27.7053341\t\
+    Markaz-e Bihsud\r\nAF.27.7053342\tNerkh\r\nAF.27.7053343\tSayyidabad\r\nAF.28.7053344\tArghandab\r\nAF.28.7053345\tAtghar\r\
+    \nAF.28.7053346\tDaychopan\r\nAF.28.7053347\tKakar\r\nAF.28.7053768\tMizan\r\nAF.28.7053769\tNow Bahar\r\nAF.28.7053770\t\
+    Shah Joy\r\nAF.28.7053771\tShamulzai\r\nAF.28.7053772\tShinkai\r\nAF.28.7053773\tTarnek wa Jaldak\r\nAF.29.7053774\tBermal\r\
+    \nAF.29.7053775\tDilah\r\nAF.29.7053776\tGiyan\r\nAF.29.7053777\tGomal\r\nAF.29.7053778\tJani Khel\r\nAF.29.7053779\t\
+    Muta Khan\r\nAF.29.7053780\tNikeh\r\nAF.29.7053781\tOmnah\r\nAF.29.7053782\tUrgun\r\nAF.29.7053783\tSar Rowzah\r\nAF.29.7053784\t\
+    Sarobi\r\nAF.29.7053785\tSharan\r\nAF.29.7053786\tTerwo\r\nAF.29.7053787\tWazah Khwah\r\nAF.29.7053788\tWur Mamay\r\n\
+    AF.29.7053789\tYahya Khel\r\nAF.29.7053790\tYosuf Khel\r\nAF.29.7053791\tZarghun Shahr\r\nAF.29.7053792\tZiruk\r\nAF.30.7053793\t\
+    Chahar Bolak\r\nAF.30.7053794\tChahar Kent\r\nAF.30.7053795\tChimtal\r\nAF.30.7053796\tDehdadi\r\nAF.30.7053797\tDowlatabad\r\
+    \nAF.30.7053798\tKaldar\r\nAF.30.7053799\tKhulm\r\nAF.30.7053800\tKishindeh\r\nAF.30.7053801\tMarmul\r\nAF.30.7053802\t\
+    Nahr-e Shahi\r\nAF.30.7053803\tShahrak-e Hairatan\r\nAF.30.7053804\tSholgarah\r\nAF.30.7053805\tShor Tepah\r\nAF.30.7053806\t\
+    Zari\r\nAF.31.7053807\tAqchah\r\nAF.31.7053808\tDarzab\r\nAF.31.7053809\tFaizabad\r\nAF.31.7053810\tKhamyab\r\nAF.31.7053811\t\
+    Khanaqah\r\nAF.31.7053812\tKhwajah Du Koh\r\nAF.31.7053813\tMardian\r\nAF.31.7053814\tMingajik\r\nAF.31.7053815\tQarqin\r\
+    \nAF.31.7053816\tQush Tepah\r\nAF.31.7053817\tShibirghan\r\nAF.32.7053818\tAibak\r\nAF.32.7053819\tDarah-ye Suf-e Bala\r\
+    \nAF.32.7053820\tDarah-ye Suf-e Pa'in\r\nAF.32.7053821\tFayroz Nakhchir\r\nAF.32.7053822\tHazrat-e Sultan\r\nAF.32.7053823\t\
+    Khuram wa Sar Bagh\r\nAF.32.7053824\tRuy Duab\r\nAF.33.7053945\tBalkhab\r\nAF.33.7053946\tGosfandi\r\nAF.33.7053947\t\
+    Kohistanat\r\nAF.33.7053948\tSangcharak\r\nAF.33.7053949\tSar-e Pul\r\nAF.33.7053950\tSayad\r\nAF.33.7053951\tSozmah Qal'ah\r\
+    \nAF.34.7053952\tAsadabad\r\nAF.34.7053955\tBar Kunar\r\nAF.34.7053956\tChapah Darah\r\nAF.34.7053957\tTsowkey\r\nAF.34.7053958\t\
+    Dangam\r\nAF.34.7053959\tDarah-ye Pech\r\nAF.34.7053960\tGhaziabad\r\nAF.34.7053961\tKhas Kunar\r\nAF.34.7053962\tMarawarah\r\
+    \nAF.34.7053963\tNarang\r\nAF.34.7053964\tNaray\r\nAF.34.7053965\tNurgal\r\nAF.34.7053966\tSar Kani\r\nAF.34.7053967\t\
+    Shigal wa Sheltan\r\nAF.34.7053968\tWutahpur\r\nAF.35.7053969\t`Alingar\r\nAF.35.7053970\t`Alisheng\r\nAF.35.7053971\t\
+    Dowlat Shah\r\nAF.35.7053972\tMehtar Lam\r\nAF.35.7053973\tQarghah'i\r\nAF.36.7053975\tAhmadabad\r\nAF.36.7053976\tTsamkani\r\
+    \nAF.36.7053977\tDand Patan\r\nAF.36.7053978\tGardez\r\nAF.36.7053979\tJaji\r\nAF.36.7053980\tJani Khel\r\nAF.36.7053981\t\
+    Lajah Ahmad Khel\r\nAF.36.7053982\tSayyid Karam\r\nAF.36.7053983\tShwak\r\nAF.36.7053984\tDzadran\r\nAF.36.7054005\tZurmat\r\
+    \nAF.37.7054006\tBak\r\nAF.37.7054007\tGurbuz\r\nAF.37.7054008\tJaji Maidan\r\nAF.37.7054009\tKhost\r\nAF.37.7054013\t\
+    Manduzai\r\nAF.37.7054014\tMusa Khel\r\nAF.37.7054015\tNadir Shah Kot\r\nAF.37.7054016\tQalandar\r\nAF.37.7054017\tSabari\r\
+    \nAF.37.7054018\tShamul\r\nAF.37.7054019\tSperah\r\nAF.37.7054020\tTanai\r\nAF.37.7054021\tTerayzai\r\nAF.38.7054022\t\
+    Barg-e Matal\r\nAF.38.7054023\tDu Ab\r\nAF.38.7054025\tKamdesh\r\nAF.38.7054026\tMandol\r\nAF.38.7054027\tNurgaram\r\n\
+    AF.38.7054028\tParun\r\nAF.38.7054029\tWama\r\nAF.38.7054030\tWaygal\r\nAF.39.7054031\tChorah\r\nAF.39.7054032\tDeh Rawud\r\
+    \nAF.39.7054033\tKhas Uruzgan\r\nAF.39.7054034\tShahid-e Hasas\r\nAF.39.7054035\tTarin Kot\r\nAF.40.7054036\tBagram\r\n\
+    AF.40.7054037\tCharikar\r\nAF.40.7054038\tJabal us Saraj\r\nAF.40.7054039\tKoh-e Safi\r\nAF.40.7054040\tSalang\r\nAF.40.7054041\t\
+    Sayyid Khel\r\nAF.40.7054042\tShaykh `Ali\r\nAF.40.7054043\tShinwari\r\nAF.40.7054044\tSiyahgird Ghorband\r\nAF.40.7054324\t\
+    Surkh-e Parsa\r\nAF.41.7054325\tGayti\r\nAF.41.7054326\tGizab\r\nAF.41.7054327\tIshtarlay\r\nAF.41.7054328\tKajran\r\n\
+    AF.41.7054329\tKhadir\r\nAF.41.7054330\tMir Amor\r\nAF.41.7054331\tNili\r\nAF.41.7054332\tSang-e Takht\r\nAF.41.7054334\t\
+    Shahristan\r\nAF.42.7054336\t`Unabah\r\nAF.42.7054337\tBazarak\r\nAF.42.7054338\tDarah\r\nAF.42.7054339\tKhinj\r\nAF.42.7054340\t\
+    Parian\r\nAF.42.7054341\tRukhah\r\nAF.42.7054342\tShutul\r\nAF.32.7701545\tDara-I-Suf\r\nAF.24.7701550\tQala-I-Zal\r\n\
+    AF.02.7701613\tQala-i-Naw\r\nAF.13.7729752\tKabul\r\nAF.14.7729831\tHisa-I-Awali Panjsher\r\nAF.24.7729833\tKunduz\r\n\
+    AF.23.7729834\tReg\r\nAF.19.7729835\tChakhansur\r\nAF.06.7729836\tFarah\r\nAF.05.7732055\tBamyan\r\nAF.08.7732056\tBahrami\
+    \ Shahid\r\nAF.03.7732108\tPuli Khumri\r\nAF.13.7732182\tSurobi\r\nAF.28.7732190\tQalat\r\nAF.01.7732208\tKuran Wa Munjan\r\
+    \nAF.05.7732337\tShibar\r\nAF.40.7732339\tSurkhi Parsa\r\nAF.18.7732350\tDih Bala\r\nAF.10.7732352\tGarmsir\r\nAF.10.7732355\t\
+    Nawa-i-Barakzayi\r\nAF.30.7732365\tNahri Shahi\r\nAF.30.7732367\tSholgara\r\nAF.27.7732571\tDay Mirdad\r\nAF.24.7732594\t\
+    Chahar Dara\r\nAF.36.7732601\tTani\r\nAF.34.7732642\tSirkanay\r\nAF.02.7732653\tKushk-e Kuhnah\r\nAF.39.7732654\tDaykundi\r\
+    \nAF.27.7732663\tMarkazi Bihsud\r\nAF.27.7732665\tHisa-I-Awal Bihsud\r\nAF.27.7732666\tNirkh\r\nAF.23.7911046\tDand\r\n\
+    AF.30.8354719\tMazar-e Sharif\r\nAF.07.8741348\tDawlatabad District\r\nAF.07.8741538\tKhwaja Sabz\r\nAF.30.8792246\tDawlatabad\r\
+    \nAF.36.9165874\tLija Mangal\r\nAF.31.9166292\tBalkhab District\r\nAF.11.9166336\tHerat District\r\nAF.39.9166386\tNili\
+    \ District\r\nAF.14.9166418\tKohistan District\r\nAF.36.9166448\tKhost Province\r\nAF.39.9166456\tChora District\r\nAF.30.9166477\t\
+    Kishindih District\r\nAF.30.9166481\tDihdadi District\r\nAF.32.9179480\tDarah Sof District\r\nAF.10.9653598\tNaw Zad\r\
+    \nAF.23.9653599\tKandahar District"
+- offset: 1851533
+  text: 'WORLD (Prithvi-Chakra)  : Bhaavachalita and Koorma Chakra ; Time of Main Fruit of Planets .        Click anywhere
+    to make that point centre of experimental Desha-Chakra.'
+divisional_and_vargas:
+- offset: 10754
+  text: D60 :ON for Santhanam, OFF for other versions of BPHS. Before clicking Shodashvarga button, select the Varga and D60
+    type.
+- offset: 10944
+  text: Put it OFF for Popular method, and ON (default) for Original Parashari Vargas with Reverse order for even signs in
+    D2-7-9-10-16-20-24-27-30-60 and for Extra Vargas among sixty vargas beyond shodash vargas. In Popular Method only D30
+    has Reversed Order in Even Signs.
+- offset: 23195
+  text: ON = Divisionals(Vargas) according to Sanskrit verses of BPHS ;  OFF = according to modern commentators of BPHS.
+- offset: 1273984
+  text: Degrees of Planets in selected Varga excluding Rasis(For Shodash Vargas Only)
+- offset: 1276135
+  text: Stree-Jaataka Phala of D30 according to BPHS
+- offset: 1283814
+  text: VARGA-TABLE  for  Helping in  Sudarshana Cakra's   Phala
+- offset: 1294636
+  text: SHODASH  VARGA - 2            DIVISIONAL  CHARTS
+- offset: 1295312
+  text: SHODASH   VARG - 1            DIVISIONAL  CHARTS
+- offset: 1295989
+  text: VARGOTTAMA  and  BHAAVOTTAMA  combinations in 16 vargas (divisional charts); Phala = Like Svagrihi Planet.
+- offset: 1296402
+  text: Bhavottama button gives correct results only with D1. After using other vargas, do not click Bhavottama button,and
+    start from MAIN button.
+- offset: 1311309
+  text: Shodash Varg (Divisional)
+- offset: 1314723
+  text: HELP for D9 GRAPH Setting
+- offset: 1316437
+  text: Shodash Vargas do not work in annual/monthly &c charts, yet the procedure is provided for experimenters.
+- offset: 1339120
+  text: Degrees of Planets in Latest Varga
+- offset: 1360962
+  text: Divisions in Shodash Dev Form
+- offset: 1361261
+  text: Cut-off Min for D9 Graph (fraction in decimal allowed)
+- offset: 1361378
+  text: Cut-off Hour for D9 Graph
+- offset: 1361468
+  text: Cut-off Year for D9 Graph
+- offset: 1361557
+  text: Cut-off Month for D9 Graph
+- offset: 1362589
+  text: Uncheck it for backward graph of selected shodash deity. Check it for forward graph.
+- offset: 1363469
+  text: Enter NUMBER of Varga here before clicking the "Shodash-varga"  button.
+medini_and_mundane:
+- offset: 25792
+  text: mnuMediniIndiaSizeVeryBig
+- offset: 25822
+  text: Medini India Size Very Big
+- offset: 534500
+  text: mnuMediniIndiaSizeVeryBig
+- offset: 1272551
+  text: 'VRISHTI  :  at  10  minute  intervals  on'
+- offset: 1299124
+  text: 'SAMVATSAR : True (Spashta) or Mean (Madhyama)'
+- offset: 1299271
+  text: Ending Moment of Current Samvatsar
+- offset: 1299357
+  text: Compute Current Samvatsar and its Details
+- offset: 1319531
+  text: Select Divya vs Human Years in Medini
+general_phala_and_rules:
+- offset: 5002
+  text: '15''53.Kundalee: Astrological Software for accurate Phalaadesh.'
+- offset: 531460
+  text: frmPlanetariumLinearDrishti
+- offset: 1269930
+  text: Start Time Of Navamsa-Lagnas ; Bhavas of Grahas
+- offset: 1293948
+  text: frmPlanetariumLinearDrishti
+- offset: 1359113
+  text: Degrees Latitude.   RANGE = +90  to  -90 .   Darbhangaa = 26:10   .  Makarand MNethod gives polar result at 74:16
+- offset: 1377741
+  text: Makaranda Triphalaa Method
+- offset: 2341648
+  text: 'Kundalee: Astrological Software for accurate Phalaadesh.'
