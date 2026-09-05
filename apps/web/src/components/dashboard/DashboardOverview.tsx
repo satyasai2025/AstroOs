@@ -46,6 +46,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { useCurrentUser } from "@/lib/auth";
 import { useMyCharts } from "@/lib/charts";
+import { useDashboardSummary } from "@/lib/billing";
 import { tokenStore } from "@/lib/api";
 import {
   researchProjectsApi,
@@ -386,6 +387,7 @@ export function DashboardOverview({
 }: DashboardOverviewProps) {
   const hasSession = typeof window !== "undefined" && !!tokenStore.getAccess();
   const { data: user } = useCurrentUser();
+  const { data: summary } = useDashboardSummary();
   const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [pickerSearch, setPickerSearch] = useState("");
@@ -500,21 +502,38 @@ export function DashboardOverview({
             Live astrological analysis and research console.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onStartNewChart}
-          className="flex items-center gap-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-sm transition"
-        >
-          + New Chart
-        </button>
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/settings/billing"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 hover:border-cyan-500/50 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 transition shadow-sm"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
+            <span>{summary?.plan_name || "Free"} Plan</span>
+          </Link>
+          <button
+            type="button"
+            onClick={onStartNewChart}
+            className="flex items-center gap-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-500 px-3 py-1.5 text-xs font-semibold text-slate-950 shadow-sm transition"
+          >
+            + New Chart
+          </button>
+        </div>
       </div>
 
       {/* Stats row — every number is a real count, not a mockup placeholder */}
       <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard
-          label="Total Charts"
-          value={chartsLoading ? "…" : String(chartsData?.total ?? 0)}
-          caveat="Charts saved to your account."
+          label="Saved Charts"
+          value={
+            chartsLoading
+              ? "…"
+              : `${chartsData?.total ?? 0} / ${summary?.saved_horoscopes_limit ?? 5}`
+          }
+          caveat={
+            summary?.plan_code === "FREE"
+              ? `Free tier limit: 5 charts (${Math.max(0, 5 - (chartsData?.total ?? 0))} remaining).`
+              : `${summary?.plan_code || "Pro"} plan library quota.`
+          }
           icon="charts"
           accent="cyan"
           href="/charts/history"

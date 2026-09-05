@@ -5,7 +5,8 @@
  * Supports INR first-class currency, GST/tax breakdowns, and customer portal sessions.
  */
 
-import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
+import { api, tokenStore } from "@/lib/api";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -147,6 +148,14 @@ export async function fetchPricingCatalog(currency: PricingCurrency = "INR"): Pr
 
 export async function fetchDashboardSummary(): Promise<DashboardSummary> {
   return api.get<DashboardSummary>("/api/v1/dashboard/summary");
+}
+
+export function useDashboardSummary() {
+  return useQuery<DashboardSummary>({
+    queryKey: ["dashboard", "summary"],
+    queryFn: () => fetchDashboardSummary(),
+    enabled: typeof window !== "undefined" && !!tokenStore.getAccess(),
+  });
 }
 
 export async function fetchMySubscription(): Promise<SubscriptionInfo | null> {

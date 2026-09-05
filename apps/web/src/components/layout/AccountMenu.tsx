@@ -4,16 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useLogout } from "@/lib/auth";
+import { useDashboardSummary } from "@/lib/billing";
 import type { User } from "@/lib/types";
 import { NavIcon } from "./AppShell";
 
 const ACCOUNT_MENU_ITEMS = [
   { href: "/settings/profile", label: "Profile", icon: "user" },
+  { href: "/settings/billing", label: "Billing & Plans", icon: "bar" },
   { href: "/settings/astrology", label: "Astrology", icon: "star" },
   { href: "/settings/ai", label: "AI", icon: "cpu" },
   { href: "/settings/appearance", label: "Appearance", icon: "palette" },
   { href: "/settings/security", label: "Security", icon: "lock" },
   { href: "/settings/data", label: "Data", icon: "database" },
+  { href: "/pricing", label: "Upgrade Plan", icon: "sparkle" },
   { href: "/help", label: "Help & Guide", icon: "book" },
 ];
 
@@ -22,6 +25,7 @@ export function AccountMenu({ user }: { user: User }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const logout = useLogout();
+  const { data: summary } = useDashboardSummary();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -64,13 +68,18 @@ export function AccountMenu({ user }: { user: User }) {
             >
               {initial}
             </span>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">
                 {user.display_name}
               </p>
-              <p className="truncate text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                {user.role}
-              </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wide bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
+                  {summary?.plan_code || "FREE"} PLAN
+                </span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                  {summary?.saved_horoscopes_count ?? 0}/{summary?.saved_horoscopes_limit ?? 5} Charts
+                </span>
+              </div>
             </div>
           </div>
 
