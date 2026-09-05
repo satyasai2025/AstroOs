@@ -34,6 +34,8 @@ from apps.api.schemas.ai import (
     DashaInterpretationRequest,
     ExplainRuleRequest,
     KnowledgeQuestionRequest,
+    MasterConsultationRequest,
+    MasterConsultationResponse,
     QuestionRequest,
     TransitReadingRequest,
     YogaExplanationRequest,
@@ -296,4 +298,54 @@ async def sbc_event_analysis(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate SBC event analysis: {exc}",
         )
+
+
+@router.post("/master-consultation", response_model=MasterConsultationResponse)
+async def master_astrologer_consultation(
+    body: MasterConsultationRequest,
+    ephe: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> MasterConsultationResponse:
+    """
+    Generate an authentic, complete Shastric Master Astrologer consultation.
+    Works 100% deterministically without external API keys, and auto-enriches
+    if a free cloud provider (Gemini / Groq / OpenAI) is configured.
+    """
+    try:
+        from apps.api.services.master_astrologer_engine import MasterAstrologerEngine
+
+        horoscope_engine = HoroscopeEngine(ephe)
+        chart = await asyncio.to_thread(
+            horoscope_engine.generate_d1,
+            birth_datetime_utc=body.birth_datetime_utc,
+            latitude=body.latitude,
+            longitude=body.longitude,
+            ayanamsa=body.ayanamsa,
+            house_system=body.house_system,
+        )
+
+        engine = MasterAstrologerEngine()
+        res = await asyncio.to_thread(
+            engine.generate_consultation,
+            chart=chart,
+            target_date=body.target_date,
+            subject_name=body.subject_name,
+            language=body.language,
+        )
+
+        return MasterConsultationResponse(
+            subject_name=res.subject_name,
+            is_llm_enriched=res.is_llm_enriched,
+            ai_provider_used=res.ai_provider_used,
+            model_used=res.model_used,
+            executive_summary=res.executive_summary,
+            reading_markdown=res.reading_markdown,
+            dense_facts=res.grounding_facts.dense_grounding_text,
+        )
+    except Exception as exc:
+        logger.exception("Error generating master astrologer consultation: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate consultation: {exc}",
+        )
+
 

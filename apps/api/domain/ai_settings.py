@@ -15,7 +15,7 @@ from typing import Optional
 
 from apps.api.domain.user import UserId
 
-PROVIDERS = ("astroos_ai", "openai", "anthropic", "gemini", "openrouter", "ollama")
+PROVIDERS = ("astroos_ai", "openai", "anthropic", "gemini", "groq", "openrouter", "ollama")
 """astroos_ai means "use the server's own configured provider" (Settings.OPENAI_*)
 — the only provider that needs no user-supplied API key."""
 

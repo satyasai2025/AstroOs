@@ -34,6 +34,7 @@ _PROVIDER_BASE_URLS = {
     "openai": "https://api.openai.com/v1",
     "anthropic": "https://api.anthropic.com/v1",
     "gemini": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "groq": "https://api.groq.com/openai/v1",
     "openrouter": "https://openrouter.ai/api/v1",
     "ollama": "http://localhost:11434/v1",
 }
@@ -42,6 +43,7 @@ _DEFAULT_MODELS = {
     "openai": "gpt-4o-mini",
     "anthropic": "claude-sonnet-5",
     "gemini": "gemini-2.5-flash",
+    "groq": "llama-3.1-8b-instant",
     "openrouter": "openai/gpt-4o-mini",
     "ollama": "llama3.1",
 }
@@ -101,11 +103,28 @@ def build_resolved_provider(
 ) -> ResolvedAIProvider:
     """Fill in provider defaults and validate, without touching the DB."""
     if provider == "astroos_ai":
+        resolved_key = global_settings.OPENAI_API_KEY
+        resolved_base = global_settings.OPENAI_BASE_URL
+        resolved_model = global_settings.OPENAI_MODEL
+
+        # Smart auto-detection: if key starts with gsk_ (Groq) or AIza (Gemini)
+        # and base_url is unset or points to default openai.com, auto-wire the correct base_url & model.
+        if resolved_key:
+            clean_key = resolved_key.strip()
+            if clean_key.startswith("gsk_") and (not resolved_base or "openai.com" in resolved_base):
+                resolved_base = "https://api.groq.com/openai/v1"
+                if not resolved_model or resolved_model == "gpt-4o-mini":
+                    resolved_model = "llama-3.3-70b-versatile"
+            elif clean_key.startswith("AIza") and (not resolved_base or "openai.com" in resolved_base):
+                resolved_base = "https://generativelanguage.googleapis.com/v1beta/openai"
+                if not resolved_model or resolved_model == "gpt-4o-mini":
+                    resolved_model = "gemini-2.0-flash"
+
         return ResolvedAIProvider(
             provider="astroos_ai",
-            api_key=global_settings.OPENAI_API_KEY,
-            model=global_settings.OPENAI_MODEL,
-            base_url=global_settings.OPENAI_BASE_URL,
+            api_key=resolved_key,
+            model=resolved_model,
+            base_url=resolved_base,
             temperature=temperature,
             max_tokens=max_tokens,
         )

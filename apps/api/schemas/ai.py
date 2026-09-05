@@ -30,6 +30,23 @@ class ChartSummaryRequest(BirthDataInput):
     style: str = "concise"
 
 
+class MasterConsultationRequest(BirthDataInput):
+    """Request payload for full Shastric master astrologer consultation."""
+    subject_name: str = Field(default="Native", description="Name of the person")
+    target_date: Optional[date] = Field(default=None, description="Evaluation date for dasha/transits")
+    language: str = Field(default="hi", description="'hi' (Hindi/Hinglish) or 'en' (English)")
+
+
+class MasterConsultationResponse(BaseModel):
+    subject_name: str
+    is_llm_enriched: bool
+    ai_provider_used: str
+    model_used: str
+    executive_summary: str
+    reading_markdown: str
+    dense_facts: str
+
+
 class YogaExplanationRequest(BirthDataInput):
     """Request payload for yoga explanation operations."""
     pass
