@@ -394,26 +394,22 @@ export default function InteractiveKundliView({
 }: InteractiveKundliViewProps) {
   const [activeTab, setActiveTab] = useState<TabId>("chart");
   const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
-  const [pinnedPlanet, setPinnedPlanet] = useState<string | null>(
-    initialPlanet || null,
+  const [pinnedPlanet, setPinnedPlanet] = useState<string>(
+    initialPlanet || chart?.planets?.[0]?.planet || "Sun",
   );
   const [hoveredHouse, setHoveredHouse] = useState<number | null>(null);
-  const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
+  const [selectedHouse, setSelectedHouse] = useState<number | null>(1);
 
-  const activePlanet = pinnedPlanet ?? hoveredPlanet;
-  const activeHouse = selectedHouse ?? hoveredHouse;
+  // Active planet for detail panel is strictly the pinned/selected planet to prevent hover thrashing
+  const detailPlanet = pinnedPlanet || chart?.planets?.[0]?.planet || "Sun";
+  // Active planet for SVG highlights can respond to hover
+  const activePlanet = hoveredPlanet ?? pinnedPlanet;
+  const activeHouse = hoveredHouse ?? selectedHouse;
 
   // ── Extra per-planet data for the redesigned detail panel ──
-  // Digbala isn't in the /workflow/analyze response (only the combined
-  // Shadbala total is) — useShadbalaAll hits its own compute-only
-  // endpoint, same pattern as the standalone AvasthaPanel/
-  // IshtaKashtaBalaPanel elsewhere on this page. TanStack Query dedupes
-  // by query key, so this doesn't double-fetch if those panels are also
-  // mounted with the same `request`.
   const { data: shadbalaAll } = useShadbalaAll(request);
   const { data: avasthaData } = useAvastha(request);
-  const karakatvaGraha =
-    activePlanet && activePlanet !== "Ascendant" ? activePlanet.toLowerCase() : "";
+  const karakatvaGraha = detailPlanet && detailPlanet !== "Ascendant" ? detailPlanet.toLowerCase() : "";
   const { data: karakatvaData } = useKarakatvaSearch({ graha: karakatvaGraha });
 
   // ── Ascendant info ──
@@ -519,34 +515,47 @@ const asc = chart.ascendant;
     });
   }, [chart]);
 
-  // ── Planet detail data ──
+  // ── Planet detail data (based on stable selected/pinned planet) ──
   const planetDetail = useMemo(() => {
-    if (!activePlanet || activePlanet === "Ascendant") return null;
-    const pos = chart.planets.find((p) => p.planet === activePlanet);
+    if (!detailPlanet || detailPlanet === "Ascendant") return null;
+    const pos = chart.planets.find((p) => p.planet === detailPlanet);
     if (!pos) return null;
 
     const strength = chart.planet_strengths.find(
-      (p) => p.planet === activePlanet,
+      (p) => p.planet === detailPlanet,
     );
     const aspects = chart.aspects.filter(
       (a) =>
-        a.from_planet === activePlanet || a.to_planet === activePlanet,
+        a.from_planet === detailPlanet || a.to_planet === detailPlanet,
     );
     const conjunctions = chart.planets.filter(
       (p) =>
-        p.planet !== activePlanet &&
+        p.planet !== detailPlanet &&
         p.house_number === pos.house_number,
     );
 
     return { position: pos, strength, aspects, conjunctions };
-  }, [activePlanet, chart]);
+  }, [detailPlanet, chart]);
 
   // ── Handlers ──
   const handlePlanetClick = useCallback(
     (planet: string) => {
-      setPinnedPlanet((prev) => (prev === planet ? null : planet));
+      setPinnedPlanet(planet);
+      if (activeTab !== "planets" && activeTab !== "chart") {
+        setActiveTab("planets");
+      }
     },
-    [],
+    [activeTab],
+  );
+
+  const handleHouseClick = useCallback(
+    (houseNum: number) => {
+      setSelectedHouse(houseNum);
+      if (activeTab !== "houses") {
+        setActiveTab("houses");
+      }
+    },
+    [activeTab],
   );
 
   const chartStyle = useWorkflowStore((s) => s.chartStyle);
@@ -615,7 +624,7 @@ const asc = chart.ascendant;
         </div>
 
         {/* Chart area */}
-        <div className="flex flex-1 items-center justify-center p-4">
+        <div className="flex flex-1 items-center justify-center p-4 min-w-0 overflow-hidden">
           {chartStyle === "south" ? (
             <SouthIndianChart
               title="D1 Rashi Chart"
@@ -624,15 +633,15 @@ const asc = chart.ascendant;
               size={400}
               activePlanet={activePlanet}
               activeHouse={activeHouse}
-              onPlanetHover={(p) => !pinnedPlanet && setHoveredPlanet(p)}
+              onPlanetHover={(p) => setHoveredPlanet(p)}
               onPlanetClick={handlePlanetClick}
-              onHouseHover={(h) => !selectedHouse && setHoveredHouse(h)}
-              onHouseClick={(h) => setSelectedHouse(selectedHouse === h ? null : h)}
+              onHouseHover={(h) => setHoveredHouse(h)}
+              onHouseClick={handleHouseClick}
             />
           ) : (
             <svg
               viewBox={`0 0 ${CHART_SIZE} ${CHART_SIZE}`}
-              className="w-full h-auto max-w-full max-h-[350px] mx-auto block"
+              className="w-full h-auto max-w-[420px] max-h-[380px] mx-auto block select-none"
               style={{ filter: "drop-shadow(0 0 20px rgba(6, 207, 255, 0.08))" }}
             >
               {/* Background */}
@@ -662,11 +671,7 @@ const asc = chart.ascendant;
                       strokeWidth={0.8}
                       onMouseEnter={() => setHoveredHouse(houseNum)}
                       onMouseLeave={() => setHoveredHouse(null)}
-                      onClick={() =>
-                        setSelectedHouse(
-                          selectedHouse === houseNum ? null : houseNum,
-                        )
-                      }
+                      onClick={() => handleHouseClick(houseNum)}
                       style={{ cursor: "pointer" }}
                     />
                     {/* House number */}
@@ -679,6 +684,7 @@ const asc = chart.ascendant;
                       fontSize={8}
                       fontFamily="var(--font-mono)"
                       opacity={isActive ? 0.8 : 0.35}
+                      style={{ pointerEvents: "none" }}
                     >
                       {houseNum}
                     </text>
@@ -693,6 +699,7 @@ const asc = chart.ascendant;
                 stroke="var(--obsidian-accent-primary)"
                 strokeWidth={1.5}
                 opacity={0.3}
+                style={{ pointerEvents: "none" }}
               />
 
               {/* Cross lines */}
@@ -703,6 +710,7 @@ const asc = chart.ascendant;
                 y2={DIAMOND.bottom.y}
                 stroke="var(--obsidian-border)"
                 strokeWidth={0.8}
+                style={{ pointerEvents: "none" }}
               />
               <line
                 x1={DIAMOND.left.x}
@@ -711,6 +719,7 @@ const asc = chart.ascendant;
                 y2={DIAMOND.right.y}
                 stroke="var(--obsidian-border)"
                 strokeWidth={0.8}
+                style={{ pointerEvents: "none" }}
               />
 
               {/* Aspect lines */}
@@ -744,6 +753,7 @@ const asc = chart.ascendant;
                         line.aspect_type === "conjunction" ? "none" : "4 2"
                       }
                       opacity={isHighlighted ? 0.8 : 0.25}
+                      style={{ pointerEvents: "none" }}
                     />
                   );
                 })}
@@ -757,7 +767,7 @@ const asc = chart.ascendant;
                     position={pp.position}
                     x={pp.x}
                     y={pp.y}
-                    isHovered={hoveredPlanet === pp.planet}
+                    isHovered={activePlanet === pp.planet}
                     isPinned={pinnedPlanet === pp.planet}
                     onHover={() => setHoveredPlanet(pp.planet)}
                     onLeave={() => setHoveredPlanet(null)}
@@ -791,12 +801,23 @@ const asc = chart.ascendant;
 
       {/* ── Right: Detail Panel ── */}
       <div
-        className="w-full border-t lg:border-t-0 lg:border-l lg:w-[420px] lg:shrink-0 overflow-y-auto"
+        className="w-full border-t lg:border-t-0 lg:border-l lg:w-[420px] lg:shrink-0 h-[580px] overflow-y-scroll [scrollbar-gutter:stable]"
         style={{ borderColor: "var(--obsidian-border)" }}
       >
-        {activeTab === "planets" || activePlanet ? (
+        {activeTab === "houses" ? (
+          <HouseExplorerPanel
+            houseNum={selectedHouse || 1}
+            houseData={houseData}
+            ascRashiIdx={ascRashiIdx}
+          />
+        ) : activeTab === "aspects" ? (
+          <AspectsPanel
+            aspects={chart.aspects}
+            activePlanet={detailPlanet}
+          />
+        ) : (
           <PlanetExplorerPanel
-            planet={activePlanet}
+            planet={detailPlanet}
             detail={planetDetail}
             chart={chart}
             vargas={vargas}
@@ -805,19 +826,6 @@ const asc = chart.ascendant;
             avasthas={avasthaData?.avasthas ?? null}
             karakatvas={karakatvaData?.karakatvas ?? null}
           />
-        ) : activeTab === "houses" || activeHouse ? (
-          <HouseExplorerPanel
-            houseNum={activeHouse}
-            houseData={houseData}
-            ascRashiIdx={ascRashiIdx}
-          />
-        ) : activeTab === "aspects" ? (
-          <AspectsPanel
-            aspects={chart.aspects}
-            activePlanet={activePlanet}
-          />
-        ) : (
-          <ChartOverviewPanel chart={chart} asc={asc} />
         )}
       </div>
     </div>
