@@ -203,10 +203,9 @@ export function ShastricConsultationDashboard() {
       setLat(activeSummary.birth_latitude);
       setLon(activeSummary.birth_longitude);
       setCitySearchText(activeSummary.place_name || "Custom Location");
-
-      const birthYear = parseInt(birthDob.slice(0, 4)) || 1990;
-      setStartYear(Math.max(1900, birthYear + 15));
-      setEndYear(Math.min(2100, birthYear + 35));
+      const currentYr = new Date().getFullYear();
+      setStartYear(currentYr);
+      setEndYear(currentYr + 2);
     } else if (storeRequest) {
       hasAutoSelected.current = true;
       const dtStr = storeRequest.birth_datetime_utc || "";
@@ -219,9 +218,9 @@ export function ShastricConsultationDashboard() {
       setName(storeRequest.subject_name || "Active Native");
       if (storeRequest.place_name) setCitySearchText(storeRequest.place_name);
 
-      const birthYear = parseInt(dtStr.slice(0, 4)) || 1990;
-      setStartYear(Math.max(1900, birthYear + 15));
-      setEndYear(Math.min(2100, birthYear + 35));
+      const currentYr = new Date().getFullYear();
+      setStartYear(currentYr);
+      setEndYear(currentYr + 2);
     }
   }, [activeSummary, storeRequest]);
 
@@ -244,9 +243,9 @@ export function ShastricConsultationDashboard() {
     setLon(Number(p.longitude) || 0);
     setCitySearchText(p.cityName || "Custom Location");
 
-    const birthYear = parseInt(p.dob.slice(0, 4)) || 1990;
-    setStartYear(Math.max(1900, birthYear + 15));
-    setEndYear(Math.min(2100, birthYear + 35));
+    const currentYr = new Date().getFullYear();
+    setStartYear(currentYr);
+    setEndYear(currentYr + 2);
 
     setIsSearchOpen(false);
     setSearchQuery("");
@@ -260,9 +259,9 @@ export function ShastricConsultationDashboard() {
     setLon(data.lon);
     setCitySearchText(data.citySearchText);
 
-    const birthYear = parseInt(data.dob.slice(0, 4)) || 1990;
-    setStartYear(Math.max(1900, birthYear + 15));
-    setEndYear(Math.min(2100, birthYear + 35));
+    const currentYr = new Date().getFullYear();
+    setStartYear(currentYr);
+    setEndYear(currentYr + 2);
 
     if (data.saveToVault) {
       const newProfile: ChartProfile = {
