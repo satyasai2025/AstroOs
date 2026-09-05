@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChartDetailView } from "@/components/charts/ChartDetailView";
 import { RecomputeChartModal } from "@/components/charts/RecomputeChartModal";
-import { useMyCharts } from "@/lib/charts";
+import { useChart, useMyCharts } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { useWorkflowStore } from "@/lib/store";
 import { ApiError } from "@/lib/api";
@@ -13,20 +13,7 @@ import type { BirthChartSummary, WorkflowAnalysisRequest } from "@/lib/types";
 import { normalizeAyanamsa, normalizeHouseSystem } from "@/lib/types";
 
 /**
- * Per-chart detail page. There's no GET-by-chart-id endpoint that returns
- * the full analysis payload (D1 + vargas + dasha + yogas + shadbala...) —
- * only /workflow/analyze (compute) and /horoscope/my-charts (list
- * summaries) exist. So:
- *   - If the shared store already holds this exact chart's result (the
- *     common case: you just created or recomputed it), render it directly.
- *   - Otherwise (direct link, fresh reload, browser back/forward), look
- *     up this chart's saved birth parameters from the summary list and
- *     silently recompute the full analysis once, using the same defaults
- *     RecomputeChartModal starts from (vimshottari dasha, vargas included)
- *     — Swiss Ephemeris is deterministic, so this reproduces the same
- *     chart, not a different one. Sent with persist: false and this
- *     chart's own id, so the recompute never writes a duplicate
- *     birth_charts row — see WorkflowAnalysisRequest.persist.
+ * Per-chart detail page.
  */
 const KNOWN_VIEW_REDIRECTS: Record<string, string> = {
   houses: "houses",
@@ -72,12 +59,13 @@ export default function ChartDetailPage() {
   const storeRequest = useWorkflowStore((s) => s.request);
   const setResult = useWorkflowStore((s) => s.setResult);
 
+  const { data: chartData, isLoading: chartLoading } = useChart(chartId);
   const { data: chartsData, isLoading: chartsLoading } = useMyCharts();
   const analyze = useAnalyzeWorkflow();
   const [recomputeTarget, setRecomputeTarget] = useState<BirthChartSummary | null>(null);
 
   const hasMatchingResult = storeResult?.chart_id === chartId && !!storeRequest;
-  const summary = chartsData?.charts.find((c) => c.id === chartId) ?? null;
+  const summary = chartData ?? chartsData?.charts.find((c) => c.id === chartId) ?? null;
 
   const [autoRecomputeStarted, setAutoRecomputeStarted] = useState(false);
 
@@ -135,11 +123,11 @@ export default function ChartDetailPage() {
         onEditDetails={effectiveSummary ? () => setRecomputeTarget(effectiveSummary) : undefined}
       />
     );
-  } else if (chartsLoading || analyze.isPending) {
+  } else if (chartLoading || (chartsLoading && !chartData) || analyze.isPending) {
     body = (
       <div className="obsidian-card p-10 text-center text-sm" style={{ color: "var(--text-secondary)" }}>
         <h1 className="sr-only">Birth Chart Analysis</h1>
-        {chartsLoading ? "Loading chart…" : "Recomputing chart…"}
+        {chartLoading || chartsLoading ? "Loading chart…" : "Recomputing chart…"}
       </div>
     );
   } else if (!summary) {

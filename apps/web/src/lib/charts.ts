@@ -23,6 +23,14 @@ export function useMyCharts() {
   });
 }
 
+export function useChart(chartId: string | null | undefined) {
+  return useQuery<BirthChartSummary>({
+    queryKey: ["charts", chartId],
+    queryFn: () => api.get<BirthChartSummary>(`/api/v1/horoscope/charts/${chartId}`),
+    enabled: !!chartId && !!tokenStore.getAccess(),
+  });
+}
+
 /**
  * Soft-deletes a saved chart (DELETE /api/v1/horoscope/charts/{id}) and
  * refetches the saved-charts list on success so the row disappears

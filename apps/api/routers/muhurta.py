@@ -284,3 +284,58 @@ async def get_muhurta(
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
     return _serialise_result(result)
+
+
+from pydantic import BaseModel, Field
+from apps.api.services.muhurta_samskara_engine import MuhurtaSamskaraEngine
+
+
+class SamskaraEvaluateRequest(BaseModel):
+    samskara_code: str = Field(..., description="Samskara code, e.g., 'E17_Vivaah', 'E21_GrihPravesh', 'E19_Upnayan'")
+    datetime_utc: datetime = Field(..., description="Target UTC datetime for evaluation")
+    latitude: float = Field(default=28.6139, description="Observer latitude")
+    longitude: float = Field(default=77.2090, description="Observer longitude")
+    ayanamsa: str = Field(default="lahiri", description="Ayanamsa system")
+
+
+@router.get("/samskaras", summary="List All 35 Classical Samskaras & Elections (E01–E35)")
+def list_classical_samskaras():
+    """Returns the full suite of classical Shodasha Samskaras and Muhurta elections."""
+    return {"count": len(MuhurtaSamskaraEngine.list_samskaras()), "samskaras": MuhurtaSamskaraEngine.list_samskaras()}
+
+
+@router.post("/samskara/evaluate", summary="Evaluate Timestamp for a Classical Samskara")
+def evaluate_samskara_muhurta(
+    req: SamskaraEvaluateRequest,
+    ephem: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+):
+    """
+    Evaluates whether a given timestamp and location is auspicious for a specific Samskara (E01-E35),
+    checking Tithi shuddhi, Nakshatra compatibility, Ascendant strength, and classical doshas.
+    """
+    try:
+        res = MuhurtaSamskaraEngine.evaluate(
+            samskara_code=req.samskara_code,
+            dt=req.datetime_utc,
+            lat=req.latitude,
+            lon=req.longitude,
+            ephem=ephem,
+        )
+        return {
+            "samskara_code": res.samskara_code,
+            "samskara_name": res.samskara_name,
+            "category": res.category,
+            "timestamp": res.timestamp.isoformat(),
+            "suitability_score": res.suitability_score,
+            "is_auspicious": res.is_auspicious,
+            "tithi": {"name": res.tithi_name, "number": res.tithi_number, "status": res.tithi_status},
+            "nakshatra": {"name": res.nakshatra_name, "status": res.nakshatra_status},
+            "lagna": {"rashi": res.lagna_rashi, "status": res.lagna_status},
+            "dosha_flags": res.dosha_flags,
+            "positive_factors": res.positive_factors,
+            "shastric_recommendation": res.shastric_recommendation,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Samskara evaluation failed: {e}")

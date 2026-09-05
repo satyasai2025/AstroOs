@@ -1,0 +1,141 @@
+# AstroOS — Classical Samskaras & Muhurta Suite (E01–E35)
+# =========================================================
+# Provenance: Classical Muhurta Chintamani, Muhurta Ganapati, Brihat Samhita & Kundalee Suite
+# 35 Classical Rites & Practical Elections
+
+samskaras:
+  - code: "E01_Garbhadhan"
+    name: "Garbhadhan Samskara (Conception)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Rohini", "Uttara Phalguni", "Uttara Ashadha", "Uttara Bhadrapada", "Hast", "Chitra", "Anuradha", "Swati"]
+    prohibited_tithis: [4, 9, 14, 30] # Rikta & Amavasya
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Sagittarius", "Pisces"]
+    rules: "Avoid 8th house Moon and malefic placement in 1st/7th/8th."
+
+  - code: "E02_Punsavan"
+    name: "Pumsavana Samskara (Fetal Vigor)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Pushya", "Shravana", "Hasta", "Mrigashira", "Rohini"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Aries", "Leo", "Sagittarius", "Taurus", "Cancer"]
+    rules: "Male nakshatras preferred; Moon strong with Jupiter aspect."
+
+  - code: "E03_Seemantonayan"
+    name: "Seemantonnayana (Baby Shower / Parting Hair)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Pushya", "Hasta", "Uttara Phalguni", "Uttara Ashadha", "Uttara Bhadrapada"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Sagittarius", "Pisces"]
+    rules: "6th and 8th months of pregnancy; avoid Tuesday and Saturday."
+
+  - code: "E04_Samchaar"
+    name: "Jatakarma & Samchaara (Birth Rites & First Movements)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Ashwini", "Pushya", "Hasta", "Anuradha", "Revati"]
+    prohibited_tithis: [4, 9, 14]
+    benefic_lagnas: ["Cancer", "Taurus", "Gemini", "Virgo"]
+    rules: "Performed after umbilical cord is cut; Chandra bal dominant."
+
+  - code: "E16_Yatra"
+    name: "Yatra (Journeys & Strategic Travel)"
+    category: "practical_election"
+    favorable_nakshatras: ["Ashwini", "Mrigashira", "Pushya", "Hasta", "Anuradha", "Shravana", "Dhanishta", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Aries", "Taurus", "Gemini", "Virgo", "Libra", "Sagittarius", "Aquarius"]
+    rules: "Check Disha-Shoola (avoid North on Tue/Wed, East on Mon/Sat, West on Sun/Fri, South on Thu); Yogini shuddhi."
+
+  - code: "E17_Vivaah"
+    name: "Vivaah Samskara (Marriage Ceremony)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Magha", "Uttara Phalguni", "Hasta", "Swati", "Anuradha", "Mula", "Uttara Ashadha", "Uttara Bhadrapada", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30] # Rikta, Amavasya, Pratipada
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Sagittarius", "Pisces"]
+    rules: "Avoid 8th house Mars/Venus/Sun; reject Latta, Paata, Jamitra, Baana, and Trisadhis; Guru/Shukra bal must be high."
+
+  - code: "E18_KarnVedh"
+    name: "Karna Vedha (Ear Piercing)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Ashwini", "Rohini", "Pushya", "Hasta", "Chitra", "Anuradha", "Shravana", "Dhanishta", "Revati"]
+    prohibited_tithis: [4, 8, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Pisces"]
+    rules: "Benefics in Kendras (1, 4, 7, 10) and Trikonas (5, 9); 8th house clean."
+
+  - code: "E19_Upnayan"
+    name: "Upanayana Samskara (Sacred Thread Initiation)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Ashwini", "Rohini", "Mrigashira", "Ardra", "Punarvasu", "Pushya", "Hasta", "Chitra", "Swati", "Anuradha", "Shravana", "Dhanishta", "Shatabhisha", "Uttara Bhadrapada", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Sagittarius", "Pisces"]
+    rules: "Uttarayana mandatory; Jupiter & Sun strong; avoid Trishukra dosha and Shukra/Guru combustion."
+
+  - code: "E20_Grihaarambh"
+    name: "Grihaarambha (Laying Foundation Stone / Vastu)"
+    category: "vastu_election"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Uttara Phalguni", "Hasta", "Chitra", "Anuradha", "Uttara Ashadha", "Uttara Bhadrapada", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Leo", "Scorpio", "Aquarius"] # Fixed / Sthira Lagnas
+    rules: "Sthira Lagna required; 8th house empty; Vastu Purusha waking condition."
+
+  - code: "E21_GrihPravesh"
+    name: "Griha Pravesha (Housewarming Ceremony)"
+    category: "vastu_election"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Uttara Phalguni", "Hasta", "Chitra", "Anuradha", "Uttara Ashadha", "Uttara Bhadrapada", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Gemini", "Virgo", "Libra", "Sagittarius", "Aquarius", "Pisces"]
+    rules: "Uttarayana preferred; Sun in Taurus, Gemini, Leo, Scorpio, Aquarius, Pisces; Jupiter/Venus strong."
+
+  - code: "E23_Mundan"
+    name: "Chaulakarma / Mundan (Tonsure Samskara)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Ashwini", "Rohini", "Mrigashira", "Punarvasu", "Pushya", "Hasta", "Chitra", "Swati", "Jyeshtha", "Shravana", "Dhanishta", "Shatabhisha", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Pisces"]
+    rules: "Uttarayana preferred; child in 1st, 3rd, or 5th year; avoid Tuesday/Saturday."
+
+  - code: "E24_Navaann"
+    name: "Navaanna Bhakshana (First Eating of New Harvest)"
+    category: "agricultural_election"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Pushya", "Hasta", "Chitra", "Anuradha", "Shravana", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Cancer", "Virgo", "Libra", "Sagittarius", "Pisces"]
+    rules: "Chandra in benefic sign; Sukla Paksha preferred."
+
+  - code: "E25_Naamkaran"
+    name: "Naamakaranam (Naming Ceremony)"
+    category: "shodasha_samskara"
+    favorable_nakshatras: ["Ashwini", "Rohini", "Mrigashira", "Punarvasu", "Pushya", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Anuradha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Uttara Bhadrapada", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Gemini", "Cancer", "Virgo", "Libra", "Sagittarius", "Pisces"]
+    rules: "10th, 11th, 12th, or 16th day after birth; derive name from Janma Pada letter."
+
+  - code: "E29_Agnyaadhan"
+    name: "Agnyaadhaanam (Sacred Vedic Fire Establishment)"
+    category: "vedic_ritual"
+    favorable_nakshatras: ["Krittika", "Rohini", "Mrigashira", "Pushya", "Uttara Phalguni", "Hasta", "Chitra", "Vishakha", "Anuradha", "Uttara Ashadha", "Shravana"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Aries", "Leo", "Sagittarius", "Taurus"]
+    rules: "Agni-tattva ascendant/nakshatra; Sun & Mars strong."
+
+  - code: "E30_BeejVapana"
+    name: "Beeja Vapana (Sowing Seeds & Agriculture)"
+    category: "agricultural_election"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Punarvasu", "Pushya", "Hasta", "Chitra", "Swati", "Anuradha", "Mula", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Uttara Bhadrapada", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Cancer", "Virgo", "Libra", "Pisces"]
+    rules: "Watery/Earth signs (Taurus, Cancer, Virgo, Pisces) in Lagna; Moon in fertile nakshatra."
+
+  - code: "E31_HalPravahan"
+    name: "Hala Pravahana (First Plowing of Fields)"
+    category: "agricultural_election"
+    favorable_nakshatras: ["Rohini", "Mrigashira", "Pushya", "Hasta", "Chitra", "Anuradha", "Shravana", "Dhanishta", "Revati"]
+    prohibited_tithis: [4, 9, 14, 30]
+    benefic_lagnas: ["Taurus", "Virgo", "Scorpio", "Capricorn"]
+    rules: "Prithvi Tattva ascendant; Friday/Monday/Thursday favorable."
+
+  - code: "E34_Vrishti"
+    name: "Vrishti Pariksha (Monsoon & Rainfall Forecasting)"
+    category: "medini_election"
+    favorable_nakshatras: ["Ardra", "Punarvasu", "Pushya", "Rohini", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni"]
+    prohibited_tithis: []
+    benefic_lagnas: ["Cancer", "Scorpio", "Pisces"]
+    rules: "Aridra Pravesha ingress; Sun-Moon watery navamshas; Meghadhipati weekday."

@@ -412,6 +412,31 @@ async def list_my_charts(
     )
 
 
+@router.get(
+    "/charts/{chart_id}",
+    response_model=BirthChartSummarySchema,
+    summary="Get a saved chart by id",
+    description=(
+        "Returns the saved birth chart summary for the authenticated user."
+    ),
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(require_entitlement("saved_horoscopes", "view"))],
+)
+async def get_chart_by_id(
+    chart_id: uuid.UUID,
+    current_user: User = Depends(get_current_user_from_bearer),
+    session: AsyncSession = Depends(get_db_session),
+) -> BirthChartSummarySchema:
+    repo = BirthChartRepository(session)
+    chart = await repo.get_by_id(chart_id)
+    if chart is None or (chart.user_id is not None and chart.user_id != current_user.id.value):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No saved chart with that id, or it isn't yours.",
+        )
+    return BirthChartSummarySchema.model_validate(chart)
+
+
 @router.delete(
     "/charts/{chart_id}",
     summary="Delete a saved chart",

@@ -8,8 +8,9 @@
 
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api";
+import { chartKeys } from "./charts";
 import type {
   BulkImportRow,
   BulkImportResponse,
@@ -24,9 +25,15 @@ import type {
 } from "./types";
 
 export function useAnalyzeWorkflow() {
+  const queryClient = useQueryClient();
   return useMutation<WorkflowAnalysisResponse, Error, WorkflowAnalysisRequest>({
     mutationFn: (payload) =>
       api.post<WorkflowAnalysisResponse>("/api/v1/workflow/analyze", payload),
+    onSuccess: (_data, variables) => {
+      if (variables.persist !== false) {
+        queryClient.invalidateQueries({ queryKey: chartKeys.mine });
+      }
+    },
   });
 }
 

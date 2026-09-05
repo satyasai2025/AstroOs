@@ -16,6 +16,8 @@ import { ResizableAIDrawer } from "@/components/layout/ResizableAIDrawer";
 import { GlobalTopBarPanchangaWidget } from "@/components/layout/GlobalTopBarPanchangaWidget";
 import { AyanamsaSelectorDropdown } from "@/components/layout/AyanamsaSelectorDropdown";
 import { CreateChartModal, type ChartTypeId } from "@/components/dashboard/CreateChartModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { chartKeys } from "@/lib/charts";
 import { useAnalyzeWorkflow } from "@/lib/workflow";
 import { Footer } from "@/components/layout/Footer";
 
@@ -258,6 +260,7 @@ function AppShellInner({
   const closeCreateModal = useWorkflowStore((s) => s.closeCreateModal);
   const setResult = useWorkflowStore((s) => s.setResult);
   const analyze = useAnalyzeWorkflow();
+  const queryClient = useQueryClient();
   const request = useWorkflowStore((s) => s.request);
   const result = useWorkflowStore((s) => s.result);
   const { theme, toggle } = useTheme();
@@ -957,10 +960,11 @@ function AppShellInner({
           open={createModalOpen}
           onClose={closeCreateModal}
           onSubmit={(req) => {
-            closeCreateModal();
             analyze.mutate(req, {
-              onSuccess: (res) => {
+              onSuccess: async (res) => {
+                closeCreateModal();
                 setResult(res, req);
+                await queryClient.invalidateQueries({ queryKey: chartKeys.mine });
                 if (res.chart_id) {
                   try {
                     localStorage.setItem("astroos_last_viewed_chart_id", res.chart_id);
