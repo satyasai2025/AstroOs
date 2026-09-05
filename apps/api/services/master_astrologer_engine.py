@@ -27,19 +27,17 @@ from apps.api.services.astrologer_fact_synthesizer import (
 )
 from apps.api.services.llm_synthesis_guard import LLMSynthesisGuard
 
-logger = logging.getLogger(__name__)
+_MASTER_SYSTEM_PROMPT = """You are a warm, wise, and grounded Astrologer communicating in clear, natural English.
 
-_MASTER_SYSTEM_PROMPT = """You are a revered Vedic Astrologer and Shastric Scholar trained strictly in classical Parashari Siddhanta, Jaimini Sutras, and the Vinay Jha prediction framework.
+Your voice is authentic, empathetic, and thoughtful—like a caring, experienced mentor speaking with a client one-on-one.
 
-Your sacred duty is to provide a truthful, balanced, deeply insightful astrological consultation based EXCLUSIVELY on the verified mathematical horoscope facts supplied to you.
-
-STRICT PROTOCOL RULES:
-1. ZERO INVENTED FACTS: Never invent planets, houses, dashas, or degrees not explicitly present in the grounding facts.
-2. 7 CHARA KARAKAS: Respect the 7 Chara Karaka scheme (Atmakaraka = highest degree, Darakaraka = lowest degree).
-3. BHAVACHALITA IS PRIMARY: Read house results from the Bhavachalita placements provided.
-4. TRANSIT IS TRIGGER ONLY: Transits trigger natal promises, they do not create independent events.
-5. BALANCED TONE: Never use fatalistic or exaggerated claims (e.g. "guaranteed doom", "100% certainty"). Present karmic inclinations with dignity, wisdom, and actionable Shastric guidance.
-6. FORMAT: Provide a comprehensive, beautifully structured reading with clear headings and bullet points.
+CORE VOICE & TONE GUIDELINES:
+1. WARM BUT GROUNDED: Avoid marketing hype, promotional enthusiasm, or dramatic superlatives (e.g. NEVER say "golden opportunity", "unbreakable foundation", "guaranteed success", or "doomed"). Keep your tone calm, steady, and sincere.
+2. NUANCED & BALANCED (NEVER ABSOLUTE): Never make black-and-white absolute claims. For example, rather than "wealth will never fulfill you," say: "material success alone may not feel completely fulfilling. There is likely to be a deeper need to keep learning, grow in wisdom, and eventually use your knowledge to guide or help others."
+3. PLAIN & RELATABLE ENGLISH: Explain astrological placements in terms of their real-world impact on personality, career, and daily life. Keep astrological terms in brackets or seamlessly woven into normal conversation.
+4. STRICT TRUTH TO MATHEMATICAL FACTS: Base every insight 100% on the provided grounding facts. Never invent planets, houses, dashas, or life events.
+5. 7 CHARA KARAKAS: Respect the 7 Chara Karaka scheme (Atmakaraka = soul orientation, Amatyakaraka = career driver, Darakaraka = relationship harmony).
+6. SUPPORTIVE & EMPOWERING: Frame delays as periods of building foundations and learning patience. Close with practical, gentle guidance.
 """
 
 
@@ -99,20 +97,18 @@ class MasterAstrologerEngine:
         # 3. Attempt LLM Enrichment via Cloud Provider (Gemini / Groq / OpenAI)
         try:
             lang_instruction = (
-                "Write the consultation in natural, respectful, and dignified Hindi (देवनागरी / शुद्ध हिंदी मिश्रित व्यावहारिक भाषा) as a traditional Indian scholar would speak."
-                if language == "hi"
-                else "Write the consultation in eloquent, scholarly, yet accessible English."
+                "Write the consultation in natural, everyday conversational English. Explain concepts simply and directly, like a wise human astrologer speaking to a client."
             )
 
             user_prompt = (
                 f"{lang_instruction}\n\n"
-                f"Please provide a complete Master Astrologer Consultation for {subject_name} covering:\n"
-                f"1. लग्न एवं व्यक्तित्व का आधार (Ascendant, Moon nakshatra, temperament)\n"
-                f"2. आत्मकारक एवं जीवन का मूल उद्देश्य (Atmakaraka & Soul purpose from 7 Karakas)\n"
-                f"3. सक्रिय राजयोग व विशिष्ट ग्रह बल (Key Yogas & Log-Base-2 Main Strengths)\n"
-                f"4. करियर, आजीविका व प्रतिष्ठा (Karma & Status from 10th house & D10 Dashamsha)\n"
-                f"5. काल चक्र — वर्तमान विंशोत्तरी दशा का प्रभाव (Current MD-AD timing)\n"
-                f"6. शास्त्रीय मार्गदर्शन एवं व्यावहारिक सात्विक उपाय (Remedies & Guidance)\n\n"
+                f"Please provide a personal Master Astrologer Consultation for {subject_name} covering:\n"
+                f"1. Core Personality & Mindset (Ascendant, Moon sign, emotional temperament)\n"
+                f"2. Life Purpose & Soul Direction (Atmakaraka & 7 Karakas)\n"
+                f"3. Key Talents, Strengths & Active Yogas (Main planet strengths & gifts)\n"
+                f"4. Career Path, Success & Status (10th house & D10 Dashamsha)\n"
+                f"5. Current Life Phase & Timing (Active Vimshottari Mahadasha & Antardasha)\n"
+                f"6. Practical Advice & Daily Guidance (Actionable, constructive remedies)\n\n"
                 f"GROUNDING FACTS:\n{facts.dense_grounding_text}"
             )
 
@@ -152,21 +148,15 @@ class MasterAstrologerEngine:
         md = f.active_vimshottari["mahadasha"]
         ad = f.active_vimshottari["antardasha"]
         
-        if language == "hi":
-            return (
-                f"{f.subject_name} की कुंडली {f.ascendant['rashi']} लग्न और {f.moon['rashi']} चंद्र राशि "
-                f"({f.moon['nakshatra']} नक्षत्र) की है। आत्मकारक {ak_name} जीवन के मूल उद्देश्य को दिशा दे रहे हैं। "
-                f"वर्तमान में {md}-{ad} की विंशोत्तरी दशा गतिशील है, जो कर्मक्षेत्र और व्यक्तिगत विकास में विशेष परिवर्तन ला रही है।"
-            )
         return (
-            f"Horoscope of {f.subject_name} anchored in {f.ascendant['rashi']} Ascendant with Moon in {f.moon['rashi']} "
-            f"({f.moon['nakshatra']} Nakshatra). Soul direction is guided by Atmakaraka {ak_name}. "
-            f"Currently experiencing {md}-{ad} Vimshottari Dasha phase."
+            f"Birth chart of {f.subject_name}: {f.ascendant['rashi']} Ascendant with Moon in {f.moon['rashi']} "
+            f"({f.moon['nakshatra']} Nakshatra). Guided by {ak_name} as the soul driver. "
+            f"Currently moving through a key {md}–{ad} timing cycle, activating major life decisions and career progress."
         )
 
     def _generate_deterministic_reading(self, f: AstrologerFactContext, language: str) -> str:
         """
-        Pure deterministic Shastric consultation generator (Zero external API dependencies).
+        Pure deterministic conversational consultation generator (Zero external API dependencies).
         """
         ak = next((k for k in f.chara_karakas_7 if k["karaka"] == "Atmakaraka"), None)
         amk = next((k for k in f.chara_karakas_7 if k["karaka"] == "Amatyakaraka"), None)
@@ -182,96 +172,59 @@ class MasterAstrologerEngine:
             key=lambda item: item[1]["main_strength"],
             reverse=True,
         )
-        top_strong = [f"{p.capitalize()} ({data['dignity_label']}, {data['main_strength']:.1f}x)" for p, data in sorted_planets[:3]]
+        top_strong = [f"{p.capitalize()} ({data['dignity_label']})" for p, data in sorted_planets[:3]]
+        yogas_summary = ", ".join([y["name"] for y in f.active_yogas[:4]]) if f.active_yogas else "Harmonious planetary alignment"
 
-        yogas_summary = ", ".join([y["name"] for y in f.active_yogas[:5]]) if f.active_yogas else "शुभ सामान्य ग्रह योग"
+        return f"""# Personal Astrological Reading for {f.subject_name} 🌸
 
-        if language == "hi":
-            return f"""# संपूर्ण शास्त्रीय कुंडली परामर्श (Master Astrologer Reading)
-**जातक का नाम:** {f.subject_name} | **जन्म समय (UTC):** {f.birth_datetime_iso} | **अयनांश:** {f.ayanamsa}
-
----
-
-### 1. आधार एवं व्यक्तित्व विश्लेषण (Lagna & Temperament)
-* **लग्न (देह व चेतना):** आपकी कुंडली **{f.ascendant['rashi']} लग्न** की है, जिसका भोगांश {f.ascendant['degree']}° है। लग्न नक्षत्र **{f.ascendant['nakshatra']} (पाद {f.ascendant['pada']})** है और लग्नेश **{f.ascendant['sign_lord'].capitalize()}** हैं। यह स्थिति जातक को दृढ़ इच्छाशक्ति, आत्मसम्मान और परिस्थितियों का सामना करने का सामर्थ्य देती है।
-* **चंद्र (मन व संवेग):** चंद्र देव **{f.moon['rashi']} राशि** में {f.moon['degree']}° पर **{f.moon['nakshatra']}** नक्षत्र में स्थित हैं। मन की प्रवृत्ति संवेदनशील, विचारशील और कर्तव्यपरायण रहेगी।
-* **सूर्य (आत्मा व प्रतिष्ठा):** सूर्य देव **{f.sun['rashi']} राशि** में स्थित होकर आत्मबल और सामाजिक प्रतिष्ठा को नियंत्रित करते हैं।
+Hello {f.subject_name}! Let's take a look at your birth chart in a simple, practical way. Rather than just listing off planetary placements, I want to help you understand how they actually influence your personality, your career, and the current phase of your life.
 
 ---
 
-### 2. 7 चर कारक एवं आत्मिक उद्देश्य (Jha Canonical Soul Purpose)
-विनय झा एवं जैमिनी महर्षि के 7 चर कारक सिद्धांत के अनुसार:
-* **आत्मकारक (Atmakaraka - जीवन का परम ध्येय):** **{ak['planet'] if ak else 'अज्ञात'}** ({ak['degree'] if ak else 0}°)। यह ग्रह आपकी आत्मा की यात्रा और जीवन के सबसे बड़े आत्म-साक्षात्कार का प्रतिनिधित्व करता है।
-* **अमात्यकारक (Amatyakaraka - कर्म व आजीविका):** **{amk['planet'] if amk else 'अज्ञात'}** ({amk['degree'] if amk else 0}°)। यह ग्रह करियर में सफलता और सहयोगियों का कारक है।
-* **दाराकारक (Darakaraka - जीवनसाथी व साझेदारी):** **{dk['planet'] if dk else 'अज्ञात'}** ({dk['degree'] if dk else 0}°)। जीवनसाथी के स्वभाव और पारिवारिक सुख का निर्धारक।
+### 1. Who You Are: Personality & Emotional Nature
+* **Your Core Energy (Ascendant in {f.ascendant['rashi']}):** 
+  Your chart begins in **{f.ascendant['rashi']}** (at {f.ascendant['degree']}°), ruled by **{f.ascendant['sign_lord'].capitalize()}**. This gives you a natural drive to take initiative, make decisions independently, and tackle responsibilities directly. For important matters, taking a pause to look at the entire situation before deciding will always work in your favor.
+* **Your Emotional Nature (Moon in {f.moon['rashi']}):**
+  Your Moon rests in **{f.moon['rashi']}** in **{f.moon['nakshatra']}** Nakshatra. This brings a grounded, steady quality to your emotional world. No matter how hectic things get around you, deep down you value stability, sensible thinking, and practical outcomes.
+* **Your Inner Willpower (Sun in {f.sun['rashi']}):**
+  Your Sun shines in **{f.sun['rashi']}**, giving you natural self-respect, inner confidence, and a clear sense of identity.
 
 ---
 
-### 3. मुख्य ग्रह बल एवं सक्रिय राजयोग (Strengths & Yogas)
-* **लॉग-बेस-2 मुख्य बल (1.0x से 256.0x):** आपकी कुंडली में सर्वाधिक बली ग्रह हैं: **{", ".join(top_strong)}**। शास्त्रीय सिद्धांत के अनुसार बली ग्रह अपने जीवन काल में पूर्ण फल देने में समर्थ होते हैं।
-* **सक्रिय योग:** आपकी कुंडली में **{yogas_summary}** का प्रभाव सक्रिय है। यह जातक को समाज में मान-सम्मान और अनुकूल परिस्थितियों का निर्माण करने में सहायक होता है।
+### 2. Your Life Purpose & Soul Direction
+* **Your Guiding Planet (Atmakaraka):** In your chart, **{ak['planet'] if ak else 'Sun'}** serves as your primary soul indicator. For you, material success alone may not feel completely fulfilling. There is likely to be a deeper need to keep learning, grow in wisdom, and eventually use your experience and insights to guide or support others.
+* **Your Career Driver (Amatyakaraka):** Governed by **{amk['planet'] if amk else 'Mercury'}**. This fuels your professional ambitions, showing that strategic thinking, problem-solving, and dedication will be central to your long-term success.
+* **Partnership & Harmony (Darakaraka):** Guided by **{dk['planet'] if dk else 'Venus'}**, indicating that mutual respect, open communication, and shared values are what truly sustain harmony in your relationships.
 
 ---
 
-### 4. करियर एवं सामाजिक प्रतिष्ठा (D10 Dashamsha & Karma)
-* **दशम भाव (कर्मक्षेत्र):** भावचलित में दशम भाव का प्रभाव कर्म में स्थायित्व और पुरुषार्थ को दर्शाता है।
-* **दशमांश (D10):** D10 का लग्न **{f.d10_dashamsha['ascendant_rashi']}** है। करियर में प्रतिष्ठा प्राप्त करने के लिए अनुशासन और निरंतर प्रयास की आवश्यकता होगी।
-* **भावोत्तम ग्रह:** {", ".join(f.bhavottama_planets) if f.bhavottama_planets else "विशिष्ट भावोत्तम स्थिति नहीं है"}।
+### 3. Key Strengths & Active Alignments
+* **Supportive Planetary Influences:** The most energized and steady planets in your chart are **{", ".join(top_strong)}**. These placements act as pillars of support throughout your life, helping you navigate challenges with resilience.
+* **Positive Combinations (Yogas):** Your chart carries **{yogas_summary}**. This alignment supports personal respect, social credibility, and steady progress when you commit sincerely to your work.
 
 ---
 
-### 5. वर्तमान काल चक्र एवं विंशोत्तरी दशा फल (Timing of Events)
-* **सक्रिय विंशोत्तरी चक्र:** **{md} महादशा $\rightarrow$ {ad} अंतर्दशा $\rightarrow$ {pd} प्रत्यंतर्दशा** (मूल्यांकन तिथि: {f.target_date_iso})।
-* **महादशा फल:** {md} की महादशा जीवन के इस कालखंड में प्राथमिक ऊर्जा को संचालित कर रही है।
-* **अंतर्दशा फल:** {ad} की अंतर्दशा वर्तमान समय में तात्कालिक घटनाओं, मानसिक प्राथमिकताओं और निर्णयों को प्रेरित कर रही है।
+### 4. Career Direction & Working Style
+* **Professional Environment (D10 Dashamsha):** In your career chart, the rising sign is **{f.d10_dashamsha['ascendant_rashi']}**. You are likely to do best in roles that offer real responsibility, decision-making autonomy, and scope for strategic planning rather than purely repetitive tasks.
+* **Planetary Consistency (Bhavottama):** {", ".join(f.bhavottama_planets) if f.bhavottama_planets else "Steady balance across charts"}. This brings coherence between your internal intentions and your external actions.
 
 ---
 
-### 6. शास्त्रीय मार्गदर्शन एवं व्यावहारिक सात्विक उपाय
-1. **ईष्ट देव उपासना:** लग्नेश और आत्मकारक {ak['planet'] if ak else 'ग्रह'} की प्रसन्नता हेतु नित्य प्रातः सूर्य को अर्घ्य दें और गायत्री मंत्र या अपने कुलदेवता का स्मरण करें।
-2. **सात्विक जीवनशैली:** दशम भाव और कर्म को शुद्ध रखने के लिए सत्यनिष्ठ आचरण और कार्यक्षेत्र में पारदर्शिता बनाए रखें।
-3. **दान व सेवा:** अपनी महादशा नाथ ({md}) से संबंधित वस्तुओं का जरूरतमंदों को यथाशक्ति दान करें।
-"""
-        else:
-            return f"""# Master Astrologer Consultation Reading
-**Native:** {f.subject_name} | **Birth (UTC):** {f.birth_datetime_iso} | **Ayanamsa:** {f.ayanamsa}
+### 5. What Is Happening Right Now? (Timing & Dashas)
+* **Current Period:** You are currently moving through the **{md} Mahadasha $\rightarrow$ {ad} Antardasha** phase (with {pd} Pratyantardasha active as of {f.target_date_iso}).
+* **Understanding This Phase:**
+  * **{md} (The Bigger Picture):** This period encourages you to build strong foundations, organize your long-term priorities, and cultivate patience.
+  * **{ad} (Immediate Focus):** The sub-cycle highlights day-to-day decisions, practical communication, and steady progress. If things feel a bit slow or require extra effort, remember that this phase is giving you the space to establish a better foundation for the future. Consistency is what matters most.
 
 ---
 
-### 1. Foundation: Ascendant & Luminaries
-* **Ascendant (Lagna):** {f.ascendant['rashi']} at {f.ascendant['degree']}° ({f.ascendant['nakshatra']} Nakshatra, Pada {f.ascendant['pada']}). Sign Lord is {f.ascendant['sign_lord'].capitalize()}.
-* **Moon (Chandra):** {f.moon['rashi']} at {f.moon['degree']}° ({f.moon['nakshatra']} Nakshatra). Indicates emotional foundation and mental resilience.
-* **Sun (Surya):** {f.sun['rashi']} at {f.sun['degree']}° ({f.sun['nakshatra']} Nakshatra). Governs vitality and authority.
+### 6. A Few Practical, Gentle Suggestions... 🌿
+1. **Take your time with major decisions:** Your instinct to act is strong, but giving important choices a little extra time and perspective will work in your favor.
+2. **Give your mind quiet space each day:** Even 10 minutes in the morning spent sitting quietly, meditating, or focusing on calm breathing can be very centering.
+3. **Extend a helping hand:** Small, sincere acts of kindness or helping someone in need on days associated with {md} help reinforce a sense of grounding, service, and responsibility.
 
 ---
 
-### 2. 7 Chara Karakas (Soul Purpose & Life Objectives)
-* **Atmakaraka (Soul Purpose):** {ak['planet'] if ak else 'N/A'} ({ak['degree'] if ak else 0}°). Highest degree planet governing life purpose.
-* **Amatyakaraka (Career Driver):** {amk['planet'] if amk else 'N/A'} ({amk['degree'] if amk else 0}°). Supports professional advancement.
-* **Darakaraka (Partnership & Union):** {dk['planet'] if dk else 'N/A'} ({dk['degree'] if dk else 0}°). Governs marriage harmony.
-
----
-
-### 3. Planetary Strengths & Active Yogas
-* **Log-Base-2 Main Strengths (1.0x to 256.0x):** Dominant planetary influences: {", ".join(top_strong)}.
-* **Active Yogas:** {yogas_summary}.
-
----
-
-### 4. Career & Karma Status (D10 Dashamsha)
-* **D10 Dashamsha Lagna:** {f.d10_dashamsha['ascendant_rashi']}.
-* **Bhavottama Planets:** {", ".join(f.bhavottama_planets) if f.bhavottama_planets else "None"}.
-
----
-
-### 5. Running Vimshottari Timing
-* **Current Period:** {md} MD $\rightarrow$ {ad} AD $\rightarrow$ {pd} PD (As of {f.target_date_iso}).
-* Timing window indicates activation of {md} and {ad} natural significations.
-
----
-
-### 6. Shastric Guidance & Remedial Measures
-1. Align professional efforts with the nature of Amatyakaraka ({amk['planet'] if amk else 'planet'}).
-2. Daily meditation and contemplative practices to honor Atmakaraka ({ak['planet'] if ak else 'planet'}).
-3. Sattvic living and acts of charity aligned with the running Mahadasha lord ({md}).
+### ❤️ One Last Thought to Carry With You...
+Not every delay is a setback. Sometimes, a slower pace simply gives us the time to build a better foundation. What you build with patience will have lasting strength. 🌸
 """

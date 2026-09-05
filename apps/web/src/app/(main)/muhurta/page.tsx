@@ -12,6 +12,7 @@ import {
   Sun,
   Moon,
 } from "@/components/phalita/Icons";
+import { PanchangKundliTab } from "@/components/panchang/PanchangKundliTab";
 
 // ── Backend API types ────────────────────────────────────────────────────────
 
@@ -385,8 +386,24 @@ export default function MuhurtaFinderPage() {
   const [natalNakshatra, setNatalNakshatra] = useState<number>(1);
   const [natalMoonSign, setNatalMoonSign] = useState<number>(1);
 
-  const [activeTab, setActiveTab] = useState<"panchanga" | "windows" | "tarabala" | "activities">("panchanga");
+  const [activeTab, setActiveTab] = useState<"panchanga" | "windows" | "tarabala" | "activities" | "kundli">("panchanga");
   const [showHelpGuide, setShowHelpGuide] = useState<boolean>(false);
+
+  // Check URL hash or query params for #kundli
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (window.location.hash === "#kundli" || window.location.search.includes("tab=kundli")) {
+        setActiveTab("kundli");
+      }
+      const handleHashChange = () => {
+        if (window.location.hash === "#kundli") {
+          setActiveTab("kundli");
+        }
+      };
+      window.addEventListener("hashchange", handleHashChange);
+      return () => window.removeEventListener("hashchange", handleHashChange);
+    }
+  }, []);
 
   const [muhurtaData, setMuhurtaData] = useState<MuhurtaResponse | null>(null);
   const [muhurtaError, setMuhurtaError] = useState<string | null>(null);
@@ -715,53 +732,66 @@ export default function MuhurtaFinderPage() {
       </div>
 
       {/* 🌟 Tab Navigation */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 border-b pb-4 border-slate-200 dark:border-slate-800">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 border-b pb-4 border-slate-200 dark:border-slate-800">
         <button
           onClick={() => setActiveTab("panchanga")}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`px-3 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === "panchanga"
               ? "bg-cyan-600 text-white shadow-lg shadow-cyan-600/30"
               : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <Calendar className="w-4 h-4" />
-          <span>01 PANCHANGA (5 LIMBS)</span>
+          <span>01 PANCHANGA</span>
         </button>
 
         <button
           onClick={() => setActiveTab("windows")}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`px-3 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === "windows"
               ? "bg-cyan-600 text-white shadow-lg shadow-cyan-600/30"
               : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <Clock className="w-4 h-4" />
-          <span>02 AUSPICIOUS WINDOWS</span>
+          <span>02 WINDOWS</span>
         </button>
 
         <button
           onClick={() => setActiveTab("tarabala")}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`px-3 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === "tarabala"
               ? "bg-cyan-600 text-white shadow-lg shadow-cyan-600/30"
               : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <Compass className="w-4 h-4" />
-          <span>03 TARABALA &amp; PANCHAKA</span>
+          <span>03 TARABALA</span>
         </button>
 
         <button
           onClick={() => setActiveTab("activities")}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`px-3 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === "activities"
               ? "bg-cyan-600 text-white shadow-lg shadow-cyan-600/30"
               : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <Sparkles className="w-4 h-4" />
-          <span>04 ACTIVITY PLAYBOOK</span>
+          <span>04 ACTIVITIES</span>
+        </button>
+
+        <button
+          id="kundli"
+          onClick={() => setActiveTab("kundli")}
+          className={`col-span-2 sm:col-span-1 px-3 py-2.5 rounded-xl text-xs font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+            activeTab === "kundli"
+              ? "bg-gradient-to-r from-cyan-600 to-sky-600 text-white shadow-lg shadow-cyan-600/30 border-cyan-400/40"
+              : "bg-white dark:bg-slate-900 border-cyan-500/30 text-cyan-600 dark:text-cyan-300 hover:text-slate-900 dark:hover:text-white"
+          }`}
+        >
+          <span>🪐</span>
+          <span>05 KUNDLI &amp; FESTIVALS</span>
         </button>
       </div>
 
@@ -1287,6 +1317,20 @@ export default function MuhurtaFinderPage() {
             </div>
           )}
         </div>
+      )}
+
+      {/* 🌟 Tab 5: Gochar Kundli & Upavas/Festivals (Full-screen capable, JeevanCode-style) */}
+      {activeTab === "kundli" && (
+        <PanchangKundliTab
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+          latitude={latitude}
+          longitude={longitude}
+          locationName={locationName}
+          utcOffsetMinutes={utcOffsetMinutes}
+          calculationMode={calculationMode}
+          muhurtaData={muhurtaData}
+        />
       )}
 
       {/* 🌟 Streamlined Location Modal (Zero Scroll Required) */}

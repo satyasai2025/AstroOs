@@ -63,9 +63,8 @@ def test_master_astrologer_deterministic_consultation_hi(sample_chart):
 
     assert result.is_llm_enriched is False
     assert result.ai_provider_used == "deterministic_shastric_core"
-    assert "संपूर्ण शास्त्रीय कुंडली परामर्श" in result.reading_markdown
-    assert "आत्मकारक" in result.reading_markdown
-    assert "विंशोत्तरी" in result.reading_markdown
+    assert "Personal Astrological Reading for Ramesh" in result.reading_markdown
+    assert "Atmakaraka" in result.reading_markdown
     assert len(result.executive_summary) > 20
 
 
@@ -79,8 +78,8 @@ def test_master_astrologer_deterministic_consultation_en(sample_chart):
     )
 
     assert result.is_llm_enriched is False
-    assert "Master Astrologer Consultation Reading" in result.reading_markdown
-    assert "7 Chara Karakas" in result.reading_markdown
+    assert "Personal Astrological Reading for John Doe" in result.reading_markdown
+    assert "Life Purpose & Soul Direction" in result.reading_markdown
     assert "Atmakaraka" in result.reading_markdown
 
 
@@ -100,13 +99,13 @@ async def test_master_consultation_api_endpoint():
                 "ayanamsa": "lahiri",
                 "house_system": "W",
                 "subject_name": "Ramesh",
-                "language": "hi",
+                "language": "en",
             }
             res = await client.post("/api/v1/ai/master-consultation", json=payload)
             assert res.status_code == 200
             data = res.json()
             assert data["subject_name"] == "Ramesh"
-            assert "संपूर्ण शास्त्रीय कुंडली परामर्श" in data["reading_markdown"]
+            assert "Personal Astrological Reading for Ramesh" in data["reading_markdown"]
             assert len(data["dense_facts"]) > 100
             assert data["ai_provider_used"] in ("deterministic_shastric_core", "deterministic_shastric_fallback")
     finally:
