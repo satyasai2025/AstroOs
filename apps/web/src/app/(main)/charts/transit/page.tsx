@@ -591,9 +591,6 @@ function TransitAnalysisPageContent() {
           <div className="mb-6">
             <LiveSkyTransitClock />
           </div>
-          <div className="mb-6">
-            <AdvancedTransitEngineStudio result={result} />
-          </div>
       {/* Controls row: transit date stepper + Moon/Ascendant reference point */}
       <div className="mb-3 flex flex-wrap items-center gap-3">
         <div>

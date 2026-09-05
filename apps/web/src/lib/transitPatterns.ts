@@ -46,6 +46,6 @@ export function useLiveTransit(request: TransitRequest | null) {
       request ?? { birth_datetime_utc: "", latitude: 0, longitude: 0, ayanamsa: "lahiri", house_system: "W" },
     ),
     queryFn: () => api.post<TransitResponse>("/api/v1/transit/current", request),
-    enabled: false,
+    enabled: Boolean(request && request.birth_datetime_utc),
   });
 }

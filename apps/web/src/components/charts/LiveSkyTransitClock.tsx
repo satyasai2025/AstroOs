@@ -42,22 +42,11 @@ const PLANET_COLORS: Record<string, string> = {
   Ketu: "#a855f7",
 };
 
-const DEFAULT_PLANETS: LiveSkyPlanet[] = [
-  { symbol: "☉", name: "Sun", is_lunar_node: false, sidereal_longitude: 122.14, rashi: "Leo", rashi_sanskrit: "Simha", degree_in_sign: 2.14, degree_formatted: "2° 08'", speed_deg_per_day: 0.98, is_retrograde: false, is_combust: false, nakshatra: "Magha", pada: 1, nakshatra_lord: "Ketu", kakshya_index: 0, kakshya_lord: "Saturn", kakshya_range: "00° 00' - 03° 45'", color: "#f59e0b" },
-  { symbol: "☽", name: "Moon", is_lunar_node: false, sidereal_longitude: 198.45, rashi: "Libra", rashi_sanskrit: "Tula", degree_in_sign: 18.45, degree_formatted: "18° 27'", speed_deg_per_day: 13.2, is_retrograde: false, is_combust: false, nakshatra: "Swati", pada: 4, nakshatra_lord: "Rahu", kakshya_index: 4, kakshya_lord: "Venus", kakshya_range: "15° 00' - 18° 45'", color: "#e2e8f0" },
-  { symbol: "♂", name: "Mars", is_lunar_node: false, sidereal_longitude: 71.3, rashi: "Gemini", rashi_sanskrit: "Mithuna", degree_in_sign: 11.3, degree_formatted: "11° 18'", speed_deg_per_day: 0.55, is_retrograde: false, is_combust: false, nakshatra: "Ardra", pada: 2, nakshatra_lord: "Rahu", kakshya_index: 3, kakshya_lord: "Sun", kakshya_range: "11° 15' - 15° 00'", color: "#ef4444" },
-  { symbol: "☿", name: "Mercury", is_lunar_node: false, sidereal_longitude: 148.02, rashi: "Leo", rashi_sanskrit: "Simha", degree_in_sign: 28.02, degree_formatted: "28° 01'", speed_deg_per_day: -0.2, is_retrograde: true, is_combust: true, nakshatra: "Uttara Phalguni", pada: 1, nakshatra_lord: "Sun", kakshya_index: 7, kakshya_lord: "Lagna", kakshya_range: "26° 15' - 30° 00'", color: "#10b981" },
-  { symbol: "♃", name: "Jupiter", is_lunar_node: false, sidereal_longitude: 44.22, rashi: "Taurus", rashi_sanskrit: "Vrishabha", degree_in_sign: 14.22, degree_formatted: "14° 13'", speed_deg_per_day: 0.12, is_retrograde: false, is_combust: false, nakshatra: "Rohini", pada: 2, nakshatra_lord: "Moon", kakshya_index: 3, kakshya_lord: "Sun", kakshya_range: "11° 15' - 15° 00'", color: "#eab308" },
-  { symbol: "♀", name: "Venus", is_lunar_node: false, sidereal_longitude: 157.5, rashi: "Virgo", rashi_sanskrit: "Kanya", degree_in_sign: 7.5, degree_formatted: "7° 30'", speed_deg_per_day: 1.15, is_retrograde: false, is_combust: false, nakshatra: "Uttara Phalguni", pada: 4, nakshatra_lord: "Sun", kakshya_index: 1, kakshya_lord: "Jupiter", kakshya_range: "03° 45' - 07° 30'", color: "#ec4899" },
-  { symbol: "♄", name: "Saturn", is_lunar_node: false, sidereal_longitude: 321.36, rashi: "Aquarius", rashi_sanskrit: "Kumbha", degree_in_sign: 21.36, degree_formatted: "21° 21'", speed_deg_per_day: -0.05, is_retrograde: true, is_combust: false, nakshatra: "Purva Bhadrapada", pada: 1, nakshatra_lord: "Jupiter", kakshya_index: 5, kakshya_lord: "Mercury", kakshya_range: "18° 45' - 22° 30'", color: "#6366f1" },
-  { symbol: "☊", name: "Rahu", is_lunar_node: true, sidereal_longitude: 344.18, rashi: "Pisces", rashi_sanskrit: "Meena", degree_in_sign: 14.18, degree_formatted: "14° 10'", speed_deg_per_day: -0.05, is_retrograde: true, is_combust: false, nakshatra: "Uttara Bhadrapada", pada: 4, nakshatra_lord: "Saturn", kakshya_index: 3, kakshya_lord: "Sun", kakshya_range: "11° 15' - 15° 00'", color: "#8b5cf6" },
-  { symbol: "☋", name: "Ketu", is_lunar_node: true, sidereal_longitude: 164.18, rashi: "Virgo", rashi_sanskrit: "Kanya", degree_in_sign: 14.18, degree_formatted: "14° 10'", speed_deg_per_day: -0.05, is_retrograde: true, is_combust: false, nakshatra: "Hasta", pada: 2, nakshatra_lord: "Moon", kakshya_index: 3, kakshya_lord: "Sun", kakshya_range: "11° 15' - 15° 00'", color: "#a855f7" },
-];
-
 export function LiveSkyTransitClock() {
   const [isLiveMode, setIsLiveMode] = useState<boolean>(true);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [planets, setPlanets] = useState<LiveSkyPlanet[]>(DEFAULT_PLANETS);
+  const [planets, setPlanets] = useState<LiveSkyPlanet[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [ayanamsaName, setAyanamsaName] = useState<string>("Lahiri");
   const [ayanamsaVal, setAyanamsaVal] = useState<number>(24.23);
   const [, startTransition] = useTransition();
@@ -71,7 +60,7 @@ export function LiveSkyTransitClock() {
         longitude: 77.209,
         ayanamsa: "lahiri",
       });
-      if (resp && resp.planets) {
+      if (resp && resp.planets && resp.planets.length > 0) {
         startTransition(() => {
           setPlanets(
             resp.planets.map((p) => ({
@@ -79,25 +68,14 @@ export function LiveSkyTransitClock() {
               color: PLANET_COLORS[p.name] || "#e2e8f0",
             }))
           );
-          setAyanamsaName(resp.ayanamsa ? resp.ayanamsa.toUpperCase() : "Lahiri");
+          setAyanamsaName(resp.ayanamsa ? resp.ayanamsa.toUpperCase() : "LAHIRI");
           setAyanamsaVal(resp.ayanamsa_value_deg || 24.23);
+          setIsLoading(false);
         });
       }
-    } catch {
-      // Offline fallback: smooth client simulation
-      setPlanets((prev) =>
-        prev.map((p) => {
-          if (p.name === "Moon") {
-            const newDeg = (p.degree_in_sign + 0.00015) % 30;
-            return {
-              ...p,
-              degree_in_sign: Number(newDeg.toFixed(4)),
-              degree_formatted: `${Math.floor(newDeg)}° ${Math.floor((newDeg % 1) * 60)}'`,
-            };
-          }
-          return p;
-        })
-      );
+    } catch (err) {
+      console.error("LiveSky transit ephemeris error:", err);
+      setIsLoading(false);
     }
   };
 
@@ -234,10 +212,16 @@ export function LiveSkyTransitClock() {
       </div>
 
       {/* 9 Planetary Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
-        {planets.map((p) => (
-          <div
-            key={p.name}
+      {isLoading && planets.length === 0 ? (
+        <div className="py-12 flex flex-col items-center justify-center gap-2 text-center text-xs text-slate-400">
+          <span className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-cyan-400 border-t-transparent" />
+          <p>Calculating live Swiss Ephemeris planetary positions…</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
+          {planets.map((p) => (
+            <div
+              key={p.name}
             className="rounded-xl border p-3.5 flex flex-col justify-between transition-all hover:border-[var(--accent)]"
             style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}
           >
@@ -295,6 +279,7 @@ export function LiveSkyTransitClock() {
           </div>
         ))}
       </div>
+      )}
 
       {/* Ephemeris Summary Banner */}
       <div className="rounded-xl border p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs" style={{ borderColor: "var(--border-primary)", backgroundColor: "var(--bg-input)" }}>

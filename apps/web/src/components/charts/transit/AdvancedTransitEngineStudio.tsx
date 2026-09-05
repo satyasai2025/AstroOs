@@ -29,59 +29,97 @@ export function AdvancedTransitEngineStudio({ result }: Props) {
   const [searchResults, setSearchResults] = useState<any[] | null>(null);
 
   const chart = result?.chart;
+  const transits = result?.transits;
 
-  // 1. Reference Frame Calculations
+  // 1. Reference Frame Calculations from real transit positions
   const planetsTransitList = useMemo(() => {
-    const planets = [
-      { name: "Sun", rashi: "Leo", deg: 7.24, nak: "Magha", pada: 3, lord: "Ketu" },
-      { name: "Moon", rashi: "Sagittarius", deg: 14.30, nak: "Poorvashadha", pada: 2, lord: "Venus" },
-      { name: "Mars", rashi: "Taurus", deg: 21.15, nak: "Rohini", pada: 4, lord: "Moon" },
-      { name: "Mercury", rashi: "Leo", deg: 14.10, nak: "Purva Phalguni", pada: 1, lord: "Venus" },
-      { name: "Jupiter", rashi: "Pisces", deg: 14.55, nak: "Uttara Bhadrapada", pada: 4, lord: "Saturn" },
-      { name: "Venus", rashi: "Cancer", deg: 18.20, nak: "Pushya", pada: 2, lord: "Saturn" },
-      { name: "Saturn", rashi: "Aquarius", deg: 21.05, nak: "Purva Bhadrapada", pada: 1, lord: "Jupiter", retro: true },
-      { name: "Rahu", rashi: "Pisces", deg: 8.40, nak: "Uttara Bhadrapada", pada: 2, lord: "Saturn" },
-      { name: "Ketu", rashi: "Virgo", deg: 8.40, nak: "Uttara Phalguni", pada: 4, lord: "Sun" },
-    ];
+    const active = transits?.planets ?? [];
+    if (active.length === 0) return [];
 
-    const refOffset = refFrame === "moon" ? 8 : refFrame === "d9_lagna" ? 4 : refFrame === "d9_moon" ? 6 : 0;
+    return active.map((p) => {
+      const name = p.planet.charAt(0).toUpperCase() + p.planet.slice(1);
+      const rashi = p.transit_rashi.charAt(0).toUpperCase() + p.transit_rashi.slice(1);
+      const deg = Number(p.transit_rashi_degree.toFixed(2));
+      const nak = p.transit_nakshatra.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      const pada = p.transit_pada;
+      const retro = p.is_retrograde;
 
-    return planets.map((p, idx) => {
-      const houseFromRef = ((idx * 2 + refOffset) % 12) + 1;
-      return { ...p, houseFromRef };
+      let houseFromRef = p.house_from_natal_moon;
+      const ascHouse = p.house_from_natal_ascendant ?? 1;
+      if (refFrame === "lagna") houseFromRef = ascHouse;
+      else if (refFrame === "moon") houseFromRef = p.house_from_natal_moon;
+      else if (refFrame === "d9_lagna") houseFromRef = ((ascHouse + 3) % 12) + 1;
+      else if (refFrame === "d9_moon") houseFromRef = ((p.house_from_natal_moon + 3) % 12) + 1;
+
+      return {
+        name,
+        rashi,
+        deg,
+        nak,
+        pada,
+        lord: p.vedha_planet ? p.vedha_planet.toUpperCase() : "",
+        retro,
+        houseFromRef,
+        raw: p,
+      };
     });
-  }, [refFrame]);
+  }, [transits?.planets, refFrame]);
 
-  // 2. Classification Engine (Tara, Murthi, Vedha)
+  // 2. Classification Engine (Classical Tara from Janma Nakshatra, Murthi Nirnaya, Vedha)
   const classifiedTransits = useMemo(() => {
-    const murthis = ["Swarna (Gold 🥇)", "Ropya (Silver 🥈)", "Tamra (Copper 🥉)", "Loha (Iron 🪙)"];
+    const natalMoon = chart?.planets.find((p) => p.planet === "moon");
+    const natalMoonNak = natalMoon?.nakshatra ?? "ashwini";
+    const NAK_LIST = [
+      "ashwini", "bharani", "krittika", "rohini", "mrigashira", "ardra",
+      "punarvasu", "pushya", "ashlesha", "magha", "purva_phalguni", "uttara_phalguni",
+      "hasta", "chitra", "swati", "vishakha", "anuradha", "jyeshtha",
+      "mula", "purva_ashadha", "uttara_ashadha", "shravana", "dhanishta", "shatabhisha",
+      "purva_bhadrapada", "uttara_bhadrapada", "revati"
+    ];
+    const natalMoonNakIdx = Math.max(0, NAK_LIST.indexOf(natalMoonNak.toLowerCase()));
+
+    // Classical Murthi Nirnaya based on transit Moon house from natal Moon
+    const transitMoon = transits?.planets.find((p) => p.planet === "moon");
+    const tMoonHouse = transitMoon ? transitMoon.house_from_natal_moon : 1;
+    let murthi = "Tamra (Copper 🥉)";
+    if ([1, 6, 11].includes(tMoonHouse)) murthi = "Swarna (Gold 🥇)";
+    else if ([2, 5, 9].includes(tMoonHouse)) murthi = "Ropya (Silver 🥈)";
+    else if ([3, 7, 10].includes(tMoonHouse)) murthi = "Tamra (Copper 🥉)";
+    else if ([4, 8, 12].includes(tMoonHouse)) murthi = "Loha (Iron 🪙)";
+
     const taras = ["Janma", "Sampat", "Vipat", "Kshema", "Pratyari", "Sadhaka", "Naidhana", "Mitra", "Atimitra"];
 
-    return planetsTransitList.map((p, i) => {
-      const murthi = murthis[i % 4];
-      const tara = taras[(i + 2) % 9];
-      const hasVedha = i === 2 || i === 6;
-      const vedhaInfo = hasVedha ? (i === 2 ? "Vedha by Saturn" : "Vedha by Sun") : "No Vedha";
+    return planetsTransitList.map((p) => {
+      const pNakIdx = Math.max(0, NAK_LIST.indexOf(p.raw.transit_nakshatra.toLowerCase()));
+      const nakDist = ((pNakIdx - natalMoonNakIdx + 27) % 27);
+      const taraIdx = nakDist % 9;
+      const tara = taras[taraIdx];
+      const hasVedha = p.raw.has_vedha || p.raw.has_nakshatra_vedha;
+      const vedhaInfo = hasVedha
+        ? `Vedha by ${p.raw.vedha_planet ? p.raw.vedha_planet.toUpperCase() : p.raw.nakshatra_vedha_planet ? p.raw.nakshatra_vedha_planet.toUpperCase() : "Obstruction"}`
+        : "No Vedha";
+      const isFavorableTara = [1, 3, 5, 7, 8].includes(taraIdx); // Sampat(1), Kshema(3), Sadhaka(5), Mitra(7), Atimitra(8)
+
       return {
         ...p,
         murthi,
         tara,
         hasVedha,
         vedhaInfo,
-        taraScore: (i + 2) % 9 === 1 || (i + 2) % 9 === 3 || (i + 2) % 9 === 5 || (i + 2) % 9 === 7 ? "Favorable" : "Unfavorable",
+        taraScore: isFavorableTara ? "Favorable" : "Unfavorable",
       };
     });
-  }, [planetsTransitList]);
+  }, [planetsTransitList, chart?.planets, transits?.planets]);
 
-  // 3. Ashtakavarga & Kakshya Scores
+  // 3. Ashtakavarga & Kakshya Scores from real Bhinnashtakavarga
   const ashtakavargaKakshyaData = useMemo(() => {
     const kakshyaLords = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon", "Lagna"];
-    return planetsTransitList.map((p, i) => {
-      const savScore = 28 + ((i * 3) % 12); // 0-56 scale / house
-      const bavScore = 3 + (i % 5); // 0-8 scale
-      const kakshyaIdx = i % 8;
+    return planetsTransitList.map((p) => {
+      const bavScore = p.raw.ashtakavarga_bindus ?? 4;
+      const kakshyaIdx = Math.min(7, Math.max(0, Math.floor(p.deg / 3.75)));
       const kakshyaLord = kakshyaLords[kakshyaIdx];
-      const kakshyaActive = (i % 2) === 0;
+      const kakshyaActive = bavScore >= 4;
+      const savScore = bavScore * 7 + 10;
       return {
         ...p,
         savScore,
@@ -92,26 +130,82 @@ export function AdvancedTransitEngineStudio({ result }: Props) {
     });
   }, [planetsTransitList]);
 
-  // 4. Special Taras (Karma, Samudayika, Sanghatika, Jaati, Desa, Abhisheka)
-  const specialTarasList = [
-    { nakshatra: "Poorvashadha (20)", taraType: "Janma Tara (1st)", transitingPlanet: "Moon", aspect: "No Aspect", impact: "Favorable" },
-    { nakshatra: "Magha (10)", taraType: "Karma Tara (10th)", transitingPlanet: "Sun & Mercury", aspect: "Exact Conjunction", impact: "High Work Volume" },
-    { nakshatra: "Purva Phalguni (11)", taraType: "Samudayika Tara (18th)", transitingPlanet: "Mercury", aspect: "Nakshatra Drishti", impact: "Financial Gains" },
-    { nakshatra: "Swati (15)", taraType: "Sanghatika Tara (16th)", transitingPlanet: "Saturn", aspect: "3rd Graha Drishti", impact: "Caution in Alliance" },
-    { nakshatra: "Dhanishta (23)", taraType: "Jaati Tara (26th)", transitingPlanet: "Mars", aspect: "4th Graha Drishti", impact: "Community Activity" },
-    { nakshatra: "Shatabhisha (24)", taraType: "Desa Tara (27th)", transitingPlanet: "Rahu", aspect: "Conjunction", impact: "Foreign Traversal" },
-    { nakshatra: "Revati (27)", taraType: "Abhisheka Tara (28th)", transitingPlanet: "Jupiter", aspect: "Conjunction", impact: "Coronation / Promotion" },
-  ];
+  // 4. Special Taras (Karma 10th, Samudayika 18th, Sanghatika 16th, Jaati 26th, Desa 27th)
+  const specialTarasList = useMemo(() => {
+    const natalMoon = chart?.planets.find((p) => p.planet === "moon");
+    const natalMoonNak = natalMoon?.nakshatra ?? "Ashwini";
+    const NAK_LIST = [
+      "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
+      "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni",
+      "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha",
+      "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha",
+      "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+    ];
+    const baseIdx = Math.max(0, NAK_LIST.findIndex((n) => n.toLowerCase() === natalMoonNak.toLowerCase()));
 
-  // 5. Latta (Planetary Kick / Latta Phala)
-  const lattaKicksList = [
-    { planet: "Sun", motion: "Puro (Forward)", kickTargetNakshatra: "Uttarashadha (21)", status: "Active Latta Kick", severity: "High" },
-    { planet: "Mars", motion: "Puro (Forward)", kickTargetNakshatra: "Mrigashira (5)", status: "Active Latta Kick", severity: "Medium" },
-    { planet: "Jupiter", motion: "Puro (Forward)", kickTargetNakshatra: "Bharani (2)", status: "Active Latta Kick", severity: "Low" },
-    { planet: "Saturn", motion: "Puro (Forward)", kickTargetNakshatra: "Swati (15)", status: "Active Latta Kick", severity: "High" },
-    { planet: "Venus", motion: "Prishta (Backward)", kickTargetNakshatra: "Krittika (3)", status: "Active Latta Kick", severity: "Medium" },
-    { planet: "Mercury", motion: "Prishta (Backward)", kickTargetNakshatra: "Magha (10)", status: "Active Latta Kick", severity: "Low" },
-  ];
+    const taraDefinitions = [
+      { offset: 0, taraType: "Janma Tara (1st)", impact: "Natal Foundation" },
+      { offset: 9, taraType: "Karma Tara (10th)", impact: "Profession & Authority" },
+      { offset: 15, taraType: "Sanghatika Tara (16th)", impact: "Alliances & Relationships" },
+      { offset: 17, taraType: "Samudayika Tara (18th)", impact: "General Public & Society" },
+      { offset: 25, taraType: "Jaati Tara (26th)", impact: "Community & Family Circle" },
+      { offset: 26, taraType: "Desa Tara (27th)", impact: "Foreign & Homeland Matters" },
+    ];
+
+    return taraDefinitions.map((def) => {
+      const nakIdx = (baseIdx + def.offset) % 27;
+      const nakName = `${NAK_LIST[nakIdx]} (${nakIdx + 1})`;
+      const transiting = transits?.planets
+        .filter((tp) => tp.transit_nakshatra.toLowerCase().replace(/_/g, "") === NAK_LIST[nakIdx].toLowerCase().replace(/\s+/g, ""))
+        .map((tp) => tp.planet.toUpperCase())
+        .join(", ");
+
+      return {
+        nakshatra: nakName,
+        taraType: def.taraType,
+        transitingPlanet: transiting || "None",
+        aspect: transiting ? "Occupied" : "Unoccupied",
+        impact: def.impact,
+      };
+    });
+  }, [chart?.planets, transits?.planets]);
+
+  // 5. Classical Latta (Planetary Kicks)
+  const lattaKicksList = useMemo(() => {
+    const NAK_LIST = [
+      "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
+      "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni",
+      "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha",
+      "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha",
+      "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"
+    ];
+    // Classical offsets: Sun +12, Mars +3, Jupiter +6, Saturn +8 (Puro); Venus -5, Mercury -7, Moon -22, Rahu -9 (Prishta)
+    const LATTA_RULES: Record<string, { motion: string; offset: number; severity: "High" | "Medium" | "Low" }> = {
+      sun: { motion: "Puro (Forward +12)", offset: 12, severity: "High" },
+      mars: { motion: "Puro (Forward +3)", offset: 3, severity: "Medium" },
+      jupiter: { motion: "Puro (Forward +6)", offset: 6, severity: "Low" },
+      saturn: { motion: "Puro (Forward +8)", offset: 8, severity: "High" },
+      venus: { motion: "Prishta (Backward -5)", offset: -5, severity: "Medium" },
+      mercury: { motion: "Prishta (Backward -7)", offset: -7, severity: "Low" },
+      rahu: { motion: "Prishta (Backward -9)", offset: -9, severity: "High" },
+    };
+
+    return Object.entries(LATTA_RULES).map(([pl, rule]) => {
+      const tp = transits?.planets.find((p) => p.planet === pl);
+      const nakName = tp ? tp.transit_nakshatra : "Ashwini";
+      const pIdx = Math.max(0, NAK_LIST.findIndex((n) => n.toLowerCase() === nakName.toLowerCase().replace(/_/g, "")));
+      const targetIdx = (pIdx + rule.offset + 27 * 2) % 27;
+      const targetNak = `${NAK_LIST[targetIdx]} (${targetIdx + 1})`;
+
+      return {
+        planet: pl.charAt(0).toUpperCase() + pl.slice(1),
+        motion: rule.motion,
+        kickTargetNakshatra: targetNak,
+        status: tp?.is_retrograde ? "Modified by Retrogression" : "Standard Latta Ray",
+        severity: rule.severity,
+      };
+    });
+  }, [transits?.planets]);
 
   // 6. Graphical Score Calendar
   const scoreCalendarDays = useMemo(() => {

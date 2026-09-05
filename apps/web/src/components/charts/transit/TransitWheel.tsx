@@ -22,6 +22,8 @@ export function TransitWheel({
   const planets = transits.planets.map((p) => ({
     planet: p.planet,
     rashi: p.transit_rashi,
+    rashi_degree: p.transit_rashi_degree,
+    is_retrograde: p.is_retrograde,
   }));
 
   const chartTitle = houseReference === "ascendant" ? "Gochara (Natal Lagna)" : "Gochara (Natal Moon)";

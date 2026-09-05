@@ -29,7 +29,12 @@ from apps.api.schemas.transit import (
     TransitTimelineResponse,
 )
 from apps.api.services.ashtakavarga_engine import AshtakavargaEngine
-from apps.api.services.ephemeris_wrapper import EphemerisWrapper
+from apps.api.services.ephemeris_wrapper import (
+    EphemerisWrapper,
+    datetime_to_jd,
+    longitude_to_nakshatra,
+    longitude_to_rashi,
+)
 from apps.api.services.horoscope_engine import HoroscopeEngine
 from apps.api.services.transit_engine import TransitEngine
 from apps.api.services.transit_timeline_engine import TransitTimelineEngine
@@ -342,3 +347,168 @@ async def get_exact_position(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to compute exact position.",
         )
+
+
+# ── Live Sky Transit Endpoint ──────────────────────────────────────────────────
+
+
+class LiveSkyRequest(BaseModel):
+    datetime_utc: Optional[datetime] = None
+    latitude: Optional[float] = 28.6139
+    longitude: Optional[float] = 77.2090
+    ayanamsa: Optional[str] = "lahiri"
+
+
+class LiveSkyPlanetResponse(BaseModel):
+    symbol: str
+    name: str
+    is_lunar_node: bool
+    sidereal_longitude: float
+    rashi: str
+    rashi_sanskrit: str
+    degree_in_sign: float
+    degree_formatted: str
+    speed_deg_per_day: float
+    is_retrograde: bool
+    is_combust: bool
+    nakshatra: str
+    pada: int
+    nakshatra_lord: str
+    kakshya_index: int
+    kakshya_lord: str
+    kakshya_range: str
+    color: str
+
+
+class LiveSkyResponse(BaseModel):
+    planets: list[LiveSkyPlanetResponse]
+    ayanamsa: str
+    ayanamsa_value_deg: float
+
+
+_PLANET_SYMBOLS = {
+    "sun": "☉", "moon": "☽", "mars": "♂", "mercury": "☿",
+    "jupiter": "♃", "venus": "♀", "saturn": "♄", "rahu": "☊", "ketu": "☋",
+}
+_PLANET_DISPLAY_NAMES = {
+    "sun": "Sun", "moon": "Moon", "mars": "Mars", "mercury": "Mercury",
+    "jupiter": "Jupiter", "venus": "Venus", "saturn": "Saturn", "rahu": "Rahu", "ketu": "Ketu",
+}
+_PLANET_COLORS = {
+    "sun": "#f59e0b", "moon": "#e2e8f0", "mars": "#ef4444", "mercury": "#10b981",
+    "jupiter": "#eab308", "venus": "#ec4899", "saturn": "#6366f1", "rahu": "#8b5cf6", "ketu": "#a855f7",
+}
+_RASHI_SANSKRIT = {
+    "aries": "Mesha", "taurus": "Vrishabha", "gemini": "Mithuna", "cancer": "Karka",
+    "leo": "Simha", "virgo": "Kanya", "libra": "Tula", "scorpio": "Vrischika",
+    "sagittarius": "Dhanu", "capricorn": "Makara", "aquarius": "Kumbha", "pisces": "Meena",
+}
+_KAKSHYA_LORDS = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon", "Lagna"]
+_KAKSHYA_RANGES = [
+    "00° 00' - 03° 45'", "03° 45' - 07° 30'", "07° 30' - 11° 15'", "11° 15' - 15° 00'",
+    "15° 00' - 18° 45'", "18° 45' - 22° 30'", "22° 30' - 26° 15'", "26° 15' - 30° 00'",
+]
+_COMBUSTION_ORBS = {
+    "moon": 12.0, "mars": 17.0, "mercury": 14.0, "jupiter": 11.0,
+    "venus": 10.0, "saturn": 15.0,
+}
+
+
+def _calculate_live_sky(
+    dt: datetime,
+    ayanamsa_name: str,
+    wrapper: EphemerisWrapper,
+) -> LiveSkyResponse:
+    jd = datetime_to_jd(dt)
+    ayan_deg = wrapper.get_ayanamsa(jd)
+
+    sun_pos = wrapper.get_planet_position("sun", jd)
+    sun_sid_lon = wrapper.to_sidereal(sun_pos.longitude, ayan_deg)
+
+    planets_out: list[LiveSkyPlanetResponse] = []
+    graha_order = ["sun", "moon", "mars", "mercury", "jupiter", "venus", "saturn", "rahu", "ketu"]
+
+    for graha in graha_order:
+        pos = wrapper.get_planet_position(graha, jd)
+        sid_lon = wrapper.to_sidereal(pos.longitude, ayan_deg)
+        rashi_name, deg_in_rashi = longitude_to_rashi(sid_lon)
+        nak_info = longitude_to_nakshatra(sid_lon)
+
+        # Kakshya (8 divisions of 3°45' per sign)
+        k_idx = min(7, max(0, int(deg_in_rashi / 3.75)))
+        k_lord = _KAKSHYA_LORDS[k_idx]
+        k_range = _KAKSHYA_RANGES[k_idx]
+
+        # Combustion check against Sun
+        is_combust = False
+        if graha not in ("sun", "rahu", "ketu"):
+            dist = abs(sid_lon - sun_sid_lon) % 360.0
+            if dist > 180.0:
+                dist = 360.0 - dist
+            max_orb = _COMBUSTION_ORBS.get(graha, 10.0)
+            if graha == "mercury":
+                max_orb = 14.0 if pos.is_retrograde else 12.0
+            elif graha == "venus":
+                max_orb = 8.0 if pos.is_retrograde else 10.0
+            is_combust = dist <= max_orb
+
+        deg_whole = int(deg_in_rashi)
+        deg_min = int((deg_in_rashi - deg_whole) * 60)
+        formatted = f"{deg_whole}° {deg_min:02d}'"
+
+        planets_out.append(
+            LiveSkyPlanetResponse(
+                symbol=_PLANET_SYMBOLS[graha],
+                name=_PLANET_DISPLAY_NAMES[graha],
+                is_lunar_node=graha in ("rahu", "ketu"),
+                sidereal_longitude=round(sid_lon, 4),
+                rashi=rashi_name.capitalize(),
+                rashi_sanskrit=_RASHI_SANSKRIT.get(rashi_name.lower(), rashi_name.capitalize()),
+                degree_in_sign=round(deg_in_rashi, 4),
+                degree_formatted=formatted,
+                speed_deg_per_day=round(pos.speed_deg_per_day, 4),
+                is_retrograde=pos.is_retrograde,
+                is_combust=is_combust,
+                nakshatra=nak_info.nakshatra.replace("_", " ").title(),
+                pada=nak_info.pada,
+                nakshatra_lord=nak_info.lord.capitalize(),
+                kakshya_index=k_idx,
+                kakshya_lord=k_lord,
+                kakshya_range=k_range,
+                color=_PLANET_COLORS[graha],
+            )
+        )
+
+    return LiveSkyResponse(
+        planets=planets_out,
+        ayanamsa=ayanamsa_name.capitalize(),
+        ayanamsa_value_deg=round(ayan_deg, 4),
+    )
+
+
+@router.post(
+    "/live-sky",
+    response_model=LiveSkyResponse,
+    summary="Real-time astronomical sky transit positions from Swiss Ephemeris",
+)
+async def post_live_sky(
+    body: Optional[LiveSkyRequest] = None,
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> LiveSkyResponse:
+    dt = body.datetime_utc if body and body.datetime_utc else datetime.now(timezone.utc)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    ayan_name = body.ayanamsa if body and body.ayanamsa else "lahiri"
+    return await asyncio.to_thread(_calculate_live_sky, dt, ayan_name, wrapper)
+
+
+@router.get(
+    "/live-sky",
+    response_model=LiveSkyResponse,
+    summary="Real-time astronomical sky transit positions from Swiss Ephemeris",
+)
+async def get_live_sky_route(
+    wrapper: EphemerisWrapper = Depends(get_ephemeris_wrapper),
+) -> LiveSkyResponse:
+    dt = datetime.now(timezone.utc)
+    return await asyncio.to_thread(_calculate_live_sky, dt, "lahiri", wrapper)

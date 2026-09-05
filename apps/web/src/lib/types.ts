@@ -541,6 +541,7 @@ export interface TransitPlanetResponse {
   planet: string;
   transit_rashi: string;
   house_from_natal_moon: number;
+  house_from_natal_ascendant?: number;
   ashtakavarga_bindus: number | null;
   is_sade_sati: boolean;
   is_ashtama_shani: boolean;
