@@ -42,8 +42,8 @@ _PROVIDER_BASE_URLS = {
 _DEFAULT_MODELS = {
     "openai": "gpt-4o-mini",
     "anthropic": "claude-sonnet-5",
-    "gemini": "gemini-2.5-flash",
-    "groq": "llama-3.1-8b-instant",
+    "gemini": "gemini-3.6-flash",
+    "groq": "llama-3.3-70b-versatile",
     "openrouter": "openai/gpt-4o-mini",
     "ollama": "llama3.1",
 }
@@ -115,10 +115,10 @@ def build_resolved_provider(
                 resolved_base = "https://api.groq.com/openai/v1"
                 if not resolved_model or resolved_model == "gpt-4o-mini":
                     resolved_model = "llama-3.3-70b-versatile"
-            elif clean_key.startswith("AIza") and (not resolved_base or "openai.com" in resolved_base):
+            elif (clean_key.startswith("AIza") or clean_key.startswith("AQ.")) and (not resolved_base or "openai.com" in resolved_base):
                 resolved_base = "https://generativelanguage.googleapis.com/v1beta/openai"
                 if not resolved_model or resolved_model == "gpt-4o-mini":
-                    resolved_model = "gemini-2.0-flash"
+                    resolved_model = "gemini-3.6-flash"
 
         return ResolvedAIProvider(
             provider="astroos_ai",
@@ -245,7 +245,8 @@ async def call_chat_completion(
         )
         response.raise_for_status()
         body = response.json()
-        return body["choices"][0]["message"]["content"].strip()
+        content = body["choices"][0]["message"].get("content") or ""
+        return content.strip()
 
     except httpx.HTTPStatusError as exc:
         detail = exc.response.text[:300]

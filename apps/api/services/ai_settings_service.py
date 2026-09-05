@@ -128,7 +128,7 @@ class AISettingsService:
                 model=model,
                 base_url=base_url,
                 temperature=0.0,
-                max_tokens=8,
+                max_tokens=50,
                 global_settings=self._settings,
             )
             reply = await call_chat_completion(
