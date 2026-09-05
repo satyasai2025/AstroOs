@@ -16,6 +16,7 @@ import { ChartInputModal, ChartFormData } from "./ChartInputModal";
 import { SaptaNadiModal } from "./SaptaNadiModal";
 import { useTheme } from "@/components/layout/ThemeProvider";
 import { useWorkflowStore } from "@/lib/store";
+import { useActiveChart, useMyCharts } from "@/lib/charts";
 import { api } from "@/lib/api";
 
 const Icon = ({ path, className }: { path: string; className?: string }) => (
@@ -149,11 +150,65 @@ export function ShastricConsultationDashboard() {
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
+  const { data: myChartsData } = useMyCharts();
+  const { activeSummary } = useActiveChart();
   const storeRequest = useWorkflowStore((s) => s.request);
   const storeResult = useWorkflowStore((s) => s.result);
+  const hasAutoSelected = useRef(false);
 
+  // Sync saved profiles from authentic myCharts API
   useEffect(() => {
-    if (storeRequest) {
+    if (myChartsData?.charts && myChartsData.charts.length > 0) {
+      const mappedProfiles: ChartProfile[] = myChartsData.charts.map((c) => {
+        const dtStr = c.birth_datetime_utc || "";
+        return {
+          id: c.id,
+          name: c.subject_name,
+          dob: dtStr.slice(0, 10),
+          tob: dtStr.slice(11, 16) || "12:00",
+          cityName: c.place_name || "Custom Location",
+          latitude: c.birth_latitude,
+          longitude: c.birth_longitude,
+          tag: c.is_default ? "Default Vault" : "Saved Vault",
+        };
+      });
+      setSavedVaultProfiles(mappedProfiles);
+    } else {
+      try {
+        const stored = localStorage.getItem("astroos_saved_charts");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setSavedVaultProfiles(parsed);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [myChartsData]);
+
+  // Sync active chart from activeSummary or workflow store on page load
+  useEffect(() => {
+    if (hasAutoSelected.current) return;
+
+    if (activeSummary) {
+      hasAutoSelected.current = true;
+      const dtStr = activeSummary.birth_datetime_utc || "";
+      const birthDob = dtStr.slice(0, 10);
+      const birthTob = dtStr.slice(11, 16) || "12:00";
+      setName(activeSummary.subject_name);
+      setDob(birthDob);
+      setTob(birthTob);
+      setLat(activeSummary.birth_latitude);
+      setLon(activeSummary.birth_longitude);
+      setCitySearchText(activeSummary.place_name || "Custom Location");
+
+      const birthYear = parseInt(birthDob.slice(0, 4)) || 1990;
+      setStartYear(Math.max(1900, birthYear + 15));
+      setEndYear(Math.min(2100, birthYear + 35));
+    } else if (storeRequest) {
+      hasAutoSelected.current = true;
       const dtStr = storeRequest.birth_datetime_utc || "";
       if (dtStr) {
         setDob(dtStr.slice(0, 10));
@@ -161,23 +216,14 @@ export function ShastricConsultationDashboard() {
       }
       if (typeof storeRequest.latitude === "number") setLat(storeRequest.latitude);
       if (typeof storeRequest.longitude === "number") setLon(storeRequest.longitude);
-      setName("Active Native");
-    }
-  }, [storeRequest]);
+      setName(storeRequest.subject_name || "Active Native");
+      if (storeRequest.place_name) setCitySearchText(storeRequest.place_name);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("astroos_saved_charts");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setSavedVaultProfiles(parsed);
-        }
-      }
-    } catch {
-      // ignore
+      const birthYear = parseInt(dtStr.slice(0, 4)) || 1990;
+      setStartYear(Math.max(1900, birthYear + 15));
+      setEndYear(Math.min(2100, birthYear + 35));
     }
-  }, []);
+  }, [activeSummary, storeRequest]);
 
   // Handle outside click to close search dropdown
   useEffect(() => {

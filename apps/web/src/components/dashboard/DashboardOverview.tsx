@@ -583,7 +583,14 @@ export function DashboardOverview({
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-cyan-700 dark:text-cyan-400">
             Current Dasha &amp; Transit
           </h2>
-          {activeResult ? (
+          {isLoadingChart || (chartsLoading && !activeResult) ? (
+            <div className="space-y-3 py-3 animate-pulse">
+              <div className="h-4 w-32 rounded bg-slate-200 dark:bg-slate-800" />
+              <div className="h-5 w-48 rounded bg-slate-200 dark:bg-slate-800" />
+              <div className="h-2 w-full rounded-full bg-slate-200 dark:bg-slate-800" />
+              <div className="h-3 w-3/4 rounded bg-slate-200 dark:bg-slate-800" />
+            </div>
+          ) : activeResult ? (
             <div className="space-y-2 text-xs">
               {activeSubjectName && (
                 <p className="font-semibold text-slate-800 dark:text-slate-200">{activeSubjectName}</p>

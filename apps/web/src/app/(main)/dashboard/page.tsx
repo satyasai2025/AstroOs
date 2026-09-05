@@ -107,7 +107,7 @@ export default function DashboardPage() {
         <DashboardOverview
           activeResult={storeResult}
           activeSubjectName={storeRequest?.subject_name}
-          isLoadingChart={analyze.isPending}
+          isLoadingChart={analyze.isPending || (chartsLoading && !storeResult)}
           onStartNewChart={() => {
             clearResult();
             analyze.reset();
