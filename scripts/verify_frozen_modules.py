@@ -29,7 +29,9 @@ _PENDING_ENTRY_RE = re.compile(r"^\|\s*`([^`]+)`\s*\|\s*`PENDING`\s*\|")
 
 
 def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Normalize CRLF to LF so hashing is identical across Windows, macOS, and Linux CI
+    raw = path.read_bytes()
+    return hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
 
 
 def _parse_manifest() -> dict[str, str]:
